@@ -164,7 +164,7 @@ $(document).ready(function () {
 ✖ dplyr::filter() masks stats::filter()
 ✖ dplyr::lag()    masks stats::lag()</code></pre>
 <p>When you type the command above and press RETURN, RStudio will print some text to the Console (shown in the white box, above). This text tells you that the <em>tidyverse</em> package has loaded (“attached”) some other pacakges (e.g. <em>dplyr</em>). It also tells you that the <em>dplyr</em> package changes the way some commands in R work (“conflicts”). That’s OK.</p>
-<p>If you get an output that includes the word ‘error’, please see <a href="common-errors.md">common errors</a>.</p>
+<p>If you get an output that includes the word ‘error’, please see <a href="common-errors.html">common errors</a>.</p>
 <p><a name="load"></a></p>
 </div>
 <div id="loading-data" class="section level2">
@@ -194,13 +194,13 @@ cols(
 <div id="explanation-of-output" class="section level3">
 <h3>Explanation of output</h3>
 <p>R likes to print things in red sometimes – this does not mean there’s a problem. If there’s a problem, it will actually say ‘error’. The output here tells us that R has loaded the data, which has eight parts (columns, or <code>cols</code>). It gives us the name of the columns (<code>ID, sex, ...</code>) and tells us what sort of data each column contains: <code>character</code> means the data is words (e.g. ‘female’), <code>integer</code> means the data is a whole number (e.g. ‘42’).</p>
-<p>If you get an error here, please see <a href="common-errors.md">common errors</a>.</p>
+<p>If you get an error here, please see <a href="common-errors.html">common errors</a>.</p>
 <p><a name="inspect"></a></p>
 </div>
 </div>
 <div id="inspecting-data" class="section level2">
 <h2>Inspecting data</h2>
-<p>Next, we’ll take a peek at these data. You can do this by clicking on the data in the <em>Environment</em> tab of RStudio, see <a href="intro-rstudio.md">Introduction to RStudio</a>.</p>
+<p>Next, we’ll take a peek at these data. You can do this by clicking on the data in the <em>Environment</em> tab of RStudio, see <a href="intro-rstudio.html">Introduction to RStudio</a>.</p>
 <p>We can now see the data set (also known as a <em>data frame</em>). We can see that this data frame has 8 columns and 10000 rows. Each row is one person, and each column provides some information about them. Below is a description of each of the columns. Where you see <code>NA</code> this means this piece of data is missing for this person – quite common in some real datasets.</p>
 <p>Here’s what each of the columns in the data set contains:</p>
 <table style="width:92%;">
@@ -275,7 +275,7 @@ cols(
 1         87293.</code></pre>
 <p>Your output will tell you the mean income in this sample – it’s the last number on the bottom right, and it’s approximately $87,000.</p>
 <p>If you’re happy with the output you’ve got, move on to the next section. If you would like a more detailed explanation of this output, see <a href="more-on-tibbles.html">more on tibbles</a>.</p>
-<p>If you get an error here, please see <a href="common-errors.md">common errors</a>.</p>
+<p>If you get an error here, please see <a href="common-errors.html">common errors</a>.</p>
 <p><strong>Type the exact mean income into your lab book.</strong></p>
 <div id="explanation-of-command-1" class="section level3">
 <h3>Explanation of command</h3>
