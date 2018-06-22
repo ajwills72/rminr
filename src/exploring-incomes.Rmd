@@ -108,7 +108,7 @@ Now we have these data, one question we can ask is "what is the average income o
 
 I'm sure you learned about means in school but, as a reminder, you calculate a mean by adding up all the incomes and dividing by the number of incomes. Our sample has 10,000 participants, so this would be a long and tedious calculation -- and we'd probably make an error. 
 
-It would also be a little bit tedious and error prone in a spreadsheet application (e.g. Excel, Libreoffice Calc). There are some very famous cases of these kinds of "Excel errors" in research, e.g. [genetics](https://www.washingtonpost.com/news/wonk/wp/2016/08/26/an-alarming-number-of-scientific-papers-contain-excel-errors/?noredirect=on&utm_term=.e819b253b02b), [economics](https://arstechnica.com/tech-policy/2013/04/microsoft-excel-the-ruiner-of-global-economies/).
+It would also be a little bit tedious and error prone in a spreadsheet application (e.g. Excel, Libreoffice Calc). There are some very famous cases of these kinds of "Excel errors" in research, e.g. [genetics](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-016-1044-7), [economics](https://arstechnica.com/tech-policy/2013/04/microsoft-excel-the-ruiner-of-global-economies/).
 
 In R, we can calculate the mean instantly, and it's harder to make the sorts of errors that are common in Excel-based analysis.
 
