@@ -1,0 +1,97 @@
+---
+title: "Response compatibility"
+author: "Patric Bach, Chris Mitchell, Andy Wills"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+## DEVELOPERS: Uncomment one option, as appropriate
+
+## Show only commands.
+## knitr::opts_chunk$set(echo = TRUE, message = FALSE, results='hide', fig.keep = 'none', comment=NA)
+
+## Show commands and ouptut.
+knitr::opts_chunk$set(echo = TRUE, comment=NA)
+```
+
+## Before you start...
+Before starting this exercise, you should have completed **all** the [Absolute Beginers'](index.html) workshop exercises. If not, take a look at those exercises before continuing. Each section below also indicates which of the earlier worksheets are relevant.
+
+## Getting the data into R
+**Relevant worksheet:** [Using RStudio projects](using-projects.html)
+
+You'll need to complete the PsychEL excerise to get the CSV file containing your data. Set up an RStudio project for this analysis, and copy the CSV file into it. 
+
+## Exploring your data
+
+### Load
+**Relevant worksheet:** [Exploring incomes](exploring-incomes.html) 
+
+Load the _tidyverse_ package, and load your data.
+```{r init-load, message=FALSE} 
+library(tidyverse)
+compdata <- read_csv("respcompat.csv")
+```
+
+### Inspect
+Look at the data by clicking on it in the _Environment_ tab in RStudio. Here's what each of the columns in the data set contain:
+
+| Column | Description                             | Values             |
+| ------ | --------------------------------------- | ------------------ |
+| SRN    | Your Student Reference Number           |                    |
+| trial  | Trial number                            | 1 - 200            |
+| cond   | Condition (compatible vs. incompatible) | compat, incompat   |
+| error  | Did you make an error?                             | 1 = Yes, 0 = No    |
+| RT     | Reaction time                           | value in milliseconds |
+| instruct | Key you were told to press            | "L" = left, "R" = right |
+| seen     | Key you saw being pressed by another             | "L" = left, "R" = right |
+| resp     | Response you made                      | "L" = left, "R" = right |
+
+
+### Mean reaction time (RT)
+**Relevant worksheet:** [Group differences](group-differences.html). 
+
+Calculate the mean reaction time for the two conditions of your experiment (_compatible_ and _incompatible_ trials), using this command:
+
+```{r rt-means}
+compdata %>% group_by(cond) %>% summarise(mean(RT))
+```
+The output will look something like the above (the actual numbers won't be the same).
+
+### Standard deviations of RT
+**Relevant worksheet:** [Exploring incomes](exploring-incomes.html). 
+
+Now get the standard deviations. You'll need to modify the command above by changing `mean` to `sd`. 
+
+```{r rt-sd, echo=FALSE}
+compdata %>% group_by(cond) %>% summarise(sd(RT))
+```
+If you get it right, the output will look something like this (the actual numbers won't be the same).
+
+### RT histogram
+**Relevant worksheet:** [Group differences](group-differences.html).
+
+Next, take a look at the distribution of reaction times, using the following command. 
+
+```{r rt-hist}
+compdata %>% ggplot(aes(RT, colour=factor(cond))) + geom_density() 
+```
+
+If you get it right, the output will look something like this.
+
+### Mean errors
+**Relevant worksheet:** [Group differences](group-differences.html).
+
+Finally, take a look at the mean errors by condition (compatible vs. incompatible). The `errors` column codes an error as `1` and a correct response as `0`. This is helpful, because the mean of this gives the probability of an error. Modify the command you used for mean reaction times to calculate the probability of error for each condition. 
+
+```{r p-error, echo=FALSE}
+compdata %>% group_by(cond) %>% summarise(mean(error))
+```
+If you get it right, the output will look something like this (the actual numbers won't be the same).
+
+
+___
+
+This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0. 
+
+_version 0.2_
