@@ -31,7 +31,7 @@ ____
 
 #### Source code
 
-These teaching materials were generated using RMarkdown. Read-only access to the full source code is available here: `svn://willslab.org.uk/svn/pu051`. If you'd like to contribute changes or additional material, email `andy@willslab.co.uk`.
+These teaching materials were generated using a combination of Markdown and RMarkdown. The full source code is available on [github](https://github.com/ajwills72/rminr). 
 
 ___
 
@@ -40,7 +40,7 @@ This material is distributed under a [Creative Commons](https://creativecommons.
 
 Parts of this material have been adpated from these other Creative Commons materials:
 
-* May, J. (2018). [Getting Results with R](https://www.plymouth.ac.uk/staff/jon-may).
+* May, J. (2018). [Getting Results with R](https://github.com/jon-may/GettingResultsinR).
 * Whalley, B. (2018). [Just Enough R](https://benwhalley.github.io/just-enough-r/).
 * Wills, A. (2015). [R for Experimental Psychologists](http://www.willslab.org.uk/rbook.html).
 
