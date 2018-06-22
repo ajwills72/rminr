@@ -18,6 +18,8 @@ _Initial workshops, run right at the beginning of Stage 1._
 
 * [Reasons to use R](why-r-student.html). Why this course uses R to analyse data.
 
+* [Further reading](resources.html). A list of other Creative Commons resources about using R. 
+
 ## Putting R to work
 _Experiential learning activities, later in Semester 1 of Stage 1_
 
