@@ -57,7 +57,7 @@ library(tidyverse)
 
 When you type the command above and press RETURN, RStudio will print some text to the Console (shown in the white box, above). This text tells you that the _tidyverse_ package has loaded ("attached") some other pacakges (e.g. _dplyr_). It also tells you that the _dplyr_ package changes the way some commands in R work ("conflicts"). That's OK.
 
-If you get an output that includes the word 'error', please see [common errors](common-errors.md).
+If you get an output that includes the word 'error', please see [common errors](common-errors.html).
 
 <a name="load"></a>
 
@@ -79,12 +79,12 @@ There are three parts to the command `cpsdata <- read_csv("http://www.willslab.o
 ### Explanation of output
 R likes to print things in red sometimes -- this does not mean there's a problem. If there's a problem, it will actually say 'error'. The output here tells us that R has loaded the data, which has eight parts (columns, or `cols`). It gives us the name of the columns (`ID, sex, ...`) and tells us what sort of data each column contains: `character` means the data is words  (e.g. 'female'), `integer` means the data is a whole number (e.g. '42').
 
-If you get an error here, please see [common errors](common-errors.md).
+If you get an error here, please see [common errors](common-errors.html).
 
 <a name="inspect"></a>
 
 ## Inspecting data
-Next, we'll take a peek at these data. You can do this by clicking on the data in the *Environment* tab of RStudio, see [Introduction to RStudio](intro-rstudio.md).
+Next, we'll take a peek at these data. You can do this by clicking on the data in the *Environment* tab of RStudio, see [Introduction to RStudio](intro-rstudio.html).
 
 We can now see the data set (also known as a *data frame*). We can see that this data frame has 8 columns and 10000 rows. Each row is one person, and each column provides some information about them. Below is a description of each of the columns. Where you see `NA` this means this piece of data is missing for this person -- quite common in some real datasets.
 
@@ -122,7 +122,7 @@ Your output will tell you the mean income in this sample -- it's the last number
 
 If you're happy with the output you've got, move on to the next section. If you would like a more detailed explanation of this output, see [more on tibbles](more-on-tibbles.html). 
 
-If you get an error here, please see [common errors](common-errors.md).
+If you get an error here, please see [common errors](common-errors.html).
 
 **Type the exact mean income into your lab book.**
 

@@ -9,7 +9,7 @@ knitr::opts_chunk$set(echo = TRUE, comment = NA)
 library(tidyverse)
 cpsdata <- read_csv(url("http://www.willslab.org.uk/cps2.csv"))
 ```
-![Kitten that might be called Tibbles. Possibly.](kitten.jpg)
+![Kitten that might be called Tibbles. Possibly.](pics/kitten.jpg)
 
 In the [Exploring Data](exploring-incomes.html) worksheet, you got the mean income of your sample like this:
 
