@@ -1,19 +1,3 @@
----
-title: "Research Methods in R"
-author: "Andy Wills"
-output: html_document
----
-```{r setup, include=FALSE}
-## DEVELOPERS: Uncomment one option, as appropriate
-
-## Show only commands.
-## knitr::opts_chunk$set(echo = TRUE, message = FALSE, results='hide', fig.keep = 'none', comment=NA)
-
-## Show commands and ouptut.
-knitr::opts_chunk$set(echo = TRUE, comment=NA)
-```
-
-These are draft materials for the new Stage 1. There are gaps, and they are an early draft -- comments welcome!
 
 ## Absolute Beginners' Guide to R
 _Initial workshops, run right at the beginning of Stage 1._
