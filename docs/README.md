@@ -2,7 +2,7 @@
 ## Absolute Beginners' Guide to R
 _Initial workshops, run right at the beginning of Stage 1._
 
-* [Introduction to RStudio](intro-rstudio.html). How to install RStudio, and a basic introduction to the software.
+* [Introduction to RStudio](intro-rstudio.md). How to install RStudio, and a basic introduction to the software.
 
 * [Exploring data](exploring-incomes.html). Means, medians, and histograms. **Assessed lab book activity**.
 
