@@ -19,7 +19,7 @@ knitr::opts_chunk$set(echo = TRUE, comment=NA)
 ## Before you start...
 Before starting this exercise, you should have had a brief introduction to getting and using RStudio. If not, take a look at the [Introduction to RStudio][1].
 
-[1]: intro-rstudio.md
+[1]: intro-rstudio.html
 
 ## Contents
 

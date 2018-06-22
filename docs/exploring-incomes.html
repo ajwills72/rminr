@@ -126,7 +126,7 @@ $(document).ready(function () {
 
 <div id="before-you-start" class="section level2">
 <h2>Before you start…</h2>
-<p>Before starting this exercise, you should have had a brief introduction to getting and using RStudio. If not, take a look at the <a href="intro-rstudio.md">Introduction to RStudio</a>.</p>
+<p>Before starting this exercise, you should have had a brief introduction to getting and using RStudio. If not, take a look at the <a href="intro-rstudio.html">Introduction to RStudio</a>.</p>
 </div>
 <div id="contents" class="section level2">
 <h2>Contents</h2>
@@ -155,12 +155,12 @@ $(document).ready(function () {
 <p>First, we need to load a package called <em>tidyverse</em>. A package is an extension to R that adds new commands. Nearly everything we’ll do in this course uses the tidyverse package, so pretty much every project starts with this instruction.</p>
 <p><strong>Type (or copy and paste) the command in the grey box into the <em>Console</em> window of RStudio, and press the RETURN key.</strong></p>
 <pre class="r"><code>library(tidyverse)</code></pre>
-<pre><code>── Attaching packages ────────────────────────────────────────────────────────────────────────── tidyverse 1.2.1 ──</code></pre>
+<pre><code>── Attaching packages ─────────────────────────────────────────────────────────────────────────── tidyverse 1.2.1 ──</code></pre>
 <pre><code>✔ ggplot2 2.2.1     ✔ purrr   0.2.5
 ✔ tibble  1.4.2     ✔ dplyr   0.7.5
 ✔ tidyr   0.8.1     ✔ stringr 1.3.1
 ✔ readr   1.1.1     ✔ forcats 0.3.0</code></pre>
-<pre><code>── Conflicts ───────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+<pre><code>── Conflicts ────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
 ✖ dplyr::filter() masks stats::filter()
 ✖ dplyr::lag()    masks stats::lag()</code></pre>
 <p>When you type the command above and press RETURN, RStudio will print some text to the Console (shown in the white box, above). This text tells you that the <em>tidyverse</em> package has loaded (“attached”) some other pacakges (e.g. <em>dplyr</em>). It also tells you that the <em>dplyr</em> package changes the way some commands in R work (“conflicts”). That’s OK.</p>
