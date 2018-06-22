@@ -1,0 +1,101 @@
+---
+title: "More on t-tests"
+author: "Andy Wills"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+## DEVELOPERS: Uncomment one option, as appropriate
+
+## Show only commands.
+## knitr::opts_chunk$set(echo = TRUE, message = FALSE, results='hide', fig.keep = 'none', comment=NA)
+
+## Show commands and ouptut.
+knitr::opts_chunk$set(echo = TRUE, comment=NA)
+
+library(tidyverse)
+cpsdata <- read_csv(url("http://www.willslab.org.uk/cps2.csv"))
+cpslow <- cpsdata %>% filter(income < 150000)
+```
+
+In the [Evidence](evidence.html) worksheet, we did the following t-test:
+
+```{r ttest}
+t.test(cpsdata$income ~ cpsdata$sex)
+```
+
+Here's a more detailed explanation of the output of that test -- we'll go through each bit:
+
+## What you did
+
+`Welch` - There's more than one way to do a t-test. R uses the [method recommended by Welch](https://en.wikipedia.org/wiki/Welch%27s_t-test). The Welch method is [always a better choice](https://daniellakens.blogspot.com/2015/01/always-use-welchs-t-test-instead-of.html) than doing the standard (a.k.a. "Student") t-test.
+
+`Two Sample t-test` - It's _two sample_ because you have two different groups ("samples") of people being compared in the test -- females and males. 
+
+`data:  cpsdata$income by cpsdata$sex` - This just reminds you what data you're analyzing, it's basically a copy of what you told it to do, i.e. `cpsdata$income ~ cpsdata$sex`
+
+`alternative hypothesis: true difference in means is not equal to 0` - This is a way of saying that, before looking at the data, you made no assumptions about whether men would earn more than women, or vice versa. This is sometimes called a _two-tailed_ test - see [below](#one-tail) if you can safely assume a direction before looking at your data (also called a _one-tailed_ test).
+
+## What you found
+
+`t = -3.6654` - This is the _t value_ -- the output of a t-test. It's a bit like an effect size, except it's harder to interpret, because its value is also affected by the sample size (larger samples mean larger t values, other things being equal). A _t value_ isn't at all useful on its own but along with the _degrees of freedom_ (see below), we can use it to calculate the _p value_ (also see below). The t-value is negative for the reason explained in the [one-tailed tests](#one-tail) section, below. Generally speaking, psychologists ignore the minus sign when reporting t values in their papers, although people differ on this.
+
+`df = 9991.3` - _df_ is short for _degrees of freedom_. In a "Student" t-test, the degrees of freedom is the sample size, minus the number of means you've calculated from that sample. In a Welch t-test, this number is corrected to deal with some of the problems with the Student's t-test. This correction makes the Welch t-test more accurate than the Student's t-test.
+
+`p-value = 0.0002482` - The is the p value of the t-test. It's the probability of your data, under the assumption there is no difference between groups (sometimes called the _null_ hypothesis). You need the t value and the degrees of freedom to be able to calculate the p value ... but R does those calculations for you. 
+
+### Group means
+
+Although you can get these in other ways, for convenience the `t.test` command gives you the mean for each group:
+
+```
+sample estimates:
+mean in group female   mean in group male 
+            82677.29             92136.66 
+```
+
+These are the mean incomes for the two groups, $82677.29 for females and $92136.66 for males. In our sample, women earn about $9459 less than men, on average. 
+
+How big is this difference likely to be in the US population as a whole --- assuming our sample is representative of the US population? This is where this part of the ouput comes in:
+
+<a name="ci"></a>
+
+### Confidence intervals
+```
+95 percent confidence interval:
+ -14518.10  -4400.64
+```
+This 95% confidence interval tells us that the mean difference in the population is very likely to be somewhere between $14,518.10 and $4400.64. If we had collected more data we could have been more precise.  
+
+The 95% confidence interval is only thing reported by a t-test that is both useful and easy to interpret. Psychologists are now encouraged to report it in their papers, like this:
+
+`Women earned less than men, [-$14518, -$4400], d = .20, t(991.3) = 3.67, p < .05`.
+
+<a name="one-tail"></a>
+
+## One-tailed tests
+
+In a one-tailed test, you decide before looking at your data which direction the effect should be in. For example, you may have read a lot of scientific papers about the gender pay gap, so you're pretty sure that if you find a difference in your sample, it'll be the women who earn less. 
+
+R deals with groups in alphabetical order of the label you gave them, so females are group 1, and males are group 2 (because `f` comes before `m` in the alphabet). You expect the group 1 mean to be _less_ than the group 2 mean. So you use this command to do this _one-tailed_ test:
+
+```{r ttest-less, results='hide'}
+t.test(cpsdata$income ~ cpsdata$sex, alternative = "less")
+```
+The t value is negative because R calculates the mean difference as group 1 minus group 2.
+
+If instead your hypothesis was that females earn more than males, you'd use this command instead:
+
+```{r ttest-greater, results='hide'}
+t.test(cpsdata$income ~ cpsdata$sex, alternative = "greater")
+```
+
+____
+
+
+#### Licence
+This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0. 
+
+___
+
+_version: 0.2_

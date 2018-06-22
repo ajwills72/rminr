@@ -1,0 +1,59 @@
+---
+title: "More on Bayes Factors"
+author: "Andy Wills"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+## DEVELOPERS: Uncomment one option, as appropriate
+
+## Show only commands.
+## knitr::opts_chunk$set(echo = TRUE, message = FALSE, results='hide', fig.keep = 'none', comment=NA)
+
+## Show commands and ouptut.
+knitr::opts_chunk$set(echo = TRUE, comment=NA)
+
+library(tidyverse)
+library(BayesFactor)
+cpsdata <- read_csv(url("http://www.willslab.org.uk/cps2.csv"))
+cpslow <- cpsdata %>% filter(income < 150000)
+```
+
+In the [Evidence](evidence.html) worksheet, we did the following Bayesian t-test:
+
+```{r bfttest}
+ttestBF(formula = income ~ sex, data = data.frame(cpsdata))
+```
+
+Here's a more detailed explanation of the output of that test -- we'll go through each bit in turn:
+
+`Bayes factor analysis` - You're doing a Bayes Factor analysis.
+
+`[1] Alt., r=0.707` - In order to calculate a Bayes Factor, R has to make some assumptions about how big the difference is likely to be. The `ttestBF` command makes some broad assumptions that cover the range of effect sizes typically seen in psychology. 
+
+More specifically, `ttestBF` assumes a Cauchy distribution of effect sizes centered on zero, with a scale of 0.707 -- this is where `r=0.707` comes from. That description probably didn't make much sense useless you have a very strong maths background, so here's the same idea, shown as a density plot. It's basically an assumption that small effect sizes are quite likely, and large effect sizes are quite unlikely.
+
+```{r cauchy, echo=FALSE}
+x<-seq(-10,10,by=0.1)
+plot(x, dcauchy(x, scale = .707),type="l", xlab = "Effect size", ylab = "")
+```
+
+`18.25128` - The Bayes Factor (i.e. the main result of this analysis)
+
+`±0%` - Basically a confidence interval on the Bayes Factor. It's 0% here because we have so much data, but with smaller samples we might see something like `20 ±5%`, which would means the Bayes Factor is about 20, give or take 5%. So, it's between 19 and 21.
+
+`Against denominator:` - This tells you that the null hypothesis is the denominator of the fraction that is used to calculate the Bayes Factor. So, in other words, you're getting BF~10~ rather than BF~01~ -- see the [Evidence](evidence.html) worksheet.
+
+`Null, mu1-mu2 = 0` - This tells you that the null hypothesis is that the difference between the two group means (called `mu1` and `mu2` here) is zero. 
+
+`Bayes factor type: BFindepSample` - You're doing a Bayes Factor analysis; `indepSample` is short for `independent samples`, which is another way of saying "between-subjects test". `JZS` is short for Jeffreys, Zellner, and Siow - the surnames of three people who are credited with coming up with this particular way of working out Bayes Factors.
+
+___
+
+
+#### Licence
+This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0. 
+
+___
+
+_version: 0.2_
