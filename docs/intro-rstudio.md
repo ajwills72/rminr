@@ -1,4 +1,4 @@
-# Introduction to R Studio"
+# Introduction to R Studio
 _Andy Wills_
 
 ## Getting RStudio
@@ -8,7 +8,7 @@ Before you can use RStudio, you have to get it on to your computer. Here's how:
 
 **Web browser** - You can use RStudio through a web browser on any laptop or desktop, anywhere in the world that has a good internet connection. Go to [www.ronline.org](http://www.ronline.org) and log on. You can request a free account from a demonstrator in class, and you'll get one immediately. Outside class, email andy@willslab.co.uk. If emailing, allow two working days for a response.
 
-**Install on your own machine** - Alternatively, you can install RStudio on your own machine. It's completely free, and will probably take around 30 minutes. Follow these [step-by-step instructions](install-rstudio.html).
+**Install on your own machine** - Alternatively, you can install RStudio on your own machine. It's completely free, and will probably take around 30 minutes. Follow these [step-by-step instructions](install-rstudio.md).
 
 ## Running RStudio
 You run RStudio like you would run any other application (e.g. Word). You'll be greeted with a screen that looks something like this:
