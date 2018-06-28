@@ -1,6 +1,5 @@
 
 ## Absolute Beginners' Guide to R
-_Initial workshops, run right at the beginning of Stage 1._
 
 * [Introduction to RStudio](intro-rstudio.md). How to install RStudio, and a basic introduction to the software.
 
@@ -21,7 +20,6 @@ _Initial workshops, run right at the beginning of Stage 1._
 * [Further reading](resources.html). A list of other Creative Commons resources about using R. 
 
 ## Putting R to work
-_Experiential learning activities, later in Semester 1 of Stage 1_
 
 These are mainly further practice in the skills you learned in _Absolute Beginners'_. Where the exercises contain completely new skills, these are shown in **bold**. Where the excercises extend a skill you've already been taught, these are shown in _italics_.
 
