@@ -23,6 +23,8 @@
 
 These are mainly further practice in the skills you learned in _Absolute Beginners'_. Where the exercises contain completely new skills, these are shown in **bold**. Where the excercises extend a skill you've already been taught, these are shown in _italics_.
 
+If you are a current undergraduate student at Plymouth University, you should complete the accompanying Psych:EL (Psychology: Experiential Learning) activity first, in order to generate your own set of data. If you're not, you can download sample data files [here](rtoworkdata.html).
+
 * [Face recognition experiment](face-recog.html). Means, _filtering data_, and a **bar graph**.
 
 * [Response compatibility experiment](response-compatibility.html). Means, standard deviations, and density plots.
