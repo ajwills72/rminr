@@ -3,17 +3,17 @@
 
 * [Introduction to RStudio](intro-rstudio.md). How to install RStudio, and a basic introduction to the software.
 
-* [Exploring data](exploring-incomes.html). Means, medians, and histograms. **Assessed lab book activity**.
+* [Exploring data](exploring-incomes.html). Means, medians, and histograms. 
 
 * [Group differences](group-differences.html). Means and standard deviations, by group. Filtering data. Effect size.
 
 * [Evidence](evidence.html). Introduction to p values. Traditional between-subjects t-test. Bayesian between-subjects t-test.
 
-* [Using RStudio projects](using-projects.html). Creating a new project. Using an R script. Analysing your own data. Needed for **poster assessment**.
+* [Using RStudio projects](using-projects.html). Creating a new project. Using an R script. Analysing your own data. Needed for 
 
 * [Entering data by hand](entering-data-by-hand.html). Entering data into a spreadsheet. Saving data into your RStudio project.
 
-* [Cheat sheet](cheat-sheet.html). Everything we've covered so far, condensed. _Use this for reference once you've finished the module._
+* [Cheat sheet](cheat-sheet.html). Everything we've covered so far, condensed. 
 
 * [Reasons to use R](why-r-student.html). Why this course uses R to analyse data.
 
@@ -29,6 +29,7 @@ If you are a current undergraduate student at Plymouth University, you should co
 
 * [Response compatibility experiment](response-compatibility.html). Means, standard deviations, and density plots.
 
+* [Facial attractiveness experiment](face-attract.html). Means, standard deivations, **inter-quartile range**, and _density plots_. 
 ____
 
 #### Source code
@@ -65,4 +66,4 @@ Ben Whalley.
 
 ___
 
-_version: 0.2_
+_version: 0.2.1_
