@@ -1,0 +1,131 @@
+---
+title: "Facial attractiveness"
+author: "Alyson Norman, Andy Wills"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+## DEVELOPERS: Uncomment one option, as appropriate
+
+## Show only commands.
+## knitr::opts_chunk$set(echo = TRUE, message = FALSE, results='hide', fig.keep = 'none', comment=NA)
+
+## Show commands and ouptut.
+knitr::opts_chunk$set(echo = TRUE, comment=NA)
+```
+
+## Before you start...
+Before starting this exercise, you should have completed **all** the [Absolute Beginners'](index.html) workshop exercises. If not, take a look at those exercises before continuing. Each section below also indicates which of the earlier worksheets are relevant.
+
+## Getting the data into R
+**Relevant worksheet:** [Using RStudio projects](using-projects.html)
+
+You'll be provided with a single CSV file containing both your data, and that of your classmates. Set up an RStudio project for this analysis, and copy the CSV file into it. 
+
+## Exploring your data
+
+### Load
+**Relevant worksheet:** [Exploring data](exploring-incomes.html) 
+
+Load the _tidyverse_ package, and load your data. 
+
+```{r init-load, message=FALSE} 
+library(tidyverse)
+att <- read_csv("faceattract.csv")
+```
+
+### Inspect
+Look at the data by clicking on it in the _Environment_ tab in RStudio. Each row is one person's rating for one face. Here's what each of the columns in the data set contain:
+
+| Column    | Description                             | Values             |
+| --------- | --------------------------------------- | ------------------ |
+| StudentID | The participant's Student Reference Number           |        |
+| TrialNum  | Trial number                            | 0 - 99 |
+| Stimulus  | Face shown on this trial. Each face has a unique number that identifies it. | 1 - 100    |
+| Rating    | The facial attractiveness rating for this face, for this participant | 1 - 10, higher numbers = more attractive |
+
+This is a large data set, with about 250 people rating each of 100 faces for attractiveness; so about 25,000 ratings in total. R is great for analysing large data sets easily and without error.
+
+### How much do faces differ in attractiveness?
+
+**Relevant worksheets:** [Group Differences](group-differences.html), [Exploring data](exploring-incomes.html) 
+
+To look at differences in facial attractiveness, we can look at the average (mean) rating each face received, i.e. the average across the hundreds of people who rated it. To do this, we use the `group_by` and `summarise` commands you learned in the _Group Differences_ worksheet.
+
+```{r mean_att}
+av.att <- att %>% group_by(Stimulus) %>% summarise(mean = mean(Rating))
+```
+
+You can look at these averages by clicking on `av.att` in the _Environment_ tab in RStudio. You should be able to notice that some faces score higher than others, on average. However, it's pretty hard to get your head around a long list of numbers like this, so next we're going to draw a graph. This _visualisation_ will help us more easily comprehend our data.
+
+A _density plot_ is a good choice for this kind of data. We covered density plots in the _Group Differences_ worksheet, and we can use the same commands here. 
+
+```{r att_hist, fig.show='hide'}
+av.att %>% ggplot(aes(mean)) + geom_density(aes(y=..scaled..)) 
+```
+
+The density plot the above command gives you is OK, but it could be better. First, let's fix the fact that the x-axis doesn't cover the full range of the rating scale. Our rating scale goes from 1 to 10. To force R to use that full 1 to 10 range, we use the `xlim` (short for "x-axis limits") command, like this:
+
+```{r att_hist_xlim, fig.show='hide'}
+av.att %>% ggplot(aes(mean)) + geom_density(aes(y=..scaled..)) + xlim(1, 10)
+```
+
+Better...but it would be better still if the axes had more meaningful labels. Use the `xlab` and `ylab` commands you learned in the _Exploring Data_ worksheet to add meaningful labels. If you get it right, your graph should look something like this (without the words "example plot", of course):
+
+```{r att_hist_xlim_labs, echo=FALSE}
+av.att %>% ggplot(aes(mean)) + geom_density(aes(y=..scaled..)) + xlim(1, 10) +
+  xlab("Rating") + ylab("Scaled density") + 
+  annotate("text", x = Inf, y = -Inf, label = "EXAMPLE PLOT", col = "red", hjust = 5.1, vjust = -1.1)
+```
+
+**Use RStudio to export your graph as an Image, and upload it to your lab book.**
+
+### How much do ratings for a face differ?
+
+**Relevant worksheets:** [Group Differences](group-differences.html), [Exploring data](exploring-incomes.html) 
+
+For any given face, does everyone give about the same attractiveness rating? Or, do some people rate it as attractive, while other people rate it as unattractive? 
+
+One way we could look at this is to calculate the _standard deviation_ of the attractiveness ratings for each face. As we covered in the _Group Differences_ worksheet, _standard deviation_ is a number that basically represents how far, on average, people are from the mean. We calculate the standard devation of the face ratings pretty much the same way we calculated the means, just using the command `sd` instead of `mean`:
+
+```{r sd_att}
+sd.att <- att %>% group_by(Stimulus) %>% summarise(sd = sd(Rating))
+```
+
+We can then look at these standard deviations by clicking on `sd.att` in the _Environment_ tab in RStudio. However, like with the mean attractiveness, it's hard to get a clear sense of what this large table of data is telling us. We can make things clearer, but it'll take a couple of steps. The first step is to use the _inter-quartile range_, rather than the _standard deviation_. 
+
+#### Explaining inter-quartile range
+
+_Inter-quartile range_ is a measure that's somewhat similar to the _standard deviation_, but some people find it easier to interpret once they've got their heads around the concept.
+
+To explain _inter-quartile range_, we need to first explain the concepts of the _lower quartile_ and the _upper quartile_. These two ideas are related to the idea of a _median_, which you covered in _Exploring Data_. To recap, if you put a set of numbers in order, then the median is the middle number. In other words, it divides the ordered data exactly in half. Half of the data is smaller than the median and half of the data is larger than the median.
+
+The _lower quartile_ (LQ) is similar to the median, except that a quarter of the data is smaller than the lower quartile, and three-quarters of the data is larger. Correspondingly, three-quarters of the data is smaller than the _upper quartile_ (UQ), and a quarter of it is larger. 
+
+So, for a particular face, the median attractiveness rating might be 4 with a LQ of 3 and an UQ of 5. The _inter quartile range_ is the difference between the UQ and the LQ. So, in this example the inter-quartile range is 5 - 3 = 2. The _inter-quartile range_ contains the middle 50% of the ordered data.
+
+The larger the _inter-quartile range_, the more people's ratings of the same face differ. 
+
+#### Calculating inter-quartile range
+Calculating inter-quartile range in R works much the same way as calculating a mean, median, or standard deviation. The command is `IQR`, which we use like this:
+
+```{r iqr_att}
+iqr.att <- att %>% group_by(Stimulus) %>% summarise(IQR = IQR(Rating))
+```
+
+We can then look at these inter-quartile ranges by clicking on `iqr.att` in the _Environment_ tab in RStudio. While this might be a bit of an improvement, it's still a very long table of numbers. So, as the final exercise in this worksheet, calculate the mean inter-quartile range from your `iqr.att` data frame, using the `summarise` and `mean` commands. If you've done it right, your output will look something like this (the exact number will be different):
+
+```{r iqr_mean, echo=FALSE}
+iqr.att %>% summarise(mean(IQR))
+```
+
+**Enter your mean inter-quartile range into your lab book.**
+
+
+
+
+___
+
+This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0. 
+
+_version 0.2.1_
