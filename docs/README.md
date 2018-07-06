@@ -30,6 +30,7 @@ If you are a current undergraduate student at Plymouth University, you should co
 * [Response compatibility experiment](response-compatibility.html). Means, standard deviations, and density plots.
 
 * [Facial attractiveness experiment](face-attract.html). Means, standard deivations, **inter-quartile range**, and _density plots_. 
+
 ____
 
 #### Source code
