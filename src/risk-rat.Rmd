@@ -1,0 +1,153 @@
+---
+title: "Risk-taking questionnaire"
+author: "Yaniv Hanoch, Andy Wills"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+## DEVELOPERS: Uncomment one option, as appropriate
+
+## Show only commands.
+## knitr::opts_chunk$set(echo = TRUE, message = FALSE, results='hide', fig.keep = 'none', comment=NA)
+
+## Show commands and ouptut.
+knitr::opts_chunk$set(echo = TRUE, comment=NA)
+```
+
+## Before you start...
+Before starting this exercise, you should have completed **all** the [Absolute Beginners'](index.html) workshop exercises. If not, take a look at those exercises before continuing. Each section below also indicates which of the earlier worksheets are relevant.
+
+## Getting the data into R
+**Relevant worksheet:** [Using RStudio projects](using-projects.html)
+
+You'll need to complete the Psych:EL excerise to get the CSV file containing your data. You'll also need to get an older person to complete the same Psych:EL exercise to get a second CSV file containing their data. Set up an RStudio project for this analysis, and copy the CSV files into it. 
+
+## Exploring your data
+
+### Load
+**Relevant worksheet:** [Exploring data](exploring-incomes.html) 
+
+Load the _tidyverse_ package, and load your *own* data, and that of your _older_ participant.
+
+```{r init-load, message=FALSE} 
+library(tidyverse)
+risk.me <- read_csv("riskrat.csv")
+risk.other <- read_csv("riskrat-other.csv")
+```
+
+**Note**: Everyone's CSV files have different names. For example, yours might be called `10435678you.csv` and `10435678other.csv`. In the example below, you'll need to replace `riskrat.csv` and `riskrat-other.csv` with the name of your personal CSV files.
+
+### Inspect
+Look at the data by clicking on it in the _Environment_ tab in RStudio. Each row is one person's rating for one question. Here's what each of the columns in the data set contain:
+
+| Column    | Description                             | Values             |
+| --------- | --------------------------------------- | ------------------ |
+| SRN       | Your Student Reference Number           |        |
+| who       | Is this data from you, or from the other (older) person you tested? | "you", "other" |
+| group     | Which sort of risk-taking behaviour is this question about? | "ethical", "financial", "health", "social", "recreation" |
+| qu  | This number unqiuely idenifies the question that was asked  | 1 - 26, e.g. qu. 19 is "Taking a skydiving class"    |
+| rating    | The rating given in response to this question | 1 - 7, higher numbers = more likely to engage in the risky behaviour described in the question. |
+
+### Calculating your risk-taking scores
+
+**Relevant worksheets:** [Group Differences](group-differences.html)
+
+How highly did you score on each of the types of risk-taking behaviour (e.g. ethical, financial, ...)?
+
+To look at this, we take the average (mean) rating you made for each type of behaviour. To do this, we use the `group_by` and `summarise` commands you learned in the _Group Differences_ worksheet.
+
+```{r risk_groups}
+risk.me %>% group_by(group) %>% summarise(mean(rating))
+```
+
+**NOTE:** Your output should look similar to that shown above, but the numbers will be different.
+
+Which types of risk-taking behaviours did you score highest on? And lowest on?
+
+### Comparing your risk-taking behaviour to that of an older adult
+
+**Relevant worksheets:** [Group Differences](group-differences.html)
+
+People tend to be less likely to take risks as they get older. Is this the case for you and the older adult you tested? In order to answer this question, we first have to put your data, and that of your older adult, together in one _data frame_. 
+
+#### Combining data frames
+
+We can use the `rbind` (short for 'row bind') to combine two data frames, like this:
+
+```{r risk_rbind}
+risk <- rbind(risk.me, risk.other)
+```
+
+#### Comparing two individuals on an overall score
+Now we can compare you and your older adult on your overall mean risk-taking score. We do this by grouping by the `who` variable in the `risk` _data frame_. If you get this right, your output will look a bit like this, although the exact numbers will be different:
+
+```{r risk_age, result='hide'}
+risk %>% group_by(who) %>% summarise(mean(rating))
+```
+
+Who scores higher on risk taking -- you, or your older adult?
+
+**Enter the exact risk-taking score for you and your older adult into your lab book**.
+
+## Exploring everyone's data
+
+This part of the exercise can only be completed once sufficient number of people have completed the risk-taking questionnaire on Psych:EL, and got an older adult to complete it also. When this happens, you will be able to download everyone's data from Psych:EL as a CSV file. Download that file, and copy it into your RStudio project (the project you generated at the beginning of this exercise).
+
+### Load data
+Load the _tidyverse_ package, and load your everyone's data.
+
+```{r second-load, message=FALSE} 
+library(tidyverse)
+risk.all <- read_csv("riskrat-all.csv")
+```
+
+### Inspect
+
+Look at the data by clicking on it in the _Environment_ tab in RStudio. You'll see it has the same columns as the the other data files, it's just has a lot more rows (because it contains a lot of participants).
+
+### How do you compare to your peers?
+
+#### Filtering
+
+Let's start by looking at the range of scores your peers got on this questionnaire. The first thing we'll need to do is _filter_ the data so it only contains your classmates, not the older adults. This is because older adults tend to score lower on risk taking than younger adults, and so it's best to compare your score to people who are closer to your own age. We do this using the `filter` command you learned in the _Group Differences_ worksheet. Here, we want to keep all ratings where the column `who` says _you_, because these are the ratings for when your peers are answering the questionnaire themselves. We can filter like this:
+
+```{r filter-young, message=FALSE} 
+risk.young <- risk.all %>% filter(who == "you")
+```
+
+#### Density plot
+
+Now we can look at the range of scores given by your peers. A _density plot_ is a good choice for this, which you learned to produce in the _Group Differences_ worksheet. Here, we're going to make a density plot of the data in column `rating` of the `risk.young` data frame:
+
+```{r risk-density, message=FALSE} 
+risk.young %>% ggplot(aes(rating)) + geom_density(aes(y=..scaled..), adjust = 2)
+```
+
+_Note:_ You may have noticed the addition of `adjust = 2` in the above command, which we didn't use in the _Group Differences_ worksheet. The `adjust` command changes how smooth the density plot looks, with higher numbers making for smoother plots. Try changing the value to see what effect it has on your plot.
+
+In this particular plot, a rating of around 5 is the most common, with higher and lower ratings becoming increasingly less likely. But where does your score fit on this distribution? You've already calculated your overall score, so you can make this comparison manually, but we can also draw a line on this density plot representing your score, which is more immediately interpretable.
+
+To do this, we use the command `geom_vline` (`vline` being short for "vertical line") to draw a line on the plot to show your score. Replace the number `4.35` in the command below with your score:
+
+```{r risk-density-line, message=FALSE} 
+risk.young %>% ggplot(aes(rating)) + geom_density(aes(y=..scaled..), adjust = 2) +
+  geom_vline(xintercept = 4.35)
+```
+
+In the above example, the individual's score is close to the cente of the distribution. Are *you* towards the bottom, towards the top, or near the middle?
+
+Finally, we'll make this plot a bit prettier by the addition of some colour. Here, I've used some fair ugly colours, for your plot use a `lightblue` fill and a `red` line:
+
+```{r risk-density-line-cols, message=FALSE} 
+risk.young %>% ggplot(aes(rating)) + 
+  geom_density(aes(y=..scaled..), adjust = 2, fill = "green") +
+  geom_vline(xintercept = 4.35, colour = 'yellow')
+```
+
+**Use RStudio to export your light blue and red graph as an Image, and upload it to your lab book.**
+
+___
+
+This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0. 
+
+_version 0.2.1_
