@@ -25,11 +25,21 @@ These are mainly further practice in the skills you learned in _Absolute Beginne
 
 If you are a current undergraduate student at Plymouth University, you should complete the accompanying Psych:EL (Psychology: Experiential Learning) activity first, in order to generate your own set of data. If you're not, you can download sample data files [here](rtoworkdata.html).
 
+#### Part 1
+
 * [Face recognition experiment](face-recog.html). Means, _filtering data_, and a **bar graph**.
 
 * [Response compatibility experiment](response-compatibility.html). Means, standard deviations, and density plots.
 
+#### Part 2
+
 * [Facial attractiveness experiment](face-attract.html). Means, standard deivations, **inter-quartile range**, and _density plots_. 
+
+
+#### Part 3
+
+* [Risk-taking questionniare](risk-rat.html). Means, **combining data frames**, filtering data, and _density plots_.
+
 
 ____
 
@@ -54,13 +64,17 @@ ____
 
 Thanks to the following people for their feedback and advice on these materials:
 
+Jackie Andrade, Eleanor Andrade May,
 Patric Bach, Dale Barr, Chris Berry,
 Lisa DeBruine, 
 Charlotte Edmunds,
+Emily Filewood,
+Courtney Hooton,
 Angus Inkster,
 Jasmin Jones, Peter Jones, 
+Laith Kahn, 
 Chris Longmore,
-Jon May, Chris Mitchell, 
+Jon May, Chris Mitchell, Millie Monks,
 Matt Roser,
 Julian Stander, 
 Ben Whalley.

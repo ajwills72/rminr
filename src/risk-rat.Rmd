@@ -62,7 +62,7 @@ risk.me %>% group_by(group) %>% summarise(mean(rating))
 
 **NOTE:** Your output should look similar to that shown above, but the numbers will be different.
 
-Which types of risk-taking behaviours did you score highest on? And lowest on?
+_Which types of risk-taking behaviours did you score highest on? And lowest on?_
 
 ### Comparing your risk-taking behaviour to that of an older adult
 
@@ -72,7 +72,7 @@ People tend to be less likely to take risks as they get older. Is this the case 
 
 #### Combining data frames
 
-We can use the `rbind` (short for 'row bind') to combine two data frames, like this:
+We can use the `rbind` (short for 'row bind') command to combine two data frames, like this:
 
 ```{r risk_rbind}
 risk <- rbind(risk.me, risk.other)
@@ -81,19 +81,22 @@ risk <- rbind(risk.me, risk.other)
 #### Comparing two individuals on an overall score
 Now we can compare you and your older adult on your overall mean risk-taking score. We do this by grouping by the `who` variable in the `risk` _data frame_. If you get this right, your output will look a bit like this, although the exact numbers will be different:
 
-```{r risk_age, result='hide'}
+```{r risk_age}
 risk %>% group_by(who) %>% summarise(mean(rating))
 ```
 
-Who scores higher on risk taking -- you, or your older adult?
+_Who scores higher on risk taking -- you, or your older adult?_
 
 **Enter the exact risk-taking score for you and your older adult into your lab book**.
 
 ## Exploring everyone's data
 
-This part of the exercise can only be completed once sufficient number of people have completed the risk-taking questionnaire on Psych:EL, and got an older adult to complete it also. When this happens, you will be able to download everyone's data from Psych:EL as a CSV file. Download that file, and copy it into your RStudio project (the project you generated at the beginning of this exercise).
+This part of the exercise can only be completed once sufficient number of people have completed the risk-taking questionnaire on Psych:EL. When this happens, you will be able to download everyone's data from Psych:EL as a CSV file. Download that file, and copy it into your RStudio project (the project you generated at the beginning of this exercise).
 
 ### Load data
+
+**Relevant worksheet:** [Exploring data](exploring-incomes.html) 
+
 Load the _tidyverse_ package, and load your everyone's data.
 
 ```{r second-load, message=FALSE} 
@@ -106,6 +109,8 @@ risk.all <- read_csv("riskrat-all.csv")
 Look at the data by clicking on it in the _Environment_ tab in RStudio. You'll see it has the same columns as the the other data files, it's just has a lot more rows (because it contains a lot of participants).
 
 ### How do you compare to your peers?
+
+**Relevant worksheet:** [Group Differences](group-differences.html)
 
 #### Filtering
 
