@@ -1,4 +1,6 @@
 ## Make plausible-ish risk questionnaire data
+## Figures based on Blais & Weber (2006, JDM)
+## https://www.sas.upenn.edu/~baron/journal/06005/jdm06005.htm
 rm(list=ls())
 library(tidyverse)
 
