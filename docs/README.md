@@ -40,6 +40,7 @@ If you are a current undergraduate student at Plymouth University, you should co
 
 * [Risk-taking questionniare](risk-rat.html). Means, **combining data frames**, filtering data, and _density plots_.
 
+* [Brexit personalities](brexit.html). Means, filtering data, _summarising data_, density plots, effect size, Bayesian t-test, traditional t-test. 
 
 ____
 
