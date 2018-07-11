@@ -1,0 +1,98 @@
+---
+title: "Autobiographical memories"
+author: "Michael Verde, Andy Wills"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+## DEVELOPERS: Uncomment one option, as appropriate
+
+## Show only commands.
+## knitr::opts_chunk$set(echo = TRUE, message = FALSE, results='hide', fig.keep = 'none', comment=NA)
+
+## Show commands and ouptut.
+knitr::opts_chunk$set(echo = TRUE, comment=NA)
+```
+
+## Before you start...
+Before starting this exercise, you should have completed **all** the [Absolute Beginners'](index.html) workshop exercises. If not, take a look at those exercises before continuing. Each section below also indicates which of the earlier worksheets are relevant.
+
+## Getting the data into R
+**Relevant worksheet:** [Using RStudio projects](using-projects.html)
+
+You will need to complete the Psych:EL activity in your group of six before you can do this analysis. Once you have completed the activity, do this:
+
+1. Set up an RStudio project for this analysis. 
+
+2. Open [this CSV file](memories-blank.csv) with a spreadsheet application (e.g. LibreOffice Calc, Excel). Notice that each memory for each participant has its own row in the CSV file. Decide who is participant 1, 2, etc. in your group -- it doesn't matter which is which, as long as each person has a different participant number. 
+
+3. Enter the data from your group into the _period_ column, using these numbers:
+
+| Age of memory  | Number to enter |
+| -------------- | --------------- |
+| I was 0-3 years old  |  1       |
+| I was 3-6 years old  |  2       |
+| Any other time period         |  3       |
+| It was in the last 1-2 years  |  4    |
+| It was in the last year    |  5  |
+
+Enter the data from each participant, using one row for each memory. If some people recalled fewer than six memories, type `NA` for those memories (e.g. if a participant had only 5 memories, type `NA` for their memory 6.)
+
+4. Save your CSV file into your RStudio project folder, as `memories.csv`.
+
+5. Load the _tidyverse_ package, and then load your data into R.
+
+```{r init-load, message=FALSE} 
+library(tidyverse)
+mems <- read_csv("memories.csv")
+```
+
+## Making a histogram
+
+**Relevant worksheet:** [Exploring data](exploring-incomes.html). 
+
+Are memories from all time periods about equally common? Or are recent memories more common than remote ones? Or perhaps some other pattern? A histogram can help us to answer this question by visualising our data. You covered how to make a histogram in the _Exploring Data_ worksheet. In this case, our data of interest are in the `period` column of the `mems` data frame, so the command we use is:
+
+```{r hist}
+mems %>% ggplot(aes(period)) + geom_histogram(binwidth=.5)
+```
+
+### Explanation
+
+- Your histrogram will look something like the above, but the heights of the bars will likely be somewhat different. 
+
+- If you've used `NA` in your entry of your data, you'll get a warning message like the one shown above. This is normal, it's just telling you that there was some data it couldn't plot because you didn't give it a number (you gave it `NA` instead). 
+
+- The `binwidth` has been set to .5 here to make a gap between each bar in the histogram. Try changing `binwidth` to 1 to see what effect it has on your plot.
+
+
+## Improving the histogram
+
+Not bad...but it could be better. In particular, having the time periods labelled as 1-5 doesn't make for a very readable graph; it would be better if we used more meaningful labels. We can use the `scale_x_continuous` command of _ggplot_ to add our own labels to a histogram:
+
+```{r hist-labels}
+mems %>% ggplot(aes(period)) + 
+  geom_histogram(binwidth=.5) + 
+  scale_x_continuous(breaks = 1:5, labels = c("Fred", "Wilma", "Barney", "Betty", "Pebbles")) 
+```
+
+**Explanation:** The command `scale_x_continuous` contains the words `breaks` and `labels`. `breaks = 1:5` tells R we want a bar for each of the periods 1, 2, 3, 4 and 5. `labels` gives the label for each of those bars, in order. 
+
+### Exercise
+Modify the command above to add more meaningful labels to your histogram. If you get it right, it'll look something like this (without the words "example plot", of course):
+
+```{r hist-labels2, echo = FALSE, warning=FALSE}
+mems %>% ggplot(aes(period)) + 
+  geom_histogram(binwidth=.5) + 
+  scale_x_continuous(breaks = 1:5, 
+                     labels = c("Age 0-3", "Age 3-6",  "The rest", "1-2 yrs. ago", "< 1yr. ago")) +
+  annotate("text", x = Inf, y = -Inf, label = "EXAMPLE PLOT", col = "red", hjust = 5.1, vjust = -1.1)
+```
+
+**Use RStudio to export your graph as an Image, and upload it to your lab book.**
+
+___
+
+This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0. 
+
+_version 0.2.1_
