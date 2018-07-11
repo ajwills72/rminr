@@ -9,6 +9,8 @@ These files are in alphabetical order, by filename.
 - [faceattract.csv](data/faceattract.csv)
 - [facerec.csv](data/facerec.csv)
 
+- [memories.csv](data/memories.csv)
+
 - [respcompat.csv](data/respcompat.csv)
 - [riskrat.csv](data/riskrat.csv)
 - [riskrat-all.csv](data/riskrat-all.csv)
