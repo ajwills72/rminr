@@ -1,0 +1,63 @@
+---
+title: "Police lineup experiment"
+author: "Michael Verde, Andy Wills"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+## DEVELOPERS: Uncomment one option, as appropriate
+
+## Show only commands.
+## knitr::opts_chunk$set(echo = TRUE, message = FALSE, results='hide', fig.keep = 'none', comment=NA)
+
+## Show commands and ouptut.
+knitr::opts_chunk$set(echo = TRUE, comment=NA)
+```
+
+## Before you start...
+Before starting this exercise, you should have completed **all** the [Absolute Beginners'](index.html) workshop exercises. If not, take a look at those exercises before continuing. Each section below also indicates which of the earlier worksheets are relevant.
+
+## Getting the data into R
+**Relevant worksheet:** [Using RStudio projects](using-projects.html)
+
+In this excercise, you'll be analysing some data that has already been collected. To get this data into R, follow these steps:
+
+1. Set up an RStudio project for this analysis. 
+
+2. Save [this CSV file](lineup.csv) into your RStudio project folder.
+
+5. Load the _tidyverse_ package, and then load your data into R.
+
+```{r init-load, message=FALSE} 
+library(tidyverse)
+lup <- read_csv("lineup.csv")
+```
+
+### Inspect
+Look at the data by clicking on it in the _Environment_ tab in RStudio. 
+
+Each row is one participant in this simulated police line-up experiment. Each participant views a video of a simulated crime, then has to pick the criminal from one of four photographs of different people. The criminal in the video does not appear in any of those four photos, but the participants have not yet been told that. After they make their decision, some participants are told they picked the correct person; the rest are not told anything. Each participant then goes on to answer a series of questions (Q2-Q9, below). 
+
+_Will being told they made the right choice change peoples' answers to these questions?_
+
+| Column    | Description                             | Values             |
+| --------- | --------------------------------------- | ------------------ |
+| Sub       | Subject number                          | a number                   |
+| Cond      | Did the subject receive feedback on their decision? | "Feedback", "No Feedback" |
+| Q1        | The photograph chosen by the participant | A, B, C, or D     |
+| Q2        | "Would you be willing to testify in court?" | "Testify", "Not Tesitfy"        |
+| Q3        | "How was your view of the scene?"       | 0 - 100, higher numbers = better view |
+| Q4        | "How long did you see the thief's face? (in seconds)" |  a number    |
+| Q5        | "When you chose the photograph, how confident were you?" | 0 - 100, higher numbers = more confident |
+| Q6        | "Did the thief shove the victim?"   | Yes, No   |
+| Q7        | "How confident were you in your answer?" (about the shove) | 0 - 100, higher numbers = more confident |
+| Q8        | "Do you think the thief may be violent?"   | Yes, No   |
+| Q9        | "How confident were you in your answer?" (about the thief's violence) | 0 - 100, higher numbers = more confident |
+
+
+
+___
+
+This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0. 
+
+_version 0.2.1_

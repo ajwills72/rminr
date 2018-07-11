@@ -1,0 +1,172 @@
+Sub,Cond,Q1,Q2,Q3,Q4,Q5,Q6,Q7,Q8,Q9
+2515,No Feedback,A, Not Testify ,50,5,5,Yes,10,No,30
+2517,No Feedback,A, Not Testify ,50,2,60,No,90,No,60
+2518,Feedback,A, Not Testify ,60,2,65,No,50,No,60
+2521,No Feedback,A, Not Testify ,0,0,0,No,0,No,2
+2526,Feedback,A, Not Testify ,40,0,0,No,100,No,50
+2529,No Feedback,A, Not Testify ,25,3,0,No,100,No,90
+2535,No Feedback,A, Not Testify ,40,4,55,No,100,No,70
+2539,No Feedback,A, Not Testify ,50,3,50,No,75,No,80
+2540,Feedback,A, Not Testify ,0,0,0,No,0,No,10
+2545,No Feedback,A, Not Testify ,60,3,40,No,90,Yes,50
+2553,No Feedback,A, Not Testify ,65,10,50,Yes,35,Yes,20
+2559,No Feedback,A, Not Testify ,5,2,2,No,95,No,95
+2560,Feedback,A, Not Testify ,20,1,5,No,70,Yes,50
+2561,No Feedback,A, Not Testify ,10,2,25,No,75,No,50
+2563,No Feedback,A, Not Testify ,2,5,1,No,20,Yes,1
+2567,No Feedback,A, Not Testify ,80,15,30,Yes,40,No,30
+2571,No Feedback,A, Not Testify ,60,2,80,No,100,No,90
+2572,Feedback,A, Not Testify ,20,0,0,No,90,Yes,30
+2573,No Feedback,A, Not Testify ,60,4,20,No,90,No,90
+2577,No Feedback,A, Not Testify ,60,5,40,No,100,No,50
+2579,No Feedback,A, Not Testify ,40,5,30,No,60,No,25
+2581,No Feedback,A, Not Testify ,2,3,0,No,50,No,0
+2582,Feedback,A, Not Testify ,40,5,50,Yes,30,Yes,30
+2583,No Feedback,A, Not Testify ,20,3,10,No,0,Yes,30
+2584,Feedback,A, Not Testify ,86,3,60,Yes,50,Yes,70
+2586,Feedback,A, Not Testify ,0,2,50,Yes,30,Yes,40
+2590,Feedback,A, Not Testify ,30,1,10,No,70,Yes,25
+2592,Feedback,A, Not Testify ,50,2,0,No,100,No,50
+2593,No Feedback,A, Not Testify ,10,4,30,No,50,No,70
+2595,No Feedback,A, Not Testify ,50,2,30,No,100,No,80
+2596,Feedback,A, Not Testify ,15,1,10,Yes,20,Yes,20
+2600,Feedback,A, Not Testify ,50,1,60,Yes,100,Yes,60
+2602,Feedback,A, Not Testify ,10,0,0,No,0,No,0
+2608,Feedback,A, Not Testify ,40,2,30,No,80,No,80
+2610,Feedback,A, Not Testify ,2,0,0,No,80,No,80
+2615,No Feedback,A, Not Testify ,66,2,11,No,75,No,25
+2618,Feedback,A, Not Testify ,20,10,40,No,60,No,70
+2619,No Feedback,A, Not Testify ,30,7,5,Yes,40,No,60
+2621,No Feedback,A, Not Testify ,70,10,50,No,90,No,50
+2624,Feedback,A, Not Testify ,20,3,20,No,100,No,30
+2627,No Feedback,A, Not Testify ,40,5,30,No,80,No,80
+2633,No Feedback,A, Not Testify ,40,20,30,No,60,No,10
+2647,No Feedback,A, Not Testify ,45,1,30,No,90,No,70
+2652,Feedback,A, Not Testify ,80,4,50,Yes,70,Yes,90
+2653,No Feedback,A, Not Testify ,50,2,40,Yes,50,Yes,70
+2654,Feedback,A, Not Testify ,0,2,0,Yes,50,Yes,50
+2656,Feedback,A, Not Testify ,30,20,80,No,99,Yes,60
+2661,No Feedback,A, Not Testify ,55,2,0,No,80,Yes,50
+2665,No Feedback,A, Not Testify ,5,5,50,No,50,Yes,50
+2668,Feedback,A, Not Testify ,10,9,50,Yes,80,No,20
+2678,Feedback,A, Not Testify ,30,2,20,No,40,No,40
+2679,No Feedback,A, Not Testify ,40,5,20,No,0,Yes,20
+2681,No Feedback,A, Not Testify ,20,6,0,No,10,Yes,20
+2686,Feedback,A, Not Testify ,65,10,50,Yes,60,Yes,70
+2687,No Feedback,A, Not Testify ,50,10,40,No,90,No,60
+2688,Feedback,A, Not Testify ,40,8,65,No,50,Yes,40
+2689,No Feedback,A, Not Testify ,50,4,50,Yes,50,Yes,80
+2697,No Feedback,A, Not Testify ,10,3,10,Yes,20,Yes,50
+2698,Feedback,A, Not Testify ,40,7,20,No,100,No,40
+2699,No Feedback,A, Not Testify ,45,7,40,No,85,No,75
+2700,Feedback,A, Not Testify ,50,0,10,No,40,No,90
+2701,No Feedback,A, Not Testify ,60,10,40,No,50,No,60
+2703,No Feedback,A, Not Testify ,70,0,0,No,80,No,0
+2705,No Feedback,A, Not Testify ,33,0,15,Yes,80,No,60
+2706,Feedback,A, Not Testify ,15,2,10,No,0,No,0
+2525,No Feedback,B, Not Testify ,50,5,0,No,100,No,50
+2527,No Feedback,B, Not Testify ,30,3,10,No,10,Yes,50
+2538,Feedback,B, Not Testify ,90,0,70,No,90,No,80
+2552,Feedback,B, Not Testify ,20,4,0,No,100,Yes,50
+2558,Feedback,B, Not Testify ,0,0,0,No,90,Yes,0
+2576,Feedback,B, Not Testify ,40,4,0,No,0,No,0
+2607,No Feedback,B, Not Testify ,0,0,0,No,0,Yes,0
+2659,No Feedback,B, Not Testify ,48,5,60,Yes,50,Yes,30
+2667,No Feedback,B, Not Testify ,4,5,4,Yes,4,No,4
+2537,No Feedback,C, Not Testify ,10,3,0,No,80,Yes,20
+2546,Feedback,C, Not Testify ,10,0,0,No,100,No,50
+2549,No Feedback,C, Not Testify ,30,4,30,No,70,Yes,0
+2551,No Feedback,C, Not Testify ,50,5,25,No,80,No,50
+2565,No Feedback,C, Not Testify ,30,10,10,No,90,No,0
+2566,Feedback,C, Not Testify ,45,0,0,No,80,No,75
+2568,Feedback,C, Not Testify ,30,5,60,No,80,No,70
+2569,No Feedback,C, Not Testify ,10,2,10,No,70,No,20
+2575,No Feedback,C, Not Testify ,65,5,35,No,80,No,5
+2585,No Feedback,C, Not Testify ,20,10,20,No,100,No,50
+2589,No Feedback,C, Not Testify ,50,5,0,No,50,No,50
+2597,No Feedback,C, Not Testify ,50,10,50,No,80,No,80
+2601,No Feedback,C, Not Testify ,45,30,45,No,30,Yes,60
+2603,No Feedback,C, Not Testify ,30,2,0,Yes,70,Yes,60
+2609,No Feedback,C, Not Testify ,0,0,0,No,50,No,50
+2617,No Feedback,C, Not Testify ,30,1,20,No,70,No,60
+2623,No Feedback,C, Not Testify ,60,10,40,No,70,No,70
+2625,No Feedback,C, Not Testify ,20,10,50,No,90,No,90
+2626,Feedback,C, Not Testify ,70,7,45,No,90,No,60
+2630,Feedback,C, Not Testify ,50,10,90,No,60,Yes,25
+2636,Feedback,C, Not Testify ,30,3,20,Yes,30,Yes,30
+2641,No Feedback,C, Not Testify ,20,2,20,No,60,No,50
+2643,No Feedback,C, Not Testify ,0,2,0,No,60,No,60
+2644,Feedback,C, Not Testify ,79,15,30,No,70,No,67
+2645,No Feedback,C, Not Testify ,70,2,70,No,100,No,50
+2648,Feedback,C, Not Testify ,30,0,0,Yes,60,Yes,40
+2650,Feedback,C, Not Testify ,25,3,50,No,80,Yes,80
+2655,No Feedback,C, Not Testify ,60,20,40,No,60,No,60
+2676,Feedback,C, Not Testify ,35,4,75,No,100,No,80
+2683,No Feedback,C, Not Testify ,50,5,0,No,50,Yes,50
+2685,No Feedback,C, Not Testify ,50,3,60,No,100,No,80
+2704,Feedback,C, Not Testify ,50,10,10,No,85,Yes,50
+2707,No Feedback,C, Not Testify ,10,10,40,No,100,Yes,10
+2557,No Feedback,D, Not Testify ,50,4,75,No,75,No,90
+2616,Feedback,D, Not Testify ,65,3,65,No,100,No,20
+2513,No Feedback,A, Testify ,65,15,60,No,100,Yes,0
+2514,Feedback,A, Testify ,20,5,40,No,80,No,80
+2516,Feedback,A, Testify ,80,5,75,Yes,100,Yes,90
+2519,No Feedback,A, Testify ,40,10,60,No,50,Yes,50
+2520,Feedback,A, Testify ,50,5,80,No,75,No,60
+2524,Feedback,A, Testify ,30,10,50,No,50,Yes,70
+2530,Feedback,A, Testify ,50,20,85,No,85,Yes,75
+2532,Feedback,A, Testify ,40,1,80,No,40,No,50
+2536,Feedback,A, Testify ,60,5,50,No,50,Yes,50
+2542,Feedback,A, Testify ,5,50,20,No,0,Yes,10
+2547,No Feedback,A, Testify ,70,5,85,No,95,Yes,50
+2564,Feedback,A, Testify ,60,1,40,No,99,No,30
+2574,Feedback,A, Testify ,60,5,50,No,90,Yes,0
+2578,Feedback,A, Testify ,75,3,55,Yes,90,Yes,30
+2580,Feedback,A, Testify ,50,10,50,Yes,50,Yes,45
+2587,No Feedback,A, Testify ,50,30,100,Yes,60,Yes,50
+2591,No Feedback,A, Testify ,50,6,25,No,100,No,60
+2606,Feedback,A, Testify ,80,5,75,No,30,Yes,25
+2613,No Feedback,A, Testify ,100,10,100,No,100,Yes,10
+2620,Feedback,A, Testify ,70,10,80,No,90,No,60
+2622,Feedback,A, Testify ,75,10,80,Yes,100,Yes,75
+2629,No Feedback,A, Testify ,20,1,40,No,100,Yes,70
+2640,Feedback,A, Testify ,60,3,80,No,65,No,70
+2642,Feedback,A, Testify ,100,45,100,Yes,98,Yes,80
+2664,Feedback,A, Testify ,50,5,60,No,10,No,20
+2666,Feedback,A, Testify ,0,60,100,No,0,Yes,0
+2670,Feedback,A, Testify ,65,3,89,No,100,No,78
+2673,No Feedback,A, Testify ,60,40,80,No,70,No,90
+2682,Feedback,A, Testify ,30,3,3,Yes,10,Yes,0
+2694,Feedback,A, Testify ,80,5,70,No,80,Yes,60
+2702,Feedback,A, Testify ,60,7,75,Yes,50,Yes,45
+2523,No Feedback,B, Testify ,40,2,10,Yes,20,Yes,50
+2533,No Feedback,B, Testify ,30,10,0,Yes,40,,
+2548,Feedback,B, Testify ,50,3,75,No,100,Yes,10
+2638,Feedback,B, Testify ,70,3,90,Yes,70,Yes,60
+2657,No Feedback,B, Testify ,80,2,40,No,100,No,60
+2680,Feedback,B, Testify ,75,4,75,No,100,No,80
+2528,Feedback,C, Testify ,50,30,30,No,2,Yes,100
+2534,Feedback,C, Testify ,67,8,100,Yes,88,Yes,90
+2543,No Feedback,C, Testify ,60,3,60,No,90,No,70
+2544,Feedback,C, Testify ,80,6,60,Yes,50,No,60
+2550,Feedback,C, Testify ,25,10,40,No,40,Yes,60
+2556,Feedback,C, Testify ,85,7,75,Yes,50,Yes,60
+2570,Feedback,C, Testify ,70,2,75,Yes,80,Yes,80
+2588,Feedback,C, Testify ,40,2,70,No,80,No,60
+2598,Feedback,C, Testify ,40,3,50,No,25,Yes,70
+2611,No Feedback,C, Testify ,50,5,50,Yes,50,Yes,50
+2639,No Feedback,C, Testify ,75,60,10,No,10,Yes,70
+2662,Feedback,C, Testify ,60,2,50,No,50,No,60
+2669,No Feedback,C, Testify ,70,5,40,No,10,No,30
+2672,Feedback,C, Testify ,40,2,70,No,90,No,90
+2675,No Feedback,C, Testify ,30,10,50,Yes,20,No,70
+2677,No Feedback,C, Testify ,70,7,90,No,60,Yes,90
+2696,Feedback,C, Testify ,60,4,50,No,10,Yes,20
+2708,Feedback,C, Testify ,50,4,60,No,99,No,75
+2554,Feedback,D, Testify ,40,2,50,Yes,70,Yes,80
+2562,Feedback,D, Testify ,20,1,2,Yes,20,No,20
+2594,Feedback,D, Testify ,50,3,75,No,50,No,30
+2614,Feedback,D, Testify ,65,10,60,Yes,30,No,40
+2634,Feedback,D, Testify ,69,15,50,No,100,Yes,50
+2658,Feedback,D, Testify ,45,4,75,No,60,No,50
+2692,Feedback,D, Testify ,80,2,0,No,75,No,75
