@@ -27,6 +27,8 @@ If you are a current undergraduate student at Plymouth University, you should co
 
 #### Part 1
 
+* [Authobiographical memory study](memories.html). Entering data by hand, _histograms_.
+
 * [Face recognition experiment](face-recog.html). Means, _filtering data_, and a **bar graph**.
 
 * [Response compatibility experiment](response-compatibility.html). Means, standard deviations, and density plots.
