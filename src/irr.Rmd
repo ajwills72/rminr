@@ -1,0 +1,171 @@
+---
+title: "Inter-rater reliability"
+author: "Michaela Gummerum, Andy Wills"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+## DEVELOPERS: Uncomment one option, as appropriate
+
+## Show only commands.
+## knitr::opts_chunk$set(echo = TRUE, message = FALSE, results='hide', fig.keep = 'none', comment=NA)
+
+## Show commands and ouptut.
+knitr::opts_chunk$set(echo = TRUE, comment=NA)
+```
+
+## Before you start...
+Before starting this exercise, you should have completed **all** the previous [Absolute Beginners'](index.html) workshop exercises. Each section below indicates which of the earlier worksheets are particularly relevant.
+
+## Inter-rater reliability
+
+"What's the _inter-rater reliability_?" is a technical way of asking "How much do people agree?". If inter-rater reliabiltiy is high, they agree a lot. If it's low, they disagree a lot. If two people independently code some interview data, and their codes largely agree, then that's evidence that the coding scheme is _objective_ (i.e. is the same whichever person uses it), rather than _subjective_ (i.e. the answer depends on who is coding the data). Generally, we want our data to be objective, so it's important to establish that inter-rater reliabilty is high. This worksheet covers two ways of working out inter-rater reliabiltiy: percentage agreement, and Cohen's kappa.
+
+## Getting the data into R
+
+**Relevant worksheet:** [Using RStudio projects](using-projects.html)
+
+You and your partner must first complete the friendship interview coding exercise. You'll then get a CSV file that contains both your ratings. Set up an RStudio project for this analysis, and copy the CSV file into it. 
+
+If you were unable to complete the coding exercise, you can use this [example CSV file](data/irr.csv) instead. _You can only gain marks in your lab book for this exercise if you use your personal CSV file._
+
+## Exploring your data
+
+### Load
+**Relevant worksheet:** [Exploring data](exploring-incomes.html) 
+
+Load the _tidyverse_ package, and load your data.
+
+```{r init-load, message=FALSE} 
+library(tidyverse)
+friends <- read_csv("irr.csv")
+```
+
+**Note**: Everyone's CSV file will have a different name. For example, yours might be called `10435678irr.csv`. In the example above, you'll need to replace `irr.csv` with the name of your personal CSV file.
+
+### Inspect
+Look at the data by clicking on it in the _Environment_ tab in RStudio. Each row is one participant in the interviews you coded. Here's what each of the columns in the data set contain:
+
+| Column    | Description                             | Values             |
+| --------- | --------------------------------------- | ------------------ |
+| subj      | Anonymous ID number for the participant you coded           | a number        |
+| rater1    | How the first rater coded the participant's response | One of: "Shared Act", "Helping", "Trust", "Feelings" |
+| rater2    | How the second rater coded the particiapnt's response | as rater 1 |
+
+
+## Percentage agreement
+
+To what extent did you and your workshop partner agree on how each participant's response should be coded? The simplest way to answer this question is just to count up the number of times you gave the same answer. You're already looking at the data (you clicked on it in the _Enviornment_ tab in the previous step, see above), and you only categorized a few participants, so it's easy to do this by hand. 
+
+For example, you might have given the same answer for four out of the five participants. You therefore agreed on 80% of occasions. Your **percentage agreement** in this example was 80%. The number might be higher or lower for your workshop pair.
+
+For realistically-sized data sets, calculating percent agreement by hand would be tedious and error prone. In these cases, it would be better to get R to calculate it for you, so we'll practice on your current data set. We can do this in a couple of steps:
+
+### 1. Select the ratings
+
+**Relevant worksheet:** [Group differences](group-differences.html). 
+
+Your `friends` data frame contains not only your ratings, but also a list of participant numbers in the `subj` column. For the next step to work properly, we have to remove this column. We can do this using the `select` command. In the _Group Differences_ worksheet, you learned how to use the `filter` command to say which rows of a data frame you wanted to keep. The command `select` works in a similar way, except that it filters columns:
+
+```{r select, message=FALSE} 
+ratings <- friends %>% select(rater1, rater2)
+```
+
+In the command above, we take the `friends` data frame, select the `rater1` and `rater2` columns, and put them in a new data frame called `ratings`. 
+
+### 2. Calculate percentage agreement
+We can now use the `agree` command to work out percentage agreement. The `agree` command is part of the package `irr` (short for Inter-Rater Reliability), so we need to load that package first:
+
+```{r pc, message=FALSE} 
+library(irr)
+agree(ratings)
+```
+**NOTE**: If you get an error here, type `install.packages("irr")`, wait for the pacakge to finish installing, and try again. 
+
+The key result here is `%-agree`, which is your percentage agreement. The output also tells you how many subjects you rated, and the number of people who made ratings. The bit that says `Tolerance=0` refers to an aspect of percentage agreement not covered in this course. If you're curious about _tolerance_ in a percentage agreement calculation, type `?agree` into the Console and read the help file for this command.
+
+**Enter your percentage agreement into your lab book**.
+
+## Cohen's kappa
+
+One problem with the _percentage agreement_ measure is that people will sometimes agree purely by chance. For example, imagine your coding scheme had only two options (e.g. "Trust" or "Feelings"). Where there are two options then, just by random chance, we'd expect your percentage agreement to be around 50%. For example, imagine that for each participant, each rater flipped a coin, coding the response as "Trust" if the coin landed heads, and "Feelings" if it landed tails. 25% of the time both coins would come up heads, and 25% of the time both coins would come up tails. So, on 50% of occasions, the raters would agree, purely by chance. So, 50% agreement is not particularly impressive when there are two options.
+
+50% agreement is a lot more impressive if there are, say, six options. Imagine in this case that both raters roll a dice. One time in six they would get the same number. So, percentage agreement by chance when there are six options is 1/6 --- about 17% agreement. If two raters agree 50% of the time when using six options, that level of agreement is much higher than we'd expect by chance.
+
+[Jacob Cohen][1] thought it would be much neater if we could have a measure of agreement where zero always meant the level of agreement expected by chance, and 1 always meant perfect agreement. This can be achieved by the following sum: 
+
+_(P - C) / (100 - C)_
+
+where _P_ is the percentage agreement between the two raters, and _C_ is the percentage agreement we'd expect by chance. For example, say that in your coding exercise, you had a percentage agreement of 80%.  You were given four categories to use, so the percentage agreement by chance, if you were both just throwing [four-sided dice](https://upload.wikimedia.org/wikipedia/commons/0/0b/D%26D_Game_1.jpg), is 25%. This gives you an agreement score of:
+
+```{r ckhand}
+(80 - 25) / (100 - 25)
+```
+
+So, on a scale of zero (chance) to one (perfect), your agreement in this example was about 0.7 -- not bad!
+
+### Calculating Cohen's kappa
+
+Cohen's kappa is a measure of agreement that's calculated in a similar way to the above example. The difference between Cohen's kappa and what we just did is that Cohen's kappa also deals with situations where raters use some of the categories more than others. This affects the calculation of how likely it is they will agree by chance. 
+
+To calculate Cohen's kappa in R, we use the command `kappa2` from the `irr` package, like this: 
+
+```{r ckauto}
+kappa2(ratings)
+```
+
+The key result here is `Kappa` which is your Cohen's kappa value (in this example, it's about 0.74 -- your value may be higher or lower than this). The output also tells you how many subjects you rated, and the number of people who made ratings. The bit that says `Weights: unweighted` refers to an aspect of Cohen's kappa not covered in this course. If you're curious, type `?kappa2` into the Console and read the help file for this command.
+
+**Enter your Cohen's kappa into your lab book**.
+
+### Describing Cohen's kappa
+
+There are some words that psychologists sometimes use to describe the level of agreement between raters, based on the value of kappa they get. These words are:
+
+| Kappa | Level of agreement |
+| ----- | ------------------ |
+| < 0.21 | slight |
+| 0.21 - 0.40 | fair   |
+| 0.41 - 0.60 | moderate |
+| 0.61 - 0.80 | substantial |
+| 0.81 - 0.99 | almost perfect |
+| 1           | perfect |
+
+So, in the above example, there is _substantial_ agreement between the two raters. 
+
+This choice of words comes from an article by [Landis & Koch (1977)][2]. Their choice was based on personal opinion. 
+
+### Cohen's kappa and evidence
+
+**Relevant worksheet:** [Evidence](evidence.html). 
+
+Let's take another look at the output we just generated, because there are some bits we haven't talked about yet:
+
+```{r ckauto2, echo=FALSE}
+kappa2(ratings)
+```
+
+The `z` and `p-value` lines relate to a significance test, much like the ones you covered in the _Evidence_ worksheet. As we said back then, psychologists often misinterpret _p values_, so it's important to emphasise here that this _p value_ is **not**, for example, the probability that the raters agree at the level expected by chance. In fact, there is no way to explain this p value that is simple, useful and accurate. A Bayes Factor (see the _Evidence_ workshop) would have been more useful, and easier to interpret, but the `irr` package does not provide one. 
+
+By convention, if the _p value_ is less than 0.05, psychologists will generally believe you when you assert that the two raters agreed more than would be expected by chance. If the _p value_ is greater than 0.05, they will generally be skeptical. If you were writing a report, you could make a statement like:
+
+_The agreement between raters was substantial, κ = 0.74, and greater than would be expected by chance, Z = 3.04, p < .05._
+
+
+[1]:https://en.wikipedia.org/wiki/Jacob_Cohen_(statistician)
+[2]:https://www.jstor.org/stable/2529310?seq=1#page_scan_tab_contents
+
+
+____
+
+
+_Postcript: Why is it called "Cohen's kappa"?_
+
+The "Cohen" bit comes from its inventor, [Jacob Cohen][1]. Kappa (κ) is the Greek letter he decided to use to name his measure (others have used Roman letters, e.g. the 't' in 't-test', but measures of agreement, by convention, use Greek letters). The R command is `kappa2` rather than `kappa` because the command `kappa` also exits and does something very different, which just happens to use the same letter to represent it. It'd probably have been better to call the command something like `cohen.kappa`, but they didn't.
+
+___
+
+This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0. 
+
+_version 0.2.1_
+
