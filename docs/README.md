@@ -9,9 +9,11 @@
 
 * [Evidence](evidence.html). Introduction to p values. Traditional between-subjects t-test. Bayesian between-subjects t-test.
 
-* [Using RStudio projects](using-projects.html). Creating a new project. Using an R script. Analysing your own data. Needed for 
+* [Using RStudio projects](using-projects.html). Creating a new project. Using an R script. Analysing your own data. 
 
 * [Entering data by hand](entering-data-by-hand.html). Entering data into a spreadsheet. Saving data into your RStudio project.
+
+* [Inter-rater reliability](irr.html). Percentage agreement. Cohen's kappa. 
 
 * [Cheat sheet](cheat-sheet.html). Everything we've covered so far, condensed. 
 
