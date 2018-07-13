@@ -27,7 +27,7 @@ Before starting this exercise, you should have completed **all** the previous [A
 
 You and your partner must first complete the friendship interview coding exercise. You'll then get a CSV file that contains both your ratings. Set up an RStudio project for this analysis, and copy the CSV file into it. 
 
-If you were unable to complete the coding exercise, you can use this [example CSV file](data/irr.csv) instead. _You can only gain marks in your lab book for this exercise if you use your personal CSV file._
+If you were unable to complete the coding exercise, you can use this [example CSV file](irr.csv) instead. _You can only gain marks in your lab book for this exercise if you use your personal CSV file._
 
 ## Exploring your data
 
