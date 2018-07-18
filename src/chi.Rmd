@@ -1,0 +1,216 @@
+---
+title: "Relationships, part 1"
+author: "Michaela Gummerum, Andy Wills"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+## DEVELOPERS: Uncomment one option, as appropriate
+
+## Show only commands.
+## knitr::opts_chunk$set(echo = TRUE, message = FALSE, results='hide', fig.keep = 'none', comment=NA)
+
+## Show commands and ouptut.
+knitr::opts_chunk$set(echo = TRUE, comment=NA)
+```
+
+## Before you start...
+Before starting this exercise, you should have completed **all** the previous [Absolute Beginners'](index.html) workshop exercises. Each section below indicates which of the earlier worksheets are particularly relevant.
+
+## Getting the data into R
+
+**Relevant worksheet:** [Using RStudio projects](using-projects.html)
+
+You'll be provided with a CSV file before or during the workshop. Set up an RStudio project for this analysis, and copy the CSV file into it. 
+
+If you want to try out this worksheet without that data file, you can use this [example CSV file](chi.csv) instead. _You can only gain marks in your lab book for this exercise if you use the CSV file from the workshop_.
+
+## Exploring your data
+
+### Load
+**Relevant worksheet:** [Exploring data](exploring-incomes.html) 
+
+Load the _tidyverse_ package, and load your data.
+
+```{r init-load, message=FALSE} 
+library(tidyverse)
+friends <- read_csv("chi.csv")
+```
+
+**Note**: In the example above, you'll need to replace `chi.csv` with the name of the CSV file you just copied into your RStudio project.
+
+### Inspect
+Look at the data by clicking on it in the _Environment_ tab in RStudio. Each row is one participant in an interview about friendships. Here's what each of the columns in the data set contain:
+
+| Column    | Description                             | Values             |
+| --------- | --------------------------------------- | ------------------ |
+| subj      | Anonymous ID number of participant          | a number        |
+| age    | Age of the participant, in years | One of: 7, 9, 12, 15 |
+| gender | Gender of the participant        | One of: "male", "female"" |
+| culture    | Culture of participant | One of: "China", "Iceland", or "Russia" |
+| coded | How their interview response was coded | One of "Shared Act", "Helping", "Trust", "Feelings" |
+
+This is a large dataset comprising over 500 participants of different ages, genders, and cultures.
+
+## Frequency tables
+
+Let's start by looking at how often each of the coded responses (i.e. _Shared Activities, Helping, Trust, and Feelings_) appear in the interviews. We could do this by hand, but it would be slow and error prone. Instead, we use the `table` command in R to do it for us:
+
+```{r starting}
+table(friends$coded)
+```
+
+### Explanation of command
+
+Here's a step-by-step explanation of how the above command works. You'll need this in a moment to calculate some frequency tables for yourself.
+
+1. `table()` - This command counts how many times each thing occurs (in this case, how often each type of coded response occurs).
+
+2. `friends$coded` - We need to tell `table()` where to find the data we are interested in. In this case, it's the `coded` column of the `friends` _dataframe_ that we loaded earlier. We tell R this by typing `friends$coded`. Yes, that’s `$`, the same symbol as we use to indicate US Dollars. However, it doesn’t mean "dollars" in R. It means column. So, `friends$coded` means the `coded` column of the `friends` dataframe. 
+
+### Explanation of output
+
+R gives us a table, which reports how often each of the coded resposnes occurred in the data set. In the above example, we can see that the first two codes were used about twice as often as the second two codes. Your data may be different.
+
+### Exercise
+
+Now produce frequency tables for each of the other _variables_ in this _dataframe_ (i.e. `age`, `gender`, and `culture`). You do this by changing the command `table(friends$coded)` so that it now refers to a different column in the `friends` dataframe. Re-read the above _Explanation of command_ section if you're stuck.
+
+**Enter the command for creating a _frequency table for culture_ into your lab book.**
+
+## Contingency tables
+
+Do childrens' ideas about friendship differ across cultures? We can use the `table` command to look at this, too. We use it to produce a _frequency table_ for each of the different cultures in our sample, like this:
+```{r cont}
+cont <- table(friends$culture, friends$coded)
+cont
+```
+
+### Explanation of command
+Here's an explanation of each part of that command:
+
+1. `cont <-` Store this table with the name `cont`, so we can use it later. The command `<-` stores the thing on its right in the thing of its left. 
+
+1. `table(rows, columns)` - The R command for producing tables. We replace the word `rows` with the name of the variable we want to appear on the rows of the table, and we replace the word `columns` with the name of the variable we want to appear in the columns of the table.
+
+2. `friends$culture` - The `culture` column of the `friends` data frame. We've put this first in our `table` command, so `culture` appears as rows.
+
+3. `friends$coded` - The `coded` column of the `friends` data frame. This appears second in our `table` command, so `coded` appears as columns.
+
+### Explanation of output
+
+R gives us a table, showing how many of each response were made in each culture. This is called a _contingency table_. The name _contingency table_ comes from the word _contingent_, as in, for example "Getting your degree is _contingent_ on passing your exams". A contingency table gives the frequencies for one variable (e.g. the interview responses) _contingent_ on another variable (e.g. the culture of the participants).
+
+In our example output, close inspection of the contingency table reveals that the "Shared Activities" response is less common in Iceland than in the other countries. The "Trust" response is more common in Iceland than in the other countries. 
+
+So, in this case, it does look like childrens' conceptions of friendship vary between cultures. Of course, not everyone in the same culture responded the same way but, overall, some types of response are more or less likely in some cultures than others.
+
+## Mosaic plots
+
+Some people find it quite hard to notice these kinds of patterns in contingency tables, and the patterns are certainly harder to spot in a table than in a good visualization. The visualization we're going to use here is called a _mosaic plot_. The command to do this in R is
+
+```{r mosaic}
+mosaicplot(cont)
+```
+
+### Explanation of output
+
+It's called a _mosaic_ plot because it's made up of _tiles_. 
+
+In the above example, the _width_ of each tile represents the number of participants from each `culture`. We collected data from approximately the same number of people from each culture, so all tiles are approximately the same width.
+
+The _height_ of each tile is determined by the frequency of each of the responses (Feelings, Helping, etc.) within each culture -- the more common a response wihtin a particular culture, the taller the tile. 
+
+Looking at this mosaic plot, it's visually obvious that China and Russia are quite similar to each other, but that Iceland has more "Trust", and fewer "Shared Act", responses than the other countries. This is the same information as we got from looking at the contingency table, but (for most people) it's easier to see in a mosaic plot. 
+
+## Evidence
+
+So, it looks like there's some kind of relationship between culture and conceptions of friendship ... but how good is the evidence that this is a real result, and not just some kind of fluke we can put down to chance? As we covered in the _Evidence_ worksheet, the best way to answer this question is to calculate a Bayes Factor (BF). In R, we can calculate the Bayes Factor for a contingency table like this:
+
+```{r bf, message=FALSE}
+library(BayesFactor, quietly = TRUE)
+contingencyTableBF(cont, fixedMargin = "rows", sampleType = "indepMulti")
+```
+
+The Bayes Factor is reported on the third line, towards the right. The Bayes Factor in this example is about 112. This means it's over 100 times more likely that there is a relationship between culture and friendship concepts, than there isn't. 
+
+Psychologists generally agree to believe the relationship is real if the Bayes Factor exceeds 3, and generally agree to believe the relationship is _not_ real if the Bayes Factor is less than 0.33. So, in this example, we have pretty good evidence for the existence of a relationship.
+
+If you're curious about what the rest of the output means, see [more on Bayes Factors](more-on-bf.html).
+
+### Explanation of command
+
+1. The first line, `library(BayesFactor, quietly = TRUE)` loads the _BayesFactor_ package, which is a set of extra commands that allows R to calculate Bayes Factors.
+
+2. `contingencyTableBF()` - The command for calculating a BF (Bayes Factor) for a contingency table.
+
+3. `cont` - Our contingency table (we stored it in `cont` earlier on in this worksheet).
+
+4. `fixedMargin = "rows"` - The number of children sampled from each culture was decided by the experimenter. This means that the total of each row in the contingency table was known before the childrens' responses were coded. The jargon term for this is that the rows have _fixed marginal totals_. In contrast, the totals for each column were not known before the responses were coded, and would likely change a bit if a different sample was used. So, the columns do not have fixed marginal totals. In order to calculate the Bayes Factor, R needs to know whether it is the `rows` or the `cols` that are fixed. In this case, it is the rows.
+
+5. `sampleType = "indepMulti"` - If the rows are fixed and the columns are not (or vice versa), then the jargon term for the type of data you have is _independent multinomial_ data -- `indepMulti` for short. R can also deal with other types of data, but we don't cover them in this worksheet. If you're curious, type `?contingencyTableBF` for details on the other types of data handled by `contingencyTableBF`. 
+
+**Enter the Bayes Factor for your data into your lab book.** (The Bayes Factor for your data will likely be a bit different to the one above).
+
+### Traditional analysis
+
+There's a long history in psychology of performing a _contingency-table chi-square_ test to examine the level of evidence for a relationship. The results of such tests are widely misinterpreted by psychologists, but some still like to see them anyway. Here's how to calculate one for these data:
+
+```{r chi}
+chisq.test(cont)
+```
+
+The key result here is the `p-value`. It's important to emphasise that this _p value_ is **not** the probability that the observed relationship is due to chance. As we covered in the _Evidence_ worksheet, there is no way to explain this _p value_ that is simple, useful, and accurate. 
+
+Nonetheless, the convention is that if the _p value_ is less than 0.05, psychologists will generally believe you when your assert that the relationship is not due to chance. If the _p value_ is greater than 0.05, they will generally be skeptical. 
+
+The _p value_ in this example is very small, so has been reported in _standard form_, and is read as 1.393 x 10<sup>-5</sup>.  You would have been taught standard notation in school but, as a reminder, 1.393 x 10<sup>-5</sup> = .00001393. See this [BBC bitesize revision guide on standard form](https://www.bbc.com/education/guides/zxsv97h/revision) if you need a bit more explanation than that.
+
+The reported _p value_ is less than .05 in this example, and so psychologists will generally believe your result is real.
+
+### Reporting your results
+
+In addition to the _p value_, psychologists will generally record at least two further numbers in their articles. The first is the chi-square value, written as `X-squared` in the above output, but as X<sup>2</sup> in articles. 
+
+The second is the _degrees of freedom_ (`df` in the above output). In this case, _degrees of freedom_ relates to the size of the contingency table, and is the number of columns, minus one, multiplied by the number of rows, minus one (i.e. `(rows - 1) x (cols -1)`). 
+
+In you were writing up this analysis in a report, you would write something like:
+
+_The coded friendship concepts occured with different frequency across cultures, BF = 112, X<sup>2</sup>(6) = 32.4, p < .001. This relationship appeared to be mainly driven by Icelandic childrens' greater use of the Trust category, and lesser use of the Shared Activities category (see Table 1)._
+
+As discussed in the _Evidence_ worksheet, it is also important to report the method by which you calculated your Bayes Factor. So, somewhere in you report, you should say something like:
+
+_Bayes Factors were calculated assuming independent multinomial sampling, using the BayesFactor package (Morey & Rouder, 2018), within the R enviornment (R Core Team, 2018)._
+
+You can get the references for these citations by typing `citation("BayesFactor")` and `citation()`.
+
+## Exercise
+Each step in this exercise can be completed by slightly modifying a command you have already used. 
+
+1. Produce a contingency table that shows the relationship between gender and concepts of friendship in this data set. Do this by modifying `cont <- table(friends$culture, friends$coded)` appropriately. 
+
+If your modified command still uses `cont`, the commands you used before should now work without having to modify them. 
+
+2. Produce a mosaic plot from this contingency table. 
+
+3. Calculate the Bayes Factor for the relationship. **Enter your Bayes Factor into your lab book.**
+
+4. Peform a contingency chi-square test.
+
+## Ordered variables
+
+You may have noticed that this worksheet did not include Bayes Factor or chi-square calculations for the effect of the child's age. This is because these techniques, at least as covered in this worksheet, are intended for _unordered_ variables only. Culture is an unordered (aka. "nominal") variable because there is no order we can put China, Iceland and Russia in that is relevant to our investigation. Gender is also unordered. Age, however, is different; it has a clear order: 7, 9, 12, 15. It makes more sense to write the ages in this order than, for example, as: 12, 7, 9, 15. 
+
+It is not correct to use the contingency table Bayes Factor or chi-square techniques described here on age, or any other ordered (aka. "ordinal") data. For the analysis of ordered variables, see the next worksheet.
+
+
+
+
+
+
+___
+
+This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0. 
+
+_version 0.2.1_
+
