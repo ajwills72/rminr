@@ -60,6 +60,8 @@ Let's start by looking at how often each of the coded responses (i.e. _Shared Ac
 table(friends$coded)
 ```
 
+R gives us a table, which reports how often each of the coded resposnes occurred in the data set. In the above example, we can see that the first two codes were used about twice as often as the second two codes. Your data may be different.
+
 ### Explanation of command
 
 Here's a step-by-step explanation of how the above command works. You'll need this in a moment to calculate some frequency tables for yourself.
@@ -67,10 +69,6 @@ Here's a step-by-step explanation of how the above command works. You'll need th
 1. `table()` - This command counts how many times each thing occurs (in this case, how often each type of coded response occurs).
 
 2. `friends$coded` - We need to tell `table()` where to find the data we are interested in. In this case, it's the `coded` column of the `friends` _dataframe_ that we loaded earlier. We tell R this by typing `friends$coded`. Yes, that’s `$`, the same symbol as we use to indicate US Dollars. However, it doesn’t mean "dollars" in R. It means column. So, `friends$coded` means the `coded` column of the `friends` dataframe. 
-
-### Explanation of output
-
-R gives us a table, which reports how often each of the coded resposnes occurred in the data set. In the above example, we can see that the first two codes were used about twice as often as the second two codes. Your data may be different.
 
 ### Exercise
 
@@ -89,13 +87,15 @@ cont
 ### Explanation of command
 Here's an explanation of each part of that command:
 
-1. `cont <-` Store this table with the name `cont`, so we can use it later. The command `<-` stores the thing on its right in the thing of its left. 
+1. `cont <-` Store this table as `cont`, so we can use it later. The command `<-` stores the thing on its right in the thing on its left. 
 
-1. `table(rows, columns)` - The R command for producing tables. We replace the word `rows` with the name of the variable we want to appear on the rows of the table, and we replace the word `columns` with the name of the variable we want to appear in the columns of the table.
+2. `table(rows, columns)` - The R command for producing tables. We replace the word `rows` with the name of the variable we want to appear on the rows of the table, and we replace the word `columns` with the name of the variable we want to appear in the columns of the table.
 
-2. `friends$culture` - The `culture` column of the `friends` data frame. We've put this first in our `table` command, so `culture` appears as rows.
+3. `friends$culture` - The `culture` column of the `friends` data frame. We've put this first in our `table` command, so `culture` appears as rows.
 
-3. `friends$coded` - The `coded` column of the `friends` data frame. This appears second in our `table` command, so `coded` appears as columns.
+4. `friends$coded` - The `coded` column of the `friends` data frame. This appears second in our `table` command, so `coded` appears as columns.
+
+5. `cont` - Lastly, we type `cont` on its own to display the contingency table in the Console (clicking on `cont` in the Environment tab in RStudio won't work in this case).
 
 ### Explanation of output
 
@@ -119,7 +119,7 @@ It's called a _mosaic_ plot because it's made up of _tiles_.
 
 In the above example, the _width_ of each tile represents the number of participants from each `culture`. We collected data from approximately the same number of people from each culture, so all tiles are approximately the same width.
 
-The _height_ of each tile is determined by the frequency of each of the responses (Feelings, Helping, etc.) within each culture -- the more common a response wihtin a particular culture, the taller the tile. 
+The _height_ of each tile is determined by the frequency of each of the responses (Feelings, Helping, etc.) within each culture -- the more common a response within a particular culture, the taller the tile. 
 
 Looking at this mosaic plot, it's visually obvious that China and Russia are quite similar to each other, but that Iceland has more "Trust", and fewer "Shared Act", responses than the other countries. This is the same information as we got from looking at the contingency table, but (for most people) it's easier to see in a mosaic plot. 
 
@@ -162,7 +162,7 @@ chisq.test(cont)
 
 The key result here is the `p-value`. It's important to emphasise that this _p value_ is **not** the probability that the observed relationship is due to chance. As we covered in the _Evidence_ worksheet, there is no way to explain this _p value_ that is simple, useful, and accurate. 
 
-Nonetheless, the convention is that if the _p value_ is less than 0.05, psychologists will generally believe you when your assert that the relationship is not due to chance. If the _p value_ is greater than 0.05, they will generally be skeptical. 
+Nonetheless, the convention is that if the _p value_ is less than 0.05, psychologists will generally believe you when you assert that the relationship is not due to chance. If the _p value_ is greater than 0.05, they will generally be skeptical. 
 
 The _p value_ in this example is very small, so has been reported in _standard form_, and is read as 1.393 x 10<sup>-5</sup>.  You would have been taught standard notation in school but, as a reminder, 1.393 x 10<sup>-5</sup> = .00001393. See this [BBC bitesize revision guide on standard form](https://www.bbc.com/education/guides/zxsv97h/revision) if you need a bit more explanation than that.
 
@@ -178,6 +178,8 @@ In you were writing up this analysis in a report, you would write something like
 
 _The coded friendship concepts occured with different frequency across cultures, BF = 112, X<sup>2</sup>(6) = 32.4, p < .001. This relationship appeared to be mainly driven by Icelandic childrens' greater use of the Trust category, and lesser use of the Shared Activities category (see Table 1)._
 
+"Table 1" would be the contingency table you'd produced with the `table` command.
+
 As discussed in the _Evidence_ worksheet, it is also important to report the method by which you calculated your Bayes Factor. So, somewhere in you report, you should say something like:
 
 _Bayes Factors were calculated assuming independent multinomial sampling, using the BayesFactor package (Morey & Rouder, 2018), within the R enviornment (R Core Team, 2018)._
@@ -189,7 +191,7 @@ Each step in this exercise can be completed by slightly modifying a command you 
 
 1. Produce a contingency table that shows the relationship between gender and concepts of friendship in this data set. Do this by modifying `cont <- table(friends$culture, friends$coded)` appropriately. 
 
-If your modified command still uses `cont`, the commands you used before should now work without having to modify them. 
+If your modified command still uses `cont`, the commands you used before should now work without having to modify them:
 
 2. Produce a mosaic plot from this contingency table. 
 
@@ -197,12 +199,19 @@ If your modified command still uses `cont`, the commands you used before should 
 
 4. Peform a contingency chi-square test.
 
-## Ordered variables
+## Further notes
+
+### Ordered variables
 
 You may have noticed that this worksheet did not include Bayes Factor or chi-square calculations for the effect of the child's age. This is because these techniques, at least as covered in this worksheet, are intended for _unordered_ variables only. Culture is an unordered (aka. "nominal") variable because there is no order we can put China, Iceland and Russia in that is relevant to our investigation. Gender is also unordered. Age, however, is different; it has a clear order: 7, 9, 12, 15. It makes more sense to write the ages in this order than, for example, as: 12, 7, 9, 15. 
 
 It is not correct to use the contingency table Bayes Factor or chi-square techniques described here on age, or any other ordered (aka. "ordinal") data. For the analysis of ordered variables, see the next worksheet.
 
+### Interpreting large contingency tables
+
+The Bayes Factor, and chi-square, analyses only tell you that there is some kind of relationship between your two variables (in this example)
+
+### Effect size for contingency tables
 
 
 
