@@ -15,6 +15,8 @@
 
 * [Inter-rater reliability](irr.html). Percentage agreement. Cohen's kappa. 
 
+* [Relationships](chi.html). Frequency and contingency tables. Mosaic plots. Traditional chi-square test. Bayesian test. 
+
 * [Cheat sheet](cheat-sheet.html). Everything we've covered so far, condensed. 
 
 * [Reasons to use R](why-r-student.html). Why this course uses R to analyse data.
@@ -71,6 +73,7 @@ Thanks to the following people for their feedback and advice on these materials:
 
 Jackie Andrade, Eleanor Andrade May,
 Patric Bach, Dale Barr, Chris Berry,
+Laura Charlton,
 Lisa DeBruine, 
 Charlotte Edmunds,
 Emily Filewood,
@@ -80,7 +83,7 @@ Jasmin Jones, Peter Jones,
 Laith Kahn, 
 Chris Longmore,
 Jon May, Chris Mitchell, Millie Monks,
-Matt Roser,
+Charlie Reynolds, Matt Roser,
 Julian Stander, 
 Ben Whalley.
 

@@ -1,0 +1,157 @@
+---
+title: "More on relationships"
+author: "Michaela Gummerum, Andy Wills"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+## DEVELOPERS: Uncomment one option, as appropriate
+
+## Show only commands.
+## knitr::opts_chunk$set(echo = TRUE, message = FALSE, results='hide', fig.keep = 'none', comment=NA)
+
+## Show commands and ouptut.
+knitr::opts_chunk$set(echo = TRUE, comment=NA)
+```
+
+```{r init-load,echo = FALSE, message=FALSE} 
+library(tidyverse)
+library(BayesFactor, quietly = TRUE)
+friends <- read_csv("chi.csv")
+```
+
+This worksheet contains information you don't strictly need for the workshop, but which you may find useful when applying these skills later on.
+
+## Contents
+
+- [Ordered variables](#order)
+- [Bayes Factor analysis](#bf)
+- [Interpreting large contingency tables](#large)
+- [Effect size for contingency tables](#effect)
+
+<a name="order"></a>
+
+## Ordered variables
+
+You may have noticed that the _Relationships_ worksheet did not include Bayes Factor or chi-square calculations for the effect of the child's age. This is because these techniques, at least as covered in this worksheet, are intended for _unordered_ variables only. Culture is an unordered (aka. "nominal") variable because there is no order we can put China, Iceland and Russia in that is relevant to our investigation. Gender is also unordered. Age, however, is different; it has a clear order: 7, 9, 12, 15. It makes more sense to write the ages in this order than, for example, as: 12, 7, 9, 15. 
+
+It is not correct to use the Bayes Factor or chi-square techniques described in the _Relationships_ worksheet on age, or any other ordered (aka. "ordinal") data. For the analysis of ordered variables, see the next worksheet.
+
+<a name="bf"></a>
+
+## Bayes Factor analysis
+
+In the _Relationships_ worksheet, you ran the following analysis.
+
+```{r bf, message=FALSE}
+cont <- table(friends$culture, friends$coded)
+cont
+contingencyTableBF(cont, fixedMargin = "rows", sampleType = "indepMulti")
+```
+
+### Further explanation of command
+Here's a more detailed explanation of the part of the command we skimmed over in the _Relationships_ worksheet:
+
+`fixedMargin = "rows"` - The number of children sampled from each culture was decided by the experimenter. This means that the total of each row in the contingency table was known before the childrens' responses were coded. The jargon term for this is that the rows have _fixed marginal totals_. In contrast, the totals for each column were not known before the responses were coded, and would likely change a bit if a different sample was used. So, the columns do not have fixed marginal totals. In order to calculate the Bayes Factor, R needs to know whether it is the `rows` or the `cols` that are fixed. In this case, it is the rows.
+
+`sampleType = "indepMulti"` - If the rows are fixed and the columns are not (or vice versa), then the jargon term for the type of data you have is _independent multinomial_ data -- `indepMulti` for short. R can also deal with other types of data, but we don't cover them in this worksheet. The _Examples_ section of [Jamil et al. (2017)](https://link.springer.com/article/10.3758/s13428-016-0739-8) explains the four options that are available, and give examples of the sorts of data each is used for. 
+
+
+### Further explanation of output
+
+`Bayes factor analyis` - We're doing a Bayes Factor analysis!
+
+`[1] Non-indep.` - This Bayes Factor assesses _non-independence_, e.g. that friendship concepts and culture are not independent, they are related.
+
+`(a=1)` - In order to calculate a Bayes Factor, R has to make some assumptions. By setting `a` to 1, you are saying that, prior to collecting the data, you would have expected every number in the contingency table to be about the same as every other number. This is sometimes called an _uninformative prior_ because it's basically saying you knew nothing about how these data were likely to turn out before you collected them. This is often a bit unrealistic, but we use it here because it's relatively simple. 
+
+`112.2798` - The Bayes Factor (i.e. the main result of this analysis)
+
+`±0%` - Basically a confidence interval on the Bayes Factor. It's 0% here because we have so much data, but with smaller samples we might see something like `20 ±5%`, which would means the Bayes Factor is about 20, give or take 5%. So, it's between 19 and 21.
+
+`Against denominator:` - This tells you that the null hypothesis is the denominator of the fraction that is used to calculate the Bayes Factor. So, in other words, you're getting BF~10~ rather than BF~01~ -- see the [Evidence](evidence.html) worksheet.
+
+`Null, independence, a = 1` - This tells you that the null hypothesis is that the two variables (e.g. culture and friendship response) are _independent_ (i.e. there is no relationship between them). `a = 1` means the same as it did when we last saw it (see above).
+
+`Bayes factor type: BFcontingencyTable,` - This reminds you which command you ran.
+
+`independent multinomial`  - This reminds you what type of data you assumed (see `sampleType`, above.)
+
+<a name="large"></a>
+
+## Interpreting large contingency tables
+
+The Bayes Factor, and chi-square, analyses only tell you that there is some kind of relationship between your two variables. They don't tell you what part of the contingency table is driving that relationship. 
+
+For example, in the contingency table above, it looks likes the relationship is mainly being driven by the Icelandic childrens' different use of the Trust and Shared Act categories. However, the BF and X<sup>2</sup> analyses don't tell you this, they just tell you there's a relationship of some sort. 
+
+In you want to directly test your hyopthesis, you must reduce your contingency table down to just the relevant rows and columns. So, first, you'd filter to just Shared Activities and Trust, using the `filter` command covered in the _Group Differences_ worksheet:
+
+```{r cutdown}
+ice.trust <- friends %>% filter(coded == "Shared Act" | coded == "Trust")
+```
+
+If you click on `ice.trust` in the _Enviornment_ tab of RStudio, you'll see that we now only have these two types of responses.
+
+You also need to simply the data so it's just Iceland verus Other. We can use the `mutate` command to do this, which we haven't covered yet, but will cover in a later worksheet (_link to be inserted when worksheet is written_).
+
+```{r cutdown2}
+ice.trust <- ice.trust %>% mutate( cult2 = ifelse(culture == "Iceland", "Icleand", "Other"))
+```
+
+If you click on `ice.trust` in the _Enviornment_ tab of RStudio, you'll see that we have a new column called `cult2` that classifies countries as `Iceland` or `Other`. 
+
+We can now re-do our analysis on this smaller contingency table:
+
+```{r bf2, message=FALSE}
+cont <- table(ice.trust$cult2, ice.trust$coded)
+cont
+contingencyTableBF(cont, fixedMargin = "rows", sampleType = "indepMulti")
+```
+
+The Bayes Factor for the analysis of this smaller table is well over 3, so we conclude that indeed Icelandic children differ from the other cultures we investigated on their use of the Shared Act and Trust categories. 
+
+<a name="effect"></a>
+
+## Effect size for contingency tables
+
+In the _Group Differences_ worksheet, we talked about effect size. For a difference between groups, the effect size is the difference in the group means, divided by the standard deviation. It gives a sense of how large the between-group effect is, relative to the within-group variability. We used the `cohen.d()` command to calculate it. 
+
+We can also calculate effect size for contingency tables. The most commonly used measure in this case Cramer's Phi, which ranges between zero and one. We use the `cramer` command in the _sjstats_ package to calculate it:
+
+```{r phi0}
+library(sjstats)
+cont
+cramer(cont)
+```
+**Note:** If you get an error here, try installing the package, `install.packages("sjstats")`
+
+In this example, Cramer's Phi is about 0.34. For a contingency table that has 2 rows and 2 columns, this is conventionally described as a "medium" effect size (with 0.1 being "small" and 0.5 being "large"). For larger tables, see this [website](http://www.real-statistics.com/chi-square-and-f-distributions/effect-size-chi-square/).
+
+Where there is no within-group variability, Cramer's Phi is 1:
+
+```{r phi1, echo=FALSE}
+cont[] <- rbind(c(20,0), c(0,40))
+cont
+```
+```{r phi1a}
+cramer(cont)
+```
+
+Where there no between-group variability, Cramer's Phi is zero:
+
+```{r phi2, echo=FALSE}
+cont[] <- rbind(c(10,10), c(20,20))
+cont
+```
+
+```{r phi2a}
+cramer(cont)
+```
+
+___
+
+This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0. 
+
+_version 0.2.1_
+

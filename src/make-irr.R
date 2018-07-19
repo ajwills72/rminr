@@ -1,3 +1,8 @@
+### Frequency/chi-saure data set on friendship
+
+
+
+
 ## IRR data set on friendship
 ## Categories from Gummerum & Keller (2008)
 library(tidyverse)
