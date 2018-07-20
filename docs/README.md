@@ -25,7 +25,7 @@
 
 ## Putting R to work
 
-These are mainly further practice in the skills you learned in _Absolute Beginners'_. Where the exercises contain completely new skills, these are shown in **bold**. Where the excercises extend a skill you've already been taught, these are shown in _italics_.
+These are mainly further practice in the skills you learned in _Absolute Beginners'_. Where the exercises contain completely new skills, these are shown in **bold**. Where the excercises extend a skill you've already been taught, these are shown in _italics_. The exercises are somewhat graded in difficulty, with Part 1 being the easiest and Part 3 containing some harder exercises. 
 
 If you are a current undergraduate student at Plymouth University, you should complete the accompanying Psych:EL (Psychology: Experiential Learning) activity first, in order to generate your own set of data. If you're not, you can download sample data files [here](rtoworkdata.html).
 
@@ -41,12 +41,13 @@ If you are a current undergraduate student at Plymouth University, you should co
 
 * [Facial attractiveness experiment](face-attract.html). Means, standard deivations, **inter-quartile range**, and _density plots_. 
 
-
 #### Part 3
 
 * [Risk-taking questionniare](risk-rat.html). Means, **combining data frames**, filtering data, and _density plots_.
 
 * [Brexit personalities](brexit.html). Means, filtering data, _summarising data_, density plots, effect size, Bayesian t-test, traditional t-test. 
+
+* [Police lineup](lineup.html). Contingency table, mosaic plot, Bayesian contingency test, means, density plot, Bayesian t-test
 
 ____
 
