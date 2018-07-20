@@ -1,0 +1,12 @@
+## Default set by github
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+## More R stuff
+.Rproj
+## Temp files
+*~
+## Stuff specific to structure of this site
+src/*.html
+
