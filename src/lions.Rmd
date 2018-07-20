@@ -1,0 +1,133 @@
+---
+title: "Animal behaviour"
+author: "Phil Gee, Andy Wills"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+## DEVELOPERS: Uncomment one option, as appropriate
+
+## Show only commands.
+## knitr::opts_chunk$set(echo = TRUE, message = FALSE, results='hide', fig.keep = 'none', comment=NA)
+
+## Show commands and ouptut.
+knitr::opts_chunk$set(echo = TRUE, comment=NA)
+```
+
+## Before you start...
+Before starting this exercise, you should have completed **all** the relevant [Absolute Beginners'](index.html) workshop exercises. Each section below indicates which of the earlier worksheets are relevant.
+
+## Getting the data into R
+
+**Relevant worksheet:** [Using RStudio projects](using-projects.html)
+
+You and your partner must first complete the behaviour coding exercise. You'll then get a CSV file that contains both your ratings. Set up an RStudio project for this analysis, and copy the CSV file into it. 
+
+If you were unable to complete the coding exercise, you can use this [example CSV file](data/lions.csv) instead. _You can only gain marks in your lab book for this exercise if you use your personal CSV file._
+
+## Exploring your data
+
+### Load
+**Relevant worksheet:** [Exploring data](exploring-incomes.html) 
+
+Load the _tidyverse_ package, and load your data.
+
+```{r init-load, message=FALSE} 
+library(tidyverse)
+lions <- read_csv("lions.csv")
+```
+
+**Note**: Everyone's CSV file will have a different name. In the example above, you'll need to replace `lions.csv` with the name of your personal CSV file.
+
+### Inspect
+Look at the data by clicking on it in the _Environment_ tab in RStudio. Each row is one time point in the video you coded. Here's what each of the columns in the data set contain:
+
+| Column    | Description                             | Values             |
+| --------- | --------------------------------------- | ------------------ |
+| time      | Time point           | 1 - 10        |
+| period    | How long before feeding time? (in minutes) | 10 or 180 | 
+| motion.r1 | Rater 1's coding of the animal's motion at each time point | In the example file, you'll find: "pacing", "sleeping", "standing", "lying", "running". Your codes may be different |
+| motion.r2 | Rater 2's coding of the animal's motion at each time point | as above |
+| loc.r1    | Rater 1's coding of the animal's location at each time point |  In the example file, you'll find: "top left", "top right", "bottom left", "bottom right". Your codes may be different |
+| loc.r2    | Rater 2's coding of the animal's location at each time point |  as above |
+
+
+## Percentage agreement
+
+**Relevant worksheet:** [Inter-rater reliability](irr.html) 
+
+To what extent did you and your workshop partner agree on how each behaviour should be coded? As we covered in the _Inter-rater reliability_ worksheet, to look at this, we first have to `select` the relevant columns of the data frame. For example, to look at inter-rater reliability for the _motion_ category, we select:
+
+```{r select, message=FALSE} 
+motion <- lions %>% select(motion.r1, motion.r2)
+```
+
+We can now use the `agree` command to work out percentage agreement:
+
+```{r pc, message=FALSE} 
+library(irr)
+agree(motion)
+```
+**NOTE**: If you get an error here, type `install.packages("irr")`, wait for the pacakge to finish installing, and try again. 
+
+The key result here is `%-agree`, which is your percentage agreement. The term `Subjects` here is a bit misleading, it doesn't mean the number of animals you observed (this data file contains your ratings of one animal), it means the number of time points you recorded an observation for. 
+
+**Enter the percentage agreement for your motion and location codings into your lab book**.
+
+## Cohen's kappa
+
+One problem with the _percentage agreement_ measure is that people will sometimes agree purely by chance. Jacob Cohen thought it would be much neater if we could have a measure of agreement where zero always meant the level of agreement expected by chance, and 1 always meant perfect agreement. To calculate his mesaure, Cohen's kappa, in R we use the command `kappa2`: 
+
+```{r ckauto}
+kappa2(motion)
+```
+
+**Enter the Cohen's kappa values for your motion and location codings into your lab book.**
+
+## Behaviour and feeding time
+
+**Relevant worksheet:** [Relationships](relationships.html) 
+
+Does the lion behave differently when it's close to feeding time? To look at this, we need to calculate the frequency of each behaviour at our two time periods (10 minutes before feeding, and 180 minutes before feeding). You can use the `table` command we learned in the _Relationships_ worksheet to do this, but you're going to have to choose which behaviour, and which of your two raters, to look at. If you choose "motion" and rater 2, the commands would be:
+
+```{r cont}
+cont <- table(lions$period, lions$motion.r2)
+cont
+```
+
+### Bar chat
+
+**Relevant worksheet:** [Face recognition](face-recog.html) 
+
+To visualise this, we're going to use a bar chart. We covered bar charts in the _Face recognition_ worksheet; here we're going to extend that example to create a bar chart that shows our two different time periods on the same axes. 
+
+```{r bars}}
+df <- data.frame(cont)
+colnames(df) <- c("Period", "Behaviour", "Frequency")
+df %>% ggplot(aes(x = Behaviour, y = Frequency, fill = Period)) + geom_col(position="dodge")
+```
+
+In this example, we can see that the lion was lying down about as often in the two time periods, but was standing more 10 minutes before feeding time than 180 minutes before feeding time. Your data may be different.
+
+### Explanation of command
+
+This graph command goes a bit beyond what we've covered in previous worksheets, so here's an explanation of how the new bits work:
+
+`df <- data.frame(cont)` - A _data frame_ is the standard way R stores data (e.g. `lions` is a data frame). The `ggplot` commands expects to get a data frame, and gets upset if it gets something else, like a contingency table. So, the first thing we do is make a data frame version of `cont` (our contingency table), and give it a name (`df` in this case). 
+
+If you click on `df` in the _Environment_ tab of RStudio, you'll see that the rows of the contingency table have been called "Var1" and the columns have been called "Var2". These are not very meaningful labels, so we use the `colnames` command (short for "column names") to give them more meaningful names. This will make our graph clearer. We do this using the command: `colnames(df) <- c("Period", "Behaviour", "Freq")`.
+
+`ggplot(aes(x = Behaviour, y = Freq, fill = Period))` - As in previous bar graphs you've made, you need to tell `ggplot` which data is on the x axis, and which is on the y axis. The new bit here is that we also tell `ggplot` to produce two different colours of bars, with the colour depending on `Period`. 
+
+`geom_col(position="dodge")` - As before, `geom_col` is the command for a "column" plot (aka. a bar chart). The new part here is `position="dodge"`; this tells `ggplot` that you want the two different colours of bars to be placed side-by-side, rather than directly on top of each other (i.e. you want them to "dodge" each other).
+
+### Exercise
+
+**Pick one of your coding categories (e.g. motion, or location), and produce a mosaic plot for one of your raters. Use RStudio to export that plot as an Image, and upload it to your lab book.**
+
+___
+
+This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0. 
+
+_version 0.2.1_
+
