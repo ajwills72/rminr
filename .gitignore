@@ -4,7 +4,7 @@
 .RData
 .Ruserdata
 ## More R stuff
-.Rproj
+*.Rproj
 ## Temp files
 *~
 ## Stuff specific to structure of this site
