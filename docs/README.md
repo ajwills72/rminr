@@ -43,11 +43,13 @@ If you are a current undergraduate student at Plymouth University, you should co
 
 #### Part 3
 
-* [Risk-taking questionniare](risk-rat.html). Means, **combining data frames**, filtering data, and _density plots_.
-
 * [Brexit personalities](brexit.html). Means, filtering data, _summarising data_, density plots, effect size, Bayesian t-test, traditional t-test. 
 
+* [Creativity and the environment](green.html). Means, density plots, effect size, Bayesian t-test.
+
 * [Police lineup](lineup.html). Contingency table, mosaic plot, Bayesian contingency test, means, density plot, Bayesian t-test
+
+* [Risk-taking questionniare](risk-rat.html). Means, **combining data frames**, filtering data, and _density plots_.
 
 ____
 
