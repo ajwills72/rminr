@@ -43,6 +43,8 @@ If you are a current undergraduate student at Plymouth University, you should co
 
 #### Part 3
 
+* [Animal Behaviour](lions.html). Percentage agreement, Cohen's kappa, contingency tables, _car charts_.
+
 * [Brexit personalities](brexit.html). Means, filtering data, _summarising data_, density plots, effect size, Bayesian t-test, traditional t-test. 
 
 * [Creativity and the environment](green.html). Means, density plots, effect size, Bayesian t-test.
