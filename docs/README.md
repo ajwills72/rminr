@@ -17,6 +17,8 @@
 
 * [Relationships](chi.html). Frequency and contingency tables. Mosaic plots. Traditional chi-square test. Bayesian test. 
 
+* [Placeholder A](https://upload.wikimedia.org/wikipedia/commons/9/9e/Bermuda_Triangle_he.jpg). Correlation worksheet, not yet written.
+
 * [Cheat sheet](cheat-sheet.html). Everything we've covered so far, condensed. 
 
 * [Reasons to use R](why-r-student.html). Why this course uses R to analyse data.
@@ -37,13 +39,21 @@ If you are a current undergraduate student at Plymouth University, you should co
 
 * [Response compatibility experiment](response-compatibility.html). Means, standard deviations, and density plots.
 
+* [Placeholder B](https://upload.wikimedia.org/wikipedia/commons/9/9e/Bermuda_Triangle_he.jpg). Not yet written.
+
+* [Placeholder C](https://upload.wikimedia.org/wikipedia/commons/9/9e/Bermuda_Triangle_he.jpg). Not yet written.
+
+* [Placeholder D](https://upload.wikimedia.org/wikipedia/commons/9/9e/Bermuda_Triangle_he.jpg). Not yet written.
+
 #### Part 2
 
 * [Facial attractiveness experiment](face-attract.html). Means, standard deivations, **inter-quartile range**, and _density plots_. 
 
+* [Placeholder E](https://upload.wikimedia.org/wikipedia/commons/9/9e/Bermuda_Triangle_he.jpg). Not yet written.
+
 #### Part 3
 
-* [Animal Behaviour](lions.html). Percentage agreement, Cohen's kappa, contingency tables, _car charts_.
+* [Animal Behaviour](lions.html). Percentage agreement, Cohen's kappa, contingency tables, _bar charts_.
 
 * [Brexit personalities](brexit.html). Means, filtering data, _summarising data_, density plots, effect size, Bayesian t-test, traditional t-test. 
 
@@ -52,6 +62,9 @@ If you are a current undergraduate student at Plymouth University, you should co
 * [Police lineup](lineup.html). Contingency table, mosaic plot, Bayesian contingency test, means, density plot, Bayesian t-test
 
 * [Risk-taking questionniare](risk-rat.html). Means, **combining data frames**, filtering data, and _density plots_.
+
+* [Placeholder F](https://upload.wikimedia.org/wikipedia/commons/9/9e/Bermuda_Triangle_he.jpg). Activity by not yet written.
+
 
 ____
 
