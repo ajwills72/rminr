@@ -24,7 +24,7 @@ In this excercise, you'll be analysing some data that has already been collected
 
 1. Set up an RStudio project for this analysis. 
 
-2. Save [this CSV file](lineup.csv) into your RStudio project folder.
+2. Save [this CSV file](data/lineup.csv) into your RStudio project folder.
 
 5. Load the _tidyverse_ package, and then load your data into R.
 
@@ -54,7 +54,79 @@ _Will being told they made the right choice change peoples' answers to these que
 | Q8        | "Do you think the thief may be violent?"   | Yes, No   |
 | Q9        | "How confident were you in your answer?" (about the thief's violence) | 0 - 100, higher numbers = more confident |
 
+## Testifying in court
 
+**Relevant worksheet:** [Relationships](chi.html), [Evidence](evidence.html)
+
+Will witnesses be more likely to testify in court if they are told they are right? We can look at this question with the data set you just loaded. Looking at the `lup` data frame, the column `Cond` tells us whether each participant was given feedback or not. The `Q2` column tells us whether they said they would be willing to testify in court or not. Both of these variables have unordered ("nominal") data, so the appropriate form of analysis here is a contingency table. As we covered in the _Relationships_ worksheet, we produce a contingency table using the `table` command:
+
+```{r table}
+cont <- table(lup$Cond, lup$Q2)
+cont
+```
+
+Often, it's easier to see what's going on in a contingency table if we draw a mosaic plot:
+
+```{r mosaic}
+mosaicplot(cont)
+```
+
+It looks like, with feedback, people are about 50:50 on whether they would testify. Without feedback, a large majority would not testify.
+
+Is this a real effect, or could it just be down to chance? As we covered in the _Relationships_ worksheet, the best way to look at this is with a Bayesian test. We use the `cont` contingency table we generated above:
+
+```{R bf,message=FALSE}
+library(BayesFactor, quietly = TRUE)
+contingencyTableBF(cont, sampleType = "indepMulti", fixedMargin = "rows" )
+```
+
+We've set `fixedMargin = "rows"` because the rows of the contingency table represent the groups created by the experimenter (_Feedback_ vs. _No Feedback_). 
+
+The Bayes Factor here is about 1200, so it's over a thousand times more likely there is a real difference, than there isn't. 
+
+## Did the thief shove the victim?
+
+Now do the same analyses as above, but on question 6, "Did the thief shove the victim?". To do this you change the command `cont <- table(lup$Cond, lup$Q2)` so that you get a contingency table for question 6. You can then re-run the commands above to get the answers. 
+
+**Enter the Bayes Factor for question 6 into your lab book.**
+
+Using the convention that there is a difference if BF > 3, there isn't a difference if BF < 0.33, and if it's between 0.33 and 3, we're unsure, select **difference, no difference, or unsure**, in your lab book.
+
+## How was your view of the scene?
+
+**Relevant worksheet:** [Group Differences](group-differences.html), [Evidence](evidence.html)
+
+Did participants think there view was better if they were told they made the correct decision? In this case, we have one ordered variable (`Q3`, their rating of their view on a 1-100 scale), and one unordered variable (`Cond` - whether they got feedback or not). 
+
+We start by looking to see how the mean scores on Question 3 differ for those who were and weren't given feedback. As we saw in the _Group Differences_ worksheet, we use the `group_by`,  `summarise`, and `mean` commands to do this:
+
+```{r means}
+lup %>% group_by(Cond) %>% summarise(mean(Q3))
+```
+
+It looks like there's a small difference, with the ratings of their view slightly higher in the feedback condition -- but how does this between-group difference compare to the within-group variability? As we covered in the _Group Differences_ worksheet, this most easily looked at with a scaled density plot:
+
+```{r density}
+lup %>% ggplot(aes(Q3, colour=factor(Cond))) + geom_density(aes(y=..scaled..)) 
+```
+
+This graph tells a somewhat different story to the means. The two groups almost completely overlap, with the main difference being that the No Feedback participants mostly give scores close to 50, while the Feedback participants give a broader range of scores. 
+
+At this point, the most pressing question is probably whether the difference observed in the mean scores is likely to be real, or whether it's more likely down to chance. As we saw in the _Evidence_ worksheet, the best way to look at this is with a Bayesian t-test:
+
+```{r bf2}
+ttestBF(formula = Q3 ~ Cond, data = data.frame(lup))
+```
+
+The Bayes Factor in this case is about 1/3, meaning it's about three times as likely there _isn't_ a difference as there is. 
+
+## How long they thought they saw the thief's face
+
+Did participants who were told they were right think they saw the thief's face for longer? This was addressed by Question 4 (column `Q4` in data frame `lup`). By changing `Q3` to `Q4` in the commands above, you can answer this question. 
+
+**Record the mean viewing time for each condition, and the Bayes Factor for the difference, in your lab book**.
+
+Using the convention that there is a difference if BF > 3, there isn't a difference if BF < 0.33, and if it's between 0.33 and 3, we're unsure, select **difference, no difference, or unsure**, in your lab book.
 
 ___
 
