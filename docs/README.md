@@ -57,7 +57,7 @@ If you are a current undergraduate student at Plymouth University, you should co
 
 * [Brexit personalities](brexit.html). Means, filtering data, _summarising data_, density plots, effect size, Bayesian t-test, traditional t-test. 
 
-* [Creativity and the environment](green.html). Means, density plots, effect size, Bayesian t-test.
+* [Creativity and the environment](green.html). **Preprocessing**, means, density plots, effect size, Bayesian t-test.
 
 * [Police lineup](lineup.html). Contingency table, mosaic plot, Bayesian contingency test, means, density plot, Bayesian t-test
 

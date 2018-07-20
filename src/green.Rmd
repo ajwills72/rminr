@@ -15,7 +15,7 @@ knitr::opts_chunk$set(echo = TRUE, comment=NA)
 ```
 
 ## Before you start...
-Before starting this exercise, you should have completed **all** the [Absolute Beginners'](index.html) workshop exercises. If not, take a look at those exercises before continuing. Each section below also indicates which of the earlier worksheets are relevant.
+Before starting this exercise, you should have completed all the relevant [Absolute Beginners'](index.html) workshop exercises. Each section below indicates which of the earlier worksheets are relevant.
 
 ## Getting the data into R
 
@@ -31,7 +31,7 @@ In this excercise, you'll be analysing some data that you and your peers recentl
 
 ```{r init-load, message=FALSE} 
 library(tidyverse)
-creative <- read_csv("green.csv")
+data <- read_csv("green.csv")
 ```
 
 **Note**: In the example above, you'll need to replace `green.csv` with the name of the CSV file you just copied into your RStudio project.
@@ -39,7 +39,7 @@ creative <- read_csv("green.csv")
 ### Inspect
 Look at the data by clicking on it in the _Environment_ tab in RStudio. 
 
-Each row is one participant in this study of creativity. Each participant attempts to come up with a creative solution to a problem, while either talking a walk in an _urban_ enviornment or a _green_ enviornment. Each idea is rated for creativity by a different participant. 
+Each row is rating of one participant in this study of creativity. Each participant attempts to come up with a creative solution to a problem, while either talking a walk in an _urban_ environment or a _green_ enviornment. Each idea is rated for creativity by a set of raters. 
 
 _Will the green environment lead to more creative ideas than the urban environment?_
 
@@ -50,11 +50,25 @@ _Will the green environment lead to more creative ideas than the urban environme
 | Cond      | Which enviornment was the creator in? | "Urban", "Green" |
 | score  | How creative was the idea rated to be? | 1-10, higher numbers = more creative |
 
+## Pre-processing
+
+**Relevant worksheet:** [Group Differences](group-differences.html)
+
+We start by "pre-processing" our data, in order to make it easier to analyse. Specifically, each idea was rated by several people. We're going to take the average (mean) of those ratings, so we're left with one creativity score per participant. 
+We use the `group_by`,  `summarise`, and `mean` commands we used in the _Group Differences_ worksheet to do this: 
+
+```{r preproc}
+creative <- data %>% group_by(Cond, SRNrated) %>% summarise(score = mean(score))
+```
+
+If we look at this summarised data, by clicking on the _Environment_ tab of RStudio, we can see that we now have one creativity score per participant.
+
 ## Creativity and the environment
 
-**Relevant worksheet:** [Group Differences](group-differences.html), [Evidence](evidence.html)
+**Relevant worksheets:** [Group Differences](group-differences.html), [Evidence](evidence.html)
 
-We start by looking to see how the mean creativity scores differ for those who were in a green or an urban environment. As we saw in the _Group Differences_ worksheet, we use the `group_by`,  `summarise`, and `mean` commands to do this:
+
+We start by looking to see how the mean creativity scores differ for those who were in a green or an urban environment. We can do this using the `group_by` and `summarise` functions in a similar way to before, but on our preprocessed data, which we have stored in the data frame `creative`:
 
 ```{r means}
 creative %>% group_by(Cond) %>% summarise(mean(score))
@@ -66,7 +80,7 @@ Your output will look similar to this, but the numbers will probably be differen
 creative %>% ggplot(aes(score, colour=factor(Cond))) + geom_density(aes(y=..scaled..))
 ```
 
-In this example, the graph tells a somewhat different story to the means. The two groups almost completely overlap, with the main difference being that the Green environment participants mostly get scores close to 6, while the Urban environment participants get a broader range of scores. 
+In this example, the graph tells a somewhat different story to the means. The two groups almost completely overlap.
 
 We can express the size of the difference in means, relative to the within-group variability, as an effect size. As we said in the _Group Differences_ worksheet, we calculate an effect size in R like this:
 
@@ -75,7 +89,7 @@ library(effsize)
 cohen.d(creative$score ~ creative$Cond)
 ```
 
-In this example, the effect size is around 0.15, which is typically described as a very small (or sometimes "negligible") effect. The effect size for your data may be different.
+In this example, the effect size is around 0.02, which is typically described as a very small ("negligible") effect. The effect size for your data may be different.
 
 At this point, the most pressing question is probably whether the difference observed in the mean scores is likely to be real, or whether it's more likely down to chance. As we saw in the _Evidence_ worksheet, the best way to look at this is with a Bayesian t-test:
 
@@ -84,7 +98,7 @@ library(BayesFactor, quietly = TRUE)
 ttestBF(formula = score ~ Cond, data = data.frame(creative))
 ```
 
-The Bayes Factor in this case is about 1/4, meaning it's about four times as likely there _isn't_ a difference as there is. Your number will likely be a bit different.
+The Bayes Factor in this case is about 1/6, meaning it's about six times as likely there _isn't_ a difference as there is. Your number will likely be a bit different.
 
 **Record the mean creativity score for each condition, the effect size, and the Bayes Factor for the difference, in your lab book**.
 
