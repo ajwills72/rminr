@@ -39,7 +39,7 @@ If you are a current undergraduate student at Plymouth University, you should co
 
 * [Response compatibility experiment](response-compatibility.html). Means, standard deviations, and density plots.
 
-* [Visual illusions](illustions.html). Filtering data, means, **violin plot**, Bayesian t-test.
+* [Visual illusions](illusions.html). Filtering data, means, **violin plot**, Bayesian t-test.
 
 * [Placeholder C](https://upload.wikimedia.org/wikipedia/commons/9/9e/Bermuda_Triangle_he.jpg). Not yet written.
 
