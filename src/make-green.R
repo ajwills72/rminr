@@ -1,8 +1,8 @@
 library(tidyverse)
-nsubj <- 100
+nsubj <- 60
 nrats <- 10 
 urban <- round(rnorm(nsubj * nrats, 5, 2),0)
-green <- round(rnorm(nsubj * nrats, 5.1, 2),0)
+green <- round(rnorm(nsubj * nrats, 5.15, 2),0)
 score <- c(urban, green)
 score[score < 1] <- 1
 score[score > 10] <- 10
