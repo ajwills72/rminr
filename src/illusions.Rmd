@@ -44,7 +44,7 @@ Look at the data by clicking on it in the _Environment_ tab in RStudio. Each row
 | Pattern  | Type of stimulus presented on this trial | "P1"  = Muller-Lyer, arrow heads, "P2" = Muller-Lyer arrow tails, "T" = T illusion          |
 | Angle   | Angle of line | For Muller-Lyer, angle in degrees of small lines on left hand side of the Muller-Lyer stimulus, clockwise from 9 o'clock: 15, 30, 45, 60, 75, 90, 105, 120, 135, 150, 165. For T illusion, angle in degrees of lefthand line, clockwise from 9 o'clock: 0, 15, 30, 45, 60, 75, 90, 105, 120, 135, 150, 165 |
 | FinalLength  | Final length of the line you adjusted (arbitrary units) | a number; 200 if you accurately matched the other line|
-| Difference200     | 200 - FinalLength                           | a number; 0 if you accurately matched, positive if your line was too short, negative if your line was too long |
+| Difference200     | FinalLength - 200                          | a number; 0 if you accurately matched, negative if your line was too short, positive if your line was too long |
 
 You completed 240 trials in total, 120 for each illusion. Each angle was presented 10 times, except the 90 degree angle for the Muller-Lyer illusion, which was presented 20 times.
 
@@ -73,7 +73,7 @@ The error of your judgement on each trial is in the `Difference200` column of yo
 mull %>% group_by(Angle) %>% summarise(mean(Difference200))
 ```
 
-In this example, the participant over-esimated line length with the "arrow heads" (Angle > 90), and under-estimated line length with the "arrow tails" ( Angle < 90). Your data may be different.
+In this example, the participant under-esimated line length with the "arrow heads" (Angle > 90), and over-estimated line length with the "arrow tails" ( Angle < 90). Your data may be different.
 
 ### Violin plot
 
@@ -126,7 +126,7 @@ There's quite a lot more that might be done with this data set, but you haven't 
 mut <- mull %>% filter(Angle == 45 | Angle == 135)
 ```
 
-As we've already seen (at least for our example data), the length of the line was underestimated at 45 degrees, and overestimated at 135 degrees (see the table of means, above). We also saw that the range of lengths estimated for 45 degrees barely overlapped with the range of lengths estimated for 135 degrees (see the violin plot, above). 
+As we've already seen (at least for our example data), the length of the line was over-estimated at 45 degrees, and under-estimated at 135 degrees (see the table of means, above). We also saw that the range of lengths estimated for 45 degrees barely overlapped with the range of lengths estimated for 135 degrees (see the violin plot, above). 
 
 How likely is it that this difference between the estimates at 45 degrees and 135 degrees is down to chance? As we saw in the _Evidence_ worksheet, the best way to answer this question is to calculate a Bayes Factor. In this case, the data frame is `mut`, which we just made with the `filter` command above. The column `Difference200` contains the size of the illusion, and the column `Angle` contains the angle of the stimulus:
 

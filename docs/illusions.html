@@ -185,8 +185,8 @@ ill &lt;- read_csv(&quot;GG.csv&quot;)</code></pre>
 </tr>
 <tr class="odd">
 <td>Difference200</td>
-<td>200 - FinalLength</td>
-<td>a number; 0 if you accurately matched, positive if your line was too short, negative if your line was too long</td>
+<td>FinalLength - 200</td>
+<td>a number; 0 if you accurately matched, negative if your line was too short, positive if your line was too long</td>
 </tr>
 </tbody>
 </table>
@@ -222,7 +222,7 @@ ill &lt;- read_csv(&quot;GG.csv&quot;)</code></pre>
  9   135                 -15.6
 10   150                 -19.4
 11   165                 -31.2</code></pre>
-<p>In this example, the participant over-esimated line length with the “arrow heads” (Angle &gt; 90), and under-estimated line length with the “arrow tails” ( Angle &lt; 90). Your data may be different.</p>
+<p>In this example, the participant under-esimated line length with the “arrow heads” (Angle &gt; 90), and over-estimated line length with the “arrow tails” ( Angle &lt; 90). Your data may be different.</p>
 </div>
 <div id="violin-plot" class="section level3">
 <h3>Violin plot</h3>
@@ -250,7 +250,7 @@ ill &lt;- read_csv(&quot;GG.csv&quot;)</code></pre>
 <p><strong>Relevant worksheet:</strong> <a href="evidence.html">Evidence</a></p>
 <p>There’s quite a lot more that might be done with this data set, but you haven’t yet been taught the best techniques to do so (these will come in a later course). For now, we’re just going to compare the two stimuli most commonly used in a Muller-Lyer experiment - the 45 degree, and 135 degree stimuli. To do this, we make use of the <code>filter</code> command again, selecting just the 45 degree and 135 degree angles:</p>
 <pre class="r"><code>mut &lt;- mull %&gt;% filter(Angle == 45 | Angle == 135)</code></pre>
-<p>As we’ve already seen (at least for our example data), the length of the line was underestimated at 45 degrees, and overestimated at 135 degrees (see the table of means, above). We also saw that the range of lengths estimated for 45 degrees barely overlapped with the range of lengths estimated for 135 degrees (see the violin plot, above).</p>
+<p>As we’ve already seen (at least for our example data), the length of the line was over-estimated at 45 degrees, and under-estimated at 135 degrees (see the table of means, above). We also saw that the range of lengths estimated for 45 degrees barely overlapped with the range of lengths estimated for 135 degrees (see the violin plot, above).</p>
 <p>How likely is it that this difference between the estimates at 45 degrees and 135 degrees is down to chance? As we saw in the <em>Evidence</em> worksheet, the best way to answer this question is to calculate a Bayes Factor. In this case, the data frame is <code>mut</code>, which we just made with the <code>filter</code> command above. The column <code>Difference200</code> contains the size of the illusion, and the column <code>Angle</code> contains the angle of the stimulus:</p>
 <pre class="r"><code>library(BayesFactor, quietly = TRUE)
 ttestBF(formula = Difference200 ~ Angle, data = data.frame(mut))</code></pre>
