@@ -80,7 +80,7 @@ Your output will look similar to this, but the numbers will probably be differen
 creative %>% ggplot(aes(score, colour=factor(Cond))) + geom_density(aes(y=..scaled..))
 ```
 
-In this example, the graph tells a somewhat different story to the means. The two groups almost completely overlap.
+In this example, the graph tells a somewhat different story to the means - although a difference between groups is visible, it is small compared to the variability within each group.
 
 We can express the size of the difference in means, relative to the within-group variability, as an effect size. As we said in the _Group Differences_ worksheet, we calculate an effect size in R like this:
 
@@ -89,7 +89,7 @@ library(effsize)
 cohen.d(creative$score ~ creative$Cond)
 ```
 
-In this example, the effect size is around 0.02, which is typically described as a very small ("negligible") effect. The effect size for your data may be different.
+In this example, the effect size is around 0.2, which is typically described as a small effect. The effect size for your data may be different.
 
 At this point, the most pressing question is probably whether the difference observed in the mean scores is likely to be real, or whether it's more likely down to chance. As we saw in the _Evidence_ worksheet, the best way to look at this is with a Bayesian t-test:
 
@@ -98,7 +98,7 @@ library(BayesFactor, quietly = TRUE)
 ttestBF(formula = score ~ Cond, data = data.frame(creative))
 ```
 
-The Bayes Factor in this case is about 1/6, meaning it's about six times as likely there _isn't_ a difference as there is. Your number will likely be a bit different.
+The Bayes Factor in this case is about 1/3, meaning it's about three times as likely there _isn't_ a difference as there is. Your number will likely be a bit different.
 
 **Record the mean creativity score for each condition, the effect size, and the Bayes Factor for the difference, in your lab book**.
 
