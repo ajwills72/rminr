@@ -91,6 +91,9 @@ img {
 .tabbed-pane {
   padding-top: 12px;
 }
+.html-widget {
+  margin-bottom: 20px;
+}
 button.code-folding-btn:focus {
   outline: none;
 }
@@ -215,7 +218,7 @@ mean in group female   mean in group male
 <h3>How likely is the null hypothesis?</h3>
 <p>It is possible to calculate what we want to know, P(null|data), given what a t-test gives us, P(data|null), but we have to know P(null) – the probability the null hypothesis was correct <em>before</em> we collected our data. We normally don’t know this precisely but we can make an informed guess.</p>
 <p>For example, say you have the hypothesis that if people read a few sentences related to old age, they will walk more slowly. Believe it or not, this is a <a href="https://scholar.google.com/scholar?q=Automaticity+of+social+behavior%3A+Direct+effects+of+trait+construct+and+stereotype+activation+on+action+Bargh+1996">real example of a psychological hypothesis</a>.</p>
-<p>Before collecting any data, this hypotheses seems unlikely. If the experiment is well designed (see lectures), we might conclude that the probability of the null hypothesis was rather high. Let’s say, P(null) = 0.95.</p>
+<p>Before collecting any data, this hypothesis seems unlikely. If the experiment is well designed (see lectures), we might conclude that the probability of the null hypothesis was rather high. Let’s say, P(null) = 0.95.</p>
 <p>We run the experiment, do a t-test, and get a p value of .049. So, P(data|null) = .049. Traditionally, psychologists would call this a <em>significant</em> result, believe you, and allow you to publish it. This is the wrong response because, in this case, P(null|data) is about 0.5 (not .05, .5! 50:50 !) .</p>
 <p>In other words, instead of running the experiment, you’d have done just as well to flip a coin and say your hypothesis was right if the coin came up heads. This is no way to run a research programme, and probably goes some way to explain why psychology is full of reports of weird findings that aren’t real (the replication crisis - see lectures).</p>
 <p><a name="bf"></a></p>
