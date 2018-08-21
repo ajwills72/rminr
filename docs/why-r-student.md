@@ -37,7 +37,7 @@ Our course focusses on realistic data analysis, making R the perfect tool for th
 The alternatives to R for real data analysis are either kludgy, error prone and have poor reproducibility (e.g. preprocessing in Excel, followed by statistics in SPSS), or are more niche in the graduate jobs market (e.g. MATLAB). In particular, Excel is famously error prone with, for example,  [1 in 5 experiments in genetics having been screwed up by Excel](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-016-1044-7) and [the case for the UK government's policy of financial austerity being based on an Excel screwup](https://arstechnica.com/tech-policy/2013/04/microsoft-excel-the-ruiner-of-global-economies/).
 
 ### Reproducible 
- R's use of scripts means that, if you have done the analysis completely in R, you already have a full, reproducible record of your analysis path. Anyone with an internet connection can download R, and reproduce your analysis using your script. Making your analyses reproducible is be an essential skill in many areas of research. 
+ R's use of scripts means that, if you have done the analysis completely in R, you already have a full, reproducible record of your analysis path. Anyone with an internet connection can download R, and reproduce your analysis using your script. Making your analyses reproducible is an essential skill in many areas of research. 
 
 ### Free as in freedom
 R is "free as in freedom" because all the source code is available to everyone (it's "open source"). Some reasons this is important:
