@@ -125,7 +125,7 @@ It is possible to calculate what we want to know, P(null|data), given what a t-t
 
 For example, say you have the hypothesis that if people read a few sentences related to old age, they will walk more slowly. Believe it or not, this is a [real example of a psychological hypothesis](https://scholar.google.com/scholar?q=Automaticity+of+social+behavior%3A+Direct+effects+of+trait+construct+and+stereotype+activation+on+action+Bargh+1996).
 
-Before collecting any data, this hypotheses seems unlikely. If the experiment is well designed (see lectures), we might conclude that the probability of the null hypothesis was rather high. Let's say, P(null) = 0.95. 
+Before collecting any data, this hypothesis seems unlikely. If the experiment is well designed (see lectures), we might conclude that the probability of the null hypothesis was rather high. Let's say, P(null) = 0.95. 
 
 We run the experiment, do a t-test, and get a p value of .049. So, P(data|null) = .049. Traditionally, psychologists would call this a _significant_ result, believe you, and allow you to publish it. This is the wrong response because, in this case, P(null|data) is about 0.5 (not .05, .5! 50:50 !) .
 
