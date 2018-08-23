@@ -50,7 +50,7 @@ R is "free as in freedom" because all the source code is available to everyone (
 R is already installed on most public machines at the University of Plymouth. 
 
 ### Runs inside a browser
-There are free services that mean you can use R without having to install it, e.g. [ronline.org](http://www.ronline.org). If you'd like to learn more, ask Andy Wills for a free account.
+You can use R without having to install it, e.g. [RStudio Plymouth](https://rstudio.plymouth.ac.uk). 
 
 ___
 
