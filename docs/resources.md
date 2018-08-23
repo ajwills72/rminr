@@ -18,13 +18,12 @@ Alternatively, there are some video tutorials about R on [lynda.com](https://www
 [Cookbook for R: Graphs](http://www.cookbook-r.com/Graphs/)
 - Recipes for common graph types in R. Written by Winston Chang, former Psychology graduate student and now a programmer at RStudio. _CC-BY-SA_
 
+[R Graph Gallery](https://www.r-graph-gallery.com/)
+- More graph recipes, focussing on particularly beautiful ones.
+
 [ggplot2 extensions](http://www.ggplot2-exts.org/index.html). 
 - This website provides links to many R packages that allow you to do more types of graphs in R.
 
 [ggplot2: Elegant Graphics for Data Analysis](ggplot2-book.pdf)
 - The definitive guide to making graphs with R, one of the more advanced guides out there. Written by Hadley Wickham. The source code for this book, from which this PDF was created, is freely available on [github](https://github.com/hadley/ggplot2-book). You can buy an paper or ebook version through an online book retailer.
 
-
-___
-
-_version: 0.2_
