@@ -37,19 +37,19 @@ If you are a current undergraduate student at Plymouth University, you should co
 
 * [Face recognition experiment](face-recog.html). Means, _filtering data_, and a **bar graph**.
 
+* [Spatial navigation tests](navigate.html). More on **bar graphs**.
+
 * [Response compatibility experiment](response-compatibility.html). Means, standard deviations, and density plots.
 
 * [Visual illusions](illusions.html). Filtering data, means, **violin plot**, Bayesian t-test.
 
-* [Placeholder C](https://upload.wikimedia.org/wikipedia/commons/9/9e/Bermuda_Triangle_he.jpg). Not yet written.
-
-* [Placeholder D](https://upload.wikimedia.org/wikipedia/commons/9/9e/Bermuda_Triangle_he.jpg). Not yet written.
+* [Placeholder B](https://upload.wikimedia.org/wikipedia/commons/9/9e/Bermuda_Triangle_he.jpg). Not yet written.
 
 #### Part 2
 
 * [Facial attractiveness experiment](face-attract.html). Means, standard deivations, **inter-quartile range**, and _density plots_. 
 
-* [Placeholder E](https://upload.wikimedia.org/wikipedia/commons/9/9e/Bermuda_Triangle_he.jpg). Not yet written.
+* [Placeholder C](https://upload.wikimedia.org/wikipedia/commons/9/9e/Bermuda_Triangle_he.jpg). Not yet written.
 
 #### Part 3
 
