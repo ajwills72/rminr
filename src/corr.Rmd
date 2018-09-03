@@ -1,0 +1,282 @@
+---
+title: "Relationships, part 2."
+author: "Sylvia Terbeck, Andy Wills"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+## DEVELOPERS: Uncomment one option, as appropriate
+
+## Show only commands.
+## knitr::opts_chunk$set(echo = TRUE, message = FALSE, results='hide', fig.keep = 'none', comment=NA)
+
+## Show commands and ouptut.
+knitr::opts_chunk$set(echo = TRUE, comment=NA)
+
+## Define custom functions
+coreg <- function(r, scale) {
+  samples = 25
+  library(MASS)
+  data <- mvrnorm(n=samples, mu=c(0, 0), Sigma=matrix(c(1, r, r, 1), nrow=2), empirical=TRUE)
+  data <- (data + 2.5) * 2
+  data[,2] <- data[,2] / scale
+  data <- as.data.frame(data)
+  data %>% ggplot(aes(x = V1, y = V2)) + geom_point(shape=1) +
+  theme_minimal() + xlab("") + ylab("") + xlim(0, 10) + ylim(0, 10) +
+  ggtitle(paste("r = ", r))
+}
+
+source("multiplot.R")
+```
+
+## Before you start...
+Before starting this exercise, you should have completed **all** the previous [Absolute Beginners'](index.html) workshop exercises. Each section below indicates which of the earlier worksheets are particularly relevant.
+
+## Contents
+
+- [Getting the data into R](#intor)
+- [Summarising the data](#sum)
+- [Variability](#var)
+- [Scatter plots and correlation](#scatter)
+- [Measuring correlation](#corr)
+- [Evidence for correlation](#evidence)
+- [Exercise](#ex)
+- [Further reading](#further)
+
+<a name="intor"></a>
+
+## Getting the data into R
+
+**Relevant worksheet:** [Using RStudio projects](using-projects.html)
+
+You'll be provided with a CSV file before or during the workshop. Set up an RStudio project for this analysis, and copy the CSV file into it. 
+
+If you want to try out this worksheet without that data file, you can use this [example CSV file](data/corr.csv) instead. _You can only gain marks in your lab book for this exercise if you use the CSV file from the workshop_.
+
+## Exploring your data
+
+### Load
+**Relevant worksheet:** [Exploring data](exploring-incomes.html) 
+
+Load the _tidyverse_ package, and load your data.
+
+```{r init-load, message=FALSE} 
+library(tidyverse)
+data <- read_csv("corr.csv")
+```
+
+**Note**: In the example above, you'll need to replace `corr.csv` with the name of the CSV file you just copied into your RStudio project.
+
+### Inspect
+Look at the data by clicking on it in the _Environment_ tab in RStudio. Each row is one participant in one group. Here's what each of the columns in the data set contain:
+
+| Column    | Description                             | Values             |
+| --------- | --------------------------------------- | ------------------ |
+| SRN       | ID number of participant          | a number        |
+| grp       |  ID number of the group that this participant was in | a number |
+| ingroup   | Participant's rating of ingroup closeness | 1 (low) - 10 (high) |
+| outgroup  | Participant's rating of outgroup distance | 1 (low) - 10 (high) |
+| dominance | Participant's rating of the dominance of their group leader | 1 (low) - 10 (high) |
+
+This is a large dataset comprising over 200 participants. 
+
+<a name="sum"></a>
+
+## Summarising your data
+
+**Relevant worksheets:** [Group differences](group-differences.html), [face recognition](face-recognition.html)
+
+The data from this study is different to other data you have looked at so far in this course. In particular, the participants worked as a group, rather than individually. This means that, for example, the ratings of ingroup closeness are likely to be more similar _within_ a group, than _between_ groups. For example, one group might have got on really well with one another, so they all gave quite high closeness ratings. Another group might not have 'gelled', and went on to all give quite low ratings. Of course, even within groups, some ratings may be higher than others (some members of group X might feel closer to Group X than others), but it's likely that ratings within the same group will be more similar than ratings across groups. We call this sort of data **hierarchical** data. 
+
+We won't cover how to make the most out of hierarchical data until a later course. For this introductory course, we're going to take the simple approach of averaging ratings within each group. So, for example, if the group had two members, one who gave a rating of 5 and the other a rating of 7, we would average these and record the group's score as 6. As we covered in the [group differences](group-differences.html) worksheet, we can do this using the `group_by` and `summarise` commands:
+
+```{r summarise}
+gdata <- data %>% 
+  group_by(grp) %>%
+  summarise(ingroup = mean(ingroup),
+            outgroup = mean(outgroup),
+            dominance = mean(dominance))
+```
+
+We've put our answers into a new data frame, `gdata`, so go to the _Environment_ window of RStudio and click on `gdata` to see your summarised data. You'll now see one line for each group in your study.
+
+### Explanation of command
+
+Most of the above command is the same as in the [group differences](group-differences.html) worksheet, and the [face recognition](face-recognition.html) workseet --- take a look back at those sheets if you need a reminder. The new thing here is that we are calculating the mean for more than one variable. In fact, we're calculating it for three variables (`ingroup, outgroup, dominance`). The `summarise` command can do this, as long as there is a comma (`,`) separating the things you want a summary of. 
+
+<a name="var"></a>
+
+## Variability
+
+**Relevant worksheets:** [Group differences](group-differences.html), [facial attractiveness](face-attract.html)
+
+Did every group give basically the same rating of ingroup closeness, or did closeness vary a lot between groups? One way to take a look at this is to produce a _density plot_, as we covered in the [group differences](group-differences.html) and [facial attractiveness](face-attract.html) worksheets:
+
+```{r density}
+gdata %>% ggplot(aes(ingroup)) + geom_density(aes(y=..scaled..)) + xlim(1, 10)
+```
+
+In the example above, the most common (modal) rating of ingroup closeness is between 7 and 8. So, on average, people rated the ingroup closeness as quite high. However, there were quite a range of ratings, both above and below this modal rating. Your data may be different.
+
+We can ask the same question about outgroup distance. Did everyone give bascially the same rating, or did outgroup distance vary a lot between groups? Changing `ingroup` to `outgroup` in the above command gives us the answer:
+
+```{r density-2}
+gdata %>% ggplot(aes(outgroup)) + geom_density(aes(y=..scaled..)) + xlim(1, 10)
+```
+
+In the example above, most groups gave close to the lowest possible rating (1), so we see a large peak in the plot at around 1. We also see a series of much smaller peaks, indicating that a few groups gave much higher ratings. It is possible that these mostly low ratings are due to _social desirability bias_ -- the phenomenon that people are reluctant to give answers that their social group would view negatively. 
+
+As in the last example, your data may look different.
+
+<a name="scatter"></a>
+
+## Scatter plots and correlation
+
+**Relevant worksheet:** [Face recognition](face-recognition.html)
+
+So, ingroup closeness varies between groups, as does outgroup distance (at least to some extent). Are these two sorts of variability related? For example, does high ingroup closeness tend to be associated with high outgroup distance -- perhaps feeling close to your ingroup is associated with feeling distant from your outgroup? 
+
+Or perhaps high ingroup closeness is associated with low outgroup distance --- feeling close to your own group also makes you feel close to other groups? Or, a third option, perhaps the two things are unrelated --- whether you have high or low ingroup closeness does not predict your outgroup distance.
+
+One way to look at this question is to produce a _scatterplot_. On a scatterplot, each point represents one group. That point's position on the x-axis represents their ingroup closeness, and that point's position on the y-axis represents their outgroup distance. 
+
+The command to produce a scatterplot in R is much like the command for a bar graph, as you used in, for example, the [face recognition](face-recog.html) worksheet. The only difference is that we use the `geom_point()` command (because the graph is a set of dots or _points_) rather than the `geom_col()` command we used for bar (_column_) charts:
+
+```{r scatter}
+gdata %>% ggplot(aes(x = ingroup, y = outgroup)) + geom_point() 
+```
+
+In the above example, many of the points are close to the x axis. This is becasue, as we saw above, most groups gave a rating close to 1 for outgroup distance. However, once we get to an ingroup closeness above 8, an interesting pattern starts to emerge. As ingroup closeness increases from 8 to 10, outgroup distance rises from around 1 to around 7 or 8. 
+
+So it seems that, in this example dataset, ingroup closeness and outgroup distance are related. We call this type of relationship a _correlation_. 
+
+<a name="corr"></a>
+
+## Measuring correlation
+
+**Relevant worksheets:** [Group differences](group-differences.html)
+
+Sometimes, it's useful to have a single number that summarises how well two variables are correlated. We can calculate this number, called a _correlation co-efficient_, using the `cor` command in R:
+
+```{r corr}
+cor(gdata$ingroup, gdata$outgroup)
+```
+
+### Explanation of command
+
+The command is used in a similar way to the `cohen.d` command you used to calculate _effect size_ in the [group differences](group-differences.html) worksheet:
+
+`cor()` - The command to calculate a correlation co-efficient.
+
+`gdata$ingroup` - One variable is in the `ingroup` column of the `gdata` data frame.
+
+`,` - this comma needs to be here so R knows where one variable ends and the other begins.
+
+`gdata$outgroup` - The other variable is in the `outgroup` column of the `gdata` data frame.
+
+### Explanation of output
+
+In the above example, the correlation co-efficient was about 0.66. By tradition, we use a lower case _r_ to represent a correlation co-efficient, so here _r = 0.66_. In order to make sense of this number, you need to know that the biggest _r_ can ever be is 1, and the smallest it can ever be is -1. 
+
+**Where r = 1**: A correlation of 1 means a perfect linear relationship. In other words, there is a straight line you can draw that goes exactly through the centre of each dot on your scatterplot. The line can be shallow, or steep. Here are some examples:
+
+```{r corr-eg-1, echo=FALSE, message=FALSE, warning=FALSE, cache=TRUE}
+multiplot(coreg(1, .6), coreg(1, 1), coreg(1, 2), coreg(1, 8), cols = 2)
+```
+
+**Where r = 0**: A correlation of zero means there is no relationship between the two variables. Here are some examples:
+
+```{r corr-eg-0, echo=FALSE, message=FALSE, warning=FALSE, cache=TRUE}
+multiplot(coreg(0, .6), coreg(0, 1), coreg(0, .8), coreg(0, 1), cols = 2)
+```
+
+**Where r is between 0 and 1:** As the correlation co-efficient gets further from zero, the relationship between the two variables becomes more like a straight line. Here are some more examples:
+
+```{r corr-various, echo=FALSE, message=FALSE, warning=FALSE, cache=TRUE}
+multiplot(coreg(0, 1), coreg(.5, 1), coreg(.1, 1.2), coreg(.7, 1), coreg(.3, 0.6), coreg(.9, 1.8), cols = 3)
+```
+
+**Where r is less than 0:** A negative correlation co-efficient just means that, as one variable gets larger, the other gets smaller:
+
+```{r corr-neg, echo=FALSE, message=FALSE, warning=FALSE, cache=TRUE}
+multiplot(coreg(0, 1), coreg(-.5, 1), coreg(-.1, 1.2), coreg(-.7, 1), coreg(-.3, 0.6), coreg(-.9, 1.8), cols = 3)
+```
+
+### Interpreting correlation co-efficients
+
+**Relevant worksheets:** [Group differences](group-differences.html)
+
+A correlation co-efficient is much like an _effect size_, which we covered in the [group differences](group-differences.html) worksheet. More specifically, it measures the strength of the relationship between the two variables (sometimes called the _covariance_), relative to the variance of each variable considered on its own. 
+
+[Jacob Cohen](https://en.wikipedia.org/wiki/Jacob_Cohen_(statistician)) suggested the following conventions in describing correlation co-efficients: a co-efficient of 0.1 is described as a _weak_ relationship, a correlation of 0.3 is described as a _moderate_ association, and a correlation of 0.5 is described as a _strong_ relationship. Not all psychologists agree with these descriptions. 
+
+<a name="evidence"></a>
+
+## Evidence for correlation
+
+**Relevant worksheet:** [Evidence](evidence.html)
+
+So far, we've produced a scatterplot of _ingroup closeness_ versus _outgroup distance_, and we've calculated a correlation co-efficient for that relationship ( _r=0.66_ in the example above ). But is the relationship between these two variables real, or a fluke? Much like the Bayesian t-test we calculated in the [evidence](evidence.html) worksheet, we can calculate a Bayes Factor for the relationship between two variables. 
+
+The first step is to load the _BayesFactor_ packages, which we previously used in the [evidence](evidence.html) worksheet:
+
+```{r bf-load, message=FALSE}
+library(BayesFactor, quietly = TRUE)
+```
+
+Then, we use the `correlationBF` command, which has a similar format to the `cor` command above:
+
+```{r bf}
+correlationBF(gdata$ingroup, gdata$outgroup)
+```
+
+The Bayes Factor is reported on the third line, towards the right. In this example, our Bayes Factor is about 89.7. This means it's about ninety times as likely there is a relationship between these two variables as there isn't. This is larger than the conventional threshold of 3, so psychologists will generally believe you when you claim that there is a relationship between ingroup closeness and outgroup distance. If the Bayes Factor had been less than 0.33, this would have been evidence that there was no relationship.
+
+### Traditional analysis
+
+As we covered in the [Evidence](evidence.html) worksheet, psychologists have typically reported _p values_, despite the fact that _p values_ are widely misinterpreted. If you want to calculate a _p value_ for a correlation co-efficient, you can use the following command:
+
+```{r r-sig}
+cor.test(gdata$ingroup, gdata$outgroup)
+```
+
+The _p value_ in this case is about .00029. The _p value_ is **not** the probability that the null hypothesis is false, nor is it anything else that is both clear and useful (see the Evidence worksheet for more details). However, the value of .00029 is lower than the conventional .05 cutoff. This means psychologists will generally believe you when you claim that there is a relationship between ingroup closeness and outgroup distance.
+
+### Reporting a correlation
+
+Psychologists generally include some numbers from their analyses in their writeups. In the case of a correlation, you'd normally write something like:
+
+"ingroup closeness and outgroup distance were significantly correlated, _r_ = .66, _BF_ = 89.7, _p_ < .05."
+
+<a name="ex"></a>
+
+## Exercise
+
+In this exercise, you'll apply what you've learned to the relationship between _ingroup closeness_, and _group-leader dominance_. Do each of the following, and **upload to your lab book**:
+
+**Hint:** Most of these steps can be completed by copying the commands you used earlier, and replacing `outgroup` with `dominance`. 
+
+1. Make a density plot of the _dominance_ scores. Export the graph as an image, and **upload to your lab book**.
+
+2. Make a scatterplot with _ingroup_ closeness on the x-axis, and group-leader _dominance_ on the y-axis. **Upload to your lab book**. 
+
+3. Calculate the correlation co-efficient for _ingroup_ versus _dominance_. **Type the value into your lab book**.
+
+4. In your lab book, **select the description of the strength of this relationship** - weak, moderate, or strong; using Cohen's conventions.
+
+5. Calculate the Bayes Factor for this correlation. **Type the value into your lab book**. 
+
+6. In your lab book, **select the description of this Bayes Factor** --- (a) substantial evidence for the presence of a relationship, (b) substantial evidence for the absence of the relationship, (c) equivocal evidence for the relationship. 
+
+
+<a name="further"></a>
+
+## Further reading
+
+For more detailed information on the analyses covered in this worksheet, see  [more on relationships, part 2](corr-extended.html).
+
+___
+
+This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0. 
+
+

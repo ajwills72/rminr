@@ -17,7 +17,7 @@
 
 * [Relationships](chi.html). Frequency and contingency tables. Mosaic plots. Traditional chi-square test. Bayesian test. 
 
-* [Placeholder A](https://upload.wikimedia.org/wikipedia/commons/9/9e/Bermuda_Triangle_he.jpg). Correlation worksheet, not yet written.
+* [Relationships, part 2](corr.html). Density plots. Scatter plots. Correlation co-efficient. Bayesian and traditional tests. 
 
 * [Cheat sheet](cheat-sheet.html). Everything we've covered so far, condensed. 
 
