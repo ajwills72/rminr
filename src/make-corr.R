@@ -120,3 +120,9 @@ multiplot(coreg(0), coreg(-.6), coreg(-.2), coreg(-.8), coreg(-.4), coreg(-1), c
 
 multiplot(coreg(1, .5), coreg(1, 1), coreg(1, 4), coreg(1, 8), cols = 2)
 
+## Beta function
+
+x <- seq(0, 1, length=100)
+hx <- dbeta(x, 1/.333, 1/.333)
+hx <- hx/max(hx)
+plot(x, hx, type = "l", xlab = "r", ylab = "")
