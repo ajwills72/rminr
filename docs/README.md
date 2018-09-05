@@ -66,6 +66,10 @@ If you are a current undergraduate student at Plymouth University, you should co
 * [Placeholder F](https://upload.wikimedia.org/wikipedia/commons/9/9e/Bermuda_Triangle_he.jpg). Activity by not yet written.
 
 
+## The next level...
+
+* [Stage 2 Research Methods Plan](stage2plan.html). Draft plan for Stage 2 development, comments welcome.
+
 ____
 
 #### Source code
