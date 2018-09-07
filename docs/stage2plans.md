@@ -1,108 +1,3 @@
-<div id="table-of-contents">
-<h2>Table of Contents</h2>
-<div id="text-table-of-contents">
-<ul>
-<li><a href="#sec-1">1. Requirements of DMR etc</a>
-<ul>
-<li><a href="#sec-1-1">1.1. Stats to teach</a></li>
-<li><a href="#sec-1-2">1.2. Modes of assessment</a></li>
-<li><a href="#sec-1-3">1.3. Employability</a></li>
-</ul>
-</li>
-<li><a href="#sec-2">2. Semesterization</a></li>
-<li><a href="#sec-3">3. Group structure</a></li>
-<li><a href="#sec-4">4. Out of class support</a></li>
-<li><a href="#sec-5">5. Example of topics and questions</a></li>
-<li><a href="#sec-6">6. Data collection</a></li>
-<li><a href="#sec-7">7. Resources</a>
-<ul>
-<li><a href="#sec-7-1">7.1. Laptops/desktops</a></li>
-<li><a href="#sec-7-2">7.2. Lab book</a></li>
-<li><a href="#sec-7-3">7.3. R server</a></li>
-</ul>
-</li>
-<li><a href="#sec-8">8. Pass/fail assessment</a></li>
-<li><a href="#sec-9">9. Schedule of work (Semester One)</a>
-<ul>
-<li><a href="#sec-9-1">9.1. Week 1</a>
-<ul>
-<li><a href="#sec-9-1-1">9.1.1. Session A: Select a topic</a></li>
-<li><a href="#sec-9-1-2">9.1.2. Session B: Methods bootcamp</a></li>
-</ul>
-</li>
-<li><a href="#sec-9-2">9.2. Week 2</a>
-<ul>
-<li><a href="#sec-9-2-1">9.2.1. Session A: An experiment is born</a></li>
-<li><a href="#sec-9-2-2">9.2.2. Session B: Handling large data sets</a></li>
-</ul>
-</li>
-<li><a href="#sec-9-3">9.3. Week 3</a>
-<ul>
-<li><a href="#sec-9-3-1">9.3.1. Session A: Reading and refining the idea</a></li>
-<li><a href="#sec-9-3-2">9.3.2. Session B: Building an experiment in PsychoPy</a></li>
-</ul>
-</li>
-<li><a href="#sec-9-4">9.4. Week 4</a>
-<ul>
-<li><a href="#sec-9-4-1">9.4.1. Session A: Finalizing the idea</a></li>
-<li><a href="#sec-9-4-2">9.4.2. Session B: Writing your PsychoPy script</a></li>
-</ul>
-</li>
-<li><a href="#sec-9-5">9.5. Week 5</a>
-<ul>
-<li><a href="#sec-9-5-1">9.5.1. Session A: Data collection #1</a></li>
-<li><a href="#sec-9-5-2">9.5.2. Session B: Introduction to inferential tests</a></li>
-</ul>
-</li>
-<li><a href="#sec-9-6">9.6. Week 6</a>
-<ul>
-<li><a href="#sec-9-6-1">9.6.1. Session A: Data collection #2</a></li>
-<li><a href="#sec-9-6-2">9.6.2. Session B: One-factor ANOVA</a></li>
-</ul>
-</li>
-<li><a href="#sec-9-7">9.7. Week 7</a>
-<ul>
-<li><a href="#sec-9-7-1">9.7.1. Session A: Pairwise tests and GG/HF corrections</a></li>
-<li><a href="#sec-9-7-2">9.7.2. Session B: Analysing and interpreting your data</a></li>
-</ul>
-</li>
-<li><a href="#sec-9-8">9.8. Week 8</a>
-<ul>
-<li><a href="#sec-9-8-1">9.8.1. Session A: Preparing a group presentation</a></li>
-<li><a href="#sec-9-8-2">9.8.2. Session B: Two-factor ANOVA, interactions</a></li>
-</ul>
-</li>
-<li><a href="#sec-9-9">9.9. Week 9</a>
-<ul>
-<li><a href="#sec-9-9-1">9.9.1. Session A: Giving a group presentation</a></li>
-<li><a href="#sec-9-9-2">9.9.2. Session B: Modifying an experiment</a></li>
-</ul>
-</li>
-<li><a href="#sec-9-10">9.10. Week 10</a>
-<ul>
-<li><a href="#sec-9-10-1">9.10.1. Session A: Re-programming the experiment</a></li>
-<li><a href="#sec-9-10-2">9.10.2. Session B: Data collection #1</a></li>
-</ul>
-</li>
-<li><a href="#sec-9-11">9.11. Week 11</a>
-<ul>
-<li><a href="#sec-9-11-1">9.11.1. Session A: Data collection #2</a></li>
-<li><a href="#sec-9-11-2">9.11.2. Session B: Analyzing and interpeting your data</a></li>
-</ul>
-</li>
-<li><a href="#sec-9-12">9.12. Week 12</a>
-<ul>
-<li><a href="#sec-9-12-1">9.12.1. Session A: Writing a good report</a></li>
-<li><a href="#sec-9-12-2">9.12.2. Session B: Critiquing reports / Finishing up</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#sec-10">10. Schedule of work (Semester Two)</a></li>
-</ul>
-</div>
-</div>
-
 # Requirements of DMR etc<a id="sec-1" name="sec-1"></a>
 
 ## Stats to teach<a id="sec-1-1" name="sec-1-1"></a>
@@ -142,32 +37,43 @@ planning / timetabling. Critical thinking / analysis.
 
 PSYC511 runs as a continuous block. PSYC512 has a 3-week break after Week 7.
 
-# Group structure<a id="sec-3" name="sec-3"></a>
+# Group structure and workload<a id="sec-3" name="sec-3"></a>
 
-Students work in sub-groups of 5-6 students. Each teacher is the mentor for
-three sub-groups (total: 18 students) and follows them throughout the
-semester. There's one group leader for every four teachers. The group leader
-does not have an allocated group of students but is responsible for the overall
-smooth running of the 12 sub-groups.
+Students have 4 contact hours per week, for 24 weeks (across the 2 semesters), for a total of **96 student contact hours**. 
 
-1 group leader
+There are two main teaching roles:
 
-4 teachers
+- _Teacher_: A member of faculty, responsible for developing the materials and for teaching in class.
 
-72 students
+- _Teaching Assistant_ (TA): Could be a Ph.D. student, TARA, or faculty member. Responsible for teaching in class
+and marking reports. 
 
-We then have as many of these Groups as we need to meet cohort
-size - four should be sufficient for current cohort sizes. 
+To teach a group of 80 students, we need 2 Teachers and 5 TAs:
+
+![](pics/workshop.png)
+
+So, to deliver to a group of 80 students, across 24 weeks, at 4 student contact hours a week, we need a total of 672 staff contact hours. 
+
+To deliver this to 240 students, we need to repeat the whole thing 3 times (3 _Instantiations_), meaning the total staff contact time across 24 weeks of 2016 hours.
+
+There are lots of ways one could spread Teachers and TAs across these 2016 hours. Constraints are:
+
+1. We need enough Teachers to develop the materials for three topic areas (so, at least 3 Teachers, I reckon).
+
+2. We need to not overload anyone. For example, a TA or Teacher covering all 3 _Instantiations_ would have ~150 hours contact time in a semester. A TA covering all 3 _Instantiations_ would end up with, in addition, about 50 reports to mark. 
+3. We need to know whether the _Instantiations_ are running at the same time in different locations, or at different times in the same location. If we're using Link 301, it's the latter.
+
+One plan is to have 6 Teachers (2 for each instantiation) per module. The topics would change between semesters, so to cover the whole year, we'd need **12 Teachers**, each with a contact time commitment of **48 hours**. 
+
+The number of TAs needed across the year depends on how many hours they do. For example, if each did **96 hours contact** (e.g. 48 hours per semester, or two Instantiations in one semester), we'd need **15 TAs**.
 
 # Out of class support<a id="sec-4" name="sec-4"></a>
 
-Each Teacher and Team Leader supports the practical during their regular office
-hours.
+Each Teacher and TA supports the practical during their regular office hours.
 
 # Example of topics and questions<a id="sec-5" name="sec-5"></a>
 
-A topic might be 'Basic processes of learning'. Within that topic, the team
-leader has indentified 2-4 sub-topics. For example:
+A topic might be 'Basic processes of learning'. Within that topic, there are 2-4 sub-topics. For example:
 
 1.  Relationship between surprise and learning
 2.  Is learning sudden or gradual?
@@ -185,7 +91,7 @@ reasonable effect size. The second data collection should in some way permit
 the inclusion of a b/subj effect (even if that's just a cross-experiment
 comparison). 
 
-# Resources<a id="sec-7" name="sec-7"></a>
+# Non-staff Resources<a id="sec-7" name="sec-7"></a>
 
 ## Laptops/desktops<a id="sec-7-1" name="sec-7-1"></a>
 
@@ -195,7 +101,7 @@ well in advance, as laptops are needed from Week 1. The laptop doesn't have to
 be particularly good, but it will need a good enough battery to last through a
 2 hour session.
 
-The Project Team will have to consider whether this requirement is reasonable
+The Management will have to consider whether this requirement is reasonable
 and, if not, how we provide enough desktop machines to meet the individual
 assessment requirement of the DMR.
 
@@ -228,25 +134,23 @@ to pass these exercises at a later date.
 
 ### Session A: Select a topic<a id="sec-9-1-1" name="sec-9-1-1"></a>
 
-0 min - Each Team Leader has already recorded a 15 min video presentation of a
-topic area they have selected (probably related to their research
-expertise). The Group views the videos from the other Team Leaders, and then
-the Team Leader gives their own 15 minute presentation in person.
+0 min - The Teachers have already prepared, between them, three topics. Each Teacher
+must have a good grasp of all three topics. Each topic gets a 15 minute introduction,
+delivered by one of the Teachers. 
 
 60 min - The students get a 20 minute 'break', during which time they can
-discuss the topics with each other and with the Teachers and Team Leaders.
+discuss the topics with each other and with the Teachers and TAs.
 
 80 min - The students select a topic by going to stand at a particular point in
-the room. The Team Leader allocates Teachers to topics commensurate with their
-popularity (e.g. if half the students pick topic A, then half the Teachers are
-allocated to Topic A). 
+the room. 
 
-85 min - Students are told to self-organize into sub-groups of between 5-7
+85 min - Students are told to self-organize into groups of between 5-6
 members. Each group is going to select a question within the topic to study for
 the next 11 weeks, so it makes sense to group on similar interests and
-friendship. Teachers self-organize one to each sub-group
+friendship. The Teachers allocate TAs to groups. Where possible, any given TA should
+be covering just one topic. 
 
-90 min - Teachers do introductions for their sub-group, and then talk to them
+90 min - TAs do introductions for their groups, and talk to them
 about each of the 2-4 sub-topics in this topic area. Students are given
 questions and assigned reading.
 
@@ -272,40 +176,40 @@ Materials:
 2.  A basic-as-possible R script to produce a correct present/absent RT by set
     size (5, 20) graph from an individual's data. Use tidyverse.
 
-0 min - Team leader gives a 20 min presentation on basics of PsychoPy from a
+0 min - A Teacher gives a 20 min presentation on basics of PsychoPy from a
 user perspective i.e.: Download and install (for anyone who didn't do this
 homework). Initial becnhmarking. Zipping and unzipping. Loading a
 script. Running it. Entering subject number. Locating the 3 data files (csv,
 log, psydat). Keeping a backup. Inspecting the CSV file - rows are trials,
 columns are info. Calculating a result from a CSV file by hand.
 
-20 min - Short period while students and teachers get into subgroups and anyone
-who was absent in session 1 is matched up with groups that have fewer than 7
+20 min - Short period while students and TAs get into roups and anyone
+who was absent in session 1 is matched up with groups that have fewer than 6
 members.
 
 25 min - Students individually go through the demonstrated steps, using a ZIP
-archive downloaded from DLE. Teachers keep records of who has done this
+archive downloaded from DLE. TAs keep records of who has done this
 successfully and hence has a pass mark for this exercise (this could possibly
 be done through the online lab book). 
 
 55 min - Break
 
-65 min - Team leader gives 20 min presentation on basics of data processing in
+65 min - A Teacher gives 20 min presentation on basics of data processing in
 R. This is revision from Stage 1. Download and install R and Rstudio. Describe
 the four-panel interface of R. Show how to: (1) Load a CSV file, (2) Select the
 relevant columns, (3) Give those columns nice names, (4) aggregate the
 trial-level data into a subject-level summary. (5) Plot a simple graph.
 
 85 min - Students individually go through the demonstrated seteps, using a ZIP
-archive downloaded from DLE. Teachers record passes (perhaps via online lab
+archive downloaded from DLE. TAs record passes (perhaps via online lab
 book system). 
 
 105 min - Students are reminded of homework from Session A, and encouraged to
 play around with R and Psychopy before next week. Also, the following
 additional homework is set:
 
-(4) Send the three files from your run of the PsychoPy experiment to your team
-leader by email (this again could be done via online labbook instead if such a
+(4) Send the three files from your run of the PsychoPy experiment to your TA
+ by email (this again could be done via online labbook instead if such a
 system were avaialble). This is also a recorded-pass exercise.
 
 ## Week 2<a id="sec-9-2" name="sec-9-2"></a>
@@ -315,40 +219,40 @@ system were avaialble). This is also a recorded-pass exercise.
 0 min - Short period while students get into groups and the previously-absent
 join groups.
 
-10 min - Students discuss with each other, and their Teacher, what they have
+10 min - Students discuss with each other, and their TA, what they have
 read and brainstorm on possible questions one might ask about this topic.
 
-40 min - Team leader gives 20 min presentation on how to get from a sub-topic to
+40 min - A Teacher gives 20 min presentation on how to get from a sub-topic to
 an broad experimental design (1st half of exp-design slides)
 
-60 min - With support from Teachers, sub-groups select a question and plan a
+60 min - With support from TAs, sub-groups select a question and plan a
 broad experimental design. 
 
-100 min - The sub-group nominates a student scribe to write down their idea in
-no more than one page of A4 and email to their teacher and every member of
-their sub-group (alternative: lab book).
+100 min - The group nominates a student scribe to write down their idea in
+no more than one page of A4 and email to their TA and every member of
+their group (alternative: lab book).
 
-105 min - Team leader sets homework:
+105 min - A Teacher sets homework:
 
 (1) For session 3A: Each member of the group finds a **different** paper relevant
 to their topic and prepares to talk to their group about it in session 3A.
 
 ### Session B: Handling large data sets<a id="sec-9-2-2" name="sec-9-2-2"></a>
 
-0 min - Team leader reveals resource on DLE with 200+ participant files for the
+0 min - A Teacher reveals resource on DLE with 200+ participant files for the
 1B experiment (these were collected in Week 1 from students). Runs R script from
 week 1 on a few of them to demonstrate variability in psychological
 data. Demonstrate development of that script which loads in all 200 files,
 makes one big data frame. 
 
-20 min - Get into sub-groups
+20 min - Get into groups
 
 30 min - Pass/fail assessed individual exercise replicating the steps in the
-team leader presentation.
+Teacher's presentation.
 
 50 min - Break
 
-60 min - Team leader presents on taking differences at a subject-level as a
+60 min - A Teacher presents on taking differences at a subject-level as a
 good way of getting a better signal. Ignores present/absent, focusses on set
 size. Demonstrates R script to take differences and plot histogram thereof. Use
 this to revise concepts of mean and variance. Demonstrate mean and variance
@@ -360,22 +264,22 @@ calculation in R.
 
 ### Session A: Reading and refining the idea<a id="sec-9-3-1" name="sec-9-3-1"></a>
 
-0 min - Get intro groups
+0 min - Get into groups
 
-5 min - Each member of the sub-group presents to the sub-group for 10 minutes
+5 min - Each member of the group presents to the group for 10 minutes
 on the paper they have read and how it relates to/affects their planned
-experiment. Allow 5 min subsequent to each presentation for this. Teacher
+experiment. Allow 5 min subsequent to each presentation for this. TA
 organizes, asks probing questions, and helps students decide what if any
-changes to make on this basis. Teacher schedules 10 minute break somewhere
+changes to make on this basis. TA schedules 10 minute break somewhere
 within this.
 
-105 min - The sub-group nominates a student scribe (different persont to last
+105 min - The group nominates a student scribe (different persont to last
 week) to write down their revised idea in no more than one page of A4 and email
-to their teacher and every member of their sub-group (alternative: lab book).
+to their TA and every member of their group (alternative: lab book).
 
 ### Session B: Building an experiment in PsychoPy<a id="sec-9-3-2" name="sec-9-3-2"></a>
 
-0 min - Team leader gives 20 min presentation on how to use Builder View on
+0 min - A Teacher gives 20 min presentation on how to use Builder View on
 PsychoPy to build your own experiment. Discusses the two-panel interface of
 PsychoPy. Demonstrates creating an event, adding some fixed-test instructions,
 adding a response key.
@@ -383,7 +287,7 @@ adding a response key.
 20 min - Individual pass/fail exercise generating instruction screen for their
 experiment (this may need to contain placeholder text for now).
 
-35 min - Team leader presentation on the following PsychoPy concepts: CSV files
+35 min - A Teacher presentation on the following PsychoPy concepts: CSV files
 as list of trials. Text and picture presentation. Loops. Introduce task below.
 
 70 min - Individual pass/fail exercise to generate a script to investigate
@@ -397,22 +301,22 @@ their own time until session 4B if they need it.
 
 ### Session A: Finalizing the idea<a id="sec-9-4-1" name="sec-9-4-1"></a>
 
-0 min - Team Leader gives 20 min presentation on getting from a general design
+0 min - A Teacher gives 20 min presentation on getting from a general design
 to the best specific design you can (see 2nd phase in exp-design.odt file). 
 
-25 min - Sub-groups with Teacher review their revised design and work to turn
+25 min - Groups with TA review their revised design and work to turn
 it into a specific protocol (something specific enough it could be programmed
 in PsychoPy).
 
-105 min - Sub-group elects scribe (third different person) to write up the
-protocol and email it to all sub-group members and Teacher before Session 4B
+105 min - Group elects scribe (third different person) to write up the
+protocol and email it to all group members and TA before Session 4B
 (or lab book). If they manage this before the end of Session 4A, they can start
 the work for session 4B.
 
 ### Session B: Writing your PsychoPy script<a id="sec-9-4-2" name="sec-9-4-2"></a>
 
 Goal: Have a working, bug-checked PsychoPy script ready to go for Session
-5A. The tasks, which they need to divide between members of the sub-group
+5A. The tasks, which they need to divide between members of the group
 include: (1) Writing the instructions, (2) Producing the CSV file(s) that
 define the trials. (3) Creating the stimulus sets, (4) Building the structure
 in PsychoPy. (5) Testing for bugs. (6) Checking the output is usable. 
@@ -422,11 +326,11 @@ in PsychoPy. (5) Testing for bugs. (6) Checking the output is usable.
 ### Session A: Data collection #1<a id="sec-9-5-1" name="sec-9-5-1"></a>
 
 The whole session is dedicated to being participants in the experiments of
-other sub-groups - see notes.
+other groups - see notes.
 
 ### Session B: Introduction to inferential tests<a id="sec-9-5-2" name="sec-9-5-2"></a>
 
-0 min - Team Leader reminds Group brief of material covered in 2B. Goes from
+0 min - A Teacher reminds students briefly of material covered in 2B. Goes from
 those ideas of mean and variance to the ideas of expeirmental and null
 hypotheses, the idea of inferential testing, and the idea of a within-subjects
 t-test. Demonstrates how to get from the 200 subject data set of 2B to a p
@@ -437,14 +341,14 @@ dataset. Maybe have multiple sets of data for those who work quickly
 
 50 min - break (work through break if not finished)
 
-60 min - Team Leader presentation on how P(data|null) is what we traditionally
+60 min - Teacher presentation on how P(data|null) is what we traditionally
 calculate but almost never what we actually want to know. Generally, we want to
 know whether the experimental or null is more likely, given our data. So,
 P(exp|data) / P(null|data). This is different, and not related to a p-value in
 any simple way. Fortuantely, it's also possible to calculate that ratio (a
 Bayes Factor). Demonstrate how to do this using Morey's BayesFactor package
 (Note: I'm a bit sad that this is a non-informative-prior approach to Bayes,
-but one step at a time&#x2026;)
+but one step at a time).
 
 80 min - Individual pass/fail doing a Bayesian t-test on the same DLE-provided
 data set. Maybe have multiple sets of data for those who work quickly.
@@ -457,7 +361,7 @@ The data collection continues, as per Session 5A
 
 ### Session B: One-factor ANOVA<a id="sec-9-6-2" name="sec-9-6-2"></a>
 
-0 min - In a pretty theory-light manner, TL introduces within/subj ANOVA as an
+0 min - In a pretty theory-light manner, a Teacher introduces within/subj ANOVA as an
 alternative method for doing  what we did with a within/subj
 t-test. Demonstrates how to do this with same dataset as 5B, using 'ez' package
 in R. Explain an F-ratio as conceptually a similar thing to a t-value i.e. a
@@ -475,7 +379,7 @@ quicker.
 
 60 min - break
 
-70 min - TL reminds students of the NHST vs. Bayes issue from 5B, and
+70 min - A Teacher reminds students of the NHST vs. Bayes issue from 5B, and
 introduces how to run a Bayesian version of this test from the Morey package
 
 85 min - Individual pass/fail on Bayesian one-factor ANOVA
@@ -484,7 +388,7 @@ introduces how to run a Bayesian version of this test from the Morey package
 
 ### Session A: Pairwise tests and GG/HF corrections<a id="sec-9-7-1" name="sec-9-7-1"></a>
 
-0 min - TL presentation. Light revision of 6B, and emphasis on what it means to
+0 min - Teacher presentation. Light revision of 6B, and emphasis on what it means to
 have a significant result when there are more than two nominal levels in the
 factor. Demonstrate use of subsetting and a t-test to look at a specific pair
 in the 6B data set. Discuss the rapdily increasing number of pairs in a set of
@@ -495,7 +399,7 @@ items, and the problem of multiple comparisons. Introduce Bonferroni as simple
 
 50 min - Break
 
-60 min - TL presentation. Describe sphericity assumption of ANOVA
+60 min - Teacher presentation. Describe sphericity assumption of ANOVA
 (pragmatically, rather than with deeply underlying theory). Present GG and HF
 as ways of compensating from divergence from this assumption. Focus on how to
 use within R rather than details of how it works (although give some abstract
@@ -506,10 +410,10 @@ catchup on any pass/fail assessments missed.
 
 ### Session B: Analysing and interpreting your data<a id="sec-9-7-2" name="sec-9-7-2"></a>
 
-Goal: With support of the Teacher, the sub-group performs appropriate data
-processing, analysis and interpretation of their data. Sub-group nominates a
+Goal: With support of their TA, each group performs appropriate data
+processing, analysis and interpretation of their data. Group nominates a
 scribe (fourth different person) to put together a written summary of the results and
-their interpretation, and pass to all group members and Teacher before session 8A.
+their interpretation, and pass to all group members and TA before session 8A.
 
 If this takes less than 2 hours, they can use this time to catch up on any
 missed pass/fail exercises.
@@ -520,10 +424,10 @@ missed pass/fail exercises.
 
 0 min - Get into groups
 
-5 min - Teacher and sub-group reprise what they did, what they have found, and
+5 min - TA and group reprise what they did, what they have found, and
 discuss any problems/limitations of what they have done. 
 
-25 min - Teacher leads discussion of examples of very clear, and very unclear,
+25 min - TA leads discussion of examples of very clear, and very unclear,
 lectures they have encountered since joining Stage 1. What do these good/bad
 experiences have in common? Possible issues - Rate of presentation; incorrectly
 assumed knowledge; over-crowded slides; a million facts but no big picture; a
@@ -535,17 +439,17 @@ specific question, (C) Metholodgy, (D) Results, (E) Interpretation, (F)
 problems and next steps, (G) Writing an abstract.  Agree an allocation of time
 and number of slides each. Group takes a break at some point
 
-90 min - Group gives their draft presentation to their Teacher; teacher and
+90 min - Group gives their draft presentation to their TA; TA and
 themselves reflect on what went well/ not so well.
 
-105 min - Teacher sets homework: 
+105 min - TA sets homework: 
 
-(1) Send names, title, and abstract for talk to Teacher by Session 8B.
-(2) Refine and practice your presentation in preparation for Sessio 9A.
+(1) Send names, title, and abstract for talk to TA by Session 8B.
+(2) Refine and practice your presentation in preparation for Session 9A.
 
 ### Session B: Two-factor ANOVA, interactions<a id="sec-9-8-2" name="sec-9-8-2"></a>
 
-0 min - TL introduces the concept of an interaction as a difference of
+0 min - Teacher introduces the concept of an interaction as a difference of
 differences. They should really spend a bunch of time explaning this from as
 many angles as possible (including graphical), because a lot of students find
 this really hard. Probably give some examples from the published literature. 
@@ -553,13 +457,13 @@ this really hard. Probably give some examples from the published literature.
 20 min - Students work through 8-10 examples of real data plotted and tabled in
 various forms, with a potted explanation of the study, and are asked to write
 down whether (numerically) they show a clear interaction or not, and what the
-interpretation is of these data in terms of the experiment run. Teachers go
+interpretation is of these data in terms of the experiment run. TAs go
 around and discuss/check a randomly selected answer with each student. If the
-student gets it wrong, the teacher explains the correct answer and asks them to
+student gets it wrong, the TA explains the correct answer and asks them to
 do another example, which they'll come back to. Getting one right by the end of
 this session counts as a pass. 
 
-50 min - TL goes through a few examples of two-factor ANOVA with real data in
+50 min - Teacher goes through a few examples of two-factor ANOVA with real data in
 R, showing both 'ez' NHST and 'BayesFactor' versions.
 
 70 min - Break
@@ -571,16 +475,16 @@ sets.
 
 ### Session A: Giving a group presentation<a id="sec-9-9-1" name="sec-9-9-1"></a>
 
-We split the four Teachers into two sets of two. This gives them 6 group
-presentations to assess each (which they double mark). Prior to the session The
-Teacher pairs circulate a symposium booklet for their 6 groups - names, title,
+Six of the seven staff members get into pairs -- this gives them 6 group
+presentations to assess each (which they double mark). Prior to the session the marker pairs
+circulate a symposium booklet for their 6 groups - names, title,
 and abstract for each talk. Each group gets 10 min plus 5 min for questions and
 feedback. With switchover etc., this should just fit into the 110 min time
 available.
 
 ### Session B: Modifying an experiment<a id="sec-9-9-2" name="sec-9-9-2"></a>
 
-The sub-group and Teacher reflect on their results, and the feedback received
+The group and TA reflect on their results, and the feedback received
 on their presentation. They discuss what they would have done differently if
 they were starting again. They make an assessment of how serious these
 shortcomings are to drive the following decision. Should they:
@@ -593,7 +497,7 @@ effects).
 investigation to add another factor. Run that second condition in their second
 data colleciton phase. 
 
-If choosing B, the Teacher needs to clarify that adding a condition like this
+If choosing B, the TA needs to clarify that adding a condition like this
 is OK for teaching purposes but should  be avoided in research you're going
 to publish. It introduces a time-of-testing confound. Between-subject
 conditions should be finely intermixed. 
@@ -627,27 +531,27 @@ As Session 7B.
 
 ### Session A: Writing a good report<a id="sec-9-12-1" name="sec-9-12-1"></a>
 
-0 min - TL gives 30 min talk on basics of writing a good report (see
+0 min - A Teacher gives 30 min talk on basics of writing a good report (see
 report-writing.odp as an example).
 
-35 min - Each sub-group, with assistance of Teacher, comes up with a bullet point
+35 min - Each group, with assistance of TAs, comes up with a bullet point
 plan for each section of the report. 
 
 60 min - Break; group re-arrange.
 
-70 min - Each sub-group, with an audience of that Teacher's other two
-sub-groups, talks through their bullet point plan. Teacher and other sub-groups
+70 min - Each sub-group, with an audience of that TA's other two
+groups, talks through their bullet point plan. TA and other groups
 provide feedback on what they found clear / unclear.
 
 105 min - Homework: Given two prior reports to read by Session B (see below)
 
 ### Session B: Critiquing reports / Finishing up<a id="sec-9-12-2" name="sec-9-12-2"></a>
 
-0 min - Sub-groups are given one example 1st class and one example 2ii report
+0 min - Groups are given one example 1st class and one example 2ii report
 (we would put these together ourselves by coming up with an imaginary study,
 writing it up well, and then breaking it). Can they tell why those two reports
 differed in mark? What are the good points of the 1st class report? Where did
-the 2ii report go wrong? Support from Teacher.
+the 2ii report go wrong? Support from TA.
 
 When this activity is over (probably about 60 min) the students can use the
 remaining time for whatever remaining questions they may have and/or a final
