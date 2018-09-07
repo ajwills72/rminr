@@ -58,9 +58,10 @@ To deliver this to 240 students, we need to repeat the whole thing 3 times (3 _I
 
 There are lots of ways one could spread Teachers and TAs across these 2016 hours. Constraints are:
 
-1. We need enough Teachers to develop the materials for three topic areas (so, at least 3 Teachers, I reckon).
+1. We need enough Teachers to develop the materials for six topic areas (3 per semester).
 
 2. We need to not overload anyone. For example, a TA or Teacher covering all 3 _Instantiations_ would have ~150 hours contact time in a semester. A TA covering all 3 _Instantiations_ would end up with, in addition, about 50 reports to mark. 
+
 3. We need to know whether the _Instantiations_ are running at the same time in different locations, or at different times in the same location. If we're using Link 301, it's the latter.
 
 One plan is to have 6 Teachers (2 for each instantiation) per module. The topics would change between semesters, so to cover the whole year, we'd need **12 Teachers**, each with a contact time commitment of **48 hours**. 
