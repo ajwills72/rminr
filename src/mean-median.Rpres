@@ -1,0 +1,74 @@
+Means and medians
+========================================================
+author: Andy Wills  
+date: 
+autosize: true
+
+```{r, echo=FALSE}
+data <- c(1, 2, 2, 3, 3, 3, 4, 4, 50)
+```
+
+Median
+======
+
+```{r}
+data
+```
+
+- The median is the middle number when the data is put in order
+
+```{r}
+median(data)
+```
+
+Mean
+====
+
+```{r}
+data
+```
+
+- The mean is the sum of all the numbers...
+
+```{r}
+sum(data)
+```
+
+- ...divided by the sample size
+
+```{r}
+length(data)
+```
+
+- Giving:
+
+```{r}
+mean(data)
+```
+
+Comparison
+=====
+
+```{r}
+data
+mean(data)
+median(data)
+```
+
+- In this case, the mean is bigger than 8 of the 9 numbers. This means it's not very _representative_ of its sample.
+
+- The mean will always be unrepresentative when there are a few numbers that are very high (or very low), compared to the rest.
+
+- In these cases, we saw the distibution is _skewed_.
+
+Skewness
+====
+
+```{r, echo=FALSE}
+library(tidyverse)
+cpsdata <- read_csv("http://www.willslab.org.uk/cps2.csv")
+cpsdata %>% ggplot(aes(income)) + geom_histogram(binwidth=20000)
+```
+
+- Our _income_ data is skewed, so the median gives a better indication of average salary than the mean in this case.
+

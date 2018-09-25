@@ -250,9 +250,9 @@ Take a look at the [R Graph Gallery](https://www.r-graph-gallery.com/) for lots 
 
 <a name="writing"></a>
 
-## Lab book writing exercise
+## PsycEL writing exercise
 
-In class, we discussed how the histogram helped us to understand why the mean and median incomes were so different, and whether the mean or the median gave a better account of average US income.
+In class, we discussed how the histogram helped us to understand why the mean and median incomes were so different, and whether the mean or the median gave a better account of average US income. Here are the [slides](mean-median.html), if you'd like to look at them again.
 
 On the Psyc\:EL Answer Section, you'll find the question "Does the mean or the median give a better indication of average salary in this case?". **In the text box provided, give a short answer to this question**. You need not write more than a few sentences, but you should explain your reasoning. 
 
