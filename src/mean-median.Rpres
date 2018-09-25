@@ -28,19 +28,7 @@ Mean
 data
 ```
 
-- The mean is the sum of all the numbers...
-
-```{r}
-sum(data)
-```
-
-- ...divided by the sample size
-
-```{r}
-length(data)
-```
-
-- Giving:
+- The mean is the sum of all the numbers (72), divided by the sample size (9), giving:
 
 ```{r}
 mean(data)
@@ -51,15 +39,13 @@ Comparison
 
 ```{r}
 data
-mean(data)
-median(data)
 ```
 
-- In this case, the mean is bigger than 8 of the 9 numbers. This means it's not very _representative_ of its sample.
+- In this case, the mean (8) is bigger than nearly all the numbers. This means it's not very _representative_ of its sample.
 
 - The mean will always be unrepresentative when there are a few numbers that are very high (or very low), compared to the rest.
 
-- In these cases, we saw the distibution is _skewed_.
+- In these cases, we sau the distibution is _skewed_.
 
 Skewness
 ====
