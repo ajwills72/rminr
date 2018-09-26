@@ -18,6 +18,8 @@ knitr::opts_chunk$set(echo = TRUE, comment=NA)
 
 Before starting this exercise, you should have had a brief introduction to getting and using RStudio -- [Introduction to RStudio](intro-rstudio.html). You should also have also completed the workshop exercises for [Exploring Data](exploring-incomes.html) and [Group Differences](group-differences.html). If not, take a look these earlier worksheets before continuing.
 
+First, log in to <a href = "https://rstudio.plymouth.ac.uk" target = "blank">RStudio server</a>.
+
 You also need to load _tidyverse_ and the income _data frame_, and create the `cpslow` data frame, as covered in [Group Differences](group-differences.html). Here's a reminder of the commands you need to do this:
 ```{r init,message=FALSE}
 library(tidyverse)
@@ -125,11 +127,11 @@ It is possible to calculate what we want to know, P(null|data), given what a t-t
 
 For example, say you have the hypothesis that if people read a few sentences related to old age, they will walk more slowly. Believe it or not, this is a [real example of a psychological hypothesis](https://scholar.google.com/scholar?q=Automaticity+of+social+behavior%3A+Direct+effects+of+trait+construct+and+stereotype+activation+on+action+Bargh+1996).
 
-Before collecting any data, this hypothesis seems unlikely. If the experiment is well designed (see lectures), we might conclude that the probability of the null hypothesis was rather high. Let's say, P(null) = 0.95. 
+Before collecting any data, this hypothesis seems unlikely. If the experiment is well designed, we might conclude that the probability of the null hypothesis was rather high. Let's say, P(null) = 0.95. 
 
 We run the experiment, do a t-test, and get a p value of .049. So, P(data|null) = .049. Traditionally, psychologists would call this a _significant_ result, believe you, and allow you to publish it. This is the wrong response because, in this case, P(null|data) is about 0.5 (not .05, .5! 50:50 !) .
 
-In other words, instead of running the experiment, you'd have done just as well to flip a coin and say your hypothesis was right if the coin came up heads. This is no way to run a research programme, and probably goes some way to explain why psychology is full of reports of weird findings that aren't real (the replication crisis - see lectures).
+In other words, instead of running the experiment, you'd have done just as well to flip a coin and say your hypothesis was right if the coin came up heads. This is no way to run a research programme, and probably goes some way to explain why psychology is full of reports of weird findings that aren't real (aka. the "replication crisis"").
 
 <a name="bf"></a>
 
@@ -148,7 +150,7 @@ A Bayes Factor of exactly 1 tells you that the presence or absence of a differen
 ## Between-subjects Bayesian t-test 
 A Bayesian t-test is used for the same sorts of things as a traditional t-test (see above), but returns a Bayes Factor rather than a p value.
 
-The easiest way to do a Bayesian t-test in R is to use the _BayesFactor_ package. Recall, that you load a package using the `library` command. The `quietly = TRUE` bit is there because this package is very chatty when it loads, which gets a bit annoying after a while.
+The easiest way to do a Bayesian t-test in R is to use the _BayesFactor_ package. Recall, that you load a package using the `library` command. 
 
 ```{r bayesfactor, message=FALSE}
 library(BayesFactor, quietly = TRUE)
@@ -218,5 +220,4 @@ ___
 
 This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0. 
 
-_version 0.2_
 

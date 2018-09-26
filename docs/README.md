@@ -90,7 +90,7 @@ ____
 
 Thanks to the following people for their feedback and advice on these materials:
 
-Jackie Andrade, Eleanor Andrade May,
+Jackie Andrade, Eleanor Andrade May, Martyn Atkins,
 Patric Bach, Dale Barr, Chris Berry,
 Laura Charlton,
 Lisa DeBruine, 
@@ -102,7 +102,7 @@ Angus Inkster,
 Jasmin Jones, Peter Jones, 
 Laith Kahn, 
 Chris Longmore,
-Jon May, Chris Mitchell, Millie Monks,
+Jon May, Anthony Mee, Chris Mitchell, Millie Monks,
 Alyson Norman,
 Charlie Reynolds, Matt Roser,
 Alastair Smith, Julian Stander, 
