@@ -5,6 +5,8 @@ _Andy Wills_
 
 Before starting this exercise, you should have had a brief introduction to getting and using RStudio -- [Introduction to RStudio](intro-rstudio.html). You should also have also completed the workshop exercises for [Exploring Data](exploring-incomes.html), [Group Differences](group-differences.html), and [Evidence](evidence.html). If not, take a look these earlier worksheets before continuing.
 
+Log in to <a href = "https://rstudio.plymouth.ac.uk" target = "blank">RStudio server</a>.
+
 ## Contents
 
 - [Creating a new project](#create)
