@@ -20,7 +20,7 @@ Before starting this exercise, you should have completed **all** the relevant [A
 ## Getting the data into R
 **Relevant worksheet:** [Using RStudio projects](using-projects.html)
 
-You'll need to complete the PsychEL excerise to get the CSV file containing your data. Set up an RStudio project for this analysis, and copy the CSV file into it. 
+You'll need to complete the PsychEL exercise to get the CSV file containing your data. Set up an RStudio project for this analysis, and copy the CSV file into it. 
 
 ## Exploring your data
 
@@ -41,12 +41,11 @@ Look at the data by clicking on it in the _Environment_ tab in RStudio. Each row
 | Column | Description                             | Values             |
 | ------ | --------------------------------------- | ------------------ |
 | Illusion   | The illusion presented on this trial | "M" = Muller-Lyer illusion, "T" = T illusion |
-| Pattern  | Type of stimulus presented on this trial | "P1"  = Muller-Lyer, arrow heads, "P2" = Muller-Lyer arrow tails, "T" = T illusion          |
 | Angle   | Angle of line | For Muller-Lyer, angle in degrees of small lines on left hand side of the Muller-Lyer stimulus, clockwise from 9 o'clock: 45, 90, 135. For T illusion, angle in degrees of lefthand line, clockwise from 9 o'clock: 0, 45, 90 |
 | FinalLength  | Final length of the line you adjusted (arbitrary units) | a number; 200 if you accurately matched the other line|
 | Difference200     | FinalLength - 200                          | a number; 0 if you accurately matched, negative if your line was too short, positive if your line was too long |
 
-You completed 70 trials in total. Each angle was presented 10 times, except the 90 degree angle for the Muller-Lyer illusion, which was presented 20 times.
+There may be an extra column called "Pattern", but you can just ignore it. You completed 60 trials in total. Each angle was presented 10 times.
 
 ## Muller-Lyer illusion
 
