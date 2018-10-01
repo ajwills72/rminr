@@ -92,7 +92,9 @@ mems %>% ggplot(aes(period)) +
   annotate("text", x = Inf, y = -Inf, label = "EXAMPLE PLOT", col = "red", hjust = 5.1, vjust = -1.1)
 ```
 
-2. Download your histogram, using the _Export_ icon on RStudio's _Plots_ window, and selecting "Save as image...". Give it a meaninful file name (e.g. "memories-hist") and click 'Save'. 
+2. Export your histogram, using the _Export_ icon on RStudio's _Plots_ window, and selecting "Save as image...". Give it a meaninful file name (e.g. "memories-hist") and click 'Save'. 
+
+3. Download your histogram from RStudio server - see [these instructions](using-projects.html#download) for a reminder of how to do this.
 
 3. **Upload your histogram** to PsycEL (see the PsycEL activity for instructions of how to do this).
 

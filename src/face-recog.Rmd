@@ -146,6 +146,13 @@ meanplot
 
 **Use RStudio to export your graph as an Image, and upload it to your lab book.**
 
+### Recording our answer
+
+1. Export your graph, using the _Export_ icon on RStudio's _Plots_ window, and selecting "Save as image...". Give it a meaninful file name (e.g. "face-bar") and click 'Save'. 
+
+2. Download your graph from RStudio server - see [these instructions](using-projects.html#download) for a reminder of how to do this.
+
+3. **Upload your graph** to PsycEL (see the PsychEL activity for instructions of how to do this).
 
 
 ___
