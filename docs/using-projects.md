@@ -13,6 +13,7 @@ Log in to <a href = "https://rstudio.plymouth.ac.uk" target = "blank">RStudio se
 - [Writing an R script](#write)
 - [Running an R script](#run)
 - [Exercise: Analysis using an R script](#ex1)
+- [Downloading files from RStudio Online](#download)
 
 <a name="create"></a>
 
@@ -122,6 +123,19 @@ t.test(cpsdata$income ~ cpsdata$sex)
 ## Perform Bayesian t-test
 ttestBF(formula = income ~ sex, data = data.frame(cpsdata))
 ```
+
+<a name="download"></a>
+
+### Downloading files from RStudio Online
+
+In order to use files from RStudio Online in other applications (e.g. Microsoft Office, LibreOffice), you'll need to download them. Here's how:
+
+1. Click on the 'Files' tab in RStudio Online, and click the tick box to select your file (it will have whatever filename you just gave it.). 
+
+2. Click on "More" (next to the little blue gear wheel), and then "Export...". 
+
+3. Click "Download". The file will now be in the Downloads folder of your computer. 
+
 ___
 
 This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0. 

@@ -230,19 +230,15 @@ Now, export your histogram, using the _Export_ icon on RStudio's _Plots_ window,
 
 ### Downloading files from RStudio Online
 
-1. Click on the 'Files' tab in RStudio Online, and click the tick box to select your image (it will have whatever filename you just gave it.). 
-
-2. Click on "More" (next to the little blue gear wheel), and then "Export...". 
-
-3. Click "Download". The file will now be in the Downloads folder of your computer. 
+Follow [these instructions](using-projects.html#download).
 
 ### Uploading files to PsycEL
 
-4. Open your computer's Downloads folder (e.g. on a Windows 10 machine, click on the little yellow folder at the bottom of the screen, and then click on "Downloads"). 
+1. Open your computer's Downloads folder (e.g. on a Windows 10 machine, click on the little yellow folder at the bottom of the screen, and then click on "Downloads"). 
 
-5. Find your file in that Downloads folder, and drag it to the appropriate box on your Psyc\:EL Answer Sheet. 
+2. Find your file in that Downloads folder, and drag it to the appropriate box on your Psyc\:EL Answer Sheet. 
 
-6. Click 'Upload image' on your Psyc\:EL answer sheet. 
+3. Click 'Upload image' on your Psyc\:EL answer sheet. 
 
 ### Extension exercise
 
