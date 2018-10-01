@@ -22,7 +22,7 @@ Before starting this exercise, you should have completed **all** the [Absolute B
 
 You will need to complete the Psych:EL activity in your group of six before you can do this analysis. Once you have completed the activity, do this:
 
-1. Set up an RStudio project for this analysis. 
+1. [Set up a new project](using-projects.html) on RStudio Server for this analysis.
 
 2. Open [this CSV file](memories-blank.csv) with a spreadsheet application (e.g. LibreOffice Calc, Excel). Notice that each memory for each participant has its own row in the CSV file. Decide who is participant 1, 2, etc. in your group -- it doesn't matter which is which, as long as each person has a different participant number. 
 
@@ -38,9 +38,11 @@ You will need to complete the Psych:EL activity in your group of six before you 
 
 Enter the data from each participant, using one row for each memory. If some people recalled fewer than six memories, type `NA` for those memories (e.g. if a participant had only 5 memories, type `NA` for their memory 6.)
 
-4. Save your CSV file into your RStudio project folder, as `memories.csv`.
+4. Save your CSV file into the Downloads folder of the computer you are using, as `memories.csv`.
 
-5. Load the _tidyverse_ package, and then load your data into R.
+5. [Upload your CSV](entering-data-by-hand.html#upload) to your project.
+
+6. Load the _tidyverse_ package, and then load your data into R.
 
 ```{r init-load, message=FALSE} 
 library(tidyverse)
@@ -79,7 +81,8 @@ mems %>% ggplot(aes(period)) +
 **Explanation:** The command `scale_x_continuous` contains the words `breaks` and `labels`. `breaks = 1:5` tells R we want a bar for each of the periods 1, 2, 3, 4 and 5. `labels` gives the label for each of those bars, in order. 
 
 ### Exercise
-Modify the command above to add more meaningful labels to your histogram. If you get it right, it'll look something like this (without the words "example plot", of course):
+
+1. Modify the command above to add more meaningful labels to your histogram. If you get it right, it'll look something like this (without the words "example plot", of course):
 
 ```{r hist-labels2, echo = FALSE, warning=FALSE}
 mems %>% ggplot(aes(period)) + 
@@ -89,10 +92,12 @@ mems %>% ggplot(aes(period)) +
   annotate("text", x = Inf, y = -Inf, label = "EXAMPLE PLOT", col = "red", hjust = 5.1, vjust = -1.1)
 ```
 
-**Use RStudio to export your graph as an Image, and upload it to your lab book.**
+2. Download your histogram, using the _Export_ icon on RStudio's _Plots_ window, and selecting "Save as image...". Give it a meaninful file name (e.g. "memories-hist") and click 'Save'. 
+
+3. **Upload your histogram** to PsycEL (see the PsycEL activity for instructions of how to do this).
+
 
 ___
 
 This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0. 
 
-_version 0.2.1_
