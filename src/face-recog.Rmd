@@ -20,7 +20,9 @@ Before starting this exercise, you should have completed **all** the [Absolute B
 ## Getting the data into R
 **Relevant worksheet:** [Using RStudio projects](using-projects.html)
 
-You'll need to complete the PsychEL excerise to get the CSV file containing your data. Set up an RStudio project for this analysis, and copy the CSV file into it. 
+In order to complete this worksheet, you'll need to have downloaded your CSV file from the PsycEL exercise. **See the instructions on PsycEL for how to do this.**
+
+Once you have downloaded your CSV file, [set up a new project](using-projects.html) on RStudio Server for this analysis, and [upload your CSV](entering-data-by-hand.html#upload) to your project.
 
 ## Exploring your data
 

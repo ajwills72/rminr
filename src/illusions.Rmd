@@ -145,11 +145,13 @@ Now do the following:
 
 1. Produce a violin plot for the _other_ illusion type in your data file, the T illusion. How does angle affect the size of the illusion in this case?  
 
-2. Download your violin plot, using the _Export_ icon on RStudio's _Plots_ window, and selecting "Save as image...". Give it a meaninful file name (e.g. "illusion-violin") and click 'Save'. 
+2. Export your violin plot, using the _Export_ icon on RStudio's _Plots_ window, and selecting "Save as image...". Give it a meaninful file name (e.g. "illusion-violin") and click 'Save'. 
 
-3. **Upload your violin plot** to PsycEL (see the PsychEL activity for instructions of how to do this).
+3. Download your violin plot from RStudio server - see [these instructions](using-projects.html#download) for a reminder of how to do this.
 
-4. Calculate the Bayes Factor for the comparison between 0 and 90 degrees for the T illusion. **Enter the exact Bayes Factor into the PsycEL answer section.**. 
+4. **Upload your violin plot** to PsycEL (see the PsychEL activity for instructions of how to do this).
+
+5. Calculate the Bayes Factor for the comparison between 0 and 90 degrees for the T illusion. **Enter the exact Bayes Factor into the PsycEL answer section.**. 
 
 _Hint for T illusion exercise:_ Your first step should be to produce a data frame that contains only the data from the T illusion (perhaps call it `tee`). This is the first command we covered in this worksheet. Once you've done that, the rest of the commands should work as long as you replace `mull` with `tee`. 
 
