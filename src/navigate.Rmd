@@ -20,7 +20,9 @@ Before starting this exercise, you should have completed **all** the [Absolute B
 ## Getting the data into R
 **Relevant worksheet:** [Using RStudio projects](using-projects.html)
 
-You'll need to complete the PsychEL excerise to get the CSV file containing the data. Set up an RStudio project for this analysis, and copy the CSV file into it. 
+In order to complete this worksheet, you'll need to have downloaded your CSV file from the PsycEL exercise. **See the instructions on PsycEL for how to do this.**
+
+Once you have downloaded your CSV file, [set up a new project](using-projects.html) on RStudio Server for this analysis, and [upload your CSV](entering-data-by-hand.html#upload) to your project.
 
 ## Exploring your data
 
@@ -86,7 +88,13 @@ navplot
 
 Type `colours()` into the console to see the 657 named colours available in R. Pick two you find clear and pleasing, and modify the command above to use them. 
 
-**Use RStudio to export your graph as an Image, and upload it to your lab book.** Any clear colour scheme, other than the yellow/black scheme used in this example, is fine. 
+### Recording our answer
+
+1. Export your graph, using the _Export_ icon on RStudio's _Plots_ window, and selecting "Save as image...". Give it a meaninful file name (e.g. "nav-bar") and click 'Save'. 
+
+2. Download your graph from RStudio server - see [these instructions](using-projects.html#download) for a reminder of how to do this.
+
+3. **Upload your graph** to PsycEL (see the PsychEL activity for instructions of how to do this).
 
 ___
 
