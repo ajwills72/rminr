@@ -43,8 +43,6 @@ If you are a current undergraduate student at Plymouth University, you should co
 
 * [Visual illusions](illusions.html). Filtering data, means, **violin plot**, Bayesian t-test.
 
-* [Placeholder A](https://upload.wikimedia.org/wikipedia/commons/9/9e/Bermuda_Triangle_he.jpg). Not yet written.
-
 #### Part 2
 
 * [Facial attractiveness experiment](face-attract.html). Means, standard deivations, **inter-quartile range**, and _density plots_. 
