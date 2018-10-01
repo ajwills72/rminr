@@ -31,13 +31,15 @@ These are mainly further practice in the skills you learned in _Absolute Beginne
 
 If you are a current undergraduate student at Plymouth University, you should complete the accompanying Psych:EL (Psychology: Experiential Learning) activity first, in order to generate your own set of data. If you're not, you can download sample data files [here](rtoworkdata.html).
 
-#### Part 1
+#### Part 1a
 
 * [Autobiographical memory study](memories.html). Entering data by hand, _histograms_.
 
 * [Face recognition experiment](face-recog.html). Means, _filtering data_, and a **bar graph**.
 
 * [Spatial navigation tests](navigate.html). More on **bar graphs**.
+
+#### Part 1b
 
 * [Response compatibility experiment](response-compatibility.html). Means, standard deviations, and density plots.
 
