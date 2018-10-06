@@ -45,7 +45,7 @@ data
 
 - The mean will always be unrepresentative when there are a few numbers that are very high (or very low), compared to the rest.
 
-- In these cases, we sau the distibution is _skewed_.
+- In these cases, we say the distibution is _skewed_.
 
 Skewness
 ====
