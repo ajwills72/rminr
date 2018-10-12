@@ -6,6 +6,8 @@ Before you can use RStudio, you have to get it running on your computer. Here's 
 
 **Web browser** (recommended) - Go to an <a href = "https://rstudio.plymouth.ac.uk" target = "blank">RStudio server</a> and log on, using the username and password you have been given. 
 
+_NOTE_: RStudio works on most web browsers (e.g. Firefox, Safari, Chrome) but does not work that well on the default web browser in Windows 10 ("Edge"). If you're using Windows, I recommend [downloading Firefox](https://www.mozilla.org/en-US/firefox/new/) and using that. Firefox is free and open source.
+
 **Install on your own machine** - Alternatively, you can install RStudio on your own laptop or desktop. It's completely free, and will probably take around 30 minutes to install. Follow these [step-by-step instructions](install-rstudio.md).
 
 ## Using RStudio
