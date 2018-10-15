@@ -216,6 +216,12 @@ Immigrants earn less than those born in the US, `BF =    , t(   ) = , p  =   ` (
 
 Fill in the blanks! 
 
+### When p-values and Bayes Factors disagree
+
+_Question_: So, what if your p-value is less than .05, but your Bayes Factor is less than 3 ?
+
+_Answer_: Believe the Bayes Factor, and ignore the p value. The p value is there for historical reasons and doesn't tell you anything you actually want to know. If you'd like to read more about this issue, take a look at [more on Bayes Factors](more-on-bf.html).
+
 ___
 
 This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0. 
