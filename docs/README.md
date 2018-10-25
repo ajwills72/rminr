@@ -1,6 +1,8 @@
 
 ## Absolute Beginners' Guide to R
 
+#### Part 1
+
 * [Introduction to RStudio](intro-rstudio.md). How to install RStudio, and a basic introduction to the software.
 
 * [Exploring data](exploring-incomes.html). Means, medians, and histograms. 
@@ -12,6 +14,8 @@
 * [Using RStudio projects](using-projects.html). Creating a new project. Using an R script. Analysing your own data. 
 
 * [Entering data by hand](entering-data-by-hand.html). Entering data into a spreadsheet. Saving data into your RStudio project.
+
+#### Part 2
 
 * [Inter-rater reliability](irr.html). Percentage agreement. Cohen's kappa. 
 
