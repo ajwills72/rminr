@@ -3,7 +3,7 @@
 
 #### Part 1
 
-* [Introduction to RStudio](intro-rstudio.md). How to install RStudio, and a basic introduction to the software.
+* [Introduction to RStudio](intro-rstudio.md). How to get RStudio, and a basic introduction to the software.
 
 * [Exploring data](exploring-incomes.html). Means, medians, and histograms. 
 
@@ -15,6 +15,8 @@
 
 * [Entering data by hand](entering-data-by-hand.html). Entering data into a spreadsheet. Saving data into your RStudio project.
 
+* [Calculating your module mark](modmark.html). How to calculate a final module mark from your component marks, using R.
+
 #### Part 2
 
 * [Inter-rater reliability](irr.html). Percentage agreement. Cohen's kappa. 
@@ -23,11 +25,14 @@
 
 * [Relationships, part 2](corr.html). Density plots. Scatter plots. Correlation co-efficient. Bayesian and traditional tests. 
 
+
+#### Further reading
+
 * [Cheat sheet](cheat-sheet.html). Everything we've covered so far, condensed. 
 
 * [Reasons to use R](why-r-student.html). Why this course uses R to analyse data.
 
-* [Further reading](resources.html). A list of other Creative Commons resources about using R. 
+* [Other resources](resources.html). A list of other Creative Commons resources about using R. 
 
 ## Putting R to work
 
@@ -64,8 +69,6 @@ If you are a current undergraduate student at Plymouth University, you should co
 * [Police lineup](lineup.html). Contingency table, mosaic plot, Bayesian contingency test, means, density plot, Bayesian t-test
 
 * [Risk-taking questionniare](risk-rat.html). Means, **combining data frames**, filtering data, and _density plots_.
-
-* [Placeholder B](https://upload.wikimedia.org/wikipedia/commons/9/9e/Bermuda_Triangle_he.jpg). Activity by not yet written.
 
 ## The next level...
 

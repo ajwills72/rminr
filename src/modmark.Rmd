@@ -1,0 +1,55 @@
+---
+title: "Calculating your module mark"
+author: "Peter Jones, Andy Wills"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+## DEVELOPERS: Uncomment one option, as appropriate
+
+## Show only commands.
+## knitr::opts_chunk$set(echo = TRUE, message = FALSE, results='hide', fig.keep = 'none', comment=NA)
+
+## Show commands and ouptut.
+knitr::opts_chunk$set(echo = TRUE, comment=NA)
+```
+
+You can use R to quickly calculate your final mark for a module from your component marks, assuming you know the weighting of each component (usually provided on the module description). Here's how:
+
+1. Start a new project in RStudio.
+
+2. Enter your percentage marks for each component for the module:
+
+```{r enter-marks}
+portfolio <- 65
+poster <- 22
+mcq <- 87
+data <- 35
+```
+
+Of course, replace the marks above with your own marks :-)
+
+3. Combine your marks into one variable using the `c` command:
+
+```{r components <- c(portfolio, poster, mcq, data)bine}
+components <- c(portfolio, poster, mcq, data)
+```
+
+4. Enter the weighting for each component (same order as above):
+
+```{r weights}
+weights <- c(.35, .3, .3, .05)
+```
+
+5. Calculate the weighted sum of each of your marks, using the `sum` command, and then round to the nearest whole percentage, using the `round` command:
+
+```{r mark}
+round(sum(components * weights))
+```
+
+The number you get from the above command is your overal module mark. 
+
+___
+
+This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0. 
+
