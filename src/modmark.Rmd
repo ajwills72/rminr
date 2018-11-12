@@ -41,13 +41,13 @@ components <- c(portfolio, poster, mcq, data)
 weights <- c(.35, .3, .3, .05)
 ```
 
-5. Calculate the weighted sum of each of your marks, using the `sum` command, and then round to the nearest whole percentage, using the `round` command:
+5. Calculate the weighted sum of your marks, using the `sum` command, and then round to the nearest whole percentage, using the `round` command:
 
 ```{r mark}
 round(sum(components * weights))
 ```
 
-The number you get from the above command is your overal module mark. 
+The number you get from the above command is your overall module mark. 
 
 ___
 
