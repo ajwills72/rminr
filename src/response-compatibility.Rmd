@@ -15,11 +15,7 @@ knitr::opts_chunk$set(echo = TRUE, comment=NA)
 ```
 
 ## Before you start...
-<<<<<<< HEAD
 Before starting this exercise, you should have completed **all** the [Absolute Beginners, Part 1](index.html) worksheets. If not, take a look at those exercises before continuing. Each section below also indicates which of the earlier worksheets are relevant.
-=======
-Before starting this exercise, you should have completed **all** the [Absolute Beginers', Part 1](index.html) workshop exercises. If not, take a look at those exercises before continuing. Each section below also indicates which of the earlier worksheets are relevant.
->>>>>>> 91f43121cef25ae320cfaa78957307ea5984dc7c
 
 ## Getting the data into R
 **Relevant worksheet:** [Using RStudio projects](using-projects.html)
@@ -128,4 +124,3 @@ ___
 
 This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0. 
 
-Updated.
