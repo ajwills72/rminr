@@ -67,7 +67,7 @@ How big is this difference likely to be in the US population as a whole --- assu
 ```
 This 95% confidence interval tells us that the mean difference in the population is very likely to be somewhere between $14,518.10 and $4400.64. If we had collected more data we could have been more precise.  
 
-The 95% confidence interval is only thing reported by a t-test that is both useful and easy to interpret. Psychologists are now encouraged to report it in their papers, like this:
+The 95% confidence interval is the only thing reported by a t-test that is both useful and easy to interpret. Psychologists are now encouraged to report it in their papers, like this:
 
 `Women earned less than men, [-$14518, -$4400], d = .20, t(991.3) = 3.67, p < .05`.
 
