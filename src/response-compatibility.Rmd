@@ -15,7 +15,7 @@ knitr::opts_chunk$set(echo = TRUE, comment=NA)
 ```
 
 ## Before you start...
-Before starting this exercise, you should have completed **all** the [Absolute Beginers'](index.html) workshop exercises. If not, take a look at those exercises before continuing. Each section below also indicates which of the earlier worksheets are relevant.
+Before starting this exercise, you should have completed **all** the [Absolute Beginners, Part 1](index.html) worksheets. If not, take a look at those exercises before continuing. Each section below also indicates which of the earlier worksheets are relevant.
 
 ## Getting the data into R
 **Relevant worksheet:** [Using RStudio projects](using-projects.html)
@@ -40,8 +40,7 @@ Look at the data by clicking on it in the _Environment_ tab in RStudio. Here's w
 
 | Column | Description                             | Values             |
 | ------ | --------------------------------------- | ------------------ |
-| SRN    | Your Student Reference Number           |                    |
-| trial  | Trial number                            | 1 - 200            |
+| trial  | Trial number                            | 1 - 96            |
 | cond   | Condition (compatible vs. incompatible) | compat, incompat   |
 | error  | Did you make an error?                             | 1 = Yes, 0 = No    |
 | RT     | Reaction time                           | value in milliseconds |
@@ -53,47 +52,75 @@ Look at the data by clicking on it in the _Environment_ tab in RStudio. Here's w
 ### Mean reaction time (RT)
 **Relevant worksheet:** [Group differences](group-differences.html). 
 
-Calculate the mean reaction time for the two conditions of your experiment (_compatible_ and _incompatible_ trials), using this command:
+Did you experience automatic imitation? If so, then your own responses should be faster if you had to make the same action as the hand on the screen, compared to a different action. 
+To find this out, you can calculate the average (mean) response times for each of the two conditions: when your finger press was the same as the finger press on the screen (compatible responses) and when your finger press was different to the one on the screen (incompatible responses). You can then find out in which of the two conditions your response times were faster.
+The `cond` column in your data shows the condition for each trial, while the `RT` column shows you how long you took (in milliseconds) to press the key in this trial.
+
+To look at this, you will first need to make sure that you filter out the trials in which you made an error. People always behave a bit differently when they are making an error; these trials therefore need to be removed first. You can do this with the following command:
+
+```{r filter}
+cordata <- compdata %>% filter(error == 0)
+```
+
+Recall that the `filter` command needs to be told which data to _keep_, so we tell it to keep the data where `error` is set to zero, i.e. you were correct. This data is put into a new dataframe, called `cordata`.
+
+Now you are ready to calculate the mean reaction time for the two conditions of your experiment (_compatible_ and _incompatible_ trials), using this command:
 
 ```{r rt-means}
-compdata %>% group_by(cond) %>% summarise(mean(RT))
+cordata %>% group_by(cond) %>% summarise(mean(RT))
 ```
-The output will look something like the above (the actual numbers won't be the same).
+The output will look something like the above (the actual numbers won't be the same). In the above example, the participant responded on average about 40 milliseconds more quickly in compatible compared to incompatible trials.
+
+**Enter the exact values that you found for the mean RTs in each condition into the PsycEL answer section**.
 
 ### Standard deviations of RT
 **Relevant worksheet:** [Exploring incomes](exploring-incomes.html). 
 
-Now get the standard deviations. You'll need to modify the command above by changing `mean` to `sd`. 
+It is also useful to look at the variability of your responses times in both conditions. Maybe you always responded with roughly the same speed when yours and the seen finger press were the same, but not when they were different. For example, it could be you only slowed down your responses in some of the incompatible trials. This would be reflected in larger standard deviation of the responses times in the incompatible compared to the compatible trials.
+To get the standard deviations, you'll need to modify the command above by changing `mean` to `sd`. 
 
 ```{r rt-sd, echo=FALSE}
-compdata %>% group_by(cond) %>% summarise(sd(RT))
+cordata %>% group_by(cond) %>% summarise(sd(RT))
 ```
 If you get it right, the output will look something like this (the actual numbers won't be the same).
 
 ### RT histogram
 **Relevant worksheet:** [Group differences](group-differences.html).
 
-Next, take a look at the distribution of reaction times, using the following command. 
+One way of looking at variability of response times graphically, as you covered in the [Group Differences](group-differences.html) worksheet, is to produce a diagram of the response time distributions in each condition. This will immediately show you whether your responses in both conditions have roughly the same shape and are just shifted earlier or later, or whether one of them has a longer "tail", for example, indicating a higher incidence of slower responses in particular. 
+
+Take a look at the distribution of reaction times, using the following command. 
 
 ```{r rt-hist}
-compdata %>% ggplot(aes(RT, colour=factor(cond))) + geom_density() 
+cordata %>% ggplot(aes(RT, colour=factor(cond))) + geom_density(aes(y=..scaled..)) 
 ```
 
-If you get it right, the output will look something like this.
+If you get it right, the output will look something like the above (it won't be exactly the same). 
+
+_Now do the following:_
+
+1. Export your density plot, using the _Export_ icon on RStudio's _Plots_ window, and selecting "Save as image...". Give it a meaninful file name (e.g. "rt-dist") and click 'Save'. 
+
+2. Download your density plot from RStudio server - see [these instructions](using-projects.html#download) for a reminder of how to do this.
+
+3. **Upload your density plot** to PsycEL (see the PsychEL activity for instructions of how to do this).
 
 ### Mean errors
 **Relevant worksheet:** [Group differences](group-differences.html).
 
-Finally, take a look at the mean errors by condition (compatible vs. incompatible). The `errors` column codes an error as `1` and a correct response as `0`. This is helpful, because the mean of this gives the probability of an error. Modify the command you used for mean reaction times to calculate the probability of error for each condition. 
+Finally, take a look at the mean errors by condition (compatible vs. incompatible). Typically, seeing a different action does not only make one slower, but also causes more errors, when people carry out the action that they saw rather than the action they would need to do in the given trials. To do this, you will need to work out the proportion of trials in which you made an error for each of the two conditions.
+
+You'll need to use the `compdata` data fram for this, because the `cordata` dataframe only contains the trials on which you were correct. In the `compdata` dataframe, the `errors` column codes an error as `1` and a correct response as `0`. This is helpful, because the mean of this gives the probability of an error. Modify the command you used for mean reaction times to calculate the probability of error for each condition. 
 
 ```{r p-error, echo=FALSE}
 compdata %>% group_by(cond) %>% summarise(mean(error))
 ```
+
 If you get it right, the output will look something like this (the actual numbers won't be the same).
 
+**Enter the exact values for the mean Error rates in each condition into the PsycEL answer section.**
 
 ___
 
 This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0. 
 
-_version 0.2_
