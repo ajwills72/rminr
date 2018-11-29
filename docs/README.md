@@ -50,7 +50,7 @@ If you are a current undergraduate student at Plymouth University, you should co
 
 #### Part 1b
 
-* [Response compatibility experiment](response-compatibility.html). Means, standard deviations, and density plots.
+* [Response compatibility experiment](response-compatibility.html). Means, filtering data, standard deviations, and density plots.
 
 * [Visual illusions](illusions.html). Filtering data, means, **violin plot**, Bayesian t-test.
 
@@ -112,11 +112,9 @@ Chris Longmore,
 Jon May, Anthony Mee, Chris Mitchell, Millie Monks,
 Alyson Norman,
 Charlie Reynolds, Matt Roser,
-Alastair Smith, Julian Stander, 
+Paul Sharpe, Alastair Smith, Julian Stander, 
 Sylvia Terbeck,
 Michael Verde,
 Ben Whalley.
 
-___
 
-_version: 0.2.1_
