@@ -1,75 +1,22 @@
-# Outline
+* Plan
 
-## Philosophy
-Learning by doing. Relatively few techniques, lots of practice.
+|    Week | HI                                                        | LO, homework                |
+|---------+-----------------------------------------------------------+-----------------------------|
+|       1 | Select a topic / An experiment is born                    | R revision, combining files |
+|       2 | Introduction to PsychoPy                                  | Reading and refining        |
+|       3 | Finalizing the idea  / Writing your script                | Writing your script         |
+|       4 | Finalizing script                                         | Data collection             |
+|       5 | Within-subject designs, One-factor ANOVA, Pairwise, GG/HF | Data collection             |
+|       6 | Preparing a presentation / Data analysis                  | Data analysis, pres prep    |
+|       7 | Group presentations                                       | Group washup meeting        |
+| -BREAK- | -BREAK-                                                   | -BREAK-                     |
+|       8 | Modifying an expt /  Rewriting script                     | Rewriting script            |
+|       9 | Finalizing script                                         | Data collection             |
+|      10 | Two-factor ANOVA                                          | Data collection             |
+|      11 | Data analysis                                             | Data analysis               |
+|      12 | Writing and critquing reports                             | Group washup meeting        |
 
-## Basic structure
-Students work in groups of 6 within workshops of 80. In each of 12 weeks, students have a 2-hour _high-intensity_ workshop (teaching and closely supervised group work), followed by a 2-hour _low-intensity_ workshop (loosely supervised group work towards pre-specified goals) for a total of 48 student contact hours across the semester.
-
-In this time they go through a full research cycle twice. So, they go from a topic, to a question, to a hypothesis, to building an experiment, to collecting data, to analyzing it, to a group presentation, to modifying their experiment, to collecting more data, to analyzing it again, to writing a report.
-
-## Example of topics and questions
-A topic might be 'Basic processes of learning'. Within that topic, there are 2-4 sub-topics. For example:
-
-1.  Relationship between surprise and learning
-2.  Is learning sudden or gradual?
-3.  What determines whether we learn smart rules or dumb similarity?
-
-I've provided some [example slides](learning-topics.odp). 
-
-## Data collection
-Data collection works by 5/6 of each student group participating in six
-experiments. For 30min studies, this takes 3 hours plus shifting time, so
-easily fills two sessions. It results in N=25 for each experiment. For reasonable
-power the first data collection should therefore be a within-subject design with a
-reasonable effect size. The second data collection should in some way permit
-the inclusion of a b/subj effect (even if that's just a cross-experiment
-comparison). 
-
-## Employability skills
-Communication skills. Group working to deadline. Project planning / timetabling. Critical thinking / analysis.
-
-## Stats taught
-One-way w/subj ANOVA. 2x2 ANOVA (1 between, 1 within). Bayesian alternatives.
-
-## Assessment method
-Group oral presentation (20%). Writen report (80%). Psyc:EL competency tests (pass/fail)
-
-There are a larg-ish set of pass/fail short competency tests, each can be taken an indefinite number of times until an end-of-semester deadline, you have to pass 80% of them to pass the pass/fail component. They are designed to be completable during class time, so there is support.
-
-## Semesterization
-Runs in Semester 2, so has a 3-week break after Week 7.
-
-# Resourcing
-
-## Staff
-There are two main teaching roles:
-
-- _Teacher_: A member of faculty, responsible for developing the materials and for teaching in class.
-
-- _Teaching Assistant_ (TA): Could be a Ph.D. student, TARA, or faculty member. Responsible for teaching in class and marking reports. 
-
-To teach a high-intensity workshop to a group of 80 students, we need 1 teacher and 4 TAs. To teach a low-intensity workshop, we need 2 TAs. TAs in the low-intensity sessions have to be a subset of the TAs in the high-intensity sessions, for continuity. 
-
-For a cohort of 240 students, each workshop has to be delivered three times (3 _Instantiations_). I recommend different Teachers and TAs for each Instantiation.
-
-## Computing
-- PC, Mac, or Linux computing, **one machine per student**, is needed for all session. Some combination of bring-your-own, and university-provided will likely be needed.
-
-- Students will need accounts on RStudio Server.
-
-- Students will need PsychoPy on every machine. 
-
-# Weekly schedule
-
-## Week 1
-
-Select a topic
-PsychoPy
-'R'evision
-
--------------------------
-
+* Notes
 
 ### Session A: Select a topic<a id="sec-9-1-1" name="sec-9-1-1"></a>
 
