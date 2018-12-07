@@ -72,7 +72,7 @@ If you are a current undergraduate student at Plymouth University, you should co
 
 ## The next level...
 
-* [Stage 2 Research Methods Plan](stage2plans.md). Draft plan for Stage 2 development, comments welcome.
+* [ANOVA](ANOVAplans.md). Draft plan for ANOVA course materials.
 
 ____
 
