@@ -20,7 +20,7 @@ I've provided some [example slides](learning-topics.odp).
 ## Data collection
 Data collection works by 5/6 of each student group participating in six
 experiments. For 30min studies, this takes 3 hours plus shifting time, so
-easily fills two sessions. It results in N=25 for each experiment. For reasonable
+easily fills two two-hour session. It results in N=25 for each experiment. For reasonable
 power the first data collection should therefore be a within-subject design with a
 reasonable effect size. The second data collection should in some way permit
 the inclusion of a b/subj effect (even if that's just a cross-experiment
@@ -31,6 +31,9 @@ Communication skills. Group working to deadline. Project planning / timetabling.
 
 ## Stats taught
 One-way w/subj ANOVA. 2x2 ANOVA (1 between, 1 within). Bayesian alternatives.
+
+## Ethics
+The students wrtite a detailed description of their methods; the discussion and approval of this document by staff provides a practical insight into ethics in these fairly innocous studies.
 
 ## Assessment method
 Group oral presentation (20%). Writen report (80%). Psyc:EL competency tests (pass/fail)
@@ -63,7 +66,7 @@ For a cohort of 240 students, each workshop has to be delivered three times (3 _
 # Outline plan
 
 |    Week | Content                                           |
-|---------+---------------------------------------------------|
+|---------|---------------------------------------------------|
 |       1 | Select a topic / Methods bootcamp                 |
 |       2 | An experiment is born / Processing large datasets |
 |       3 | Finalizing the idea  / Building in PsychoPy       |
@@ -88,7 +91,7 @@ At the end of the previous semester, students are told they should revise Stage
 High instensity session:
 
 | min | Contents                                                                                 |
-|-----+------------------------------------------------------------------------------------------|
+|-----|------------------------------------------------------------------------------------------|
 | 000 | Teacher gives a short introduction to each of the three topics.                          |
 | 020 | Students select topic (by standing at a particular point in the room).                   |
 | 025 | Students self-organize into groups. TA allocated to groups. Any given TA does one topic. |
@@ -110,7 +113,7 @@ Low-intensity session and homework:
 High-intensity session:
 
 | min | Contents                                                               |
-|-----+------------------------------------------------------------------------|
+|-----|------------------------------------------------------------------------|
 | 000 | Teacher introduces getting from sub-topic to broad experimental design |
 | 020 | With TA support, groups define question and plan broad design          |
 | 050 | TA assigns one paper per group member. BREAK.                          |
@@ -130,7 +133,7 @@ Low-intensity session and homework:
 ## Week 3: Finalizing the idea / Building in PsychoPy
 
 | min | Contents                                                 |
-|-----+----------------------------------------------------------|
+|-----|----------------------------------------------------------|
 | 000 | Teacher introduces getting from broad to specific design |
 | 020 | With TA support, groups work towards a specific protocol |
 | 050 | BREAK                                                    |
@@ -173,7 +176,7 @@ Data collection.
 - High-intensity session
 
 | min | Contents                                              |
-|-----+-------------------------------------------------------|
+|-----|-------------------------------------------------------|
 | 000 | With TA support, analyse and interpet data            |
 | 080 | BREAK                                                 |
 | 090 | TA led discussion of presentation planning (see Note) |
@@ -264,7 +267,7 @@ As Week 4.
 High-intensity session:
 
 | min | Contents                                                          |
-|-----+-------------------------------------------------------------------|
+|-----|-------------------------------------------------------------------|
 | 000 | With TA support, analyse and interpet data                        |
 | 080 | BREAK                                                             |
 | 090 | Teacher presentation report writing                               |
@@ -284,7 +287,7 @@ Low-intensity session, homework:
 High-intensity session:
 
 | min | Content                                              |
-|-----+------------------------------------------------------|
+|-----|------------------------------------------------------|
 | 000 | TA-led good-and-bad reports activity (see Note 1)    |
 | 050 | BREAK                                                |
 | 060 | TA-led discussion of bullet point plans (see Note 2) |
@@ -384,11 +387,3 @@ interpretation is of these data in terms of the experiment run.
 
 3. Goes through a few examples of two-factor ANOVA with real data in
 R, showing both NHST and Bayes  versions.
-
-
-
-
-
-
-
-
