@@ -310,7 +310,7 @@ Work on the report!
 # Slides
 - [Introducing topics](learning-topics.odp)
 
-- [Experiment design](exp-design.odp)
+- [Experiment design](expt-design.odp)
 
 - [Report writing](report-writing.odp)
 
