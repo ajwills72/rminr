@@ -60,368 +60,169 @@ For a cohort of 240 students, each workshop has to be delivered three times (3 _
 
 - Students will need PsychoPy on every machine. 
 
-# Weekly schedule
+# Outline plan
+
+|    Week | Content                                           |
+|---------+---------------------------------------------------|
+|       1 | Select a topic / Methods bootcamp                 |
+|       2 | An experiment is born / Processing large datasets |
+|       3 | Finalizing the idea  / Building in PsychoPy       |
+|       4 | Finalizing the PsychoPy script / Data collection  |
+|       5 | One-factor ANOVA / Data collection                |
+|       6 | Data analysis / Preparing a presentation          |
+|       7 | Group presentations                               |
+| -BREAK- | - Easter break -                                  |
+|       8 | Modifying an expt                                 |
+|       9 | Finalizing script / Data collection               |
+|      10 | Two-factor ANOVA / Data collection                |
+|      11 | Data analysis / Planning a report                 |
+|      12 | Critquing reports                                 |
 
-## Week 1
+#  Detailed plan
 
-Select a topic
-PsychoPy
-'R'evision
+## Week 0: Homework
+At the end of the previous semester, students are told they should revise Stage
+1 Absolute Beginners' Guide to R prior to Week 1 of the module.
 
--------------------------
+## Week 1: Select a topic / Methods bootcamp
+High instensity session:
 
+| min | Contents                                                                                 |
+|-----+------------------------------------------------------------------------------------------|
+| 000 | Teacher gives a short introduction to each of the three topics.                          |
+| 020 | Students select topic (by standing at a particular point in the room).                   |
+| 025 | Students self-organize into groups. TA allocated to groups. Any given TA does one topic. |
+| 030 | TAs introduce the sub-topics in their topic to their groups, and assign reading.         |
+| 050 | Break                                                                                    |
+| 060 | _Introduction to PsychoPy_ worksheet.                                                    |
+| 090 | _Introduction to preprocessing in R_ worksheet                                           |
+| 110 | Finish 
+
+Low-intensity session and homework:
 
-### Session A: Select a topic<a id="sec-9-1-1" name="sec-9-1-1"></a>
+- Read, discuss the assigned papers.
 
-0 min - The Teachers have already prepared, between them, three topics. Each Teacher
-must have a good grasp of all three topics. Each topic gets a 15 minute introduction,
-delivered by one of the Teachers. 
+- Agree in your group which sub-topic you're going to investigate.
 
-60 min - The students get a 20 minute 'break', during which time they can
-discuss the topics with each other and with the Teachers and TAs.
+- Complete Psyc:El submissions from worksheets.
 
-80 min - The students select a topic by going to stand at a particular point in
-the room. 
+## Week 2: An experiment is born / Processing large datasets
+High-intensity session:
 
-85 min - Students are told to self-organize into groups of between 5-6
-members. Each group is going to select a question within the topic to study for
-the next 11 weeks, so it makes sense to group on similar interests and
-friendship. The Teachers allocate TAs to groups. Where possible, any given TA should
-be covering just one topic. 
+| min | Contents                                                               |
+|-----+------------------------------------------------------------------------|
+| 000 | Teacher introduces getting from sub-topic to broad experimental design |
+| 020 | With TA support, groups define question and plan broad design          |
+| 050 | TA assigns one paper per group member. BREAK.                          |
+| 060 | _Preprocessing large data sets in R_ worksheet                         |
+| 110 | Finish                                                                 |
 
-90 min - TAs do introductions for their groups, and talk to them
-about each of the 2-4 sub-topics in this topic area. Students are given
-questions and assigned reading.
+Low-intensity session and homework:
 
-105 min - Students are told the homework: 
+- Each group member individually reads and tells group about it in
+  low-intensity session.
 
-(1) For session 1B: Follow DLE instructions to install R, Rstudio, and PsychoPy
-on their personal laptops.
+- Complete and submit one-page broad design summary (Psyc:EL).
 
-(2) For session 2A: Read the assigned papers, 
+- Complete and submit Preprocessing large data sets assessment if not already
+  done so.
 
-(3) For session 2A: Decide in your group which topic you are going to
-invesitgate
+## Week 3: Finalizing the idea / Building in PsychoPy
 
-110 min - Finish.
+| min | Contents                                                 |
+|-----+----------------------------------------------------------|
+| 000 | Teacher introduces getting from broad to specific design |
+| 020 | With TA support, groups work towards a specific protocol |
+| 050 | BREAK                                                    |
+| 060 | Teacher walks through Building in PsychoPy worksheet     |
+| 080 | Students work through the exercise on worksheet          |
+| 110 | FINISH                                                   |
 
-### Session B: Methods bootcamp<a id="sec-9-1-2" name="sec-9-1-2"></a>
+Low intensity session and homework:
 
-Materials: 
+- Complete and submit protocol (Psyc:EL)
+- Submit PsychoPy worksheet script (Psyc:EL)
+- Start work on PsychoPy script for your protocol.
 
-1.  A basic-as-possible PsychoPy script in a ZIP archive that implements a
-    short conjunctive visual search experiment with two set sizes.
+## Week 4: Finalizing the PsychoPy script / Data collection
+High-intensity session:
 
-2.  A basic-as-possible R script to produce a correct present/absent RT by set
-    size (5, 20) graph from an individual's data. Use tidyverse.
+Whole session is dedicated to achieving the following goal: Have a working,
+bug-checked PsychoPy script ready to go for Session 5A. The tasks, which they
+need to divide between members of the group include: (1) Writing the
+instructions, (2) Producing the CSV file(s) that define the trials. (3)
+Creating the stimulus sets, (4) Building the structure in PsychoPy. (5) Testing
+for bugs. (6) Checking the output is usable.
 
-0 min - A Teacher gives a 20 min presentation on basics of PsychoPy from a
-user perspective i.e.: Download and install (for anyone who didn't do this
-homework). Initial becnhmarking. Zipping and unzipping. Loading a
-script. Running it. Entering subject number. Locating the 3 data files (csv,
-log, psydat). Keeping a backup. Inspecting the CSV file - rows are trials,
-columns are info. Calculating a result from a CSV file by hand.
+Homework:
 
-20 min - Short period while students and TAs get into roups and anyone
-who was absent in session 1 is matched up with groups that have fewer than 6
-members.
+Finish script, upload to Psyc:EL.
 
-25 min - Students individually go through the demonstrated steps, using a ZIP
-archive downloaded from DLE. TAs keep records of who has done this
-successfully and hence has a pass mark for this exercise (this could possibly
-be done through the online lab book). 
+Low-intensity
 
-55 min - Break
+Data collection.
 
-65 min - A Teacher gives 20 min presentation on basics of data processing in
-R. This is revision from Stage 1. Download and install R and Rstudio. Describe
-the four-panel interface of R. Show how to: (1) Load a CSV file, (2) Select the
-relevant columns, (3) Give those columns nice names, (4) aggregate the
-trial-level data into a subject-level summary. (5) Plot a simple graph.
+## Week 5: One-factor ANOVA / Data collection
+- High intensity session: Whole session dedicated to one-factor ANOVA
 
-85 min - Students individually go through the demonstrated seteps, using a ZIP
-archive downloaded from DLE. TAs record passes (perhaps via online lab
-book system). 
+- Low itensity session: Data collection
 
-105 min - Students are reminded of homework from Session A, and encouraged to
-play around with R and Psychopy before next week. Also, the following
-additional homework is set:
+- Homework: Complete ANOVA exercises, submit PsychoPy script and data to Psyc:EL.
 
-(4) Send the three files from your run of the PsychoPy experiment to your TA
- by email (this again could be done via online labbook instead if such a
-system were avaialble). This is also a recorded-pass exercise.
+## Week 6: Data analysis / Preparing a presentation
+- High-intensity session
 
-## Week 2<a id="sec-9-2" name="sec-9-2"></a>
+| min | Contents                                              |
+|-----+-------------------------------------------------------|
+| 000 | With TA support, analyse and interpet data            |
+| 080 | BREAK                                                 |
+| 090 | TA led discussion of presentation planning (see Note) |
+| 110 | Finish                                                |
 
-### Session A: An experiment is born<a id="sec-9-2-1" name="sec-9-2-1"></a>
+Note:
 
-0 min - Short period while students get into groups and the previously-absent
-join groups.
+TA and group reprise what they did, what they have found, and discuss any
+problems/limitations of what they have done. TA then leads discussion of
+examples of very clear, and very unclear, lectures they have encountered since
+joining Stage 1. What do these good/bad experiences have in common? Possible
+issues - Rate of presentation; incorrectly assumed knowledge; over-crowded
+slides; a million facts but no big picture; a big picture but no facts;
+conclusions do not cleary follow from facts. Then, TA supports group to
+sub-divide the task of writing a presentation between them. The sections would
+be something like: (A) Big picture overview, (B) Introducing the specific
+question, (C) Metholodgy, (D) Results, (E) Interpretation, (F) problems and
+next steps, (G) Writing an abstract.  Agree an allocation of time and number of
+slides each.
 
-10 min - Students discuss with each other, and their TA, what they have
-read and brainstorm on possible questions one might ask about this topic.
+Low-intensity session, homework:
 
-40 min - A Teacher gives 20 min presentation on how to get from a sub-topic to
-an broad experimental design (1st half of exp-design slides)
+- Write presentation
 
-60 min - With support from TAs, sub-groups select a question and plan a
-broad experimental design. 
+- Practice on each other, TAs, and reflect.
 
-100 min - The group nominates a student scribe to write down their idea in
-no more than one page of A4 and email to their TA and every member of
-their group (alternative: lab book).
+- Submit presentation title, author names, and abstract to Psyc:EL by end of
+  week. Earlier you submit, more likely you are to get your choice of session
+  next week. Order within session pulled out of a hat on the day.
 
-105 min - A Teacher sets homework:
+- Submit analysis script to Psyc:EL
 
-(1) For session 3A: Each member of the group finds a **different** paper relevant
-to their topic and prepares to talk to their group about it in session 3A.
+- Submit ANOVA exercises to Psyc:EL if not already done so.
 
-### Session B: Handling large data sets<a id="sec-9-2-2" name="sec-9-2-2"></a>
+## Week 7: Group presentations
+The two sessions this week are identical -- both are staffed by one TA and one
+Teacher (who double mark). In each session, up to 7 groups present. 10 minute
+presentations, 3 min for questions and informal feedback, 2 min for switch
+over. Just about fits into a 2 hour session.
 
-0 min - A Teacher reveals resource on DLE with 200+ participant files for the
-1B experiment (these were collected in Week 1 from students). Runs R script from
-week 1 on a few of them to demonstrate variability in psychological
-data. Demonstrate development of that script which loads in all 200 files,
-makes one big data frame. 
+Homework:
 
-20 min - Get into groups
+Upload presentation slides to DLE.
 
-30 min - Pass/fail assessed individual exercise replicating the steps in the
-Teacher's presentation.
+## BREAK
+Easter Break intervenes, placing a 3-week gap in the schedule.
 
-50 min - Break
-
-60 min - A Teacher presents on taking differences at a subject-level as a
-good way of getting a better signal. Ignores present/absent, focusses on set
-size. Demonstrates R script to take differences and plot histogram thereof. Use
-this to revise concepts of mean and variance. Demonstrate mean and variance
-calculation in R. 
-
-80 min - Individual practice of above (pass/fail).
-
-## Week 3<a id="sec-9-3" name="sec-9-3"></a>
-
-### Session A: Reading and refining the idea<a id="sec-9-3-1" name="sec-9-3-1"></a>
-
-0 min - Get into groups
-
-5 min - Each member of the group presents to the group for 10 minutes
-on the paper they have read and how it relates to/affects their planned
-experiment. Allow 5 min subsequent to each presentation for this. TA
-organizes, asks probing questions, and helps students decide what if any
-changes to make on this basis. TA schedules 10 minute break somewhere
-within this.
-
-105 min - The group nominates a student scribe (different persont to last
-week) to write down their revised idea in no more than one page of A4 and email
-to their TA and every member of their group (alternative: lab book).
-
-### Session B: Building an experiment in PsychoPy<a id="sec-9-3-2" name="sec-9-3-2"></a>
-
-0 min - A Teacher gives 20 min presentation on how to use Builder View on
-PsychoPy to build your own experiment. Discusses the two-panel interface of
-PsychoPy. Demonstrates creating an event, adding some fixed-test instructions,
-adding a response key.
-
-20 min - Individual pass/fail exercise generating instruction screen for their
-experiment (this may need to contain placeholder text for now).
-
-35 min - A Teacher presentation on the following PsychoPy concepts: CSV files
-as list of trials. Text and picture presentation. Loops. Introduce task below.
-
-70 min - Individual pass/fail exercise to generate a script to investigate
-wether lexical decision RT is affected by the congruence/incongruence of a
-picture. A set of picture files is provided on the DLE. 
-
-The students have the rest of the session to complete this exercise - and also
-their own time until session 4B if they need it. 
-
-## Week 4<a id="sec-9-4" name="sec-9-4"></a>
-
-### Session A: Finalizing the idea<a id="sec-9-4-1" name="sec-9-4-1"></a>
-
-0 min - A Teacher gives 20 min presentation on getting from a general design
-to the best specific design you can (see 2nd phase in exp-design.odt file). 
-
-25 min - Groups with TA review their revised design and work to turn
-it into a specific protocol (something specific enough it could be programmed
-in PsychoPy).
-
-105 min - Group elects scribe (third different person) to write up the
-protocol and email it to all group members and TA before Session 4B
-(or lab book). If they manage this before the end of Session 4A, they can start
-the work for session 4B.
-
-### Session B: Writing your PsychoPy script<a id="sec-9-4-2" name="sec-9-4-2"></a>
-
-Goal: Have a working, bug-checked PsychoPy script ready to go for Session
-5A. The tasks, which they need to divide between members of the group
-include: (1) Writing the instructions, (2) Producing the CSV file(s) that
-define the trials. (3) Creating the stimulus sets, (4) Building the structure
-in PsychoPy. (5) Testing for bugs. (6) Checking the output is usable. 
-
-## Week 5<a id="sec-9-5" name="sec-9-5"></a>
-
-### Session A: Data collection #1<a id="sec-9-5-1" name="sec-9-5-1"></a>
-
-The whole session is dedicated to being participants in the experiments of
-other groups - see notes.
-
-### Session B: Introduction to inferential tests<a id="sec-9-5-2" name="sec-9-5-2"></a>
-
-0 min - A Teacher reminds students briefly of material covered in 2B. Goes from
-those ideas of mean and variance to the ideas of expeirmental and null
-hypotheses, the idea of inferential testing, and the idea of a within-subjects
-t-test. Demonstrates how to get from the 200 subject data set of 2B to a p
-value using R. Discusses how t-test assesses P(data|null).
-
-30 min - Individual pass/fail doing a t-test on a different (provided on DLE)
-dataset. Maybe have multiple sets of data for those who work quickly
-
-50 min - break (work through break if not finished)
-
-60 min - Teacher presentation on how P(data|null) is what we traditionally
-calculate but almost never what we actually want to know. Generally, we want to
-know whether the experimental or null is more likely, given our data. So,
-P(exp|data) / P(null|data). This is different, and not related to a p-value in
-any simple way. Fortuantely, it's also possible to calculate that ratio (a
-Bayes Factor). Demonstrate how to do this using Morey's BayesFactor package
-(Note: I'm a bit sad that this is a non-informative-prior approach to Bayes,
-but one step at a time).
-
-80 min - Individual pass/fail doing a Bayesian t-test on the same DLE-provided
-data set. Maybe have multiple sets of data for those who work quickly.
-
-## Week 6<a id="sec-9-6" name="sec-9-6"></a>
-
-### Session A: Data collection #2<a id="sec-9-6-1" name="sec-9-6-1"></a>
-
-The data collection continues, as per Session 5A
-
-### Session B: One-factor ANOVA<a id="sec-9-6-2" name="sec-9-6-2"></a>
-
-0 min - In a pretty theory-light manner, a Teacher introduces within/subj ANOVA as an
-alternative method for doing  what we did with a within/subj
-t-test. Demonstrates how to do this with same dataset as 5B, using 'ez' package
-in R. Explain an F-ratio as conceptually a similar thing to a t-value i.e. a
-ratio of the size of the difference to the size of the variability. Shows how
-to pick out the figures needed for a standard report of e.g. F(1, 243) = 2.12,
-p < .001. Then, explain why we'd bother with something that's so similar to a
-t-test - two reasons: (1) To have more than two nominal levels (covered this
-session), (2) to look at more than one factor at the same time (covered in a
-later session). Then, demonstrate one-factor w/subj ANOVA with a different
-large dataset with 3 nominal levels, again using 'ez' package'. 
-
-30 min - Individual pass/fail on running a multi-level one-factor ANOVA with a
-different data set (provided). Provide multiple datasets for those who are
-quicker.
-
-60 min - break
-
-70 min - A Teacher reminds students of the NHST vs. Bayes issue from 5B, and
-introduces how to run a Bayesian version of this test from the Morey package
-
-85 min - Individual pass/fail on Bayesian one-factor ANOVA
-
-## Week 7<a id="sec-9-7" name="sec-9-7"></a>
-
-### Session A: Pairwise tests and GG/HF corrections<a id="sec-9-7-1" name="sec-9-7-1"></a>
-
-0 min - Teacher presentation. Light revision of 6B, and emphasis on what it means to
-have a significant result when there are more than two nominal levels in the
-factor. Demonstrate use of subsetting and a t-test to look at a specific pair
-in the 6B data set. Discuss the rapdily increasing number of pairs in a set of
-items, and the problem of multiple comparisons. Introduce Bonferroni as simple
-(but conservative way to deal with this). Show how to do Bonferroni in R.
-
-25 min - Individual pass/fail exercise practicing these techniques
-
-50 min - Break
-
-60 min - Teacher presentation. Describe sphericity assumption of ANOVA
-(pragmatically, rather than with deeply underlying theory). Present GG and HF
-as ways of compensating from divergence from this assumption. Focus on how to
-use within R rather than details of how it works (although give some abstract
-sense of what these corrections do)
-
-80 min - Individual pass/fail exercise (quite short). Remaining time for
-catchup on any pass/fail assessments missed.
-
-### Session B: Analysing and interpreting your data<a id="sec-9-7-2" name="sec-9-7-2"></a>
-
-Goal: With support of their TA, each group performs appropriate data
-processing, analysis and interpretation of their data. Group nominates a
-scribe (fourth different person) to put together a written summary of the results and
-their interpretation, and pass to all group members and TA before session 8A.
-
-If this takes less than 2 hours, they can use this time to catch up on any
-missed pass/fail exercises.
-
-## Week 8<a id="sec-9-8" name="sec-9-8"></a>
-
-### Session A: Preparing a group presentation<a id="sec-9-8-1" name="sec-9-8-1"></a>
-
-0 min - Get into groups
-
-5 min - TA and group reprise what they did, what they have found, and
-discuss any problems/limitations of what they have done. 
-
-25 min - TA leads discussion of examples of very clear, and very unclear,
-lectures they have encountered since joining Stage 1. What do these good/bad
-experiences have in common? Possible issues - Rate of presentation; incorrectly
-assumed knowledge; over-crowded slides; a million facts but no big picture; a
-big picture but no facts; conclusions do not cleary follow from facts.
-
-45 min - Group sub-divides the task of writing a presentation between them. The
-sections would be something like: (A) Big picture overview, (B) Introducing the
-specific question, (C) Metholodgy, (D) Results, (E) Interpretation, (F)
-problems and next steps, (G) Writing an abstract.  Agree an allocation of time
-and number of slides each. Group takes a break at some point
-
-90 min - Group gives their draft presentation to their TA; TA and
-themselves reflect on what went well/ not so well.
-
-105 min - TA sets homework: 
-
-(1) Send names, title, and abstract for talk to TA by Session 8B.
-(2) Refine and practice your presentation in preparation for Session 9A.
-
-### Session B: Two-factor ANOVA, interactions<a id="sec-9-8-2" name="sec-9-8-2"></a>
-
-0 min - Teacher introduces the concept of an interaction as a difference of
-differences. They should really spend a bunch of time explaning this from as
-many angles as possible (including graphical), because a lot of students find
-this really hard. Probably give some examples from the published literature. 
-
-20 min - Students work through 8-10 examples of real data plotted and tabled in
-various forms, with a potted explanation of the study, and are asked to write
-down whether (numerically) they show a clear interaction or not, and what the
-interpretation is of these data in terms of the experiment run. TAs go
-around and discuss/check a randomly selected answer with each student. If the
-student gets it wrong, the TA explains the correct answer and asks them to
-do another example, which they'll come back to. Getting one right by the end of
-this session counts as a pass. 
-
-50 min - Teacher goes through a few examples of two-factor ANOVA with real data in
-R, showing both 'ez' NHST and 'BayesFactor' versions.
-
-70 min - Break
-
-80 min - Individul pass/fail exercise on material above, using different data
-sets.
-
-## Week 9<a id="sec-9-9" name="sec-9-9"></a>
-
-### Session A: Giving a group presentation<a id="sec-9-9-1" name="sec-9-9-1"></a>
-
-Six of the seven staff members get into pairs -- this gives them 6 group
-presentations to assess each (which they double mark). Prior to the session the marker pairs
-circulate a symposium booklet for their 6 groups - names, title,
-and abstract for each talk. Each group gets 10 min plus 5 min for questions and
-feedback. With switchover etc., this should just fit into the 110 min time
-available.
-
-### Session B: Modifying an experiment<a id="sec-9-9-2" name="sec-9-9-2"></a>
+## Week 8: Modifying an experiment 
+High-intensity session:
 
 The group and TA reflect on their results, and the feedback received
 on their presentation. They discuss what they would have done differently if
@@ -441,61 +242,153 @@ is OK for teaching purposes but should  be avoided in research you're going
 to publish. It introduces a time-of-testing confound. Between-subject
 conditions should be finely intermixed. 
 
-By the beginning of Session 10A, the group should have an agreed protocol for the
-next data collection phase. Again a scribe should be nominated (a 5th different
-person) who writes this up and emails to sub-group and teacher.
+Students then revise their protocol, and re-program their experiment in
+PsychoPy.
 
-## Week 10<a id="sec-9-10" name="sec-9-10"></a>
+Homework, low-intensity session:
 
-### Session A: Re-programming the experiment<a id="sec-9-10-1" name="sec-9-10-1"></a>
+- Submit revised protocol to Psyc:EL
+- Reprogram experiment
 
-As Session 4B. If there is spare time, students can do catch-up exercises. They
-can also seek / be given advice on writing up (via the Teachers).
+## Week 9: Finalizing the PsychoPy script / Data collection
+As Week 4.
 
-### Session B: Data collection #1<a id="sec-9-10-2" name="sec-9-10-2"></a>
+## Week 10: Two-factor ANOVA / Data collection
+- High intensity session: Whole session dedicated to two-factor ANOVA.
 
-As Session 5A
+= Low itensity session: Data collection
 
-## Week 11<a id="sec-9-11" name="sec-9-11"></a>
+- Homework: Complete ANOVA exercises, submit PsychoPy script and data to Psyc:EL.
 
-### Session A: Data collection #2<a id="sec-9-11-1" name="sec-9-11-1"></a>
+## Week 11: Data analysis / Planning a report
+High-intensity session:
 
-As Session 6A.
+| min | Contents                                                          |
+|-----+-------------------------------------------------------------------|
+| 000 | With TA support, analyse and interpet data                        |
+| 080 | BREAK                                                             |
+| 090 | Teacher presentation report writing                               |
+| 110 | Finish                                                            |
 
-### Session B: Analyzing and interpeting your data<a id="sec-9-11-2" name="sec-9-11-2"></a>
+Low-intensity session, homework:
 
-As Session 7B.
+- Bullet point plan of report.
 
-## Week 12<a id="sec-9-12" name="sec-9-12"></a>
+- Peer/TA feedback on bullet point plan.
 
-### Session A: Writing a good report<a id="sec-9-12-1" name="sec-9-12-1"></a>
+- Read the good/bad reports used in Week 12.
 
-0 min - A Teacher gives 30 min talk on basics of writing a good report (see
-report-writing.odp as an example).
+- Submit analysis script to Psyc:EL
 
-35 min - Each group, with assistance of TAs, comes up with a bullet point
-plan for each section of the report. 
+## Week 12: Critiquing reports
+High-intensity session:
 
-60 min - Break; group re-arrange.
+| min | Content                                              |
+|-----+------------------------------------------------------|
+| 000 | TA-led good-and-bad reports activity (see Note 1)    |
+| 050 | BREAK                                                |
+| 060 | TA-led discussion of bullet point plans (see Note 2) |
 
-70 min - Each sub-group, with an audience of that TA's other two
-groups, talks through their bullet point plan. TA and other groups
-provide feedback on what they found clear / unclear.
 
-105 min - Homework: Given two prior reports to read by Session B (see below)
-
-### Session B: Critiquing reports / Finishing up<a id="sec-9-12-2" name="sec-9-12-2"></a>
-
-0 min - Groups are given one example 1st class and one example 2ii report
-(we would put these together ourselves by coming up with an imaginary study,
+Note 1: Groups are given one example 1st class and one example 2ii report (we
+would put these together ourselves by coming up with an imaginary study,
 writing it up well, and then breaking it). Can they tell why those two reports
 differed in mark? What are the good points of the 1st class report? Where did
-the 2ii report go wrong? Support from TA.
+the 2ii report go wrong?
 
-When this activity is over (probably about 60 min) the students can use the
-remaining time for whatever remaining questions they may have and/or a final
-chance to catch up on the pass/fail component. 
+Note 2: All groups working with a TA get together.  Each sub-group, with an
+audience of that TA's other two groups, talks through their bullet point
+plan. TA and other groups provide feedback on what they found clear / unclear.
 
-# Schedule of work (Semester Two)<a id="sec-10" name="sec-10"></a>
+Low-intensity session, homework:
 
-Not yet planned.
+Work on the report!
+
+# Slides
+- [Introducing topics](learning-topics.odp)
+
+- [Experiment design](exp-design.odp)
+
+- [Report writing](report-writing.odp)
+
+# Worksheets
+
+## Introduction to PsychoPy
+Download and install. Initial becnhmarking. Zipping and unzipping. Loading a
+script. Running it. Entering subject number. Running through the
+expeirment. Locating the 3 data files (csv, log, psydat). Keeping a
+backup. Inspecting the CSV file - rows are trials, columns are info. Uses: A
+basic-as-possible PsychoPy script in a ZIP archive that implements a short
+conjunctive visual search experiment with two set sizes.
+
+## Building in PsychoPy
+How to use Builder View on PsychoPy to build your own experiment. Discusses the
+two-panel interface of PsychoPy. Demonstrates creating an event, adding some
+fixed-test instructions, adding a response key. CSV files as list of
+trials. Text and picture presentation. Loops. Exercise: write script to
+investigate wether lexical decision RT is affected by the
+congruence/incongruence of a picture. A set of picture files is provided.
+
+## Introduction to preprocessing in R
+Load the PsychoPy CSV file. Select relevant columns. Rename columns. Produce
+subject-level summary. Plot simple graph. Upload PsychoPy CSV file, and enter
+subject-level sumamry in PschoPy for auto-marking.
+
+## Preprocessing large data sets in R
+Uses resource of 25 participant files from "Introduction to preprocessing"
+worksheet (different random sample of 25 from 200 for each student). Run script
+from that worksheet on a few different people to illustrate between-subject
+variability. Demonstrate development of script that loads in all 25 files and
+makes one big data frame.  Introduce the idea of taking within-subject
+differences as reducing that variabilty. Use R to take differences and produce
+density plot, calculate mean and variance (some of this is revision). Upload
+mean, variance, graph for auto-marking in Psyc:EL.
+
+## One-factor ANOVA in R
+Uses a large dataset provided to student. Starts with revision of b/subj t-test
+and Bayesian equivalent. Then introduces within-subject versions. Introduces
+within/subj ANOVA and Bayesian equivalent as an alternative method for doing
+what we did with a within/subj t-test. Demonstrates how to do this with same
+dataset. Explain an F-ratio as conceptually a similar thing to a t-value i.e. a
+ratio of the size of the difference to the size of the variability. Shows how
+to pick out the figures needed for a standard report of e.g. F(1, 243) = 2.12,
+p < .001. Then, explain why we'd bother with something that's so similar to a
+t-test - two reasons: (1) To have more than two nominal levels (covered this
+worksheet), (2) to look at more than one factor at the same time (covered in a
+later worksheet). Then, demonstrate one-factor w/subj ANOVA with a different
+large dataset with 3 nominal levels. Upload results to Psyc:EL.
+
+## Pairwise comparisons and sphericity corrections in R
+Light revision of previous worksheet, and emphasis on what it means to have a
+significant result when there are more than two nominal levels in the
+factor. Demonstrate use of subsetting and a t-test to look at a specific pair
+in the 6B data set. Discuss the rapdily increasing number of pairs in a set of
+items, and the problem of multiple comparisons. Introduce Bonferroni as simple
+(but conservative way to deal with this). Show how to do Bonferroni in
+R. Describe sphericity assumption of ANOVA (pragmatically, rather than with
+deeply underlying theory). Present GG and HF as ways of compensating from
+divergence from this assumption. Focus on how to use within R rather than
+details of how it works (although give some abstract sense of what these
+corrections do). Upload results to Psyc:EL.
+
+## Two-factor ANOVA in R
+1. Introduces the concept of an interaction as a difference of differences. Spends
+a bunch of time explaning this from as many angles as possible (including
+graphical), because a lot of students find this really hard. Probably give some
+examples from the published literature.
+
+2. Students work through several examples of real data plotted and tabled in
+various forms, with a potted explanation of the study, and are asked to record
+in Psyc:EL whether (numerically) they show a clear interaction or not, and what the
+interpretation is of these data in terms of the experiment run. 
+
+3. Goes through a few examples of two-factor ANOVA with real data in
+R, showing both NHST and Bayes  versions.
+
+
+
+
+
+
+
+

@@ -303,3 +303,26 @@ R, showing both NHST and Bayes  versions.
 
 
 
+* Approval notes
+
+- The School RM map has it the wrong way around: it's w/subj ANOVA, followed by
+  b/subj (as part of two-factor), not the other way around.
+
+- Ethics: The DMR talks of an 'ethics proposal' (outcome 2). It might be better
+  to talk of a 'protocol' (i.e. a detailed description of the
+  experiment). These proposals will be reviewed for ethical soundness, but
+  writing a full ethics proposal a la the final dissertation is not the plan
+  here. Not enough time, and it's a very curated experience anyway.
+
+- Other than that, I'd say the mapping between the module outline and the BPS
+  and School research methods maps is entirely transparent.
+
+- The module outline template asks me to list the staff teaching on the module,
+  but I cannot do so.
+
+- Similarly, I assume we have marking criteria for practical reports and group
+  presentations, but I don't know where they are. 
+
+- I'll need to know asap where the low-intensity sessions are going to be run,
+  as it affects the plans of how we use PsychoPy. For example, getting PsychoPy
+  on the general university image would need a *lot* of lead time.
