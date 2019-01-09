@@ -83,7 +83,7 @@ Here's a more detailed explanation of the part of the command we skimmed over in
 
 The Bayes Factor, and chi-square, analyses only tell you that there is some kind of relationship between your two variables. They don't tell you what part of the contingency table is driving that relationship. 
 
-For example, in the contingency table above, it looks likes the relationship is mainly being driven by the Icelandic childrens' different use of the Trust and Shared Act categories. However, the BF and X<sup>2</sup> analyses don't tell you this, they just tell you there's a relationship of some sort. 
+For example, in the contingency table above, it looks like the relationship is mainly being driven by the Icelandic childrens' different use of the Trust and Shared Act categories. However, the BF and X<sup>2</sup> analyses don't tell you this, they just tell you there's a relationship of some sort. 
 
 In you want to directly test your hyopthesis, you must reduce your contingency table down to just the relevant rows and columns. So, first, you'd filter to just Shared Activities and Trust, using the `filter` command covered in the _Group Differences_ worksheet:
 
