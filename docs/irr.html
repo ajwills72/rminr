@@ -129,7 +129,7 @@ $(document).ready(function () {
 
 <div id="before-you-start" class="section level2">
 <h2>Before you start…</h2>
-<p>Before starting this exercise, you should have completed <strong>all</strong> the previous <a href="index.html">Absolute Beginners’</a> workshop exercises. Each section below indicates which of the earlier worksheets are particularly relevant.</p>
+<p>Before starting this exercise, you should have completed <strong>all</strong> the previous <a href="index.html">Absolute Beginners’, Part 1</a> workshop exercises. Each section below indicates which of the earlier worksheets are particularly relevant.</p>
 </div>
 <div id="inter-rater-reliability" class="section level2">
 <h2>Inter-rater reliability</h2>
@@ -138,8 +138,8 @@ $(document).ready(function () {
 <div id="getting-the-data-into-r" class="section level2">
 <h2>Getting the data into R</h2>
 <p><strong>Relevant worksheet:</strong> <a href="using-projects.html">Using RStudio projects</a></p>
-<p>You and your partner must first complete the friendship interview coding exercise. You’ll then get a CSV file that contains both your ratings. Set up an RStudio project for this analysis, and copy the CSV file into it.</p>
-<p>If you were unable to complete the coding exercise, you can use this <a href="irr.csv">example CSV file</a> instead. <em>You can only gain marks in your lab book for this exercise if you use your personal CSV file.</em></p>
+<p>You and your partner must first complete the friendship interview coding exercise. You’ll then get a CSV file that contains both your ratings. If you were unable to complete the coding exercise, you can use this <a href="irr.csv">example CSV file</a> instead. <em>You can only gain marks for this exercise if you use your personal CSV file.</em></p>
+<p>Once you have downloaded your CSV file, <a href="using-projects.html">set up a new project</a> on RStudio Server for this analysis, and <a href="entering-data-by-hand.html#upload">upload your CSV</a> to your project.</p>
 </div>
 <div id="exploring-your-data" class="section level2">
 <h2>Exploring your data</h2>
@@ -176,7 +176,7 @@ friends &lt;- read_csv(&quot;irr.csv&quot;)</code></pre>
 <tr class="even">
 <td>rater1</td>
 <td>How the first rater coded the participant’s response</td>
-<td>One of: “Shared Act”, “Helping”, “Trust”, “Feelings”</td>
+<td>One of: “Stage 0”, “Stage 1”, “Stage 2”, “Stage 3”, “Stage 4”</td>
 </tr>
 <tr class="odd">
 <td>rater2</td>
@@ -189,7 +189,7 @@ friends &lt;- read_csv(&quot;irr.csv&quot;)</code></pre>
 </div>
 <div id="percentage-agreement" class="section level2">
 <h2>Percentage agreement</h2>
-<p>To what extent did you and your workshop partner agree on how each participant’s response should be coded? The simplest way to answer this question is just to count up the number of times you gave the same answer. You’re already looking at the data (you clicked on it in the <em>Enviornment</em> tab in the previous step, see above), and you only categorized a few participants, so it’s easy to do this by hand.</p>
+<p>To what extent did you and your workshop partner agree on how each participant’s response should be coded? The simplest way to answer this question is just to count up the number of times you gave the same answer. You’re already looking at the data (you clicked on it in the <em>Environment</em> tab in the previous step, see above), and you only categorized a few participants, so it’s easy to do this by hand.</p>
 <p>For example, you might have given the same answer for four out of the five participants. You therefore agreed on 80% of occasions. Your <strong>percentage agreement</strong> in this example was 80%. The number might be higher or lower for your workshop pair.</p>
 <p>For realistically-sized data sets, calculating percent agreement by hand would be tedious and error prone. In these cases, it would be better to get R to calculate it for you, so we’ll practice on your current data set. We can do this in a couple of steps:</p>
 <div id="select-the-ratings" class="section level3">
@@ -216,14 +216,14 @@ agree(ratings)</code></pre>
 </div>
 <div id="cohens-kappa" class="section level2">
 <h2>Cohen’s kappa</h2>
-<p>One problem with the <em>percentage agreement</em> measure is that people will sometimes agree purely by chance. For example, imagine your coding scheme had only two options (e.g. “Trust” or “Feelings”). Where there are two options then, just by random chance, we’d expect your percentage agreement to be around 50%. For example, imagine that for each participant, each rater flipped a coin, coding the response as “Trust” if the coin landed heads, and “Feelings” if it landed tails. 25% of the time both coins would come up heads, and 25% of the time both coins would come up tails. So, on 50% of occasions, the raters would agree, purely by chance. So, 50% agreement is not particularly impressive when there are two options.</p>
+<p>One problem with the <em>percentage agreement</em> measure is that people will sometimes agree purely by chance. For example, imagine your coding scheme had only two options (e.g. “Stage 0” or “Stage 1”). Where there are two options then, just by random chance, we’d expect your percentage agreement to be around 50%. For example, imagine that for each participant, each rater flipped a coin, coding the response as “Stage 0” if the coin landed heads, and “Stage 1” if it landed tails. 25% of the time both coins would come up heads, and 25% of the time both coins would come up tails. So, on 50% of occasions, the raters would agree, purely by chance. So, 50% agreement is not particularly impressive when there are two options.</p>
 <p>50% agreement is a lot more impressive if there are, say, six options. Imagine in this case that both raters roll a dice. One time in six they would get the same number. So, percentage agreement by chance when there are six options is 1/6 — about 17% agreement. If two raters agree 50% of the time when using six options, that level of agreement is much higher than we’d expect by chance.</p>
 <p><a href="https://en.wikipedia.org/wiki/Jacob_Cohen_(statistician)">Jacob Cohen</a> thought it would be much neater if we could have a measure of agreement where zero always meant the level of agreement expected by chance, and 1 always meant perfect agreement. This can be achieved by the following sum:</p>
 <p><em>(P - C) / (100 - C)</em></p>
-<p>where <em>P</em> is the percentage agreement between the two raters, and <em>C</em> is the percentage agreement we’d expect by chance. For example, say that in your coding exercise, you had a percentage agreement of 80%. You were given four categories to use, so the percentage agreement by chance, if you were both just throwing <a href="https://upload.wikimedia.org/wikipedia/commons/0/0b/D%26D_Game_1.jpg">four-sided dice</a>, is 25%. This gives you an agreement score of:</p>
-<pre class="r"><code>(80 - 25) / (100 - 25)</code></pre>
-<pre><code>[1] 0.7333333</code></pre>
-<p>So, on a scale of zero (chance) to one (perfect), your agreement in this example was about 0.7 – not bad!</p>
+<p>where <em>P</em> is the percentage agreement between the two raters, and <em>C</em> is the percentage agreement we’d expect by chance. For example, say that in your coding exercise, you had a percentage agreement of 80%. You were given five categories to use, so the percentage agreement by chance, if you were both just throwing <a href="https://commons.wikimedia.org/wiki/File:Blue_dice_d5.jpg">five-sided dice</a>, is 20%. This gives you an agreement score of:</p>
+<pre class="r"><code>(80 - 20) / (100 - 20)</code></pre>
+<pre><code>[1] 0.75</code></pre>
+<p>So, on a scale of zero (chance) to one (perfect), your agreement in this example was about 0.75 – not bad!</p>
 <div id="calculating-cohens-kappa" class="section level3">
 <h3>Calculating Cohen’s kappa</h3>
 <p>Cohen’s kappa is a measure of agreement that’s calculated in a similar way to the above example. The difference between Cohen’s kappa and what we just did is that Cohen’s kappa also deals with situations where raters use some of the categories more than others. This affects the calculation of how likely it is they will agree by chance.</p>
@@ -233,11 +233,11 @@ agree(ratings)</code></pre>
 
  Subjects = 5 
    Raters = 2 
-    Kappa = 0.737 
+    Kappa = 0.75 
 
-        z = 3.04 
-  p-value = 0.00236 </code></pre>
-<p>The key result here is <code>Kappa</code> which is your Cohen’s kappa value (in this example, it’s about 0.74 – your value may be higher or lower than this). The output also tells you how many subjects you rated, and the number of people who made ratings. The bit that says <code>Weights: unweighted</code> refers to an aspect of Cohen’s kappa not covered in this course. If you’re curious, type <code>?kappa2</code> into the Console and read the help file for this command.</p>
+        z = 3.54 
+  p-value = 0.000407 </code></pre>
+<p>The key result here is <code>Kappa</code> which is your Cohen’s kappa value (in this example, it’s about 0.75 – your value may be higher or lower than this). The output also tells you how many subjects you rated, and the number of people who made ratings. The bit that says <code>Weights: unweighted</code> refers to an aspect of Cohen’s kappa not covered in this course. If you’re curious, type <code>?kappa2</code> into the Console and read the help file for this command.</p>
 <p><strong>Enter your Cohen’s kappa into your lab book</strong>.</p>
 </div>
 <div id="describing-cohens-kappa" class="section level3">
@@ -288,19 +288,18 @@ agree(ratings)</code></pre>
 
  Subjects = 5 
    Raters = 2 
-    Kappa = 0.737 
+    Kappa = 0.75 
 
-        z = 3.04 
-  p-value = 0.00236 </code></pre>
+        z = 3.54 
+  p-value = 0.000407 </code></pre>
 <p>The <code>z</code> and <code>p-value</code> lines relate to a significance test, much like the ones you covered in the <em>Evidence</em> worksheet. As we said back then, psychologists often misinterpret <em>p values</em>, so it’s important to emphasise here that this <em>p value</em> is <strong>not</strong>, for example, the probability that the raters agree at the level expected by chance. In fact, there is no way to explain this p value that is simple, useful and accurate. A Bayes Factor (see the <em>Evidence</em> workshop) would have been more useful, and easier to interpret, but the <code>irr</code> package does not provide one.</p>
 <p>By convention, if the <em>p value</em> is less than 0.05, psychologists will generally believe you when you assert that the two raters agreed more than would be expected by chance. If the <em>p value</em> is greater than 0.05, they will generally be skeptical. If you were writing a report, you could make a statement like:</p>
-<p><em>The agreement between raters was substantial, κ = 0.74, and greater than would be expected by chance, Z = 3.04, p &lt; .05.</em></p>
+<p><em>The agreement between raters was substantial, κ = 0.75, and greater than would be expected by chance, Z = 3.54, p &lt; .05.</em></p>
 <hr />
 <p><em>Postcript: Why is it called “Cohen’s kappa”?</em></p>
-<p>The “Cohen” bit comes from its inventor, <a href="https://en.wikipedia.org/wiki/Jacob_Cohen_(statistician)">Jacob Cohen</a>. Kappa (κ) is the Greek letter he decided to use to name his measure (others have used Roman letters, e.g. the ‘t’ in ‘t-test’, but measures of agreement, by convention, use Greek letters). The R command is <code>kappa2</code> rather than <code>kappa</code> because the command <code>kappa</code> also exits and does something very different, which just happens to use the same letter to represent it. It’d probably have been better to call the command something like <code>cohen.kappa</code>, but they didn’t.</p>
+<p>The “Cohen” bit comes from its inventor, <a href="https://en.wikipedia.org/wiki/Jacob_Cohen_(statistician)">Jacob Cohen</a>. Kappa (κ) is the Greek letter he decided to use to name his measure (others have used Roman letters, e.g. the ‘t’ in ‘t-test’, but measures of agreement, by convention, use Greek letters). The R command is <code>kappa2</code> rather than <code>kappa</code> because the command <code>kappa</code> also exists and does something very different, which just happens to use the same letter to represent it. It’d probably have been better to call the command something like <code>cohen.kappa</code>, but they didn’t.</p>
 <hr />
 <p>This material is distributed under a <a href="https://creativecommons.org/">Creative Commons</a> licence. CC-BY-SA 4.0.</p>
-<p><em>version 0.2.1</em></p>
 </div>
 </div>
 
