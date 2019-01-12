@@ -127,7 +127,7 @@ $(document).ready(function () {
 </div>
 
 
-<p>This worksheet contains information you don’t strictly need for the workshop, but which you may find useful when applying these skills later on.</p>
+<p>This worksheet contains further information about the analysis of relationships.</p>
 <div id="contents" class="section level2">
 <h2>Contents</h2>
 <ul>
@@ -149,15 +149,16 @@ $(document).ready(function () {
 <p>In the <em>Relationships</em> worksheet, you ran the following analysis.</p>
 <pre class="r"><code>cont &lt;- table(friends$culture, friends$coded)
 cont</code></pre>
-<pre><code>         
-          Feelings Helping Shared Act Trust
-  China         60      64         40    23
-  Iceland       59      52         20    58
-  Russia        68      63         38    24</code></pre>
+<pre><code>              
+               activity feelings helping length norms trust
+  China              47       33      52     28    28     8
+  East Germany       75       19      26     58     6    12
+  Iceland            78       17      13     62     6    20
+  Russia             55       27      42     44    13    15</code></pre>
 <pre class="r"><code>contingencyTableBF(cont, fixedMargin = &quot;rows&quot;, sampleType = &quot;indepMulti&quot;)</code></pre>
 <pre><code>Bayes factor analysis
 --------------
-[1] Non-indep. (a=1) : 112.2798 ±0%
+[1] Non-indep. (a=1) : 107633530 ±0%
 
 Against denominator:
   Null, independence, a = 1 
@@ -167,14 +168,14 @@ Bayes factor type: BFcontingencyTable, independent multinomial</code></pre>
 <h3>Further explanation of command</h3>
 <p>Here’s a more detailed explanation of the part of the command we skimmed over in the <em>Relationships</em> worksheet:</p>
 <p><code>fixedMargin = &quot;rows&quot;</code> - The number of children sampled from each culture was decided by the experimenter. This means that the total of each row in the contingency table was known before the childrens’ responses were coded. The jargon term for this is that the rows have <em>fixed marginal totals</em>. In contrast, the totals for each column were not known before the responses were coded, and would likely change a bit if a different sample was used. So, the columns do not have fixed marginal totals. In order to calculate the Bayes Factor, R needs to know whether it is the <code>rows</code> or the <code>cols</code> that are fixed. In this case, it is the rows.</p>
-<p><code>sampleType = &quot;indepMulti&quot;</code> - If the rows are fixed and the columns are not (or vice versa), then the jargon term for the type of data you have is <em>independent multinomial</em> data – <code>indepMulti</code> for short. R can also deal with other types of data, but we don’t cover them in this worksheet. The <em>Examples</em> section of <a href="https://link.springer.com/article/10.3758/s13428-016-0739-8">Jamil et al. (2017)</a> explains the four options that are available, and give examples of the sorts of data each is used for.</p>
+<p><code>sampleType = &quot;indepMulti&quot;</code> - If the rows are fixed and the columns are not (or vice versa), then the jargon term for the type of data you have is <em>independent multinomial</em> data – <code>indepMulti</code> for short. R can also deal with other types of data, but we don’t cover them in this worksheet. The <em>Examples</em> section of <a href="https://www.researchgate.net/publication/304187391_Default_Gunel_and_Dickey_Bayes_factors_for_contingency_tables">Jamil et al. (2017)</a> explains the four options that are available, and give examples of the sorts of data each is used for.</p>
 </div>
 <div id="further-explanation-of-output" class="section level3">
 <h3>Further explanation of output</h3>
 <p><code>Bayes factor analyis</code> - We’re doing a Bayes Factor analysis!</p>
 <p><code>[1] Non-indep.</code> - This Bayes Factor assesses <em>non-independence</em>, e.g. that friendship concepts and culture are not independent, they are related.</p>
 <p><code>(a=1)</code> - In order to calculate a Bayes Factor, R has to make some assumptions. By setting <code>a</code> to 1, you are saying that, prior to collecting the data, you would have expected every number in the contingency table to be about the same as every other number. This is sometimes called an <em>uninformative prior</em> because it’s basically saying you knew nothing about how these data were likely to turn out before you collected them. This is often a bit unrealistic, but we use it here because it’s relatively simple.</p>
-<p><code>112.2798</code> - The Bayes Factor (i.e. the main result of this analysis)</p>
+<p><code>107633530</code> - The Bayes Factor (i.e. the main result of this analysis)</p>
 <p><code>±0%</code> - Basically a confidence interval on the Bayes Factor. It’s 0% here because we have so much data, but with smaller samples we might see something like <code>20 ±5%</code>, which would means the Bayes Factor is about 20, give or take 5%. So, it’s between 19 and 21.</p>
 <p><code>Against denominator:</code> - This tells you that the null hypothesis is the denominator of the fraction that is used to calculate the Bayes Factor. So, in other words, you’re getting BF<sub>10</sub> rather than BF<sub>01</sub> – see the <a href="evidence.html">Evidence</a> worksheet.</p>
 <p><code>Null, independence, a = 1</code> - This tells you that the null hypothesis is that the two variables (e.g. culture and friendship response) are <em>independent</em> (i.e. there is no relationship between them). <code>a = 1</code> means the same as it did when we last saw it (see above).</p>
@@ -185,64 +186,63 @@ Bayes factor type: BFcontingencyTable, independent multinomial</code></pre>
 </div>
 <div id="interpreting-large-contingency-tables" class="section level2">
 <h2>Interpreting large contingency tables</h2>
-<p>The Bayes Factor, and chi-square, analyses only tell you that there is some kind of relationship between your two variables. They don’t tell you what part of the contingency table is driving that relationship.</p>
-<p>For example, in the contingency table above, it looks likes the relationship is mainly being driven by the Icelandic childrens’ different use of the Trust and Shared Act categories. However, the BF and X<sup>2</sup> analyses don’t tell you this, they just tell you there’s a relationship of some sort.</p>
-<p>In you want to directly test your hyopthesis, you must reduce your contingency table down to just the relevant rows and columns. So, first, you’d filter to just Shared Activities and Trust, using the <code>filter</code> command covered in the <em>Group Differences</em> worksheet:</p>
-<pre class="r"><code>ice.trust &lt;- friends %&gt;% filter(coded == &quot;Shared Act&quot; | coded == &quot;Trust&quot;)</code></pre>
-<p>If you click on <code>ice.trust</code> in the <em>Enviornment</em> tab of RStudio, you’ll see that we now only have these two types of responses.</p>
-<p>You also need to simply the data so it’s just Iceland verus Other. We can use the <code>mutate</code> command to do this, which we haven’t covered yet, but will cover in a later worksheet (<em>link to be inserted when worksheet is written</em>).</p>
-<pre class="r"><code>ice.trust &lt;- ice.trust %&gt;% mutate( cult2 = ifelse(culture == &quot;Iceland&quot;, &quot;Icleand&quot;, &quot;Other&quot;))</code></pre>
-<p>If you click on <code>ice.trust</code> in the <em>Enviornment</em> tab of RStudio, you’ll see that we have a new column called <code>cult2</code> that classifies countries as <code>Iceland</code> or <code>Other</code>.</p>
+<p>The Bayes Factor, and chi-square, analyses only tell you that there is some kind of relationship between your two variables. They don’t tell you which part of the contingency table is driving that relationship.</p>
+<p>For example, in the contingency table above, it looks like ‘helping’ is more common than ‘length’ in China, but it’s the other way around in the other countries. However, the BF and X<sup>2</sup> analyses don’t tell you this, they just tell you there’s a relationship of some sort be country and response.</p>
+<p>In you want to directly test your hyopthesis that China is different to the other countries on helping and length, you must reduce your contingency table down to just the relevant rows and columns. So, first, you’d filter to just ‘length’ and ‘helping’, using the <code>filter</code> command covered in the <em>Group Differences</em> worksheet:</p>
+<pre class="r"><code>length.helping &lt;- friends %&gt;% filter(coded == &quot;length&quot; | coded == &quot;helping&quot;)</code></pre>
+<p>If you click on <code>length.helping</code> in the <em>Environment</em> tab of RStudio, you’ll see that we now only have these two types of responses.</p>
+<p>You also need to simplify the data so it’s just China verus Other. We can use the <code>mutate</code> command to do this, which we haven’t covered yet, but will cover in a later worksheet (<em>link to be inserted when worksheet is written</em>).</p>
+<pre class="r"><code>length.helping &lt;- length.helping %&gt;% mutate( cult2 = ifelse(culture == &quot;China&quot;, &quot;China&quot;, &quot;Other&quot;))</code></pre>
+<p>If you click on <code>length.trust</code> in the <em>Enviornment</em> tab of RStudio, you’ll see that we now have a new column called <code>cult2</code> that classifies countries as <code>China</code> or <code>Other</code>.</p>
 <p>We can now re-do our analysis on this smaller contingency table:</p>
-<pre class="r"><code>cont &lt;- table(ice.trust$cult2, ice.trust$coded)
+<pre class="r"><code>cont &lt;- table(length.helping$cult2, length.helping$coded)
 cont</code></pre>
-<pre><code>         
-          Shared Act Trust
-  Icleand         20    58
-  Other           78    47</code></pre>
+<pre><code>       
+        helping length
+  China      52     28
+  Other      81    164</code></pre>
 <pre class="r"><code>contingencyTableBF(cont, fixedMargin = &quot;rows&quot;, sampleType = &quot;indepMulti&quot;)</code></pre>
 <pre><code>Bayes factor analysis
 --------------
-[1] Non-indep. (a=1) : 102659.5 ±0%
+[1] Non-indep. (a=1) : 43797.69 ±0%
 
 Against denominator:
   Null, independence, a = 1 
 ---
 Bayes factor type: BFcontingencyTable, independent multinomial</code></pre>
-<p>The Bayes Factor for the analysis of this smaller table is well over 3, so we conclude that indeed Icelandic children differ from the other cultures we investigated on their use of the Shared Act and Trust categories.</p>
+<p>The Bayes Factor for the analysis of this smaller table is well over 3, so we conclude that indeed Chinese children differ from the other cultures we investigated on their use of the ‘helping’ and ‘length’ categories.</p>
 <p><a name="effect"></a></p>
 </div>
 <div id="effect-size-for-contingency-tables" class="section level2">
 <h2>Effect size for contingency tables</h2>
 <p>In the <em>Group Differences</em> worksheet, we talked about effect size. For a difference between groups, the effect size is the difference in the group means, divided by the standard deviation. It gives a sense of how large the between-group effect is, relative to the within-group variability. We used the <code>cohen.d()</code> command to calculate it.</p>
-<p>We can also calculate effect size for contingency tables. The most commonly used measure in this case Cramer’s Phi, which ranges between zero and one. We use the <code>cramer</code> command in the <em>sjstats</em> package to calculate it:</p>
+<p>We can also calculate effect size for contingency tables. The most commonly used measure in this case is Cramer’s Phi, which ranges between zero and one. We use the <code>cramer</code> command in the <em>sjstats</em> package to calculate it:</p>
 <pre class="r"><code>library(sjstats)
 cont</code></pre>
-<pre><code>         
-          Shared Act Trust
-  Icleand         20    58
-  Other           78    47</code></pre>
+<pre><code>       
+        helping length
+  China      52     28
+  Other      81    164</code></pre>
 <pre class="r"><code>cramer(cont)</code></pre>
-<pre><code>[1] 0.3578146</code></pre>
+<pre><code>[1] 0.2798143</code></pre>
 <p><strong>Note:</strong> If you get an error here, try installing the package, <code>install.packages(&quot;sjstats&quot;)</code></p>
-<p>In this example, Cramer’s Phi is about 0.34. For a contingency table that has 2 rows and 2 columns, this is conventionally described as a “medium” effect size (with 0.1 being “small” and 0.5 being “large”). For larger tables, see this <a href="http://www.real-statistics.com/chi-square-and-f-distributions/effect-size-chi-square/">website</a>.</p>
+<p>In this example, Cramer’s Phi is about 0.28. For a contingency table that has 2 rows and 2 columns, this is conventionally described as a “medium” effect size (with 0.1 being “small” and 0.5 being “large”). For larger tables, see this <a href="http://www.real-statistics.com/chi-square-and-f-distributions/effect-size-chi-square/">website</a>.</p>
 <p>Where there is no within-group variability, Cramer’s Phi is 1:</p>
-<pre><code>         
-          Shared Act Trust
-  Icleand         20     0
-  Other            0    40</code></pre>
+<pre><code>       
+        helping length
+  China      20      0
+  Other       0     40</code></pre>
 <pre class="r"><code>cramer(cont)</code></pre>
 <pre><code>[1] 1</code></pre>
-<p>Where there no between-group variability, Cramer’s Phi is zero:</p>
-<pre><code>         
-          Shared Act Trust
-  Icleand         10    10
-  Other           20    20</code></pre>
+<p>Where there is no between-group variability, Cramer’s Phi is zero:</p>
+<pre><code>       
+        helping length
+  China      10     10
+  Other      20     20</code></pre>
 <pre class="r"><code>cramer(cont)</code></pre>
 <pre><code>[1] 0</code></pre>
 <hr />
-<p>This material is distributed under a <a href="https://creativecommons.org/">Creative Commons</a> licence. CC-BY-SA 4.0.</p>
-<p><em>version 0.2.1</em></p>
+<p>This material is distributed under a <a href="https://creativecommons.org/">Creative Commons</a> licence. CC-BY-SA 4.0. It is part of <a href="https://ajwills72.github.io/rminr">Research Methods in R</a>, by <a href="http://www.willslab.org.uk">Andy Wills</a></p>
 </div>
 
 
