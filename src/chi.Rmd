@@ -57,7 +57,7 @@ Look at the data by clicking on it in the _Environment_ tab in RStudio. Each row
 | culture    | Culture of participant | One of: "China", "East Germany", "Iceland", or "Russia" |
 | coded | How their interview response was coded | One of "activity", "feelings", "helping", "length", "norms", or "trust" |
 
-This is a large dataset comprising over 700 participants of different ages, genders, and cultures. It is based on, but not identical to, real data on this topic analysed by Michaela ([Gummerum et al., 2008](https://doi.org/D10.1177/0165025408089271)). An [R script](https://github.com/ajwills72/rminr/blob/master/src/chi-spss-convert.R) was used to generate these data from Michaela's more complex [data set](https://github.com/ajwills72/rminr/blob/master/src/Contall.sav).
+This is a large dataset comprising over 700 participants of different ages, genders, and cultures. It is based on, but not identical to, real data on this topic analysed by Michaela ([Gummerum et al., 2008](https://doi.org/10.1177/0165025408089271)). An [R script](https://github.com/ajwills72/rminr/blob/master/src/chi-spss-convert.R) was used to generate these data from Michaela's more complex [data set](https://github.com/ajwills72/rminr/blob/master/src/Contall.sav).
 
 <a name="freq"></a>
 
