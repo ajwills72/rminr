@@ -187,7 +187,7 @@ The second is the _degrees of freedom_ (`df` in the above output). In this case,
 
 In you were writing up this analysis in a report, you would write something like:
 
-_The coded friendship concepts occured with different frequency across cultures, BF = 112, X<sup>2</sup>(15) = 89.2, p < .001, see Table 1._
+_The coded friendship concepts occured with different frequency across cultures, BF = 1.08 x 10<sup>8</sup>, X<sup>2</sup>(15) = 89.2, p < .001, see Table 1._
 
 "Table 1" would be the contingency table you'd produced with the `table` command.
 
