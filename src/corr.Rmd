@@ -252,7 +252,7 @@ Psychologists generally include some numbers from their analyses in their writeu
 
 ## Exercise
 
-In this exercise, you'll apply what you've learned to the relationship between _ingroup closeness_, and _group-leader dominance_. Do each of the following analyses, and **include them as part of your report**. In order to get graphs from RStudio into your wordprocessor, follow [these instructions](insert-image.md).
+In this exercise, you'll apply what you've learned to the relationship between _ingroup closeness_, and _group-leader dominance_. Do each of the following analyses, and **include them as part of your report**. In order to get graphs from RStudio into your wordprocessor, follow [these instructions](insert-image.html).
 
 **Hint:** Most of these steps can be completed by copying the commands you used earlier, and replacing `outgroup` with `dominance`. 
 
