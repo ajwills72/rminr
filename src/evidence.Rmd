@@ -112,7 +112,7 @@ The traditional way of interpreting this _p value_ (see above) treats it is as i
 
 _P(null | data)_ -- the probability of the null hypothesis, given the data.
 
-These two things are **not** the same, but psychologists have a [long history](http://www.ics.uci.edu/~sternh/courses/210/cohen94_pval.pdf) of not realising this. So, if you can't see what the problem is just yet, you're in good company! Below, I'll try and illustrate the error with an analogy. If you understand the analogy, you understand (at some level) what the problem is. If you don't get it, don't worry too much -- in the next section, we'll look at a different sort of test that allows us to avoid the error.
+These two things are **not** the same, but psychologists have a [long history](http://jpeelle.net/reprints/Cohen-1994-The_earth_is_round.pdf) of not realising this. So, if you can't see what the problem is just yet, you're in good company! Below, I'll try and illustrate the error with an analogy. If you understand the analogy, you understand (at some level) what the problem is. If you don't get it, don't worry too much -- in the next section, we'll look at a different sort of test that allows us to avoid the error.
 
 ### Your car won't start? There must be a banana in the exhaust pipe!
 

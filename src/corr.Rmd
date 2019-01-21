@@ -51,7 +51,7 @@ Before starting this exercise, you should have completed **all** the previous [A
 
 You'll be provided with a CSV file before or during the workshop. Set up an RStudio project for this analysis, and copy the CSV file into it. 
 
-If you want to try out this worksheet without that data file, you can use this [example CSV file](data/corr.csv) instead. _You can only gain marks in your lab book for this exercise if you use the CSV file from the workshop_.
+If you want to try out this worksheet without that data file, you can use this [example CSV file](data/corr.csv) instead. _You can only gain marks for this exercise if you use the CSV file from the workshop_.
 
 ## Exploring your data
 
@@ -252,22 +252,17 @@ Psychologists generally include some numbers from their analyses in their writeu
 
 ## Exercise
 
-In this exercise, you'll apply what you've learned to the relationship between _ingroup closeness_, and _group-leader dominance_. Do each of the following, and **upload to your lab book**:
+In this exercise, you'll apply what you've learned to the relationship between _ingroup closeness_, and _group-leader dominance_. Do each of the following analyses, and **include them as part of your report**. In order to get graphs from RStudio into your wordprocessor, follow [these instructions](insert-image.html).
 
 **Hint:** Most of these steps can be completed by copying the commands you used earlier, and replacing `outgroup` with `dominance`. 
 
-1. Make a density plot of the _dominance_ scores. Export the graph as an image, and **upload to your lab book**.
+- Make a density plot of the _dominance_ scores. 
 
-2. Make a scatterplot with _ingroup_ closeness on the x-axis, and group-leader _dominance_ on the y-axis. **Upload to your lab book**. 
+- Make a scatterplot with _ingroup_ closeness on the x-axis, and group-leader _dominance_ on the y-axis. 
 
-3. Calculate the correlation co-efficient for _ingroup_ versus _dominance_. **Type the value into your lab book**.
+- Calculate the correlation co-efficient for _ingroup_ versus _dominance_. 
 
-4. In your lab book, **select the description of the strength of this relationship** - weak, moderate, or strong; using Cohen's conventions.
-
-5. Calculate the Bayes Factor for this correlation. **Type the value into your lab book**. 
-
-6. In your lab book, **select the description of this Bayes Factor** --- (a) substantial evidence for the presence of a relationship, (b) substantial evidence for the absence of the relationship, (c) equivocal evidence for the relationship. 
-
+- Calculate the Bayes Factor for this correlation. 
 
 <a name="further"></a>
 

@@ -1,570 +1,785 @@
 subj,age,gender,culture,coded
-1,7,male,China,Shared Act
-2,9,male,China,Trust
-3,7,male,Iceland,Helping
-4,9,male,China,Feelings
-5,12,female,Iceland,Trust
-6,15,female,Russia,Helping
-7,9,female,China,Feelings
-8,7,male,China,Trust
-9,15,male,Iceland,Feelings
-10,7,male,Iceland,Helping
-11,12,male,Russia,Feelings
-12,15,female,China,Feelings
-13,15,female,Iceland,Helping
-14,12,male,China,Shared Act
-15,7,female,China,Helping
-16,12,male,Russia,Helping
-17,12,male,Iceland,Feelings
-18,7,male,Russia,Helping
-19,7,female,China,Helping
-20,9,female,Iceland,Feelings
-21,7,female,Iceland,Feelings
-22,9,male,China,Helping
-23,7,male,Iceland,Shared Act
-24,7,male,Iceland,Shared Act
-25,15,male,Iceland,Feelings
-26,9,male,China,Shared Act
-27,9,male,China,Helping
-28,9,female,Iceland,Helping
-29,12,female,Iceland,Feelings
-30,9,male,Iceland,Helping
-31,9,female,Iceland,Feelings
-32,15,male,China,Helping
-33,9,female,China,Shared Act
-34,9,male,Iceland,Trust
-35,9,female,Russia,Trust
-36,12,male,Russia,Helping
-37,9,male,Iceland,Trust
-38,12,male,Iceland,Feelings
-39,7,female,China,Shared Act
-40,12,female,China,Feelings
-41,15,male,Iceland,Helping
-42,15,female,China,Helping
-43,9,female,Russia,Shared Act
-44,12,male,Iceland,Shared Act
-45,7,male,Iceland,Trust
-46,12,male,Russia,Helping
-47,9,female,Iceland,Helping
-48,15,female,Iceland,Feelings
-49,15,male,China,Helping
-50,12,female,China,Shared Act
-51,9,male,Iceland,Feelings
-52,9,male,Russia,Feelings
-53,9,male,China,Trust
-54,15,female,Russia,Trust
-55,15,female,Russia,Helping
-56,7,female,Russia,Helping
-57,15,male,Russia,Helping
-58,7,female,Iceland,Trust
-59,7,female,Iceland,Trust
-60,12,female,Russia,Helping
-61,7,male,Russia,Helping
-62,15,female,Iceland,Trust
-63,12,female,Russia,Feelings
-64,7,female,Russia,Shared Act
-65,7,female,Iceland,Shared Act
-66,15,male,Russia,Helping
-67,9,female,Iceland,Helping
-68,9,female,China,Helping
-69,9,male,Iceland,Feelings
-70,15,female,Russia,Helping
-71,9,male,Iceland,Helping
-72,15,male,Russia,Feelings
-73,7,male,Russia,Helping
-74,7,male,Iceland,Helping
-75,15,male,China,Helping
-76,7,male,Russia,Shared Act
-77,7,female,China,Feelings
-78,7,female,Russia,Helping
-79,12,male,Iceland,Trust
-80,9,female,China,Helping
-81,12,male,Iceland,Trust
-82,15,female,Russia,Shared Act
-83,9,male,Iceland,Trust
-84,12,female,Iceland,Feelings
-85,7,male,Iceland,Helping
-86,15,female,Iceland,Feelings
-87,7,female,Iceland,Helping
-88,7,female,Russia,Feelings
-89,7,female,China,Feelings
-90,12,male,Russia,Feelings
-91,7,male,Iceland,Trust
-92,12,male,China,Helping
-93,9,female,Iceland,Trust
-94,15,female,China,Helping
-95,15,female,China,Helping
-96,12,male,Iceland,Feelings
-97,15,female,Russia,Helping
-98,15,female,Iceland,Feelings
-99,15,female,China,Trust
-100,12,male,Russia,Feelings
-101,15,male,Iceland,Trust
-102,7,male,Russia,Trust
-103,15,male,China,Feelings
-104,7,female,Russia,Helping
-105,15,male,Iceland,Helping
-106,12,male,Iceland,Helping
-107,9,female,Russia,Helping
-108,15,female,Iceland,Helping
-109,15,female,Russia,Feelings
-110,9,female,Iceland,Shared Act
-111,12,female,China,Feelings
-112,12,male,Iceland,Helping
-113,15,male,Russia,Trust
-114,7,male,China,Helping
-115,12,male,China,Feelings
-116,12,female,Iceland,Shared Act
-117,15,male,Russia,Helping
-118,15,male,China,Feelings
-119,15,male,Russia,Helping
-120,15,female,China,Feelings
-121,15,male,China,Feelings
-122,9,male,Iceland,Trust
-123,15,female,Iceland,Trust
-124,9,male,Russia,Shared Act
-125,7,male,China,Feelings
-126,15,male,Iceland,Trust
-127,12,male,Russia,Helping
-128,12,male,Iceland,Trust
-129,15,female,Russia,Shared Act
-130,12,female,China,Helping
-131,15,male,Russia,Helping
-132,9,male,Russia,Helping
-133,12,male,China,Trust
-134,12,female,Russia,Helping
-135,7,female,China,Helping
-136,15,male,China,Feelings
-137,9,female,Russia,Shared Act
-138,9,male,Russia,Shared Act
-139,15,male,Russia,Trust
-140,9,female,Iceland,Feelings
-141,9,male,Iceland,Helping
-142,15,female,Iceland,Feelings
-143,7,male,Russia,Helping
-144,9,male,China,Feelings
-145,7,male,China,Helping
-146,15,male,Iceland,Feelings
-147,12,male,China,Helping
-148,7,female,China,Shared Act
-149,15,female,Russia,Helping
-150,7,male,Russia,Feelings
-151,7,male,Russia,Feelings
-152,9,female,Iceland,Trust
-153,7,male,Iceland,Helping
-154,12,male,China,Shared Act
-155,12,male,Iceland,Shared Act
-156,15,female,Iceland,Helping
-157,15,female,China,Shared Act
-158,9,female,China,Feelings
-159,9,male,China,Shared Act
-160,7,female,China,Trust
-161,7,male,China,Shared Act
-162,9,female,Russia,Feelings
-163,12,male,Iceland,Feelings
-164,12,male,China,Feelings
-165,7,female,Iceland,Trust
-166,7,male,Iceland,Helping
-167,9,male,Russia,Helping
-168,9,male,China,Helping
-169,7,female,Iceland,Shared Act
-170,15,female,China,Trust
-171,15,male,China,Shared Act
-172,12,female,Iceland,Trust
-173,15,male,Russia,Trust
-174,15,female,China,Feelings
-175,12,male,Iceland,Trust
-176,7,female,Russia,Feelings
-177,7,male,Russia,Feelings
-178,15,female,Iceland,Helping
-179,15,male,China,Feelings
-180,12,male,Iceland,Trust
-181,12,female,Iceland,Feelings
-182,12,male,Russia,Feelings
-183,12,male,Russia,Shared Act
-184,12,male,China,Trust
-185,15,female,Russia,Feelings
-186,7,female,China,Helping
-187,12,male,Iceland,Trust
-188,9,male,China,Shared Act
-189,9,female,Russia,Helping
-190,12,female,China,Trust
-191,15,male,Iceland,Trust
-192,7,female,Russia,Feelings
-193,15,male,Iceland,Feelings
-194,7,female,China,Helping
-195,7,female,Iceland,Feelings
-196,7,male,China,Shared Act
-197,9,male,Russia,Helping
-198,12,female,Iceland,Trust
-199,9,male,Russia,Helping
-200,9,male,Iceland,Trust
-201,12,female,Russia,Helping
-202,12,male,Russia,Shared Act
-203,7,female,China,Helping
-204,7,male,Russia,Feelings
-205,12,female,China,Helping
-206,15,female,Iceland,Feelings
-207,9,female,Russia,Helping
-208,12,male,China,Feelings
-209,12,female,Russia,Shared Act
-210,7,female,Russia,Trust
-211,15,male,China,Helping
-212,15,male,China,Shared Act
-213,9,female,Russia,Feelings
-214,9,male,Russia,Helping
-215,15,male,China,Trust
-216,7,male,Iceland,Shared Act
-217,15,male,Iceland,Trust
-218,15,male,Russia,Shared Act
-219,15,female,China,Helping
-220,12,male,Iceland,Feelings
-221,12,female,Russia,Feelings
-222,9,female,Iceland,Feelings
-223,7,male,Russia,Trust
-224,9,male,Iceland,Shared Act
-225,7,male,Russia,Shared Act
-226,15,male,China,Trust
-227,15,male,Iceland,Helping
-228,12,female,Russia,Shared Act
-229,15,female,China,Helping
-230,9,female,Iceland,Trust
-231,9,female,Iceland,Helping
-232,12,female,Iceland,Feelings
-233,9,female,China,Helping
-234,12,female,Russia,Feelings
-235,9,male,Iceland,Feelings
-236,9,male,China,Feelings
-237,15,female,Iceland,Trust
-238,7,female,China,Shared Act
-239,12,male,Russia,Feelings
-240,9,female,China,Shared Act
-241,15,female,Iceland,Trust
-242,15,female,China,Trust
-243,15,male,Iceland,Trust
-244,7,male,Russia,Trust
-245,7,female,China,Feelings
-246,12,female,Russia,Feelings
-247,9,male,China,Helping
-248,15,male,Russia,Shared Act
-249,15,female,China,Shared Act
-250,7,male,China,Shared Act
-251,9,male,Russia,Feelings
-252,9,female,Russia,Feelings
-253,7,male,China,Helping
-254,7,female,Russia,Helping
-255,15,female,Iceland,Feelings
-256,7,female,Russia,Shared Act
-257,12,male,China,Feelings
-258,12,female,China,Feelings
-259,7,male,China,Helping
-260,15,male,Russia,Feelings
-261,7,female,Iceland,Feelings
-262,12,female,China,Feelings
-263,15,female,China,Helping
-264,9,female,Iceland,Feelings
-265,7,male,Iceland,Feelings
-266,7,female,Russia,Helping
-267,7,female,Iceland,Trust
-268,15,female,China,Feelings
-269,12,male,Iceland,Helping
-270,15,female,Russia,Trust
-271,15,female,China,Feelings
-272,12,female,China,Shared Act
-273,12,male,China,Shared Act
-274,15,female,Russia,Helping
-275,12,female,Iceland,Helping
-276,9,male,China,Feelings
-277,15,male,China,Shared Act
-278,7,female,China,Feelings
-279,9,male,Iceland,Feelings
-280,9,male,Russia,Trust
-281,15,female,Russia,Shared Act
-282,7,female,China,Feelings
-283,7,male,Iceland,Trust
-284,12,female,Iceland,Feelings
-285,9,female,Russia,Feelings
-286,7,male,China,Feelings
-287,9,male,Russia,Feelings
-288,9,female,China,Helping
-289,12,male,Russia,Trust
-290,7,female,China,Feelings
-291,12,female,Iceland,Trust
-292,15,male,China,Helping
-293,9,female,Russia,Trust
-294,12,female,China,Shared Act
-295,15,female,Iceland,Helping
-296,7,male,Iceland,Feelings
-297,9,male,Russia,Feelings
-298,15,male,Russia,Feelings
-299,12,female,Iceland,Helping
-300,9,male,Iceland,Feelings
-301,12,male,China,Helping
-302,15,male,Iceland,Trust
-303,7,male,China,Shared Act
-304,7,female,China,Helping
-305,9,male,Iceland,Shared Act
-306,12,male,China,Trust
-307,9,male,Iceland,Trust
-308,15,male,China,Trust
-309,12,female,Russia,Feelings
-310,12,male,Iceland,Feelings
-311,15,male,Russia,Feelings
-312,15,male,Russia,Trust
-313,12,male,Russia,Shared Act
-314,15,male,Iceland,Helping
-315,7,female,China,Helping
-316,12,female,Iceland,Trust
-317,12,male,Iceland,Trust
-318,9,male,China,Trust
-319,9,male,Russia,Feelings
-320,12,male,Iceland,Helping
-321,12,male,China,Feelings
-322,12,female,Iceland,Feelings
-323,7,male,China,Feelings
-324,9,female,Russia,Helping
-325,9,male,Russia,Shared Act
-326,9,male,China,Shared Act
-327,12,female,Iceland,Helping
-328,7,female,Russia,Shared Act
-329,12,female,Iceland,Helping
-330,9,female,Iceland,Trust
-331,9,male,Russia,Helping
-332,9,male,Iceland,Trust
-333,9,female,Iceland,Trust
-334,9,male,Russia,Helping
-335,9,male,Russia,Trust
-336,7,male,Iceland,Trust
-337,9,female,China,Helping
-338,15,female,Russia,Feelings
-339,15,female,Iceland,Feelings
-340,15,male,China,Feelings
-341,7,male,Russia,Feelings
-342,9,female,Iceland,Helping
-343,7,male,China,Helping
-344,15,male,Russia,Feelings
-345,12,male,China,Feelings
-346,7,male,China,Feelings
-347,12,male,Russia,Helping
-348,12,female,China,Feelings
-349,15,female,China,Shared Act
-350,9,male,Russia,Feelings
-351,15,male,Russia,Feelings
-352,9,female,China,Feelings
-353,9,male,Iceland,Helping
-354,7,female,China,Helping
-355,15,male,China,Helping
-356,12,female,China,Helping
-357,7,male,Russia,Feelings
-358,9,male,Iceland,Feelings
-359,15,female,Russia,Feelings
-360,15,male,Russia,Feelings
-361,9,female,China,Shared Act
-362,7,male,Iceland,Shared Act
-363,9,female,Iceland,Trust
-364,9,female,Russia,Shared Act
-365,9,female,Iceland,Trust
-366,9,male,Iceland,Feelings
-367,15,female,Russia,Helping
-368,9,female,China,Helping
-369,15,male,Russia,Helping
-370,15,female,Russia,Feelings
-371,12,female,Russia,Helping
-372,7,male,China,Feelings
-373,7,female,Russia,Feelings
-374,12,female,Russia,Trust
-375,15,male,Iceland,Feelings
-376,15,female,China,Helping
-377,9,male,China,Helping
-378,9,female,China,Feelings
-379,9,male,China,Feelings
-380,9,male,Iceland,Helping
-381,9,female,China,Feelings
-382,15,male,Russia,Helping
-383,15,female,Russia,Feelings
-384,15,female,China,Trust
-385,7,male,Russia,Shared Act
-386,9,female,Russia,Helping
-387,15,male,China,Helping
-388,7,male,Russia,Helping
-389,7,female,Iceland,Feelings
-390,7,male,Iceland,Feelings
-391,7,female,Russia,Trust
-392,9,female,Iceland,Feelings
-393,9,female,China,Shared Act
-394,7,male,Iceland,Trust
-395,9,female,Russia,Feelings
-396,7,male,Iceland,Trust
-397,9,male,China,Feelings
-398,15,female,China,Feelings
-399,7,male,Iceland,Shared Act
-400,7,female,Iceland,Helping
-401,12,male,China,Shared Act
-402,15,female,China,Shared Act
-403,7,female,Iceland,Shared Act
-404,15,male,Russia,Shared Act
-405,7,female,Russia,Helping
-406,15,female,Iceland,Helping
-407,15,male,Russia,Shared Act
-408,15,male,Russia,Trust
-409,9,female,China,Trust
-410,12,male,Russia,Helping
-411,12,female,Russia,Feelings
-412,15,female,Russia,Helping
-413,7,female,Iceland,Feelings
-414,12,female,Russia,Feelings
-415,7,male,Russia,Feelings
-416,9,male,Russia,Shared Act
-417,15,female,China,Helping
-418,7,female,Russia,Shared Act
-419,12,male,China,Helping
-420,9,female,China,Feelings
-421,15,male,Iceland,Trust
-422,7,male,Iceland,Feelings
-423,15,female,Iceland,Trust
-424,9,female,Iceland,Helping
-425,12,male,Russia,Feelings
-426,7,male,Russia,Shared Act
-427,15,male,Russia,Shared Act
-428,9,female,Russia,Shared Act
-429,15,female,China,Helping
-430,7,female,China,Shared Act
-431,7,female,Russia,Helping
-432,9,female,China,Helping
-433,12,male,Russia,Shared Act
-434,12,male,Iceland,Helping
-435,7,female,Russia,Helping
-436,12,female,China,Feelings
-437,9,female,Russia,Feelings
-438,15,female,Russia,Helping
-439,9,female,Iceland,Feelings
-440,7,female,Russia,Shared Act
-441,15,male,China,Helping
-442,12,male,Russia,Trust
-443,15,male,China,Feelings
-444,9,male,China,Helping
-445,12,female,China,Helping
-446,7,female,Iceland,Helping
-447,12,female,China,Trust
-448,9,female,Russia,Feelings
-449,9,male,Russia,Helping
-450,12,male,China,Helping
-451,9,male,Iceland,Feelings
-452,12,female,Russia,Helping
-453,7,male,China,Shared Act
-454,9,male,Iceland,Shared Act
-455,15,female,Russia,Shared Act
-456,12,female,Iceland,Feelings
-457,12,female,Russia,Helping
-458,9,female,China,Feelings
-459,12,male,China,Feelings
-460,7,male,Russia,Shared Act
-461,7,female,Russia,Helping
-462,12,female,China,Feelings
-463,9,female,Russia,Helping
-464,15,female,China,Feelings
-465,12,male,Russia,Helping
-466,7,male,China,Helping
-467,7,male,China,Helping
-468,12,female,China,Helping
-469,7,female,Iceland,Helping
-470,7,female,Iceland,Shared Act
-471,9,female,Russia,Feelings
-472,12,female,Iceland,Trust
-473,12,male,Russia,Shared Act
-474,9,male,Russia,Helping
-475,15,male,Russia,Helping
-476,7,female,China,Shared Act
-477,7,female,Russia,Feelings
-478,12,male,Russia,Feelings
-479,15,male,Iceland,Helping
-480,9,female,China,Shared Act
-481,12,female,China,Feelings
-482,12,female,Russia,Feelings
-483,15,male,Russia,Feelings
-484,12,female,Russia,Shared Act
-485,9,male,Iceland,Trust
-486,9,female,China,Trust
-487,15,female,Iceland,Helping
-488,9,male,Russia,Trust
-489,7,male,Iceland,Feelings
-490,12,male,Iceland,Feelings
-491,12,male,Iceland,Helping
-492,7,female,China,Shared Act
-493,7,female,Iceland,Feelings
-494,15,male,China,Shared Act
-495,7,male,China,Feelings
-496,9,female,Russia,Shared Act
-497,12,female,Iceland,Helping
-498,9,female,China,Helping
-499,12,female,China,Helping
-500,7,female,Iceland,Helping
-501,7,male,Russia,Helping
-502,12,female,Iceland,Helping
-503,12,male,Iceland,Shared Act
-504,15,male,China,Feelings
-505,15,male,Iceland,Helping
-506,7,male,Russia,Feelings
-507,15,female,Russia,Feelings
-508,15,female,China,Feelings
-509,15,female,Russia,Trust
-510,15,female,Iceland,Trust
-511,15,male,Iceland,Trust
-512,15,female,China,Trust
-513,7,female,Russia,Feelings
-514,7,male,China,Feelings
-515,15,female,Iceland,Helping
-516,15,male,Russia,Feelings
-517,7,male,China,Trust
-518,15,male,China,Trust
-519,7,female,Iceland,Trust
-520,7,male,Russia,Helping
-521,7,female,Iceland,Trust
-522,15,male,Russia,Feelings
-523,9,male,Russia,Shared Act
-524,9,male,Russia,Feelings
-525,9,female,Russia,Helping
-526,7,male,Iceland,Trust
-527,15,female,Russia,Feelings
-528,9,female,Iceland,Trust
-529,12,female,Russia,Trust
-530,7,female,China,Feelings
-531,15,male,Iceland,Feelings
-532,12,female,Russia,Feelings
-533,7,male,Russia,Feelings
-534,7,male,China,Helping
-535,12,male,China,Helping
-536,9,male,Iceland,Helping
-537,12,female,China,Shared Act
-538,15,male,Iceland,Helping
-539,9,male,China,Helping
-540,12,male,Iceland,Feelings
-541,7,female,Iceland,Helping
-542,15,female,China,Shared Act
-543,15,male,Iceland,Feelings
-544,12,male,Russia,Trust
-545,7,female,Russia,Feelings
-546,7,female,China,Shared Act
-547,9,female,Iceland,Shared Act
-548,15,female,Iceland,Shared Act
-549,12,female,China,Helping
-550,12,male,Russia,Feelings
-551,9,female,China,Helping
-552,15,male,Iceland,Helping
-553,12,male,China,Helping
-554,12,male,Russia,Feelings
-555,15,female,China,Feelings
-556,9,male,China,Feelings
-557,7,male,Iceland,Feelings
-558,7,female,Russia,Feelings
-559,7,female,Iceland,Feelings
-560,15,female,Iceland,Shared Act
-561,7,male,Iceland,Feelings
-562,7,female,Iceland,Trust
-563,7,male,Iceland,Feelings
-564,12,female,Russia,Helping
-565,15,female,Iceland,Trust
-566,9,female,Russia,Shared Act
-567,9,female,Russia,Trust
-568,15,male,China,Shared Act
-569,7,male,China,Trust
+2,15 years,male,China,activity
+4,7 years,female,China,norms
+5,15 years,male,China,norms
+7,7 years,male,China,helping
+10,15 years,female,China,feelings
+13,15 years,female,China,feelings
+14,12 years,female,China,helping
+21,12 years,male,China,activity
+23,15 years,male,China,helping
+24,12 years,male,China,helping
+26,12 years,male,China,helping
+27,9 years,male,China,activity
+28,7 years,male,China,length
+30,15 years,female,China,length
+31,9 years,male,China,helping
+34,7 years,female,China,activity
+38,12 years,female,China,activity
+40,12 years,male,China,feelings
+41,15 years,male,China,helping
+42,12 years,male,China,helping
+43,7 years,male,China,feelings
+52,15 years,female,China,feelings
+55,9 years,female,China,helping
+56,9 years,male,China,feelings
+57,9 years,male,China,length
+59,15 years,female,China,norms
+60,7 years,male,China,feelings
+61,15 years,female,China,helping
+67,12 years,male,China,helping
+68,12 years,female,China,norms
+81,15 years,female,China,feelings
+82,12 years,female,China,helping
+89,15 years,male,China,helping
+90,15 years,female,China,helping
+93,9 years,female,China,activity
+97,9 years,male,China,activity
+98,9 years,male,China,activity
+99,12 years,female,China,norms
+102,7 years,male,China,feelings
+103,15 years,male,China,length
+105,9 years,female,China,helping
+106,12 years,male,China,feelings
+107,12 years,male,China,helping
+109,12 years,male,China,feelings
+113,7 years,male,China,activity
+116,15 years,female,China,trust
+119,12 years,male,China,length
+121,9 years,female,China,trust
+126,9 years,male,China,activity
+129,9 years,male,China,activity
+131,12 years,male,China,activity
+132,12 years,male,China,norms
+135,15 years,NA,China,activity
+139,7 years,male,China,activity
+142,9 years,male,China,helping
+144,9 years,male,China,length
+146,15 years,female,China,helping
+147,15 years,male,China,norms
+150,12 years,female,China,activity
+151,15 years,female,China,trust
+153,15 years,male,China,feelings
+157,9 years,female,China,length
+160,7 years,male,China,activity
+163,7 years,female,China,activity
+165,7 years,male,China,activity
+169,9 years,female,China,activity
+173,12 years,male,China,activity
+176,15 years,male,China,norms
+181,12 years,male,China,helping
+189,12 years,male,China,length
+190,12 years,female,China,feelings
+191,7 years,male,China,norms
+194,15 years,female,China,helping
+195,15 years,NA,China,helping
+196,15 years,male,China,norms
+198,15 years,male,China,helping
+201,7 years,male,China,feelings
+205,15 years,female,China,feelings
+207,15 years,male,China,feelings
+210,9 years,male,China,norms
+217,9 years,male,China,length
+218,9 years,male,China,activity
+226,15 years,male,China,norms
+228,12 years,male,China,norms
+232,7 years,female,China,activity
+237,15 years,female,China,trust
+240,9 years,female,China,feelings
+241,9 years,female,China,length
+243,7 years,female,China,activity
+250,12 years,female,China,activity
+251,9 years,female,China,activity
+253,7 years,male,China,activity
+254,7 years,male,China,helping
+255,12 years,male,China,norms
+257,12 years,female,China,feelings
+259,12 years,male,China,length
+261,12 years,female,China,norms
+263,9 years,female,China,length
+265,12 years,male,China,helping
+266,9 years,female,China,activity
+268,15 years,male,China,helping
+269,12 years,female,China,activity
+272,15 years,male,China,feelings
+273,9 years,male,China,length
+274,7 years,male,China,norms
+275,7 years,female,China,length
+276,15 years,male,China,helping
+280,12 years,female,China,length
+281,9 years,female,China,helping
+286,15 years,male,China,activity
+290,9 years,female,China,norms
+291,9 years,male,China,feelings
+293,9 years,female,China,length
+294,15 years,male,China,feelings
+297,15 years,female,China,activity
+299,15 years,female,China,helping
+306,12 years,male,China,helping
+308,15 years,female,China,length
+309,15 years,female,China,feelings
+310,9 years,male,China,activity
+311,9 years,male,China,length
+313,9 years,female,China,helping
+315,15 years,male,China,trust
+316,7 years,female,China,helping
+320,7 years,male,China,feelings
+321,12 years,female,China,feelings
+322,12 years,female,China,trust
+324,12 years,male,China,helping
+328,12 years,female,China,helping
+330,7 years,male,China,activity
+335,9 years,female,China,length
+336,7 years,male,China,activity
+337,12 years,female,China,helping
+338,12 years,male,China,helping
+341,7 years,female,China,length
+347,12 years,female,China,length
+348,15 years,female,China,norms
+350,15 years,female,China,helping
+351,15 years,female,China,helping
+352,12 years,male,China,helping
+354,7 years,male,China,activity
+356,7 years,male,China,norms
+357,12 years,male,China,feelings
+359,12 years,female,China,feelings
+360,7 years,female,China,length
+366,12 years,male,China,activity
+369,12 years,male,China,feelings
+371,7 years,male,China,length
+372,9 years,female,China,norms
+373,15 years,male,China,norms
+376,15 years,male,China,activity
+377,15 years,male,China,activity
+379,12 years,male,China,activity
+380,12 years,female,China,helping
+382,7 years,female,China,activity
+386,15 years,female,China,feelings
+389,15 years,female,China,helping
+392,12 years,male,China,activity
+396,15 years,male,China,helping
+397,12 years,male,China,helping
+399,15 years,male,China,trust
+402,7 years,male,China,activity
+406,9 years,female,China,helping
+408,15 years,female,China,feelings
+411,7 years,female,China,activity
+413,9 years,male,China,activity
+415,15 years,male,China,feelings
+416,12 years,male,China,length
+421,9 years,male,China,length
+423,7 years,female,China,feelings
+425,7 years,male,China,length
+430,12 years,female,China,helping
+432,15 years,NA,China,feelings
+433,12 years,female,China,helping
+434,12 years,female,China,norms
+438,7 years,male,China,activity
+439,12 years,female,China,helping
+441,9 years,male,China,helping
+442,9 years,male,China,activity
+443,12 years,female,China,helping
+447,15 years,female,China,helping
+450,15 years,male,China,activity
+453,12 years,male,China,activity
+454,12 years,female,China,norms
+459,9 years,female,China,norms
+460,12 years,female,China,norms
+461,9 years,female,China,norms
+463,15 years,male,China,helping
+464,12 years,female,China,helping
+465,7 years,male,China,norms
+475,9 years,female,China,norms
+477,15 years,female,China,trust
+478,7 years,female,China,length
+480,12 years,male,China,helping
+481,9 years,female,China,length
+483,12 years,male,China,feelings
+1,12 years,female,Iceland,activity
+3,12 years,male,Iceland,trust
+6,15 years,male,Iceland,activity
+11,7 years,male,Iceland,activity
+12,9 years,female,Iceland,length
+15,12 years,male,Iceland,feelings
+16,7 years,male,Iceland,activity
+18,9 years,female,Iceland,length
+22,9 years,female,Iceland,activity
+25,12 years,male,Iceland,activity
+32,15 years,male,Iceland,feelings
+33,7 years,male,Iceland,activity
+39,15 years,female,Iceland,trust
+44,12 years,female,Iceland,trust
+45,12 years,male,Iceland,feelings
+46,12 years,male,Iceland,activity
+48,12 years,female,Iceland,length
+49,7 years,male,Iceland,activity
+50,15 years,female,Iceland,feelings
+51,9 years,female,Iceland,activity
+53,15 years,male,Iceland,length
+58,12 years,female,Iceland,feelings
+62,9 years,male,Iceland,length
+65,15 years,male,Iceland,helping
+66,12 years,male,Iceland,length
+69,9 years,female,Iceland,length
+72,9 years,male,Iceland,length
+75,9 years,male,Iceland,activity
+78,9 years,male,Iceland,activity
+83,12 years,female,Iceland,activity
+84,9 years,male,Iceland,length
+85,12 years,female,Iceland,length
+86,9 years,male,Iceland,activity
+87,9 years,male,Iceland,activity
+88,12 years,male,Iceland,length
+92,15 years,male,Iceland,length
+94,9 years,male,Iceland,length
+96,7 years,female,Iceland,activity
+100,9 years,female,Iceland,length
+101,15 years,male,Iceland,trust
+108,9 years,female,Iceland,activity
+111,15 years,male,Iceland,trust
+112,9 years,male,Iceland,length
+114,12 years,male,Iceland,feelings
+115,15 years,male,Iceland,activity
+117,12 years,male,Iceland,length
+118,15 years,male,Iceland,activity
+120,9 years,female,Iceland,activity
+122,12 years,female,Iceland,length
+124,9 years,male,Iceland,activity
+125,9 years,male,Iceland,activity
+127,15 years,female,Iceland,activity
+130,15 years,female,Iceland,length
+133,9 years,male,Iceland,trust
+134,12 years,female,Iceland,length
+137,15 years,male,Iceland,activity
+140,15 years,female,Iceland,length
+141,15 years,female,Iceland,trust
+143,9 years,female,Iceland,length
+149,15 years,female,Iceland,helping
+154,9 years,male,Iceland,activity
+155,12 years,male,Iceland,length
+158,12 years,male,Iceland,helping
+159,15 years,male,Iceland,feelings
+161,15 years,female,Iceland,feelings
+162,12 years,female,Iceland,activity
+164,15 years,male,Iceland,length
+167,12 years,male,Iceland,activity
+168,12 years,female,Iceland,feelings
+170,15 years,male,Iceland,trust
+171,12 years,male,Iceland,length
+175,15 years,male,Iceland,feelings
+177,12 years,female,Iceland,length
+180,9 years,female,Iceland,activity
+183,9 years,male,Iceland,activity
+184,9 years,male,Iceland,activity
+186,7 years,male,Iceland,activity
+187,9 years,female,Iceland,trust
+188,12 years,female,Iceland,length
+192,15 years,female,Iceland,activity
+193,15 years,female,Iceland,length
+197,12 years,male,Iceland,activity
+199,15 years,female,Iceland,helping
+202,15 years,female,Iceland,helping
+214,12 years,female,Iceland,length
+215,9 years,male,Iceland,activity
+219,15 years,male,Iceland,length
+220,12 years,male,Iceland,helping
+221,9 years,female,Iceland,length
+223,12 years,female,Iceland,activity
+224,9 years,female,Iceland,activity
+225,12 years,male,Iceland,activity
+229,9 years,female,Iceland,length
+230,7 years,female,Iceland,activity
+233,9 years,female,Iceland,activity
+238,12 years,female,Iceland,length
+239,7 years,male,Iceland,length
+248,12 years,male,Iceland,trust
+252,15 years,male,Iceland,feelings
+258,15 years,female,Iceland,helping
+260,15 years,female,Iceland,length
+262,12 years,male,Iceland,length
+264,7 years,female,Iceland,length
+270,12 years,female,Iceland,length
+271,15 years,female,Iceland,length
+277,7 years,male,Iceland,length
+278,12 years,male,Iceland,feelings
+279,9 years,male,Iceland,length
+282,15 years,male,Iceland,helping
+283,15 years,male,Iceland,trust
+284,15 years,male,Iceland,feelings
+285,9 years,female,Iceland,activity
+288,15 years,female,Iceland,length
+295,9 years,female,Iceland,length
+296,9 years,male,Iceland,activity
+301,12 years,male,Iceland,helping
+303,12 years,male,Iceland,helping
+304,15 years,female,Iceland,feelings
+305,9 years,female,Iceland,activity
+307,9 years,female,Iceland,activity
+317,12 years,female,Iceland,activity
+318,15 years,male,Iceland,helping
+319,15 years,male,Iceland,helping
+323,15 years,male,Iceland,trust
+326,9 years,male,Iceland,activity
+327,15 years,female,Iceland,length
+329,9 years,female,Iceland,length
+331,15 years,male,Iceland,length
+332,15 years,female,Iceland,length
+333,7 years,female,Iceland,activity
+334,12 years,female,Iceland,activity
+339,15 years,male,Iceland,trust
+340,9 years,female,Iceland,length
+342,9 years,female,Iceland,activity
+343,9 years,male,Iceland,activity
+349,7 years,female,Iceland,activity
+353,15 years,female,Iceland,trust
+361,15 years,female,Iceland,helping
+362,9 years,female,Iceland,activity
+363,12 years,male,Iceland,length
+365,9 years,male,Iceland,activity
+367,9 years,female,Iceland,activity
+368,12 years,male,Iceland,activity
+374,9 years,male,Iceland,trust
+375,15 years,female,Iceland,trust
+384,12 years,male,Iceland,length
+387,15 years,male,Iceland,trust
+388,9 years,female,Iceland,activity
+390,15 years,male,Iceland,norms
+391,15 years,female,Iceland,activity
+393,9 years,male,Iceland,norms
+394,9 years,female,Iceland,activity
+395,15 years,female,Iceland,length
+398,15 years,male,Iceland,activity
+400,15 years,male,Iceland,activity
+401,7 years,male,Iceland,activity
+405,7 years,male,Iceland,activity
+407,15 years,male,Iceland,norms
+409,15 years,male,Iceland,length
+410,9 years,male,Iceland,activity
+412,7 years,male,Iceland,length
+414,15 years,female,Iceland,norms
+417,12 years,male,Iceland,norms
+418,12 years,male,Iceland,activity
+420,15 years,male,Iceland,length
+422,7 years,female,Iceland,activity
+427,15 years,female,Iceland,activity
+428,15 years,female,Iceland,length
+429,9 years,female,Iceland,activity
+435,12 years,female,Iceland,length
+436,12 years,female,Iceland,activity
+437,12 years,male,Iceland,length
+440,12 years,female,Iceland,activity
+445,12 years,female,Iceland,activity
+446,15 years,male,Iceland,trust
+448,12 years,male,Iceland,norms
+449,7 years,male,Iceland,length
+451,15 years,male,Iceland,feelings
+455,15 years,female,Iceland,trust
+456,7 years,male,Iceland,activity
+457,15 years,male,Iceland,activity
+458,15 years,female,Iceland,length
+462,9 years,female,Iceland,length
+466,15 years,female,Iceland,activity
+467,15 years,female,Iceland,feelings
+470,9 years,male,Iceland,activity
+471,9 years,female,Iceland,length
+472,12 years,male,Iceland,activity
+473,9 years,male,Iceland,activity
+474,12 years,female,Iceland,length
+479,15 years,male,Iceland,trust
+482,12 years,male,Iceland,activity
+484,9 years,female,Iceland,activity
+489,15 years,female,Iceland,length
+491,7 years,female,Iceland,activity
+492,15 years,female,Iceland,feelings
+8,12 years,female,Russia,norms
+9,15 years,female,Russia,length
+17,15 years,male,Russia,helping
+29,15 years,female,Russia,length
+35,12 years,male,Russia,trust
+36,15 years,female,Russia,feelings
+37,12 years,female,Russia,length
+47,9 years,female,Russia,length
+54,9 years,female,Russia,feelings
+63,9 years,male,Russia,norms
+64,12 years,female,Russia,helping
+70,9 years,male,Russia,norms
+76,9 years,female,Russia,norms
+79,9 years,female,Russia,helping
+91,9 years,female,Russia,trust
+95,12 years,female,Russia,norms
+110,7 years,female,Russia,helping
+123,15 years,female,Russia,feelings
+128,12 years,female,Russia,helping
+138,9 years,male,Russia,length
+145,15 years,female,Russia,helping
+148,12 years,female,Russia,feelings
+166,9 years,male,Russia,helping
+172,7 years,male,Russia,length
+174,9 years,female,Russia,norms
+185,7 years,female,Russia,helping
+203,9 years,female,Russia,norms
+206,9 years,male,Russia,length
+211,9 years,male,Russia,activity
+212,7 years,female,Russia,activity
+216,15 years,male,Russia,helping
+222,15 years,male,Russia,trust
+231,15 years,male,Russia,activity
+234,12 years,female,Russia,trust
+236,12 years,female,Russia,feelings
+245,12 years,male,Russia,length
+246,9 years,male,Russia,norms
+249,9 years,male,Russia,activity
+256,15 years,female,Russia,length
+267,15 years,female,Russia,feelings
+287,12 years,male,Russia,helping
+289,15 years,female,Russia,length
+298,9 years,male,Russia,trust
+325,7 years,male,Russia,activity
+346,9 years,male,Russia,helping
+358,9 years,female,Russia,length
+364,15 years,female,Russia,feelings
+370,15 years,female,Russia,length
+378,7 years,male,Russia,length
+381,15 years,male,Russia,activity
+383,9 years,female,Russia,activity
+385,9 years,female,Russia,helping
+403,9 years,male,Russia,helping
+419,7 years,female,Russia,feelings
+424,9 years,male,Russia,activity
+444,12 years,male,Russia,length
+468,9 years,female,Russia,norms
+469,12 years,male,Russia,feelings
+476,15 years,male,Russia,length
+500,15 years,female,Russia,feelings
+503,15 years,female,Russia,activity
+504,12 years,female,Russia,trust
+506,15 years,female,Russia,activity
+512,15 years,male,Russia,length
+518,15 years,male,Russia,length
+539,12 years,male,Russia,feelings
+555,7 years,male,Russia,length
+569,12 years,male,Russia,activity
+574,15 years,female,Russia,trust
+575,15 years,male,Russia,trust
+577,7 years,female,Russia,activity
+583,7 years,female,Russia,helping
+597,9 years,male,Russia,length
+611,9 years,male,Russia,activity
+613,12 years,male,Russia,helping
+615,9 years,female,Russia,helping
+627,15 years,female,Russia,trust
+632,7 years,female,Russia,length
+644,7 years,male,Russia,trust
+650,12 years,female,Russia,feelings
+655,12 years,female,Russia,activity
+658,12 years,female,Russia,trust
+661,7 years,female,Russia,length
+665,12 years,female,Russia,helping
+668,9 years,male,Russia,activity
+674,15 years,male,Russia,activity
+682,7 years,female,Russia,activity
+686,7 years,female,Russia,length
+690,9 years,female,Russia,activity
+696,7 years,male,Russia,length
+708,12 years,male,Russia,activity
+711,9 years,female,Russia,feelings
+713,7 years,female,Russia,activity
+716,7 years,female,Russia,activity
+721,9 years,female,Russia,activity
+730,12 years,male,Russia,helping
+740,12 years,female,Russia,activity
+762,7 years,female,Russia,activity
+775,7 years,male,Russia,length
+793,7 years,female,Russia,helping
+807,7 years,female,Russia,helping
+814,15 years,male,Russia,norms
+819,9 years,male,Russia,activity
+822,15 years,male,Russia,feelings
+828,9 years,female,Russia,feelings
+838,12 years,male,Russia,trust
+843,9 years,female,Russia,activity
+845,7 years,female,Russia,activity
+850,7 years,female,Russia,length
+858,7 years,female,Russia,feelings
+866,9 years,female,Russia,activity
+867,15 years,male,Russia,feelings
+873,12 years,male,Russia,helping
+876,7 years,female,Russia,activity
+879,15 years,male,Russia,activity
+880,12 years,female,Russia,activity
+895,7 years,female,Russia,helping
+902,12 years,male,Russia,helping
+920,7 years,female,Russia,feelings
+929,15 years,male,Russia,feelings
+930,9 years,female,Russia,length
+934,9 years,male,Russia,length
+953,15 years,male,Russia,length
+962,12 years,male,Russia,activity
+963,7 years,female,Russia,length
+969,9 years,male,Russia,length
+970,9 years,female,Russia,trust
+972,12 years,female,Russia,helping
+974,7 years,male,Russia,activity
+981,12 years,female,Russia,feelings
+982,9 years,male,Russia,activity
+987,12 years,male,Russia,trust
+995,15 years,male,Russia,helping
+1003,9 years,female,Russia,activity
+1015,7 years,male,Russia,activity
+1027,9 years,male,Russia,activity
+1035,12 years,female,Russia,helping
+1043,12 years,male,Russia,helping
+1052,15 years,female,Russia,helping
+1059,12 years,female,Russia,helping
+1066,9 years,male,Russia,norms
+1069,9 years,male,Russia,activity
+1078,15 years,female,Russia,helping
+1079,9 years,female,Russia,length
+1082,15 years,female,Russia,feelings
+1086,12 years,male,Russia,feelings
+1090,9 years,male,Russia,feelings
+1097,7 years,female,Russia,length
+1099,9 years,female,Russia,activity
+1106,9 years,male,Russia,activity
+1110,7 years,male,Russia,activity
+1115,7 years,female,Russia,activity
+1130,12 years,male,Russia,helping
+1131,9 years,female,Russia,length
+1153,12 years,male,Russia,activity
+1164,9 years,male,Russia,length
+1167,15 years,male,Russia,helping
+1172,7 years,male,Russia,activity
+1179,15 years,female,Russia,activity
+1181,15 years,male,Russia,helping
+1195,9 years,male,Russia,length
+1203,12 years,female,Russia,activity
+1210,15 years,male,Russia,activity
+1218,7 years,male,Russia,activity
+1239,7 years,male,Russia,length
+1241,7 years,male,Russia,length
+1243,12 years,female,Russia,activity
+1248,9 years,male,Russia,length
+1257,7 years,female,Russia,activity
+1258,9 years,male,Russia,length
+1289,9 years,female,Russia,trust
+1291,15 years,female,Russia,activity
+1298,9 years,male,Russia,helping
+1308,9 years,male,Russia,helping
+1318,7 years,male,Russia,length
+1320,12 years,male,Russia,feelings
+1329,15 years,female,Russia,feelings
+1330,12 years,male,Russia,activity
+1337,12 years,female,Russia,helping
+1340,15 years,male,Russia,helping
+1357,9 years,female,Russia,norms
+1366,12 years,female,Russia,norms
+1367,9 years,male,Russia,helping
+1380,12 years,male,Russia,length
+1413,9 years,female,Russia,activity
+1422,15 years,female,Russia,helping
+1428,12 years,male,Russia,helping
+1445,12 years,female,Russia,length
+1448,15 years,male,Russia,feelings
+1453,7 years,female,Russia,length
+1454,7 years,female,Russia,activity
+1456,12 years,male,Russia,helping
+1464,15 years,female,Russia,helping
+1469,9 years,female,Russia,activity
+1485,7 years,male,Russia,feelings
+1490,12 years,male,Russia,length
+19,9 years,female,East Germany,trust
+20,15 years,male,East Germany,activity
+71,9 years,female,East Germany,length
+73,15 years,male,East Germany,feelings
+74,12 years,male,East Germany,length
+77,12 years,male,East Germany,activity
+80,9 years,male,East Germany,helping
+104,12 years,female,East Germany,helping
+136,9 years,male,East Germany,length
+152,15 years,female,East Germany,helping
+156,7 years,female,East Germany,length
+178,15 years,female,East Germany,helping
+179,9 years,female,East Germany,activity
+182,15 years,male,East Germany,length
+200,9 years,male,East Germany,length
+204,15 years,male,East Germany,length
+208,15 years,female,East Germany,helping
+209,15 years,female,East Germany,feelings
+213,9 years,female,East Germany,activity
+227,9 years,female,East Germany,feelings
+235,12 years,female,East Germany,length
+242,9 years,female,East Germany,activity
+244,12 years,male,East Germany,length
+247,12 years,male,East Germany,activity
+292,12 years,male,East Germany,trust
+300,15 years,female,East Germany,helping
+302,9 years,male,East Germany,activity
+312,15 years,female,East Germany,length
+314,7 years,male,East Germany,norms
+344,12 years,female,East Germany,activity
+345,15 years,female,East Germany,activity
+355,7 years,female,East Germany,length
+404,12 years,male,East Germany,activity
+426,7 years,female,East Germany,activity
+431,9 years,male,East Germany,activity
+452,7 years,male,East Germany,helping
+486,9 years,female,East Germany,activity
+488,9 years,male,East Germany,length
+490,15 years,male,East Germany,feelings
+495,12 years,male,East Germany,trust
+511,15 years,female,East Germany,feelings
+538,7 years,female,East Germany,length
+546,15 years,male,East Germany,activity
+563,7 years,female,East Germany,helping
+564,7 years,female,East Germany,activity
+588,15 years,male,East Germany,activity
+621,12 years,female,East Germany,activity
+625,12 years,male,East Germany,trust
+643,15 years,female,East Germany,helping
+653,9 years,female,East Germany,length
+656,15 years,female,East Germany,length
+657,9 years,female,East Germany,feelings
+706,7 years,female,East Germany,length
+707,15 years,female,East Germany,trust
+712,7 years,male,East Germany,helping
+727,9 years,male,East Germany,length
+738,9 years,male,East Germany,length
+768,15 years,male,East Germany,norms
+777,15 years,male,East Germany,helping
+782,9 years,male,East Germany,helping
+784,7 years,female,East Germany,activity
+789,7 years,male,East Germany,activity
+797,9 years,female,East Germany,length
+810,9 years,female,East Germany,feelings
+830,7 years,male,East Germany,activity
+846,12 years,male,East Germany,activity
+854,15 years,male,East Germany,trust
+875,9 years,male,East Germany,length
+881,9 years,NA,East Germany,length
+894,15 years,male,East Germany,activity
+905,15 years,female,East Germany,trust
+911,7 years,male,East Germany,helping
+919,7 years,male,East Germany,activity
+931,9 years,male,East Germany,helping
+940,9 years,male,East Germany,length
+942,15 years,male,East Germany,helping
+950,15 years,female,East Germany,trust
+988,12 years,female,East Germany,length
+992,12 years,female,East Germany,feelings
+1018,9 years,male,East Germany,length
+1019,12 years,female,East Germany,activity
+1026,9 years,male,East Germany,activity
+1034,7 years,female,East Germany,activity
+1042,15 years,female,East Germany,activity
+1061,9 years,female,East Germany,feelings
+1062,12 years,female,East Germany,length
+1067,12 years,male,East Germany,helping
+1107,7 years,female,East Germany,length
+1109,15 years,male,East Germany,feelings
+1117,9 years,male,East Germany,length
+1136,9 years,NA,East Germany,activity
+1148,12 years,female,East Germany,activity
+1173,12 years,male,East Germany,norms
+1183,15 years,male,East Germany,length
+1211,12 years,male,East Germany,activity
+1222,15 years,male,East Germany,trust
+1224,7 years,male,East Germany,length
+1226,15 years,male,East Germany,activity
+1244,15 years,female,East Germany,activity
+1246,7 years,female,East Germany,activity
+1268,9 years,female,East Germany,activity
+1275,7 years,female,East Germany,length
+1280,9 years,male,East Germany,length
+1283,12 years,male,East Germany,activity
+1296,9 years,female,East Germany,activity
+1305,9 years,female,East Germany,activity
+1309,7 years,male,East Germany,activity
+1319,9 years,male,East Germany,activity
+1343,12 years,female,East Germany,feelings
+1361,9 years,male,East Germany,activity
+1394,9 years,female,East Germany,feelings
+1396,9 years,male,East Germany,length
+1407,9 years,female,East Germany,length
+1415,15 years,male,East Germany,feelings
+1419,15 years,female,East Germany,activity
+1421,12 years,female,East Germany,length
+1424,12 years,female,East Germany,feelings
+1437,12 years,male,East Germany,activity
+1440,7 years,male,East Germany,helping
+1457,12 years,female,East Germany,activity
+1459,7 years,male,East Germany,activity
+1470,9 years,female,East Germany,helping
+1472,9 years,female,East Germany,helping
+1501,7 years,female,East Germany,length
+1509,7 years,male,East Germany,activity
+1510,12 years,female,East Germany,activity
+1511,9 years,male,East Germany,activity
+1518,15 years,male,East Germany,norms
+1528,12 years,female,East Germany,activity
+1538,7 years,male,East Germany,length
+1559,7 years,male,East Germany,helping
+1579,15 years,male,East Germany,helping
+1599,15 years,female,East Germany,activity
+1602,9 years,female,East Germany,activity
+1606,12 years,male,East Germany,length
+1625,7 years,female,East Germany,length
+1627,7 years,female,East Germany,activity
+1640,9 years,female,East Germany,activity
+1655,15 years,male,East Germany,length
+1663,9 years,female,East Germany,activity
+1664,9 years,female,East Germany,length
+1692,15 years,female,East Germany,length
+1697,9 years,female,East Germany,activity
+1713,12 years,male,East Germany,length
+1743,12 years,female,East Germany,activity
+1744,12 years,male,East Germany,helping
+1770,12 years,female,East Germany,feelings
+1820,9 years,male,East Germany,length
+1838,9 years,male,East Germany,activity
+1854,12 years,male,East Germany,activity
+1860,9 years,female,East Germany,activity
+1866,7 years,female,East Germany,activity
+1886,15 years,male,East Germany,length
+1915,7 years,male,East Germany,activity
+1927,12 years,female,East Germany,activity
+1963,9 years,female,East Germany,activity
+1971,9 years,male,East Germany,trust
+1976,12 years,male,East Germany,length
+2003,9 years,female,East Germany,length
+2015,7 years,male,East Germany,activity
+2017,15 years,male,East Germany,length
+2052,15 years,male,East Germany,feelings
+2069,15 years,male,East Germany,length
+2072,7 years,male,East Germany,norms
+2083,12 years,female,East Germany,length
+2084,9 years,female,East Germany,length
+2113,9 years,female,East Germany,length
+2120,7 years,female,East Germany,helping
+2123,15 years,female,East Germany,helping
+2130,7 years,male,East Germany,activity
+2172,9 years,female,East Germany,length
+2191,7 years,female,East Germany,activity
+2212,9 years,female,East Germany,helping
+2218,9 years,male,East Germany,activity
+2257,15 years,male,East Germany,trust
+2262,15 years,female,East Germany,activity
+2268,12 years,male,East Germany,activity
+2309,12 years,male,East Germany,activity
+2311,9 years,male,East Germany,helping
+2357,7 years,male,East Germany,length
+2365,9 years,male,East Germany,activity
+2379,9 years,male,East Germany,length
+2386,9 years,female,East Germany,length
+2387,7 years,male,East Germany,length
+2411,12 years,female,East Germany,trust
+2418,7 years,male,East Germany,length
+2438,9 years,female,East Germany,length
+2446,12 years,male,East Germany,activity
+2471,12 years,male,East Germany,feelings
+2478,9 years,male,East Germany,feelings
+2485,9 years,male,East Germany,activity
+2486,7 years,male,East Germany,activity
+2491,9 years,male,East Germany,norms
+2495,15 years,male,East Germany,feelings
+2522,9 years,female,East Germany,activity
+2524,9 years,male,East Germany,activity
