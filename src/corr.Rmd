@@ -252,7 +252,7 @@ Psychologists generally include some numbers from their analyses in their writeu
 
 ## Exercise
 
-In this exercise, you'll apply what you've learned to the relationship between _ingroup closeness_, and _group-leader dominance_. Do each of the following analyses, and **include them in your report**. In order to get graphs from RStudio into your wordprocessor, follow [these instructions](insert-image.md).
+In this exercise, you'll apply what you've learned to the relationship between _ingroup closeness_, and _group-leader dominance_. Do each of the following analyses, and **include them as part of your report**. In order to get graphs from RStudio into your wordprocessor, follow [these instructions](insert-image.md).
 
 **Hint:** Most of these steps can be completed by copying the commands you used earlier, and replacing `outgroup` with `dominance`. 
 
@@ -262,11 +262,7 @@ In this exercise, you'll apply what you've learned to the relationship between _
 
 - Calculate the correlation co-efficient for _ingroup_ versus _dominance_. 
 
-- Describe the strength of the correlation (weak, moderate, or strong) using Cohen's conventions.
-
 - Calculate the Bayes Factor for this correlation. 
-
-- State the interpretation of the Bayes Factor, using one of the following terms: (a) substantial evidence for the presence of a relationship, (b) substantial evidence for the absence of the relationship, (c) equivocal evidence for the relationship. 
 
 <a name="further"></a>
 
