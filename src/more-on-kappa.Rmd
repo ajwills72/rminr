@@ -16,9 +16,9 @@ library(tidyverse)
 library(irr)
 friends <- read_csv("irr_nan.csv")
 ```
-In this brief extension worksheet, we look at why kappa is sometime much lower than percentage agreement, and also why the `kappa2` command sometimes prints `NaN` for _Z_ and _p_. 
+In this brief extension worksheet, we look at why kappa is sometimes much lower than percentage agreement, and also why the `kappa2` command sometimes prints `NaN` for _Z_ and _p_. 
 
-To illustrate these things, here are some example rating, and the output they produce:
+To illustrate these things, here are some example ratings, and the output they produce:
 
 ```{r init-load, message=FALSE, echo=FALSE}
 friends
