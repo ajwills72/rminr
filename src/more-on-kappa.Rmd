@@ -1,0 +1,51 @@
+---
+title: "More on Cohen's Kappa"
+author: "Andy Wills"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+## DEVELOPERS: Uncomment one option, as appropriate
+
+## Show only commands.
+## knitr::opts_chunk$set(echo = TRUE, message = FALSE, results='hide', fig.keep = 'none', comment=NA)
+
+## Show commands and ouptut.
+knitr::opts_chunk$set(echo = TRUE, comment=NA)
+library(tidyverse)
+library(irr)
+friends <- read_csv("irr_nan.csv")
+```
+In this brief extension worksheet, we look at why kappa is sometime much lower than percentage agreement, and also why the `kappa2` command sometimes prints `NaN` for _Z_ and _p_. 
+
+To illustrate these things, here are some example rating, and the output they produce:
+
+```{r init-load, message=FALSE, echo=FALSE}
+friends
+ratings <- friends %>% select(rater1, rater2)
+agree(ratings)
+kappa2(ratings)
+```
+
+
+## Why is kappa zero in this case?
+
+It might seem odd to have a kappa of zero here, because the percentage agreement is quite high (80%). Recall that Cohen's kappa is calculated as:
+
+_(P - C) / (100 - C)_
+
+where _P_ is the percentage agreement between the two raters, and _C_ is the percentage agreement we'd expect by chance. So, for kappa to be zero, the percentage agreement by chance must also be 80%. 
+
+Agreement by chance is so high here because Rater 1 is using the same response all the time, and Rater 2 is using that same response 80% of the time. If one person always makes the same rating, and the other makes that rating on a random 80% of occasions, they'll agree 80% of the time. For example, if I call everything I see a cat, and you call everything you see a cat unless you roll a five on your five-sided dice, we'll agree 80% of the time. This does not mean either of us knows what a cat is.
+
+## Why are Z and p equal to `NaN`
+
+In this case, `NaN` doesn't mean grandmother, it means 'not a number'. What's happened here is that there is so little variation in the ratings used (they are nearly all '3') that R cannot calculate the Z score or the p value --- the calculations that are used to do this break down in these extreme cases.
+
+
+----
+
+This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0. 
+
+
+
