@@ -1,0 +1,76 @@
+---
+title: "Sample characteristics"
+author: "Andy Wills"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+## DEVELOPERS: Uncomment one option, as appropriate
+
+## Show only commands.
+## knitr::opts_chunk$set(echo = TRUE, message = FALSE, results='hide', fig.keep = 'none', comment=NA)
+
+## Show commands and ouptut.
+knitr::opts_chunk$set(echo = TRUE, comment=NA)
+```
+
+In the [Relationships](chi.html) worksheet, we loaded a large data set, like this:
+
+```{r init-load, message=FALSE} 
+library(tidyverse)
+friends <- read_csv("chi.csv")
+```
+
+We then looked at this data by clicking on it in the _Environment_ tab in RStudio. Each row was one participant in an interview about friendships. Here's what each of the columns in the data set contained:
+
+| Column    | Description                             | Values             |
+| --------- | --------------------------------------- | ------------------ |
+| subj      | Anonymous ID number of participant          | a number        |
+| age    | Age of the participant | One of: "7 years", "9 years", "12 years", "15 years"" |
+| gender | Gender of the participant        | One of: "male", "female"" |
+| culture    | Culture of participant | One of: "China", "East Germany", "Iceland", or "Russia" |
+| coded | How their interview response was coded | One of "activity", "feelings", "helping", "length", "norms", or "trust" |
+
+In that worksheet, we just said it was a large dataset comprising over 700 participants of different ages, genders, and cultures. OK, but what if you wanted to know exactly how many participants? Or how many were male? In principle, you could just open `chi.csv` in a spreadsheet and start counting, but that's long, tedious, and error prone. A better option is to use some simple commands in R:
+
+## Number of participants
+
+In this kind of data set, where each participant generates exactly one row in the data file, we can get the number of participants by using `nrow` to count the number of rows:
+
+```{r nrow}
+nrow(friends)
+```
+
+Later on, you'll encounter data files where each participant generates several rows of data, so this technique is a bit error prone. Better to do this:
+
+```{r bettern}
+length(unique(friends$subj))
+```
+
+The command `unique` means "give me a list of all the different things in this column, but only list each unique thing once". So `unique(friends$subj)` means list all the distinct subject numbers used. This is the same as the number of subjects in the experiment. Next, we ask for the `length()` of that list, i.e. how many things does it have in it. This gives us the same answer as before.
+
+## Gender balance
+
+In the relationships worksheet, we saw we could use the `table` command to count things. We can use the same approach here to count the number of males and females:
+
+```{r starting}
+table(friends$gender)
+```
+
+R tells us there were 375 females and 404 males.
+
+**Hold on a minute!** 375 + 404 = 779. But there were 784 participants. What happened to the other 5 people?
+We can investigate by using the `unique` command we used before:
+
+```{r gender}
+unique(friends$gender)
+```
+We can see that the gender column has three different entries -- male, female, and `NA`. The last of those means "Not Available"; in other words, the gender of some participants was not recorded. In R, when information is missing, you put `NA` to indicate that. We came across this before in the [exploring data](exploring-incomes.html) worksheet, where we had to tell the command `mean` to ignore `NA`  by typing `na.rm = TRUE`. The `table` command is slightly different, in that it assumes you want to ignore `NA` without having to tell it. 
+
+So, the complete answer here is that 784 participants were tested, 404 were male, 375 female, and for 5 gender was not recorded.
+
+___
+
+This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0. 
+It is part of [Research Methods in R](https://ajwills72.github.io/rminr), by [Andy Wills](http://www.willslab.org.uk)
+

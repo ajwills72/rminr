@@ -216,6 +216,8 @@ If your modified command still uses `cont`, the commands you used before should 
 
 ## Further reading
 
+When you write up an experiment, you often need to provide some summary information about the sample, including the exact number of participants, and the gender balance. R makes it easy to work these things out, as this worksheet shows: [sample characteristics](sample.html).
+
 For more detailed information on the analyses covered in this worksheet, see  [more on relationships](chi-extended.html).
 
 
