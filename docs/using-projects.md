@@ -18,7 +18,7 @@ Before starting this exercise, you should have had a brief introduction to getti
 
 RStudio uses _projects_ to help you keep your work organized, and to make sure you have a reproducible record of your analyses. Reproducible analysis is essential to good, open science. 
 
-We're going to use a project to organize the analyses of data you have collected. An R Studio project is a way to organise data and anlyses that belong together. You should start a new project for each worksheet in this introduction to R, and for each study you conduct throughout your degree. *As you will be working with numerous data sets and analyses, developing this habit now ensure that they remain organised.* 
+We're going to use a project to organize the analyses of data you have collected. An R Studio project is a way to organise data and anlyses that belong together. You should start a new project for each worksheet in this introduction to R, and for each study you conduct throughout your degree. *As you will be working with numerous data sets and analyses, developing this habit now ensures that they remain organised.* 
 
 Here's how to create a new project:
 
@@ -46,7 +46,7 @@ If everything worked well, your screen should now look like this:
 
 ![Project created](pics/project-made.png)
 
-Notice that projects in RStudio look slighlty different to how you've been using RStudio up until now. The two main changes are:
+Notice that projects in RStudio look slightly different to how you've been using RStudio up until now. The two main changes are:
 
 * There is now a new type of tab on the top left. This is a _Script_ tab, which we're going to use in a moment. 
 
