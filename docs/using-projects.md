@@ -1,5 +1,5 @@
 # Using RStudio projects
-_Andy Wills_
+_Andy Wills, Paul Sharpe, Stuart Spicer_
 
 ## Before you start...
 
