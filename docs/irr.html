@@ -226,7 +226,7 @@ agree(ratings)</code></pre>
 <p>So, on a scale of zero (chance) to one (perfect), your agreement in this example was about 0.75 – not bad!</p>
 <div id="calculating-cohens-kappa" class="section level3">
 <h3>Calculating Cohen’s kappa</h3>
-<p>Cohen’s kappa is a measure of agreement that’s calculated in a similar way to the above example. The difference between Cohen’s kappa and what we just did is that Cohen’s kappa also deals with situations where raters use some of the categories more than others. This affects the calculation of how likely it is they will agree by chance.</p>
+<p>Cohen’s kappa is a measure of agreement that’s calculated in a similar way to the above example. The difference between Cohen’s kappa and what we just did is that Cohen’s kappa also deals with situations where raters use some of the categories more than others. This affects the calculation of how likely it is they will agree by chance. For more information on this, see <a href="more-on-kappa.html">more on Cohen’s kappa</a>.</p>
 <p>To calculate Cohen’s kappa in R, we use the command <code>kappa2</code> from the <code>irr</code> package, like this:</p>
 <pre class="r"><code>kappa2(ratings)</code></pre>
 <pre><code> Cohen's Kappa for 2 Raters (Weights: unweighted)
@@ -239,6 +239,7 @@ agree(ratings)</code></pre>
   p-value = 0.000407 </code></pre>
 <p>The key result here is <code>Kappa</code> which is your Cohen’s kappa value (in this example, it’s about 0.75 – your value may be higher or lower than this). The output also tells you how many subjects you rated, and the number of people who made ratings. The bit that says <code>Weights: unweighted</code> refers to an aspect of Cohen’s kappa not covered in this course. If you’re curious, type <code>?kappa2</code> into the Console and read the help file for this command.</p>
 <p><strong>Enter your Cohen’s kappa into your lab book</strong>.</p>
+<p>Depending on your ratings, you may get a value for Kappa that is zero, or even negative. For further explanation of why this happens, see <a href="more-on-kappa.html">more on Cohen’s kappa</a>.</p>
 </div>
 <div id="describing-cohens-kappa" class="section level3">
 <h3>Describing Cohen’s kappa</h3>
@@ -295,6 +296,7 @@ agree(ratings)</code></pre>
 <p>The <code>z</code> and <code>p-value</code> lines relate to a significance test, much like the ones you covered in the <em>Evidence</em> worksheet. As we said back then, psychologists often misinterpret <em>p values</em>, so it’s important to emphasise here that this <em>p value</em> is <strong>not</strong>, for example, the probability that the raters agree at the level expected by chance. In fact, there is no way to explain this p value that is simple, useful and accurate. A Bayes Factor (see the <em>Evidence</em> workshop) would have been more useful, and easier to interpret, but the <code>irr</code> package does not provide one.</p>
 <p>By convention, if the <em>p value</em> is less than 0.05, psychologists will generally believe you when you assert that the two raters agreed more than would be expected by chance. If the <em>p value</em> is greater than 0.05, they will generally be skeptical. If you were writing a report, you could make a statement like:</p>
 <p><em>The agreement between raters was substantial, κ = 0.75, and greater than would be expected by chance, Z = 3.54, p &lt; .05.</em></p>
+<p>Depending on your ratings, the <code>kappa2</code> command may give you <code>NaN</code> for the Z score and p value. For further explanation of why this happens, see <a href="more-on-kappa.html">more on Cohen’s kappa</a>. If you get <code>NaN</code>, it is better to omit the Z and p scores entirely, perhaps with a note that they could not be estimated for your data.</p>
 <hr />
 <p><em>Postcript: Why is it called “Cohen’s kappa”?</em></p>
 <p>The “Cohen” bit comes from its inventor, <a href="https://en.wikipedia.org/wiki/Jacob_Cohen_(statistician)">Jacob Cohen</a>. Kappa (κ) is the Greek letter he decided to use to name his measure (others have used Roman letters, e.g. the ‘t’ in ‘t-test’, but measures of agreement, by convention, use Greek letters). The R command is <code>kappa2</code> rather than <code>kappa</code> because the command <code>kappa</code> also exists and does something very different, which just happens to use the same letter to represent it. It’d probably have been better to call the command something like <code>cohen.kappa</code>, but they didn’t.</p>

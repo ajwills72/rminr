@@ -58,17 +58,21 @@ If you are a current undergraduate student at Plymouth University, you should co
 
 * [Facial attractiveness experiment](face-attract.html). Means, standard deivations, **inter-quartile range**, and _density plots_. 
 
-#### Part 3
-
-* [Animal Behaviour](lions.html). Percentage agreement, Cohen's kappa, contingency tables, _bar charts_.
-
-* [Brexit personalities](brexit.html). Means, filtering data, _summarising data_, density plots, effect size, Bayesian t-test, traditional t-test. 
-
-* [Creativity and the environment](green.html). **Preprocessing**, means, density plots, effect size, Bayesian t-test.
+#### Part 3a
 
 * [Police lineup](lineup.html). Contingency table, mosaic plot, Bayesian contingency test, means, density plot, Bayesian t-test
 
-* [Risk-taking questionniare](risk-rat.html). Means, **combining data frames**, filtering data, and _density plots_.
+* [Risk taking](risk-rat.html). Means, **combining data frames**, filtering data, and _density plots_.
+
+
+#### Part 3b
+
+* [Animal Welfare](lions.html). Percentage agreement, Cohen's kappa, contingency tables, _bar charts_.
+
+* [Creativity and the environment](green.html). **Preprocessing**, means, density plots, effect size, Bayesian t-test.
+
+* [Political psychology](brexit.html). Means, filtering data, _summarising data_, density plots, effect size, Bayesian t-test, traditional t-test. 
+
 
 ## The next level...
 

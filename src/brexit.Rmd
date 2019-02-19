@@ -1,5 +1,5 @@
 ---
-title: "Brexit personality questionnaire"
+title: "Political psychology"
 author: "Yaniv Hanoch, Andy Wills"
 output: html_document
 ---
@@ -15,12 +15,12 @@ knitr::opts_chunk$set(echo = TRUE, comment=NA)
 ```
 
 ## Before you start...
-Before starting this exercise, you should have completed **all** the [Absolute Beginners'](index.html) workshop exercises. If not, take a look at those exercises before continuing. Each section below also indicates which of the earlier worksheets are relevant.
+Before starting this exercise, you should have completed **all** the [Absolute Beginners', Part 1](index.html) worksheets. If not, take a look at those exercises before continuing. Each section below also indicates which of the earlier worksheets are relevant.
 
 ## Getting the data into R
 **Relevant worksheet:** [Using RStudio projects](using-projects.html)
 
-You'll need to complete the Psych:EL excerise to get the CSV file containing your data. Set up an RStudio project for this analysis, and copy the CSV files into it. 
+You'll need to complete the Psych:EL excerise to get the CSV files containing your data, and data for your group. [Set up an RStudio project](using-projects.html) for this analysis, and [upload the CSV files](entering-data-by-hand.html#upload) to it.
 
 ## Exploring your data
 
@@ -34,17 +34,18 @@ library(tidyverse)
 brex <- read_csv("brexit.csv")
 ```
 
-**Note**: Everyone's CSV file has a different name. For example, yours might be called `10435678brexit.csv`. In the example above, you'll need to replace `brexit.csv` with the name of your personal CSV file.
+**Note**: Everyone's CSV file has a different name. For example, yours might be called `Wills.csv`. In the example above, you'll need to replace `Wills.csv` with the name of your personal CSV file.
 
 ### Inspect
 Look at the data by clicking on it in the _Environment_ tab in RStudio. Each row is one person's rating for one question. Here's what each of the columns in the data set contain:
 
 | Column    | Description                             | Values             |
 | --------- | --------------------------------------- | ------------------ |
+| UnRowID   | Unique Row ID: you can ignore this.     |        |
 | SRN       | Your Student Reference Number           |        |
-| cond       | How would you vote in a Brexit referendum? | "leave", "remain" |
+| cond      | How would you vote in a Brexit referendum? | "leave", "remain" |
 | type      | Which questionnaire is this a response for? | "auth" = Authoritarian Personality Scale, "dom" = Social Dominance Orientation questionnaire |
-| qu  | This number uniquely identifies the question that was asked  | 1 - 30 |
+| qu  | This number uniquely identifies the question that was asked  | 1 - 21 |
 | rating    | The rating given in response to this question | 1 - 7, higher numbers = more authoritarian / higher social dominance orientation |
 
 ### Calculating your own personality scores
@@ -62,8 +63,6 @@ brex %>% group_by(type) %>% summarise(mean(rating))
 **NOTE:** Your output should look similar to that shown above, but the numbers will be different.
 
 ## Exploring everyone's data
-
-This part of the exercise can only be completed once a sufficient number of people have completed the questionnaires on Psych:EL. When this happens, you will be able to download everyone's data from Psych:EL as a CSV file. Download that file, and copy it into your RStudio project (the project you generated at the beginning of this exercise).
 
 ### Load data
 
@@ -123,11 +122,11 @@ library(effsize)
 cohen.d(auth.sum$rating ~ auth.sum$cond)
 ```
 
-If the example above, our effect size (_Cohen's d_) is around 0.37, which is normally described as a _small_ effect (see _Group Differences_ for the meaning of _small_ in this context, it does not imply "unimportant"). 
+If the example above, our effect size (_Cohen's d_) is around 0.48, which is normally described as being between a _small_ and a _medium_ effect (see _Group Differences_ for the meaning of _small_ in this context, it does not imply "unimportant"). 
 
-**Enter your Cohen's d value into your lab book.** Your number will likely be somewhat different to the one in the above example.
+**Enter your Cohen's d value into PsycEL.** Your number will likely be somewhat different to the one in the above example.
 
-### Evidence
+### 5. Evidence
 
 **Relevant worksheet:** [Evidence](evidence.html)
 
@@ -138,31 +137,20 @@ library(BayesFactor, quietly = TRUE)
 ttestBF(formula = rating ~ cond, data = data.frame(auth.sum))
 ```
 
-In this example, The Bayes Factor is about 2.4, meaning it's about 2.4 times as likely that there is a difference, than there isn't. This number is bigger than 0.33 but smaller than 3 so, by convention, it's not clear from these data whether _leavers_ and _remainers_ differ on this personality measure or not. 
+In this example, The Bayes Factor is about 14, meaning it's about 14 times as likely that there is a difference, than there isn't. This number is bigger than 0.33 but smaller than 3 so, by convention, it's not clear from these data whether _leavers_ and _remainers_ differ on this personality measure or not. 
 
- **Enter your exact Bayes Factor into your lab book.** (The Bayes Factor for your data will likely be a bit different to the one above).
-
-#### Traditional analysis
-
-There's a long history in psychology of performing a t-test to examine the level of evidence for a group difference. The results of such tests are widely misinterpreted by psychologists, but some still like to see them anyway. Here's how to do a t-test for these data:
-
-```{r auth-t, message=FALSE} 
-t.test(auth.sum$rating ~ auth.sum$cond)
-```
-
-In this example, the _p value_ is about .015. As this is lower than .05, psychologists would traditionally endorse this as a "real" result. The fact that it's only 2-3 times more likely there is a difference than there isn't (see the Bayes Factor calculation above) underlines the dangers of relying solely on p values.
+ **Enter your exact Bayes Factor into PsycEL.** (The Bayes Factor for your data will likely be a bit different to the one above).
 
 ### Do 'leavers' score higher on a Social Dominance Orientation scale?
-In this final part of the exercise, the task is to produce a density plot, calculate the effect size, and calculate the Bayes Factor, for the _other_ questionnaire ... the Social Dominance questionnaire. Go through the numbered steps above, changing the code so you're doing the same analyses on this other questionnaire. To get you started, here's Step 1:
+In this final part of the exercise, the task is to produce a density plot, calculate the effect size, and calculate the Bayes Factor, for the _other_ questionnaire ... the Social Dominance questionnaire. Go through the steps above, changing the code so you're doing the same analyses on this other questionnaire. To get you started, here's Step 1:
 
 ```{r filter-dom, message=FALSE} 
 dom <- brex.all %>% filter(type == "dom")
 ```
 
-**Enter your effect size, and Bayes Factor, for the Social Dominance Orientation scale, into your lab books.**
+**Enter your effect size, and Bayes Factor, for the Social Dominance Orientation scale, into PsycEL.**
 
 ___
 
 This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0. 
 
-_version 0.2.1_

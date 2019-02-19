@@ -106,7 +106,7 @@ So, on a scale of zero (chance) to one (perfect), your agreement in this example
 
 ### Calculating Cohen's kappa
 
-Cohen's kappa is a measure of agreement that's calculated in a similar way to the above example. The difference between Cohen's kappa and what we just did is that Cohen's kappa also deals with situations where raters use some of the categories more than others. This affects the calculation of how likely it is they will agree by chance. 
+Cohen's kappa is a measure of agreement that's calculated in a similar way to the above example. The difference between Cohen's kappa and what we just did is that Cohen's kappa also deals with situations where raters use some of the categories more than others. This affects the calculation of how likely it is they will agree by chance. For more information on this, see [more on Cohen's kappa](more-on-kappa.html).
 
 To calculate Cohen's kappa in R, we use the command `kappa2` from the `irr` package, like this: 
 
@@ -117,6 +117,8 @@ kappa2(ratings)
 The key result here is `Kappa` which is your Cohen's kappa value (in this example, it's about 0.75 -- your value may be higher or lower than this). The output also tells you how many subjects you rated, and the number of people who made ratings. The bit that says `Weights: unweighted` refers to an aspect of Cohen's kappa not covered in this course. If you're curious, type `?kappa2` into the Console and read the help file for this command.
 
 **Enter your Cohen's kappa into your lab book**.
+
+Depending on your ratings, you may get a value for Kappa that is zero, or even negative. For further explanation of why this happens, see [more on Cohen's kappa](more-on-kappa.html).
 
 ### Describing Cohen's kappa
 
@@ -150,6 +152,8 @@ The `z` and `p-value` lines relate to a significance test, much like the ones yo
 By convention, if the _p value_ is less than 0.05, psychologists will generally believe you when you assert that the two raters agreed more than would be expected by chance. If the _p value_ is greater than 0.05, they will generally be skeptical. If you were writing a report, you could make a statement like:
 
 _The agreement between raters was substantial, κ = 0.75, and greater than would be expected by chance, Z = 3.54, p < .05._
+
+Depending on your ratings, the `kappa2` command may give you `NaN` for the Z score and p value. For further explanation of why this happens, see [more on Cohen's kappa](more-on-kappa.html). If you get `NaN`, it is better to omit the Z and p scores entirely, perhaps with a note that they could not be estimated for your data.
 
 
 [1]:https://en.wikipedia.org/wiki/Jacob_Cohen_(statistician)
