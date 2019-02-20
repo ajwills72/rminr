@@ -22,9 +22,9 @@ Before starting this exercise, you should have completed **all** the [Absolute B
 
 In this excercise, you'll be analysing some data that has already been collected. To get this data into R, follow these steps:
 
-1. Set up an RStudio project for this analysis. 
+1. [Set up an RStudio project](using-projects.html) for this analysis. 
 
-2. Save [this CSV file](data/lineup.csv) into your RStudio project folder.
+2. Upload [this CSV file](data/lineup.csv) into your RStudio project folder. Here's a reminder of [how to upload CSV files](entering-data-by-hand.html#upload).
 
 5. Load the _tidyverse_ package, and then load your data into R.
 
@@ -88,15 +88,15 @@ The Bayes Factor here is about 1200, so it's over a thousand times more likely t
 
 Now do the same analyses as above, but on question 6, "Did the thief shove the victim?". To do this you change the command `cont <- table(lup$Cond, lup$Q2)` so that you get a contingency table for question 6. You can then re-run the commands above to get the answers. 
 
-**Enter the Bayes Factor for question 6 into your lab book.**
+**Enter the Bayes Factor for question 6 into PsycEL.**
 
-Using the convention that there is a difference if BF > 3, there isn't a difference if BF < 0.33, and if it's between 0.33 and 3, we're unsure, select **difference, no difference, or unsure**, in your lab book.
+Using the convention that there is a difference if BF > 3, there isn't a difference if BF < 0.33, and if it's between 0.33 and 3, we're unsure, select **difference, no difference, or unsure**, on PsycEL.
 
 ## How was your view of the scene?
 
 **Relevant worksheet:** [Group Differences](group-differences.html), [Evidence](evidence.html)
 
-Did participants think there view was better if they were told they made the correct decision? In this case, we have one ordered variable (`Q3`, their rating of their view on a 1-100 scale), and one unordered variable (`Cond` - whether they got feedback or not). 
+Did participants think their view was better if they were told they made the correct decision? In this case, we have one ordered variable (`Q3`, their rating of their view on a 1-100 scale), and one unordered variable (`Cond` - whether they got feedback or not). 
 
 We start by looking to see how the mean scores on Question 3 differ for those who were and weren't given feedback. As we saw in the _Group Differences_ worksheet, we use the `group_by`,  `summarise`, and `mean` commands to do this:
 
@@ -124,12 +124,10 @@ The Bayes Factor in this case is about 1/3, meaning it's about three times as li
 
 Did participants who were told they were right think they saw the thief's face for longer? This was addressed by Question 4 (column `Q4` in data frame `lup`). By changing `Q3` to `Q4` in the commands above, you can answer this question. 
 
-**Record the mean viewing time for each condition, and the Bayes Factor for the difference, in your lab book**.
+**Enter the mean viewing time for each condition, and the Bayes Factor for the difference, into PsycEL**.
 
-Using the convention that there is a difference if BF > 3, there isn't a difference if BF < 0.33, and if it's between 0.33 and 3, we're unsure, select **difference, no difference, or unsure**, in your lab book.
+Using the convention that there is a difference if BF > 3, there isn't a difference if BF < 0.33, and if it's between 0.33 and 3, we're unsure, select **difference, no difference, or unsure**, into PsycEL.
 
 ___
 
 This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0. 
-
-_version 0.2.1_

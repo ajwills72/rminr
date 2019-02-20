@@ -136,8 +136,8 @@ $(document).ready(function () {
 <p><strong>Relevant worksheet:</strong> <a href="using-projects.html">Using RStudio projects</a></p>
 <p>In this excercise, you’ll be analysing some data that has already been collected. To get this data into R, follow these steps:</p>
 <ol style="list-style-type: decimal">
-<li><p>Set up an RStudio project for this analysis.</p></li>
-<li><p>Save <a href="data/lineup.csv">this CSV file</a> into your RStudio project folder.</p></li>
+<li><p><a href="using-projects.html">Set up an RStudio project</a> for this analysis.</p></li>
+<li><p>Upload <a href="data/lineup.csv">this CSV file</a> into your RStudio project folder. Here’s a reminder of <a href="entering-data-by-hand.html#upload">how to upload CSV files</a>.</p></li>
 <li><p>Load the <em>tidyverse</em> package, and then load your data into R.</p></li>
 </ol>
 <pre class="r"><code>library(tidyverse)
@@ -251,13 +251,13 @@ Bayes factor type: BFcontingencyTable, independent multinomial</code></pre>
 <div id="did-the-thief-shove-the-victim" class="section level2">
 <h2>Did the thief shove the victim?</h2>
 <p>Now do the same analyses as above, but on question 6, “Did the thief shove the victim?”. To do this you change the command <code>cont &lt;- table(lup$Cond, lup$Q2)</code> so that you get a contingency table for question 6. You can then re-run the commands above to get the answers.</p>
-<p><strong>Enter the Bayes Factor for question 6 into your lab book.</strong></p>
-<p>Using the convention that there is a difference if BF &gt; 3, there isn’t a difference if BF &lt; 0.33, and if it’s between 0.33 and 3, we’re unsure, select <strong>difference, no difference, or unsure</strong>, in your lab book.</p>
+<p><strong>Enter the Bayes Factor for question 6 into PsycEL.</strong></p>
+<p>Using the convention that there is a difference if BF &gt; 3, there isn’t a difference if BF &lt; 0.33, and if it’s between 0.33 and 3, we’re unsure, select <strong>difference, no difference, or unsure</strong>, on PsycEL.</p>
 </div>
 <div id="how-was-your-view-of-the-scene" class="section level2">
 <h2>How was your view of the scene?</h2>
 <p><strong>Relevant worksheet:</strong> <a href="group-differences.html">Group Differences</a>, <a href="evidence.html">Evidence</a></p>
-<p>Did participants think there view was better if they were told they made the correct decision? In this case, we have one ordered variable (<code>Q3</code>, their rating of their view on a 1-100 scale), and one unordered variable (<code>Cond</code> - whether they got feedback or not).</p>
+<p>Did participants think their view was better if they were told they made the correct decision? In this case, we have one ordered variable (<code>Q3</code>, their rating of their view on a 1-100 scale), and one unordered variable (<code>Cond</code> - whether they got feedback or not).</p>
 <p>We start by looking to see how the mean scores on Question 3 differ for those who were and weren’t given feedback. As we saw in the <em>Group Differences</em> worksheet, we use the <code>group_by</code>, <code>summarise</code>, and <code>mean</code> commands to do this:</p>
 <pre class="r"><code>lup %&gt;% group_by(Cond) %&gt;% summarise(mean(Q3))</code></pre>
 <pre><code># A tibble: 2 x 2
@@ -284,11 +284,10 @@ Bayes factor type: BFindepSample, JZS</code></pre>
 <div id="how-long-they-thought-they-saw-the-thiefs-face" class="section level2">
 <h2>How long they thought they saw the thief’s face</h2>
 <p>Did participants who were told they were right think they saw the thief’s face for longer? This was addressed by Question 4 (column <code>Q4</code> in data frame <code>lup</code>). By changing <code>Q3</code> to <code>Q4</code> in the commands above, you can answer this question.</p>
-<p><strong>Record the mean viewing time for each condition, and the Bayes Factor for the difference, in your lab book</strong>.</p>
-<p>Using the convention that there is a difference if BF &gt; 3, there isn’t a difference if BF &lt; 0.33, and if it’s between 0.33 and 3, we’re unsure, select <strong>difference, no difference, or unsure</strong>, in your lab book.</p>
+<p><strong>Enter the mean viewing time for each condition, and the Bayes Factor for the difference, into PsycEL</strong>.</p>
+<p>Using the convention that there is a difference if BF &gt; 3, there isn’t a difference if BF &lt; 0.33, and if it’s between 0.33 and 3, we’re unsure, select <strong>difference, no difference, or unsure</strong>, into PsycEL.</p>
 <hr />
 <p>This material is distributed under a <a href="https://creativecommons.org/">Creative Commons</a> licence. CC-BY-SA 4.0.</p>
-<p><em>version 0.2.1</em></p>
 </div>
 
 
