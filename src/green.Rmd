@@ -15,7 +15,7 @@ knitr::opts_chunk$set(echo = TRUE, comment=NA)
 ```
 
 ## Before you start...
-Before starting this exercise, you should have completed all the relevant [Absolute Beginners'](index.html) workshop exercises. Each section below indicates which of the earlier worksheets are relevant.
+Before starting this exercise, you should have completed all the relevant [Absolute Beginners', Part 1](index.html) worksheets. Each section below indicates which of the earlier worksheets are relevant.
 
 ## Getting the data into R
 
@@ -23,9 +23,9 @@ Before starting this exercise, you should have completed all the relevant [Absol
 
 In this excercise, you'll be analysing some data that you and your peers recently collected. To get this data into R, follow these steps:
 
-1. Set up an RStudio project for this analysis. 
+1. [Set up an RStudio project](using-projects.html) for this analysis. 
 
-2. Save the CSV file you have been given for this activity into your RStudio project folder. If you want to try out this worksheet without that data file, you can use this [example CSV file](data/green.csv) instead. _You can only gain marks in your lab book for this exercise if you use the CSV file you were sent_. 
+2. [Upload the CSV file](entering-data-by-hand.html#upload) you have been given for this activity into your RStudio project folder. If you want to try out this worksheet without that data file, you can use this [example CSV file](data/green.csv) instead. _You can only complete your PsycEL activity if you  use the CSV file you were sent_. 
 
 3. Load the _tidyverse_ package, and then load your data into R.
 
@@ -34,12 +34,12 @@ library(tidyverse)
 data <- read_csv("green.csv")
 ```
 
-**Note**: In the example above, you'll need to replace `green.csv` with the name of the CSV file you just copied into your RStudio project.
+**Note**: In the example above, you'll need to replace `green.csv` with the name of the CSV file you just uploaded into your RStudio project.
 
 ### Inspect
 Look at the data by clicking on it in the _Environment_ tab in RStudio. 
 
-Each row is rating by one participant in this study of creativity. Groups of participants came up with a creative solution to a problem, while either talking a walk in an _urban_ environment or a _nature_ environment. Each of these solutions has been rated for creativity by a set of raters. 
+Each row is a rating by one participant in this study of creativity. Groups of participants came up with a creative solution to a problem, while either talking a walk in an _urban_ environment or a _nature_ environment. Each of these solutions has been rated for creativity by a set of raters. 
 
 _Will the nature environment lead to more creative ideas than the urban environment?_
 
@@ -89,7 +89,7 @@ library(effsize)
 cohen.d(creative$score ~ creative$Cond)
 ```
 
-In this example, the effect size is around 0.2, which is typically described as a small effect. The effect size for your data may be different.
+In this example, the effect size is around 0.04, which is typically described as a small or very small effect (RStudio uses the slightly nonstandard phrase 'negligble'). The effect size for your data may be different.
 
 At this point, the most pressing question is probably whether the difference observed in the mean scores is likely to be real, or whether it's more likely down to chance. As we saw in the _Evidence_ worksheet, the best way to look at this is with a Bayesian t-test:
 
@@ -98,14 +98,13 @@ library(BayesFactor, quietly = TRUE)
 ttestBF(formula = score ~ Cond, data = data.frame(creative))
 ```
 
-The Bayes Factor in this case is about 1/3, meaning it's about three times as likely there _isn't_ a difference as there is. Your number will likely be a bit different.
+The Bayes Factor in this case is about 1/5 (0.2), meaning it's about five times as likely there _isn't_ a difference as there is. Your number will likely be a bit different.
 
-**Record the mean creativity score for each condition, the effect size, and the Bayes Factor for the difference, in your lab book**.
+**Enter the mean creativity score for each condition, the effect size, and the Bayes Factor for the difference, into PsycEL**.
 
-Using the convention that there is a difference if BF > 3, there isn't a difference if BF < 0.33, and if it's between 0.33 and 3, we're unsure, select **difference, no difference, or unsure**, in your lab book.
+Using the convention that there is a difference if BF > 3, there isn't a difference if BF < 0.33, and if it's between 0.33 and 3, we're unsure, select **difference, no difference, or unsure**, on PsycEL.
 
 ___
 
 This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0. 
 
-_version 0.2.1_
