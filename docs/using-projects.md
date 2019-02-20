@@ -5,12 +5,15 @@ _Andy Wills_
 
 Before starting this exercise, you should have had a brief introduction to getting and using RStudio -- [Introduction to RStudio](intro-rstudio.html). You should also have also completed the workshop exercises for [Exploring Data](exploring-incomes.html), [Group Differences](group-differences.html), and [Evidence](evidence.html). If not, take a look these earlier worksheets before continuing.
 
+Log in to <a href = "https://rstudio.plymouth.ac.uk" target = "blank">RStudio server</a>.
+
 ## Contents
 
 - [Creating a new project](#create)
 - [Writing an R script](#write)
 - [Running an R script](#run)
 - [Exercise: Analysis using an R script](#ex1)
+- [Downloading files from RStudio Online](#download)
 
 <a name="create"></a>
 
@@ -120,9 +123,21 @@ t.test(cpsdata$income ~ cpsdata$sex)
 ## Perform Bayesian t-test
 ttestBF(formula = income ~ sex, data = data.frame(cpsdata))
 ```
+
+<a name="download"></a>
+
+### Downloading files from RStudio Online
+
+In order to use files from RStudio Online in other applications (e.g. Microsoft Office, LibreOffice), you'll need to download them. Here's how:
+
+1. Click on the 'Files' tab in RStudio Online, and click the tick box to select your file (it will have whatever filename you just gave it.). 
+
+2. Click on "More" (next to the little blue gear wheel), and then "Export...". 
+
+3. Click "Download". The file will now be in the Downloads folder of your computer. 
+
 ___
 
 This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0. 
 
-_version 0.2_
 

@@ -1,0 +1,102 @@
+---
+title: "Spatial navigation"
+author: "Alastair Smith, Andy Wills"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+## DEVELOPERS: Uncomment one option, as appropriate
+
+## Show only commands.
+## knitr::opts_chunk$set(echo = TRUE, message = FALSE, results='hide', fig.keep = 'none', comment=NA)
+
+## Show commands and ouptut.
+knitr::opts_chunk$set(echo = TRUE, comment=NA)
+```
+
+## Before you start...
+Before starting this exercise, you should have completed **all** the [Absolute Beginners', Part 1](index.html) workshop exercises. If not, take a look at those exercises before continuing. Each section below also indicates which of the earlier worksheets are relevant.
+
+## Getting the data into R
+**Relevant worksheet:** [Using RStudio projects](using-projects.html)
+
+In order to complete this worksheet, you'll need to have downloaded your CSV file from the PsycEL exercise. **See the instructions on PsycEL for how to do this.**
+
+Once you have downloaded your CSV file, [set up a new project](using-projects.html) on RStudio Server for this analysis, and [upload your CSV](entering-data-by-hand.html#upload) to your project.
+
+## Exploring your data
+
+### Load
+**Relevant worksheet:** [Exploring data](exploring-incomes.html) 
+
+Load the _tidyverse_ package, and load your data. 
+**Note**: Everyone's CSV file has a different name. For example, yours might be called `10435678 data.csv`. In the example below, you'll need to replace `navigate.csv` with the name of your personal CSV file.
+
+```{r init-load, message=FALSE} 
+library(tidyverse)
+nav <- read_csv("navigate.csv")
+```
+
+### Inspect
+Look at the data by clicking on it in the _Environment_ tab in RStudio. Each row is a score for one test. Here's what each of the columns in the data set contain:
+
+| Column    | Description                             | Values             |
+| --------- | --------------------------------------- | ------------------ |
+| Who       | Your data, or average of your cohort?   | "Me", "Cohort"     |
+| Test      | Spatial navigation test                 | "SBSOD", "Landmark", "Direction", "Order" |
+| Percent     | Score on that test, as a percentage     | 0-100 |
+
+## Making a bar chart
+
+**Relevant worksheet:** [Exploring data](exploring-incomes.html). 
+
+In the [Face Recognition](face-recog.html) exercise, you made a simple bar chart with two bars. This time, you'll make a more complex, eight-bar plot. The data you loaded has eight test scores, four for your personal scores, and four for the mean scores of your peers. In order to make it easy to compare each of your scores to the cohort mean, we are going to plot four pairs of bars: (1) Your Direction score, (2) Cohort Direction score, (3) Your Landmark score, and so on. For clarity, and beautification, the bars for your scores are going to be a different colour to the bars for the cohort mean. Here's the command we need:
+
+```{r bar-chart}
+navplot <- nav %>% ggplot(aes(x = Test, y = Percent, fill = Who)) + geom_col(position = "dodge")
+navplot
+```
+
+Your output will look a bit like the above, but the heights of the bars will probably be different. 
+
+### Explanation of command
+
+`navplot <- ` - This gives the bar chart a name (`navplot`), so we can modify it later without having to retype everything.
+
+`nav` - The data frame we want to plot
+
+`%>%` - This is the 'pipe' command. It means, "send the nav data frame to the ggplot command".
+
+`ggplot` is the command in R used to draw graphs
+
+`aes` tells ggplot which columns of your data frame to use in the plot. In this case, we want 'Test' on the x axis, 'Percent' on the y axis, and 'Who' being used to set the colour we use to fill in the bar.
+
+`+ geom_col()` says that the type of graph we want is a bar chart (`col` is short for columns, another word for bars). 
+
+`position = "dodge"` - By default, ggplot would put the two scores for each test (yours and the cohort's) directly on top of each other. This is sometimes useful, but more often we want the bars to avoid ("dodge") each other, and appear side-by-side. 
+
+`navplot` - This tells R to display the graph that we have named `navplot`.
+
+## Choosing colours
+
+Personally, I'm not mad keen on R's choice of colours. Fortunately, we can choose colours more to our liking. In honour of my [Hogwart's house](https://en.wikipedia.org/wiki/Hogwarts#Hufflepuff), let's change these to yellow and black:
+
+```{r cols, }
+navplot <- navplot + scale_fill_manual(values=c("yellow","black"))
+navplot
+```
+
+Type `colours()` into the console to see the 657 named colours available in R. Pick two you find clear and pleasing, and modify the command above to use them. 
+
+### Recording our answer
+
+1. Export your graph, using the _Export_ icon on RStudio's _Plots_ window, and selecting "Save as image...". Give it a meaninful file name (e.g. "nav-bar") and click 'Save'. 
+
+2. Download your graph from RStudio server - see [these instructions](using-projects.html#download) for a reminder of how to do this.
+
+3. **Upload your graph** to PsycEL (see the PsychEL activity for instructions of how to do this).
+
+___
+
+This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0. 
+

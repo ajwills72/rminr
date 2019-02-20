@@ -1,7 +1,9 @@
 
 ## Absolute Beginners' Guide to R
 
-* [Introduction to RStudio](intro-rstudio.md). How to install RStudio, and a basic introduction to the software.
+#### Part 1
+
+* [Introduction to RStudio](intro-rstudio.md). How to get RStudio, and a basic introduction to the software.
 
 * [Exploring data](exploring-incomes.html). Means, medians, and histograms. 
 
@@ -13,17 +15,24 @@
 
 * [Entering data by hand](entering-data-by-hand.html). Entering data into a spreadsheet. Saving data into your RStudio project.
 
+* [Calculating your module mark](modmark.html). How to calculate a final module mark from your component marks, using R.
+
+#### Part 2
+
 * [Inter-rater reliability](irr.html). Percentage agreement. Cohen's kappa. 
 
 * [Relationships](chi.html). Frequency and contingency tables. Mosaic plots. Traditional chi-square test. Bayesian test. 
 
-* [Placeholder A](https://upload.wikimedia.org/wikipedia/commons/9/9e/Bermuda_Triangle_he.jpg). Correlation worksheet, not yet written.
+* [Relationships, part 2](corr.html). Density plots. Scatter plots. Correlation co-efficient. Bayesian and traditional tests. 
+
+
+#### Further reading
 
 * [Cheat sheet](cheat-sheet.html). Everything we've covered so far, condensed. 
 
 * [Reasons to use R](why-r-student.html). Why this course uses R to analyse data.
 
-* [Further reading](resources.html). A list of other Creative Commons resources about using R. 
+* [Other resources](resources.html). A list of other Creative Commons resources about using R. 
 
 ## Putting R to work
 
@@ -31,40 +40,43 @@ These are mainly further practice in the skills you learned in _Absolute Beginne
 
 If you are a current undergraduate student at Plymouth University, you should complete the accompanying Psych:EL (Psychology: Experiential Learning) activity first, in order to generate your own set of data. If you're not, you can download sample data files [here](rtoworkdata.html).
 
-#### Part 1
+#### Part 1a
 
 * [Autobiographical memory study](memories.html). Entering data by hand, _histograms_.
 
 * [Face recognition experiment](face-recog.html). Means, _filtering data_, and a **bar graph**.
 
-* [Response compatibility experiment](response-compatibility.html). Means, standard deviations, and density plots.
+* [Spatial navigation tests](navigate.html). More on **bar graphs**.
+
+#### Part 1b
+
+* [Response compatibility experiment](response-compatibility.html). Means, filtering data, standard deviations, and density plots.
 
 * [Visual illusions](illusions.html). Filtering data, means, **violin plot**, Bayesian t-test.
-
-* [Placeholder C](https://upload.wikimedia.org/wikipedia/commons/9/9e/Bermuda_Triangle_he.jpg). Not yet written.
-
-* [Placeholder D](https://upload.wikimedia.org/wikipedia/commons/9/9e/Bermuda_Triangle_he.jpg). Not yet written.
 
 #### Part 2
 
 * [Facial attractiveness experiment](face-attract.html). Means, standard deivations, **inter-quartile range**, and _density plots_. 
 
-* [Placeholder E](https://upload.wikimedia.org/wikipedia/commons/9/9e/Bermuda_Triangle_he.jpg). Not yet written.
-
-#### Part 3
-
-* [Animal Behaviour](lions.html). Percentage agreement, Cohen's kappa, contingency tables, _bar charts_.
-
-* [Brexit personalities](brexit.html). Means, filtering data, _summarising data_, density plots, effect size, Bayesian t-test, traditional t-test. 
-
-* [Creativity and the environment](green.html). **Preprocessing**, means, density plots, effect size, Bayesian t-test.
+#### Part 3a
 
 * [Police lineup](lineup.html). Contingency table, mosaic plot, Bayesian contingency test, means, density plot, Bayesian t-test
 
-* [Risk-taking questionniare](risk-rat.html). Means, **combining data frames**, filtering data, and _density plots_.
+* [Risk taking](risk-rat.html). Means, **combining data frames**, filtering data, and _density plots_.
 
-* [Placeholder F](https://upload.wikimedia.org/wikipedia/commons/9/9e/Bermuda_Triangle_he.jpg). Activity by not yet written.
 
+#### Part 3b
+
+* [Animal Welfare](lions.html). Percentage agreement, Cohen's kappa, contingency tables, _bar charts_.
+
+* [Creativity and the environment](green.html). **Preprocessing**, means, density plots, effect size, Bayesian t-test.
+
+* [Political psychology](brexit.html). Means, filtering data, _summarising data_, density plots, effect size, Bayesian t-test, traditional t-test. 
+
+
+## The next level...
+
+* [ANOVA](ANOVAplans.md). Draft plan for ANOVA course materials.
 
 ____
 
@@ -89,22 +101,24 @@ ____
 
 Thanks to the following people for their feedback and advice on these materials:
 
-Jackie Andrade, Eleanor Andrade May,
+Jackie Andrade, Eleanor Andrade May, Martyn Atkins,
 Patric Bach, Dale Barr, Chris Berry,
 Laura Charlton,
 Lisa DeBruine, 
 Charlotte Edmunds,
 Emily Filewood,
-Courtney Hooton,
+Giorgio Ganis, Phil Gee, Michaela Gummerum,
+Yaniv Hanoch, Courtney Hooton,
 Angus Inkster,
 Jasmin Jones, Peter Jones, 
 Laith Kahn, 
 Chris Longmore,
-Jon May, Chris Mitchell, Millie Monks,
+Jon May, Anthony Mee, Chris Mitchell, Millie Monks,
+Alyson Norman,
 Charlie Reynolds, Matt Roser,
-Julian Stander, 
+Paul Sharpe, Alastair Smith, Julian Stander, 
+Sylvia Terbeck,
+Michael Verde,
 Ben Whalley.
 
-___
 
-_version: 0.2.1_

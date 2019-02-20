@@ -48,6 +48,32 @@ plot(x, dcauchy(x, scale = .707),type="l", xlab = "Effect size", ylab = "")
 
 `Bayes factor type: BFindepSample` - You're doing a Bayes Factor analysis; `indepSample` is short for `independent samples`, which is another way of saying "between-subjects test". `JZS` is short for Jeffreys, Zellner, and Siow - the surnames of three people who are credited with coming up with this particular way of working out Bayes Factors.
 
+## When p-values and Bayes Factors disagree
+
+So, what if your p-value is less than .05, but your Bayes Factor is less than 3? The short answer is ... 
+believe the Bayes Factor, and ignore the p value. The p value is there for historical reasons and doesn't tell you anything you actually want to know. 
+
+### Long answer
+
+Recall that the p value doesn't tell you anything that is both easy to
+understand and useful to know. For example, it *doesn't* tell you the
+likelihood of the null hypothesis, given your data.
+
+Recall also that BF does give you something you want to know --- how much more
+likely your experimental hypothesis is than the null hypothesis (e.g. BF = 3 means
+experimental hypothesis is 3x more likely)
+
+Now, take a look at [Wetzels et al. (2011)](http://pcl.missouri.edu/sites/default/files/Wetzels:etal:2011.pdf). In situations where .01 < p < .05,
+most of the time Bayesian analysis indicates the evidence is
+anecdotal (i.e. BF < 3). If you were going to stick to p values, you wouldn't
+pick the p <.05 threshold -- it's just far too lenient.
+
+Then, take a look at [Masicampo & Lalande (2012)](https://www.researchgate.net/profile/Daniel_Lalande/publication/230594320_A_Peculiar_Prevalence_of_p_Values_Just_Below_05/links/55f97a1408aeafc8ac259527/A-Peculiar-Prevalence-of-p-Values-Just-Below-05.pdf?origin=publication_detail) ... p values in Psychology are
+very  commonly in the .01 < p <.05 region.
+
+Put that all together and we begin to get a sense of one of the causes of the
+replication crisis, and how BF may help us escape it.
+
 ___
 
 

@@ -91,6 +91,9 @@ img {
 .tabbed-pane {
   padding-top: 12px;
 }
+.html-widget {
+  margin-bottom: 20px;
+}
 button.code-folding-btn:focus {
   outline: none;
 }
@@ -127,6 +130,7 @@ $(document).ready(function () {
 <div id="before-you-start" class="section level2">
 <h2>Before you start…</h2>
 <p>Before starting this exercise, you should have had a brief introduction to getting and using RStudio – <a href="intro-rstudio.html">Introduction to RStudio</a>. You should also have also completed the workshop exercises for <a href="exploring-incomes.html">Exploring Data</a> and <a href="group-differences.html">Group Differences</a>. If not, take a look these earlier worksheets before continuing.</p>
+<p>First, log in to <a href="https://rstudio.plymouth.ac.uk" target="blank">RStudio server</a>.</p>
 <p>You also need to load <em>tidyverse</em> and the income <em>data frame</em>, and create the <code>cpslow</code> data frame, as covered in <a href="group-differences.html">Group Differences</a>. Here’s a reminder of the commands you need to do this:</p>
 <pre class="r"><code>library(tidyverse)
 cpsdata &lt;- read_csv(url(&quot;http://www.willslab.org.uk/cps2.csv&quot;))
@@ -204,7 +208,7 @@ mean in group female   mean in group male
 <p><em>P(data | null)</em> – which means the probability of our data, assuming the null hypothesis is correct.</p>
 <p>The traditional way of interpreting this <em>p value</em> (see above) treats it is as if it were the:</p>
 <p><em>P(null | data)</em> – the probability of the null hypothesis, given the data.</p>
-<p>These two things are <strong>not</strong> the same, but psychologists have a <a href="http://www.ics.uci.edu/~sternh/courses/210/cohen94_pval.pdf">long history</a> of not realising this. So, if you can’t see what the problem is just yet, you’re in good company! Below, I’ll try and illustrate the error with an analogy. If you understand the analogy, you understand (at some level) what the problem is. If you don’t get it, don’t worry too much – in the next section, we’ll look at a different sort of test that allows us to avoid the error.</p>
+<p>These two things are <strong>not</strong> the same, but psychologists have a <a href="http://jpeelle.net/reprints/Cohen-1994-The_earth_is_round.pdf">long history</a> of not realising this. So, if you can’t see what the problem is just yet, you’re in good company! Below, I’ll try and illustrate the error with an analogy. If you understand the analogy, you understand (at some level) what the problem is. If you don’t get it, don’t worry too much – in the next section, we’ll look at a different sort of test that allows us to avoid the error.</p>
 <div id="your-car-wont-start-there-must-be-a-banana-in-the-exhaust-pipe" class="section level3">
 <h3>Your car won’t start? There must be a banana in the exhaust pipe!</h3>
 <p>To make this all a bit less abstract, let’s make the data “your car doesn’t start”, and my theory “there’s a banana in your exhaust pipe”. Sticking a banana up your car’s exhaust pipe (not recommended!!) is a reasonably effective way of making it so your car won’t start. So the probability your car won’t start, given there’s a banana in the exhaust pipe, is quite high. Let’s say that <em>P(nostart | banana)</em> = 0.95.</p>
@@ -215,9 +219,9 @@ mean in group female   mean in group male
 <h3>How likely is the null hypothesis?</h3>
 <p>It is possible to calculate what we want to know, P(null|data), given what a t-test gives us, P(data|null), but we have to know P(null) – the probability the null hypothesis was correct <em>before</em> we collected our data. We normally don’t know this precisely but we can make an informed guess.</p>
 <p>For example, say you have the hypothesis that if people read a few sentences related to old age, they will walk more slowly. Believe it or not, this is a <a href="https://scholar.google.com/scholar?q=Automaticity+of+social+behavior%3A+Direct+effects+of+trait+construct+and+stereotype+activation+on+action+Bargh+1996">real example of a psychological hypothesis</a>.</p>
-<p>Before collecting any data, this hypotheses seems unlikely. If the experiment is well designed (see lectures), we might conclude that the probability of the null hypothesis was rather high. Let’s say, P(null) = 0.95.</p>
+<p>Before collecting any data, this hypothesis seems unlikely. If the experiment is well designed, we might conclude that the probability of the null hypothesis was rather high. Let’s say, P(null) = 0.95.</p>
 <p>We run the experiment, do a t-test, and get a p value of .049. So, P(data|null) = .049. Traditionally, psychologists would call this a <em>significant</em> result, believe you, and allow you to publish it. This is the wrong response because, in this case, P(null|data) is about 0.5 (not .05, .5! 50:50 !) .</p>
-<p>In other words, instead of running the experiment, you’d have done just as well to flip a coin and say your hypothesis was right if the coin came up heads. This is no way to run a research programme, and probably goes some way to explain why psychology is full of reports of weird findings that aren’t real (the replication crisis - see lectures).</p>
+<p>In other words, instead of running the experiment, you’d have done just as well to flip a coin and say your hypothesis was right if the coin came up heads. This is no way to run a research programme, and probably goes some way to explain why psychology is full of reports of weird findings that aren’t real (aka. the “replication crisis”“).</p>
 <p><a name="bf"></a></p>
 </div>
 </div>
@@ -232,7 +236,7 @@ mean in group female   mean in group male
 <div id="between-subjects-bayesian-t-test" class="section level2">
 <h2>Between-subjects Bayesian t-test</h2>
 <p>A Bayesian t-test is used for the same sorts of things as a traditional t-test (see above), but returns a Bayes Factor rather than a p value.</p>
-<p>The easiest way to do a Bayesian t-test in R is to use the <em>BayesFactor</em> package. Recall, that you load a package using the <code>library</code> command. The <code>quietly = TRUE</code> bit is there because this package is very chatty when it loads, which gets a bit annoying after a while.</p>
+<p>The easiest way to do a Bayesian t-test in R is to use the <em>BayesFactor</em> package. Recall, that you load a package using the <code>library</code> command.</p>
 <pre class="r"><code>library(BayesFactor, quietly = TRUE)</code></pre>
 <p>The <code>quietly = TRUE</code> bit is there because this package is very chatty when it loads, which gets a bit annoying after a while. Telling it to load quietly helps a bit, although you’ll still get a welcome message (not shown here).</p>
 <p>If you get an error here, please see <a href="common-errors.html">common errors</a>.</p>
@@ -304,9 +308,13 @@ Bayes factor type: BFindepSample, JZS</code></pre>
 <p>Now write a single sentence that reports what you’ve found in the standard way. It will be of the form:</p>
 <p>Immigrants earn less than those born in the US, <code>BF =    , t(   ) = , p  =</code> (or you could replace <code>p=</code> with <code>p &lt;</code>).</p>
 <p>Fill in the blanks!</p>
+</div>
+<div id="when-p-values-and-bayes-factors-disagree" class="section level3">
+<h3>When p-values and Bayes Factors disagree</h3>
+<p><em>Question</em>: So, what if your p-value is less than .05, but your Bayes Factor is less than 3 ?</p>
+<p><em>Answer</em>: Believe the Bayes Factor, and ignore the p value. The p value is there for historical reasons and doesn’t tell you anything you actually want to know. If you’d like to read more about this issue, take a look at <a href="more-on-bf.html">more on Bayes Factors</a>.</p>
 <hr />
 <p>This material is distributed under a <a href="https://creativecommons.org/">Creative Commons</a> licence. CC-BY-SA 4.0.</p>
-<p><em>version 0.2</em></p>
 </div>
 </div>
 

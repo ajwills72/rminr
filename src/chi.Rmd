@@ -14,67 +14,62 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE, comment=NA)
 ```
 
-## Before you start...
-Before starting this exercise, you should have completed **all** the previous [Absolute Beginners'](index.html) workshop exercises. Each section below indicates which of the earlier worksheets are particularly relevant.
-
-
 ## Contents
 
-- [Loading data](#intor)
+- [Before you start...](#before)
+- [Getting data into R](#intor)
 - [Frequency tables](#freq)
+- [Exercise 1](#ex1)
 - [Contingency tables](#cont)
 - [Mosaic plots](#mos)
 - [Evidence](#evidence)
+- [Exercise 2](#ex2)
 - [Further reading](#further)
+
+
+<a name="before"></a>
+
+## Before you start...
+Before starting this exercise, you should have completed **all** the previous [Absolute Beginners', Part 1](index.html) workshop exercises. Each section below indicates which of the earlier worksheets are particularly relevant.
 
 <a name="intor"></a>
 
 ## Getting the data into R
 
-**Relevant worksheet:** [Using RStudio projects](using-projects.html)
+**Relevant worksheet:** [Using RStudio projects](using-projects.html), [Exploring data](exploring-incomes.html)
 
-You'll be provided with a CSV file before or during the workshop. Set up an RStudio project for this analysis, and copy the CSV file into it. 
+Dowload this [CSV file](data/chi.csv), which contains the all the data you need for this worksheet. Then, [set up a new project](using-projects.html) on RStudio Server for this analysis, and [upload your CSV](entering-data-by-hand.html#upload) to your project.
 
-If you want to try out this worksheet without that data file, you can use this [example CSV file](data/chi.csv) instead. _You can only gain marks in your lab book for this exercise if you use the CSV file from the workshop_.
-
-## Exploring your data
-
-### Load
-**Relevant worksheet:** [Exploring data](exploring-incomes.html) 
-
-Load the _tidyverse_ package, and load your data.
+Now, load the _tidyverse_ package, and load your data.
 
 ```{r init-load, message=FALSE} 
 library(tidyverse)
 friends <- read_csv("chi.csv")
 ```
 
-**Note**: In the example above, you'll need to replace `chi.csv` with the name of the CSV file you just copied into your RStudio project.
-
-### Inspect
 Look at the data by clicking on it in the _Environment_ tab in RStudio. Each row is one participant in an interview about friendships. Here's what each of the columns in the data set contain:
 
 | Column    | Description                             | Values             |
 | --------- | --------------------------------------- | ------------------ |
 | subj      | Anonymous ID number of participant          | a number        |
-| age    | Age of the participant, in years | One of: 7, 9, 12, 15 |
+| age    | Age of the participant | One of: "7 years", "9 years", "12 years", "15 years"" |
 | gender | Gender of the participant        | One of: "male", "female"" |
-| culture    | Culture of participant | One of: "China", "Iceland", or "Russia" |
-| coded | How their interview response was coded | One of "Shared Act", "Helping", "Trust", "Feelings" |
+| culture    | Culture of participant | One of: "China", "East Germany", "Iceland", or "Russia" |
+| coded | How their interview response was coded | One of "activity", "feelings", "helping", "length", "norms", or "trust" |
 
-This is a large dataset comprising over 500 participants of different ages, genders, and cultures.
+This is a large dataset comprising over 700 participants of different ages, genders, and cultures. It is based on, but not identical to, real data on this topic analysed by Michaela ([Gummerum et al., 2008](https://doi.org/10.1177/0165025408089271)). An [R script](https://github.com/ajwills72/rminr/blob/master/src/chi-spss-convert.R) was used to generate these data from Michaela's more complex [data set](https://github.com/ajwills72/rminr/blob/master/src/Contall.sav).
 
 <a name="freq"></a>
 
 ## Frequency tables
 
-Let's start by looking at how often each of the coded responses (i.e. _Shared Activities, Helping, Trust, and Feelings_) appear in the interviews. We could do this by hand, but it would be slow and error prone. Instead, we use the `table` command in R to do it for us:
+Let's start by looking at how often each of the coded responses (i.e. _actitivites, feelings, helping, length, norms, and trust_) appear in the interviews. We could do this by hand, but it would be slow and error prone. Instead, we use the `table` command in R to do it for us:
 
 ```{r starting}
 table(friends$coded)
 ```
 
-R gives us a table, which reports how often each of the coded resposnes occurred in the data set. In the above example, we can see that the first two codes were used about twice as often as the second two codes. Your data may be different.
+R gives us a table, which reports how often each of the coded resposnes occurred in the data set. We can see that _activity_ was used the most, _norms_ the least. In fact, _activity_ was used more than _feelings, norms, and trust_ combined. 
 
 ### Explanation of command
 
@@ -86,7 +81,7 @@ Here's a step-by-step explanation of how the above command works. You'll need th
 
 <a name="ex1"></a>
 
-## Exercise
+## Exercise 1
 
 Now produce frequency tables for each of the other _variables_ in this _dataframe_ (i.e. `age`, `gender`, and `culture`). You do this by changing the command `table(friends$coded)` so that it now refers to a different column in the `friends` dataframe. Re-read the above _Explanation of command_ section if you're stuck.
 
@@ -119,9 +114,7 @@ Here's an explanation of each part of that command:
 
 R gives us a table, showing how many of each response were made in each culture. This is called a _contingency table_. The name _contingency table_ comes from the word _contingent_, as in, for example "Getting your degree is _contingent_ on passing your exams". A contingency table gives the frequencies for one variable (e.g. the interview responses) _contingent_ on another variable (e.g. the culture of the participants).
 
-In our example output, close inspection of the contingency table reveals that the "Shared Activities" response is less common in Iceland than in the other countries. The "Trust" response is more common in Iceland than in the other countries. 
-
-So, in this case, it does look like childrens' conceptions of friendship vary between cultures. Of course, not everyone in the same culture responded the same way but, overall, some types of response are more or less likely in some cultures than others.
+Close inspection of the contingency table reveals that, for example, the "helping" response is more common in China than in Iceland. The "activity" response is more common in Iceland than in Russia. So, it does look like childrens' conceptions of friendship vary between cultures. Of course, not everyone in the same culture responded the same way but, overall, some types of response are more or less likely in some cultures than others.
 
 <a name="mos"></a>
 
@@ -139,9 +132,9 @@ It's called a _mosaic_ plot because it's made up of _tiles_.
 
 In the above example, the _width_ of each tile represents the number of participants from each `culture`. We collected data from approximately the same number of people from each culture, so all tiles are approximately the same width.
 
-The _height_ of each tile is determined by the frequency of each of the responses (Feelings, Helping, etc.) within each culture -- the more common a response within a particular culture, the taller the tile. 
+The _height_ of each tile is determined by the frequency of each of the responses (feelings, helping, etc.) within each culture -- the more common a response within a particular culture, the taller the tile. 
 
-Looking at this mosaic plot, it's visually obvious that China and Russia are quite similar to each other, but that Iceland has more "Trust", and fewer "Shared Act", responses than the other countries. This is the same information as we got from looking at the contingency table, but (for most people) it's easier to see in a mosaic plot. 
+Looking at this mosaic plot, it's visually obvious that "length" is a less common response in China than in other countries.
 
 <a name="evidence"></a>
 
@@ -154,9 +147,9 @@ library(BayesFactor, quietly = TRUE)
 contingencyTableBF(cont, fixedMargin = "rows", sampleType = "indepMulti")
 ```
 
-The Bayes Factor is reported on the third line, towards the right. The Bayes Factor in this example is about 112. This means it's over 100 times more likely that there is a relationship between culture and friendship concepts, than there isn't. 
+The Bayes Factor is reported on the third line, towards the right. The Bayes Factor in this example is about 107.6 _million_. This means it's more than 100 million times more likely that there is a relationship between culture and friendship concepts, than there isn't. 
 
-Psychologists generally agree to believe the relationship is real if the Bayes Factor exceeds 3, and generally agree to believe the relationship is _not_ real if the Bayes Factor is less than 0.33. So, in this example, we have pretty good evidence for the existence of a relationship.
+Psychologists generally agree to believe the relationship is real if the Bayes Factor exceeds 3, and generally agree to believe the relationship is _not_ real if the Bayes Factor is less than 0.33. So, in this example, we have very strong evidence for the existence of a relationship.
 
 If you're curious about what the rest of the output means, see [more on relationships](chi-extended.html).
 
@@ -170,8 +163,6 @@ If you're curious about what the rest of the output means, see [more on relation
 
 4. `fixedMargin = "rows", sampleType = "indepMulti"` - This tells R that the different groups in your sample (in this case, different cultures) appear as the `rows` of your contingency table. If you'd put them as the columns (e.g. if you'd used `table(friends$coded, friends$culture)` then you would change this to `fixedMargin = "cols"`. For a more detailed explanation, see [more on relationships](chi-extended.html).
 
-**Enter the Bayes Factor for your data into your lab book.** (The Bayes Factor for your data will likely be a bit different to the one above).
-
 ### Traditional analysis
 
 There's a long history in psychology of performing a _contingency-table chi-square_ test to examine the level of evidence for a relationship. The results of such tests are widely misinterpreted by psychologists, but some still like to see them anyway. Here's how to calculate one for these data:
@@ -184,7 +175,7 @@ The key result here is the `p-value`. It's important to emphasise that this _p v
 
 Nonetheless, the convention is that if the _p value_ is less than 0.05, psychologists will generally believe you when you assert that the relationship is not due to chance. If the _p value_ is greater than 0.05, they will generally be skeptical. 
 
-The _p value_ in this example is very small, so has been reported in _standard form_, and is read as 1.393 x 10<sup>-5</sup>.  You would have been taught standard notation in school but, as a reminder, 1.393 x 10<sup>-5</sup> = .00001393. See this [BBC bitesize revision guide on standard form](https://www.bbc.com/education/guides/zxsv97h/revision) if you need a bit more explanation than that.
+The _p value_ in this example is very small, so has been reported in _standard form_, and is read as 1.417 x 10<sup>-12</sup>.  You would have been taught standard notation in school but, as a reminder, 1.417 x 10<sup>-12</sup> = .000000000001417. See this [BBC bitesize revision guide on standard form](https://www.bbc.com/education/guides/zxsv97h/revision) if you need a bit more explanation than that.
 
 The reported _p value_ is less than .05 in this example, and so psychologists will generally believe your result is real.
 
@@ -196,7 +187,7 @@ The second is the _degrees of freedom_ (`df` in the above output). In this case,
 
 In you were writing up this analysis in a report, you would write something like:
 
-_The coded friendship concepts occured with different frequency across cultures, BF = 112, X<sup>2</sup>(6) = 32.4, p < .001. This relationship appeared to be mainly driven by Icelandic childrens' greater use of the Trust category, and lesser use of the Shared Activities category (see Table 1)._
+_The coded friendship concepts occured with different frequency across cultures, BF = 1.08 x 10<sup>8</sup>, X<sup>2</sup>(15) = 89.2, p < .001, see Table 1._
 
 "Table 1" would be the contingency table you'd produced with the `table` command.
 
@@ -208,7 +199,7 @@ You can get the references for these citations by typing `citation("BayesFactor"
 
 <a name="ex2"></a>
 
-## Exercise
+## Exercise 2
 Each step in this exercise can be completed by slightly modifying a command you have already used. 
 
 1. Produce a contingency table that shows the relationship between gender and concepts of friendship in this data set. Do this by modifying `cont <- table(friends$culture, friends$coded)` appropriately. 
@@ -225,11 +216,13 @@ If your modified command still uses `cont`, the commands you used before should 
 
 ## Further reading
 
+When you write up an experiment, you often need to provide some summary information about the sample, including the exact number of participants, and the gender balance. R makes it easy to work these things out, as this worksheet shows: [sample characteristics](sample.html).
+
 For more detailed information on the analyses covered in this worksheet, see  [more on relationships](chi-extended.html).
+
 
 ___
 
 This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0. 
-
-_version 0.2.1_
+It is part of [Research Methods in R](https://ajwills72.github.io/rminr), by [Andy Wills](http://www.willslab.org.uk)
 

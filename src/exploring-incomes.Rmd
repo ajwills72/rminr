@@ -124,7 +124,7 @@ If you're happy with the output you've got, move on to the next section. If you 
 
 If you get an error here, please see [common errors](common-errors.html).
 
-**Type the exact mean income into your lab book.**
+**RECORD YOUR ANSWER** - Type the exact mean income into the Answer Section of Psyc\:EL.
 
 ### Explanation of command
 This command has three components:
@@ -149,7 +149,7 @@ If you've entered the correct command, you'll find that the  median income is $5
 cpsdata %>% summarise(median(income))
 ```
 
-**Type the exact command you used to calculate median income into your lab book.**
+**RECORD YOUR ANSWER** - Type the exact command you used to calculate median income into the Answer Section of Psyc\:EL.
 
 <a name="missing"></a>
 
@@ -224,9 +224,21 @@ cpsdata %>% ggplot(aes(income)) + geom_histogram(fill = 'blue', binwidth=50000) 
   annotate("text", x = Inf, y = -Inf, label = "EXAMPLE PLOT", col = "red", hjust = 5.1, vjust = -1.1)
 ```
 
-Now, export your histogram, using the _Export_ icon on RStudio's _Plots_ window, and selecting "Save as image...".
+Now, export your histogram, using the _Export_ icon on RStudio's _Plots_ window, and selecting "Save as image...". Give it a meaninful file name (e.g. "ExploringIncomes") and click 'Save'. 
 
-**Upload the file you have just saved to your lab book.**
+**RECORD YOUR ANSWER** - _Psyc\:EL_ and _RStudio Online_ are entirely separate web pages that don't talk to each other, so you'll need to download your graph from RStudio Online and then upload it to Psyc\:EL. Here's how:
+
+### Downloading files from RStudio Online
+
+Follow [these instructions](using-projects.html#download).
+
+### Uploading files to PsycEL
+
+1. Open your computer's Downloads folder (e.g. on a Windows 10 machine, click on the little yellow folder at the bottom of the screen, and then click on "Downloads"). 
+
+2. Find your file in that Downloads folder, and drag it to the appropriate box on your Psyc\:EL Answer Sheet. 
+
+3. Click 'Upload image' on your Psyc\:EL answer sheet. 
 
 ### Extension exercise
 
@@ -234,14 +246,12 @@ Take a look at the [R Graph Gallery](https://www.r-graph-gallery.com/) for lots 
 
 <a name="writing"></a>
 
-## Lab book writing exercise
+## PsycEL writing exercise
 
-In class, we discussed how the histogram helped us to understand why the mean and median incomes were so different, and whether the mean or the median gave a better account of average US income.
+In class, we discussed how the histogram helped us to understand why the mean and median incomes were so different, and whether the mean or the median gave a better account of average US income. Here are the [slides](mean-median.html), if you'd like to look at them again.
 
-In your lab book, you'll find the question "Does the mean or the median give a better indication of average salary in this case? Explain your reasoning". **In the text box provided in your lab book, provide a short answer to this question**. You need not write more than a few sentences.
+On the Psyc\:EL Answer Section, you'll find the question "Does the mean or the median give a better indication of average salary in this case?". **In the text box provided, give a short answer to this question**. You need not write more than a few sentences, but you should explain your reasoning. 
 
 ___
 
 This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0. 
-
-_version 0.2_

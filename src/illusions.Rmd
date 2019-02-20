@@ -15,12 +15,15 @@ knitr::opts_chunk$set(echo = TRUE, comment=NA)
 ```
 
 ## Before you start...
-Before starting this exercise, you should have completed **all** the relevant [Absolute Beginers'](index.html) workshop exercises. If not, take a look at those exercises before continuing. Each section below also indicates which of the earlier worksheets are relevant.
+Before starting this exercise, you should have completed **all** the relevant [Absolute Beginers', Part 1](index.html) workshop exercises. If not, take a look at those exercises before continuing. Each section below also indicates which of the earlier worksheets are relevant.
 
 ## Getting the data into R
-**Relevant worksheet:** [Using RStudio projects](using-projects.html)
+**Relevant worksheet:** [Using RStudio projects](using-projects.html), [Entering data by hand](entering-data-by-hand.html)
 
-You'll need to complete the PsychEL excerise to get the CSV file containing your data. Set up an RStudio project for this analysis, and copy the CSV file into it. 
+In order to complete this worksheet, you'll need to have downloaded your CSV file from the PsycEL exercise. **See the instructions on PsycEL for how to do this.**
+
+Once you have downloaded your CSV file, [set up a new project](using-projects.html) on RStudio Server for this analysis, and [upload your CSV](entering-data-by-hand.html#upload) to your project.
+
 
 ## Exploring your data
 
@@ -41,12 +44,11 @@ Look at the data by clicking on it in the _Environment_ tab in RStudio. Each row
 | Column | Description                             | Values             |
 | ------ | --------------------------------------- | ------------------ |
 | Illusion   | The illusion presented on this trial | "M" = Muller-Lyer illusion, "T" = T illusion |
-| Pattern  | Type of stimulus presented on this trial | "P1"  = Muller-Lyer, arrow heads, "P2" = Muller-Lyer arrow tails, "T" = T illusion          |
-| Angle   | Angle of line | For Muller-Lyer, angle in degrees of small lines on left hand side of the Muller-Lyer stimulus, clockwise from 9 o'clock: 15, 30, 45, 60, 75, 90, 105, 120, 135, 150, 165. For T illusion, angle in degrees of lefthand line, clockwise from 9 o'clock: 0, 15, 30, 45, 60, 75, 90, 105, 120, 135, 150, 165 |
+| Angle   | Angle of line | For Muller-Lyer, angle in degrees of small lines on left hand side of the Muller-Lyer stimulus, clockwise from 9 o'clock: 45, 90, 135. For T illusion, angle in degrees of lefthand line, clockwise from 9 o'clock: 0, 45, 90 |
 | FinalLength  | Final length of the line you adjusted (arbitrary units) | a number; 200 if you accurately matched the other line|
 | Difference200     | FinalLength - 200                          | a number; 0 if you accurately matched, negative if your line was too short, positive if your line was too long |
 
-You completed 240 trials in total, 120 for each illusion. Each angle was presented 10 times, except the 90 degree angle for the Muller-Lyer illusion, which was presented 20 times.
+There may be an extra column called "Pattern", but you can just ignore it. You completed 60 trials in total. Each angle was presented 10 times.
 
 ## Muller-Lyer illusion
 
@@ -141,11 +143,17 @@ In this example, the Bayes Factor is about 9986, so it's almost 10,000 times as 
 
 Now do the following:
 
-1. Produce a violin plot for the _other_ illusion type in your data file, the T illusion. How does angle affect the size of the illusion in this case?  **Save this plot as an Image, and upload it to your lab book**. 
+1. Produce a violin plot for the _other_ illusion type in your data file, the T illusion. How does angle affect the size of the illusion in this case?  
 
-2. Calculate the Bayes Factor for the comparison between 15 and 60 degrees for the T illusion. **Enter the exact Bayes Factor into your lab book**. 
+2. Export your violin plot, using the _Export_ icon on RStudio's _Plots_ window, and selecting "Save as image...". Give it a meaninful file name (e.g. "illusion-violin") and click 'Save'. 
 
-_Hint:_ Your first step should be to produce a data frame that contains only the data from the T illusion (perhaps call it `tee`). This is the first command we covered in this worksheet. Once you've done that, the rest of the commands should work as long as you replace `mull` with `tee`. 
+3. Download your violin plot from RStudio server - see [these instructions](using-projects.html#download) for a reminder of how to do this.
+
+4. **Upload your violin plot** to PsycEL (see the PsychEL activity for instructions of how to do this).
+
+5. Calculate the Bayes Factor for the comparison between 0 and 90 degrees for the T illusion. **Enter the exact Bayes Factor into the PsycEL answer section.**. 
+
+_Hint for T illusion exercise:_ Your first step should be to produce a data frame that contains only the data from the T illusion (perhaps call it `tee`). This is the first command we covered in this worksheet. Once you've done that, the rest of the commands should work as long as you replace `mull` with `tee`. 
 
 
 

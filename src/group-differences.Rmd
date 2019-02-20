@@ -35,7 +35,9 @@ Before starting this exercise, you should have had a brief introduction to getti
 <a name="revision"></a>
 
 ## Loading packages and data (revision)
-The first few steps are the same as in the _Exploring Incomes_ workshop. You open RStudio, and then you load _tidyverse_ and you load the income _data frame_. Type (or copy and paste) each of the commands in the grey box into the _Console_ window of RStudio, and press the RETURN key after each one. 
+The first few steps are the same as in the _Exploring Incomes_ workshop. First, log in to <a href = "https://rstudio.plymouth.ac.uk" target = "blank">RStudio server</a>.
+
+Next, you load _tidyverse_ and you load the income _data frame_. Type (or copy and paste) each of the commands in the grey box into the _Console_ window of RStudio, and press the RETURN key after each one. 
 
 ```{r init,message=FALSE}
 library(tidyverse)
@@ -89,7 +91,7 @@ In conclusion, women in our made-up sample get paid, on average, around 85% what
 ## Variation in pay
 Of course, not every male gets $62k a year in the US, and not every female gets $53k. It seems very likely that the range of incomes earned by men and women overlap -- meaning that if you picked one man and one woman at random, there's a reasonable chance that the woman earns more than the man. This _variation_ in pay is the topic of the next exercise.
 
-In class, you were introduced to the idea of _standard deviation_, a number that basically represents how far, on average, people are from the mean. If the standard deviation of income is large, it's quite likely that a person, picked at random, will have an income that's a lot different to the mean. You can see this in the first few lines of our `cpsdata` data set -- the participant with ID 5 has an annual income of over $700k; more than 12 times the median income!
+_Standard deviation_ is a number that basically represents how far, on average, people are from the mean. If the standard deviation of income is large, it's quite likely that a person, picked at random, will have an income that's a lot different to the mean. You can see this in the first few lines of our `cpsdata` data set -- the participant with ID 5 has an annual income of over $700k; more than 12 times the median income!
 
 <a name="sd"></a>
 
@@ -169,7 +171,7 @@ We can take a look at this new *data frame* by clicking on it in RStudio's _Envi
 
 Now, we can plot these filtered data in the same way as before, by changing the name of the dataframe from `cpsdata` to `cpslow`. 
 
-**So start with the command** `cpslow %>% ggplot(aes(income, colour=factor(sex))) + geom_density(aes(y=..scaled..))`, **make that change, and press RETURN.** Remember that you can get back to commands you typed earlier by pressing the up arrow on your keyboard while in the Console. 
+**So start with the command** `cpsdata %>% ggplot(aes(income, colour=factor(sex))) + geom_density(aes(y=..scaled..))`, **make that change, and press RETURN.** Remember that you can get back to commands you typed earlier by pressing the up arrow on your keyboard while in the Console. 
 
 If you've got it right, your graph will look like this:
 
@@ -184,7 +186,8 @@ So, the gender pay gap is visible in this graph. The graph also illustrates that
 **Note:** This doesn't mean that the gender pay gap is less (or more) important than income inequality. These kinds of questions of importance are moral, philosophical, and political. Statistics cannot directly answer these kinds of questions, but they can provide information to inform the debate. 
 
 ## Introducing effect size
-As we covered in class, *effect size* is a way of talking about the size of the difference between group means, relative to the standard deviations of those groups. We often use the letter *d* to stand for effect size. 
+
+*Effect size* is a way of talking about the size of the difference between group means, relative to the standard deviations of those groups. We often use the letter *d* to stand for effect size. 
 
 If a difference has an effect size of 1, the difference in means is equal to the standard deviation. In social science, an effect size of 1 is considered "large" -- in other words, many of the things we are interested in have an effect size smaller than 1. 
 
@@ -283,5 +286,4 @@ ___
 
 This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0. 
 
-_version 0.2_
 

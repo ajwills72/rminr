@@ -1,17 +1,17 @@
-# Introduction to R Studio
+# Introduction to RStudio
 _Andy Wills_
 
 ## Getting RStudio
-Before you can use RStudio, you have to get it on to your computer. Here's how:
+Before you can use RStudio, you have to get it running on your computer. Here's how:
 
-**Plymouth University computer room** - RStudio is already on these machines. Skip to __Running RStudio__, below.
+**Web browser** (recommended) - Go to an <a href = "https://rstudio.plymouth.ac.uk" target = "blank">RStudio server</a> and log on, using the username and password you have been given. 
 
-**Web browser** - You can use RStudio through a web browser on any laptop or desktop, anywhere in the world that has a good internet connection. Go to [www.ronline.org](http://www.ronline.org) and log on. You can request a free account from a demonstrator in class, and you'll get one immediately. Outside class, email andy@willslab.co.uk. If emailing, allow two working days for a response.
+_NOTE_: RStudio works on most web browsers (e.g. Firefox, Safari, Chrome) but does not work that well on the default web browser in Windows 10 ("Edge"). If you're using Windows, I recommend [downloading Firefox](https://www.mozilla.org/en-US/firefox/new/) and using that. Firefox is free and open source.
 
-**Install on your own machine** - Alternatively, you can install RStudio on your own machine. It's completely free, and will probably take around 30 minutes. Follow these [step-by-step instructions](install-rstudio.md).
+**Install on your own machine** - Alternatively, you can install RStudio on your own laptop or desktop. It's completely free, and will probably take around 30 minutes to install. Follow these [step-by-step instructions](install-rstudio.md).
 
-## Running RStudio
-You run RStudio like you would run any other application (e.g. Word). You'll be greeted with a screen that looks something like this:
+## Using RStudio
+You'll be greeted with a screen that looks something like this:
 
 ![RStudio on first opening](pics/rstudio-new.png)
 
@@ -33,6 +33,4 @@ ___
 
 This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0. 
 
-____
 
-_version: 0.2_

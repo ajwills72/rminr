@@ -1,0 +1,149 @@
+---
+title: "More on relationships, part 2."
+author: "Sylvia Terbeck, Andy Wills"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+## DEVELOPERS: Uncomment one option, as appropriate
+
+## Show only commands.
+## knitr::opts_chunk$set(echo = TRUE, message = FALSE, results='hide', fig.keep = 'none', comment=NA)
+
+## Show commands and ouptut.
+knitr::opts_chunk$set(echo = TRUE, comment=NA)
+
+## Setup
+library(tidyverse)
+data <- read_csv("corr.csv")
+gdata <- data %>% 
+  group_by(grp) %>%
+  summarise(ingroup = mean(ingroup),
+            outgroup = mean(outgroup),
+            dominance = mean(dominance))
+```
+
+This worksheet provides more detailed information on some of the concepts covered in the _Relationships, part 2_ worksheet.
+
+## Correlation co-efficients
+
+In the main worksheet, we used this command to calculate a correlation co-efficient:
+
+```{r corr}
+cor(gdata$ingroup, gdata$outgroup)
+```
+
+More specifically, this command calculates _Pearson's_ correlation co-efficient. If people don't say what calculation they've done, they've almost certainly done this one. 
+
+Pearson's calculation is a good choice if you expect the relationship between your two variables to be linear (i.e. a straight line), because the calculation assumes that the relationship _is_ linear. However, if you think the relationship is not a straight line, then there are other options that are better. The best known one is [Spearman's](https://en.wikipedia.org/wiki/Spearman%27s_rank_correlation_coefficient) correlation, which ranks the data in each variable separately, and then uses those ranks in Pearson's calculation. In R, we calculate Spearman's correlation like this:
+
+```{r spear}
+cor(gdata$ingroup, gdata$outgroup, method="spearman")
+```
+
+Notice that this gives us a different answer to Pearson's calculation (in this example, lower than Pearson's, although in some cases it can be higher than Pearson's). 
+
+A third calculation is also possible --- _Kendall's_ correlation co-efficient. [Kendall's method](https://en.wikipedia.org/wiki/Kendall_rank_correlation_coefficient) is somewhat similar to _Spearman's_, in that it is based on ranks. It is less used than the other two methods, and is not covered in this introductory course. If you need to calculate it, use `method="kendall"`.
+
+## Bayes Factor analysis
+
+In the main worksheet, we ran the following command:
+
+```{r bf-load, message=FALSE}
+library(BayesFactor, quietly = TRUE)
+correlationBF(gdata$ingroup, gdata$outgroup)
+```
+
+Here's a more detailed explanation of the output of that test -- we'll go through each bit in turn:
+
+`Bayes factor analysis` - You're doing a Bayes Factor analysis.
+
+`[1] Alt., r=0.333` - In order to calculate a Bayes Factor, R has to make some assumptions about how big the correlation is likely to be. The `correlationBF` command makes some broad assumptions that cover the range of correlation co-efficients typically seen in psychology. 
+
+More specifically, `correlationBF` assumes a beta distribution of correlation co-efficients, with a scale of 0.333 -- this is where `r=0.333` comes from. That description probably didn't make much sense useless you have a very strong maths background, so here's the same idea, shown as a density plot. It's basically an assumption that a co-efficient of 0.5 is most likely, with both very large (> .9) and very small (< .1) co-efficients being quite unlikely. 
+
+```{r beta, echo=FALSE}
+x <- seq(0, 1, length=100)
+hx <- dbeta(x, 1/.333, 1/.333)
+hx <- hx/max(hx)
+plot(x, hx, type = "l", xlab = "r", ylab = "")
+```
+
+`89.70525` - The Bayes Factor (i.e. the main result of this analysis)
+
+`±0%` - Basically a confidence interval on the Bayes Factor. It's 0% here because of the amount of data we have, but with smaller samples we might see something like `20 ±5%`, which would mean the Bayes Factor is about 20, give or take 5%. So, it's between 19 and 21.
+
+`Against denominator:` - This tells you that the null hypothesis is the denominator of the fraction that is used to calculate the Bayes Factor. So, in other words, you're getting BF~10~ rather than BF~01~ -- see the [Evidence](evidence.html) worksheet.
+
+`Null, rho = 0` - This tells you that the null hypothesis is that the correlation co-efficient (called `rho` here) is zero.  
+
+`Bayes factor type: BFcorrelation, Jeffreys-beta` - You're doing a Bayes Factor analysis of correlation, using the beta function (see above) suggested by Jeffreys.
+
+## Traditional analysis
+
+In the main worksheet, we ran the following command:
+
+```{r r-sig}
+cor.test(gdata$ingroup, gdata$outgroup)
+```
+
+Here's a more detailed explanation of the output of that test -- we'll go through each bit:
+
+### What you did
+
+`Pearons' product-moment correlation` - There's more than one way to calculate a correlation (see above). This test uses Pearson's method.
+
+`data:  gdata$ingroup and gdata$outgroup` - This just reminds you what data you're analyzing, it's basically a copy of what you told it to do, i.e. `gdata$ingroup, gdata$outgroup`
+
+`alternative hypothesis: true correlation is not equal to 0` - This is a way of saying that, before looking at the data, you made no assumptions about whether the correlation would be positive or negative.  This is sometimes called a _two-tailed_ test - see [below](#one-tail) if you can safely assume a direction before looking at your data (also called a _one-tailed_ test).
+
+### What you found
+
+`t = 4.2608` - This is the _t value_ -- the output of a t-test. We're using a t-test here in a special way, to calculate the significance of a correlation co-efficient. A _t value_ isn't at all useful on its own but along with the _degrees of freedom_ (see below), we can use it to calculate the _p value_ (also see below). 
+
+`df = 23` - _df_ is short for _degrees of freedom_. In a t-test, the degrees of freedom is the sample size, minus the number of means you've calculated from that sample (in this case, two means were calculated, one for each variable). 
+
+`p-value = 0.0002939` - The is the p value of the t-test. It's the probability of your data, under the assumption there is no correlation (sometimes called the _null_ hypothesis). You need the t value and the degrees of freedom to be able to calculate the p value ... but R does those calculations for you. 
+
+``` 
+sample estimates:
+      cor 
+0.6641777  
+```
+
+The part above just tells you that the correlation co-efficient is 0.6641777 (you could have also got this number using the `cor` command).
+
+```
+95 percent confidence interval:
+ 0.3647781 0.8390981
+```
+
+This 95% confidence interval tells us that the true value of the correlation in the population is very likely to be somewhere between about .36 and .84. If we had collected more data we could have been more precise.  
+
+The 95% confidence interval is only thing reported by a traditional analysis that is both useful and easy to interpret. Psychologists are now encouraged to report it in their papers, like this:
+
+`ingroup closeness correlated with outgroup distance, r = .66 [.36, .84], t(23) = 4.26, p < .05`.
+
+<a name="one-tail"></a>
+
+### One-tailed tests
+
+In a one-tailed test, you decide before looking at your data which direction the effect should be in. For example, you may have read a lot of scientific papers about group relations, so you're pretty sure that if you find a correlation between ingroup closeness and outgroup distrance, that correlation will be positive. 
+
+If this case, you'd use this command to do this _one-tailed_ test:
+
+```{r ctest-great, results='hide'}
+cor.test(gdata$ingroup, gdata$outgroup, alternative = "greater")
+```
+
+If instead your hypothesis was that the correlation would be negative, you'd use this command instead:
+
+```{r ctest-less, results='hide'}
+cor.test(gdata$ingroup, gdata$outgroup, alternative = "less")
+```
+
+___
+
+This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0. 
+
+
