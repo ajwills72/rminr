@@ -42,7 +42,7 @@ If you are a current undergraduate student at Plymouth University, you should co
 
 #### Part 1a
 
-* [Autobiographical memory study](memories.html). Entering data by hand, _histograms_.
+* [Memories from life](memories.html). _Histograms_.
 
 * [Face recognition experiment](face-recog.html). Means, _filtering data_, and a **bar graph**.
 
