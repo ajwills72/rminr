@@ -64,6 +64,14 @@ cordata <- compdata %>% filter(error == 0)
 
 Recall that the `filter` command needs to be told which data to _keep_, so we tell it to keep the data where `error` is set to zero, i.e. you were correct. This data is put into a new dataframe, called `cordata`.
 
+Another problem is that response times measurements are sometimes strongly skewed by rare very slow responses, for example when people get distracted by their mobile ringing and only respond after several seconds. It is therefore good to remove such very long “outlier” trials -- this is much like what you did with outlier incomes in the [Exploring Incomes](exploring-incomes.html) worksheet. Usually people respond well within 2 seconds. Remove all trials with responses longer than that with the following command:
+
+```{r filter-rt}
+cordata <- cordata %>% filter(RT < 2000)
+```
+
+Recall that your data file measures reaction time in milliseconds, and that `filter` needs to be told what to **keep**, so you `filter` to keep RTs of less than 2000ms.
+
 Now you are ready to calculate the mean reaction time for the two conditions of your experiment (_compatible_ and _incompatible_ trials), using this command:
 
 ```{r rt-means}
@@ -104,6 +112,12 @@ _Now do the following:_
 2. Download your density plot from RStudio server - see [these instructions](using-projects.html#download) for a reminder of how to do this.
 
 3. **Upload your density plot** to PsycEL (see the PsychEL activity for instructions of how to do this).
+
+### More on reaction times
+
+You can use the results from the standard deviations and the RT histogram to diagnose why response times in the two conditions differ. There are several – not mutually exclusive – options. First, all responses could just be slightly slower in one condition (usually the incompatible trials) than in the other. Evidence for this would be that the standard deviations in both conditions are very similar and the RT histogram shows the same "shape"" in both conditions, with one just being slightly shifted rightwards. Alternatively, it could be that one condition is slower because people become more variable. If this is the case, then the standard deviations should be larger in one condition than the other, and the RT histogram should show a "flatter"" bulge that starts at the same point but extends further to the right. There is also a final, third, possibility. Most response times might be generally equally fast in both conditions, but one may show a higher incidence particularly of the slower responses. This would be evident in, again, a larger standard deviation in one condition. The RT histogram should show roughly overlapping peaks, but with a longer tail in one condition.
+ 
+After having uploaded the RT histogram, **write a few sentences on the PsycEL page about why you think one condition is slower than the other**.
 
 ### Mean errors
 **Relevant worksheet:** [Group differences](group-differences.html).

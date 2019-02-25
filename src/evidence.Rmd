@@ -137,13 +137,15 @@ In other words, instead of running the experiment, you'd have done just as well 
 
 ## Bayes Factors
 
-We can escape this whole confusing mess of the traditional t-test by calculating a _Bayes Factor_ rather than a _p value_. A Bayes Factor is a number that tells us how likely it is there's a difference between groups.
+We can escape this whole confusing mess of the traditional t-test by calculating a _Bayes Factor_ rather than a _p value_. A Bayes Factor is a number that tells us how likely it is there's a difference between groups
 
-For example, a Bayes Factor of 10 means it's ten times more likely there is a difference than there isn't.
+For example, a Bayes Factor of 10 means it's ten times more likely there is a difference than there isn't. 
 
 A Bayes Factor less than 1 is also informative. For example, a Bayes Factor of 0.1 (1/10) tells you it's ten times more likley that there *isn't* a difference than there is. 
 
 A Bayes Factor of exactly 1 tells you that the presence or absence of a difference is equally likely.
+
+All the above assumes that, before you collected the data, you thought the presence or absence of a difference were equally likely outcomes. If that is not the case, see [more on Bayes Factors](more-on-bf.html).
 
 <a name="bayes-t"></a>
 

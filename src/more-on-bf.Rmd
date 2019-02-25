@@ -38,7 +38,9 @@ x<-seq(-10,10,by=0.1)
 plot(x, dcauchy(x, scale = .707),type="l", xlab = "Effect size", ylab = "")
 ```
 
-`18.25128` - The Bayes Factor (i.e. the main result of this analysis)
+`18.25128` - The Bayes Factor (i.e. the main result of this analysis). This is sometimes described as the relative likelihood of a difference, compared to the absence of a difference. Under that description, the Bayes Factor reported here means it's about 18x more likely there is a difference than there isn't. But that's a bit of a simplification.
+
+This way of describing a Bayes Factor is only accurate if, before collecting the data, you thought the presence or absence of a difference were equally likely outcomes. If that is not the case, it is more accurate to consider the Bayes Factor as the extent to which you should update your beliefs. For example, say you think telepathy is really unlikely, perhaps because there is no known mechanism by which it can operate. You might express your skepticism by saying it's about million times more likely telepathy doesn't exist than it does (a '1 in a million' chance). Say you then run an experiment on telepathy and get a Bayes Factor of 20. This tells you you should adjust your belief from 1 in a million to 1 in 50,000. So, after the experiment, you still think it's more likely telepathy doesn't exist than it does. Bayes Factors are a way of rationally updating your beliefs as new data becomes available.
 
 `±0%` - Basically a confidence interval on the Bayes Factor. It's 0% here because we have so much data, but with smaller samples we might see something like `20 ±5%`, which would means the Bayes Factor is about 20, give or take 5%. So, it's between 19 and 21.
 
