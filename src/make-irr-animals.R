@@ -1,5 +1,6 @@
 ## IRR data set on animal behaviour
-## Categories from my head
+## Motion categories from my head
+## Location categories from Phil Gee
 rm(list=ls())
 library(tidyverse)
 ntime <- 20
@@ -16,7 +17,7 @@ for(i in 1:length(motion.r1)) {
   }
 }
 
-loc <- c("top left", "top right", "bottom left", "bottom right")
+loc <- c("zone_1", "zone_2", "zone_3", "zone_4")
 loc.r1 <- loc[round(runif(ntime, 1, length(loc)), 0)]
 loc.r2 <- loc.r1
 pag <- .8
@@ -32,5 +33,5 @@ period <- rep(c("180", "10"), each = 10)
 
 rats <- data.frame(time, period, motion.r1, motion.r2, loc.r1, loc.r2)
 
-write_csv(rats,"lions.csv")
+write_csv(rats,"animals.csv")
 

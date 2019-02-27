@@ -3,6 +3,8 @@ _Andy Wills_
 
 These files are in alphabetical order, by filename.
 
+- [animals.csv](data/animals.csv)
+
 - [brexit.csv](data/brexit.csv)
 - [brexit-all.csv](data/brexit-all.csv)
 
@@ -24,4 +26,3 @@ ___
 
 This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0. 
 
-_version: 0.2.1_
