@@ -42,35 +42,35 @@ Look at the data by clicking on it in the _Environment_ tab in RStudio. Each row
 
 | Column    | Description                             | Values             |
 | --------- | --------------------------------------- | ------------------ |
-| time      | Time point           | 1 - 10        |
-| period    | How long before feeding time? (in minutes) | 10 or 180 | 
-| motion.r1 | Rater 1's coding of the animal's motion at each time point | In the example file, you'll find: "pacing", "sleeping", "standing", "lying", "running". Your codes may be different. |
-| motion.r2 | Rater 2's coding of the animal's motion at each time point | as above. |
-| loc.r1    | Rater 1's coding of the animal's location at each time point |  In the example file, you'll find: "zone_1", "zone_2", "zone_3", "zone_4". Your codes may be different. |
-| loc.r2    | Rater 2's coding of the animal's location at each time point |  as above. |
+| time      | Time point.           | 1 - 10        |
+| period    | How long before feeding time? (in minutes). | 10 or 180 | 
+| behav.r1 | Rater 1's coding of the animal's behaviour at each time point. | In the example file, you'll find: "pacing", "sleeping", "standing", "lying", "running". Your codes may be different. |
+| behav.r2 | Rater 2's coding of the animal's behaviour at each time point. | as above. |
+| loc.r1    | Rater 1's coding of the animal's location at each time point. |  In the example file, you'll find: "zone_1", "zone_2", "zone_3", "zone_4". Your codes may be different. |
+| loc.r2    | Rater 2's coding of the animal's location at each time point. |  as above. |
 
 
 ## Percentage agreement
 
 **Relevant worksheet:** [Inter-rater reliability](irr.html) 
 
-To what extent did you and your workshop partner agree on how each behaviour should be coded? As we covered in the _inter-rater reliability_ worksheet, to look at this, we first have to `select` the relevant columns of the data frame. For example, to look at inter-rater reliability for the _motion_ category, we select:
+To what extent did you and your workshop partner agree on how each behaviour should be coded? As we covered in the _inter-rater reliability_ worksheet, to look at this, we first have to `select` the relevant columns of the data frame. For example, to look at inter-rater reliability for the _behaviour_ category, we select:
 
 ```{r select, message=FALSE} 
-motion <- animals %>% select(motion.r1, motion.r2)
+behav <- animals %>% select(behav.r1, behav.r2)
 ```
 
 We can now use the `agree` command to work out percentage agreement:
 
 ```{r pc, message=FALSE} 
 library(irr)
-agree(motion)
+agree(behav)
 ```
 **NOTE**: If you get an error here, type `install.packages("irr")`, wait for the pacakge to finish installing, and try again. 
 
 The key result here is `%-agree`, which is your percentage agreement. The term `Subjects` here is a bit misleading, it doesn't mean the number of animals you observed (this data file contains your ratings of one animal), it means the number of time points you recorded an observation for. 
 
-**Enter the percentage agreement for your motion and location codings into PsycEL**.
+**Enter the percentage agreement for your behaviour and location codings into PsycEL**.
 
 ## Cohen's kappa
 
@@ -79,14 +79,14 @@ The key result here is `%-agree`, which is your percentage agreement. The term `
 One problem with the _percentage agreement_ measure is that people will sometimes agree purely by chance. Jacob Cohen thought it would be much neater if we could have a measure of agreement where zero always meant the level of agreement expected by chance, and 1 always meant perfect agreement. To calculate his mesaure, Cohen's kappa, in R we use the command `kappa2`: 
 
 ```{r ckauto}
-kappa2(motion)
+kappa2(behav)
 ```
 
-**Enter the Cohen's kappa values for your motion and location codings into PsycEL.**
+**Enter the Cohen's kappa values for your behaviour and location codings into PsycEL.**
 
 There are some words that psychologists sometimes use to describe the level of agreement between raters, based on the value of kappa they get. These descriptions are listed in the [inter-rater reliability](irr.html) worksheet, in the section "Describing Cohen's kappa".
 
-**On PsycEL, select the correct term to describe the kappa values for your motion and location codings.** 
+**On PsycEL, select the correct term to describe the kappa values for your behaviour and location codings.** 
 
 If either of those descriptions are 'moderate' or lower, reflect on why that might be. For example, is there a problem with the definitions of the behavioural categories you used? What else might have caused the lack of agreement? 
 
@@ -100,26 +100,29 @@ If either of those descriptions are 'moderate' or lower, reflect on why that mig
 Does the lion behave differently when it’s close to feeding time? To look at
 this, we need to calculate the frequency of each behaviour at our two time
 periods (10 minutes before feeding, and 180 minutes before feeding). You can
-use the `table` command we learned in the _Relationships_ worksheet to do this, but
-you’re going to have to choose which behaviour, and which of your two raters,
+use the `table` command we learned in the _Relationships_ worksheet to do this, but you’re going to have to choose which behaviour, and which of your two raters,
 to look at.  That's because it's likely you will have had at least a few
 disagreements.  But if both of you were looking at the same behaviour, how can
 we decide who was 'right'?  There are a few possible solutions, but for now we
 will take the simplest: flip a coin to decide which of your raters' data you
 will use.
 
-If you choose "motion" and rater 2, the commands would be:
+If you choose "behaviour" and rater 2, the commands would be:
 
 ```{r cont}
-cont <- table(animals$period, animals$motion.r2)
+cont <- table(animals$period, animals$behav.r2)
 cont
 ```
 
-### Bar chat
+### Explanation of command
+
+What you have just done here, as we covered in the [relationships](relationships.htm#cont) worksheet, is to convert your _data frame_, called  `animals`, into a _contingency table_, called `cont`. This contingency table shows how often each behaviour occurs at each time period. Recall that `table(rows, columns)` is the command used in R for producing contingency tables. We replace the word `rows` with the name of the variable we want to appear on the rows of the table, and we replace the word `columns` with the name of the variable we wnat to appear in the columns of the table.
+
+### Bar chart
 
 **Relevant worksheet:** [Face recognition](face-recog.html) 
 
-To visualise this, we're going to use a bar chart. We covered bar charts in the _Face recognition_ worksheet; here we're going to extend that example to create a bar chart that shows our two different time periods on the same axes. 
+To visualise the relationship between behaviour and feeding time, we're going to use a bar chart. We covered bar charts in the _Face recognition_ worksheet; here we're going to extend that example to create a bar chart that shows our two different time periods on the same axes. 
 
 ```{r bars, fig.show='hide'}
 df <- data.frame(cont)
@@ -150,12 +153,12 @@ annotate("text", x = Inf, y = -Inf, label = "EXAMPLE PLOT", col = "red", hjust =
 
 ```
 
-In the above example graph, we can see that the animal was sleeping about as
-often in the two time periods, but was lying more 10 minutes before feeding
-time than 180 minutes before feeding time, and standing more 180 minutes before
-feeding time than 10 minutes before. What do your data show?  Did proximity to
-feeding time have an effect on behaviour?  If so, which behaviours were most
-affected?
+In the above example graph, we can see that the animal was pacing and standing
+as often in the two time periods, but was lying slightly more 10 minutes before
+feeding time than 180 minutes before feeding time, and sleeping slightly more 180
+minutes before feeding time than 10 minutes before. What do your data show?
+Did proximity to feeding time have an effect on behaviour?  If so, which
+behaviours were most affected?
 
 **Enter a few sentences into PsycEL describing what your data show.**
 
