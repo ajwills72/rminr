@@ -3,7 +3,6 @@ title: "Creativity and the environment"
 author: "Jon May, Andy Wills"
 output: html_document
 ---
-
 ```{r setup, include=FALSE}
 ## DEVELOPERS: Uncomment one option, as appropriate
 
@@ -39,7 +38,7 @@ data <- read_csv("green.csv")
 ### Inspect
 Look at the data by clicking on it in the _Environment_ tab in RStudio. 
 
-Each row is a rating by one participant in this study of creativity. Groups of participants came up with a creative solution to a problem, while either talking a walk in an _urban_ environment or a _nature_ environment. Each of these solutions has been rated for creativity by a set of raters. 
+Each row is a rating by one participant in this study of creativity. Groups of participants came up with a creative solution to a problem, while either taking a walk in an _urban_ environment or a _nature_ environment. Each of these solutions has been rated for creativity by a set of raters. 
 
 _Will the nature environment lead to more creative ideas than the urban environment?_
 
@@ -54,7 +53,23 @@ _Will the nature environment lead to more creative ideas than the urban environm
 
 **Relevant worksheet:** [Group Differences](group-differences.html)
 
-We start by "pre-processing" our data, in order to make it easier to analyse. Specifically, each solution was rated by several people. We're going to take the average (mean) of those ratings, so we're left with one creativity score per solution. 
+We start by "pre-processing" our data, in order to make it easier to analyse. We do this in two steps:
+
+### 1. Cleaning the data set
+
+In some cases, a participant did not provide a rating of a solution -- this is then represented in the dataset as `NA`. R uses `NA` to specify that this data point is missing -- in this case, because the participant didn't respond.
+
+Although it's good to explicitly record that a response was not made, keeping these `NA`  in the dataset will cause problems later on, so we're going to remove them:
+
+```{r drop_na}
+data  <- data %>% drop_na(score)
+```
+
+The command `drop_na(score)` is new  -- it just means remove the rows of the dataset where the score is recorded as `NA`. The rest of the command uses things we covered in the Group Differences worksheet -- the dataframe `data` is sent (i.e., piped, `%>%`) to the `drop_na()` command, which removes the `NA`, and the results are stored (`<-`) back in the `data` dataframe.
+
+### 2. Summarising
+
+Each solution was rated by several people. We're going to take the average (mean) of those ratings, so we're left with one creativity score per solution. 
 We use the `group_by`,  `summarise`, and `mean` commands we used in the _Group Differences_ worksheet to do this: 
 
 ```{r preproc}
@@ -89,7 +104,7 @@ library(effsize)
 cohen.d(creative$score ~ creative$Cond)
 ```
 
-In this example, the effect size is around 0.04, which is typically described as a small or very small effect (RStudio uses the slightly nonstandard phrase 'negligble'). The effect size for your data may be different.
+In this example, the effect size is around 0.21, which is typically described as a small effect. The effect size for your data may be different.
 
 At this point, the most pressing question is probably whether the difference observed in the mean scores is likely to be real, or whether it's more likely down to chance. As we saw in the _Evidence_ worksheet, the best way to look at this is with a Bayesian t-test:
 
@@ -98,7 +113,7 @@ library(BayesFactor, quietly = TRUE)
 ttestBF(formula = score ~ Cond, data = data.frame(creative))
 ```
 
-The Bayes Factor in this case is about 1/5 (0.2), meaning it's about five times as likely there _isn't_ a difference as there is. Your number will likely be a bit different.
+The Bayes Factor in this case is approximately a 1/2 (0.41 to be more precise), meaning it's about twice as likely there _isn't_ a difference as there is. Your number will likely be a bit different.
 
 **Enter the mean creativity score for each condition, the effect size, and the Bayes Factor for the difference, into PsycEL**.
 
