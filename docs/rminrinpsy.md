@@ -16,5 +16,8 @@ sure how to do that, just email me: andy@willslab.co.uk
 | [University of Lancaster](https://www.lancaster.ac.uk/study/postgraduate/postgraduate-courses/psychological-research-methods-msc/#course-structure) | U.K.   |       | 2014 | none      |
 | University of Plymouth | U.K.    | 2018 (Year 1) - 2020 (Year 3)| 2017 | [UG](https://ajwills72.github.io/rminr), [PG](https://benwhalley.github.io/just-enough-r/) |
 
+## Other, incomplete information
+
+- Danny Navarro has a Creative Commons book aimed at teaching R to undergraduates, developed maily at Adelaide, I think [Learning statistics with R](https://learningstatisticswithr.com/book/preface.html).
 
 
