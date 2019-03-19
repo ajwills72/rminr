@@ -11,7 +11,7 @@ sure how to do that, just email me: andy@willslab.co.uk
 
 | University             | Country | UG    | PG   | Link      |
 | ---------------------- | ------- | ----- | ---- | --------- |
-| University of Plymouth | U.K.    | 2018  | 2017 | [UG](https://ajwills72.github.io/rminr), [PG](https://benwhalley.github.io/just-enough-r/) |
+| University of Plymouth | U.K.    | 2018 (Year 1) - 2020 (Year 3)| 2017 | [UG](https://ajwills72.github.io/rminr), [PG](https://benwhalley.github.io/just-enough-r/) |
 
 
 
