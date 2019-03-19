@@ -12,6 +12,4 @@ sure how to do that, just email me: andy@willslab.co.uk
 | University             | Country | UG    | PG   | Link      |
 | ---------------------- | ------- | ----- | ---- | --------- |
 | University of Plymouth | U.K.    | 2018  | 2017 | [UG](https://ajwills72.github.io/rminr), [PG](https://benwhalley.github.io/just-enough-r/) |
-
-
-
+| University of Glasgow  | U.K.    | 2015  | 2010 | [UG](http://talklab.psy.gla.ac.uk/stats_2018), [PG](https://gupsych.github.io/data_skills/) |
