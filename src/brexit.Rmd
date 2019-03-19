@@ -137,7 +137,7 @@ library(BayesFactor, quietly = TRUE)
 ttestBF(formula = rating ~ cond, data = data.frame(auth.sum))
 ```
 
-In this example, The Bayes Factor is about 14, meaning it's about 14 times as likely that there is a difference, than there isn't. This number is bigger than 0.33 but smaller than 3 so, by convention, it's not clear from these data whether _leavers_ and _remainers_ differ on this personality measure or not. 
+In this example, The Bayes Factor is about 14, meaning it's about 14 times as likely that there is a difference, than there isn't. 
 
  **Enter your exact Bayes Factor into PsycEL.** (The Bayes Factor for your data will likely be a bit different to the one above).
 
