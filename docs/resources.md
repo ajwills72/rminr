@@ -13,6 +13,8 @@ Alternatively, there are some video tutorials about R on [lynda.com](https://www
 [R for Data Science](http://r4ds.had.co.nz/) 
 - The definitive guide to modern R usage, but it's one of the more advanced guides out there. Co-written by Hadley Wickham, Chief Scientist at RStudio, and author of much of the _tidyverse_. _CC BY-NC-ND_. 
 
+[Other courses](rminrinpsy.html). A list of organizations using R to teach research methods in psychology, with links to their materials. 
+
 ## Graphs
 
 [Cookbook for R: Graphs](http://www.cookbook-r.com/Graphs/)
