@@ -4,7 +4,7 @@ This is a crowd-sourced list of organizations using R to teach research methods 
 and a link to Creative Commons teaching materials, where these are available. The year teaching in R
 was adopted at undergraduate and postgraduate level is also recorded.
 
-If you'd like to appear on this list, please submit a [pull request](https://github.com/ajwills72/rminr/blob/master/docs/rminrinpsy.md). Or, if you're not 
+If you'd to add to this list, please submit a [pull request](https://github.com/ajwills72/rminr/blob/master/docs/rminrinpsy.md). Or, if you're not 
 sure how to do that, just email me: andy@willslab.co.uk
 
 ## Universities
