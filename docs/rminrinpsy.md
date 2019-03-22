@@ -11,7 +11,7 @@ sure how to do that, just email me: andy@willslab.co.uk
 
 | University             | Country | UG    | PG   | Link      |
 | ---------------------- | ------- | ----- | ---- | --------- |
-| Nottingham Trent University | U.K. | 2019 | 2018 | none |
+| Nottingham Trent University | U.K. | 2019 (Year 1) - 2021 (Year 3) | 2018 | none |
 | [University of Edinburgh](https://www.ed.ac.uk/ppls/psychology/research/seminars-and-reading-groups/psychology-statistics-group) | U.K.   | 2018  | 2018  | none          |
 | [University of Glasgow](https://psyteachr.github.io/)  | U.K.    | 2015  | 2010 | [UG](http://talklab.psy.gla.ac.uk/stats_2018), [PG](https://gupsych.github.io/data_skills/) |
 | [University of Lancaster](https://www.lancaster.ac.uk/study/postgraduate/postgraduate-courses/psychological-research-methods-msc/#course-structure) | U.K.   |       | 2014 | none      |
