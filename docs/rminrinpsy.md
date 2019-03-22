@@ -1,6 +1,6 @@
 # Teaching Research Methods in R
 
-This is a crowd-sourced list of organizations using R to teach research methods _in Psychology_,
+This is a crowd-sourced list of uses of R to teach research methods _in Psychology_,
 and a link to Creative Commons teaching materials, where these are available. The year teaching in R
 was adopted at undergraduate and postgraduate level is also recorded, where known. Where there are no materials, but the  organization's name has a link, this is a link to evidence that R is used.
 
