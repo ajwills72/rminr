@@ -11,7 +11,7 @@ sure how to do that, just email me: andy@willslab.co.uk
 
 | University             | Country | UG    | PG   | Link      |
 | ---------------------- | ------- | ----- | ---- | --------- |
-| Missouri State         | U.S.A.  |  ?    | yes  | [PG](http://statstools.com/) | 
+| Missouri State         | U.S.A.  |      | yes  | [PG](http://statstools.com/) | 
 | Nottingham Trent University | U.K. | 2019 (Year 1) - 2021 (Year 3) | 2018 |  |
 | [University of Edinburgh](https://www.ed.ac.uk/ppls/psychology/research/seminars-and-reading-groups/psychology-statistics-group) | U.K.   | 2018  | 2018  |           |
 | [University of Glasgow](https://psyteachr.github.io/)  | U.K.    | 2015  | 2010 | [UG](http://talklab.psy.gla.ac.uk/stats_2018), [PG](https://gupsych.github.io/data_skills/) |
