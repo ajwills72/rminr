@@ -25,7 +25,7 @@ sure how to do that, just email me: andy@willslab.co.uk
 
 | Lab  | Location | Country | Link |
 | ---- | -------- | ---- | ------ |
-| Infant lab | Birckbeck, University of London | U.K. | [Jupyter notebooks and R](https://github.com/InfantLab/NotebookDemos). |
+| Infant lab | Birkbeck, University of London | U.K. | [Jupyter notebooks and R](https://github.com/InfantLab/NotebookDemos). |
 
 
 ## Individuals
