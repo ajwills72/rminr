@@ -19,6 +19,7 @@ sure how to do that, just email me: andy@willslab.co.uk
 | [University of Lancaster](https://www.lancaster.ac.uk/study/postgraduate/postgraduate-courses/psychological-research-methods-msc/#course-structure) | U.K.   |       | 2014 |       |
 | University of Lincoln | U.K. |     | 2018| [PG](https://craddm.github.io/PSY9219M)|
 | University of Plymouth | U.K.    | 2018 (Year 1) - 2020 (Year 3)| 2017 | [UG](https://ajwills72.github.io/rminr), [PG](https://benwhalley.github.io/just-enough-r/) |
+| University of Sussex   | U.K.  | 2019 |   |    |
 
 
 ## Labs 
