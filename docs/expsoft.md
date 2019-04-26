@@ -24,7 +24,8 @@ multi-second freezes!
 
 ## Choices
 
-It's basically between PsychoPy and OpenSesame, I think - I don't see any other options that even get close to the above
+It's basically between [PsychoPy](http://www.psychopy.org/) and [OpenSesame](https://osdoc.cogsci.nl/), 
+I think - I don't see any other options that even get close to the above
 requirements. 
 
 PsychoPy has the advantage that some of us have been using it for years now. But it has some fatal issues, 
@@ -33,12 +34,13 @@ unlikely to change until after the machines are replaced or upgrading. I request
 
 OpenSesame, in my testing so far, seems to hit all the requirements. It's got a great GUI, better than PsychoPy, 
 and arguably better than E-prime. It generated Python scripts under the hood, and you have access to that, so the GUI
-can be supplemented by code (written by those who know how and given to students) if needed. There's a one-hour training 
-video that probably takes a more like 90 mins to work along with, but at the end of that I feel like I understand the basics.
+can be supplemented by code (written by those who know how and given to students) if needed. There's a one-hour [training 
+video](https://youtu.be/FCXcnAv9aMA) that probably takes a more like 90 mins to work along with, but at the end of that I feel like I understand the basics.
 We might need to generate teaching materials pitched at a lower level than this video, though. OpenSesame can be run on a 
 Windows machine without installation. It's sufficiently lightweight that I can even run it inside a virtual Windows machine 
 running on my linux laptop. I can also run it on Linux just fine (the installation is a bit more of a pain, but 
-Linux users will cope). I have no easy way of testing it on a Mac. 
+Linux users will cope). I have no easy way of testing it on a Mac - aparently there are some issues with Mojave, but these
+seem minor/avoidable/solved, I think. Mac users please advise.
 
 
 
