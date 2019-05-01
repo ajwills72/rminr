@@ -20,17 +20,18 @@ I've provided some [example slides](learning-topics.odp).
 ## Data collection
 Data collection works by 5/6 of each student group participating in six
 experiments. For 30min studies, this takes 3 hours plus shifting time, so
-easily fills two two-hour session. It results in N=25 for each experiment. For reasonable
-power the first data collection should therefore be a within-subject design with a
-reasonable effect size. The second data collection should in some way permit
-the inclusion of a b/subj effect (even if that's just a cross-experiment
-comparison). 
+easily fills two two-hour session. It results in N=25 for each experiment. For
+reasonable power the first data collection should therefore be a within-subject
+design with at least a medium effect size (d = .55) and a directional hypothesis. 
+
+The second data collection should in some way permit the inclusion of a b/subj
+effect (even if that's just a cross-experiment comparison). For resonable power, they'll need a directional hypothesis and a medium-large effect size (d = .75)
 
 ## Employability skills
 Communication skills. Group working to deadline. Project planning / timetabling. Critical thinking / analysis.
 
 ## Stats taught
-One-way w/subj ANOVA. 2x2 ANOVA (1 between, 1 within). Bayesian alternatives.
+Power calculation. One-way w/subj ANOVA. Two-way mixed ANOVA (1 between, 1 within). Bayesian alternatives.
 
 ## Ethics
 The students wrtite a detailed description of their methods; the discussion and approval of this document by staff provides a practical insight into ethics in these fairly innocous studies.
@@ -41,7 +42,7 @@ Group oral presentation (20%). Writen report (80%). Psyc:EL competency tests (pa
 There are a larg-ish set of pass/fail short competency tests, each can be taken an indefinite number of times until an end-of-semester deadline, you have to pass 80% of them to pass the pass/fail component. They are designed to be completable during class time, so there is support.
 
 ## Semesterization
-Runs in Semester 2, so has a 3-week break after Week 7.
+Runs in Semester 2, so has a 3-week break after Week 9.
 
 # Resourcing
 
@@ -61,25 +62,26 @@ For a cohort of 240 students, each workshop has to be delivered three times (3 _
 
 - Students will need accounts on RStudio Server.
 
-- Students will need PsychoPy on every machine. 
+- Students will need Open Sesame on every machine. 
 
 # Outline plan
 
-|    Week | Content                                           |
-|---------|---------------------------------------------------|
-|       1 | Select a topic / Methods bootcamp                 |
-|       2 | An experiment is born / Processing large datasets |
-|       3 | Finalizing the idea  / Building in PsychoPy       |
-|       4 | Finalizing the PsychoPy script / Data collection  |
-|       5 | One-factor ANOVA / Data collection                |
-|       6 | Data analysis / Preparing a presentation          |
-|       7 | Group presentations                               |
-| -BREAK- | - Easter break -                                  |
-|       8 | Modifying an expt                                 |
-|       9 | Finalizing script / Data collection               |
-|      10 | Two-factor ANOVA / Data collection                |
-|      11 | Data analysis / Planning a report                 |
-|      12 | Critquing reports                                 |
+| Week    | Content                                                                      |
+|---------|------------------------------------------------------------------------------|
+| 1       | Selecting a topic. Power calculations. Introduction to OpenSesame.           |
+| 2       | Defining your question. Outlining your design. Introduction to preprocessing |
+| 3       | Finalizing your idea. Building your experiment, part 1.                      |
+| 4       | Building your experiment, part 2. Data collection, part 1.                    |
+| 5       | One-factor ANOVA / Data collection                                           |
+| 6       | Data analysis / Preparing a presentation                                     |
+| 7       | Group presentations                                                          |
+| 8       | Modifying an expt                                                            |
+| 9       | Finalizing script / Data collection                                          |
+| -BREAK- | - Easter break -                                                             |
+| 10      | Two-factor ANOVA / Data collection                                           |
+| 11      | Data analysis / Planning a report                                            |
+| 12      | Critquing reports                                                            |
+
 
 #  Detailed plan
 
@@ -97,12 +99,12 @@ High instensity session:
 | 025 | Students self-organize into groups. TA allocated to groups. Any given TA does one topic. |
 | 030 | TAs introduce the sub-topics in their topic to their groups, and assign reading.         |
 | 050 | Break                                                                                    |
-| 060 | _Introduction to PsychoPy_ worksheet.                                                    |
-| 090 | _Introduction to preprocessing in R_ worksheet                                           |
+| 060 | _Introduction to Power_ worksheet                                                        |
+| 090 | _Introduction to OpenSesame_ worksheet.                                                  |
 | 110 | Finish 
 
 Low-intensity session and homework:
-
+2
 - Read, discuss the assigned papers.
 
 - Agree in your group which sub-topic you're going to investigate.
@@ -168,7 +170,7 @@ Data collection.
 ## Week 5: One-factor ANOVA / Data collection
 - High intensity session: Whole session dedicated to one-factor ANOVA
 
-- Low itensity session: Data collection
+- Low intensity session: Data collection
 
 - Homework: Complete ANOVA exercises, submit PsychoPy script and data to Psyc:EL.
 
@@ -316,28 +318,29 @@ Work on the report!
 
 # Worksheets
 
-## Introduction to PsychoPy
-Download and install. Initial becnhmarking. Zipping and unzipping. Loading a
-script. Running it. Entering subject number. Running through the
-expeirment. Locating the 3 data files (csv, log, psydat). Keeping a
-backup. Inspecting the CSV file - rows are trials, columns are info. Uses: A
-basic-as-possible PsychoPy script in a ZIP archive that implements a short
-conjunctive visual search experiment with two set sizes.
+## OpenSesame
 
-## Building in PsychoPy
-How to use Builder View on PsychoPy to build your own experiment. Discusses the
-two-panel interface of PsychoPy. Demonstrates creating an event, adding some
-fixed-test instructions, adding a response key. CSV files as list of
-trials. Text and picture presentation. Loops. Exercise: write script to
-investigate wether lexical decision RT is affected by the
-congruence/incongruence of a picture. A set of picture files is provided.
+## Introduction to OpenSesame
+Download and install. Loading a script. Running it. Entering subject
+number. Running through the expeirment. Locating the 3 data file. Keeping a
+backup. Inspecting the CSV file - rows are trials, columns are info.
 
-## Introduction to preprocessing in R
+Uses: A basic-as-possible OpenSesame script that implements a short conjunctive
+visual search experiment with two set sizes.
+
+## Building an experiment in OpenSesame
+How to build your own experiment. Discusses the interface of
+OpenSesame. Creating an instruction screen, adding a response key. List of trials.
+Text and picture presentation. Loops. 
+
+Exercise: write script to investigate wether lexical decision RT is affected by
+the congruence/incongruence of a picture. A set of picture files is provided.
+
+## Preprocessing large data sets in R
 Load the PsychoPy CSV file. Select relevant columns. Rename columns. Produce
 subject-level summary. Plot simple graph. Upload PsychoPy CSV file, and enter
 subject-level sumamry in PschoPy for auto-marking.
 
-## Preprocessing large data sets in R
 Uses resource of 25 participant files from "Introduction to preprocessing"
 worksheet (different random sample of 25 from 200 for each student). Run script
 from that worksheet on a few different people to illustrate between-subject
