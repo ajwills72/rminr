@@ -118,6 +118,7 @@ High-intensity session:
 |-----|------------------------------------------------------------------------|
 | 000 | Teacher introduces getting from sub-topic to broad experimental design |
 | 020 | With TA support, groups define question and plan broad design          |
+
 | 050 | TA assigns one paper per group member. BREAK.                          |
 | 060 | _Preprocessing large data sets in R_ worksheet                         |
 | 110 | Finish                                                                 |
@@ -214,14 +215,7 @@ Low-intensity session, homework:
 - Submit ANOVA exercises to Psyc:EL if not already done so.
 
 ## Week 7: Group presentations
-The two sessions this week are identical -- both are staffed by one TA and one
-Teacher (who double mark). In each session, up to 7 groups present. 10 minute
-presentations, 3 min for questions and informal feedback, 2 min for switch
-over. Just about fits into a 2 hour session.
 
-Homework:
-
-Upload presentation slides to DLE.
 
 ## BREAK
 Easter Break intervenes, placing a 3-week gap in the schedule.
@@ -301,7 +295,7 @@ writing it up well, and then breaking it). Can they tell why those two reports
 differed in mark? What are the good points of the 1st class report? Where did
 the 2ii report go wrong?
 
-Note 2: All groups working with a TA get together.  Each sub-group, with an
+Note 2: All groups working with a TA get together.  Each group, with an
 audience of that TA's other two groups, talks through their bullet point
 plan. TA and other groups provide feedback on what they found clear / unclear.
 
