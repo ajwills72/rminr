@@ -155,8 +155,8 @@ aov_car(formula = rt ~ Error(subj/cond*block), data = allsum3)
 ## If you want to just run NHST, with more than two factors, though -- that's pretty easy:
 
 ## Subject-level summary
-allsum4  <- namdat %>% group_by(subj, sex, medit, cond) %>% summarise(rt = mean(rt))
+allsum4  <- namdat %>% group_by(subj, sex, medit, cond, block) %>% summarise(rt = mean(rt))
 
 ## NHST ANOVA
-aov_car(formula = rt ~ sex*medit + Error(subj/cond), data = allsum4)
+aov_car(formula = rt ~ sex*medit + Error(subj/cond*block), data = allsum4)
 
