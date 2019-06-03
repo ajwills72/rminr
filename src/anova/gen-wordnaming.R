@@ -22,7 +22,7 @@ library(tidyverse)
 
 ## Function to create one subject
 
-make.one  <- function(medit, sex, subj, err.av, RT.av, RT.sd, RT.ben, sd.ben) {
+make.one  <- function(medit, sex, subj, err.av, RT.av, RT.sd, RT.ben, sd.ben, RT.blk) {
     trials  <- 30
     ## List of items
     items <- c("horse", "star", "carrot", "anchor", "ball", "cake", "fork",
@@ -67,6 +67,10 @@ make.one  <- function(medit, sex, subj, err.av, RT.av, RT.sd, RT.ben, sd.ben) {
     ## Add block
     data$block  <- rep(1:2, each=trials/2)
     data  <- data %>% select(subj, sex, medit, block, trial, word, pic, cond, acc, rt)
+
+    ## Add some noise to block factor
+    data$rt[data$block == 2]  <- data$rt[data$block == 2] +
+        round(rsnorm(trials/2, RT.blk, RT.sd, xi = 6),0)
     ## Return dataframe
     data
 }
@@ -77,6 +81,7 @@ N  <- 70
 ## Distribution of parameters across participants
 err.av  <- rnorm(N, .05, .025)  # Mean participant errors
 RT.av  <- rnorm(N, 500, 25)     # Mean participant RT in millisecond
+RT.blk  <- rnorm(N, 0, 25)      # Mean participant RT difference for block factor
 RT.sd <- rnorm(N, 50, 5)        # SD of participant RT
 sd.ben  <- rnorm(N, .75, .1)    # SD multiplier for congurent trials
 
@@ -85,7 +90,7 @@ data  <- NULL
 RT.ben  <- rnorm(N, 5, 100)      # Mean cost of incongruence
 for(subj in 1:N) {
     onesub  <- make.one("meditate", "male", subj, err.av[subj], RT.av[subj],
-                        RT.sd[subj], RT.ben[subj], sd.ben[subj])
+                        RT.sd[subj], RT.ben[subj], sd.ben[subj], RT.blk[subj])
     data  <- rbind(data, onesub)
 }
 
@@ -93,7 +98,7 @@ for(subj in 1:N) {
 RT.ben  <- rnorm(N, 5, 100)      # Mean cost of incongruence
 for(subj in 1:N) {
     onesub  <- make.one("meditate", "female", subj+N, err.av[subj],
-                        RT.av[subj], RT.sd[subj], RT.ben[subj], sd.ben[subj])
+                        RT.av[subj], RT.sd[subj], RT.ben[subj], sd.ben[subj], RT.blk[subj])
     data  <- rbind(data, onesub)
 }
 
@@ -102,7 +107,7 @@ for(subj in 1:N) {
 RT.ben  <- rnorm(N, 50, 100)      # Mean cost of incongruence
 for(subj in 1:N) {
     onesub  <- make.one("control", "male", subj+N*2, err.av[subj], RT.av[subj],
-                        RT.sd[subj], RT.ben[subj], sd.ben[subj])
+                        RT.sd[subj], RT.ben[subj], sd.ben[subj], RT.blk[subj])
     data  <- rbind(data, onesub)
 }
 
@@ -110,7 +115,7 @@ for(subj in 1:N) {
 RT.ben  <- rnorm(N, 50, 100)      # Mean cost of incongruence
 for(subj in 1:N) {
     onesub  <- make.one("control", "female", subj+N*3, err.av[subj], RT.av[subj],
-                        RT.sd[subj], RT.ben[subj], sd.ben[subj])
+                        RT.sd[subj], RT.ben[subj], sd.ben[subj], RT.blk[subj])
     data  <- rbind(data, onesub)
 }
 

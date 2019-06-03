@@ -4,6 +4,7 @@ library(tidyverse)
 cpsdata <- read_csv(url("http://www.willslab.org.uk/cps2.csv"))
 library(BayesFactor)
 ## For documentation on BayesFactor, type 'BFmanual()'
+cpsdata %>% ggplot(aes(income, colour=factor(sex))) + geom_density(aes(y=..scaled..)) 
 ttestBF(formula = income ~ sex, data = data.frame(cpsdata))
 t.test(cpsdata$income ~ cpsdata$sex)
 
@@ -20,7 +21,8 @@ namdati  <- namdat %>% filter(cond == "incong")
 subsum  <- namdati %>% group_by(subj, medit) %>% summarise(rt = mean(rt))
 
 ## Was there an effect of meditation?
-ttestBF(formula = rt ~ medit, data = data.frame(subsum))
+subsum %>% ggplot(aes(rt, colour=medit)) + geom_density(aes(y=..scaled..)) 
+ttestBF(formula = rt ~ medit, data = subsum)
 t.test(subsum$rt ~ subsum$medit)
 
 ## Now, a different way to ask R to do _exactly_ the same things
@@ -41,6 +43,16 @@ datctrl  <- namdat %>% filter(medit == "control")
 ### And, again, let's produce a subject-level summary
 ctrlsum  <- datctrl %>% group_by(subj, cond) %>% summarise(rt = mean(rt))
 
+### Graph...
+ctrlsum %>% ggplot(aes(rt, colour=cond)) + geom_density(aes(y=..scaled..))
+
+### ...but any repeated-measures test is on the difference scores, so for a
+### more relevant plot we need to calculate those.
+
+## Difference plot
+ctrldiff  <- spread(ctrlsum, cond, rt) %>% mutate(diff = incong - cong)
+ctrldiff %>% ggplot(aes(diff)) + geom_density(aes(y=..scaled..))
+
 ### Now, let's do the BF test
 anovaBF(formula = rt ~ cond + subj, data = ctrlsum, whichRandom = "subj")
 #### Line 1 is our BF
@@ -54,6 +66,15 @@ aov_car(formula = rt ~ Error(subj/cond), data = ctrlsum)
 
 ## Again, produce a subject-level summary
 allsum  <- namdat %>% group_by(subj, medit, cond) %>% summarise(rt = mean(rt))
+
+## Graph it. 
+allsum %>% ggplot(aes(rt, colour=cond, linetype=medit)) + geom_density(aes(y=..scaled..))
+
+## Again, any within-subjects factor will be analysed as a difference so it
+## makes sense to plot that. It also makes it a lot easier to visualise an
+## interaction
+alldiff  <- spread(allsum, cond, rt) %>% mutate(diff = incong - cong)
+alldiff %>% ggplot(aes(diff, colour=medit)) + geom_density(aes(y=..scaled..))
 
 ## BF interactions
 ## This will take at least one minute to run, so it's worth storing the output...
@@ -90,7 +111,7 @@ bf
 ## H3. Fortunately, this is easy to do:
 
 bf[4]/bf[3]
-## So the BF for the interaction is about 19.5
+## So the BF for the interaction is about 2100
 
 ## Right, now the old-fashioned way
 aov_car(formula = rt ~ medit + Error(subj/cond), data = allsum)
@@ -107,10 +128,14 @@ aov_car(formula = rt ~ medit + Error(subj/cond), data = allsum)
 ## Subject-level summary
 allsum2  <- namdati %>% group_by(subj, medit, sex) %>% summarise(rt = mean(rt))
 
+## Graph it. 
+allsum2 %>% ggplot(aes(rt, colour=sex, linetype=medit)) + geom_density(aes(y=..scaled..))
+
 ## BF ANOVA
 ## Wholly b/subj BF ANOVAs tend to be quick to run, but we still
 ## store the result so we can work out the interaction
 bfa  <- anovaBF(formula = rt ~ medit*sex, data = allsum2)
+bfa
 bfa[4]/bfa[3]
 
 ## And here's the old-fashioned way again...
@@ -129,6 +154,27 @@ aov_car(formula = rt ~ medit*sex + Error(subj), data = allsum2)
 
 ## Subject-level summary
 allsum3  <- namdat %>% group_by(subj, cond, block) %>% summarise(rt = mean(rt))
+
+## Graphing with two repeated-measures is 'interesting'...
+allsum3 %>% ggplot(aes(rt, colour=cond, linetype=block)) + geom_density(aes(y=..scaled..))
+
+## We can start by taking a difference for one factor, and plotting two
+## distributions...
+alldiff3  <- spread(allsum3, cond, rt) %>% mutate(diff = incong - cong)
+alldiff3 %>% ggplot(aes(diff, linetype=block)) + geom_density(aes(y=..scaled..))
+
+## In this case, they look pretty similar, but still it's worth remembering
+## that an interaction is a difference of differences, so the appropriate
+## distribution for an analysis of an within-subjects interaction is also a
+## difference of differences.
+
+## So let's calculate that, and plot it.
+ddiff  <- alldiff3 %>%
+    select(subj, block, diff) %>%
+    spread(block, diff) %>%
+    mutate(diffofdiff = `1` - `2`)
+
+ddiff %>% ggplot(aes(diffofdiff)) + geom_density(aes(y=..scaled..))
 
 ## BF ANOVA
 bfb  <- anovaBF(formula = rt ~ cond*block + subj, data = allsum3, whichRandom = "subj")
