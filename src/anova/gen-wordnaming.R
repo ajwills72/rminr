@@ -10,7 +10,7 @@
 ## trial - trial number
 ## word - word presented
 ## pic - picture presented
-## cond - congruency (cong, noncong)
+## congru - congruency (cong, noncong)
 ## acc - correct response (1,0)
 ## rt - response time (ms)
 
@@ -39,7 +39,7 @@ make.one  <- function(medit, sex, subj, err.av, RT.av, RT.sd, RT.ben, sd.ben, RT
     pic  <- c(items, ritems)
 
     ## Dummy trial type
-    cond  <- c("cong", "incong")
+    congru  <- c("cong", "incong")
 
     ## Random trial order
     trial  <- sample(1:(trials*2), trials*2, replace=FALSE)
@@ -51,11 +51,11 @@ make.one  <- function(medit, sex, subj, err.av, RT.av, RT.sd, RT.ben, sd.ben, RT
     cong  <- round(rsnorm(trials, RT.av, RT.sd * sd.ben, xi = 6),0)
 
     ## Build first part of dataframe
-    data  <- data.frame(medit, sex, subj, trial, pic, word, cond)
+    data  <- data.frame(medit, sex, subj, trial, pic, word, congru)
 
     ## Add trial type
-    data$cond[data$pic == data$word]  <- "cong"
-    data$cond[data$pic != data$word]  <- "incong"
+    data$congru[data$pic == data$word]  <- "cong"
+    data$congru[data$pic != data$word]  <- "incong"
 
     ## Add accuracy, RT
     data$acc  <- as.numeric(runif(trials*2, 0, 1) > err.av)
@@ -65,8 +65,8 @@ make.one  <- function(medit, sex, subj, err.av, RT.av, RT.sd, RT.ben, sd.ben, RT
     data  <- data %>% arrange(trial)
 
     ## Add block
-    data$block  <- rep(1:2, each=trials/2)
-    data  <- data %>% select(subj, sex, medit, block, trial, word, pic, cond, acc, rt)
+    data$block  <- rep(1:2, each=trials)
+    data  <- data %>% select(subj, sex, medit, block, trial, word, pic, congru, acc, rt)
 
     ## Add some noise to block factor
     data$rt[data$block == 2]  <- data$rt[data$block == 2] +
@@ -120,7 +120,7 @@ for(subj in 1:N) {
 }
 
 
-write_csv(data, "wordnaming.csv")
+write_csv(data, "src/anova/wordnaming.csv")
 
 
 

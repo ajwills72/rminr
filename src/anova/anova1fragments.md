@@ -17,7 +17,7 @@ Here's what each of the columns in the data set contains:
 | trial  | Trial number (per participant)          | 1-60               |
 | word   | The word presented on this trial        | e.g. "cup"         |
 | pic    | The name of the picture presented       | e.g. "cake"        |
-| cond   | Experimental condition - congruent or incongruent trial? | 'cong', 'incong' |
+| congru | Experimental condition - congruent or incongruent trial? | 'cong', 'incong' |
 | acc    | Accuracy of naming response             | 1 = correct, 0 = incorrect |
 | rt     | Reaction time                           | in milliseconds    |
 
