@@ -231,4 +231,92 @@ allsum4  <- namdat %>% group_by(subj, sex, medit, congru, block) %>% summarise(r
 
 ## NHST ANOVA
 aov_car(formula = rt ~ sex*medit + Error(subj/congru*block), data = allsum4)
+###############################
+## New things 3: More than 2 levels
+namdat2  <- read_csv("src/anova/wordnaming2.csv")
+namdat2$subj <- factor(namdat2$subj)
+namdat2$sex <- factor(namdat2$sex)
+namdat2$medit <- factor(namdat2$medit)
+namdat2$block <- factor(namdat2$block)
+namdat2$congru <- factor(namdat2$congru)
+
+### Let's just look at the control group
+datctrl2  <- namdat2 %>% filter(medit == "control")
+
+### And, again, let's produce a subject-level summary
+ctrlsum2  <- datctrl2 %>% group_by(subj, congru) %>% summarise(rt = mean(rt))
+
+### Graph
+ctrlsum2 %>% ggplot(aes(rt, colour=congru)) + geom_density(aes(y=..scaled..))
+
+### Although the test still works on differences, there are three pairs of differences here
+### and we'll delay looking at each of those for a bit.
+
+## Now, let's do the BF test
+## This will take some seconds to run.
+anovaBF(formula = rt ~ congru + subj, data = ctrlsum2, whichRandom = "subj")
+#### Line 1 is our BF
+
+### This tests the hypothesis that the congruency factor affects performance. It doesn't tell 
+### you which pairs of conditions are different. To do that, filter out a condition and re-run
+
+## For example, does congruency speed things up, relative to neutral
+cong.neut <- ctrlsum2 %>% filter(congru != "incong")
+anovaBF(formula = rt ~ congru + subj, data = cong.neut, whichRandom = "subj")
+
+incong.neut <- ctrlsum2 %>% filter(congru != "cong")
+anovaBF(formula = rt ~ congru + subj, data = incong.neut, whichRandom = "subj")
+
+### And, for historical interest, the NHST
+aov_car(formula = rt ~ Error(subj/congru), data = ctrlsum2)
+
+## Note 1: the output looks a little different to when there were two levels. The d.f. are fractional
+## and there's a note "Sphericity correction method: GG". The afex package is automatically applying a 
+## "Greenhouse Geisser" correction. We needn't worry about the details of what that means, it's just a
+## way of improving the accuracy of the estimate of p.
+
+## and following up specific pairs:
+
+aov_car(formula = rt ~ Error(subj/congru), data = cong.neut)
+aov_car(formula = rt ~ Error(subj/congru), data = incong.neut)
+
+## Note 2: Tukey tests are not covered in this worksheet. In general, I would advise against any analysis 
+## strategy that involves testing every possible pair of conditions and then applying some correction for
+## multiple comparisons. Your analysis is either confirmatory, in which case you should test your specific hypotheses,
+## or it is exploratory, in which case you should be pretty skeptical of anything that comes up anyway.
+
+## If you feel like what you're doing in exploratory analysis is testing a lot of hypotheses that are, a priori, 
+## quite unlikely, then the thing to do is to incorporate that prior. So, if you think that the odds for 
+## a difference, versus against a priori, are about 1:100, then you need a BF of 300 to believe, after data collection
+## that the difference is about 3 times as likely to be real as not.
+
+
+## Note: Last bit to think about including -- simple effects.
+,
+
+
+a priori, each comparison
+## is quite unlikely to result in a difference - say P(difference) = .01 then make use of that --- you'd need
+## a BF of 50 to update to the position that a difference or an absence of a difference were equally likely. 
+
+
+
+
+With repeated-measures designs, looking at pairs is best done like this (essentially, follow-up t-tests).
+## Tukey (see b/subjects) not appropriate here as it assumes independence between the conditions, which isn't
+## true in a repeated-measures design.
+
+
+##### Code fragments for b/subj pairwise comparisons
+congru.anova <- aov_car(formula = rt ~ Error(subj/congru), data = ctrlsum2)
+congru.anova
+
+pairs(lsmeans(congru.anova,"congru"))
+
+# https://www.psychologie.uni-heidelberg.de/ae/meth/team/mertens/blog/anova_in_r_made_easy.nb.html
+
+ls1 <- lsmeans(congru.anova,"congru")
+ls1
+pairs(ls1)
+update(pairs(ls1))
 
