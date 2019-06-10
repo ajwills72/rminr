@@ -14,6 +14,7 @@ sure how to do that, just email me: andy@willslab.co.uk
 | Harrisburg University of Science and Technology | U.S.A. |     | 2018 | [PG](http://statstools.com/learn) |
 | Missouri State         | U.S.A.  |      | 2017  | [PG](http://statstools.com/learn) | 
 | Nottingham Trent University | U.K. | 2012 | 2010|  |
+| Stanford University | U.S.A. | 2018 |    | [UG](http://statsthinking21.org)
 | [University of Edinburgh](https://www.ed.ac.uk/ppls/psychology/research/seminars-and-reading-groups/psychology-statistics-group) | U.K.   | 2018  | 2018  |           |
 | [University of Glasgow](https://psyteachr.github.io/)  | U.K.    | 2015  | 2010 | [UG](http://talklab.psy.gla.ac.uk/stats_2018), [PG](https://gupsych.github.io/data_skills/) |
 | [University of Lancaster](https://www.lancaster.ac.uk/study/postgraduate/postgraduate-courses/psychological-research-methods-msc/#course-structure) | U.K.   |       | 2014 |       |
