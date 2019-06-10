@@ -7,6 +7,9 @@ Alternatively, there are some video tutorials about R on [lynda.com](https://www
 
 ## General guides
 
+[Statistical Thinking for the 21st Century](http://statsthinking21.org)
+- A core undergraduate textbook on Stanford's Psychology programme. Excellent choice for further reading if you find our materials a little too basic. 
+
 [Just Enough R](https://benwhalley.github.io/just-enough-r/) 
 - A detailed guide to using R in psychology, somewhat more advanced than _Research Methods in R_. Written by Ben Whalley, a psychology academic at Plymouth University, U.K. _CC-BY-SA_.
 
