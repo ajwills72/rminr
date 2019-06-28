@@ -11,6 +11,7 @@ sure how to do that, just email me: andy@willslab.co.uk
 
 | University             | Country | UG    | PG   | Link      |
 | ---------------------- | ------- | ----- | ---- | --------- |
+| Duke University.       | U.S.A.  | 2019  |      | [UG](https://osf.io/8a9ch/wiki/home/) |
 | Harrisburg University of Science and Technology | U.S.A. |     | 2018 | [PG](http://statstools.com/learn) |
 | Missouri State         | U.S.A.  |      | 2017  | [PG](http://statstools.com/learn) | 
 | Nottingham Trent University | U.K. | 2012 | 2010|  |
