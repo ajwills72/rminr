@@ -11,9 +11,11 @@ sure how to do that, just email me: andy@willslab.co.uk
 
 | University             | Country | UG    | PG   | Link      |
 | ---------------------- | ------- | ----- | ---- | --------- |
+| Duke University.       | U.S.A.  | 2019  |      | [UG](https://osf.io/8a9ch/wiki/home/) |
 | Harrisburg University of Science and Technology | U.S.A. |     | 2018 | [PG](http://statstools.com/learn) |
 | Missouri State         | U.S.A.  |      | 2017  | [PG](http://statstools.com/learn) | 
 | Nottingham Trent University | U.K. | 2012 | 2010|  |
+| Stanford University | U.S.A. | 2018 |    | [UG](http://statsthinking21.org)
 | [University of Edinburgh](https://www.ed.ac.uk/ppls/psychology/research/seminars-and-reading-groups/psychology-statistics-group) | U.K.   | 2018  | 2018  |           |
 | [University of Glasgow](https://psyteachr.github.io/)  | U.K.    | 2015  | 2010 | [UG](http://talklab.psy.gla.ac.uk/stats_2018), [PG](https://gupsych.github.io/data_skills/) |
 | [University of Lancaster](https://www.lancaster.ac.uk/study/postgraduate/postgraduate-courses/psychological-research-methods-msc/#course-structure) | U.K.   |       | 2014 |       |
@@ -28,7 +30,7 @@ sure how to do that, just email me: andy@willslab.co.uk
 | Lab  | Location | Country | Link |
 | ---- | -------- | ---- | ------ |
 | Infant lab | Birkbeck, University of London | U.K. | [Jupyter notebooks and R](https://github.com/InfantLab/NotebookDemos). |
-
+| [Avances en Medición Psicológica](https://www.medicionpsicologica.com/) | Lima, Universidad Nacional Mayor de San Marcos (UNMSM) | PE | [Curso-Taller “R: una herramienta flexible para el análisis de datos en Psicología” (Nivel Básico)](https://osf.io/6w985/). |
 
 ## Individuals
 

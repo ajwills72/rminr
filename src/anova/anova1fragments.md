@@ -4,7 +4,7 @@
 
 Some psychologists have suggested that learning how to meditate can improve people's ability to ignore irrelevant information. On that basis, we might expect those who have been trained how to meditate will show a smaller difference in reaction times between _congruent_ and _incongruent_ trials, compared to people who have not received such training.
 
-In this experiment, 140 participants were randomly allocated to the meditation training condition, with another 140 assigned to a control condition (relaxation training). Within each group, half the participants were male and half were female. Each participant completed 60 trials of training. They did 30 trials, took a short break, and then did another 30 trials. This gives us 16800 trials in total. On each trial, the participant either named the word correctly, or they didn't. Either way, they took a certain amount of time (measured in milliseconds) to name the word. 
+In this experiment, 140 participants were randomly allocated to the meditation training condition, with another 140 assigned to a control condition (no training). Within each group, half the participants were male and half were female. Each participant completed 60 trials of training. They did 30 trials, took a short break, and then did another 30 trials. This gives us 16800 trials in total. On each trial, the participant either named the word correctly, or they didn't. Either way, they took a certain amount of time (measured in milliseconds) to name the word. 
 
 Here's what each of the columns in the data set contains:
 
@@ -17,7 +17,7 @@ Here's what each of the columns in the data set contains:
 | trial  | Trial number (per participant)          | 1-60               |
 | word   | The word presented on this trial        | e.g. "cup"         |
 | pic    | The name of the picture presented       | e.g. "cake"        |
-| cond   | Experimental condition - congruent or incongruent trial? | 'cong', 'incong' |
+| congru | Experimental condition - congruent or incongruent trial? | 'cong', 'incong' |
 | acc    | Accuracy of naming response             | 1 = correct, 0 = incorrect |
 | rt     | Reaction time                           | in milliseconds    |
 
@@ -68,4 +68,29 @@ You can also do an NHST version of this test with `aov_car`. The command has a s
 `anova_car` can also handle more than one between-subjects factor, but again the command format is different to `anovaBF`. In `anova_car` you **do** have to keep on telling it which column contains the subject numbers, even when there are no within-subject factors. This is a bit of an annoying quirk of the `afex` package (there are reasons for it, but we won't go into them here). 
 
 ### 2-within
+
+## More than two levels
+
+Another thing you can do with ANOVA, that you can't do with t-tests, is look at situations where a manipulation has more than two levels. For example, in our word naming experiment, we could have not only congruent and incongruent trials, but also neutral trials where no picture was shown. This would let us work out whether congruency sped people up, or incongruency slowed them down, or both -- relative to no picture at all.
+
+So here's another dataset where congruency has three levels. Meditation training now also has three levels - meditation, no training, and relaxation training. Relaxation training is an active control - it contains much of the same content as meditation training, but without the specific bits we think improve attentional focus.
+
+
+| Column | Description                             | Values             |
+| ------ | --------------------------------------- | ------------------ |
+| subj   | Unique anonymous participant number     | 1-420               | 
+| sex    | Biological sex of the participant       | "male", "female"   |
+| medit  | Whether the participant has had meditation training | "meditate", "control", "relax" |
+| block  | Block of trials                         | 1-3                |
+| trial  | Trial number (per participant)          | 1-90               |
+| word   | The word presented on this trial        | e.g. "cup"         |
+| pic    | The name of the picture presented       | e.g. "cake", NA for no picture        |
+| congru | Experimental condition - congruent or incongruent trial? | 'cong', 'incong', 'neutral' |
+| acc    | Accuracy of naming response             | 1 = correct, 0 = incorrect |
+| rt     | Reaction time                           | in milliseconds    |
+
+
+
+
+
 
