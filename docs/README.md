@@ -1,7 +1,13 @@
+# Research Methods in R
 
-## Absolute Beginners' Guide to R
+1. [Absolute Beginners' Guide to R](#beginners)
+2. [Putting R to Work](#rtowork)
+3. [Research Methods in Practice](#rmip)
 
-#### Part 1
+## 1. Absolute Beginners' Guide to R
+<a name="beginners"></a>
+
+A series of worksheets on using R for data analysis in psychology. No previous knowledge of R, or of psycholopgy, is assumed. 
 
 * [Introduction to RStudio](intro-rstudio.md). How to get RStudio, and a basic introduction to the software.
 
@@ -17,16 +23,11 @@
 
 * [Calculating your module mark](modmark.html). How to calculate a final module mark from your component marks, using R.
 
-#### Part 2
-
 * [Inter-rater reliability](irr.html). Percentage agreement. Cohen's kappa. 
 
 * [Relationships](chi.html). Frequency and contingency tables. Mosaic plots. Traditional chi-square test. Bayesian test. 
 
 * [Relationships, part 2](corr.html). Density plots. Scatter plots. Correlation co-efficient. Bayesian and traditional tests. 
-
-
-#### Further reading
 
 * [Cheat sheet](cheat-sheet.html). Everything we've covered so far, condensed. 
 
@@ -34,38 +35,28 @@
 
 * [Other resources](resources.html). A list of other Creative Commons resources about using R. 
 
-## Putting R to work
+## 2. Putting R to work
+<a name="rtowork"></a>
 
-These are mainly further practice in the skills you learned in _Absolute Beginners'_. Where the exercises contain completely new skills, these are shown in **bold**. Where the excercises extend a skill you've already been taught, these are shown in _italics_. The exercises are somewhat graded in difficulty, with Part 1 being the easiest and Part 3 containing some harder exercises. 
+These are mainly further practice in the skills learned in _Absolute Beginners'_. Where the exercises contain completely new skills, these are shown in **bold**. Where the excercises extend a skill you've already been taught, these are shown in _italics_. The exercises become somewhat more difficult as you go down the list. 
 
 If you are a current undergraduate student at Plymouth University, you should complete the accompanying Psych:EL (Psychology: Experiential Learning) activity first, in order to generate your own set of data. If you're not, you can download sample data files [here](rtoworkdata.html).
 
-#### Part 1a
+* [Autobiographical memory](memories.html). Entering data by hand, _histograms_.
 
-* [Autobiographical memory study](memories.html). Entering data by hand, _histograms_.
+* [Face recognition](face-recog.html). Means, _filtering data_, and a **bar graph**.
 
-* [Face recognition experiment](face-recog.html). Means, _filtering data_, and a **bar graph**.
+* [Spatial navigation](navigate.html). More on **bar graphs**.
 
-* [Spatial navigation tests](navigate.html). More on **bar graphs**.
-
-#### Part 1b
-
-* [Response compatibility experiment](response-compatibility.html). Means, filtering data, standard deviations, and density plots.
+* [Response compatibility](response-compatibility.html). Means, filtering data, standard deviations, and density plots.
 
 * [Visual illusions](illusions.html). Filtering data, means, **violin plot**, Bayesian t-test.
 
-#### Part 2
-
-* [Facial attractiveness experiment](face-attract.html). Means, standard deivations, **inter-quartile range**, and _density plots_. 
-
-#### Part 3a
+* [Facial attractiveness](face-attract.html). Means, standard deivations, **inter-quartile range**, and _density plots_. 
 
 * [Police lineup](lineup.html). Contingency table, mosaic plot, Bayesian contingency test, means, density plot, Bayesian t-test
 
 * [Risk taking](risk-rat.html). Means, **combining data frames**, filtering data, and _density plots_.
-
-
-#### Part 3b
 
 * [Animal Welfare](lions.html). Percentage agreement, Cohen's kappa, contingency tables, _bar charts_.
 
@@ -74,9 +65,18 @@ If you are a current undergraduate student at Plymouth University, you should co
 * [Political psychology](brexit.html). Means, filtering data, _summarising data_, density plots, effect size, Bayesian t-test, traditional t-test. 
 
 
-## The next level...
+## Research Methods in Practice
+<a name="rtowork"></a>
 
-* [ANOVA](ANOVAplans.md). Draft plan for ANOVA course materials.
+The following materials are currently being developed, so on clicking these links, you may find just notes, or incomplete worksheets. 
+
+- [Statistical power](power.html) 
+
+- [Data preprocessing](preproc.html). 
+
+- [One-factor ANOVA](anova1.html). 
+
+- [Two-factor ANOVA](anova2.html). 
 
 ____
 
