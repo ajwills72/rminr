@@ -49,7 +49,7 @@ If everything worked well, your screen should now look like this:
 
 ![Project created](pics/project-made.png)
 
-Notice that projects in RStudio look slighlty different to how you've been using RStudio up until now. The two main changes are:
+Notice that projects in RStudio look slightly different to how you've been using RStudio up until now. The two main changes are:
 
 * There is now a new type of tab on the top left. This is a _Script_ tab, which we're going to use in a moment. 
 
