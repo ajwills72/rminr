@@ -1,0 +1,148 @@
+---
+title: "Evidence (briefly), part 1"
+author: "Andy Wills"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+## DEVELOPERS: Uncomment one option, as appropriate
+
+## Show only commands.
+## knitr::opts_chunk$set(echo = TRUE, message = FALSE, results='hide', fig.keep = 'none', comment=NA)
+
+## Show commands and ouptut.
+knitr::opts_chunk$set(echo = TRUE, comment=NA)
+```
+
+## Before you start...
+Before starting this worksheet, you should have had a brief introduction to [using RStudio](using_rstudio.html). You should also have also completed the worksheets [Exploring Data](vbg_explore.html) and [Group Differences](vbg_groups.html). If not, take a look these earlier worksheets before continuing.
+
+If you have completed those worksheets, then you'll have set up an R project, and you'll have a script in it that looks like this:
+
+```{r init, message=FALSE, cache=TRUE, echo=TRUE, results='hide', fig.keep = 'none'}
+## Exploring data
+library(tidyverse)
+cpsdata <- read_csv("cps2.csv")
+cpsdata %>% summarise(mean(income))
+cpsdata %>% summarise(mean(hours, na.rm = TRUE))
+
+## Grouping data: worksheet
+cpsdata %>% group_by(sex) %>% summarise(mean(income))
+cpsdata %>% ggplot(aes(income, colour=factor(sex))) + geom_density(aes(y=..scaled..)) 
+cpslow <- cpsdata %>% filter(income < 150000)
+
+## Group data: exercise
+cpslow %>% ggplot(aes(income, colour=factor(sex))) + geom_density(aes(y=..scaled..))
+cpslow %>% group_by(native) %>% summarise(mean(income))
+cpslow %>% ggplot(aes(income, colour=factor(native))) + geom_density(aes(y=..scaled..))
+```
+
+The lines beginning `##` are comments. They are ignored by R but are useful 'notes to self' to keep track of what you've done. 
+
+## Contents
+
+- [Evidence](#evidence)
+- [Bayesian t-test](#bayes-t)
+- [Traditional t-test](#bs-ttest)
+- [Exercise](#ex1)
+
+<a name="evidence"></a>
+
+## Evidence
+
+We saw in the last worksheet that in our sample of 10,000 US residents men, on average, earned more than women. We also saw that there was a lot of variability in our sample, and that the range of incomes earned by men largely overlapped the range of incomes earned by women. Obviously, there are a lot more than 10,000 people in the US. So, how likely is it that our sample is representative of the US population? To put that another way, how strong is the evidence, on the basis of our data, that US men do in fact earn more than US women? Basically, should we believe what our data seem to be telling us?
+
+### Comparing hypotheses
+
+The standard way to answer this sort of question is to come up with two _hypotheses_ and work out which is the more likely. The two hypotheses we normally compare are:
+
+- **Hypothesis Zero** (aka. 'null hypothesis'). There is no difference in the means. In our example, the hypothesis is that the mean income for men and women in the US is exactly the same. 
+
+- **Hypothesis One** (aka. 'experimental hypothesis'). There is a difference in the means. In our experiment, the hypothesis is that the mean income for men and women in the US is not exactly the same.
+
+Now we have our hypotheses, we use the data to work out which hypothesis is the more likely. The answer we end up with is called a Bayes Factor. A Bayes Factor is a number that tells us how much more likely Hypothesis One is than Hypothesis Zero.
+
+For example, a Bayes Factor of 10 means it's ten times more likely there is a difference (Hypothesis One) than there isn't (Hypothesis Zero).
+
+A Bayes Factor less than 1 is also informative. For example, a Bayes Factor of 0.1 (1/10) tells you it's ten times more likely that there *isn't* a difference than there is. 
+
+A Bayes Factor of exactly 1 tells you that the presence or absence of a difference is equally likely.
+
+Psychologists love a "line in the sand", so a convention has emerged that we believe there is a difference if the Bayes Factor is greater than 3, and believe there isn't a difference if the Bayes Factor is less than 0.33. We sometimes describe these lines in the sand as "substantial evidence for a difference" (BF > 3) and "substantial evidence for the null" (BF < 0.33). 
+
+All the above assumes that, before you collected the data, you thought the presence or absence of a difference were equally likely outcomes. This can often be a reasonable default position, particularly if you're exploring a new question. If there were good reasons to think one hypothesis was much more likely that the other, before you collected your data, see [more on Bayes Factors](more-on-bf.html) for how to deal with this.
+
+<a name="bayes-t"></a>
+
+## Bayesian t-test 
+
+The easiest way to calculate a Bayes Factor in R is to use something called a between-subjects Bayesian t-test. This test looks at how big the difference in means between groups is, how much the variation in the two groups overlaps, and how big the sample is. It then does some calculations, based on some assumptions about how large real differences tend to be in psychology, and works out a Bayes Factor. The exact nature of that calculation is largely a matter for  mathematicians and methods experts; other psychologists generally take the answer on trust. 
+
+We start by loading the  _BayesFactor_ package. Recall, that you load a package using the `library` command. 
+
+```{r bayesfactor, message=FALSE}
+library(BayesFactor, quietly = TRUE)
+```
+The `quietly = TRUE` bit is there because this package is very chatty when it loads, which gets a bit annoying after a while. Telling it to load quietly helps a bit, although you'll still get a welcome message (not shown here). 
+
+If you get an error here, please see [common errors](common-errors.html).
+
+The command to calculate a Bayes Factor for our gender pay gap example is: 
+
+```{r bfttest}
+ttestBF(formula = income ~ sex, data = data.frame(cpsdata))
+```
+ 
+The Bayes Factor is reported on the third line, towards the right. Our Bayes Factor is about 18.25. This means it's about 18 times more likely that there is a gender pay gap in the US population than that there isn't. 
+
+If you're curious about what the rest of the output means, see [more on Bayes Factors](more-on-bf.html).
+
+### Explanation of command
+The `ttestBF()` (short for "Bayes Factor t-test") command has two components, separated by a comma:
+
+1. `formula =` - Here we tell R what we want to analyse (the `income` column of our data frame), and which group each income belongs to (which is found in the `sex` column). The tilde, `~` means "as a function of". So `income ~ sex` means look at income as a function of biological sex. 
+
+2. `data =` - Here we tell R which data frame to use; in our case `cpsdata`. Due to a limitation of the BayesFactor package, we have to specifically tell it to treat our data as a data frame (hence `data.frame(cpsdata)` rather than just `cpsdata`).
+
+<a name="bs-ttest"></a>
+
+## Traditional t-test
+
+Until the 2010s, nearly all psychologists used what we now call "traditional" t-tests, rather than Bayesian t-tests. They did this because traditional t-tests used to be easier to calculate than Bayesian t-tests (until faster computers and better software came along). This convenience was bought at the cost of the output of traditional t-tests being much harder to interpret. Indeed, most professional psychologists misinterpret p values. If you've been taught about p values by a psychologist in the past, what you were told is much more likely to have been wrong than right. 
+
+For historical reasons, and so you can understand and critique older papers in our field, we'll now briefly show you how to run a traditional t-test in R. The command is:
+
+```{r ttest}
+t.test(cpsdata$income ~ cpsdata$sex)
+```
+
+and the key figure in the output is the `p-value`. The historical convention, based on a number of misconceptions about what p values are, was as follows:
+
+* If `p < .05` then psychologists would believe your observed difference was real and allow you to proclaim it as "statistically significant", and to publish it. 
+
+* If `p >= .05` then psychologists would be skeptical. They probably wouldn't believe your observed difference is real, and they'd expect you to describe it as "statistically non-significant". Unlike Bayes Factors, a non-significant p-value **does not** mean you have evidence for the null. Traditional t-tests cannot provide evidence for the null.
+
+<a name="ex1"></a>
+
+## Exercise 
+In this exercise, you'll consolidate what you've learned so far. 
+
+**The task is to further exmaine this sample of participants who are living in the US (`cpsdata`) , and earning less than $150k (`cpslow`).** 
+
+Specifically, the task is to peform a Bayesian t-test and a traditional t-test to address the question of whether people born in the US earn more. Your output should look like the below if you've got it right.
+
+As you can see, the Bayesian evidence for a difference is pretty overwhelming in this case -- it's about 3.5 million times more likely there is a difference than there isn't!
+
+### Expected output
+```{r ex1, echo=FALSE}
+ttestBF(formula = income ~ native, data = data.frame(cpslow))
+t.test(cpslow$income ~ cpslow$native)
+```
+
+**Note:** 7.102e-11, what does that mean? It's scientific notation (a.k.a. "Standard Form"), so is read 7.102 x 10^-11^. You would have been taught scientific notation in school, but here's a reminder if you need it [BBC bitesize revision guide on standard form](https://www.bbc.com/education/guides/zxsv97h/revision).
+
+___
+
+This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0. 
+
+

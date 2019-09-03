@@ -1,8 +1,12 @@
 # Research Methods in R
 
 1. [Absolute Beginners' Guide to R](#beginners)
+
 2. [Putting R to Work](#rtowork)
-3. [Research Methods in Practice](#rmip)
+
+3. [A Very Brief Guide to R](#vbgtr)
+
+4. [Research Methods in Practice](#rmip)
 
 ## 1. Absolute Beginners' Guide to R
 <a name="beginners"></a>
@@ -64,8 +68,22 @@ If you are a current undergraduate student at Plymouth University, you should co
 
 * [Political psychology](brexit.html). Means, filtering data, _summarising data_, density plots, effect size, Bayesian t-test, traditional t-test. 
 
+## 3. A Very Brief Guide to R
 
-## Research Methods in Practice
+The _Absolute Beginners' Guide to R_ and _Putting R to Work_ provide, between them, about 20 hours of introductory material. For those in a hurry, the _Very Brief Guide to R_ covers the most critical material from those two courses in about four hours.
+
+* [Using RStudio](using_rstudio.html): Brief introduction to the software
+
+* [Exploring data](vbg_explore.html): Loading data, calculating means
+
+* [Group differences](vbg_groups.html): Grouping, density plots, filtering.
+
+* [Evidence, part 1](vbg_evidence.html): Bayesian and traditional t-tests 
+
+* [Evidence, part 2](vbg_corr.html): Bayes and traditional correlation, scatterplot
+
+
+## 4. Research Methods in Practice
 <a name="rtowork"></a>
 
 The following materials are currently being developed, so on clicking these links, you may find just notes, or incomplete worksheets. 
@@ -114,6 +132,7 @@ Jasmin Jones, Peter Jones,
 Laith Kahn, 
 Chris Longmore,
 Jon May, Anthony Mee, Chris Mitchell, Millie Monks,
+Karol Nedza,
 Alyson Norman,
 Charlie Reynolds, Matt Roser,
 Paul Sharpe, Alastair Smith, Julian Stander, 

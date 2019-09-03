@@ -1,0 +1,213 @@
+---
+title: "Relationships (briefly), part 2."
+author: "Andy Wills"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+## DEVELOPERS: Uncomment one option, as appropriate
+
+## Show only commands.
+## knitr::opts_chunk$set(echo = TRUE, message = FALSE, results='hide', fig.keep = 'none', comment=NA)
+
+## Show commands and ouptut.
+knitr::opts_chunk$set(echo = TRUE, comment=NA)
+
+## Define custom functions
+coreg <- function(r, scale) {
+  samples = 25
+  library(MASS)
+  data <- mvrnorm(n=samples, mu=c(0, 0), Sigma=matrix(c(1, r, r, 1), nrow=2), empirical=TRUE)
+  data <- (data + 2.5) * 2
+  data[,2] <- data[,2] / scale
+  data <- as.data.frame(data)
+  data %>% ggplot(aes(x = V1, y = V2)) + geom_point(shape=1) +
+  theme_minimal() + xlab("") + ylab("") + xlim(0, 10) + ylim(0, 10) +
+  ggtitle(paste("r = ", r))
+}
+
+source("multiplot.R")
+```
+
+## Before you start...
+Before starting this worksheet, you should have completed all three previous worksheets of the [Very Brief Guide to R](index.html). Once you'll have, you'll have an R project that contains a script like this:
+
+```{r init, message=FALSE, cache=TRUE, echo=TRUE, results='hide', fig.keep = 'none'}
+## Exploring data
+library(tidyverse)
+cpsdata <- read_csv("cps2.csv")
+cpsdata %>% summarise(mean(income))
+cpsdata %>% summarise(mean(hours, na.rm = TRUE))
+
+## Grouping data: worksheet
+cpsdata %>% group_by(sex) %>% summarise(mean(income))
+cpsdata %>% ggplot(aes(income, colour=factor(sex))) + geom_density(aes(y=..scaled..)) 
+cpslow <- cpsdata %>% filter(income < 150000)
+
+## Grouping data: exercise
+cpslow %>% ggplot(aes(income, colour=factor(sex))) + geom_density(aes(y=..scaled..))
+cpslow %>% group_by(native) %>% summarise(mean(income))
+cpslow %>% ggplot(aes(income, colour=factor(native))) + geom_density(aes(y=..scaled..))
+
+## Evidence Part 1
+library(BayesFactor, quietly = TRUE)
+ttestBF(formula = income ~ sex, data = data.frame(cpsdata))
+t.test(cpsdata$income ~ cpsdata$sex)
+
+## Evidence Part 1: Exercise
+ttestBF(formula = income ~ native, data = data.frame(cpslow))
+t.test(cpslow$income ~ cpslow$native)
+```
+
+## Contents
+
+- [Loading new data](#intor)
+- [Scatter plots](#scatter)
+- [Measuring correlation](#corr)
+- [Evidence for correlation](#evidence)
+- [Exercise](#ex)
+
+<a name="intor"></a>
+
+## Loading new data
+
+We're going to use some new data in this final worksheet, so download it from [here](data/gcorr.csv) and upload it to RStudio, and then load the data into a dataframe called `gdata`. Look at the [Exploring data](vbg_explore.html) worksheet if you need a reminder on how to do this. If you've done it correctly, you'll get an output like this:
+
+```{r init-load, echo=FALSE} 
+gdata <- read_csv("gcorr.csv")
+```
+
+Next, click on `gdata` in the Environment window, and take a look. The data is from an experiment where each of 25 groups of people selected a leader and then completed a task together. Afterwards, they  answered some questions about their group. Specifically, the rated their _ingroup closeness_ (how close, psychologically speaking, they felt to members of their own group, their _outgroup distance_ (how distant they felt from members of other groups), and how _dominant_ their group leader was in their group. The ratings were made inidivually, and then averaged to give one number per group per measure. 
+
+Here's what each of the column labels mean:
+
+| Column    | Description                             | Values             |
+| --------- | --------------------------------------- | ------------------ |
+| grp       |  ID number of the group  | a number |
+| ingroup   | Group's mean rating of ingroup closeness | 1 (low) - 10 (high) |
+| outgroup  | Group's mean rating of outgroup distance | 1 (low) - 10 (high) |
+| dominance | Group's mean rating of the dominance of their group leader | 1 (low) - 10 (high) |
+
+This is a small dataset comprising 25 groups.
+
+<a name="scatter"></a>
+
+## Scatterplots
+
+One question we can ask about these data concerns the relationship between ingroup closeness and outgroup distants. 
+
+For example, does high ingroup closeness tend to be associated with high outgroup distance -- perhaps feeling close to your ingroup is associated with feeling distant from your outgroup? 
+
+Or perhaps high ingroup closeness is associated with low outgroup distance --- feeling close to your own group also makes you feel close to other groups? Or, a third option, perhaps the two things are unrelated --- whether you have high or low ingroup closeness does not predict your outgroup distance.
+
+One way to look at this question is to produce a _scatterplot_. On a scatterplot, each point represents one group. That point's position on the x-axis represents their ingroup closeness, and that point's position on the y-axis represents their outgroup distance. 
+
+The command to produce a scatterplot in R is much like the command for a density plot. It is:
+
+```{r scatter}
+gdata %>% ggplot(aes(x = ingroup, y = outgroup)) + geom_point() 
+```
+
+### Explanation of command
+
+The command takes the data from the `gdata` dataframe, and _pipes_ it (`%>%`) to `ggplot` to produce a graph. The rest of the command tells `ggplot` what type of graph we want:
+
+`geom_point()` - We want a scatterplot
+
+`aes(x = ingroup, y = outgroup)` - We want the variable `ingroup` on the x-axis, and the variable `outgroup` on th y-axis.
+
+### Discussion of output
+
+In the above scatterplot, many of the points are close to the x axis. This is becasue, as we saw above, most groups gave a rating close to 1 for outgroup distance. However, once we get to an ingroup closeness above 8, an interesting pattern starts to emerge. As ingroup closeness increases from 8 to 10, outgroup distance rises from around 1 to around 7 or 8. 
+
+So it seems that, in this example dataset, ingroup closeness and outgroup distance are related. We call this type of relationship a _correlation_. 
+
+<a name="corr"></a>
+
+## Measuring correlation
+
+Sometimes, it's useful to have a single number that summarises how well two variables are correlated. We can calculate this number, called a _correlation co-efficient_, using the `cor` command in R:
+
+```{r corr}
+cor(gdata$ingroup, gdata$outgroup)
+```
+
+### Explanation of command
+
+Here's what each part of the command means: 
+
+`cor()` - The command to calculate a correlation co-efficient.
+
+`gdata$ingroup` - One variable is in the `ingroup` column of the `gdata` data frame.
+
+`,` - this comma needs to be here so R knows where one variable ends and the other begins.
+
+`gdata$outgroup` - The other variable is in the `outgroup` column of the `gdata` data frame.
+
+### Explanation of output
+
+In the above example, the correlation co-efficient was about 0.66. By tradition, we use a lower case _r_ to represent a correlation co-efficient, so here _r = 0.66_. In order to make sense of this number, you need to know that the biggest _r_ can ever be is 1, and the smallest it can ever be is -1. 
+
+**Where r = 1**: A correlation of 1 means a perfect linear relationship. In other words, there is a straight line you can draw that goes exactly through the centre of each dot on your scatterplot. The line can be shallow, or steep. Here are some examples:
+
+```{r corr-eg-1, echo=FALSE, message=FALSE, warning=FALSE, cache=TRUE}
+multiplot(coreg(1, .6), coreg(1, 1), coreg(1, 2), coreg(1, 8), cols = 2)
+```
+
+**Where r = 0**: A correlation of zero means there is no relationship between the two variables. Here are some examples:
+
+```{r corr-eg-0, echo=FALSE, message=FALSE, warning=FALSE, cache=TRUE}
+multiplot(coreg(0, .6), coreg(0, 1), coreg(0, .8), coreg(0, 1), cols = 2)
+```
+
+**Where r is between 0 and 1:** As the correlation co-efficient gets further from zero, the relationship between the two variables becomes more like a straight line. Here are some more examples:
+
+```{r corr-various, echo=FALSE, message=FALSE, warning=FALSE, cache=TRUE}
+multiplot(coreg(0, 1), coreg(.5, 1), coreg(.1, 1.2), coreg(.7, 1), coreg(.3, 0.6), coreg(.9, 1.8), cols = 3)
+```
+
+**Where r is less than 0:** A negative correlation co-efficient just means that, as one variable gets larger, the other gets smaller:
+
+```{r corr-neg, echo=FALSE, message=FALSE, warning=FALSE, cache=TRUE}
+multiplot(coreg(0, 1), coreg(-.5, 1), coreg(-.1, 1.2), coreg(-.7, 1), coreg(-.3, 0.6), coreg(-.9, 1.8), cols = 3)
+```
+
+## Evidence for correlation
+
+So far, we've produced a scatterplot of _ingroup closeness_ versus _outgroup distance_, and we've calculated a correlation co-efficient for that relationship ( _r=0.66_ in the example above). But is the relationship between these two variables real, or a fluke? Much like the Bayesian t-test we calculated in the previous worksheet, we can calculate a Bayes Factor for the relationship between two variables. This uses the same _BayesFactor_ package, which we already loaded in the last worksheet.
+
+To calculate a Bayes Factor for the correlation, we use the  `correlationBF` command, which has a similar format to the `cor` command above:
+
+```{r bf}
+correlationBF(gdata$ingroup, gdata$outgroup)
+```
+
+The Bayes Factor is reported on the third line, towards the right. In this example, our Bayes Factor is about 89.7. This means it's about ninety times as likely there is a relationship between these two variables as there isn't. This is larger than the conventional threshold of 3, so psychologists will generally believe you when you claim that there is a relationship between ingroup closeness and outgroup distance. If the Bayes Factor had been less than 0.33, this would have been evidence that there was no relationship.
+
+### Traditional analysis
+
+As we covered in the [Evidence](evidence.html) worksheet, historically psychologists have typically reported _p values_, despite the fact that _p values_ are widely misinterpreted. If you want to calculate a _p value_ for a correlation co-efficient, you can use the following command:
+
+```{r r-sig, results='hide'}
+cor.test(gdata$ingroup, gdata$outgroup)
+```
+<a name="ex"></a>
+
+## Exercise
+
+In this exercise, you'll apply what you've learned to the relationship between _ingroup closeness_, and _group-leader dominance_. Do each of the following analyses:
+
+1. Make a scatterplot with _ingroup_ closeness on the x-axis, and group-leader _dominance_ on the y-axis. 
+
+2. Calculate the correlation co-efficient for _ingroup_ versus _dominance_. 
+
+3. Calculate the Bayes Factor for this correlation. 
+
+## The End!
+
+If you're able to complete the above exercise on your own, you're all set! If not, ask for help in class, and/or work through the [Absolute Beginners' Guide to R](index.html)
+
+___
+
+
+This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0. 
