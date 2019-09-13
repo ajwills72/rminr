@@ -46,8 +46,7 @@ In order to do this, we need to split our data into two groups -- males and fema
 ```{r group-mean}
 cpsdata %>% group_by(sex) %>% summarise(mean(income))
 ```
-
-Women in our made-up sample get paid, on average, around 9,000 (9k) less than men. Of course, not every male gets 92k a year in the US, and not every female gets 83k. It seems very likely that the range of incomes earned by men and women overlap -- meaning that if you picked one man and one woman at random, there's a reasonable chance that the woman earns more than the man. We can look at this _variation_ in pay using a graph. 
+Copy it into your script and run it (CTRL+ENTER). Women in our made-up sample get paid, on average, around 9,000 (9k) less than men. Of course, not every male gets 92k a year in the US, and not every female gets 83k. It seems very likely that the range of incomes earned by men and women overlap -- meaning that if you picked one man and one woman at random, there's a reasonable chance that the woman earns more than the man. We can look at this _variation_ in pay using a graph. 
 
 <a name="group-density"></a>
 
@@ -122,6 +121,8 @@ cpslow %>% ggplot(aes(income, colour=factor(sex))) + geom_density(aes(y=..scaled
 At first glance, the two distributions of incomes still look quite similar. For example, the *modal* income -- the point where the graph is highest -- is at quite a low income, and that income is quite similar for both men and women. However, on closer inspection, you'll also see that the red line (females) is above the blue line (men) until about 25-50k, and below the blue line from then on. This means that more women than men earn less than 50k, and more men than women earn more than 50k. 
 
 So, the gender pay gap is visible in this graph. The graph also illustrates that the difference in this sample is small, relative to the range of incomes. This doesn't mean that the gender pay gap is less (or more) important than income inequality. These kinds of questions of importance are moral, philosophical, and political. Data cannot directly answer these kinds of questions, but they can provide information to inform the debate. 
+
+<a name="ex1"></a>
 
 ## Exercise
 In this exercise, you'll consolidate what you've learned so far. 
