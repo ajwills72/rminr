@@ -17,7 +17,7 @@ We'll go through what it all means in a bit. But, first, we're going to...
 
 RStudio uses _projects_ to help you keep your work organized, and to make sure you have a record of your analyses. You should start a new project each time you start a new module in your degree (possibly more frequently, but we'll come back to that later). Here's how to create a new project:
 
-1. At the top right of RStudio, you will see a little blue cube, with the text "Project: (none)". Click on this. 
+1. At the top right of RStudio, you will see a little blue cube, with the text "Project: (none)". Click on this, and select "New project". 
 
 ![RStudio without a project open](pics/rstudio-new.png)
 
