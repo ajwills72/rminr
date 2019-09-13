@@ -29,7 +29,7 @@ RStudio uses _projects_ to help you keep your work organized, and to make sure y
 
 ![Project dialog #2](pics/create2.png)
 
-4. Next, type in a name for the project that makes sense to you in the "Directory name" box. I've typed _psyc411_, but you should pick something more meaningful to you (e.g. _briefcourse_. Then click "Create project".
+4. Next, type in a name for the project that makes sense to you in the "Directory name" box. I've typed _psyc411_, but you should pick something more meaningful to you (e.g. _briefcourse_). Then click "Create project".
 
 ![Project dialog #3](pics/create3.png)
 
