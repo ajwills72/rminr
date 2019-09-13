@@ -30,7 +30,7 @@ source("multiplot.R")
 ```
 
 ## Before you start...
-Before starting this worksheet, you should have completed all three previous worksheets of the [Very Brief Guide to R](index.html). Once you'll have, you'll have an R project that contains a script like this:
+Before starting this worksheet, you should have completed all three previous worksheets of the [Very Brief Guide to R](index.html#vbgtr). Once you have, you'll have an R project that contains a script like this:
 
 ```{r init, message=FALSE, cache=TRUE, echo=TRUE, results='hide', fig.keep = 'none'}
 ## Exploring data
@@ -77,7 +77,7 @@ We're going to use some new data in this final worksheet, so download it from [h
 gdata <- read_csv("gcorr.csv")
 ```
 
-Next, click on `gdata` in the Environment window, and take a look. The data is from an experiment where each of 25 groups of people selected a leader and then completed a task together. Afterwards, they  answered some questions about their group. Specifically, the rated their _ingroup closeness_ (how close, psychologically speaking, they felt to members of their own group, their _outgroup distance_ (how distant they felt from members of other groups), and how _dominant_ their group leader was in their group. The ratings were made inidivually, and then averaged to give one number per group per measure. 
+Next, click on `gdata` in the Environment window, and take a look. The data is from an experiment where each of 25 groups of people selected a leader and then completed a task together. Afterwards, they  answered some questions about their group. Specifically, they rated their _ingroup closeness_ (how close, psychologically speaking, they felt to members of their own group), their _outgroup distance_ (how distant they felt from members of other groups), and how _dominant_ their group leader was in their group. The ratings were made inidivually, and then averaged to give one number per group per measure. 
 
 Here's what each of the column labels mean:
 
@@ -94,7 +94,7 @@ This is a small dataset comprising 25 groups.
 
 ## Scatterplots
 
-One question we can ask about these data concerns the relationship between ingroup closeness and outgroup distants. 
+One question we can ask about these data concerns the relationship between ingroup closeness and outgroup distance. 
 
 For example, does high ingroup closeness tend to be associated with high outgroup distance -- perhaps feeling close to your ingroup is associated with feeling distant from your outgroup? 
 
@@ -172,6 +172,8 @@ multiplot(coreg(0, 1), coreg(.5, 1), coreg(.1, 1.2), coreg(.7, 1), coreg(.3, 0.6
 multiplot(coreg(0, 1), coreg(-.5, 1), coreg(-.1, 1.2), coreg(-.7, 1), coreg(-.3, 0.6), coreg(-.9, 1.8), cols = 3)
 ```
 
+<a name="evidence"></a>
+
 ## Evidence for correlation
 
 So far, we've produced a scatterplot of _ingroup closeness_ versus _outgroup distance_, and we've calculated a correlation co-efficient for that relationship ( _r=0.66_ in the example above). But is the relationship between these two variables real, or a fluke? Much like the Bayesian t-test we calculated in the previous worksheet, we can calculate a Bayes Factor for the relationship between two variables. This uses the same _BayesFactor_ package, which we already loaded in the last worksheet.
@@ -186,7 +188,7 @@ The Bayes Factor is reported on the third line, towards the right. In this examp
 
 ### Traditional analysis
 
-As we covered in the [Evidence](evidence.html) worksheet, historically psychologists have typically reported _p values_, despite the fact that _p values_ are widely misinterpreted. If you want to calculate a _p value_ for a correlation co-efficient, you can use the following command:
+As we covered in the [Evidence](vbg_evidence.html) worksheet, historically psychologists have typically reported _p values_, despite the fact that _p values_ are widely misinterpreted. If you want to calculate a _p value_ for a correlation co-efficient, you can use the following command:
 
 ```{r r-sig, results='hide'}
 cor.test(gdata$ingroup, gdata$outgroup)
@@ -203,9 +205,19 @@ In this exercise, you'll apply what you've learned to the relationship between _
 
 3. Calculate the Bayes Factor for this correlation. 
 
+### Expected output
+If you've done it right, these are the answers you'll get:
+
+```{r ex1, echo=FALSE}
+gdata %>% ggplot(aes(x = ingroup, y = dominance)) + geom_point() 
+cor(gdata$ingroup, gdata$dominance)
+correlationBF(gdata$ingroup, gdata$dominance)
+```
+
+
 ## The End!
 
-If you're able to complete the above exercise on your own, you're all set! If not, ask for help in class, and/or work through the [Absolute Beginners' Guide to R](index.html)
+If you're able to complete the above exercise on your own, you're all set! If not, ask for help in class, and/or work through the [Absolute Beginners' Guide to R](index.html#beginners)
 
 ___
 
