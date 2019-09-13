@@ -70,6 +70,8 @@ If you are a current undergraduate student at Plymouth University, you should co
 
 ## 3. A Very Brief Guide to R
 
+<a name="vbgtr"></a>
+
 The _Absolute Beginners' Guide to R_ and _Putting R to Work_ provide, between them, about 20 hours of introductory material. For those in a hurry, the _Very Brief Guide to R_ covers the most critical material from those two courses in about four hours.
 
 * [Using RStudio](using_rstudio.html): Brief introduction to the software
