@@ -127,7 +127,7 @@ and the key figure in the output is the `p-value`. The historical convention, ba
 ## Exercise 
 In this exercise, you'll consolidate what you've learned so far. 
 
-**The task is to further exmaine this sample of participants who are living in the US (`cpsdata`) , and earning less than $150k (`cpslow`).** 
+**The task is to further exmaine this sample of participants who are living in the US, and earning less than $150k (`cpslow`).** 
 
 Specifically, the task is to peform a Bayesian t-test and a traditional t-test to address the question of whether people born in the US earn more. Your output should look like the below if you've got it right.
 
