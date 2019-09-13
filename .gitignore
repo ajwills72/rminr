@@ -7,6 +7,7 @@
 *.Rproj
 ## Temp files
 *~
+*#
 ## Stuff specific to structure of this site
 ## src/*.html
 src/*_cache
