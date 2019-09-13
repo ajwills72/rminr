@@ -186,7 +186,7 @@ summary {
 
 <div id="before-you-start" class="section level2">
 <h2>Before you start…</h2>
-<p>Before starting this exercise, you should have had a brief introduction to using RStudio. If not, take a look at the <a href="using_rstudio.html">Using RStudio</a>.</p>
+<p>Before starting this exercise, you should have had a brief introduction to using RStudio. If not, take a look at the <a href="using_rstudio.html">Using RStudio</a> worksheet.</p>
 </div>
 <div id="contents" class="section level2">
 <h2>Contents</h2>
@@ -211,25 +211,22 @@ summary {
 <p>First, we need to load a package called <em>tidyverse</em>. A package is an extension to R that adds new commands. Nearly everything we’ll do in this course uses the tidyverse package, so pretty much every project starts with this instruction.</p>
 <p><strong>Type (or copy and paste) the command in the grey box into line 1 of the <em>Script</em> window of RStudio</strong>. Now, with your cursor still on line 1, press CTRL+ENTER (i.e. press the key marked ‘Ctrl’ and the RETURN or ENTER key together).</p>
 <pre class="r"><code>library(tidyverse)</code></pre>
-<pre><code>── Attaching packages ────────────────────────────────── tidyverse 1.2.1 ──</code></pre>
-<pre><code>✔ ggplot2 3.2.1     ✔ purrr   0.3.2
-✔ tibble  2.1.3     ✔ dplyr   0.8.3
-✔ tidyr   0.8.3     ✔ stringr 1.4.0
-✔ readr   1.3.1     ✔ forcats 0.4.0</code></pre>
-<pre><code>── Conflicts ───────────────────────────────────── tidyverse_conflicts() ──
-✖ dplyr::filter() masks stats::filter()
-✖ dplyr::lag()    masks stats::lag()</code></pre>
 <p>When you do this, line 1 is automatically copied to your <em>Console</em> window and run. Then, RStudio will print some text to the Console (shown in the white box, above). This text tells you that the <em>tidyverse</em> package has loaded (“attached”) some other pacakges (e.g. <em>dplyr</em>). It also tells you that the <em>dplyr</em> package changes the way some commands in R work (“conflicts”). That’s OK.</p>
 <p>If you get an output that includes the word ‘error’, please see <a href="common-errors.html">common errors</a>.</p>
 <p><a name="load"></a></p>
+</div>
+<div id="saving-your-script" class="section level2">
+<h2>Saving your script</h2>
+<p>You should notice that the name <code>Untitled1</code> on the <em>Script</em> window has now gone red. This is to remind you that your script has changed since the last time you saved it. So, click on the “Save” icon (the little floppy disk) and save your R script with some kind of meaningful name, for example <code>briefguide.R</code>. The <code>.R</code> indicates that it is an R script.</p>
+<p>Re-save your script each time you change something in it; that way, you won’t lose any of your work.</p>
 </div>
 <div id="loading-data" class="section level2">
 <h2>Loading data</h2>
 <p>Now, we’re going to load some data on the income of 10,000 people in the United States of America. I’ve made up this dataset for teaching purposes, but it’s somewhat similar to large open data sets available on the web, such as <a href="https://thedataweb.rm.census.gov/ftp/cps_ftp.html">US Current Population Survey</a>. Here’s how you get a copy of this data into RStudio so you can start looking at it:</p>
 <ol style="list-style-type: decimal">
-<li><p>Download a copy of the data, by clcking <a href="http://www.willslab.org.uk/cps2.csv">here</a> and saving it to the Downloads folder of your computer.</p></li>
+<li><p>Download a copy of the data, by clicking <a href="http://www.willslab.org.uk/cps2.csv">here</a> and saving it to the Downloads folder of your computer.</p></li>
 <li><p>Go to RStudio in your web browser.</p></li>
-<li><p>Click on the ‘Files’ tab in RStudio.</p></li>
+<li><p>Click on the ‘Files’ tab in RStudio (bottom right rectangle)</p></li>
 <li><p>Click the ‘Upload’ button.</p></li>
 <li><p>Click ‘Browse…’</p></li>
 <li><p>Go to your Downloads folder, and select the file you just saved there.</p></li>
@@ -254,12 +251,12 @@ cols(
 <ol style="list-style-type: decimal">
 <li><p>The first part of the command is <code>cpsdata</code>. This gives a name to the data we are going to load. We’ll use this name to refer to it later, so it’s worth using a name that is both short and meaningful. I’ve called it <code>cpsdata</code> because it’s somewhat similar to data from the US Current Population Survey, but you can give data pretty much any name you choose (e.g. <em>fart</em>).</p></li>
 <li><p>The bit in the middle, <code>&lt;-</code>, is an arrow and is typed by pressing <code>&lt;</code> and then <code>-</code>, without a space. This arrow means “put the thing on the right of the arrow into the thing on the left of the arrow”.</p></li>
-<li><p>The last part of the command is <code>read_csv(&quot;cps2.csv&quot;)</code>. It loads the data file into <code>cpsdata</code>. The part inside the speech marks, <code>cps2.csv</code>, is the name of the file you just uploaded to your RStudio project. This command can also download data directly from the web, for example <code>read_csv(&quot;http://www.willslab.org.uk/cps2.csv&quot;)</code>. This would have been a quicker way to do it in this case, of course not all data is on a web page.</p></li>
+<li><p>The last part of the command is <code>read_csv(&quot;cps2.csv&quot;)</code>. It loads the data file into <code>cpsdata</code>. The part inside the speech marks, <code>cps2.csv</code>, is the name of the file you just uploaded to your RStudio project. This command can also download data directly from the web, for example <code>read_csv(&quot;http://www.willslab.org.uk/cps2.csv&quot;)</code>. This would have been a quicker way to do it in this case, but of course not all data is on a web page.</p></li>
 </ol>
 </div>
 <div id="explanation-of-output" class="section level3">
 <h3>Explanation of output</h3>
-<p>R likes to print things in red sometimes – this does not mean there’s a problem. If there’s a problem, it will actually say ‘error’. The output here tells us that R has loaded the data, which has eight parts (columns, or <code>cols</code>). It gives us the name of the columns (<code>ID, sex, ...</code>) and tells us what sort of data each column contains: <code>character</code> means the data is words (e.g. ‘female’), <code>integer</code> means the data is a whole number (e.g. ‘42’).</p>
+<p>R likes to print things in red sometimes – this does not mean there’s a problem. If there’s a problem, it will actually say ‘error’. The output here tells us that R has loaded the data, which has eight parts (columns, or <code>cols</code>). It gives us the name of the columns (<code>ID, sex, ...</code>) and tells us what sort of data each column contains: <code>character</code> means the data is words (e.g. ‘female’), <code>double</code> means the data is a number (e.g. ‘42.78’).</p>
 <p>If you get an error here, please see <a href="common-errors.html">common errors</a>.</p>
 <p><a name="inspect"></a></p>
 </div>
@@ -350,6 +347,7 @@ cols(
 <li><p>The bit in the middle, <code>%&gt;%</code>, is called a <em>pipe</em>. Its job is to send data from one part of your command to another. It is typed by pressing <code>%</code> then <code>&gt;</code> then <code>%</code>, without spaces. So <code>cpsdata %&gt;%</code> sends our data frame to the next part of our command.</p></li>
 <li><p>The bit on the right, <code>summarise(mean(income))</code> is itself made up of parts. The command <code>summarise</code> does as the name might suggest, it summarises a set of data (<code>cpsdata</code> in this case) into a single number, e.g. a mean. The <code>mean</code> command indicates that the type of summary we want is a mean (there are also a number of other types of summary, as you’ll see in other courses). Finally, <code>income</code> is the name of the column of <code>cpsdata</code> we want to take the mean of – in this case, the income of each individual.</p></li>
 </ol>
+<p><a name="missing"></a></p>
 </div>
 </div>
 <div id="dealing-with-missing-data" class="section level2">

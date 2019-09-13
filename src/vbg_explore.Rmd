@@ -17,7 +17,7 @@ knitr::opts_chunk$set(echo = TRUE, comment=NA)
 ```
 
 ## Before you start...
-Before starting this exercise, you should have had a brief introduction to using RStudio. If not, take a look at the [Using RStudio][1].
+Before starting this exercise, you should have had a brief introduction to using RStudio. If not, take a look at the [Using RStudio][1] worksheet.
 
 [1]: using_rstudio.html
 
@@ -69,7 +69,7 @@ Now, we're going to load some data on the income of 10,000 people in the United 
 
 2. Go to RStudio in your web browser. 
 
-3. Click on the 'Files' tab in RStudio.
+3. Click on the 'Files' tab in RStudio (bottom right rectangle)
 
 4. Click the 'Upload' button.
 
@@ -95,7 +95,7 @@ There are three parts to the command `cpsdata <- read_csv("cps2.csv")`:
 3. The last part of the command is `read_csv("cps2.csv")`. It loads the data file into `cpsdata`. The part inside the speech marks, `cps2.csv`, is the name of the file you just uploaded to your RStudio project. This command can also download data directly from the web, for example `read_csv("http://www.willslab.org.uk/cps2.csv")`. This would have been a quicker way to do it in this case, but of course not all data is on a web page. 
 
 ### Explanation of output
-R likes to print things in red sometimes -- this does not mean there's a problem. If there's a problem, it will actually say 'error'. The output here tells us that R has loaded the data, which has eight parts (columns, or `cols`). It gives us the name of the columns (`ID, sex, ...`) and tells us what sort of data each column contains: `character` means the data is words  (e.g. 'female'), `integer` means the data is a whole number (e.g. '42').
+R likes to print things in red sometimes -- this does not mean there's a problem. If there's a problem, it will actually say 'error'. The output here tells us that R has loaded the data, which has eight parts (columns, or `cols`). It gives us the name of the columns (`ID, sex, ...`) and tells us what sort of data each column contains: `character` means the data is words  (e.g. 'female'), `double` means the data is a number (e.g. '42.78').
 
 If you get an error here, please see [common errors](common-errors.html).
 
@@ -150,6 +150,8 @@ This command has three components:
 2. The bit in the middle, `%>%`, is called a *pipe*. Its job is to send data from one part of your command to another. It is typed by pressing `%` then `>` then `%`, without spaces. So `cpsdata %>%` sends our data frame to the next part of our command.
 
 3. The bit on the right, `summarise(mean(income))` is itself made up of parts. The command `summarise` does as the name might suggest, it summarises a set of data (`cpsdata` in this case) into a single number,  e.g. a mean. The `mean` command indicates that the type of summary we want is a mean (there are also a number of other types of summary, as you'll see in other courses). Finally, `income` is the name of the column of `cpsdata` we want to take the mean of -- in this case, the income of each individual.
+
+<a name="missing"></a>
 
 ## Dealing with missing data
 
