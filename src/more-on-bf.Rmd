@@ -78,7 +78,7 @@ replication crisis, and how BF may help us escape it.
 
 ## How likely is the null hypothesis?
 
-In our discussion of the Bargh paper in the [Evidence](evidence.html) worksheet, we estimated the probability of the null prior to data collection as .95. We also said that the probability of the null, after a t-test with p = .049, the probability of the null was around 50:50. This calculation also makes use of Bayesian maths, you can find details of the calculation [here](bayescalc.pdf).
+In our discussion of the Bargh paper in the [Evidence](evidence.html) worksheet, we estimated the probability of the null prior to data collection as .95. We also said that the probability of the null, after a t-test with p = .049, was around 50:50. This calculation also makes use of Bayesian maths, you can find details of the calculation [here](bayescalc.pdf).
 ___
 
 
