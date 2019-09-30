@@ -7,11 +7,17 @@ Alternatively, there are some video tutorials about R on [lynda.com](https://www
 
 ## General guides
 
+[Statistical Thinking for the 21st Century](http://statsthinking21.org)
+- A core undergraduate textbook on Stanford's Psychology programme. Excellent choice for further reading if you find our materials a little too basic. 
+
 [Just Enough R](https://benwhalley.github.io/just-enough-r/) 
 - A detailed guide to using R in psychology, somewhat more advanced than _Research Methods in R_. Written by Ben Whalley, a psychology academic at Plymouth University, U.K. _CC-BY-SA_.
 
 [R for Data Science](http://r4ds.had.co.nz/) 
 - The definitive guide to modern R usage, but it's one of the more advanced guides out there. Co-written by Hadley Wickham, Chief Scientist at RStudio, and author of much of the _tidyverse_. _CC BY-NC-ND_. 
+
+[Other courses](rminrinpsy.html). 
+- A list of organizations using R to teach research methods in psychology, with links to their materials. 
 
 ## Graphs
 

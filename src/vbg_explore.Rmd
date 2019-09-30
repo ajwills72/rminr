@@ -1,0 +1,174 @@
+---
+title: "Exploring data (briefly)"
+author: "Andy Wills"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+## DEVELOPERS: Uncomment one option, as appropriate
+
+## Show only commands.
+## knitr::opts_chunk$set(echo = TRUE, message = FALSE, results='hide', fig.keep = 'none', comment=NA)
+
+## Show commands and ouptut.
+knitr::opts_chunk$set(echo = TRUE, comment=NA)
+```
+
+## Before you start...
+Before starting this exercise, you should have had a brief introduction to using RStudio. If not, take a look at the [Using RStudio][1] worksheet.
+
+[1]: using_rstudio.html
+
+## Contents
+
+- [How to use these worksheets](#how-to)
+- [Loading a package](#package)
+- [Loading data](#load)
+- [Inspecting data](#inspect)
+- [Calculating a mean](#means)
+- [Dealing with missing data](#missing)
+
+<a name="how-to"></a>
+
+## How to use these worksheets.
+
+Throughout this worksheet, you'll see the commands you should type into RStudio inside a grey box, followed by the output you should expect to see in one or more white boxes. Any differences in the colour of the text can be ignored.
+
+Each command in this worksheet is followed by one or more  _explanation_ sections - those are there to help you understand how the commands work and how to read the output they produce.
+
+<a name="package"></a>
+
+## Loading a package
+First, we need to load a package called *tidyverse*. A package is an extension to R that adds new commands. Nearly everything we'll do in this course uses the tidyverse package, so pretty much every project starts with this instruction. 
+
+**Type (or copy and paste) the command in the grey box into line 1 of the _Script_ window of RStudio**. Now, with your cursor still on line 1, press CTRL+ENTER (i.e. press the key marked 'Ctrl' and the RETURN or ENTER key together). 
+
+```{r init}
+library(tidyverse)
+```
+
+When you do this, line 1 is automatically copied to your _Console_ window and run. Then, 
+RStudio will print some text to the Console (shown in the white box, above). This text tells you that the _tidyverse_ package has loaded ("attached") some other pacakges (e.g. _dplyr_). It also tells you that the _dplyr_ package changes the way some commands in R work ("conflicts"). That's OK.
+
+If you get an output that includes the word 'error', please see [common errors](common-errors.html).
+
+<a name="load"></a>
+
+## Saving your script
+
+You should notice that the name `Untitled1` on the _Script_ window has now gone red. This is to remind you that your script has changed since the last time you saved it. So, click on the "Save" icon (the little floppy disk) and save your R script with some kind of meaningful name, for example `briefguide.R`. The `.R` indicates that it is an R script.
+
+Re-save your script each time you change something in it; that way, you won't lose any of your work.
+
+## Loading data
+Now, we're going to load some data on the income of 10,000 people in the United States of America. I've made up this dataset for teaching purposes, but it's somewhat similar to large open data sets available on the web, such as [US Current Population Survey](https://thedataweb.rm.census.gov/ftp/cps_ftp.html). Here's how you get a copy of this data into RStudio so you can start looking at it:
+
+1. Download a copy of the data, by clicking [here](http://www.willslab.org.uk/cps2.csv) and saving it to the Downloads folder of your computer.
+
+2. Go to RStudio in your web browser. 
+
+3. Click on the 'Files' tab in RStudio (bottom right rectangle)
+
+4. Click the 'Upload' button.
+
+5. Click 'Browse...'
+
+6. Go to your Downloads folder, and select the file you just saved there.
+
+7. Click "OK".
+
+8. Copy or type the following command into your RStudio script window, and run it (i.e. press CTRL+ENTER while your cursor is on that line)
+
+```{r load,cache=TRUE}
+cpsdata <- read_csv("cps2.csv")
+```
+
+### Explanation of command
+There are three parts to the command `cpsdata <- read_csv("cps2.csv")`:
+
+1. The first part of the command is `cpsdata`. This gives a name to the data we are going to load. We'll use this name to refer to it later, so it's worth using a name that is both short and meaningful. I've called it `cpsdata` because it's somewhat similar to data from the US Current Population Survey, but you can give data pretty much any name you choose (e.g. _fart_). 
+
+2. The bit in the middle, `<-`, is an arrow and is typed by pressing `<` and then `-`, without a space. This arrow means "put the thing on the right of the arrow into the thing on the left of the arrow". 
+
+3. The last part of the command is `read_csv("cps2.csv")`. It loads the data file into `cpsdata`. The part inside the speech marks, `cps2.csv`, is the name of the file you just uploaded to your RStudio project. This command can also download data directly from the web, for example `read_csv("http://www.willslab.org.uk/cps2.csv")`. This would have been a quicker way to do it in this case, but of course not all data is on a web page. 
+
+### Explanation of output
+R likes to print things in red sometimes -- this does not mean there's a problem. If there's a problem, it will actually say 'error'. The output here tells us that R has loaded the data, which has eight parts (columns, or `cols`). It gives us the name of the columns (`ID, sex, ...`) and tells us what sort of data each column contains: `character` means the data is words  (e.g. 'female'), `double` means the data is a number (e.g. '42.78').
+
+If you get an error here, please see [common errors](common-errors.html).
+
+<a name="inspect"></a>
+
+## Inspecting data
+Next, we'll take a peek at these data. You can do this by clicking on the data in the *Environment* tab of RStudio, see [Using RStudio](using_rstudio.html).
+
+We can now see the data set (also known as a *data frame*). We can see that this data frame has 8 columns and 10000 rows. Each row is one person, and each column provides some information about them. Below is a description of each of the columns. Where you see `NA` this means this piece of data is missing for this person -- quite common in some real datasets.
+
+Here's what each of the columns in the data set contains:
+
+| Column | Description                             | Values             |
+| ------ | --------------------------------------- | ------------------ |
+| ID     | Unique anonymous participant number     | 1-10,000           | 
+| sex    | Biological sex of participant           | male, female       |
+| native | Participant born in the US?             | foreign, native           |
+| blind  | Participant blind?                      | yes, no            |
+| hours  | Number of hours worked per week         | a number           |
+| job    | Type of job held by participant:        | charity, nopay, private, public |
+| income | Annual income in dollars                | a number           |
+| education | Highest qualification obtained       | grade-school, high-school, bachelor, master, doctor |
+
+<a name="means"></a>
+
+## Calculating a mean
+Now we have these data, one question we can ask is "what is the average income of people in the U.S.?" (or, at least, in this sample). In this first example, we're going to calculate the _mean_ income. 
+
+I'm sure you learned about means in school but, as a reminder, you calculate a mean by adding up all the incomes and dividing by the number of incomes. Our sample has 10,000 participants, so this would be a long and tedious calculation -- and we'd probably make an error. 
+
+It would also be a little bit tedious and error prone in a spreadsheet application (e.g. Excel, Libreoffice Calc). There are some very famous cases of these kinds of "Excel errors" in research, e.g. [genetics](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-016-1044-7), [economics](https://arstechnica.com/tech-policy/2013/04/microsoft-excel-the-ruiner-of-global-economies/).
+
+In R, we can calculate the mean instantly, and it's harder to make the sorts of errors that are common in Excel-based analysis.
+
+To calculate mean income in  R, we add the following command to our script (line 3), and press CTRL+ENTER:
+
+```{r mean}
+cpsdata %>% summarise(mean(income))
+```
+
+Your output will tell you the mean income in this sample -- it's the last number on the bottom right, and it's approximately $87,000.
+
+If you're happy with the output you've got, move on to the next section. If you would like a more detailed explanation of this output, see [more on tibbles](more-on-tibbles.html). 
+
+If you get an error here, please see [common errors](common-errors.html).
+
+### Explanation of command
+This command has three components:
+
+1. The bit on the left, `cpsdata`, is our data frame, which we loaded and named earlier. 
+
+2. The bit in the middle, `%>%`, is called a *pipe*. Its job is to send data from one part of your command to another. It is typed by pressing `%` then `>` then `%`, without spaces. So `cpsdata %>%` sends our data frame to the next part of our command.
+
+3. The bit on the right, `summarise(mean(income))` is itself made up of parts. The command `summarise` does as the name might suggest, it summarises a set of data (`cpsdata` in this case) into a single number,  e.g. a mean. The `mean` command indicates that the type of summary we want is a mean (there are also a number of other types of summary, as you'll see in other courses). Finally, `income` is the name of the column of `cpsdata` we want to take the mean of -- in this case, the income of each individual.
+
+<a name="missing"></a>
+
+## Dealing with missing data
+
+To calculate the mean number of hours worked per week, we have to deal with the fact that there is some missing data - we don't know for all 10,000 people how many hours they work in a week, because they didn't all tell us. To get a mean of those who did tell us, we tell R to ignore the missing data, like this:
+
+```{r mean-hours-narm}
+cpsdata %>% summarise(mean(hours, na.rm = TRUE))
+```
+
+### Explanation
+`rm` is short for 'remove', but 'ignore' would be a more accurate description, as this command doesn't delete the `NA` entries in `cpsdata`, it just ignores them. So `na.rm = TRUE` means "ignore the missing data". 
+
+If you get an error here, please see [common errors](common-errors.html).
+
+<a name="graphs"></a>
+
+
+___
+
+This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0. 

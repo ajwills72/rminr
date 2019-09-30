@@ -141,7 +141,7 @@ We can escape this whole confusing mess of the traditional t-test by calculating
 
 For example, a Bayes Factor of 10 means it's ten times more likely there is a difference than there isn't. 
 
-A Bayes Factor less than 1 is also informative. For example, a Bayes Factor of 0.1 (1/10) tells you it's ten times more likley that there *isn't* a difference than there is. 
+A Bayes Factor less than 1 is also informative. For example, a Bayes Factor of 0.1 (1/10) tells you it's ten times more likely that there *isn't* a difference than there is. 
 
 A Bayes Factor of exactly 1 tells you that the presence or absence of a difference is equally likely.
 

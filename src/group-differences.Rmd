@@ -157,7 +157,7 @@ Somehow, we need to deal with the fact that a few people in our sample are very 
 
 Looking at our previous density plots, we can see that the vast majority of people are paid less than $150k a year. So, let's restrict our plotting to just those people. 
 
-We do this using the `filter` command. It's called _filter_ because it works a bit like the filter paper in a chemsitry lab (or in your coffee machine) -- stopping some things, while letting other things pass through. We can filter our data by telling R *what data we want to keep*. Here, we want to keep all people who earn less than £150k, and filter out the rest. So the filter we need is `filter(income < 150000)`, where `<` means "less than". 
+We do this using the `filter` command. It's called _filter_ because it works a bit like the filter paper in a chemistry lab (or in your coffee machine) -- stopping some things, while letting other things pass through. We can filter our data by telling R *what data we want to keep*. Here, we want to keep all people who earn less than £150k, and filter out the rest. So the filter we need is `filter(income < 150000)`, where `<` means "less than". 
 
 We'll be using this dataset of people with <$150k incomes a few times, so we're going to give it a new name, `cpslow` (or any other name you want, e.g. _angelface_ )
 
