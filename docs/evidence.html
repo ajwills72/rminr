@@ -7,9 +7,10 @@
 <meta charset="utf-8" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
-<meta name="author" content="Andy Wills" />
+<meta name="author" content="Andy Wills and Chris Berry" />
 
 
 <title>Evidence</title>
@@ -70,9 +71,7 @@ h6 {
 </style>
 
 
-</head>
 
-<body>
 
 <style type="text/css">
 .main-container {
@@ -97,22 +96,80 @@ img {
 button.code-folding-btn:focus {
   outline: none;
 }
+summary {
+  display: list-item;
+}
 </style>
 
 
 
-<div class="container-fluid main-container">
-
 <!-- tabsets -->
-<script>
-$(document).ready(function () {
-  window.buildTabsets("TOC");
-});
-</script>
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
 
 <!-- code folding -->
 
 
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
 
 
 
@@ -122,7 +179,7 @@ $(document).ready(function () {
 
 
 <h1 class="title toc-ignore">Evidence</h1>
-<h4 class="author"><em>Andy Wills</em></h4>
+<h4 class="author">Andy Wills and Chris Berry</h4>
 
 </div>
 
@@ -186,7 +243,7 @@ mean in group female   mean in group male
 <p>Psychologists will generally record this probability in their articles. So, in this case, they would write<code>p = .0002</code> or, alternatively, <code>p &lt; .05</code>. The latter form, <code>p &lt; .05</code>, reads “the p value is less than .05”. More on this later.</p>
 <p>Psychologists usually also report at least two further numbers when reporting a t-test in their articles. The first is the t value, <code>t</code>. Our t value in this case is about 3.67 (we can safely ignore the minus sign).</p>
 <p>The second is the “degrees of freedom” (<code>df</code>). <em>Degress of freedom</em> are a way of talking about the size of the dataset used in the t test. You’ll see it isn’t quite the sample size, because we know our sample size was 10,000, yet the <code>df</code> are a bit lower than that: 9991.3.</p>
-<p>In summary, <code>t = 3.67</code>, <code>df = 991.3</code>, and <code>p = .0002</code>. Psychologists have a standard shorthand for this, which is to write, <code>t(991.3) = 3.67, p = .0002</code>. You’ll see this sort of thing in most psychology articles. In more recent articles, you’ll also see a report of the effect size, in this case <code>d = .020</code>, as we calculated previously.</p>
+<p>In summary, <code>t = 3.67</code>, <code>df = 9991.3</code>, and <code>p = .0002</code>. Psychologists have a standard shorthand for this, which is to write, <code>t(991.3) = 3.67, p = .0002</code>. You’ll see this sort of thing in most psychology articles. In more recent articles, you’ll also see a report of the effect size, in this case <code>d = .020</code>, as we calculated previously.</p>
 <p>The whole sentence would be something like:</p>
 <p><code>Men earned more than women, d = .20, t(991.3) = 3.67, p &lt; .05</code>.</p>
 <p>There’s quite a bit of other output from our t-test that we haven’t discussed. If you’re curious about what the rest of the output means, take at look at <a href="more-on-t.html">more on t-tests</a>. In particular, there is a section on <a href="more-on-t.html#ci">confidence intervals</a>, which may come up in some of your other teaching.</p>
@@ -229,7 +286,7 @@ mean in group female   mean in group male
 <h2>Bayes Factors</h2>
 <p>We can escape this whole confusing mess of the traditional t-test by calculating a <em>Bayes Factor</em> rather than a <em>p value</em>. A Bayes Factor is a number that tells us how likely it is there’s a difference between groups</p>
 <p>For example, a Bayes Factor of 10 means it’s ten times more likely there is a difference than there isn’t.</p>
-<p>A Bayes Factor less than 1 is also informative. For example, a Bayes Factor of 0.1 (1/10) tells you it’s ten times more likley that there <em>isn’t</em> a difference than there is.</p>
+<p>A Bayes Factor less than 1 is also informative. For example, a Bayes Factor of 0.1 (1/10) tells you it’s ten times more likely that there <em>isn’t</em> a difference than there is.</p>
 <p>A Bayes Factor of exactly 1 tells you that the presence or absence of a difference is equally likely.</p>
 <p>All the above assumes that, before you collected the data, you thought the presence or absence of a difference were equally likely outcomes. If that is not the case, see <a href="more-on-bf.html">more on Bayes Factors</a>.</p>
 <p><a name="bayes-t"></a></p>
@@ -336,6 +393,23 @@ $(document).ready(function () {
 
 
 </script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>

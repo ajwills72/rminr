@@ -1,0 +1,47 @@
+\documentclass{article}
+\title{How likely is the null hypothesis?}
+\author{Andy J. Wills}
+
+\begin{document}
+\maketitle
+
+In our example, we estimated that the probability the null hypothesis
+is true, prior to data collection, was .95. So $P(H_0) = .95$. Our t-test gave
+$p = .049$, so $P(data|H_0) = .049$. To work out $P(H_0|data)$, we use Bayes'
+theorem. Bayes' is most typically written as:
+
+\begin{equation}
+  P(H_0 | data) = \frac{P(data | H_0) P(H_0)} {P(data)}
+  \label{bayes}
+\end{equation}
+
+but can equivalently be expressed as:
+
+\begin{equation}
+ P(H_0 | data) = \frac{P(data | H_0) P(H_0)} {P(data | H_0) P(H_0) +
+   P(data | \overline{H_0}) P(\overline{H_0})}
+ \label{bayesalt}
+\end{equation}
+
+where $P(\overline{H_0})$ means the probability the null hypothesis is
+false\footnote{Note $\overline{H_0}$ is a different thing to the probability
+  that the experimental hypothesis is true, $P(H_1)$. Null-hypothesis
+  significance testing does not give you that number}. Equation~\ref{bayesalt}
+is more useful in this case, as $P(\overline{H_0}) = 1 - P(H_0)$ and
+$P(data | \overline{H_0}) = 1 - P(data | H_0)$. By substitution, we can see that:
+
+\begin{equation}
+P(null | data) =
+\frac{0.049 \times .95}
+{.049 \times .95 + .951 \times .05} = 0.49
+\label{bayeseg}
+\end{equation}
+
+which leads to the claim that the probability of the null hypothesis after a
+significant t-test is, in this case, close to $50:50$.
+
+\end{document}
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:
