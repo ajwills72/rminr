@@ -1,6 +1,6 @@
 ---
 title: "Risk-taking questionnaire"
-author: "Yaniv Hanoch, Andy Wills"
+author: "Andy Wills, Yaniv Hanoch"
 output: html_document
 ---
 
@@ -72,10 +72,10 @@ People tend to be less likely to take risks as they get older. Is this the case 
 
 #### Combining data frames
 
-We can use the `rbind` (short for 'row bind') command to combine two data frames, like this:
+We can use the `bind_rows` command to combine two data frames, like this:
 
 ```{r risk_rbind}
-risk <- rbind(risk.me, risk.other)
+risk <- bind_rows(risk.me, risk.other)
 ```
 
 #### Comparing two individuals on an overall score
@@ -154,5 +154,3 @@ risk.young %>% ggplot(aes(rating)) +
 ___
 
 This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0. 
-
-_version 0.2.1_
