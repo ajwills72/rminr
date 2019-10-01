@@ -46,9 +46,6 @@ R is "free as in freedom" because all the source code is available to everyone (
 
 2. All software is eventually abandoned by the people who wrote it (if for no other reason than their death). Open source software only dies if no one in the world cares enough about it to maintain it. In contrast, closed-source software (e.g. SPSS) dies as soon as the current owners decide to kill it. 
 
-### Supported by Plymouth University
-R is already installed on most public machines at the University of Plymouth. 
-
 ### Runs inside a browser
 You can use R without having to install it, e.g. [RStudio Plymouth](https://rstudio.plymouth.ac.uk). 
 
@@ -56,4 +53,3 @@ ___
 
 This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0. 
 
-_version 0.2_
