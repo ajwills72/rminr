@@ -3,8 +3,6 @@ _Andy Wills_
 
 _Research Methods in R_ is deliberately introductory, only scratching the surface of what can be achieved in R. Below is a list of [Creative Commons](https://creativecommons.org/) resources that [respect your freedom](https://www.gnu.org/philosophy/free-sw.html) -- in other words resources that are, and always will be, free.
 
-Alternatively, there are some video tutorials about R on [lynda.com](https://www.plymouth.ac.uk/your-university/about-us/university-structure/service-areas/it-services/lynda). Students at some universities have paid for access to these materials through their tuition fees. Unfortunately, once they graduate, they lose access to these materials unless they pay [£180 per  year](https://techboomers.com/t/lynda-cost) to lynda.com. I recommend sticking to the freedom-respecting resources I list below.
-
 ## General guides
 
 [Statistical Thinking for the 21st Century](http://statsthinking21.org)
@@ -16,7 +14,7 @@ Alternatively, there are some video tutorials about R on [lynda.com](https://www
 [R for Data Science](http://r4ds.had.co.nz/) 
 - The definitive guide to modern R usage, but it's one of the more advanced guides out there. Co-written by Hadley Wickham, Chief Scientist at RStudio, and author of much of the _tidyverse_. _CC BY-NC-ND_. 
 
-[Other courses](rminrinpsy.html). 
+[Other courses](rminrinpsy.html) 
 - A list of organizations using R to teach research methods in psychology, with links to their materials. 
 
 ## Graphs

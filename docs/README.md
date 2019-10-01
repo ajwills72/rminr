@@ -1,13 +1,19 @@
 # Research Methods in R
 _2019 Edition._
 
+_Research Methods in R_ is a set of guides on how to use R as your central research methods tool. The target audience is psychology undergraduate students. _Research Methods in R_ is [Creative Commons](https://creativecommons.org/), so you are free to reuse these materials and adapt them as you wish, as long as you attribute them to their authors, and as long as your modifications have a Creative Commons licence.
+
+The advantages of R over other software packages are discussed [here](why-r-student.html). Many psychology degree programmes have switched to R over the last few years, here is a partial [list](rminrinpsy.html).
+
+## List of guides
+
 1. [Absolute Beginners' Guide to R](#beginners)
 
 2. [Putting R to Work](#rtowork)
 
 3. [A Very Brief Guide to R](#vbgtr)
 
-4. [Research Methods in Practice](#rmip)
+4. [Research Methods in Practice](#rmip) (work in progress)
 
 ## 1. Absolute Beginners' Guide to R
 <a name="beginners"></a>
@@ -35,8 +41,6 @@ A series of worksheets on using R for data analysis in psychology. No previous k
 * [Relationships, part 2](corr.html). Density plots. Scatter plots. Correlation co-efficient. Bayesian and traditional tests. 
 
 * [Cheat sheet](cheat-sheet.html). Everything we've covered so far, condensed. 
-
-* [Reasons to use R](why-r-student.html). Why this course uses R to analyse data.
 
 * [Other resources](resources.html). A list of other Creative Commons resources about using R. 
 
