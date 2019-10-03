@@ -15,6 +15,8 @@ The advantages of R over other software packages are discussed [here](why-r-stud
 
 4. [Research Methods in Practice](#rmip) (work in progress)
 
+5. [Going further with R](#gfwr) (work in progress)
+
 ## 1. Absolute Beginners' Guide to R
 <a name="beginners"></a>
 
@@ -102,6 +104,14 @@ The following materials are currently being developed, so on clicking these link
 - [One-factor ANOVA](anova1.html). 
 
 - [Two-factor ANOVA](anova2.html). 
+
+
+## 5. Going further with R
+<a name="gfwr"></a>
+
+The following materials are currently being developed, so on clicking these links, you may find just notes, or incomplete worksheets. 
+
+- [Other resources](gfwr-other.html): Links to external resources.
 
 ____
 
