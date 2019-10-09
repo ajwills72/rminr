@@ -243,9 +243,9 @@ mean in group female   mean in group male
 <p>Psychologists will generally record this probability in their articles. So, in this case, they would write<code>p = .0002</code> or, alternatively, <code>p &lt; .05</code>. The latter form, <code>p &lt; .05</code>, reads “the p value is less than .05”. More on this later.</p>
 <p>Psychologists usually also report at least two further numbers when reporting a t-test in their articles. The first is the t value, <code>t</code>. Our t value in this case is about 3.67 (we can safely ignore the minus sign).</p>
 <p>The second is the “degrees of freedom” (<code>df</code>). <em>Degress of freedom</em> are a way of talking about the size of the dataset used in the t test. You’ll see it isn’t quite the sample size, because we know our sample size was 10,000, yet the <code>df</code> are a bit lower than that: 9991.3.</p>
-<p>In summary, <code>t = 3.67</code>, <code>df = 9991.3</code>, and <code>p = .0002</code>. Psychologists have a standard shorthand for this, which is to write, <code>t(991.3) = 3.67, p = .0002</code>. You’ll see this sort of thing in most psychology articles. In more recent articles, you’ll also see a report of the effect size, in this case <code>d = .020</code>, as we calculated previously.</p>
+<p>In summary, <code>t = 3.67</code>, <code>df = 9991.3</code>, and <code>p = .0002</code>. Psychologists have a standard shorthand for this, which is to write, <code>t(9991.3) = 3.67, p = .0002</code>. You’ll see this sort of thing in most psychology articles. In more recent articles, you’ll also see a report of the effect size, in this case <code>d = .020</code>, as we calculated previously.</p>
 <p>The whole sentence would be something like:</p>
-<p><code>Men earned more than women, d = .20, t(991.3) = 3.67, p &lt; .05</code>.</p>
+<p><code>Men earned more than women, d = .20, t(9991.3) = 3.67, p &lt; .05</code>.</p>
 <p>There’s quite a bit of other output from our t-test that we haven’t discussed. If you’re curious about what the rest of the output means, take at look at <a href="more-on-t.html">more on t-tests</a>. In particular, there is a section on <a href="more-on-t.html#ci">confidence intervals</a>, which may come up in some of your other teaching.</p>
 </div>
 <div id="interpreting-a-t-test" class="section level3">
@@ -321,7 +321,7 @@ Bayes factor type: BFindepSample, JZS</code></pre>
 <div id="reporting-a-bayes-factor" class="section level3">
 <h3>Reporting a Bayes Factor</h3>
 <p>Psychologists love a “line in the sand”, so a convention has emerged that we believe there is a difference if the Bayes Factor is greater than 3, and believe there isn’t a difference if the Bayes Factor is less than 0.33. We sometimes describe these lines in the sand as “substantial evidence for a difference” (BF &gt; 3) and “substantial evidence for the null” (BF &lt; 0.33). In good, recent papers, you will see a Bayes Factor reported alongside the effect size and results of a traditional t-test. The full sentence might be something like:</p>
-<p><code>Men earned more than women, d = .20, BF = 18.25, t(991.3) = 3.67, p &lt; .05</code>.</p>
+<p><code>Men earned more than women, d = .20, BF = 18.25, t(9991.3) = 3.67, p &lt; .05</code>.</p>
 <p>Sometimes, you’ll see Bayes Factor written as BF<sub>10</sub>, which means the same thing as BF. You’ll also occasionally see BF<sub>01</sub>, which is the same idea but flipped, so BF<sub>01</sub> &lt; 1/3 means substantial evidence for a difference, and BF<sub>01</sub> &gt; 3 means substantial evidence for the null.</p>
 <div id="which-bayesian-t-test" class="section level4">
 <h4>Which Bayesian t-test?</h4>
