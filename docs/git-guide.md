@@ -1,3 +1,19 @@
+# Logs
+
+List of commits with comments:
+
+	git log
+
+List of commits with comments and which files were changed:
+
+	git log --stat
+
+# Pushing
+
+Pushing a local branch to a remote server
+
+	git push --set-upstream origin slpSUSTAINrc
+
 # Branching and merging
 
 Which branch am I on?
@@ -11,14 +27,18 @@ What branches does the remote have?
 Start tracking a remote branch and switch to it:
 
 	git checkout --track origin/2019-20
-	
+
+although the following shortcut will often work:
+
+	git checkout 2019-20
+
 Merge in another branch
 
 	git merge master
 
-Which branch am I on?
+Adding a local branch to a remote server
 
-	git status
+	git push origin slpATRIUM
 	
 # Handling a pull request
 
