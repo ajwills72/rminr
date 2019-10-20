@@ -5,10 +5,14 @@
 .Ruserdata
 ## More R stuff
 *.Rproj
+## Latex stuff
+*.aux
+*.log
+src/auto/*
 ## Temp files
 *~
 *#
 ## Stuff specific to structure of this site
-## src/*.html
+src/*.html
 src/*_cache
 src/*_files
