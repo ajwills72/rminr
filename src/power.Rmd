@@ -1,0 +1,236 @@
+---
+title: "How much data should I collect?"
+author: "Andy Wills"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+## DEVELOPERS: Uncomment one option, as appropriate
+
+## Show only commands.
+## knitr::opts_chunk$set(echo = TRUE, message = FALSE, results='hide', fig.keep = 'none', comment=NA)
+
+## Show commands and ouptut.
+knitr::opts_chunk$set(echo = TRUE, comment=NA)
+
+```
+
+Collecting data takes time and effort, both for the experimenter and for the participants. So, we don't want to collect more data than is necessary to answer our question. On the other hand, psychologists often don't collect enough data to support the conclusions they make. Recent estimates suggest that, on average, professional psychologists need to collect about [three times as much data](bakker2016) as they think they do in order to be confident about their conclusions. Most psychology students have the same bias. In this worksheet, I'll show you how to avoid that bias, by working out rationally how much data you need to collect.
+
+## Importance of effect size
+
+The amount of data you need to collect depends on the _effect size_ you expect to observe. [Previously](group-differences.html), you learned that effect size measures how big the difference between two groups is, relative to the amount of variability within each group. You worked out that the gender pay gap in the U.S. is several thousand dollars a year, and that the effect size is small, because both men and women vary a lot in how much they earn. The variability of incomes in the U.S. is high because there are a wide range of incomes above and below the mean.
+
+Effect size is measured by Cohen's _d_. If you have an effect size of 0.5, this means that the difference between the group means is half the standard deviation of the groups. Standard deviation is a measure of variability. 
+
+### Exercise 1
+
+This first exercise uses techniques you learned in the [previously](README.html#beginners), in order to revise concepts you'll need for this course. If you need further revision, click on the links provided below.
+
+The data you'll be analyzing are an example of the sort of results you might get if you ran an experiment on the [production effect](https://uwaterloo.ca/memory-attention-cognition-lab/sites/ca.memory-attention-cognition-lab/files/uploads/files/pbr2011.pdf) in memory. In this case, the experiment looks at whether people remember words better if they read them silently, or if someone else reads the words out loud to them. Some participants read silently, others had the words read out loud to them.  They are later given a recognition test, where they have to pick out the words they heard or read from a list that contains both old and new words.
+
+Here are the steps of this exercise
+
+1. Download the [data](production.csv) for the production effect.
+
+2. Start a new RStudio [project](using-projects.html#create).
+
+3. [Upload](entering-data-by-hand.html#upload) the production effect data to that project. 
+
+4. [Load](exploring-incomes.html#package) the data into a dataframe.
+
+5. Inspect the data by clicking on its name in the _Environment_ tab. You will see there are three columns, named `subj`, `cond`, and `phit`. The `subj` column is an anonymous ID number for each participant. The `cond` column indicates which of the two conditions of the experiment the participant was in. The `phit` column gives the probability of a 'hit'. A 'hit', in general terms, is a measure of how good that participant's memory was (bigger is better). Specifically, 'hits' are those cases where a word that person had heard or read was picked out correctly by them in the recognition test.
+
+6. Calculate the [mean probability of a hit for each group](group-differences.html#group).
+
+7. Look at the variability in each group using a [density plot](group-differences.html#group-density).
+
+8. Calculate the [effect size](group-differences.html#effsize).
+
+9. Calculate the evidence for the two groups being different using a [Bayes Factor](evidence.html#bf) and a traditional [t-test](evidence.html#bs-ttest)
+
+Here's what your results should look like:
+
+```{r effsize, echo=FALSE}
+library(tidyverse)
+library(effsize)
+library(BayesFactor, quietly = TRUE)
+prod <- read_csv("production.csv")
+prod %>% group_by(cond) %>% summarise(mean(phit))
+prod %>% ggplot(aes(phit, colour=factor(cond))) + geom_density(aes(y=..scaled..)) 
+cohen.d(prod$phit ~ prod$cond)
+ttestBF(formula = phit ~ cond, data = data.frame(prod))
+t.test(prod$phit ~ prod$cond)
+```
+
+In summary, this particular experiment has a _small_ effect size (d = 0.42). The evidence for a difference, and for the absence of a difference, is weak - the Bayes Factor is close to 1. The p-value from the traditional t-test is greater than .05, meaning that psychologists would be skeptical that you had observed a real difference.
+
+## Determining your sample size
+
+Having revised some key concepts, let's return to the main point for this worksheet --- working out how many people you should test. We going to do this using the command `pwr.t.test` from the `pwr` package (you you'll need to `library(pwr)` before you use it). The command looks like this:
+
+`pwr.t.test(type = "two.sample", d = X1, alternative = X2, sig.level = X3, power = X4)`
+
+The first part, `type = "two.sample"` just says that we have two groups here -- one group of people in the 'silent' condition, and another in the 'other' condition.
+
+In order to work out how many people we need to test, we need to replace each of the `X` in the above with something else. Here's how to work out what to replace them with:
+
+### X1. Decide on an expected effect size
+
+The smaller the effect size you expect to observe, the more data you need to collect to be sure of observing it. But what effect size should you expect? We know that the average (median) effect size in psychology is around `d = 0.5`, see [Bakker et al., 2012](url). So, if we've nothing else to go on, we assume an effect size of 0.5. 
+
+However, we can often do better than this. Many psychologists now publish their effect sizes, so a better choice is to find a study close to what you plan to do, and base your expected effect size on this. Even if the author does not report an effect size, you can often calculate it from other numbers in the article. ADD SUPPL worksheet on this.
+
+In summary, upi estimate your expected effect size from previous work. Or, if that's not possible, use `d=0.5`.
+
+### X2. Do you expect the effect to be in a particular direction?
+
+If you've based your effect size on a previous study, you're also assuming that the effect will be in the same direction as the previous study. So, for example, if that previous study found 'other' was better than 'silent', you assume you'll find that, too. If you expect a particular direction, you set `alternative = "greater"` (why not less?). If there's no previous relevant work, you set `alternative = "two.sided"`.
+
+### X3. How much evidence for a difference do you want?
+
+The more sure you want to be there is (or isn't) a difference between your two conditions (e.g. 'other' and 'silent'), the more data you need to collect. 
+
+Ideally, we'd use a Bayes Factor here, and say something like "we want the Bayes Factor to be at least 3". We can do this in R, but it's a bit too complicated for this intermediate-level course. So, for convenience, we're going to use a p-value instead. Traditionally, psychologists have accepted p < .05 as sufficient evidence for a difference, and we'll adopt that same tradition here (ALTHOUGH SEE THIS SUPPL ARGUMENT THAT THIS IS TOO LENINENT).
+
+In summary, set `sig.level=.05`.
+
+### X4. How sure do you want to be you'll find the effect?
+
+Assuming the effect exists then, if you collect enough data, you'll find it. The more data you collect, the more likely you are to find it. So, how sure do you want to be that you'll find it, if it exists?
+
+Statistical `power` is a number that ranges from zero to one, and indicates how sure you want to be. Unless you literally test the whole population of people you're interested in, you can never be completey sure. In other words, `power` is only very rarely 1. In psychology, we traditionally accept `power = .8` - "80% power" - as being sufficiently sure. If a study has 80% power, that's generally considered good enough to draw conclusions from. 
+
+Note that 80% power does not mean you have an 80% chance of getting a 'significant' p-value (`p < .05`) . This will also depend on whether the effect actually exists and, if it does, how accurate your estimate of the effect size was. 
+
+In summary, set `power = .8`.
+
+### Exercise 2
+
+Use `pwr.t.test` to work out how many people per group you need to test for 80% power to detect the median effect size in psychology, assuming a standard significance level, and that you do not know which direction the effect will be in.
+
+If you get it right, your result should look like this:
+
+```{r pwr2, echo=FALSE}
+library(pwr)
+pwr.t.test(power = .8, d = .5, type = "two.sample", 
+alternative = "two.sided", sig.level = .05)
+```
+
+So, to the nearest whole person, you need 64 people per group (so, 128 people in total) to stand a good chance of finding a typically-sized effect, if it exists. This is about three times as much data as experiment psychologists have traditionally collected.
+
+### Exercise 3
+
+Traditionally, psychologists use about 20 participant per group. Calculate the power of such an experiment, assuming the same typical effect size of 0.5. You can do this by removing `power` from the command and adding `n = 20`. The `pwr.t.test` command will return to you whichever single figure you didn't give it.
+
+Your answer should look like this:
+
+```{r pwr3, echo=FALSE}
+pwr.t.test(n = 20, d = .5, type = "two.sample",
+alternative = "two.sided", sig.level = .05)
+```
+
+As you can see, statistical power in traditional psychology experiments is very low ... in this case, around 33%. This means that very often, we'll end up without good evidence there is a difference between groups, even though the groups are in fact different.
+
+## Power of within-subject designs
+
+So far, this is all looking a bit bad for psychology. Effect sizes are typically only medium (`d=.5`) and to test for a difference between groups with that kind of effect size, we should test 64 people per group. That's a lot of testing, and most psychology studies don't traditionally hit that target -- 20 per group is much more typical.
+
+How can we make things better? One really good option is to use a _within-subjects_ design. The production-effect experiment in the example above was a _between-subjects_ design - some people read words silently while others had them read out loud to them. To turn this into a _within-subjects_ design, we could give **each person** some words to read silently, and others that were read aloud to them. As long as we designed the experiment well, taking into account things like [order effects](crit-think), we could still test for a production effect.
+
+The reason for switching to a within-subjects design is that it's much more efficient. In other words, for a given effect size, you can reach 80% power with many fewer participants, as we'll see below.
+
+### Exercise 4
+
+The `pwr.t.test` command lets us work out how many people we need for a within-subjects design, too. Just set `type="paired"` and use as before. Here's the answer you should get:
+
+```{r pwr4}
+pwr.t.test(power = .8, d = .5, type = "paired", 
+alternative = "two.sided", sig.level = .05)
+```
+
+In other words, you only need test 34 people _in total_ in a within-subjects design, relative to the 128 people you'd need to test in a _between-subjects_ design.
+
+This comparison assumes the effect size would be the same in a within-subjects design, as in a between-subjects design. This is not necessarily the case. Nevertheless, the comparison shows that, for any given effect size, within-subject designs get the same power with fewer participants. This is sometimes described as within-subject designs being more _efficient_ than between-subject designs. 
+
+## Other ways to improve power
+
+Whether you use a within- or a between-subjects design, another really good way to improve the statistical power of your experiment is to increase the effect size of your design. Professional psychologists are often surprised how much difference this makes. The relationship between effect size and sample size for 80% power is not a straight line. The required sample size drops off very rapidly as effect size increases, as showin in the graph below:
+
+```{r pwr 5}
+pwr.n <- function(d, type) {
+    result <- pwr.t.test(power = .8, d = d, sig.level = .05, type = type, alternative="two.sided")
+    ceiling(result$n)
+}
+
+set <- seq(.5, 1, .1)
+bs.grph <- NULL
+for(d in set) {
+    bs.grph <- c(bs.grph, pwr.n(d, "two.sample") * 2)
+}
+bs.graph <- tibble(d = set, N = bs.grph, type = "Between")
+
+ws.grph <- NULL
+for(d in set) {
+    ws.grph <- c(ws.grph, pwr.n(d, "paired"))
+}
+ws.graph <- tibble(d = set, N = ws.grph, type = "Within")
+
+power.graph <- bind_rows(bs.graph, ws.graph)
+
+power.graph %>% ggplot(aes(x = d, y = N, color = factor(type))) + geom_line() + geom_point()
+```
+
+### Extension exercise
+
+If you're feeling confidentf, and have some time, try to recreate the above graph using R. 
+
+### Too lenient?
+
+but this turns out to be weak evidence for a difference (Wetzels et al., 2011, Figure 3). A better choice is `p = .01`; where p = .01, Bayes Factors tend to be between about 3 and 5.
+
+ Also, like p-values, the traditional value for statistical power is probably
+
+### Cohen's d when there isn't one
+
+D from t and df:
+
+d = (t*2) / (sqrt(df))
+
+https://www.easycalculation.com/formulas/effect-size-cohen-d.html
+
+### Within-subject effect size
+
+Some complexities:
+
+http://jakewestfall.org/blog/index.php/2016/03/25/five-different-cohens-d-statistics-for-within-subject-designs/
+
+### Further reading
+
+Problems in psychology with power and typical sample size etc:
+
+https://github.com/ajwills72/fix-replication-crisis/blob/master/slides/pu069.pdf
+
+General stuff on statistical power:
+
+[wikipedia](https://en.wikipedia.org/wiki/Power_(statistics))
+
+Better, Bayesian, ways to do power calcs
+
+[wikipedia](https://en.wikipedia.org/wiki/Predictive_probability_of_success)
+
+More R examples of power calcs
+
+[quick-R](https://www.statmethods.net/stats/power.html)
+
+Relation between p-value anf BF
+
+Wetzels et al. (2011) DOI: 10.1177/1745691611406923
+
+___
+
+
+
+This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0. 
+
+
