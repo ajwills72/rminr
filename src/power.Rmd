@@ -189,16 +189,6 @@ If you're feeling confidentf, and have some time, try to recreate the above grap
 
 but this turns out to be weak evidence for a difference (Wetzels et al., 2011, Figure 3). A better choice is `p = .01`; where p = .01, Bayes Factors tend to be between about 3 and 5.
 
- Also, like p-values, the traditional value for statistical power is probably
-
-### Cohen's d when there isn't one
-
-D from t and df:
-
-d = (t*2) / (sqrt(df))
-
-https://www.easycalculation.com/formulas/effect-size-cohen-d.html
-
 ### Within-subject effect size
 
 Some complexities:
@@ -226,6 +216,20 @@ More R examples of power calcs
 Relation between p-value anf BF
 
 Wetzels et al. (2011) DOI: 10.1177/1745691611406923
+
+
+### Some notes on power calcs
+
+`vignette("pwr-vignette")` is explicit that a repeated-measures calculation of power with the `pwr.t.test` function uses mean difference divided by the standard deviation of the differences. This is sometimes known as dz (Eq 2.3.5, Cohen, 1988). 
+
+This is not what is calculated with `cohen.d(paired=TRUE)`. The documentation is not particularly clear, and comments in source code seem wrong/contradictory, but inspection of the source code itself suggest that it just gives you standard Cohen's d, with some rounding error. Basically, it seems to calculate dz and also r, and then use the calculations on p.48-49 of Cohen (1988) to convert dz to d. Pretty weird -- why not just calculate d in the first place?
+
+Fortunately, dz is easily calculated if you have the t statistic from a repeated-measures test (tr). It's just:
+
+`dz <- tr / sqrt(n)`
+
+where `n` is the number of participants. 
+
 
 ___
 
