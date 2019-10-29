@@ -93,15 +93,13 @@ The _Absolute Beginners' Guide to R_ and _Putting R to Work_ provide, between th
 
 
 ## 4. Research Methods in Practice
-<a name="rtowork"></a>
+<a name="rmip"></a>
 
 These are intermediate-level materials, designed to follow on from _An Absolute Beginners' Guide to R_ and to provide statistical methods for conducting realistic, high-quality studies in psychology. They are aimed at a second-year undergraduate audience.
 
 The following materials are under development. Comments welcome:
 
-- [Statistical power](power.html) 
-
-- [Estimating effect size for power calculations](effsize_from_papers.html)
+- [Statistical power](power.html), with additional advice on [estimating effect size](effsize_from_papers.html).
 
 The following materials are in the planning stage. So, on clicking these links, you may find just notes, or incomplete worksheets. 
 

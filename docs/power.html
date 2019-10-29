@@ -379,7 +379,7 @@ summary {
 <p>Effect size is measured by Cohen’s <em>d</em>. If you have an effect size of 0.5, this means that the difference between the group means is half the standard deviation of the groups. Standard deviation is a measure of variability.</p>
 <div id="exercise-1-revision" class="section level3">
 <h3>Exercise 1: Revision</h3>
-<p>This first exercise uses techniques you learned <a href="README.html#beginners">previously</a>, in order to revise concepts you’ll need for the rest of this worksheet. If you need further revision, click on the links provided below.</p>
+<p>This first exercise uses techniques you learned previously, in order to revise concepts you’ll need for the rest of this worksheet. If you need further revision, click on the links provided below.</p>
 <p>The data you’ll be analyzing are an example of the sort of results you might get if you ran an experiment on the <a href="https://uwaterloo.ca/memory-attention-cognition-lab/sites/ca.memory-attention-cognition-lab/files/uploads/files/pbr2011.pdf">production effect</a> in memory. In this case, the experiment looks at whether people remember words better if they read them silently, or if someone else reads the words out loud to them. Some participants read silently, others had the words read out loud to them. They are later given a recognition test, where they have to pick out the presented words from a list that contains both old and new words.</p>
 <p>Here are the steps of this exercise:</p>
 <ol style="list-style-type: decimal">
@@ -499,7 +499,7 @@ NOTE: n is number in *each* group</code></pre>
 <div id="within-subjects-effect-size" class="section level3">
 <h3>Within-subjects effect size</h3>
 <p>Before looking at the power of within-subjects designs, we have to decide how to calculate effect size for this kind of experiment. This is a surprisingly controversial question, with at least <a href="http://jakewestfall.org/blog/index.php/2016/03/25/five-different-cohens-d-statistics-for-within-subject-designs/">five different ways</a> currently in use! For the purposes of this worksheet, we can largely avoid this controversy, as <code>pwr.t.test</code> requires within-subject effect size to be calculated in a particular way, so we have to calculate it this way in order to work out how many people we need to test.</p>
-<p>The <code>pwr.t.test</code> command insists we use the effect size measure known as Cohen’s <span class="math inline">\(d_{z}\)</span> for within-subject designs. This is the mean difference between conditions, divided by the standard deviation of the <em>differences</em>. The <code>cohen.d</code> command we used earlier does not calculate this sort of within-subjects effect size. If you need to calculate Cohen’s <span class="math inline">\(d_{z}\)</span>, see the <a href="effsize_from_papers.Rmd">estimating effect sizes</a> worksheet</p>
+<p>The <code>pwr.t.test</code> command insists we use the effect size measure known as Cohen’s <span class="math inline">\(d_{z}\)</span> for within-subject designs. This is the mean difference between conditions, divided by the standard deviation of the <em>differences</em>. The <code>cohen.d</code> command we used earlier does not calculate this sort of within-subjects effect size. If you need to calculate Cohen’s <span class="math inline">\(d_{z}\)</span>, see the <a href="effsize_from_papers.html">estimating effect sizes</a> worksheet</p>
 </div>
 <div id="exercise-4-estimating-within-subjects-sample-size" class="section level3">
 <h3>Exercise 4: Estimating within-subjects sample size</h3>

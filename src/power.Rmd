@@ -27,7 +27,7 @@ Effect size is measured by Cohen's _d_. If you have an effect size of 0.5, this 
 
 ### Exercise 1: Revision
 
-This first exercise uses techniques you learned [previously](README.html#beginners), in order to revise concepts you'll need for the rest of this worksheet. If you need further revision, click on the links provided below.
+This first exercise uses techniques you learned previously, in order to revise concepts you'll need for the rest of this worksheet. If you need further revision, click on the links provided below.
 
 The data you'll be analyzing are an example of the sort of results you might get if you ran an experiment on the [production effect](https://uwaterloo.ca/memory-attention-cognition-lab/sites/ca.memory-attention-cognition-lab/files/uploads/files/pbr2011.pdf) in memory. In this case, the experiment looks at whether people remember words better if they read them silently, or if someone else reads the words out loud to them. Some participants read silently, others had the words read out loud to them.  They are later given a recognition test, where they have to pick out the presented words from a list that contains both old and new words.
 
@@ -148,7 +148,7 @@ The reason for switching to a within-subjects design is that it's much more effi
 
 Before looking at the power of within-subjects designs, we have to decide how to calculate effect size for this kind of experiment. This is a surprisingly controversial question, with at least [five different ways](http://jakewestfall.org/blog/index.php/2016/03/25/five-different-cohens-d-statistics-for-within-subject-designs/) currently in use! For the purposes of this worksheet, we can largely avoid this controversy, as `pwr.t.test` requires within-subject effect size to be calculated in a particular way, so we have to calculate it this way in order to work out how many people we need to test. 
 
-The `pwr.t.test` command insists we use the effect size measure known as Cohen's $d_{z}$ for within-subject designs. This is the mean difference between conditions, divided by the standard deviation of the _differences_. The `cohen.d` command we used earlier does not calculate this sort of within-subjects effect size. If you need to calculate Cohen's $d_{z}$, see the [estimating effect sizes](effsize_from_papers.Rmd) worksheet
+The `pwr.t.test` command insists we use the effect size measure known as Cohen's $d_{z}$ for within-subject designs. This is the mean difference between conditions, divided by the standard deviation of the _differences_. The `cohen.d` command we used earlier does not calculate this sort of within-subjects effect size. If you need to calculate Cohen's $d_{z}$, see the [estimating effect sizes](effsize_from_papers.html) worksheet
 
 ### Exercise 4: Estimating within-subjects sample size
 
