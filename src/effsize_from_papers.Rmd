@@ -1,0 +1,109 @@
+---
+title: "Estimating effect size for power calculations"
+author: "Andy Wills"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+## DEVELOPERS: Uncomment one option, as appropriate
+
+## Show only commands.
+## knitr::opts_chunk$set(echo = TRUE, message = FALSE, results='hide', fig.keep = 'none', comment=NA)
+
+## Show commands and putout.
+knitr::opts_chunk$set(echo = TRUE, comment=NA)
+library(tidyverse)
+prod <- read_csv("production.csv")
+silent <- prod %>% filter(cond == "silent")
+silent <- silent$phit
+other <- prod %>% filter(cond == "other")
+other <- other$phit
+
+```
+
+In order to work out how many people you need to test, you need to estimate the likely effect size. If you really have nothing else to go on, assume an effect size of 0.5. However, you can normally do better than that, by looking at previous experiments you, or other people, have run. How you do this depends on whether the previous experiment is a between-subjects design or a within-subjects design:
+
+# Between-subjects designs
+
+To estimate Cohen's d from your own data (or from published raw data), pick the study that is closest in design to the one you want to run. Then, you can simply use the `cohen.d` command on that data to estimate Cohen's d for your study. This calculation was covered in the main worksheet.
+
+If the closest previous study is one published in a journal article, and those authors have not published their data, then you'll have to estimate effect size from what they've written in their paper. 
+
+The best-case scenario is that they reported Cohen's d, in which case, you just use that number. However, people don't always report Cohen's d. What you can do in these cases is calculate Cohen's d from the information they have given. Normally the easiest way to do this is to take the t value from the appropriate t-test. So, for example, if they report "group A scored higher than group B, t(32) = 2.45, p < .05", then the value you need is 2.45. You also need to know $n$, which is the number of participants _per group_. This is normally reported. You can then use this piece of R code to work out Cohen's d:
+
+```{r dest}
+t <- 2.45
+n <- 15
+d <- t * sqrt(2/n)
+d
+```
+
+# Within-subjects designs
+
+To estimate Cohen's $d_{z}$ from your own data (or published data), first calculate the appropriate within-subjects t-test, and record the t statistic:
+
+```{r cohendz}
+tresult <- t.test(silent, other, paired = TRUE)
+tresult
+t <- abs(tresult$statistic)
+t
+```
+
+Next, use this t-statistic to work out Cohen's $d_{z}$ in the following way, where $n$ is the number of participants tested
+
+```{r cohendz2}
+n <- 30
+dz <- t / sqrt(n)
+names(dz) <- "dz"
+dz
+```
+
+Do **not** use `cohen.d(paired=TRUE)` from the `effsize` package (see end of this worksheet for details).
+
+If you're looking at someone else's work, and don't have the raw data, you'll instead have to make use of what is reported in the paper. Sometimes Cohen's d will be reported, but generally speaking, you should **not** use this value. As covered in the main worksheet, there are at least five ways of calculating a within-subjects effect size, and most papers are not clear about which one they are using. If the paper specifically reports $d_{z}$, it's fine to use that. Otherwise, find the appropriate within-subjects t-test, and use the t value and sample size to calculate $d_{z}$, as shown above. 
+
+# From between-subjects to within-subjects designs
+
+As we covered in the main worksheet, within-subjects designs are generally more _efficient_, i.e. they achieve good power with fewer participants than between-subjects designs. So, if you're following up a between-subjects design, but want to do it within-subjects to be more efficient, how should you estimate the effect size?
+
+The first thing to say is that all of the following assumes that moving from a between- to a within-subject design does not change the behaviour under test. This may not always be the case. For example, a person doing two memory tests in a row may suffer from proactive interference, reducing accuracy and increasing variability. Or a person doing two learning tasks in a row may exhibit a form of 'learning to learn' effect where the second tasks is made easier by having experienced the first one. 
+
+Anyway, if one makes the assumption that changing to a within-subjects design will not substantially change peoples' behaviour, then one approach is to estimate $d_{z}$ as $d / \sqrt{2}$. So, take the effect size for the between-subjects design, divide by the square root of 2 (about 1.41), and use that as your estimated effect size for your within-subjects design. You'll probably still find that you need fewer people for adequate power than in a between-subject design (normally, about half as many). 
+
+Using $d_{z} = d / \sqrt{2}$ will be a conservative estimate (i.e. the effect size you end up with in your experiment will probably be larger than your estimate). How good your estimate is will depend on how well correlated the two conditions of your within-subjects design turn out to be. One of the reasons within-subjects designs tend to be efficient is that peoples' responses in the two conditions tend to correlate positively with each other. So, for example, if your memory is pretty good when you read words silently, it's also probably pretty good when you have those words read out to you. And, if your memory for read-out words is poor, your memory for silently-read words is probably poor too. In other words, some people's memory is just overall better than others, so performances on different memory tasks tend to correlate positively with each other.
+
+The impact on effect size of this correlation between conditions can be large. As we previously covered, correlation is measured by a correlation co-efficient, $r$. If $r$ = .8, then $d_{z} = 1.58d$. So, rather than expecting a lower effect size as in the previous example, we expect moving to a within-subjects design to substantially increase our effect size (as measured by $d_{z}$). 
+
+So, if possible, try to estimate how well correlated the two conditions of your within-subjects design are likely to be. Normally, the best you can do here is search the literature for studies of correlation between tests. Or, find published data sets from which such correlations can be calculated. When you have an estimate of $r$, you can use it to estimate $d_{z}$ from $d$ with the equation $d_{z} = d / \sqrt{2(1 - r)}$. 
+
+Below is a more mathematical treatment of this issue, specifically a derivation of the equations above. If you're happy to take them on trust, you can stop reading here.
+
+### Technical note
+
+There is a lawful relation between the standard deviations of the differences, and the standard deviations of each group. Specifically:
+
+$\sigma_{z} = \sigma_{x-y} = \sqrt{\sigma_{x}^2 + \sigma_{y}^2 - 2 r \sigma_{x} \sigma_{y}}$
+
+ see e.g. ([Cohen, 1988](https://www.google.com/search?tbm=bks&q=cohen+1988), p. 48). Making the simplifying assumption that $\sigma_{x} = \sigma_{y} = \sigma$, i.e. that the two groups have equal variance, we get
+
+$\sigma_{z} = \sigma \sqrt{2 (1 - r)}$
+
+and thus
+
+$d_{z} = \frac{d}{\sqrt{2 (1 -r)}}$
+
+which is the equation underlying all conversions in this section. The advice to use
+$d_{z} = d / \sqrt{2}$ when $r$ is unknown is based on the assumption that the worst the correlation is likely to be is zero (i.e. that negative correlations between the two measures are unlikely). Assuming $r=0$ is highly conservative, given this assumption. In practice, correlations between something like two slightly different memory tests (e.g. a change of modality) are often [close to 1](http://arthurjensen.net/wp-content/uploads/2014/06/Individual-Differences-in-Visual-and-Auditory-Memory-1971-by-Arthur-Robert-Jensen.pdf). This is why within-subject designs tend to be so efficient. 
+
+### Some notes on the calculation of within-subject effect size in various R packages
+
+As covered in the main worksheet, there are a lot of different ways of calculating a within-subjects effect size, and different packages in R calculate it in different ways. 
+The command `pwr.t.test` in the `pwr` package (version 1.2-2) says it uses $d_{z}$, i.e. the mean difference divided by the standard deviation of the differences, see `vignette("pwr-vignette")`. This is not what is calculated with `cohen.d(paired=TRUE)` in the `effsize` package (version 0.7.6). The documentation for `cohen.d` is not particularly clear but inspection of the source code suggests that it just gives you standard Cohen's d. Basically, it seems to calculate $d_{z}$ and also $r$, and then use the calculations on p.48-49 of Cohen (1988) to convert $d_{z}$ to $d$. I'm not sure why one would do that, but it's not the same value as used by `pwr.t.test`. 
+
+
+___
+
+
+This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0. 
+
+
