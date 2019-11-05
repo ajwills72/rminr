@@ -1,5 +1,5 @@
 ---
-title: "Estimating effect size for power calculations"
+title: "More on statistical power"
 author: "Andy Wills"
 output: html_document
 ---
@@ -21,9 +21,53 @@ other <- other$phit
 
 ```
 
-In order to work out how many people you need to test, you need to estimate the likely effect size. If you really have nothing else to go on, assume an effect size of 0.5. However, you can normally do better than that, by looking at previous experiments you, or other people, have run. How you do this depends on whether the previous experiment is a between-subjects design or a within-subjects design:
+In this worksheet, we cover a number of issues concerning statistical power in more detail:
 
-# Between-subjects designs
+- [Statistical power and the replication crisis](#replication)
+
+- [A better standard for statistical power](#96power)
+
+- [Improving effect size](#bigger)
+
+- [Estimating effect size from previous work](#estimate)
+
+
+<a name="replication"></a>
+
+## Statistical power and the replication crisis
+
+We saw in the main worksheet that most published psychology experiments are underpowered - they have  around 30% power. So, we'd expect most experiments not to work (i.e. to not produce a significant difference).  Yet around [95% of published papers in psychology report significant results](http://marjanbakker.eu/Bakker%20Van%20Dijk%20Wicherts%202012.pdf). How can that be? 
+
+Two strategies on the part of researchers explain this difference. The first is publication bias -- they run a lot of studies and publish only those that report a significant difference. The second is to use some questionable practices in data analysis, like trying a few different analyses and reporting only the analysis that was significant. Or testing for significance after every ten participants and stopping when they found a difference. 
+
+To be clear, these are all really bad ideas! These kinds of strategies, when combined with low statistical power, are likely a major cause of the replication crisis in psychology (i.e. that around half of all published results don't replicate). The solutions include running adequately powered studies, and using Bayesian statistics to support publication of null results.
+
+<a name="96power"></a>
+
+## A better standard for statistical power
+
+Earlier, we said that we'd accept $p < .05$ as our standard of evidence for a difference. This is the traditional choice in psychology, but it's also the wrong choice, as setting our standard at $p < .05$ only provides rather [weak evidence](http://ejwagenmakers.com/2011/WetzelsEtAl2011_855.pdf) for a difference. A better choice is $p < .01$. Where $p = .01$, Bayes Factors tend to be between about 3 and 5. 
+
+So, this is an argument for using `sig.level = .01` to estimate how many people you need to test. But this can also have an effect on what level of `power` one should choose.
+This is because `sig.level` and `1-power` represent the importance you place on the two errors you could make here: saying there is a difference when there isn't one (`sig.level`), and saying there isn't a difference when there is (`1 - power`). Having traditional criteria of 80% power and $p < .05$ means we think the first error (a false positive) is four times  ($.2/.05$) as important to avoid as the second (a false negative). To keep that same ratio with `sig.level = .01`, we'd have to set `power = .96`. This is certainly possible, but increases the required sample size substantially. For example, where a within-subject design has $d_{z} = 0.5$, these choices of significance level and power raise the required sample size from 34 to 79.
+
+In summary, `power = 0.8, sig.level = .05` is the current convention and hence probably good enough to get your work published in most journals, at the moment. If, however, you want to keep ahead of steadily rising expectations in this area, and if you have the resources available, then `power = .96, sig.level = .01` is a better choice.
+
+<a name="bigger"></a>
+
+## Improving effect size
+
+Statistical power can be improved by increasing sample size. However, if can also be improved by increasing effect size. Often, the latter option is the more efficient one. 
+
+You can increase effect size either by increasing the mean difference, or by decreasing the variability, or both. In experiments, increasing the mean difference is often as easy as increasing the size of your manipulation. So, for example, if you want to look at the effects of time pressure on decision accuracy, comparing 1 second with 5 seconds is likely to give you a bigger effect size than comparing 1 second with 1.1 seconds. Decreasing variability can be achieved in a number of ways, and what's practical will depend on your experiment. One of the things that often works is to make sure you collect a lot of data from each participant. For example, if your dependent measure is reaction time, collecting 50 responses from each participant will generally give you a better estimate of their mean reaction time than collecting just one response.
+
+<a name="estimate"></a>
+
+## Estimating effect size from previous work
+
+In order to work out how many people you need to test, you need to estimate the likely effect size of what you want to observe. If you really have nothing else to go on, assume an effect size of 0.5. However, you can normally do better than that, by looking at previous experiments you, or other people, have run. How you do this depends on whether the previous experiment is a between-subjects design or a within-subjects design:
+
+### Between-subjects designs
 
 To estimate Cohen's d from your own data (or from published raw data), pick the study that is closest in design to the one you want to run. Then, you can simply use the `cohen.d` command on that data to estimate Cohen's d for your study. This calculation was covered in the main worksheet.
 
@@ -38,7 +82,7 @@ d <- t * sqrt(2/n)
 d
 ```
 
-# Within-subjects designs
+### Within-subjects designs
 
 To estimate Cohen's $d_{z}$ from your own data (or published data), first calculate the appropriate within-subjects t-test, and record the t statistic:
 
@@ -58,27 +102,30 @@ names(dz) <- "dz"
 dz
 ```
 
-Do **not** use `cohen.d(paired=TRUE)` from the `effsize` package (see end of this worksheet for details).
+Do **not** use `cohen.d(paired=TRUE)` from the `effsize` package.
 
 If you're looking at someone else's work, and don't have the raw data, you'll instead have to make use of what is reported in the paper. Sometimes Cohen's d will be reported, but generally speaking, you should **not** use this value. As covered in the main worksheet, there are at least five ways of calculating a within-subjects effect size, and most papers are not clear about which one they are using. If the paper specifically reports $d_{z}$, it's fine to use that. Otherwise, find the appropriate within-subjects t-test, and use the t value and sample size to calculate $d_{z}$, as shown above. 
 
-# From between-subjects to within-subjects designs
+
+### From between-subjects to within-subjects designs
 
 As we covered in the main worksheet, within-subjects designs are generally more _efficient_, i.e. they achieve good power with fewer participants than between-subjects designs. So, if you're following up a between-subjects design, but want to do it within-subjects to be more efficient, how should you estimate the effect size?
 
-The first thing to say is that all of the following assumes that moving from a between- to a within-subject design does not change the behaviour under test. This may not always be the case. For example, a person doing two memory tests in a row may suffer from proactive interference, reducing accuracy and increasing variability. Or a person doing two learning tasks in a row may exhibit a form of 'learning to learn' effect where the second tasks is made easier by having experienced the first one. 
+The first thing to say is that all of the following assumes that moving from a between- to a within-subject design does not change the behaviour under test. This may not always be the case. For example, a person doing two memory tests in a row may suffer from proactive interference, reducing accuracy and increasing variability. Or a person doing two learning tasks in a row may exhibit a form of 'learning to learn' effect where the second task is made easier by having experienced the first one. 
 
 Anyway, if one makes the assumption that changing to a within-subjects design will not substantially change peoples' behaviour, then one approach is to estimate $d_{z}$ as $d / \sqrt{2}$. So, take the effect size for the between-subjects design, divide by the square root of 2 (about 1.41), and use that as your estimated effect size for your within-subjects design. You'll probably still find that you need fewer people for adequate power than in a between-subject design (normally, about half as many). 
 
-Using $d_{z} = d / \sqrt{2}$ will be a conservative estimate (i.e. the effect size you end up with in your experiment will probably be larger than your estimate). How good your estimate is will depend on how well correlated the two conditions of your within-subjects design turn out to be. One of the reasons within-subjects designs tend to be efficient is that peoples' responses in the two conditions tend to correlate positively with each other. So, for example, if your memory is pretty good when you read words silently, it's also probably pretty good when you have those words read out to you. And, if your memory for read-out words is poor, your memory for silently-read words is probably poor too. In other words, some people's memory is just overall better than others, so performances on different memory tasks tend to correlate positively with each other.
+Using $d_{z} = d / \sqrt{2}$ will be a conservative estimate (i.e. the effect size you end up with in your experiment will probably be larger than your estimate). How good your estimate is will depend on how well correlated the two conditions of your within-subjects design turn out to be. One of the reasons within-subjects designs tend to be efficient is that peoples' responses in the two conditions tend to correlate positively with each other. So, for example, if your memory is pretty good when you read words silently, it's also probably pretty good when you have those words read out to you. And, if your memory for read-out words is poor, your memory for silently-read words is probably poor too. In other words, some people's memory is just overall better than others, so performances on different memory tasks tend to correlate positively with each other. 
 
 The impact on effect size of this correlation between conditions can be large. As we previously covered, correlation is measured by a correlation co-efficient, $r$. If $r$ = .8, then $d_{z} = 1.58d$. So, rather than expecting a lower effect size as in the previous example, we expect moving to a within-subjects design to substantially increase our effect size (as measured by $d_{z}$). 
 
 So, if possible, try to estimate how well correlated the two conditions of your within-subjects design are likely to be. Normally, the best you can do here is search the literature for studies of correlation between tests. Or, find published data sets from which such correlations can be calculated. When you have an estimate of $r$, you can use it to estimate $d_{z}$ from $d$ with the equation $d_{z} = d / \sqrt{2(1 - r)}$. 
 
+In practice, correlations between something like two slightly different memory tests (e.g. a change of modality) are often [close to 1](http://arthurjensen.net/wp-content/uploads/2014/06/Individual-Differences-in-Visual-and-Auditory-Memory-1971-by-Arthur-Robert-Jensen.pdf). This is why within-subject designs tend to be so efficient. 
+
 Below is a more mathematical treatment of this issue, specifically a derivation of the equations above. If you're happy to take them on trust, you can stop reading here.
 
-### Technical note
+#### Technical note
 
 There is a lawful relation between the standard deviations of the differences, and the standard deviations of each group. Specifically:
 
@@ -93,16 +140,14 @@ and thus
 $d_{z} = \frac{d}{\sqrt{2 (1 -r)}}$
 
 which is the equation underlying all conversions in this section. The advice to use
-$d_{z} = d / \sqrt{2}$ when $r$ is unknown is based on the assumption that the worst the correlation is likely to be is zero (i.e. that negative correlations between the two measures are unlikely). Assuming $r=0$ is highly conservative, given this assumption. In practice, correlations between something like two slightly different memory tests (e.g. a change of modality) are often [close to 1](http://arthurjensen.net/wp-content/uploads/2014/06/Individual-Differences-in-Visual-and-Auditory-Memory-1971-by-Arthur-Robert-Jensen.pdf). This is why within-subject designs tend to be so efficient. 
+$d_{z} = d / \sqrt{2}$ when $r$ is unknown is based on the assumption that the worst the correlation is likely to be is zero (i.e. that negative correlations between the two measures are unlikely). Assuming $r=0$ is highly conservative, given this assumption. 
 
-### Some notes on the calculation of within-subject effect size in various R packages
+#### Some notes on the calculation of within-subject effect size in various R packages
 
 As covered in the main worksheet, there are a lot of different ways of calculating a within-subjects effect size, and different packages in R calculate it in different ways. 
 The command `pwr.t.test` in the `pwr` package (version 1.2-2) says it uses $d_{z}$, i.e. the mean difference divided by the standard deviation of the differences, see `vignette("pwr-vignette")`. This is not what is calculated with `cohen.d(paired=TRUE)` in the `effsize` package (version 0.7.6). The documentation for `cohen.d` is not particularly clear but inspection of the source code suggests that it just gives you standard Cohen's d. Basically, it seems to calculate $d_{z}$ and also $r$, and then use the calculations on p.48-49 of Cohen (1988) to convert $d_{z}$ to $d$. I'm not sure why one would do that, but it's not the same value as used by `pwr.t.test`. 
 
-
 ___
-
 
 This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0. 
 

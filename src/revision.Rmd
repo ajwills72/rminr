@@ -1,0 +1,95 @@
+---
+title: "Revision"
+author: "Andy Wills"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+## DEVELOPERS: Uncomment one option, as appropriate
+
+## Show only commands.
+## knitr::opts_chunk$set(echo = TRUE, message = FALSE, results='hide', fig.keep = 'none', comment=NA)
+
+## Show commands and output.
+knitr::opts_chunk$set(echo = TRUE, comment=NA)
+
+```
+
+In this worksheet, you'll revise concepts you've already learned. We'll use these concepts in the next worksheet. 
+
+In this worksheet, we'll analyse some data on the [production effect](https://uwaterloo.ca/memory-attention-cognition-lab/sites/ca.memory-attention-cognition-lab/files/uploads/files/pbr2011.pdf) in memory. In this particular production-effect experiment, the experimenters examined whether people remember words better if they read them silently, or if someone else reads the words out loud to them. It was a between-subjects experiment; in other words, some participants read silently, while others had the words read out loud to them.  All participants  were later given a recognition test, where they had to pick out the presented words from a list that contained both old and new words. These data were computer-generated for the purposes of this exercise, but are similar to real data in this area.
+
+
+## Getting ready
+
+```{r load, echo=FALSE, message=FALSE}
+library(tidyverse)
+prod <- read_csv("production.csv")
+```
+
+First, you need to get the data and load it into Rstudio. Here's how:
+
+- Download the data - click [here](production.csv).
+
+- Start a new RStudio [project](using-projects.html#create) and open an [R script](using-projects.html#write) ready to record all your commands.
+
+- Use RStudio to [upload](entering-data-by-hand.html#upload) the production effect data to that project. 
+
+- [Load](exploring-incomes.html#package) the data into a dataframe.
+
+Now, take a look at the data by clicking on its name in the _Environment_ tab. You will see there are three columns, named `subj`, `cond`, and `phit`. The `subj` column is an anonymous ID number for each participant. The `cond` column indicates which of the two conditions of the experiment the participant was in. The `phit` column gives the probability of a 'hit'. This is a measure of how good that participant's memory was (bigger is better). 
+
+## Descriptive statistics
+
+Next, take a look at how much the groups (silent vs. other) differ from each other, and how much variability there is in each group. Specifically:
+
+- Calculate the [mean probability of a hit for each group](group-differences.html#group). The correct answers are:
+
+```{r desc, echo=FALSE, message=FALSE}
+prod %>% group_by(cond) %>% summarise(mean(phit))
+```
+
+- Look at the variability in each group, and group overlap, using a [density plot](group-differences.html#group-density). It should look like this:
+
+```{r graph, echo=FALSE, message=FALSE}
+prod %>% ggplot(aes(phit, colour=factor(cond))) + geom_density(aes(y=..scaled..)) 
+```
+
+## Effect size
+
+[Previously](group-differences.html), you learned that effect size measures how big the difference between two groups is, relative to the amount of variability within each group. For example, you worked out that the gender pay gap in the U.S. is several thousand dollars a year, and that the effect size is small, because both men and women vary a lot in how much they earn. The variability of incomes in the U.S. is high because there are a wide range of incomes above and below the mean.
+
+Calculate the [effect size](group-differences.html#effsize) for the current memory experiment. If you get it right, your output should look like this:
+
+```{r effsize, echo=FALSE, message=FALSE}
+library(effsize)
+cohen.d(prod$phit ~ prod$cond)
+```
+
+Effect size measures how big the difference between the groups is, relative to the amount of variability in each group. Specifically, effect size is the difference in the means, divided by the standard deviation (a measure of variability). An effect size of 0.5 occurs when the difference in the means is half the standard deviation. Anything below 0.5 is considered to be a small effect size. Anything above 0.8 is considered large. Between these two figures, effect sizes are described as 'medium'. 
+
+This experiment has a small effect size.
+
+## Bayes Factor
+
+Bayes Factors measure the level of evidence for there being (or not being) a difference between groups. If you get a Bayes Factor of 3 or more, psychologists generally consider that meaningful evidence for a difference. If you get a Bayes Factor of 0.33 or less, we generally consider that meaningful evidence for the _absence_ of a difference. Where a Bayes Factor is greater than 0.33 but smaller than 3, we generally conclude the experiment didn't tell us anything worth listening to. 
+
+Calculate the [Bayes Factor](evidence.html#bf) for this experiment. The correct answer is:
+
+```{r bayes, echo=FALSE, message=FALSE}
+library(BayesFactor, quietly = TRUE)
+ttestBF(formula = phit ~ cond, data = data.frame(prod))
+```
+
+This experiment didn't tell us anything worth listening to: the Bayes Factor was close to 1. 
+
+## Recording your work
+
+That's the end of the revision. **Copy and paste the R script you used for this exercise into PsycEL.**
+
+___
+
+
+This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0. 
+
+
