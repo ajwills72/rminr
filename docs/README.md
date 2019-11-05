@@ -13,7 +13,7 @@ The advantages of R over other software packages are discussed [here](why-r-stud
 
 3. [A Very Brief Guide to R](#vbgtr)
 
-4. [Research Methods in Practice](#rmip) (work in progress)
+4. [Intermediate Guide to R](#rmip) (work in progress)
 
 5. [Going further with R](#gfwr) (work in progress)
 
