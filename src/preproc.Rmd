@@ -1,0 +1,78 @@
+---
+title: "Preprocessing data from experiments"
+author: "Andy Wills"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+## DEVELOPERS: Uncomment one option, as appropriate
+
+## Show only commands.
+## knitr::opts_chunk$set(echo = TRUE, message = FALSE, results='hide', fig.keep = 'none', comment=NA)
+
+## Show commands and ouptut.
+knitr::opts_chunk$set(echo = TRUE, comment=NA)
+
+```
+
+Data preprocessing is a term for all the things you have to do to your data before you can analyze it. In the _Absolute Beginners' Guide to R_, the preprocessing was mostly done for you, and you just used `read_csv` to load in the preprocessed data. However, in most realistic situations, data does not come preprocessed. In this worksheet, we'll look at preprocessing data from computerized experiments. Preprocessing data from these kinds of experiments typically comes in four parts - loading, tidying, summarizing, and combining. We'll cover these in turn below.
+
+## Loading
+
+### Getting the data into your project
+
+Create a new RStudio project for this worksheet, download this [zip archive](rawdata.zip) of data to your computer, and then upload it to your RStudio project. Make sure it is the `rawdata.zip` file you upload (your computer might also produce a folder called `rawdata` - do not upload that). 
+
+A zip archive is a way of combining lots of different data files into a single file. When you upload a zip archive to RStudio, it opens up the archive and puts each of the files into a folder in your project. The folder has the name of the zip archive - in this case, `rawdata`. 
+
+Click on the name 'rawdata' in the Files window of RStudio. You'll see there are three CSV files, and one file called `README.md`. We'll use these files in a minute. 
+
+Each CSV file (e.g. `subject-11.csv`) contains the data from one participant in a [facial prototypes](http://cabezalab.org/wp-content/uploads/2011/11/Cabeza99_PrototypeEffectFaceRecogExtensionLimits_MemCog.pdf) experiment. The experiment was run using OpenSeame, a free and open-source program. If you have OpenSesame installed on your machine, you can try out the experiment by downloading it [here](facialproto_short.osexp).
+
+#### Summary of the experiment
+
+You'll need a general sense of what happens in this experiment to understand the data it produces. Here's a summary:
+
+In this experiment, people are shown some pictures of male faces. Each is a picture of a real face, but its internal features (eyes, nose, mouth, etc.) have been digitally stretched or compressed either along their x-axis or their y-axis). Participants rate each picture for masculinity (1-8 scale, higher numbers = more masculine), just as a way of encouraging them to look at each picture closely.
+
+After people have been shown 32 pictures, they move to the test phase. They're shown another 24 pictures, and have to rate their confidence they've seen that _exact_ picture before (0 = definitely not seen, 9 = definitely seen). The pictures they're shown include ones they've seen before (`seen`), the undistorted version of the faces they've seen (`prototype`), and some other distortions of the faces they haven't seen before (`unseen`).
+
+The expected result is that people are confident they've seen the `prototype` faces before, even though they haven't. One interpretation of this result is that we average across the pictures we see. The prototype is the average of the pictures we've seen of that face, so it seems familiar even though we've not seen it  before. 
+
+#### Loading one participant
+
+We'll start by load the data for one of the participants, `subject-11.csv`. Recall that we can do this using the `read_csv` command. In this case, the CSV file we want to load is inside the `rawdata` folder of our project so we have to say `rawdata/subject-11.csv` rather than just `subject-11.csv`, so RStudio knows where to look for the file. 
+
+Start a new R script in your RStudio project, add the following commands to it, and run the script:
+
+```{r load, message=FALSE}
+library(tidyverse)
+dat <- read_csv("rawdata/subject-11.csv")
+```
+
+Click on `dat` in the Environment tab and take a look at the file you've loaded. This is a typical output file for OpenSesame, but it seems quite overwhelming at first sight. It has 101 columns of data, many with unclear names. There are 56 rows of data, so 5656 pieces of data in total, and this is just for one participant in one short experiment!
+
+Our first job here is to tidy up this dataset so it's clear and readable to the average human being.
+
+## Tidying
+
+The first thing you need to know to make sense of this dataset is that each row is one _trial_ of the experiment. In a typical experiment, a _trial_ begins with the presentation of a stimulus (in this case, a face) and ends with the participant making a response (in this case, a rating). Participants rate 32 pictures for masculinity, and then 24 pictures for confidence they've seen them before, leading to a total of 56 trials in this experiment, and hence 56 rows in this data frame.
+
+This is what's sometimes called  [tidy data](https://benwhalley.github.io/rmip/data-handling.html), because there is one row for each observation (each trial, in this case). This is arguably not a great name, because a dataset with over 100 rows doesn't seem like a very tidy thing to most people. It is perhaps more neutrally called _long format_ data, because it has more rows and fewer columns than the main alternative, which is to put all data from a single participant on the same row. This is called _wide_ format, and in this case would result in a dataset with 1 row and 5656 columns.
+
+Most commands in R assume your data is in _long_ format, so it's good news our raw data is also in that format, even if it still needs a bunch of tidying up before we can analyze it.
+
+
+## Summarizing
+
+## Combining
+
+## Exercise
+
+
+
+___
+
+This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0. 
+
+
