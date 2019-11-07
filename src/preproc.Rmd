@@ -72,12 +72,12 @@ The first thing you need to know to make sense of this dataset is that each row 
 
 This is what's sometimes called  [tidy data](https://benwhalley.github.io/rmip/data-handling.html), which means there is one row for each observation (each trial, in this case). It is also called _long format_ data, because it has more rows and fewer columns than the main alternative, which is to put all data from a single participant on the same row. This is called _wide_ format, and in this case would result in a dataset with 1 row and 5656 columns.
 
-Most commands in R assume your data is in _long_ format, so it's good news our raw data is also in that format, even if it still needs a bunch of tidying up before we can analyze it. The first step is to go through the 101 columns and find those we actually need.
+Most commands in R assume your data is in _long_ format, so it's good news our raw data is also in that format, even if it still needs a bunch of tidying up before we can analyse it. The first step is to go through the 101 columns and find those we actually need.
 
 ### Responses
 
 One thing we'll definitely need to know is how the participant responded on each trial of the experiment. 
-If you scroll through the columns of `dat`, which are organized alphabetically, you'll find a column called `response`. You'll see that each row contains a number from 0 to 9. So, this is the rating the participant made on that trial. We'll need to know that to analyze this data, so `response` is one of the columns we need to keep.
+If you scroll through the columns of `dat`, which are organised alphabetically, you'll find a column called `response`. You'll see that each row contains a number from 0 to 9. So, this is the rating the participant made on that trial. We'll need to know that to analyse this data, so `response` is one of the columns we need to keep.
 
 Columns to keep: `response`
 
@@ -89,7 +89,7 @@ Columns to keep: `phase`, `response`
 
 ### Trial types
 
-In the second phase of the experiment, there are three different types of trial - unseen faces, seen faces, and prototypes. We'll need to know what type of stimulus was presented in order to analyze these data. Scroll to the column called `type`, and you'll see that for the second phase (rows 33 onwards), it contains this information. For the first phase it contains `NA`, meaning this is not relevant information for the first phase. So `type` is another column we'll need to keep.
+In the second phase of the experiment, there are three different types of trial - unseen faces, seen faces, and prototypes. We'll need to know what type of stimulus was presented in order to analyse these data. Scroll to the column called `type`, and you'll see that for the second phase (rows 33 onwards), it contains this information. For the first phase it contains `NA`, meaning this is not relevant information for the first phase. So `type` is another column we'll need to keep.
 
 Columns to keep: `phase`, `type`, `response`
 
@@ -101,7 +101,7 @@ Columns to keep: `phase`, `live_row`, `type`, `response`
 
 ### Column ordering
 
-You may have noticed that the list of 'colums to keep' is not in alphabetical order. Instead, it follows the conventional ordering of _position in experiment_ (`phase, live_row`), _stimulus_ (`type`), _response_. Most experiments report their data in this order. Having conventions like these make it easier for others to read and understand our analyses. 
+You may have noticed that the list of 'columns to keep' is not in alphabetical order. Instead, it follows the conventional ordering of _position in experiment_ (`phase, live_row`), _stimulus_ (`type`), _response_. Most experiments report their data in this order. Having conventions like these make it easier for others to read and understand our analyses. 
 
 ### Selecting columns
 
@@ -117,7 +117,7 @@ Click on `tidydat` in the _Environment_ window. You'll see we have a much easier
 
 ### Renaming columns
 
-When working with data, it's useful to have meaningul column names, because it makes it easier to remember what they contain. The column `live_row` could be more clearly named as `trial`, as that's the information it contains. We rename columns in R using the `colnames` command:
+When working with data, it's useful to have meaningful column names, because it makes it easier to remember what they contain. The column `live_row` could be more clearly named as `trial`, as that's the information it contains. We rename columns in R using the `colnames` command:
 
 ```{r rename}
 colnames(tidydat) <- c("phase", "trial", "type", "response")
@@ -127,7 +127,7 @@ colnames(tidydat) <- c("phase", "trial", "type", "response")
 
 ## Filtering
 
-We now have a clear, tidy dataframe (`tidydat`), which we can start to analyze. The expected result is that the participant will show high confidence ratings for having seen the prototype, despite not having seen it before. Does this participant show this pattern of results?
+We now have a clear, tidy dataframe (`tidydat`), which we can start to analyse. The expected result is that the participant will show high confidence ratings for having seen the prototype, despite not having seen it before. Does this participant show this pattern of results?
 
 Our predictions are about the test phase, but this data frame also contains data about the exposure phase (the masculinity ratings). So, the first thing we have to do is _filter_ the data so that it only contains the test phase. As covered in [Absolute Beginners' Guide to R](group-differences.html#filter), we use the `filter` command to do this, telling it which parts of the data we want to keep
 
@@ -137,23 +137,23 @@ testdat <- tidydat %>% filter(phase == "test")
 
 **Explanation of command** - The `tidydat` data is passed (`%>%`) to the `filter` command, which keeps only those rows (trials) where `phase == "test"`, i.e. where the column `phase` contains the word `test`. This filtered data is then written (`<-`) to a new data frame called `testdat`.
 
-Click on `testdat` in the Envrionment window. You'll see that now we just have 24 rows, all from the test phase.
+Click on `testdat` in the Environment window. You'll see that now we just have 24 rows, all from the test phase.
 
-## Summarizing
+## Summarising
 
-We can now use the `group_by` and `summarize` commands covered in [Absolute Beginners' Guide to R](group-differences.html#group) to answer our question.
+We can now use the `group_by` and `summarise` commands covered in [Absolute Beginners' Guide to R](group-differences.html#group) to answer our question.
 
 ```{r summary}
-testdat %>% group_by(type) %>% summarize(mean(response))
+testdat %>% group_by(type) %>% summarise(mean(response))
 ```
 
-**Expalantion of command** - Our test-phase data (`testdat`) is piped to `group_by(type)`, which groups it into the three parts given by the `type` column (seen, unseen, prototype). This grouped data is then sent to `summarize` to work out a summary value for each group. We tell `summarize` what summary we want, in this case we want a `mean`. And we tell the `mean` command that the data we want a mean of is in the `response` column. 
+**Explanation of command** - Our test-phase data (`testdat`) is piped to `group_by(type)`, which groups it into the three parts given by the `type` column (seen, unseen, prototype). This grouped data is then sent to `summarise` to work out a summary value for each group. We tell `summarise` what summary we want, in this case we want a `mean`. And we tell the `mean` command that the data we want a mean of is in the `response` column. 
 
 Looking at the output, we can see that this participant was more confident they'd seen the prototypes (4.75) than that they'd seen the pictures they'd actually seen before (3.88). This fits our hypothesis. But, somewhat oddly, they were even more confident about other distortions they hadn't seen (5). An alternative hypothesis (and the correct one in this case) is that this particular participant just randomly pressed the buttons, so any difference in the three scores is down to chance. 
 
 ## Combining
 
-Experiments generally involve testing relatively large numbers of people, in order to achieve good [statistical power](power.html). This means that another important part of preprocessing is to combine the data from different participants into a single data frame, so we can analyze the data from all the participants at the same time.
+Experiments generally involve testing relatively large numbers of people, in order to achieve good [statistical power](power.html). This means that another important part of preprocessing is to combine the data from different participants into a single data frame, so we can analyse the data from all the participants at the same time.
 
 ### Combining two files
 
@@ -187,7 +187,7 @@ We also need to add the subject number for  `subject-12`:
 dat2 <- dat2 %>% add_column(subj = 12, .before = TRUE)
 ```
 
-Now, we combine the two data franes as before:
+Now, we combine the two data frames as before:
 
 ```{r bind2}
 alldat <- bind_rows(dat, dat2)
@@ -197,7 +197,7 @@ Now, when you click on `alldat`, you'll see a dataframe with 112 rows and 102 co
 
 ### Combining many files
 
-Generally, we have a lot more than two people in an expeirment. You could use the same technique to combine the data of tens, hundreds, or thousands of participants. However, that would take a really long time and be quite tedious. Fortunately, R allows us to speed up this process so that, even if we have tens of thousands of participants, we can quickly combine their data without error.
+Generally, we have a lot more than two people in an experiment. You could use the same technique to combine the data of tens, hundreds, or thousands of participants. However, that would take a really long time and be quite tedious. Fortunately, R allows us to speed up this process so that, even if we have tens of thousands of participants, we can quickly combine their data without error.
 
 #### List of files
 
@@ -208,7 +208,7 @@ fnamlist <- list.files("rawdata", "csv", full.names=TRUE)
 fnamlist
 ```
 
-**Explanation of command**: The first part of `list.files`, `"rawdata"`, tells R which folder the data files are in. Generally, it's a good idea to keep all your data files inside a single folder, so it is easier for commands like this to find them. The second part of `list.files`, `"csv"` tells R to only give the names of files that contain `csv` somewhere in their name. This is useful, because sometimes raw data folders contain other files, too. For example, `rawdata` contains `README.md`, a file that generally provides information relating to the data, rather than being data itself. The third part, `full.names=TRUE`, tells R to give the name of the file including the name of the folder it is in, so `rawdata/subject-11.csv` rather than just `subject-11.csv`.  The output of `list.files` is written to a _vector_ called `fnamlist`, which is then printed to the screen by the command `fnamlist`. A vector isa dataframe with only one column, and R prints it across the screen rather than down, to save space.
+**Explanation of command**: The first part of `list.files`, `"rawdata"`, tells R which folder the data files are in. Generally, it's a good idea to keep all your data files inside a single folder, so it is easier for commands like this to find them. The second part of `list.files`, `"csv"` tells R to only give the names of files that contain `csv` somewhere in their name. This is useful, because sometimes raw data folders contain other files, too. For example, `rawdata` contains `README.md`, a file that generally provides information relating to the data, rather than being data itself. The third part, `full.names=TRUE`, tells R to give the name of the file including the name of the folder it is in, so `rawdata/subject-11.csv` rather than just `subject-11.csv`.  The output of `list.files` is written to a _vector_ called `fnamlist`, which is then printed to the screen by the command `fnamlist`. A vector is a dataframe with only one column, and R prints it across the screen rather than down, to save space.
 
 #### Load every file 
 
@@ -272,22 +272,22 @@ These six lines of code load and combine every data file, and add a participant 
 
 ## Back to tidying
 
-Of course, this combined data file has the same problems as the inidividual files that make it up -- there are over 100 columns, most of which we don't need. We can fix this with the same commands as before; we just have to remember to also select the column containing the participant numbers:
+Of course, this combined data file has the same problems as the individual files that make it up -- there are over 100 columns, most of which we don't need. We can fix this with the same commands as before; we just have to remember to also select the column containing the participant numbers:
 
 ```{r tidyagain}
 tidydat <- alldat %>% select(subj, phase, live_row, type, response)
 colnames(tidydat) <- c("subj", "phase", "trial", "type", "response")
 ```
 
-Click on `tidydat`, you'll see a human-readble data fram with 168 rows, and 5 columns. This is the full dataset for the experiment, so we can now start analyzing it.
+Click on `tidydat`, you'll see a human-readable data frame with 168 rows, and 5 columns. This is the full dataset for the experiment, so we can now start analyzing it.
 
-## Back to summarizing
+## Back to summarising
 
-Now we have this combined file, we summarize the test phase data for each participant using the same commands as before. We just need to include `subj` to the `group_by` command so we get a separate summary for each person:
+Now we have this combined file, we summarise the test phase data for each participant using the same commands as before. We just need to include `subj` to the `group_by` command so we get a separate summary for each person:
 
 ```{r sumagain}
 test <- tidydat %>% filter(phase == "test")
-test.sum <- test %>% group_by(subj, type) %>% summarize(mean(response))
+test.sum <- test %>% group_by(subj, type) %>% summarise(mean(response))
 ```
 
 Clicking on `test.sum` in the _Environment_ window, we can now see a summary for each participant. All three participants were more confident they'd seen the prototype than the pictures they'd actually seen, which supports our hypothesis. But they're also all at least as confident about other unseen distortions, too. So, again, an alternative hypothesis is that participants were just pressing keys randomly. This was in fact the case for these data. In the next part of the worksheet, you'll look at some data from a different experiment where the participants took the task more seriously. 
@@ -296,9 +296,9 @@ Clicking on `test.sum` in the _Environment_ window, we can now see a summary for
 
 In this section of the worksheet, you'll preprocess the data from a different experiment. You'll find the data in the folder called `lexdec`, and the OpenSesame implementation of this experiment in the `expt-scripts` folder. 
 
-In this experiment, words are shown on the screen one at a time. Some are real words, others are made-up words (nonwords). The participant's job is to decide whether each is a word or nonword, as quickly as possible. The computer records for each decision whether they got it correct, and how long it took them to respond (their _response time_). The experiment begins with a practice phase, so participants can get used to the task. This is followed by the test phase, which is the part we analyse.
+In this experiment, words are shown on the screen one at a time. Some are real words, others are made-up words (non-words). The participant's job is to decide whether each is a word or non-word, as quickly as possible. The computer records for each decision whether they got it correct, and how long it took them to respond (their _response time_). The experiment begins with a practice phase, so participants can get used to the task. This is followed by the test phase, which is the part we analyse.
 
-Your task is to write R code that gives the mean reaction time for each participant, for both words and nonwords. You should analyse only reaction times for trials in which they made the correct response, and you should not include the practice phase in your analysis. 
+Your task is to write R code that gives the mean reaction time for each participant, for both words and non-words. You should analyse only reaction times for trials in which they made the correct response, and you should not include the practice phase in your analysis. 
 
 This can, and should, be done with less than 15 files of R code. When your code is working correctly, it will give you the following numbers:
 
@@ -314,11 +314,11 @@ alldat <- alldat %>%
     select(subj, practice, live_row, category, correct, response_time)
 colnames(alldat) <- c("subj", "practice", "trial", "type", "acc", "rt")
 test <- alldat %>% filter(practice == "no") %>% filter(acc == 1) 
-test.sum <- test %>% group_by(subj, type) %>% summarize(mean(rt))
+test.sum <- test %>% group_by(subj, type) %>% summarise(mean(rt))
 test.sum
 ```
 
-**Hints:** Your code should first get a list of files, then use a loop to load all those files in and combine them. Don't forget that `lexdec` is a shorter name than `rawdata`, so the `substr` command will have to change. Next you'll have to find the relevant columns among the 100+ columns of the data file. Once you've found them, use `select` to select just those columns and use `colnames` to give the selected columns better names. Use `filter` to remove the practice phase and keep only the correct responses. Note that accuracy in this data file is a number, not a word, so the correct phrase is something like `acc == 1`, rather than `acc == "1"`. Finally, use `group_by` and `summarize` to report the mean response time for words and non words for each participant. Good luck!
+**Hints:** Your code should first get a list of files, then use a loop to load all those files in and combine them. Don't forget that `lexdec` is a shorter name than `rawdata`, so the `substr` command will have to change. Next you'll have to find the relevant columns among the 100+ columns of the data file. Once you've found them, use `select` to select just those columns and use `colnames` to give the selected columns better names. Use `filter` to remove the practice phase and keep only the correct responses. Note that accuracy in this data file is a number, not a word, so the correct phrase is something like `acc == 1`, rather than `acc == "1"`. Finally, use `group_by` and `summarise` to report the mean response time for words and non words for each participant. Good luck!
 
 **Once you're getting the right answers, paste your R code into PsycEL**.
 

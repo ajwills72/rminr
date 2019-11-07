@@ -408,10 +408,10 @@ dat &lt;- read_csv(&quot;rawdata/subject-11.csv&quot;)</code></pre>
 <h2>Tidying</h2>
 <p>The first thing you need to know to make sense of this dataset is that each row is one <em>trial</em> of the experiment. In a typical experiment, a <em>trial</em> begins with the presentation of a stimulus (in this case, a face) and ends with the participant making a response (in this case, a rating). Participants rate 32 pictures for masculinity, and then 24 pictures for confidence they’ve seen them before, leading to a total of 56 trials in this experiment, and hence 56 rows in this data frame.</p>
 <p>This is what’s sometimes called <a href="https://benwhalley.github.io/rmip/data-handling.html">tidy data</a>, which means there is one row for each observation (each trial, in this case). It is also called <em>long format</em> data, because it has more rows and fewer columns than the main alternative, which is to put all data from a single participant on the same row. This is called <em>wide</em> format, and in this case would result in a dataset with 1 row and 5656 columns.</p>
-<p>Most commands in R assume your data is in <em>long</em> format, so it’s good news our raw data is also in that format, even if it still needs a bunch of tidying up before we can analyze it. The first step is to go through the 101 columns and find those we actually need.</p>
+<p>Most commands in R assume your data is in <em>long</em> format, so it’s good news our raw data is also in that format, even if it still needs a bunch of tidying up before we can analyse it. The first step is to go through the 101 columns and find those we actually need.</p>
 <div id="responses" class="section level3">
 <h3>Responses</h3>
-<p>One thing we’ll definitely need to know is how the participant responded on each trial of the experiment. If you scroll through the columns of <code>dat</code>, which are organized alphabetically, you’ll find a column called <code>response</code>. You’ll see that each row contains a number from 0 to 9. So, this is the rating the participant made on that trial. We’ll need to know that to analyze this data, so <code>response</code> is one of the columns we need to keep.</p>
+<p>One thing we’ll definitely need to know is how the participant responded on each trial of the experiment. If you scroll through the columns of <code>dat</code>, which are organised alphabetically, you’ll find a column called <code>response</code>. You’ll see that each row contains a number from 0 to 9. So, this is the rating the participant made on that trial. We’ll need to know that to analyse this data, so <code>response</code> is one of the columns we need to keep.</p>
 <p>Columns to keep: <code>response</code></p>
 </div>
 <div id="phases" class="section level3">
@@ -421,7 +421,7 @@ dat &lt;- read_csv(&quot;rawdata/subject-11.csv&quot;)</code></pre>
 </div>
 <div id="trial-types" class="section level3">
 <h3>Trial types</h3>
-<p>In the second phase of the experiment, there are three different types of trial - unseen faces, seen faces, and prototypes. We’ll need to know what type of stimulus was presented in order to analyze these data. Scroll to the column called <code>type</code>, and you’ll see that for the second phase (rows 33 onwards), it contains this information. For the first phase it contains <code>NA</code>, meaning this is not relevant information for the first phase. So <code>type</code> is another column we’ll need to keep.</p>
+<p>In the second phase of the experiment, there are three different types of trial - unseen faces, seen faces, and prototypes. We’ll need to know what type of stimulus was presented in order to analyse these data. Scroll to the column called <code>type</code>, and you’ll see that for the second phase (rows 33 onwards), it contains this information. For the first phase it contains <code>NA</code>, meaning this is not relevant information for the first phase. So <code>type</code> is another column we’ll need to keep.</p>
 <p>Columns to keep: <code>phase</code>, <code>type</code>, <code>response</code></p>
 </div>
 <div id="trial-number" class="section level3">
@@ -431,7 +431,7 @@ dat &lt;- read_csv(&quot;rawdata/subject-11.csv&quot;)</code></pre>
 </div>
 <div id="column-ordering" class="section level3">
 <h3>Column ordering</h3>
-<p>You may have noticed that the list of ‘colums to keep’ is not in alphabetical order. Instead, it follows the conventional ordering of <em>position in experiment</em> (<code>phase, live_row</code>), <em>stimulus</em> (<code>type</code>), <em>response</em>. Most experiments report their data in this order. Having conventions like these make it easier for others to read and understand our analyses.</p>
+<p>You may have noticed that the list of ‘columns to keep’ is not in alphabetical order. Instead, it follows the conventional ordering of <em>position in experiment</em> (<code>phase, live_row</code>), <em>stimulus</em> (<code>type</code>), <em>response</em>. Most experiments report their data in this order. Having conventions like these make it easier for others to read and understand our analyses.</p>
 </div>
 <div id="selecting-columns" class="section level3">
 <h3>Selecting columns</h3>
@@ -442,35 +442,35 @@ dat &lt;- read_csv(&quot;rawdata/subject-11.csv&quot;)</code></pre>
 </div>
 <div id="renaming-columns" class="section level3">
 <h3>Renaming columns</h3>
-<p>When working with data, it’s useful to have meaningul column names, because it makes it easier to remember what they contain. The column <code>live_row</code> could be more clearly named as <code>trial</code>, as that’s the information it contains. We rename columns in R using the <code>colnames</code> command:</p>
+<p>When working with data, it’s useful to have meaningful column names, because it makes it easier to remember what they contain. The column <code>live_row</code> could be more clearly named as <code>trial</code>, as that’s the information it contains. We rename columns in R using the <code>colnames</code> command:</p>
 <pre class="r"><code>colnames(tidydat) &lt;- c(&quot;phase&quot;, &quot;trial&quot;, &quot;type&quot;, &quot;response&quot;)</code></pre>
 <p><strong>Explanation of command</strong> - The command <code>c()</code> means <em>concatenate</em> i.e. put together. So <code>c(&quot;phase&quot;, &quot;trial&quot;, &quot;type&quot;, &quot;response&quot;)</code> is a way of putting the four names together so they can be sent somewhere. They are sent (<code>&lt;-</code>) to the <code>colnames()</code> command, which changes the column names of <code>tidydat</code>.</p>
 </div>
 </div>
 <div id="filtering" class="section level2">
 <h2>Filtering</h2>
-<p>We now have a clear, tidy dataframe (<code>tidydat</code>), which we can start to analyze. The expected result is that the participant will show high confidence ratings for having seen the prototype, despite not having seen it before. Does this participant show this pattern of results?</p>
+<p>We now have a clear, tidy dataframe (<code>tidydat</code>), which we can start to analyse. The expected result is that the participant will show high confidence ratings for having seen the prototype, despite not having seen it before. Does this participant show this pattern of results?</p>
 <p>Our predictions are about the test phase, but this data frame also contains data about the exposure phase (the masculinity ratings). So, the first thing we have to do is <em>filter</em> the data so that it only contains the test phase. As covered in <a href="group-differences.html#filter">Absolute Beginners’ Guide to R</a>, we use the <code>filter</code> command to do this, telling it which parts of the data we want to keep</p>
 <pre class="r"><code>testdat &lt;- tidydat %&gt;% filter(phase == &quot;test&quot;)</code></pre>
 <p><strong>Explanation of command</strong> - The <code>tidydat</code> data is passed (<code>%&gt;%</code>) to the <code>filter</code> command, which keeps only those rows (trials) where <code>phase == &quot;test&quot;</code>, i.e. where the column <code>phase</code> contains the word <code>test</code>. This filtered data is then written (<code>&lt;-</code>) to a new data frame called <code>testdat</code>.</p>
-<p>Click on <code>testdat</code> in the Envrionment window. You’ll see that now we just have 24 rows, all from the test phase.</p>
+<p>Click on <code>testdat</code> in the Environment window. You’ll see that now we just have 24 rows, all from the test phase.</p>
 </div>
-<div id="summarizing" class="section level2">
-<h2>Summarizing</h2>
-<p>We can now use the <code>group_by</code> and <code>summarize</code> commands covered in <a href="group-differences.html#group">Absolute Beginners’ Guide to R</a> to answer our question.</p>
-<pre class="r"><code>testdat %&gt;% group_by(type) %&gt;% summarize(mean(response))</code></pre>
+<div id="summarising" class="section level2">
+<h2>Summarising</h2>
+<p>We can now use the <code>group_by</code> and <code>summarise</code> commands covered in <a href="group-differences.html#group">Absolute Beginners’ Guide to R</a> to answer our question.</p>
+<pre class="r"><code>testdat %&gt;% group_by(type) %&gt;% summarise(mean(response))</code></pre>
 <pre><code># A tibble: 3 x 2
   type      `mean(response)`
   &lt;chr&gt;                &lt;dbl&gt;
 1 prototype             4.75
 2 seen                  3.88
 3 unseen                5   </code></pre>
-<p><strong>Expalantion of command</strong> - Our test-phase data (<code>testdat</code>) is piped to <code>group_by(type)</code>, which groups it into the three parts given by the <code>type</code> column (seen, unseen, prototype). This grouped data is then sent to <code>summarize</code> to work out a summary value for each group. We tell <code>summarize</code> what summary we want, in this case we want a <code>mean</code>. And we tell the <code>mean</code> command that the data we want a mean of is in the <code>response</code> column.</p>
+<p><strong>Explanation of command</strong> - Our test-phase data (<code>testdat</code>) is piped to <code>group_by(type)</code>, which groups it into the three parts given by the <code>type</code> column (seen, unseen, prototype). This grouped data is then sent to <code>summarise</code> to work out a summary value for each group. We tell <code>summarise</code> what summary we want, in this case we want a <code>mean</code>. And we tell the <code>mean</code> command that the data we want a mean of is in the <code>response</code> column.</p>
 <p>Looking at the output, we can see that this participant was more confident they’d seen the prototypes (4.75) than that they’d seen the pictures they’d actually seen before (3.88). This fits our hypothesis. But, somewhat oddly, they were even more confident about other distortions they hadn’t seen (5). An alternative hypothesis (and the correct one in this case) is that this particular participant just randomly pressed the buttons, so any difference in the three scores is down to chance.</p>
 </div>
 <div id="combining" class="section level2">
 <h2>Combining</h2>
-<p>Experiments generally involve testing relatively large numbers of people, in order to achieve good <a href="power.html">statistical power</a>. This means that another important part of preprocessing is to combine the data from different participants into a single data frame, so we can analyze the data from all the participants at the same time.</p>
+<p>Experiments generally involve testing relatively large numbers of people, in order to achieve good <a href="power.html">statistical power</a>. This means that another important part of preprocessing is to combine the data from different participants into a single data frame, so we can analyse the data from all the participants at the same time.</p>
 <div id="combining-two-files" class="section level3">
 <h3>Combining two files</h3>
 <p>We’ll start by loading in data from a second participant into a different dataframe:</p>
@@ -484,13 +484,13 @@ dat &lt;- read_csv(&quot;rawdata/subject-11.csv&quot;)</code></pre>
 <p><strong>Explanation of command</strong>: The <code>dat</code> dataframe is piped (<code>%&gt;%</code>) to the <code>add_column_</code> command, which adds a column called <code>subj</code>, in which every row contains the number <code>11</code> (the subject number). <code>.before = TRUE</code> means it adds the <code>subj</code> column before any of the others (i.e. on the left). Without this, it would add it at the end. This data frame with an added column is written back into <code>dat</code>, so it’s <code>dat</code> (rather than some new data frame) that contains the added column.</p>
 <p>We also need to add the subject number for <code>subject-12</code>:</p>
 <pre class="r"><code>dat2 &lt;- dat2 %&gt;% add_column(subj = 12, .before = TRUE)</code></pre>
-<p>Now, we combine the two data franes as before:</p>
+<p>Now, we combine the two data frames as before:</p>
 <pre class="r"><code>alldat &lt;- bind_rows(dat, dat2)</code></pre>
 <p>Now, when you click on <code>alldat</code>, you’ll see a dataframe with 112 rows and 102 columns, the first column being the subject number.</p>
 </div>
 <div id="combining-many-files" class="section level3">
 <h3>Combining many files</h3>
-<p>Generally, we have a lot more than two people in an expeirment. You could use the same technique to combine the data of tens, hundreds, or thousands of participants. However, that would take a really long time and be quite tedious. Fortunately, R allows us to speed up this process so that, even if we have tens of thousands of participants, we can quickly combine their data without error.</p>
+<p>Generally, we have a lot more than two people in an experiment. You could use the same technique to combine the data of tens, hundreds, or thousands of participants. However, that would take a really long time and be quite tedious. Fortunately, R allows us to speed up this process so that, even if we have tens of thousands of participants, we can quickly combine their data without error.</p>
 <div id="list-of-files" class="section level4">
 <h4>List of files</h4>
 <p>The first thing we need to do to combine many participants is to get a list of the names of their data files (e.g. <code>subject-11.csv</code>). We do this using the <code>list.files</code> command:</p>
@@ -498,7 +498,7 @@ dat &lt;- read_csv(&quot;rawdata/subject-11.csv&quot;)</code></pre>
 fnamlist</code></pre>
 <pre><code>[1] &quot;rawdata/subject-11.csv&quot; &quot;rawdata/subject-12.csv&quot;
 [3] &quot;rawdata/subject-13.csv&quot;</code></pre>
-<p><strong>Explanation of command</strong>: The first part of <code>list.files</code>, <code>&quot;rawdata&quot;</code>, tells R which folder the data files are in. Generally, it’s a good idea to keep all your data files inside a single folder, so it is easier for commands like this to find them. The second part of <code>list.files</code>, <code>&quot;csv&quot;</code> tells R to only give the names of files that contain <code>csv</code> somewhere in their name. This is useful, because sometimes raw data folders contain other files, too. For example, <code>rawdata</code> contains <code>README.md</code>, a file that generally provides information relating to the data, rather than being data itself. The third part, <code>full.names=TRUE</code>, tells R to give the name of the file including the name of the folder it is in, so <code>rawdata/subject-11.csv</code> rather than just <code>subject-11.csv</code>. The output of <code>list.files</code> is written to a <em>vector</em> called <code>fnamlist</code>, which is then printed to the screen by the command <code>fnamlist</code>. A vector isa dataframe with only one column, and R prints it across the screen rather than down, to save space.</p>
+<p><strong>Explanation of command</strong>: The first part of <code>list.files</code>, <code>&quot;rawdata&quot;</code>, tells R which folder the data files are in. Generally, it’s a good idea to keep all your data files inside a single folder, so it is easier for commands like this to find them. The second part of <code>list.files</code>, <code>&quot;csv&quot;</code> tells R to only give the names of files that contain <code>csv</code> somewhere in their name. This is useful, because sometimes raw data folders contain other files, too. For example, <code>rawdata</code> contains <code>README.md</code>, a file that generally provides information relating to the data, rather than being data itself. The third part, <code>full.names=TRUE</code>, tells R to give the name of the file including the name of the folder it is in, so <code>rawdata/subject-11.csv</code> rather than just <code>subject-11.csv</code>. The output of <code>list.files</code> is written to a <em>vector</em> called <code>fnamlist</code>, which is then printed to the screen by the command <code>fnamlist</code>. A vector is a dataframe with only one column, and R prints it across the screen rather than down, to save space.</p>
 </div>
 <div id="load-every-file" class="section level4">
 <h4>Load every file</h4>
@@ -542,23 +542,23 @@ for(fnam in fnamlist) {
 </div>
 <div id="back-to-tidying" class="section level2">
 <h2>Back to tidying</h2>
-<p>Of course, this combined data file has the same problems as the inidividual files that make it up – there are over 100 columns, most of which we don’t need. We can fix this with the same commands as before; we just have to remember to also select the column containing the participant numbers:</p>
+<p>Of course, this combined data file has the same problems as the individual files that make it up – there are over 100 columns, most of which we don’t need. We can fix this with the same commands as before; we just have to remember to also select the column containing the participant numbers:</p>
 <pre class="r"><code>tidydat &lt;- alldat %&gt;% select(subj, phase, live_row, type, response)
 colnames(tidydat) &lt;- c(&quot;subj&quot;, &quot;phase&quot;, &quot;trial&quot;, &quot;type&quot;, &quot;response&quot;)</code></pre>
-<p>Click on <code>tidydat</code>, you’ll see a human-readble data fram with 168 rows, and 5 columns. This is the full dataset for the experiment, so we can now start analyzing it.</p>
+<p>Click on <code>tidydat</code>, you’ll see a human-readable data frame with 168 rows, and 5 columns. This is the full dataset for the experiment, so we can now start analyzing it.</p>
 </div>
-<div id="back-to-summarizing" class="section level2">
-<h2>Back to summarizing</h2>
-<p>Now we have this combined file, we summarize the test phase data for each participant using the same commands as before. We just need to include <code>subj</code> to the <code>group_by</code> command so we get a separate summary for each person:</p>
+<div id="back-to-summarising" class="section level2">
+<h2>Back to summarising</h2>
+<p>Now we have this combined file, we summarise the test phase data for each participant using the same commands as before. We just need to include <code>subj</code> to the <code>group_by</code> command so we get a separate summary for each person:</p>
 <pre class="r"><code>test &lt;- tidydat %&gt;% filter(phase == &quot;test&quot;)
-test.sum &lt;- test %&gt;% group_by(subj, type) %&gt;% summarize(mean(response))</code></pre>
+test.sum &lt;- test %&gt;% group_by(subj, type) %&gt;% summarise(mean(response))</code></pre>
 <p>Clicking on <code>test.sum</code> in the <em>Environment</em> window, we can now see a summary for each participant. All three participants were more confident they’d seen the prototype than the pictures they’d actually seen, which supports our hypothesis. But they’re also all at least as confident about other unseen distortions, too. So, again, an alternative hypothesis is that participants were just pressing keys randomly. This was in fact the case for these data. In the next part of the worksheet, you’ll look at some data from a different experiment where the participants took the task more seriously.</p>
 </div>
 <div id="exercise" class="section level2">
 <h2>Exercise</h2>
 <p>In this section of the worksheet, you’ll preprocess the data from a different experiment. You’ll find the data in the folder called <code>lexdec</code>, and the OpenSesame implementation of this experiment in the <code>expt-scripts</code> folder.</p>
-<p>In this experiment, words are shown on the screen one at a time. Some are real words, others are made-up words (nonwords). The participant’s job is to decide whether each is a word or nonword, as quickly as possible. The computer records for each decision whether they got it correct, and how long it took them to respond (their <em>response time</em>). The experiment begins with a practice phase, so participants can get used to the task. This is followed by the test phase, which is the part we analyse.</p>
-<p>Your task is to write R code that gives the mean reaction time for each participant, for both words and nonwords. You should analyse only reaction times for trials in which they made the correct response, and you should not include the practice phase in your analysis.</p>
+<p>In this experiment, words are shown on the screen one at a time. Some are real words, others are made-up words (non-words). The participant’s job is to decide whether each is a word or non-word, as quickly as possible. The computer records for each decision whether they got it correct, and how long it took them to respond (their <em>response time</em>). The experiment begins with a practice phase, so participants can get used to the task. This is followed by the test phase, which is the part we analyse.</p>
+<p>Your task is to write R code that gives the mean reaction time for each participant, for both words and non-words. You should analyse only reaction times for trials in which they made the correct response, and you should not include the practice phase in your analysis.</p>
 <p>This can, and should, be done with less than 15 files of R code. When your code is working correctly, it will give you the following numbers:</p>
 <pre><code># A tibble: 6 x 3
 # Groups:   subj [3]
@@ -570,7 +570,7 @@ test.sum &lt;- test %&gt;% group_by(subj, type) %&gt;% summarize(mean(response))
 4 12    word         1818 
 5 13    nonword      1458.
 6 13    word         1526 </code></pre>
-<p><strong>Hints:</strong> Your code should first get a list of files, then use a loop to load all those files in and combine them. Don’t forget that <code>lexdec</code> is a shorter name than <code>rawdata</code>, so the <code>substr</code> command will have to change. Next you’ll have to find the relevant columns among the 100+ columns of the data file. Once you’ve found them, use <code>select</code> to select just those columns and use <code>colnames</code> to give the selected columns better names. Use <code>filter</code> to remove the practice phase and keep only the correct responses. Note that accuracy in this data file is a number, not a word, so the correct phrase is something like <code>acc == 1</code>, rather than <code>acc == &quot;1&quot;</code>. Finally, use <code>group_by</code> and <code>summarize</code> to report the mean response time for words and non words for each participant. Good luck!</p>
+<p><strong>Hints:</strong> Your code should first get a list of files, then use a loop to load all those files in and combine them. Don’t forget that <code>lexdec</code> is a shorter name than <code>rawdata</code>, so the <code>substr</code> command will have to change. Next you’ll have to find the relevant columns among the 100+ columns of the data file. Once you’ve found them, use <code>select</code> to select just those columns and use <code>colnames</code> to give the selected columns better names. Use <code>filter</code> to remove the practice phase and keep only the correct responses. Note that accuracy in this data file is a number, not a word, so the correct phrase is something like <code>acc == 1</code>, rather than <code>acc == &quot;1&quot;</code>. Finally, use <code>group_by</code> and <code>summarise</code> to report the mean response time for words and non words for each participant. Good luck!</p>
 <p><strong>Once you’re getting the right answers, paste your R code into PsycEL</strong>.</p>
 <hr />
 <p>This material is distributed under a <a href="https://creativecommons.org/">Creative Commons</a> licence. CC-BY-SA 4.0.</p>
