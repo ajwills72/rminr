@@ -35,6 +35,9 @@ subj$trial <- subj$trial + 1
 test <- subj %>% filter(phase == "test")
 test %>% group_by(type) %>% summarize(resp = mean(resp), rt = mean(rt))
 
+##
+fnams <- list.files("rawdata", "csv", full.names=TRUE)
+
 ## Loading in all the participants
 rm(list=ls())
 fnams <- list.files("rawdata", pattern = "csv", full.names=TRUE)

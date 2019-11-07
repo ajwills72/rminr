@@ -103,9 +103,9 @@ The following materials are under development. Comments welcome:
 
 - [Statistical power](power.html). 
 
-The following materials are in the planning stage. So, on clicking these links, you may find just notes, or incomplete worksheets. 
-
 - [Data preprocessing](preproc.html). 
+
+The following materials are in the planning stage. So, on clicking these links, you may find just notes, or incomplete worksheets. 
 
 - [One-factor ANOVA](anova1.html). 
 
