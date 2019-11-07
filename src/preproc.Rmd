@@ -21,7 +21,7 @@ Data preprocessing is a term for all the things you have to do to your data befo
 
 ### Getting the data into your project
 
-Create a new RStudio project for this worksheet, download this [zip archive](rawdata.zip) of data to your computer, and then upload it to your RStudio project. Make sure it is the `rawdata.zip` file you upload (your computer might also produce a folder called `rawdata` - do not upload that). 
+Create a new RStudio project for this worksheet, download this [zip archive](data/rawdata.zip) of data to your computer, and then upload it to your RStudio project. Make sure it is the `rawdata.zip` file you upload (your computer might also produce a folder called `rawdata` - do not upload that). 
 
 A zip archive is a way of combining lots of different data files into a single file. When you upload a zip archive to RStudio, it opens up the archive and puts each of the files into a folder in your project. The folder has the name of the zip archive - in this case, `rawdata`. 
 
