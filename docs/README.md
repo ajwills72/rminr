@@ -99,7 +99,7 @@ These are intermediate-level materials, designed to follow on from _An Absolute 
 
 The following materials are under development. Comments welcome:
 
-- [Revision](revison.html)
+- [Revision](revision.html)
 
 - [Statistical power](power.html). 
 
