@@ -302,7 +302,6 @@ R, showing both NHST and Bayes  versions.
 
 
 
-
 * Approval notes
 
 - The School RM map has it the wrong way around: it's w/subj ANOVA, followed by
