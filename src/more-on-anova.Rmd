@@ -1,0 +1,105 @@
+---
+title: "More on ANOVA"
+author: "Andy Wills"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+## DEVELOPERS: Uncomment one option, as appropriate
+
+## Show only commands.
+## knitr::opts_chunk$set(echo = TRUE, message = FALSE, results='hide', fig.keep = 'none', comment=NA)
+
+## Show commands and output.
+knitr::opts_chunk$set(echo = TRUE, comment=NA)
+
+```
+
+# Contents
+
+- [Introduction](#intro)
+
+<a name="intro"></a>
+
+# Introduction
+
+In the [Evidence, part 2]() and [Evidence, part 3]() worksheets, we looked at Bayesian ANOVA methods. Throughout [Research Methods in R]() we focus on Bayesian, rather than traditional ("p value") methods, because Bayes Factors are more useful and easier to understand. However, psychologists have been routinely using traditional ANOVA methods since the 1970s, and it was not until the 2010s that we started using Bayesian methods. So, there's a lot of older work out there that uses a technique you haven't yet been taught. There are also some psychologists who still expect to see the traditional analysis, with Bayesian analysis considered an optional addition to, rather than a replacement for, traditional methods. Although this view is hard to support in principled terms, it is probably still worth knowing how to do a traditional ANOVA, in case you are called upon to do so. This is what we'll cover in this worksheet.
+
+This worksheet is designed to be read alongside the Evidence worksheets (parts 2 and 3). Work through the evidence worksheets and then, when you get to a Bayesian ANOVA calculation, replace it with the command shown below.
+
+Before doing this, you will need to load the `afex` package, which contains the commands for doing traditional ANOVA in R:
+
+```{r load, message=FALSE}
+library(afex)
+```
+
+# Traditional ANOVA (between-subjects)
+
+```{r init, echo=FALSE, message=FALSE}
+library(tidyverse)
+prod <- read_csv("production.csv")
+prod$cond <- factor(prod$cond)
+```
+
+Instead of using the command:
+
+`anovaBF(formula = phit ~ cond, data = data.frame(prod))`
+
+use
+
+```{r anovaBS}
+aov_car(formula = phit ~ cond + Error(subj), data = data.frame(prod))
+```
+ 
+### Explanation of command
+
+In most ways, this command is very like `anovaBF`. For example, the part `formula = phit ~ cond` says we want to look at the effect of the `cond` variable (silent vs. read aloud) on the `phit` variable (memory performance, specifically probability of a hit). This is just like `anovaBF`. The main difference is that we also have `+ Error(subj)`. This tells `aov_car` which column contains the participant IDs (in this case, `subj`). The command `aov_car` always needs to be told this. Note that this is different to `anovaBF`, where we only have to say which column contains the participant IDs if we are doing a _within-subjects_ test. 
+
+### Explanation of output
+
+Although there's quite a lot in this output, the main thing to focus on is the number underneath `p.value`. In this case, the number is '.11'. So, the p-value in this case is .11, written as `p = .11`. Recall that p values are widely misinterpreted by psychologists, but we have a convention that if the p value is less than .05, then people will believe there is a difference. In this case, the p value is greater than .05, and so people will be skeptical about any claim that the two groups differ. Note that p values do not ever give evidence for the null. In other words, they can never tell you the two groups are the same, just that you don't have evidence they are different. This is one of the reasons we generally talk about Bayes Factors  in these worksheets.
+
+If you are reporting the results of a traditional ANOVA in a journal article, you are generally expected to report the `F` value, along with the degrees of freedom (`df`), as well as the p value. So, in this case, you would write:
+
+The two groups did not differ significantly _F_(1, 58) = 2.62, _p_ = .11.
+
+Like p values themselves, the F ratio and degrees of freedom are not particularly meaningful or useful information for the reader to have, but such are the traditions of our field.
+
+One useful piece of information `aov_car` provides is `ges` - which is `.04` in this example. `ges` stands for "Generalized Eta Squared". This is a measure of [effect size](), somewhat like Cohen's d, but the scale is different. `ges` is much like a [correlation co-efficient](corr.html#corr), and ranges between 0 and 1. A large effect size for `ges` is around .26, a medium-sized effect is around .13, and a small effect is around .02 ([further details here](https://www.psy.gla.ac.uk/~steve/best/effect.html))/ It can be useful to report generalized eta squared, and this is reported as $\eta_{g}^{2}$. So one could write:
+
+The two groups did not differ significantly, _F_(1, 58) = 2.62, _p_ = .11, $\eta_{g}^{2} = .04$.
+
+Note that some authors will instead report a related measure called _partial_ eta-squared ($\eta_{p}^{2}$). This is not the same thing and, in most circumstances, it is better to report generalized eta-squared. This point is discussed further [here](https://stats.stackexchange.com/questions/301801/generalized-eta-squared).
+
+
+### Extended explanation of output
+
+In this section, you'll find an explanation of each component of the output. You can skip this section if you like, but if you're curious what the rest of the output means, read on.
+
+`Contrasts set to contr.sum for the following variables: cond` - This refers to a part of the `aov_car` command that we do not cover in these worksheeets. It can be safely ignored.
+
+`Anova Table` - An ANOVA table is just a description of the way we report the results of an ANOVA. It is everything from the line which begins `Effect` until the line `---`.
+
+`(Type 3 tests)` - There's more than one way of doing an ANOVA. In fact, there are three ways, known as Type 1, Type 2, and Type 3. Statisticians argue about which way is best, and R can calculate them in any of these three ways. However, psychologists have nearly always used Type 3, mainly because they didn't realize there were other ways of doing it! So, `Type 3` in this context basically just means "the way psychologists expect it to have been done". If you are interested in how these types differ, take a look at this [blog post](). 
+
+`Response: phit` - This just confirms that R is doing what you asked it to, i.e. analyzing the variable  `phit`.
+
+The next two lines are read as a table. So, the first line, `Effect...` are the labels on the table, and the second line are the relevant numbers. Taking each of these in turn:
+
+`Effect: cond` - This confirms we are looking at the effect of the variable `cond` (on `phit`, see above).
+
+`df: 1, 58` - We came across the concept of degrees of freedom (`df`) before, when looking at traditional [t-tests](). In that case, there was just one number, and this corresponds to the _second_ number in an ANOVA - `58` in this case. This second number is a way of talking about the size of the dataset. It isn't quite the sample size, but it's related to it. The first number, `1` in this case, is a way of talking about the number of _levels_ in the factor. There are two levels in the factor we are analyzing (silent vs. read aloud). So, the first `df` is not quite the number of levels, but it is related to it. The two degrees of freedom in an ANOVA are also known as the _numerator_ (first number) and _denominator_ (second number) degrees of freedom. 
+
+`F: 2.62` - The F value (also known as an F-ratio) is just a number, like a [t value](). On its own, it does not allow us to draw any conclusions. However, when we also know  the degrees of freedom, we can use it to work out the p value. Decades ago, this was done by looking up the F value in the back of a book. Today, we just let the computer work it out for us. 
+
+`ges: .04` - Generalized eta-squared, see above.
+
+`p.value: .11` - The p value is .11, see above.
+
+`Signif. codes: ...` - This is a 'key', i.e. it explains some other part of the output. If the p value had been less than .1, you would have seen one of these symbols next to the p value, for example `.04 *`. These symbols help the reader quickly spot significant p values. 
+
+__
+
+This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0. 
+
+
