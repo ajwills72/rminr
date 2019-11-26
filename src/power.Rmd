@@ -1,5 +1,5 @@
 ---
-title: "How much data should I collect?"
+title: "Statistical power"
 author: "Andy Wills"
 output: html_document
 ---
@@ -15,12 +15,39 @@ knitr::opts_chunk$set(echo = TRUE, comment=NA)
 
 ```
 
-Collecting data takes time and effort, both for the experimenter and for the participants. So, we don't want to collect more data than is necessary to answer our question. On the other hand, psychologists often [don't collect enough data](http://www.marjanbakker.eu/Bakker%20et%20al.%202016.pdf) to support the conclusions they make. In this worksheet, we'll cover the basics of how to work efficiently, by collecting _just enough_ data to answer your question. 
+# Contents
 
+- [Introduction](#intro)
+
+- [Determining your sample size](#size)
+
+- [Exercise 1](#ex1) : Estimating sample size
+
+- [Exercise 2](#ex2) : Estimating statistical power
+
+- [Within-subjects designs](#ws)
+
+- [Exercise 3](#ex3) : Estimating sample size (within-subjects)
+
+- [Exercise 4](#ex4) : Estimating required effect size (within-subjects)
+
+- [Improving power without increasing sample size](#good-design)
+
+- [Exercise 5](#ex5) : Extension work
+
+<a name="intro"></a>
+
+# Introduction
+
+Collecting data takes time and effort, both for the experimenter and for the participants. So, we don't want to collect more data than is necessary to answer our question. On the other hand, psychologists often [don't collect enough data](http://www.marjanbakker.eu/Bakker%20et%20al.%202016.pdf) to support the conclusions they make. In this worksheet, we'll cover the basics of how to work efficiently, by collecting _just enough_ data to answer your question. 
 
 In these _Research Methods in R_ materials, we generally use Bayesian techniques (e.g.  Bayes Factors), rather than more traditional techniques (e.g.  p values). We do this because Bayes Factors are easy to interpret. This is in contrast to p values, which are traditionally used in psychology, but which are widely misunderstood. This worksheet, however, is an exception - it uses traditional techniques. This is because there is no Bayesian method to answer these particular questions that is sufficiently simple for this intermediate-level course. 
 
-## Determining your sample size
+<a name="size"></a>
+
+
+
+# Determining your sample size
 
 In traditional analyses, researchers hope to find a _statistically significant_ difference between groups, as measured by p values. If an analysis gives you a p value less than .05, psychologists will traditionally believe the difference is real. 
 
@@ -40,7 +67,7 @@ The first part of the `pwr.t.test` command -  `type = "two.sample"` - says that 
 
 In order to work out how many people we need to test, we have to replace each of the question marks with something else. We'll cover each of these below.
 
-### Statistical `power`
+## Statistical `power`
 
 Statistical power is a measure of how sure you want to be of finding a difference. Specifically, statistical power is the probability you will find a statistically significant difference ($p < .05$), assuming that difference has the effect size you expected. 
 
@@ -50,7 +77,7 @@ The convention is that if your statistical power is 0.8, you have collected enou
 
 In summary, set `power = .8`.
 
-### Estimated effect size (`d`)
+## Estimated effect size (`d`)
 
 The amount of data you need to collect depends on the _effect size_ you want to be able to observe. Effect size is measured by Cohen's _d_. If you have an effect size of 0.5, this means that the difference between the group means is half the standard deviation of the groups. Standard deviation is a measure of variability. 
 
@@ -59,13 +86,15 @@ However, we can often do better than this. Many psychologists now publish their 
 
 In summary, you should estimate the effect size you want to be able to observe from the effect size reported in previous, relevant, experiments. If there are no previous relevant experiments, use `d = 0.5` because that's the average effect size across all of psychology.
 
-### Do you have good reasons to expect a particular direction of effect?
+## Do you have good reasons to expect a particular direction of effect?
 
 If you've based your effect size estimate on a previous study, you're probably also assuming that the effect will be in the same direction as the previous study. For example, if the previous study found in the U.S. that average income was lower from women than for men, with an effect size of 0.4, and you're using that effect size to work out how big your sample should be to look at the same question in the U.K., then you're probably assuming you'll find the same direction of effect as the previous study (i.e. men earning more than women). 
 
 If you expect a particular direction, and have good reasons for doing so, you set `alternative = "greater"`. Or, you could set `alternative = "less"` - it doesn't matter which you choose for this `pwr.t.test` command. If there's no previous relevant work, you set `alternative = "two.sided"`.
 
-### Exercise 1: Estimating sample size
+<a name="ex1"></a>
+
+# Exercise 1: Estimating sample size
 
 Use `pwr.t.test` to work out how many people per group you need to test for 80% power to detect the median effect size in psychology, assuming that you do not know which direction the effect will be in.
 
@@ -81,7 +110,9 @@ So, to the nearest whole person, you need 64 people per group (so, 128 people in
 
 **Copy the R code you used for this exercise into PsycEL.**
 
-### Exercise 2: Estimating power
+<a name="ex2"></a>
+
+# Exercise 2: Estimating power
 
 Traditionally, psychologists test about 20 participant per group. Calculate the power of such an experiment, assuming the same typical effect size of 0.5. You can do this by removing `power` from the command and adding `n = 20`. 
 
@@ -96,7 +127,9 @@ As you can see, statistical power in traditional psychology experiments is very 
 
 **Copy the R code you used for this exercise into PsycEL.**
 
-## Power of within-subject designs
+<a name="ws"></a>
+
+# Within-subjects designs
 
 So far, this is all looking a pretty bad for psychology. Effect sizes are typically only medium (`d = .5`) and to test for a difference between groups with that kind of effect size, we should test 64 people per group (see Exercise 1). That's a lot of testing, and most psychology studies don't traditionally hit that target -- 20 per group is much more typical. At that sample size, the power is very low for medium-sized effects (see Exercise 2).
 
@@ -104,11 +137,13 @@ How can we make things better? One really good option is to use a _within-subjec
 
 The reason for switching to a within-subjects design is that it's much more efficient. In other words, for a given effect size, you can reach 80% power with many fewer participants, as we'll see below.
 
-### Within-subjects effect size
+## Within-subjects effect size
 
 Before looking at the power of within-subjects designs, we have to decide how to calculate effect size for this kind of experiment. There are at least [five different ways](http://jakewestfall.org/blog/index.php/2016/03/25/five-different-cohens-d-statistics-for-within-subject-designs/) of doing this, but we'll use the one required by the `pwr.t.test` command - Cohen's $d_{z}$. This is the mean difference between conditions, divided by the standard deviation of the _differences_. The `cohen.d` command we used earlier does **not** calculate this sort of within-subjects effect size. We won't need to calculate $d_{z}$ in this worksheet but, if you need to in later work, see the "[more on power](effsize_from_papers.html)" worksheet.
 
-### Exercise 3: Estimating within-subjects sample size
+<a name="ex3"></a>
+
+# Exercise 3: Estimating within-subjects sample size
 
 The `pwr.t.test` command lets us work out how many people we need for a within-subjects design, too. Just set `type="paired"` and use as before. Here's the answer you should get:
 
@@ -123,7 +158,9 @@ This comparison assumes the effect size would be the same in a within-subjects d
 
 **Copy the R code you used for this exercise into PsycEL.**
 
-## Exercise 4: Estimating required effect size
+<a name="ex4"></a>
+
+# Exercise 4: Estimating required effect size
 
 Often, there is a maximum number of people you can test given the time and resources available. For example, if you're taking PSYC520 at Plymouth University, you will only be able to test 25 people in your first data collection period due to time constraints. When you have this kind of constraint, it's important to know what effect size you will be able to detect with 80% power. To do this, take your last command and replace `d = .5` with `n = 25`. If you do this correctly, you'll see this output:
 
@@ -136,13 +173,16 @@ So, if you can only test 25 people in a within-subjects study, then you will onl
 
 **Copy the R code you used for this exercise into PsycEL.**
 
-## Improving power without increasing sample size
+<a name="good-design"></a>
+
+# Improving power without increasing sample size
 
 Whether you use a within- or a between-subjects design, another really good way to improve the statistical power of your experiment is to increase the experiment's effect size. Effect size is the mean difference divided by the variability, so you can increase effect size by either increasing the mean difference, or decreasing the varaibility, or both. There are some suggestions of how to do this in the "[more on power](effsize_from_papers.html)" worksheet.
 
 Psychologists are often surprised how much difference small increases in effect size can make. The relationship between effect size and sample size for 80% power is not a straight line. The required sample size drops off very rapidly as effect size increases, as shown in the graph below:
 
 ```{r pwr6, echo=FALSE}
+library(tidyverse)
 pwr.n <- function(d, type) {
     result <- pwr.t.test(power = .8, d = d, sig.level = .05, type = type, alternative="two.sided")
     ceiling(result$n)
@@ -168,7 +208,9 @@ power.graph %>% ggplot(aes(x = d, y = N, color = factor(type))) + geom_line() + 
 
 $N$ in this graph is the _total_ number of people you'd need to test for 80% power. You should be able to see that small increases above $d = .5$ lead to substantial reductions in necessary sample size, falling to 10 participants in total for $d_{z} = 1$ in a within-subjects design. In the other direction, small reductions in $d$ lead to very large increases in required sample size, with $d = .3$ requiring over 350 people for a between-subjects design.
 
-### Exercise 5: Extension task
+<a name="ex5"></a>
+
+# Exercise 5: Extension task
 
 If you're feeling confident, and have some time, try to recreate the above graph using R, and **copy the R code you used for this exercise into PsycEL.**
 

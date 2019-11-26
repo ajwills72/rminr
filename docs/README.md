@@ -105,11 +105,11 @@ The following materials are under development. Comments welcome:
 
 - [Data preprocessing](preproc.html). 
 
+- [Evidence, part 2](anova1.html)
+
 The following materials are in the planning stage. So, on clicking these links, you may find just notes, or incomplete worksheets. 
 
-- [One-factor ANOVA](anova1.html). 
-
-- [Two-factor ANOVA](anova2.html). 
+- [Evidence, part 3](anova2.html). 
 
 
 ## 5. Going further with R
