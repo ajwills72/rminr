@@ -10,7 +10,7 @@ output: html_document
 ## Show only commands.
 ## knitr::opts_chunk$set(echo = TRUE, message = FALSE, results='hide', fig.keep = 'none', comment=NA)
 
-## Show commands and ouptut.
+## Show commands and output.
 knitr::opts_chunk$set(echo = TRUE, comment=NA)
 
 ```
