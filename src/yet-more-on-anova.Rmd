@@ -1,0 +1,70 @@
+---
+title: "Yet more on ANOVA"
+author: "Andy Wills"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+## DEVELOPERS: Uncomment one option, as appropriate
+
+## Show only commands.
+## knitr::opts_chunk$set(echo = TRUE, message = FALSE, results='hide', fig.keep = 'none', comment=NA)
+
+## Show commands and output.
+knitr::opts_chunk$set(echo = TRUE, comment=NA)
+
+```
+
+# Contents
+
+- [Introduction](#intro)
+
+<a name="intro"></a>
+
+# Introduction
+
+This worksheet provides detailed explanations of the output of traditional ANOVA calculations. It isn't required reading, but if you're curious, read on.
+
+```{r load, echo = FALSE, message=FALSE}
+library(afex)
+prod <- read_csv("production.csv")
+prod$cond <- factor(prod$cond)
+```
+
+# Traditional ANOVA (between-subjects)
+
+```{r anovaBS}
+aov_car(formula = phit ~ cond + Error(subj), data = prod)
+```
+ 
+Here's what each component of the output means:
+
+`Contrasts set to contr.sum for the following variables: cond` - This refers to a part of the `aov_car` command that we do not cover in these worksheeets. It can be safely ignored.
+
+`Anova Table` - An ANOVA table is just a description of the way we report the results of an ANOVA. It is everything from the line which begins `Effect` until the line `---`.
+
+`(Type 3 tests)` - There's more than one way of doing an ANOVA. In fact, there are three ways, known as Type 1, Type 2, and Type 3. Statisticians argue about which way is best, and R can calculate them in any of these three ways. However, psychologists have nearly always used Type 3, mainly because they didn't realize there were other ways of doing it! So, `Type 3` in this context basically just means "the way psychologists expect it to have been done". If you are interested in how these types differ, take a look at this [blog post](). 
+
+`Response: phit` - This just confirms that R is doing what you asked it to, i.e. analyzing the variable  `phit`.
+
+The next two lines are read as a table. So, the first line, `Effect...` are the labels on the table, and the second line are the relevant numbers. Taking each of these in turn:
+
+`Effect: cond` - This confirms we are looking at the effect of the variable `cond` (on `phit`, see above).
+
+`df: 1, 58` - We came across the concept of degrees of freedom (`df`) before, when looking at traditional [t-tests](). In that case, there was just one number, and this corresponds to the _second_ number in an ANOVA - `58` in this case. This second number is a way of talking about the size of the dataset. It isn't quite the sample size, but it's related to it. The first number, `1` in this case, is a way of talking about the number of _levels_ in the factor. There are two levels in the factor we are analyzing (silent vs. read aloud). So, the first `df` is not quite the number of levels, but it is related to it. The two degrees of freedom in an ANOVA are also known as the _numerator_ (first number) and _denominator_ (second number) degrees of freedom. 
+
+`MSE: 0.04` - `MSE` stands for "mean squared error". Like a [standard deviation](), this is a measure of variability around the mean. It's generally more useful to report `ges` (covered in the main worksheet) instead, but some journals insist on MSE, so it's also provided for completeness.
+
+`F: 2.62` - The F value (also known as an F-ratio) is just a number, like a [t value](). On its own, it does not allow us to draw any conclusions. However, when we also know  the degrees of freedom, we can use it to work out the p value. Decades ago, this was done by looking up the F value in the back of a book. Today, we just let the computer work it out for us. 
+
+`ges: .04` - Generalized eta-squared, see main worksheet.
+
+`p.value: .11` - The p value, see main worksheet.
+
+`Signif. codes: ...` - This is a 'key', i.e. it explains some other part of the output. If the p value had been less than .1, you would have seen one of these symbols next to the F value. These symbols help the reader quickly spot 'significant' results.
+
+__
+
+This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0. 
+
+

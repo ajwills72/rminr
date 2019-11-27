@@ -19,41 +19,52 @@ knitr::opts_chunk$set(echo = TRUE, comment=NA)
 
 - [Introduction](#intro)
 
+- [Load the `afex` package](#afex)
+
+- [Traditional ANOVA (between-subjects)](#anovaBS)
+
+- [Traditional ANOVA (within-subjects)](#anovaWS)
+
+- [Pairwise comparisons](#pairs)
+
 <a name="intro"></a>
 
 # Introduction
 
-In the [Evidence, part 2]() and [Evidence, part 3]() worksheets, we looked at Bayesian ANOVA methods. Throughout [Research Methods in R]() we focus on Bayesian, rather than traditional ("p value") methods, because Bayes Factors are more useful and easier to understand. However, psychologists have been routinely using traditional ANOVA methods since the 1970s, and it was not until the 2010s that we started using Bayesian methods. So, there's a lot of older work out there that uses a technique you haven't yet been taught. There are also some psychologists who still expect to see the traditional analysis, with Bayesian analysis considered an optional addition to, rather than a replacement for, traditional methods. Although this view is hard to support in principled terms, it is probably still worth knowing how to do a traditional ANOVA, in case you are called upon to do so. This is what we'll cover in this worksheet.
+In the [Evidence, part 2](anova1.html) and [Evidence, part 3](anova2.html) worksheets, we looked at Bayesian ANOVA methods. Throughout _Research Methods in R_ we focus on Bayesian, rather than traditional ("p value") methods, because Bayes Factors are more useful and easier to understand. However, psychologists have been using traditional ANOVA methods since the 1970s, and it was not until the 2010s that we started using Bayesian methods. So, there's a lot of older work out there that uses a technique you haven't yet been taught. There are also some psychologists who still expect to see the traditional analysis, with Bayesian analysis considered an optional addition to, rather than a replacement for, traditional methods. Although this view is hard to support in principled terms, it is probably still worth knowing how to do a traditional ANOVA, in case you are called upon to do so, and so you can interpret older published work in psychology. This is what we'll cover in this worksheet.
 
-This worksheet is designed to be read alongside the Evidence worksheets (parts 2 and 3). Work through the evidence worksheets and then, when you get to a Bayesian ANOVA calculation, replace it with the command shown below.
+The following assumes you have completed the [Evidence, part 2](anova1.html) worksheet.
 
-Before doing this, you will need to load the `afex` package, which contains the commands for doing traditional ANOVA in R:
+<a name="afex"></a>
+
+# Load the `afex` package
+
+To do traditional ANVOA in R, you will need to load the `afex` package:
 
 ```{r load, message=FALSE}
 library(afex)
 ```
 
+<a name="anovaBS"></a>
+
 # Traditional ANOVA (between-subjects)
 
-```{r init, echo=FALSE, message=FALSE}
-library(tidyverse)
+Before you start, make sure you have loaded the data, and that you've told R which columns are factors:
+
+```{r init, message=FALSE}
 prod <- read_csv("production.csv")
 prod$cond <- factor(prod$cond)
 ```
 
-Instead of using the command:
-
-`anovaBF(formula = phit ~ cond, data = data.frame(prod))`
-
-use
+Now, to do a traditional between-subjects ANOVA, use the command:
 
 ```{r anovaBS}
-aov_car(formula = phit ~ cond + Error(subj), data = data.frame(prod))
+aov_car(formula = phit ~ cond + Error(subj), data = prod)
 ```
  
 ### Explanation of command
 
-In most ways, this command is very like `anovaBF`. For example, the part `formula = phit ~ cond` says we want to look at the effect of the `cond` variable (silent vs. read aloud) on the `phit` variable (memory performance, specifically probability of a hit). This is just like `anovaBF`. The main difference is that we also have `+ Error(subj)`. This tells `aov_car` which column contains the participant IDs (in this case, `subj`). The command `aov_car` always needs to be told this. Note that this is different to `anovaBF`, where we only have to say which column contains the participant IDs if we are doing a _within-subjects_ test. 
+The command `aov_car` is similar to the command `anovaBF`, but for traditional ANOVA. In most ways, this command works like `anovaBF`. For example, the part `formula = phit ~ cond` says we want to look at the effect of the `cond` variable (silent vs. read aloud) on the `phit` variable (memory performance, specifically probability of a hit). This is just like `anovaBF`. The main difference is that we also have `+ Error(subj)`. This tells `aov_car` which column contains the participant IDs (in this case, `subj`). The command `aov_car` always needs to be told this. Note that this is different to `anovaBF`, where we only have to say which column contains the participant IDs if we are doing a _within-subjects_ test. 
 
 ### Explanation of output
 
@@ -61,42 +72,90 @@ Although there's quite a lot in this output, the main thing to focus on is the n
 
 If you are reporting the results of a traditional ANOVA in a journal article, you are generally expected to report the `F` value, along with the degrees of freedom (`df`), as well as the p value. So, in this case, you would write:
 
-The two groups did not differ significantly _F_(1, 58) = 2.62, _p_ = .11.
+The two groups did not differ significantly, _F_(1, 58) = 2.62, _p_ = .11.
 
-Like p values themselves, the F ratio and degrees of freedom are not particularly meaningful or useful information for the reader to have, but such are the traditions of our field.
+The F ratio and degrees of freedom are not particularly meaningful or useful information for the reader to have, but nonetheless journals normally require them when reporting traditional ANOVA. For further explanation, see the [yet more on ANOVA](yet-more-on-anova.html) worksheet.
 
-One useful piece of information `aov_car` provides is `ges` - which is `.04` in this example. `ges` stands for "Generalized Eta Squared". This is a measure of [effect size](), somewhat like Cohen's d, but the scale is different. `ges` is much like a [correlation co-efficient](corr.html#corr), and ranges between 0 and 1. A large effect size for `ges` is around .26, a medium-sized effect is around .13, and a small effect is around .02 ([further details here](https://www.psy.gla.ac.uk/~steve/best/effect.html))/ It can be useful to report generalized eta squared, and this is reported as $\eta_{g}^{2}$. So one could write:
+One useful piece of information `aov_car` provides is `ges` - which is `.04` in this example. `ges` stands for "generalized eta-squared". This is a measure of [effect size](group-differences.html#effsize), somewhat like Cohen's d, but the scale is different. `ges` is much like a [correlation co-efficient](corr.html#corr), and ranges between 0 and 1. A large effect size for `ges` is around .26, a medium-sized effect is around .13, and a small effect is around .02 ([further details here](https://www.psy.gla.ac.uk/~steve/best/effect.html)). It can be useful to report generalized eta squared, and this is reported as $\eta_{g}^{2}$. So one could write:
 
-The two groups did not differ significantly, _F_(1, 58) = 2.62, _p_ = .11, $\eta_{g}^{2} = .04$.
+The two groups did not differ significantly, _F_(1, 58) = 2.62, _p_ = .11, $\eta_{g}^{2}$ = .04.
 
 Note that some authors will instead report a related measure called _partial_ eta-squared ($\eta_{p}^{2}$). This is not the same thing and, in most circumstances, it is better to report generalized eta-squared. This point is discussed further [here](https://stats.stackexchange.com/questions/301801/generalized-eta-squared).
 
+<a name="anovaWS"></a>
 
-### Extended explanation of output
+# Traditional ANOVA (within-subjects)
 
-In this section, you'll find an explanation of each component of the output. You can skip this section if you like, but if you're curious what the rest of the output means, read on.
+First, ensure you have loaded and preprocessed the data for this example:
 
-`Contrasts set to contr.sum for the following variables: cond` - This refers to a part of the `aov_car` command that we do not cover in these worksheeets. It can be safely ignored.
+```{r init2, message=FALSE}
+words <- read_csv("wordnaming2.csv")
+wordctrl <- words %>% filter(medit == "control")
+wordctrlCI <- wordctrl %>% filter(congru != "neutral")
+wordctrlCIsum <- wordctrlCI %>%
+    group_by(subj, congru) %>%
+    summarise(rt = mean(rt))
+wordctrlCIsum$congru <- factor(wordctrlCIsum$congru)
+wordctrlCIsum$subj <- factor(wordctrlCIsum$subj)
+```
 
-`Anova Table` - An ANOVA table is just a description of the way we report the results of an ANOVA. It is everything from the line which begins `Effect` until the line `---`.
+This is the command to run a traditional within-subjects ANOVA:
 
-`(Type 3 tests)` - There's more than one way of doing an ANOVA. In fact, there are three ways, known as Type 1, Type 2, and Type 3. Statisticians argue about which way is best, and R can calculate them in any of these three ways. However, psychologists have nearly always used Type 3, mainly because they didn't realize there were other ways of doing it! So, `Type 3` in this context basically just means "the way psychologists expect it to have been done". If you are interested in how these types differ, take a look at this [blog post](). 
+```{r tradWS}
+aov_car(formula = rt ~ Error(subj/congru), data = wordctrlCIsum)
+```
 
-`Response: phit` - This just confirms that R is doing what you asked it to, i.e. analyzing the variable  `phit`.
+## Explanation of command
 
-The next two lines are read as a table. So, the first line, `Effect...` are the labels on the table, and the second line are the relevant numbers. Taking each of these in turn:
+`aov_car` works similarly to `anovaBF` - for example we specify a `formula` and the data set (`data`). It differs mainly in how the right-hand side of the formula (everything after the `~`) is laid out. To do a within-subjects test in `aov_car` we write `Error(x/y)`, where `x` is the column of data frame that contains the subject IDs (`subj` in this case), and `y` is the column of the data frame that contains the within-subjects condition (`congru` in this case).
 
-`Effect: cond` - This confirms we are looking at the effect of the variable `cond` (on `phit`, see above).
+## Explanation of output
 
-`df: 1, 58` - We came across the concept of degrees of freedom (`df`) before, when looking at traditional [t-tests](). In that case, there was just one number, and this corresponds to the _second_ number in an ANOVA - `58` in this case. This second number is a way of talking about the size of the dataset. It isn't quite the sample size, but it's related to it. The first number, `1` in this case, is a way of talking about the number of _levels_ in the factor. There are two levels in the factor we are analyzing (silent vs. read aloud). So, the first `df` is not quite the number of levels, but it is related to it. The two degrees of freedom in an ANOVA are also known as the _numerator_ (first number) and _denominator_ (second number) degrees of freedom. 
+The output can be read exactly the same way as in the last example. When reporting this analysis, one would write:
 
-`F: 2.62` - The F value (also known as an F-ratio) is just a number, like a [t value](). On its own, it does not allow us to draw any conclusions. However, when we also know  the degrees of freedom, we can use it to work out the p value. Decades ago, this was done by looking up the F value in the back of a book. Today, we just let the computer work it out for us. 
+The two conditions differed significantly, _F_(1, 139) = 44.78, _p_ < .0001, $\eta_{g}^{2}$ = .11.
 
-`ges: .04` - Generalized eta-squared, see above.
+# Traditional ANOVA with more than two levels
 
-`p.value: .11` - The p value is .11, see above.
+First, ensure you have loaded and preprocessed the data for this example:
 
-`Signif. codes: ...` - This is a 'key', i.e. it explains some other part of the output. If the p value had been less than .1, you would have seen one of these symbols next to the p value, for example `.04 *`. These symbols help the reader quickly spot significant p values. 
+```{r init3, message=FALSE}
+wordctrlsum <- wordctrl %>%
+    group_by(subj, congru) %>%
+    summarise(rt = mean(rt))
+wordctrlsum$congru <- factor(wordctrlsum$congru)
+wordctrlsum$subj <- factor(wordctrlsum$subj)
+```
+
+The command to run a traditional ANOVA with more than two levels is exactly the same as it is with two levels. For example, the within-subjects version is:
+
+```{r tradWS2}
+aov_car(formula = rt ~ Error(subj/congru), data = wordctrlsum)
+```
+
+## Explanation of output
+
+The output is read exactly the same way as before. In this example, you would write:
+
+Congruency significantly affected reaction time,  _F_(1.05, 145.55) = 43.75, _p_ < .0001, $\eta_{g}^{2}$ = .09.
+
+There is one new aspect here, the statement at the end:
+
+`Sphericity correction method: GG`
+
+You'll see something like this in traditional ANOVA outputs when a within-subjects factor has more than two levels. It turns out that traditional ANOVA methods generally get the p value wrong in these cases, because they make assumptions about the data which are normally untrue. The incorrect assumption they make is that the data is "spherical" -- if you're curious what that means, click [here](https://en.wikipedia.org/wiki/Mauchly%27s_sphericity_test). 
+
+Fortunately, there are ways of correcting this error. These are called _sphericity corrections_ ("sphericity" is the property of being spherical). The two main methods are Greenhouse-Geisser (`GG`) correction, and Huynh-Feldt (`HF`) correction. `aov_car` picks the most appropriate one, makes the correction, and tells you it's done so by including that statement `Sphericity correction method: GG` at the end. Another way you can tell a sphericity correction has been applied is that the degrees of freedom (`df`) are normally not whole numbers (`1.05` and `145.44` in this case). 
+
+You would normally report towards the begining of your results that you used such a correction. For example:
+
+"Greenhouse-Geisser corrections for non-sphericity were applied where appropriate."
+
+<a name="pairs"></a>
+
+# Pairwise comparisons
+
+You can do pairwise comparisons in traditional ANOVA in the same way you do them with `anovaBF`. In other words, filter the data to include just the two conditions you want to compare, and run the appropriate test. There are also other ways to do this, but we don't cover them in these intermediate-level worksheets.
 
 __
 
