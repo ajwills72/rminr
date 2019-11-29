@@ -1,0 +1,17 @@
+Graph,Training,Trial,RT
+1,meditate,congruent,500
+1,meditate,incongruent,400
+1,control,congruent,400
+1,control,incongruent,500
+2,meditate,congruent,500
+2,meditate,incongruent,400
+2,control,congruent,600
+2,control,incongruent,500
+3,meditate,congruent,400
+3,meditate,incongruent,300
+3,control,congruent,400
+3,control,incongruent,500
+4,meditate,congruent,
+4,meditate,incongruent,
+4,control,congruent,
+4,control,incongruent,
