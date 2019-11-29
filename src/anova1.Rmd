@@ -158,6 +158,8 @@ Here's a summary of what each of the columns in the data set contains:
 
 <a name="preproc"></a>
 
+This data set is based on the design of experiments that have really been done [REF](), and is realistic in terms of its size and complexity. However, it's important to remember that this is _generated_ data, not data actually collected from participants. So, you should not take the analyses you do of this simulated data as evidence for the effectiveness of meditation in improving attentional control. As is often the case, real data in this area is less clear, and more contoversial [REF]().
+
 # Preprocessing
 
 As covered in the [preprocessing](preproc.html) worksheet, the first thing we need to do with realistic data sets like this is to preprocess them, so the data is in a format that we can analyse. The two steps we need to do for our first analysis are _filtering_ and _summarising_.
