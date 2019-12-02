@@ -20,7 +20,7 @@ The advantages of R over other software packages are discussed [here](why-r-stud
 ## 1. Absolute Beginners' Guide to R
 <a name="beginners"></a>
 
-A series of worksheets on using R for data analysis in psychology. No previous knowledge of R, or of psycholopgy, is assumed. 
+A series of worksheets on using R for data analysis in psychology. No previous knowledge of R, or of psychology, is assumed. 
 
 * [Introduction to RStudio](intro-rstudio.md). How to get RStudio, and a basic introduction to the software.
 
