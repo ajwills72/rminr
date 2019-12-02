@@ -1,0 +1,18 @@
+<a name="anovaBS"></a>
+
+# Bayesian ANOVA (between-subjects)
+
+In summary, there appears to be an effect of meditation on the congruency score, but how good is the evidence for that claim? We can use a between-subjects Bayesian ANOVA to work this out. So,
+
+**WRITE SOME COMMANDS** that use the `medidiff` data frame to perform a between-subjects Bayesian ANOVA (`anovaBF`) on the effect of group (i.e. meditation versus control, found in the `medit` column) on the congruency score (found in the `diff` column). Don't forget to tell R which columns are _factors_, using the `factor` command. If you need to revise how to do this, take a look back at the [Evidence, part 2](anova1.html#factors) worksheet.
+
+_EXPECTED OUTPUT_: You should get the following output:
+
+```{r easy, echo=FALSE}
+medidiff$medit <- factor(medidiff$medit)
+anovaBF(formula = diff ~ medit, data = data.frame(medidiff))
+```
+
+The interpretation of this output is the same as before. The key figure here is the Bayes Factor, which is close to 5000 on this occasion. This is very substantial evidence in favour of a difference between conditions. If, prior to seeing this analysis, you thought it was about 50:50 whether meditation would affect attention in this experiment or not, this Bayes Factor tells you that you should now think that it is about 5000 times more likely there is an effect (in this experiment) than there isn't. 
+
+<a name="intsect"></a>

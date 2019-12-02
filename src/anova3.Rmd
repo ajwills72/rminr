@@ -1,0 +1,332 @@
+---
+title: "Evidence, part 4"
+author: "Andy Wills"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+## DEVELOPERS: Uncomment one option, as appropriate
+
+## Show only commands.
+## knitr::opts_chunk$set(echo = TRUE, message = FALSE, results='hide', fig.keep = 'none', comment=NA)
+
+## Show commands and putout.
+knitr::opts_chunk$set(echo = TRUE, comment=NA, cache = TRUE)
+
+
+```
+
+For the previous parts of this worksheet, see the [Absolute Beginners' Guide to R](evidence.html), and the [evidence, part 2](anova1.html) and [evidence, part 3](anova2.html) worksheets.
+
+# Contents
+
+- [Getting started](#start)
+
+- [Introduction](#intro)
+
+- [Defining factors](#factors) 
+
+- [Bayesian factorial ANOVA](#bfact)
+
+- [Exercise](#ex1)
+
+- [Pairwise comparisons](#pairc)
+
+- [Better graphs](#bettergraphs)
+
+- [Reporting Bayesian ANOVA](#report)
+
+- [Ordinal factors](#ordinal)
+
+<a name="start"></a>
+
+# Getting started
+
+We'll be using the same meditation training data we used in [evidence, part 3](anova2.html), so make sure you've completed that worksheet and have the preprocessed `MCwordsCIsum` data frame from that worksheet in your current R project. If for some reason you do not have that data frame, you can re-create it like this, as long as you have `wordnaming2.csv` in your R project (which is available from the _git_ repository we used [previously](preproc.html#load)):
+
+```{r init, message=FALSE}
+library(tidyverse)
+library(BayesFactor, quietly = TRUE)
+words <- read_csv("wordnaming2.csv")
+MCwords <- words %>% filter(medit != "relax")
+MCwordsCI <- MCwords %>% filter(congru != "neutral")
+MCwordsCIsum <-
+    MCwordsCI %>% group_by(subj, medit, congru) %>% summarise(rt = mean(rt))
+```
+
+<a name="start"></a>
+
+# Introduction
+
+In this worksheet, we'll use the `anovaBF` command to analyse the data from an experiment with a _factorial_ design. In [evidence, part 3](anova2.html), we said that a _factorial_ experiment design is one where there are at least two factors (e.g. training type, trial type) and we have data for all combinations of those factors (e.g. meditate-congruent, meditate-incongruent, control-conrguent, control-incongruent). When you have a factorial design with two factors, there are three questions you can ask:
+
+1. Is there a _main effect_ of the first factor (e.g. training type)?
+
+2. Is there a _main effect_ of the second factor (e.g. trial type)?
+
+3. Is there an _interaction_ between these two factors?
+
+The command `anovaBF` allows us to answer all these three questions in one go. 
+
+<a name="factors"></a>
+
+# Defining factors
+
+Take a look at the data frame `MCwordsCIsum`. It gives the mean congruent reaction time, and mean incongruent reaction time, for each participant. As before, we have to tell R which of the columns of this data frame are _factors_. The columns `medit` and `congru` are factors - they are the two factors of the design. Recall that in analyses where there is a within-subjects factor, we also need to tell R that the participant ID is a factor. So, we need to set three of the four columns of `MCwordsCIsum` as factors, like this:
+
+```{r three-factors}
+MCwordsCIsum$subj <- factor(MCwordsCIsum$subj)
+MCwordsCIsum$medit <- factor(MCwordsCIsum$medit)
+MCwordsCIsum$congru <- factor(MCwordsCIsum$congru)
+```
+
+<a name="bfact"></a>
+
+# Bayesian factorial ANOVA
+
+Once you have told R which columns are _factors_, you're ready to answer these three questions:
+
+1. Is there a _main effect_ of the first factor (e.g. training type)?
+
+2. Is there a _main effect_ of the second factor (e.g. trial type)?
+
+3. Is there an _interaction_ between these two factors?
+
+This is a big calculation for R, so run the following commands, and then read the explanation while you're waiting for the results. It could take up to a minute to get the answer.
+
+```{r bf-fact-1}
+bf <- anovaBF(formula = rt ~ medit*congru + subj,
+              data = data.frame(MCwordsCIsum), whichRandom = "subj")
+```
+
+## Explanation of command
+
+We'll  look at each part of this command but, rather than looking at each in turn, we'll look at the crucial part first, which is this:
+
+### Formula
+
+`formula = rt ~ medit*congru + subj` 
+
+This tells `anovaBF` what type of ANOVA we want. It says that the dependent variable is the reaction time column `rt`, and that the independent variables are the training type `medit` and the trial type `congru`. The `*` means "do a factorial ANOVA". In other words, it means work out a Bayes Factor for the main effect of each factor, and for the interaction. The final part, `+ subj`, says that this experiment contains at least one within-subjects factor, and that the participant IDs are to be found in the `subj` column. 
+
+### Random factors
+
+The command `anovaBF` is smart enough to work out for itself that `medit` is between-subjects and `congru` is within-subjects. However, it does have to be told which factors are [random factors](anova1.html#anovaWS). In most cases we'll deal with in this guide, only the participant ID is a random factor. Hence:
+
+`whichRandom = "subj"`
+
+### Storing results in an object
+
+`bf <-` - As the calculation takes a while to run, it makes sense to save the results of the calculation, so we only ever have to do it once. This command writes the output of `anovaBF` to an _object_ called `bf`. Until now, most objects you've seen have been data frames. But there are other types of object in R, including ones, like this one, that contain the results of calculations.
+
+### Everything else
+
+`anovaBF` - This is the same command as we've used for a while now. It's quite flexible!
+
+`data = data.frame(MCwordsCIsum)` - As in previous examples of `anovaBF`, this just says where to find the data (i.e. in the `MCwordsCIsum` data frame).
+
+## Explanation of output
+
+Once calculation has finished, take a look at the results. You do this by typing in the name of the object you stored the results in:
+
+```{r reveal}
+bf
+```
+
+The exact figures in your output may be slightly different to those shown.
+
+The key parts of this output are the Bayes Factors, which are the numbers immediately after the colons. A couple of things to notice here. First, there are four Bayes factors, when we might have expected to see three. We'll come back to that later. Second, there are things like `±2.66%` after the Bayes Factors. This means that R has _estimated_ the Bayes Factors, and is able to tell you how accurate that estimate is. So, for example, `10 ± 10%` means the Bayes Factor is somewhere between 9 and 11. 
+
+We'll look at each of these Bayes factors in turn. Notice they are numbered, e.g. `[1]` - this will become useful later. Also notice that they all include  `+ subj`. This  just indicates that at least one of the factors is within-subjects, so we'll ignore the `+ subj` in our descriptions from here on.
+
+
+### `[1] medit`
+
+This is the **main effect** of training type, `medit`. More specifically, it is a test of the hypothesis that `medit`, affects `rt`. 
+
+Recall that a Bayes Factor is a comparison of evidence of two hypotheses. So, in a Bayesian t-test, for example, a BF of 3 means there is three times as much evidence in favour of a difference between groups (the experimental hypothesis) as in favour of their _not_ being a difference (the null hypothesis). 
+
+The Bayes Factor for this hypothesis is around 340, which is really strong evidence that there is a main effect of meditation training. But which direction is the main effect in? Does meditation training make you faster overall, or slower overall?
+
+We can find this out by using the `group_by` and `summarise` commands we have used several times before:
+
+```{r meditME}
+MCwordsCIsum %>% group_by(medit) %>% summarise(mean(rt))
+```
+
+From this, we can see that people in the meditation condition are about 30 ms faster, on average, than those in the control condition. Meditation training seems to have led to a reduction in overall reaction times in this task.
+
+### `[2] congru`
+
+The is the **main effect** of congruence. Again, more specifically, it is the hypothesis that `congru`  affects `rt`. This is compared against the hypothesis that there is no effect of congruence.
+
+The Bayes Factor is about 790, strong evidence for  a main effect of congruence. As before, we can find out which direction this effect is in:
+
+```{r congruME}
+MCwordsCIsum %>% group_by(congru) %>% summarise(mean(rt))
+```
+
+As expected, incongruent trials are slower than congruent trials, on average. Again the difference is around 30 ms.
+
+### The interaction
+
+`anovaBF` does not directly give us a Bayes Factor for the interaction of the two main effects. Instead, it gives us two Bayes Factors for things that we can use to work out the interaction BF. These are:
+
+#### [3] `medit + congru`
+
+This the hypothesis that there is a main effect of both factors. There is no assumption that the two main effects are of the same size. This 'main effects' hypothesis is compared against the null hypothesis, i.e. that neither `medit` nor `congru` affect `rt`. 
+
+The BF for this hypothesis is large (about 300,000). We'd expect this, given that there was substantial evidence for both `congru` alone and `medit` alone.
+
+#### [4] medit + congru + medit:congru
+
+This is the Bayes Factor for the hypothesis that there are main effects for both factors (`medit + congru`) _and_ that the two factors interact (`+ medit:congru`). This is again compared against the null hypothesis that neither `medit` nor `congru` have any effect. 
+
+The BF for this hypothesis is also large (about $1.8 \times 10^{9}$). We'd expect this, because there was substantial evidence for the 'main effects' hypothesis `medit + congru`. 
+
+#### Interaction BF
+
+Remember that a Bayes Factor is always a comparison of two types of evidence. So far, we've always compared some experimental hypothesis with  the null hypothesis. But we can also compare the evidence for two different experimental hypotheses. The hypothesis that there is an interaction is the hypothesis that there is something more going on that just the combination of main effects. For example, the hypothesis that the congruency effect is smaller after mediation. So, to get a Bayes Factor for the interaction, we compare the evidence for hypothesis `[4]` with the evidence for hypothesis `[3]`. To do this, we divide the Bayes Factor for `[4]` by the Bayes Factor for `[3]`. 
+
+In R we can use the `bf` object to do this:
+
+```{r int-fact}
+bf[4] / bf[3]
+```
+
+This gives us a Bayes Factor for the interaction close to 6000. So, there is strong evidence for the interaction, too.
+
+<a name="ex1"></a>
+
+# Exercise
+
+As covered in [Evidence, part 2](anova1.html#threeplus), one of the strengths of `anovaBF` is that it's not limited to factors with two levels. In our meditation experiment, there were three between-subjects training conditions (meditate, relaxation, none), and three within-subjects trial trials (congruent, incongruent, neutral). **The goal of this exercise is to write an R script to analyze the full experiment**. 
+
+Below are further instructions. In some cases, there are also examples of what your output should look like at each stage if you've got it right (recall that your BF may be slightly different to those shown). Once your script is working correctly, **copy and paste it into PsycEL**.
+
+Start a new R script, and begin it with `rm(list=ls()` to make sure you've cleared everything from your environment. Then, write R commands to do the following (see below).
+Only include the commands that are needed to do this, and use meaningful names for your variables.
+
+1. Load packages and data, 
+
+```{r ex-a, echo=FALSE, message=FALSE}
+rm(list=ls())
+library(tidyverse)
+library(BayesFactor)
+words <- read_csv("wordnaming2.csv")
+```
+
+2. Preprocess that data and place it in a data frame called `wordsum`
+
+```{r ex-b, echo=FALSE}
+wordsum <- words %>% group_by(subj, medit, congru) %>% summarise(rt = mean(rt))
+```
+
+3. Tell R which columns of your preprocessed data are factors
+
+```{r ex-c, echo=FALSE}
+wordsum$subj <- factor(wordsum$subj)
+wordsum$medit <- factor(wordsum$medit)
+wordsum$congru <- factor(wordsum$congru)
+```
+
+3. Calculate a factorial Bayesian ANOVA for this full 3 (meditate, relax, control) x 3 (congruent, incongruent, neutral)  data set, and store it in an object (e.g. `bfall`)
+
+```{r ex-d, echo=FALSE, message=FALSE}
+bfall <- anovaBF(formula = rt ~ medit*congru + subj,
+              data = data.frame(wordsum), whichRandom = "subj")
+```
+
+4. Show the results of that calculation
+
+```{r ex-e, echo=FALSE}
+bfall
+```
+
+4. Calculate the BF for the interaction.
+
+```{r ex-f, echo=FALSE}
+bfall[4]/bfall[3]
+```
+
+5. Report the mean RTs for the main effect of each condition.
+
+```{r ex-g, echo=FALSE}
+wordsum %>% group_by(medit) %>% summarise(mean(rt))
+wordsum %>% group_by(congru) %>% summarise(mean(rt))
+```
+
+6. Calculate the mean RT for each of the nine conditions of the experiment, and place these data in a new data frame so you can graph them:
+
+```{r ex-h, echo=FALSE}
+gdat <- wordsum %>% group_by(medit, congru) %>% summarise(rt = mean(rt))
+gdat
+```
+
+7. Graph
+
+Use a line graph, similar to the ones you produced earlier, to show these nine means. Note that `ggplot` orders conditions alphabetically, so by default your x-axis would come out in the order `cong, incong, neutral`. It makes more sense to use the order `cong, neutral, incong` as the neutral trials (those without pictures) are, in some sense, in between the congruent trials (helpful pictures) and the incongruent trials (unhelpful pictures).  You can reorder the points on the x-axis of a graph using the `scale_x_discrete` command. In this case, you can set the correct order by adding this to your graph commands:
+
+`scale_x_discrete(limits=c("cong", "neutral", "incong"))`
+
+
+```{r ex-i, echo=FALSE}
+gdat %>%
+    ggplot(aes(x = congru, y = rt, group = medit)) +
+    geom_line(aes(colour=medit)) +
+    geom_point(aes(colour=medit)) +
+    scale_x_discrete(limits=c("cong", "neutral", "incong")) + 
+    theme_bw()
+```
+
+<a name="pairc"></a>
+
+# Pairwise comparisons
+
+Although that's the end of the exercise, in a full analysis you would probably want to go further and look at particular pairs of conditions within the experiment. You do this as before, by using the `filter` command to select the data you want to analyze. For more details, see the [Evidence, part 2](anova1.html) worksheet.
+
+<a name="bettergraphs"></a>
+
+# Better graphs
+
+The graph you produced in the above exercise is quite common in psychology experiments, but it's not particularly informative because it gives only the average response for each condition. It gives no sense of how much people vary from one another. 
+
+One common approach to this problem is to add _error bars_, or _confidence intervals_ to a line plot or bar plot. These are ways of showing variability around the mean with a little "I" shaped mark and although we don't cover them in this course, you'll see them in a lot of journal articles.
+
+Unfortunately, very many of those articles use them _wrongly_  for within-subjects factors, because they use the variability of each level of the factor to calculate the confidence intervals. This is wrong because it is the variability of the _differences_ between conditions that are relevant in a within-subjects design, not the variability of the individual conditions. The former will often be smaller than the latter. Indeed, this difference is one of the main reasons to favour within-subjects designs, see [here](effsize_from_papers.html#estimate) for more details. 
+
+A better way of showing variability in a within-subjects factor is to use a density plot of the differences, as we have in these worksheets. Where you also have a between-subjects factor, you can overlay those difference-density plots, as in this [figure](anova2.html#densediff). You can alternatively use boxplots or [violin plots](illusions.html), which some people find more attractive and/or easier to interpret.
+
+In cases where your within-subjects factor has more than two levels, this can get more tricky but generally the solution is to pick those pairs of levels that are important for your hypothesis, and do difference-density plots of those.
+
+<a name="report"></a>
+
+# Reporting Bayesian ANOVA
+
+When it comes to reporting the results of a Bayesian ANOVA, you just give the Bayes Factor in the appropriate part of your text. For example:
+
+There was a main effect of training type, $BF = 814$, a main effect of congruency, $BF = 2.8 \times 10^{16}$, and an interaction between these two factors, $BF = 5.4 \times 10^{7}$. 
+
+It's important to remember that Bayes Factors without means are basically meaningless. So, you need to show, for example, a graph of the means for each condition (as above) for the reader to make sense of your analysis.
+
+There are a number of different ways to do Bayesian calculations, and these can lead to somewhat different results. So, it's really important to also say exactly what calculation you did. In this case you would say:
+
+We performed a factorial Bayesian ANOVA with one within-subjects factor (congruency) and one between-subject factor (training type), using the BayesFactor package (Morey & Rouder, 2018) in R (R Core Team, 2019).
+
+It's also important to include those references in your Reference section. R will tell you the reference for a package if you type e.g.  `citation("BayesFactor")`. The reference for R itself is found by typing `citation()`. Note that R is what is doing your calculations, while _RStudio_ is a web page that makes it easier to use R. _RStudio_ does not have any affect on the output you get. So, you don't normally cite _RStudio_ in your writeups. 
+
+<a name="ordinal"></a>
+
+# Ordinal factors
+
+A final important thing to realize about ANOVA is that it does not care about the order of the levels in your factors. For example, the full data set you have been analyzing includes block number. Participants do 30 trials, then take a break, then do another 30 trials, and so on. So each response is either in block 1, 2, or 3. If people were getting tired, you might see reaction times rise from blocks 1 to 2 and again from blocks 2 to 3. You might also find Bayesian evidence for a main effect of block (e.g. BF = 30). 
+
+It's important to realise that this tells you only that the three groups differ, not that 3 is greater than 2 and 2 is greater than 1. There are two ways of finding evidence for that sort of question. First, you could do two pairwise comparions (1 vs. 2, and 2 vs. 3). Alternatively, you could use a different analysis method that takes account of the fact that block is an _ordinal_ factor (i.e. that it has a specific order). [Regression](https://benwhalley.github.io/just-enough-r/linear-models-simple.html) is often a good choice in these cases.
+
+
+___
+
+
+This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0. 
+
+
