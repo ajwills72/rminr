@@ -13,7 +13,7 @@
 <meta name="author" content="Andy Wills" />
 
 
-<title>Preprocessing data from experiments</title>
+<title>Traditional ANOVA</title>
 
 <script>/*! jQuery v1.11.3 | (c) 2005, 2015 jQuery Foundation, Inc. | jquery.org/license */
 !function(a,b){"object"==typeof module&&"object"==typeof module.exports?module.exports=a.document?b(a,!0):function(a){if(!a.document)throw new Error("jQuery requires a window with a document");return b(a)}:b(a)}("undefined"!=typeof window?window:this,function(a,b){var c=[],d=c.slice,e=c.concat,f=c.push,g=c.indexOf,h={},i=h.toString,j=h.hasOwnProperty,k={},l="1.11.3",m=function(a,b){return new m.fn.init(a,b)},n=/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g,o=/^-ms-/,p=/-([\da-z])/gi,q=function(a,b){return b.toUpperCase()};m.fn=m.prototype={jquery:l,constructor:m,selector:"",length:0,toArray:function(){return d.call(this)},get:function(a){return null!=a?0>a?this[a+this.length]:this[a]:d.call(this)},pushStack:function(a){var b=m.merge(this.constructor(),a);return b.prevObject=this,b.context=this.context,b},each:function(a,b){return m.each(this,a,b)},map:function(a){return this.pushStack(m.map(this,function(b,c){return a.call(b,c,b)}))},slice:function(){return this.pushStack(d.apply(this,arguments))},first:function(){return this.eq(0)},last:function(){return this.eq(-1)},eq:function(a){var b=this.length,c=+a+(0>a?b:0);return this.pushStack(c>=0&&b>c?[this[c]]:[])},end:function(){return this.prevObject||this.constructor(null)},push:f,sort:c.sort,splice:c.splice},m.extend=m.fn.extend=function(){var a,b,c,d,e,f,g=arguments[0]||{},h=1,i=arguments.length,j=!1;for("boolean"==typeof g&&(j=g,g=arguments[h]||{},h++),"object"==typeof g||m.isFunction(g)||(g={}),h===i&&(g=this,h--);i>h;h++)if(null!=(e=arguments[h]))for(d in e)a=g[d],c=e[d],g!==c&&(j&&c&&(m.isPlainObject(c)||(b=m.isArray(c)))?(b?(b=!1,f=a&&m.isArray(a)?a:[]):f=a&&m.isPlainObject(a)?a:{},g[d]=m.extend(j,f,c)):void 0!==c&&(g[d]=c));return g},m.extend({expando:"jQuery"+(l+Math.random()).replace(/\D/g,""),isReady:!0,error:function(a){throw new Error(a)},noop:function(){},isFunction:function(a){return"function"===m.type(a)},isArray:Array.isArray||function(a){return"array"===m.type(a)},isWindow:function(a){return null!=a&&a==a.window},isNumeric:function(a){return!m.isArray(a)&&a-parseFloat(a)+1>=0},isEmptyObject:function(a){var b;for(b in a)return!1;return!0},isPlainObject:function(a){var b;if(!a||"object"!==m.type(a)||a.nodeType||m.isWindow(a))return!1;try{if(a.constructor&&!j.call(a,"constructor")&&!j.call(a.constructor.prototype,"isPrototypeOf"))return!1}catch(c){return!1}if(k.ownLast)for(b in a)return j.call(a,b);for(b in a);return void 0===b||j.call(a,b)},type:function(a){return null==a?a+"":"object"==typeof a||"function"==typeof a?h[i.call(a)]||"object":typeof a},globalEval:function(b){b&&m.trim(b)&&(a.execScript||function(b){a.eval.call(a,b)})(b)},camelCase:function(a){return a.replace(o,"ms-").replace(p,q)},nodeName:function(a,b){return a.nodeName&&a.nodeName.toLowerCase()===b.toLowerCase()},each:function(a,b,c){var d,e=0,f=a.length,g=r(a);if(c){if(g){for(;f>e;e++)if(d=b.apply(a[e],c),d===!1)break}else for(e in a)if(d=b.apply(a[e],c),d===!1)break}else if(g){for(;f>e;e++)if(d=b.call(a[e],e,a[e]),d===!1)break}else for(e in a)if(d=b.call(a[e],e,a[e]),d===!1)break;return a},trim:function(a){return null==a?"":(a+"").replace(n,"")},makeArray:function(a,b){var c=b||[];return null!=a&&(r(Object(a))?m.merge(c,"string"==typeof a?[a]:a):f.call(c,a)),c},inArray:function(a,b,c){var d;if(b){if(g)return g.call(b,a,c);for(d=b.length,c=c?0>c?Math.max(0,d+c):c:0;d>c;c++)if(c in b&&b[c]===a)return c}return-1},merge:function(a,b){var c=+b.length,d=0,e=a.length;while(c>d)a[e++]=b[d++];if(c!==c)while(void 0!==b[d])a[e++]=b[d++];return a.length=e,a},grep:function(a,b,c){for(var d,e=[],f=0,g=a.length,h=!c;g>f;f++)d=!b(a[f],f),d!==h&&e.push(a[f]);return e},map:function(a,b,c){var d,f=0,g=a.length,h=r(a),i=[];if(h)for(;g>f;f++)d=b(a[f],f,c),null!=d&&i.push(d);else for(f in a)d=b(a[f],f,c),null!=d&&i.push(d);return e.apply([],i)},guid:1,proxy:function(a,b){var c,e,f;return"string"==typeof b&&(f=a[b],b=a,a=f),m.isFunction(a)?(c=d.call(arguments,2),e=function(){return a.apply(b||this,c.concat(d.call(arguments)))},e.guid=a.guid=a.guid||m.guid++,e):void 0},now:function(){return+new Date},support:k}),m.each("Boolean Number String Function Array Date RegExp Object Error".split(" "),function(a,b){h["[object "+b+"]"]=b.toLowerCase()});function r(a){var b="length"in a&&a.length,c=m.type(a);return"function"===c||m.isWindow(a)?!1:1===a.nodeType&&b?!0:"array"===c||0===b||"number"==typeof b&&b>0&&b-1 in a}var s=function(a){var b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u="sizzle"+1*new Date,v=a.document,w=0,x=0,y=ha(),z=ha(),A=ha(),B=function(a,b){return a===b&&(l=!0),0},C=1<<31,D={}.hasOwnProperty,E=[],F=E.pop,G=E.push,H=E.push,I=E.slice,J=function(a,b){for(var c=0,d=a.length;d>c;c++)if(a[c]===b)return c;return-1},K="checked|selected|async|autofocus|autoplay|controls|defer|disabled|hidden|ismap|loop|multiple|open|readonly|required|scoped",L="[\\x20\\t\\r\\n\\f]",M="(?:\\\\.|[\\w-]|[^\\x00-\\xa0])+",N=M.replace("w","w#"),O="\\["+L+"*("+M+")(?:"+L+"*([*^$|!~]?=)"+L+"*(?:'((?:\\\\.|[^\\\\'])*)'|\"((?:\\\\.|[^\\\\\"])*)\"|("+N+"))|)"+L+"*\\]",P=":("+M+")(?:\\((('((?:\\\\.|[^\\\\'])*)'|\"((?:\\\\.|[^\\\\\"])*)\")|((?:\\\\.|[^\\\\()[\\]]|"+O+")*)|.*)\\)|)",Q=new RegExp(L+"+","g"),R=new RegExp("^"+L+"+|((?:^|[^\\\\])(?:\\\\.)*)"+L+"+$","g"),S=new RegExp("^"+L+"*,"+L+"*"),T=new RegExp("^"+L+"*([>+~]|"+L+")"+L+"*"),U=new RegExp("="+L+"*([^\\]'\"]*?)"+L+"*\\]","g"),V=new RegExp(P),W=new RegExp("^"+N+"$"),X={ID:new RegExp("^#("+M+")"),CLASS:new RegExp("^\\.("+M+")"),TAG:new RegExp("^("+M.replace("w","w*")+")"),ATTR:new RegExp("^"+O),PSEUDO:new RegExp("^"+P),CHILD:new RegExp("^:(only|first|last|nth|nth-last)-(child|of-type)(?:\\("+L+"*(even|odd|(([+-]|)(\\d*)n|)"+L+"*(?:([+-]|)"+L+"*(\\d+)|))"+L+"*\\)|)","i"),bool:new RegExp("^(?:"+K+")$","i"),needsContext:new RegExp("^"+L+"*[>+~]|:(even|odd|eq|gt|lt|nth|first|last)(?:\\("+L+"*((?:-\\d)?\\d*)"+L+"*\\)|)(?=[^-]|$)","i")},Y=/^(?:input|select|textarea|button)$/i,Z=/^h\d$/i,$=/^[^{]+\{\s*\[native \w/,_=/^(?:#([\w-]+)|(\w+)|\.([\w-]+))$/,aa=/[+~]/,ba=/'|\\/g,ca=new RegExp("\\\\([\\da-f]{1,6}"+L+"?|("+L+")|.)","ig"),da=function(a,b,c){var d="0x"+b-65536;return d!==d||c?b:0>d?String.fromCharCode(d+65536):String.fromCharCode(d>>10|55296,1023&d|56320)},ea=function(){m()};try{H.apply(E=I.call(v.childNodes),v.childNodes),E[v.childNodes.length].nodeType}catch(fa){H={apply:E.length?function(a,b){G.apply(a,I.call(b))}:function(a,b){var c=a.length,d=0;while(a[c++]=b[d++]);a.length=c-1}}}function ga(a,b,d,e){var f,h,j,k,l,o,r,s,w,x;if((b?b.ownerDocument||b:v)!==n&&m(b),b=b||n,d=d||[],k=b.nodeType,"string"!=typeof a||!a||1!==k&&9!==k&&11!==k)return d;if(!e&&p){if(11!==k&&(f=_.exec(a)))if(j=f[1]){if(9===k){if(h=b.getElementById(j),!h||!h.parentNode)return d;if(h.id===j)return d.push(h),d}else if(b.ownerDocument&&(h=b.ownerDocument.getElementById(j))&&t(b,h)&&h.id===j)return d.push(h),d}else{if(f[2])return H.apply(d,b.getElementsByTagName(a)),d;if((j=f[3])&&c.getElementsByClassName)return H.apply(d,b.getElementsByClassName(j)),d}if(c.qsa&&(!q||!q.test(a))){if(s=r=u,w=b,x=1!==k&&a,1===k&&"object"!==b.nodeName.toLowerCase()){o=g(a),(r=b.getAttribute("id"))?s=r.replace(ba,"\\$&"):b.setAttribute("id",s),s="[id='"+s+"'] ",l=o.length;while(l--)o[l]=s+ra(o[l]);w=aa.test(a)&&pa(b.parentNode)||b,x=o.join(",")}if(x)try{return H.apply(d,w.querySelectorAll(x)),d}catch(y){}finally{r||b.removeAttribute("id")}}}return i(a.replace(R,"$1"),b,d,e)}function ha(){var a=[];function b(c,e){return a.push(c+" ")>d.cacheLength&&delete b[a.shift()],b[c+" "]=e}return b}function ia(a){return a[u]=!0,a}function ja(a){var b=n.createElement("div");try{return!!a(b)}catch(c){return!1}finally{b.parentNode&&b.parentNode.removeChild(b),b=null}}function ka(a,b){var c=a.split("|"),e=a.length;while(e--)d.attrHandle[c[e]]=b}function la(a,b){var c=b&&a,d=c&&1===a.nodeType&&1===b.nodeType&&(~b.sourceIndex||C)-(~a.sourceIndex||C);if(d)return d;if(c)while(c=c.nextSibling)if(c===b)return-1;return a?1:-1}function ma(a){return function(b){var c=b.nodeName.toLowerCase();return"input"===c&&b.type===a}}function na(a){return function(b){var c=b.nodeName.toLowerCase();return("input"===c||"button"===c)&&b.type===a}}function oa(a){return ia(function(b){return b=+b,ia(function(c,d){var e,f=a([],c.length,b),g=f.length;while(g--)c[e=f[g]]&&(c[e]=!(d[e]=c[e]))})})}function pa(a){return a&&"undefined"!=typeof a.getElementsByTagName&&a}c=ga.support={},f=ga.isXML=function(a){var b=a&&(a.ownerDocument||a).documentElement;return b?"HTML"!==b.nodeName:!1},m=ga.setDocument=function(a){var b,e,g=a?a.ownerDocument||a:v;return g!==n&&9===g.nodeType&&g.documentElement?(n=g,o=g.documentElement,e=g.defaultView,e&&e!==e.top&&(e.addEventListener?e.addEventListener("unload",ea,!1):e.attachEvent&&e.attachEvent("onunload",ea)),p=!f(g),c.attributes=ja(function(a){return a.className="i",!a.getAttribute("className")}),c.getElementsByTagName=ja(function(a){return a.appendChild(g.createComment("")),!a.getElementsByTagName("*").length}),c.getElementsByClassName=$.test(g.getElementsByClassName),c.getById=ja(function(a){return o.appendChild(a).id=u,!g.getElementsByName||!g.getElementsByName(u).length}),c.getById?(d.find.ID=function(a,b){if("undefined"!=typeof b.getElementById&&p){var c=b.getElementById(a);return c&&c.parentNode?[c]:[]}},d.filter.ID=function(a){var b=a.replace(ca,da);return function(a){return a.getAttribute("id")===b}}):(delete d.find.ID,d.filter.ID=function(a){var b=a.replace(ca,da);return function(a){var c="undefined"!=typeof a.getAttributeNode&&a.getAttributeNode("id");return c&&c.value===b}}),d.find.TAG=c.getElementsByTagName?function(a,b){return"undefined"!=typeof b.getElementsByTagName?b.getElementsByTagName(a):c.qsa?b.querySelectorAll(a):void 0}:function(a,b){var c,d=[],e=0,f=b.getElementsByTagName(a);if("*"===a){while(c=f[e++])1===c.nodeType&&d.push(c);return d}return f},d.find.CLASS=c.getElementsByClassName&&function(a,b){return p?b.getElementsByClassName(a):void 0},r=[],q=[],(c.qsa=$.test(g.querySelectorAll))&&(ja(function(a){o.appendChild(a).innerHTML="<a id='"+u+"'></a><select id='"+u+"-\f]' msallowcapture=''><option selected=''></option></select>",a.querySelectorAll("[msallowcapture^='']").length&&q.push("[*^$]="+L+"*(?:''|\"\")"),a.querySelectorAll("[selected]").length||q.push("\\["+L+"*(?:value|"+K+")"),a.querySelectorAll("[id~="+u+"-]").length||q.push("~="),a.querySelectorAll(":checked").length||q.push(":checked"),a.querySelectorAll("a#"+u+"+*").length||q.push(".#.+[+~]")}),ja(function(a){var b=g.createElement("input");b.setAttribute("type","hidden"),a.appendChild(b).setAttribute("name","D"),a.querySelectorAll("[name=d]").length&&q.push("name"+L+"*[*^$|!~]?="),a.querySelectorAll(":enabled").length||q.push(":enabled",":disabled"),a.querySelectorAll("*,:x"),q.push(",.*:")})),(c.matchesSelector=$.test(s=o.matches||o.webkitMatchesSelector||o.mozMatchesSelector||o.oMatchesSelector||o.msMatchesSelector))&&ja(function(a){c.disconnectedMatch=s.call(a,"div"),s.call(a,"[s!='']:x"),r.push("!=",P)}),q=q.length&&new RegExp(q.join("|")),r=r.length&&new RegExp(r.join("|")),b=$.test(o.compareDocumentPosition),t=b||$.test(o.contains)?function(a,b){var c=9===a.nodeType?a.documentElement:a,d=b&&b.parentNode;return a===d||!(!d||1!==d.nodeType||!(c.contains?c.contains(d):a.compareDocumentPosition&&16&a.compareDocumentPosition(d)))}:function(a,b){if(b)while(b=b.parentNode)if(b===a)return!0;return!1},B=b?function(a,b){if(a===b)return l=!0,0;var d=!a.compareDocumentPosition-!b.compareDocumentPosition;return d?d:(d=(a.ownerDocument||a)===(b.ownerDocument||b)?a.compareDocumentPosition(b):1,1&d||!c.sortDetached&&b.compareDocumentPosition(a)===d?a===g||a.ownerDocument===v&&t(v,a)?-1:b===g||b.ownerDocument===v&&t(v,b)?1:k?J(k,a)-J(k,b):0:4&d?-1:1)}:function(a,b){if(a===b)return l=!0,0;var c,d=0,e=a.parentNode,f=b.parentNode,h=[a],i=[b];if(!e||!f)return a===g?-1:b===g?1:e?-1:f?1:k?J(k,a)-J(k,b):0;if(e===f)return la(a,b);c=a;while(c=c.parentNode)h.unshift(c);c=b;while(c=c.parentNode)i.unshift(c);while(h[d]===i[d])d++;return d?la(h[d],i[d]):h[d]===v?-1:i[d]===v?1:0},g):n},ga.matches=function(a,b){return ga(a,null,null,b)},ga.matchesSelector=function(a,b){if((a.ownerDocument||a)!==n&&m(a),b=b.replace(U,"='$1']"),!(!c.matchesSelector||!p||r&&r.test(b)||q&&q.test(b)))try{var d=s.call(a,b);if(d||c.disconnectedMatch||a.document&&11!==a.document.nodeType)return d}catch(e){}return ga(b,n,null,[a]).length>0},ga.contains=function(a,b){return(a.ownerDocument||a)!==n&&m(a),t(a,b)},ga.attr=function(a,b){(a.ownerDocument||a)!==n&&m(a);var e=d.attrHandle[b.toLowerCase()],f=e&&D.call(d.attrHandle,b.toLowerCase())?e(a,b,!p):void 0;return void 0!==f?f:c.attributes||!p?a.getAttribute(b):(f=a.getAttributeNode(b))&&f.specified?f.value:null},ga.error=function(a){throw new Error("Syntax error, unrecognized expression: "+a)},ga.uniqueSort=function(a){var b,d=[],e=0,f=0;if(l=!c.detectDuplicates,k=!c.sortStable&&a.slice(0),a.sort(B),l){while(b=a[f++])b===a[f]&&(e=d.push(f));while(e--)a.splice(d[e],1)}return k=null,a},e=ga.getText=function(a){var b,c="",d=0,f=a.nodeType;if(f){if(1===f||9===f||11===f){if("string"==typeof a.textContent)return a.textContent;for(a=a.firstChild;a;a=a.nextSibling)c+=e(a)}else if(3===f||4===f)return a.nodeValue}else while(b=a[d++])c+=e(b);return c},d=ga.selectors={cacheLength:50,createPseudo:ia,match:X,attrHandle:{},find:{},relative:{">":{dir:"parentNode",first:!0}," ":{dir:"parentNode"},"+":{dir:"previousSibling",first:!0},"~":{dir:"previousSibling"}},preFilter:{ATTR:function(a){return a[1]=a[1].replace(ca,da),a[3]=(a[3]||a[4]||a[5]||"").replace(ca,da),"~="===a[2]&&(a[3]=" "+a[3]+" "),a.slice(0,4)},CHILD:function(a){return a[1]=a[1].toLowerCase(),"nth"===a[1].slice(0,3)?(a[3]||ga.error(a[0]),a[4]=+(a[4]?a[5]+(a[6]||1):2*("even"===a[3]||"odd"===a[3])),a[5]=+(a[7]+a[8]||"odd"===a[3])):a[3]&&ga.error(a[0]),a},PSEUDO:function(a){var b,c=!a[6]&&a[2];return X.CHILD.test(a[0])?null:(a[3]?a[2]=a[4]||a[5]||"":c&&V.test(c)&&(b=g(c,!0))&&(b=c.indexOf(")",c.length-b)-c.length)&&(a[0]=a[0].slice(0,b),a[2]=c.slice(0,b)),a.slice(0,3))}},filter:{TAG:function(a){var b=a.replace(ca,da).toLowerCase();return"*"===a?function(){return!0}:function(a){return a.nodeName&&a.nodeName.toLowerCase()===b}},CLASS:function(a){var b=y[a+" "];return b||(b=new RegExp("(^|"+L+")"+a+"("+L+"|$)"))&&y(a,function(a){return b.test("string"==typeof a.className&&a.className||"undefined"!=typeof a.getAttribute&&a.getAttribute("class")||"")})},ATTR:function(a,b,c){return function(d){var e=ga.attr(d,a);return null==e?"!="===b:b?(e+="","="===b?e===c:"!="===b?e!==c:"^="===b?c&&0===e.indexOf(c):"*="===b?c&&e.indexOf(c)>-1:"$="===b?c&&e.slice(-c.length)===c:"~="===b?(" "+e.replace(Q," ")+" ").indexOf(c)>-1:"|="===b?e===c||e.slice(0,c.length+1)===c+"-":!1):!0}},CHILD:function(a,b,c,d,e){var f="nth"!==a.slice(0,3),g="last"!==a.slice(-4),h="of-type"===b;return 1===d&&0===e?function(a){return!!a.parentNode}:function(b,c,i){var j,k,l,m,n,o,p=f!==g?"nextSibling":"previousSibling",q=b.parentNode,r=h&&b.nodeName.toLowerCase(),s=!i&&!h;if(q){if(f){while(p){l=b;while(l=l[p])if(h?l.nodeName.toLowerCase()===r:1===l.nodeType)return!1;o=p="only"===a&&!o&&"nextSibling"}return!0}if(o=[g?q.firstChild:q.lastChild],g&&s){k=q[u]||(q[u]={}),j=k[a]||[],n=j[0]===w&&j[1],m=j[0]===w&&j[2],l=n&&q.childNodes[n];while(l=++n&&l&&l[p]||(m=n=0)||o.pop())if(1===l.nodeType&&++m&&l===b){k[a]=[w,n,m];break}}else if(s&&(j=(b[u]||(b[u]={}))[a])&&j[0]===w)m=j[1];else while(l=++n&&l&&l[p]||(m=n=0)||o.pop())if((h?l.nodeName.toLowerCase()===r:1===l.nodeType)&&++m&&(s&&((l[u]||(l[u]={}))[a]=[w,m]),l===b))break;return m-=e,m===d||m%d===0&&m/d>=0}}},PSEUDO:function(a,b){var c,e=d.pseudos[a]||d.setFilters[a.toLowerCase()]||ga.error("unsupported pseudo: "+a);return e[u]?e(b):e.length>1?(c=[a,a,"",b],d.setFilters.hasOwnProperty(a.toLowerCase())?ia(function(a,c){var d,f=e(a,b),g=f.length;while(g--)d=J(a,f[g]),a[d]=!(c[d]=f[g])}):function(a){return e(a,0,c)}):e}},pseudos:{not:ia(function(a){var b=[],c=[],d=h(a.replace(R,"$1"));return d[u]?ia(function(a,b,c,e){var f,g=d(a,null,e,[]),h=a.length;while(h--)(f=g[h])&&(a[h]=!(b[h]=f))}):function(a,e,f){return b[0]=a,d(b,null,f,c),b[0]=null,!c.pop()}}),has:ia(function(a){return function(b){return ga(a,b).length>0}}),contains:ia(function(a){return a=a.replace(ca,da),function(b){return(b.textContent||b.innerText||e(b)).indexOf(a)>-1}}),lang:ia(function(a){return W.test(a||"")||ga.error("unsupported lang: "+a),a=a.replace(ca,da).toLowerCase(),function(b){var c;do if(c=p?b.lang:b.getAttribute("xml:lang")||b.getAttribute("lang"))return c=c.toLowerCase(),c===a||0===c.indexOf(a+"-");while((b=b.parentNode)&&1===b.nodeType);return!1}}),target:function(b){var c=a.location&&a.location.hash;return c&&c.slice(1)===b.id},root:function(a){return a===o},focus:function(a){return a===n.activeElement&&(!n.hasFocus||n.hasFocus())&&!!(a.type||a.href||~a.tabIndex)},enabled:function(a){return a.disabled===!1},disabled:function(a){return a.disabled===!0},checked:function(a){var b=a.nodeName.toLowerCase();return"input"===b&&!!a.checked||"option"===b&&!!a.selected},selected:function(a){return a.parentNode&&a.parentNode.selectedIndex,a.selected===!0},empty:function(a){for(a=a.firstChild;a;a=a.nextSibling)if(a.nodeType<6)return!1;return!0},parent:function(a){return!d.pseudos.empty(a)},header:function(a){return Z.test(a.nodeName)},input:function(a){return Y.test(a.nodeName)},button:function(a){var b=a.nodeName.toLowerCase();return"input"===b&&"button"===a.type||"button"===b},text:function(a){var b;return"input"===a.nodeName.toLowerCase()&&"text"===a.type&&(null==(b=a.getAttribute("type"))||"text"===b.toLowerCase())},first:oa(function(){return[0]}),last:oa(function(a,b){return[b-1]}),eq:oa(function(a,b,c){return[0>c?c+b:c]}),even:oa(function(a,b){for(var c=0;b>c;c+=2)a.push(c);return a}),odd:oa(function(a,b){for(var c=1;b>c;c+=2)a.push(c);return a}),lt:oa(function(a,b,c){for(var d=0>c?c+b:c;--d>=0;)a.push(d);return a}),gt:oa(function(a,b,c){for(var d=0>c?c+b:c;++d<b;)a.push(d);return a})}},d.pseudos.nth=d.pseudos.eq;for(b in{radio:!0,checkbox:!0,file:!0,password:!0,image:!0})d.pseudos[b]=ma(b);for(b in{submit:!0,reset:!0})d.pseudos[b]=na(b);function qa(){}qa.prototype=d.filters=d.pseudos,d.setFilters=new qa,g=ga.tokenize=function(a,b){var c,e,f,g,h,i,j,k=z[a+" "];if(k)return b?0:k.slice(0);h=a,i=[],j=d.preFilter;while(h){(!c||(e=S.exec(h)))&&(e&&(h=h.slice(e[0].length)||h),i.push(f=[])),c=!1,(e=T.exec(h))&&(c=e.shift(),f.push({value:c,type:e[0].replace(R," ")}),h=h.slice(c.length));for(g in d.filter)!(e=X[g].exec(h))||j[g]&&!(e=j[g](e))||(c=e.shift(),f.push({value:c,type:g,matches:e}),h=h.slice(c.length));if(!c)break}return b?h.length:h?ga.error(a):z(a,i).slice(0)};function ra(a){for(var b=0,c=a.length,d="";c>b;b++)d+=a[b].value;return d}function sa(a,b,c){var d=b.dir,e=c&&"parentNode"===d,f=x++;return b.first?function(b,c,f){while(b=b[d])if(1===b.nodeType||e)return a(b,c,f)}:function(b,c,g){var h,i,j=[w,f];if(g){while(b=b[d])if((1===b.nodeType||e)&&a(b,c,g))return!0}else while(b=b[d])if(1===b.nodeType||e){if(i=b[u]||(b[u]={}),(h=i[d])&&h[0]===w&&h[1]===f)return j[2]=h[2];if(i[d]=j,j[2]=a(b,c,g))return!0}}}function ta(a){return a.length>1?function(b,c,d){var e=a.length;while(e--)if(!a[e](b,c,d))return!1;return!0}:a[0]}function ua(a,b,c){for(var d=0,e=b.length;e>d;d++)ga(a,b[d],c);return c}function va(a,b,c,d,e){for(var f,g=[],h=0,i=a.length,j=null!=b;i>h;h++)(f=a[h])&&(!c||c(f,d,e))&&(g.push(f),j&&b.push(h));return g}function wa(a,b,c,d,e,f){return d&&!d[u]&&(d=wa(d)),e&&!e[u]&&(e=wa(e,f)),ia(function(f,g,h,i){var j,k,l,m=[],n=[],o=g.length,p=f||ua(b||"*",h.nodeType?[h]:h,[]),q=!a||!f&&b?p:va(p,m,a,h,i),r=c?e||(f?a:o||d)?[]:g:q;if(c&&c(q,r,h,i),d){j=va(r,n),d(j,[],h,i),k=j.length;while(k--)(l=j[k])&&(r[n[k]]=!(q[n[k]]=l))}if(f){if(e||a){if(e){j=[],k=r.length;while(k--)(l=r[k])&&j.push(q[k]=l);e(null,r=[],j,i)}k=r.length;while(k--)(l=r[k])&&(j=e?J(f,l):m[k])>-1&&(f[j]=!(g[j]=l))}}else r=va(r===g?r.splice(o,r.length):r),e?e(null,g,r,i):H.apply(g,r)})}function xa(a){for(var b,c,e,f=a.length,g=d.relative[a[0].type],h=g||d.relative[" "],i=g?1:0,k=sa(function(a){return a===b},h,!0),l=sa(function(a){return J(b,a)>-1},h,!0),m=[function(a,c,d){var e=!g&&(d||c!==j)||((b=c).nodeType?k(a,c,d):l(a,c,d));return b=null,e}];f>i;i++)if(c=d.relative[a[i].type])m=[sa(ta(m),c)];else{if(c=d.filter[a[i].type].apply(null,a[i].matches),c[u]){for(e=++i;f>e;e++)if(d.relative[a[e].type])break;return wa(i>1&&ta(m),i>1&&ra(a.slice(0,i-1).concat({value:" "===a[i-2].type?"*":""})).replace(R,"$1"),c,e>i&&xa(a.slice(i,e)),f>e&&xa(a=a.slice(e)),f>e&&ra(a))}m.push(c)}return ta(m)}function ya(a,b){var c=b.length>0,e=a.length>0,f=function(f,g,h,i,k){var l,m,o,p=0,q="0",r=f&&[],s=[],t=j,u=f||e&&d.find.TAG("*",k),v=w+=null==t?1:Math.random()||.1,x=u.length;for(k&&(j=g!==n&&g);q!==x&&null!=(l=u[q]);q++){if(e&&l){m=0;while(o=a[m++])if(o(l,g,h)){i.push(l);break}k&&(w=v)}c&&((l=!o&&l)&&p--,f&&r.push(l))}if(p+=q,c&&q!==p){m=0;while(o=b[m++])o(r,s,g,h);if(f){if(p>0)while(q--)r[q]||s[q]||(s[q]=F.call(i));s=va(s)}H.apply(i,s),k&&!f&&s.length>0&&p+b.length>1&&ga.uniqueSort(i)}return k&&(w=v,j=t),r};return c?ia(f):f}return h=ga.compile=function(a,b){var c,d=[],e=[],f=A[a+" "];if(!f){b||(b=g(a)),c=b.length;while(c--)f=xa(b[c]),f[u]?d.push(f):e.push(f);f=A(a,ya(e,d)),f.selector=a}return f},i=ga.select=function(a,b,e,f){var i,j,k,l,m,n="function"==typeof a&&a,o=!f&&g(a=n.selector||a);if(e=e||[],1===o.length){if(j=o[0]=o[0].slice(0),j.length>2&&"ID"===(k=j[0]).type&&c.getById&&9===b.nodeType&&p&&d.relative[j[1].type]){if(b=(d.find.ID(k.matches[0].replace(ca,da),b)||[])[0],!b)return e;n&&(b=b.parentNode),a=a.slice(j.shift().value.length)}i=X.needsContext.test(a)?0:j.length;while(i--){if(k=j[i],d.relative[l=k.type])break;if((m=d.find[l])&&(f=m(k.matches[0].replace(ca,da),aa.test(j[0].type)&&pa(b.parentNode)||b))){if(j.splice(i,1),a=f.length&&ra(j),!a)return H.apply(e,f),e;break}}}return(n||h(a,o))(f,b,!p,e,aa.test(a)&&pa(b.parentNode)||b),e},c.sortStable=u.split("").sort(B).join("")===u,c.detectDuplicates=!!l,m(),c.sortDetached=ja(function(a){return 1&a.compareDocumentPosition(n.createElement("div"))}),ja(function(a){return a.innerHTML="<a href='#'></a>","#"===a.firstChild.getAttribute("href")})||ka("type|href|height|width",function(a,b,c){return c?void 0:a.getAttribute(b,"type"===b.toLowerCase()?1:2)}),c.attributes&&ja(function(a){return a.innerHTML="<input/>",a.firstChild.setAttribute("value",""),""===a.firstChild.getAttribute("value")})||ka("value",function(a,b,c){return c||"input"!==a.nodeName.toLowerCase()?void 0:a.defaultValue}),ja(function(a){return null==a.getAttribute("disabled")})||ka(K,function(a,b,c){var d;return c?void 0:a[b]===!0?b.toLowerCase():(d=a.getAttributeNode(b))&&d.specified?d.value:null}),ga}(a);m.find=s,m.expr=s.selectors,m.expr[":"]=m.expr.pseudos,m.unique=s.uniqueSort,m.text=s.getText,m.isXMLDoc=s.isXML,m.contains=s.contains;var t=m.expr.match.needsContext,u=/^<(\w+)\s*\/?>(?:<\/\1>|)$/,v=/^.[^:#\[\.,]*$/;function w(a,b,c){if(m.isFunction(b))return m.grep(a,function(a,d){return!!b.call(a,d,a)!==c});if(b.nodeType)return m.grep(a,function(a){return a===b!==c});if("string"==typeof b){if(v.test(b))return m.filter(b,a,c);b=m.filter(b,a)}return m.grep(a,function(a){return m.inArray(a,b)>=0!==c})}m.filter=function(a,b,c){var d=b[0];return c&&(a=":not("+a+")"),1===b.length&&1===d.nodeType?m.find.matchesSelector(d,a)?[d]:[]:m.find.matches(a,m.grep(b,function(a){return 1===a.nodeType}))},m.fn.extend({find:function(a){var b,c=[],d=this,e=d.length;if("string"!=typeof a)return this.pushStack(m(a).filter(function(){for(b=0;e>b;b++)if(m.contains(d[b],this))return!0}));for(b=0;e>b;b++)m.find(a,d[b],c);return c=this.pushStack(e>1?m.unique(c):c),c.selector=this.selector?this.selector+" "+a:a,c},filter:function(a){return this.pushStack(w(this,a||[],!1))},not:function(a){return this.pushStack(w(this,a||[],!0))},is:function(a){return!!w(this,"string"==typeof a&&t.test(a)?m(a):a||[],!1).length}});var x,y=a.document,z=/^(?:\s*(<[\w\W]+>)[^>]*|#([\w-]*))$/,A=m.fn.init=function(a,b){var c,d;if(!a)return this;if("string"==typeof a){if(c="<"===a.charAt(0)&&">"===a.charAt(a.length-1)&&a.length>=3?[null,a,null]:z.exec(a),!c||!c[1]&&b)return!b||b.jquery?(b||x).find(a):this.constructor(b).find(a);if(c[1]){if(b=b instanceof m?b[0]:b,m.merge(this,m.parseHTML(c[1],b&&b.nodeType?b.ownerDocument||b:y,!0)),u.test(c[1])&&m.isPlainObject(b))for(c in b)m.isFunction(this[c])?this[c](b[c]):this.attr(c,b[c]);return this}if(d=y.getElementById(c[2]),d&&d.parentNode){if(d.id!==c[2])return x.find(a);this.length=1,this[0]=d}return this.context=y,this.selector=a,this}return a.nodeType?(this.context=this[0]=a,this.length=1,this):m.isFunction(a)?"undefined"!=typeof x.ready?x.ready(a):a(m):(void 0!==a.selector&&(this.selector=a.selector,this.context=a.context),m.makeArray(a,this))};A.prototype=m.fn,x=m(y);var B=/^(?:parents|prev(?:Until|All))/,C={children:!0,contents:!0,next:!0,prev:!0};m.extend({dir:function(a,b,c){var d=[],e=a[b];while(e&&9!==e.nodeType&&(void 0===c||1!==e.nodeType||!m(e).is(c)))1===e.nodeType&&d.push(e),e=e[b];return d},sibling:function(a,b){for(var c=[];a;a=a.nextSibling)1===a.nodeType&&a!==b&&c.push(a);return c}}),m.fn.extend({has:function(a){var b,c=m(a,this),d=c.length;return this.filter(function(){for(b=0;d>b;b++)if(m.contains(this,c[b]))return!0})},closest:function(a,b){for(var c,d=0,e=this.length,f=[],g=t.test(a)||"string"!=typeof a?m(a,b||this.context):0;e>d;d++)for(c=this[d];c&&c!==b;c=c.parentNode)if(c.nodeType<11&&(g?g.index(c)>-1:1===c.nodeType&&m.find.matchesSelector(c,a))){f.push(c);break}return this.pushStack(f.length>1?m.unique(f):f)},index:function(a){return a?"string"==typeof a?m.inArray(this[0],m(a)):m.inArray(a.jquery?a[0]:a,this):this[0]&&this[0].parentNode?this.first().prevAll().length:-1},add:function(a,b){return this.pushStack(m.unique(m.merge(this.get(),m(a,b))))},addBack:function(a){return this.add(null==a?this.prevObject:this.prevObject.filter(a))}});function D(a,b){do a=a[b];while(a&&1!==a.nodeType);return a}m.each({parent:function(a){var b=a.parentNode;return b&&11!==b.nodeType?b:null},parents:function(a){return m.dir(a,"parentNode")},parentsUntil:function(a,b,c){return m.dir(a,"parentNode",c)},next:function(a){return D(a,"nextSibling")},prev:function(a){return D(a,"previousSibling")},nextAll:function(a){return m.dir(a,"nextSibling")},prevAll:function(a){return m.dir(a,"previousSibling")},nextUntil:function(a,b,c){return m.dir(a,"nextSibling",c)},prevUntil:function(a,b,c){return m.dir(a,"previousSibling",c)},siblings:function(a){return m.sibling((a.parentNode||{}).firstChild,a)},children:function(a){return m.sibling(a.firstChild)},contents:function(a){return m.nodeName(a,"iframe")?a.contentDocument||a.contentWindow.document:m.merge([],a.childNodes)}},function(a,b){m.fn[a]=function(c,d){var e=m.map(this,b,c);return"Until"!==a.slice(-5)&&(d=c),d&&"string"==typeof d&&(e=m.filter(d,e)),this.length>1&&(C[a]||(e=m.unique(e)),B.test(a)&&(e=e.reverse())),this.pushStack(e)}});var E=/\S+/g,F={};function G(a){var b=F[a]={};return m.each(a.match(E)||[],function(a,c){b[c]=!0}),b}m.Callbacks=function(a){a="string"==typeof a?F[a]||G(a):m.extend({},a);var b,c,d,e,f,g,h=[],i=!a.once&&[],j=function(l){for(c=a.memory&&l,d=!0,f=g||0,g=0,e=h.length,b=!0;h&&e>f;f++)if(h[f].apply(l[0],l[1])===!1&&a.stopOnFalse){c=!1;break}b=!1,h&&(i?i.length&&j(i.shift()):c?h=[]:k.disable())},k={add:function(){if(h){var d=h.length;!function f(b){m.each(b,function(b,c){var d=m.type(c);"function"===d?a.unique&&k.has(c)||h.push(c):c&&c.length&&"string"!==d&&f(c)})}(arguments),b?e=h.length:c&&(g=d,j(c))}return this},remove:function(){return h&&m.each(arguments,function(a,c){var d;while((d=m.inArray(c,h,d))>-1)h.splice(d,1),b&&(e>=d&&e--,f>=d&&f--)}),this},has:function(a){return a?m.inArray(a,h)>-1:!(!h||!h.length)},empty:function(){return h=[],e=0,this},disable:function(){return h=i=c=void 0,this},disabled:function(){return!h},lock:function(){return i=void 0,c||k.disable(),this},locked:function(){return!i},fireWith:function(a,c){return!h||d&&!i||(c=c||[],c=[a,c.slice?c.slice():c],b?i.push(c):j(c)),this},fire:function(){return k.fireWith(this,arguments),this},fired:function(){return!!d}};return k},m.extend({Deferred:function(a){var b=[["resolve","done",m.Callbacks("once memory"),"resolved"],["reject","fail",m.Callbacks("once memory"),"rejected"],["notify","progress",m.Callbacks("memory")]],c="pending",d={state:function(){return c},always:function(){return e.done(arguments).fail(arguments),this},then:function(){var a=arguments;return m.Deferred(function(c){m.each(b,function(b,f){var g=m.isFunction(a[b])&&a[b];e[f[1]](function(){var a=g&&g.apply(this,arguments);a&&m.isFunction(a.promise)?a.promise().done(c.resolve).fail(c.reject).progress(c.notify):c[f[0]+"With"](this===d?c.promise():this,g?[a]:arguments)})}),a=null}).promise()},promise:function(a){return null!=a?m.extend(a,d):d}},e={};return d.pipe=d.then,m.each(b,function(a,f){var g=f[2],h=f[3];d[f[1]]=g.add,h&&g.add(function(){c=h},b[1^a][2].disable,b[2][2].lock),e[f[0]]=function(){return e[f[0]+"With"](this===e?d:this,arguments),this},e[f[0]+"With"]=g.fireWith}),d.promise(e),a&&a.call(e,e),e},when:function(a){var b=0,c=d.call(arguments),e=c.length,f=1!==e||a&&m.isFunction(a.promise)?e:0,g=1===f?a:m.Deferred(),h=function(a,b,c){return function(e){b[a]=this,c[a]=arguments.length>1?d.call(arguments):e,c===i?g.notifyWith(b,c):--f||g.resolveWith(b,c)}},i,j,k;if(e>1)for(i=new Array(e),j=new Array(e),k=new Array(e);e>b;b++)c[b]&&m.isFunction(c[b].promise)?c[b].promise().done(h(b,k,c)).fail(g.reject).progress(h(b,j,i)):--f;return f||g.resolveWith(k,c),g.promise()}});var H;m.fn.ready=function(a){return m.ready.promise().done(a),this},m.extend({isReady:!1,readyWait:1,holdReady:function(a){a?m.readyWait++:m.ready(!0)},ready:function(a){if(a===!0?!--m.readyWait:!m.isReady){if(!y.body)return setTimeout(m.ready);m.isReady=!0,a!==!0&&--m.readyWait>0||(H.resolveWith(y,[m]),m.fn.triggerHandler&&(m(y).triggerHandler("ready"),m(y).off("ready")))}}});function I(){y.addEventListener?(y.removeEventListener("DOMContentLoaded",J,!1),a.removeEventListener("load",J,!1)):(y.detachEvent("onreadystatechange",J),a.detachEvent("onload",J))}function J(){(y.addEventListener||"load"===event.type||"complete"===y.readyState)&&(I(),m.ready())}m.ready.promise=function(b){if(!H)if(H=m.Deferred(),"complete"===y.readyState)setTimeout(m.ready);else if(y.addEventListener)y.addEventListener("DOMContentLoaded",J,!1),a.addEventListener("load",J,!1);else{y.attachEvent("onreadystatechange",J),a.attachEvent("onload",J);var c=!1;try{c=null==a.frameElement&&y.documentElement}catch(d){}c&&c.doScroll&&!function e(){if(!m.isReady){try{c.doScroll("left")}catch(a){return setTimeout(e,50)}I(),m.ready()}}()}return H.promise(b)};var K="undefined",L;for(L in m(k))break;k.ownLast="0"!==L,k.inlineBlockNeedsLayout=!1,m(function(){var a,b,c,d;c=y.getElementsByTagName("body")[0],c&&c.style&&(b=y.createElement("div"),d=y.createElement("div"),d.style.cssText="position:absolute;border:0;width:0;height:0;top:0;left:-9999px",c.appendChild(d).appendChild(b),typeof b.style.zoom!==K&&(b.style.cssText="display:inline;margin:0;border:0;padding:1px;width:1px;zoom:1",k.inlineBlockNeedsLayout=a=3===b.offsetWidth,a&&(c.style.zoom=1)),c.removeChild(d))}),function(){var a=y.createElement("div");if(null==k.deleteExpando){k.deleteExpando=!0;try{delete a.test}catch(b){k.deleteExpando=!1}}a=null}(),m.acceptData=function(a){var b=m.noData[(a.nodeName+" ").toLowerCase()],c=+a.nodeType||1;return 1!==c&&9!==c?!1:!b||b!==!0&&a.getAttribute("classid")===b};var M=/^(?:\{[\w\W]*\}|\[[\w\W]*\])$/,N=/([A-Z])/g;function O(a,b,c){if(void 0===c&&1===a.nodeType){var d="data-"+b.replace(N,"-$1").toLowerCase();if(c=a.getAttribute(d),"string"==typeof c){try{c="true"===c?!0:"false"===c?!1:"null"===c?null:+c+""===c?+c:M.test(c)?m.parseJSON(c):c}catch(e){}m.data(a,b,c)}else c=void 0}return c}function P(a){var b;for(b in a)if(("data"!==b||!m.isEmptyObject(a[b]))&&"toJSON"!==b)return!1;
@@ -363,7 +363,7 @@ summary {
 
 
 
-<h1 class="title toc-ignore">Preprocessing data from experiments</h1>
+<h1 class="title toc-ignore">Traditional ANOVA</h1>
 <h4 class="author">Andy Wills</h4>
 
 </div>
@@ -373,232 +373,250 @@ summary {
 <h1>Contents</h1>
 <ul>
 <li><p><a href="#intro">Introduction</a></p></li>
-<li><p><a href="#load">Loading data</a></p></li>
-<li><p><a href="#tidy">Introduction to tidying data</a></p></li>
-<li><p><a href="#select">Selecting columns</a></p></li>
-<li><p><a href="#rename">Renaming columns</a></p></li>
-<li><p><a href="#filter">Filtering rows</a></p></li>
-<li><p><a href="#summary">Summarising data</a></p></li>
-<li><p><a href="#combine">Combining files</a></p></li>
-<li><p><a href="#ex1">Exercise</a></p></li>
+<li><p><a href="#afex">Getting started</a></p></li>
+<li><p><a href="#anovaBS">One between-subject factor</a></p></li>
+<li><p><a href="#anovaWS">One wtihin-subject factor</a></p></li>
+<li><p><a href="#three">More than two levels</a></p></li>
+<li><p><a href="#pairs">Pairwise comparisons</a></p></li>
+<li><p><a href="#fact">Factorial ANOVA</a></p></li>
+<li><p><a href="#twoBS">Two between-subject factors</a></p></li>
+<li><p><a href="#twoWS">Two within-subject factors</a></p></li>
+<li><p><a href="#complex">More than two factors</a></p></li>
 </ul>
 <p><a name="intro"></a></p>
 </div>
 <div id="introduction" class="section level1">
 <h1>Introduction</h1>
-<p>Preprocessing is all the things you have to do to your data before you can analyse it. In the <em>Absolute Beginners’ Guide to R</em>, the preprocessing was mostly done for you, and you just used <code>read_csv</code> to load in the preprocessed data. However, in most realistic situations, data does not come preprocessed. In this worksheet, we’ll look at preprocessing data from computerised experiments. Preprocessing data from these kinds of experiments typically comes in five parts - loading, tidying, filtering, summarising, and combining. We’ll cover these in turn below.</p>
-<p>In this first part of the worksheet, the commands you need to do each step are given to you. It’s important to take time to read all the instructions, try out the commands in RStudio for yourself, and read the descriptions and explanations of how they work. This is because, in the next section, you’ll be preprocessing another data set. You won’t be given any of the commands. Instead, you’ll adapt what you’ve learned to that new data set.</p>
-<p><a name="load"></a></p>
+<p>In the <a href="anova1.html">within-subject differences</a> and <a href="anova2.html">factorial differences</a> worksheets, we looked at Bayesian ANOVA methods. Throughout <em>Research Methods in R</em> we focus on Bayesian, rather than traditional (“p value”) methods, because Bayes Factors are more useful and easier to understand. However, psychologists have been using traditional ANOVA methods since the 1970s, and it was not until the 2010s that we started using Bayesian methods. So, there’s a lot of older work out there that uses a different technique. For this reason, it is probably still worth knowing how to do a traditional ANOVA. This is what we’ll cover in this worksheet.</p>
+<p>The following assumes you have completed the <a href="anova1.html">within-subject differences</a> and <a href="anova2.html">factorial differences</a> worksheets. Make sure you are in your R project that contains the data downloaded from the <em>git</em> repository - see the <a href="preproc.html#load">preprocessing</a> worksheet for details.</p>
+<p><a name="afex"></a></p>
 </div>
-<div id="loading-data" class="section level1">
-<h1>Loading data</h1>
-<div id="getting-the-data-into-your-project" class="section level2">
-<h2>Getting the data into your project</h2>
-<p>In order to get the data for this exercise, we’re going to load it from a <a href="https://en.wikipedia.org/wiki/Git">git</a> repository. The best-known git repository is <a href="https://github.com/">github</a>, and that’s the one we’ll use here. Git repositories are a common way of sharing code and data via the internet, and RStudio can easily make use of them. Here’s how:</p>
-<ol style="list-style-type: decimal">
-<li><p>Create a new RStudio <a href="using-projects.html#create">project</a> as before, but click on “Version Control” rather than “New Directory”.</p></li>
-<li><p>Click on “Git”.</p></li>
-<li><p>Enter the location of the repository into the first line. It’s <code>https://github.com/ajwills72/rminr-data</code></p></li>
-<li><p>Click “Create Project”</p></li>
-</ol>
-<p>That’s it! You should now see that your <em>Files</em> window in RStudio has a number of files showing, including a folder called <em>rawdata</em>. If so, you have successfully downloaded data from a git repository on github and put it in an RStudio project.</p>
-<p>Click on the name ‘rawdata’ in the Files window of RStudio. You’ll see there are three CSV files, and one file called <code>README.md</code>. We’ll use the CSV files in a minute.</p>
-<p>Each CSV file (e.g. <code>subject-11.csv</code>) contains the data from one participant in a <a href="http://cabezalab.org/wp-content/uploads/2011/11/Cabeza99_PrototypeEffectFaceRecogExtensionLimits_MemCog.pdf">facial prototypes</a> experiment. The experiment was run using <a href="https://osdoc.cogsci.nl/">OpenSesame</a>. OpenSesame, like R, is a free and open-source program. If you install OpenSesame on your machine, you can try out the experiment by exporting it from the <code>expt-scripts</code> folder of your project. You do this by clicking on <code>expt-scripts</code>, ticking the box next to <code>facialproto_short.osexp</code>, clicking ‘More…’ and clicking ‘Download’.</p>
-</div>
-<div id="summary-of-the-experiment" class="section level2">
-<h2>Summary of the experiment</h2>
-<p>You’ll need a general sense of what happens in this experiment to understand the data it produces. You may find the following easier to understand if you’ve tried out the experiment yourself first.</p>
-<p>In this experiment, people are shown some pictures of male faces. Each is a picture of a real face, but its internal features (eyes, nose, mouth, etc.) have been digitally stretched or compressed either along the x-axis or the y-axis. Participants rate each picture for masculinity (1-8 scale, higher numbers = more masculine), just as a way of encouraging them to look at each picture closely.</p>
-<p>After participants have been shown 32 pictures, they move to the test phase. They’re shown another 24 pictures, and have to rate their confidence they’ve seen that <em>exact</em> picture before (0 = definitely not seen, 9 = definitely seen). The pictures they’re shown include ones they’ve seen before (<code>seen</code>), the undistorted version of the faces they’ve seen (<code>prototype</code>), and some other distortions of the faces they haven’t seen before (<code>unseen</code>).</p>
-<p>The expected result is that people are confident they’ve seen the <code>prototype</code> faces before, even though they haven’t. One interpretation of this result is that we average across the pictures we see. The prototype is the average of the pictures we’ve seen of that face, so it seems familiar even though we’ve not seen it before.</p>
-<p>In order to work out whether we get the expected result, we need to know the mean confidence rating each participant gave for each face type (<code>seen, unseen, prototype</code>).</p>
-</div>
-<div id="loading-one-participant" class="section level2">
-<h2>Loading one participant</h2>
-<p>We’ll start by load the data for one of the participants, <code>subject-11.csv</code>. Recall that we can do this using the <code>read_csv</code> command. In this case, the CSV file we want to load is inside the <code>rawdata</code> folder of our project so we have to say <code>rawdata/subject-11.csv</code> rather than just <code>subject-11.csv</code>, so RStudio knows where to look for the file.</p>
-<p>Start a new R script in your RStudio project, add the following commands to it, and run the script:</p>
+<div id="getting-started" class="section level1">
+<h1>Getting started</h1>
+<p>To do traditional ANVOA in R, you will need to load the <code>afex</code> package:</p>
+<pre class="r"><code>library(afex)</code></pre>
+<p>You’ll also need to load the data, preprocess it, and set factors, as we did for Bayesian ANOVA. Here’s how:</p>
 <pre class="r"><code>library(tidyverse)
-dat &lt;- read_csv(&quot;rawdata/subject-11.csv&quot;)</code></pre>
-<p>Click on <code>dat</code> in the Environment tab and take a look at the file you’ve loaded. This is a typical output file for OpenSesame, but it seems quite overwhelming at first sight. It has 101 columns of data, many with unclear names. There are 56 rows of data, so 5656 pieces of data in total, and this is just for one participant in one short experiment!</p>
-<p>Our first job is to tidy up this dataset so it’s clear and readable to the average human being.</p>
-<p><a name="tidy"></a></p>
+words &lt;- read_csv(&quot;wordnaming2.csv&quot;)
+wordsum &lt;-
+    words %&gt;%
+    group_by(subj, medit) %&gt;%
+    summarise(rt = mean(rt))
+wordsum$subj &lt;- factor(wordsum$subj)
+wordsum$medit &lt;- factor(wordsum$medit)</code></pre>
+<p><a name="anovaBS"></a></p>
+</div>
+<div id="one-between-subject-factor" class="section level1">
+<h1>One between-subject factor</h1>
+<p>To do a traditional, one between-subject factor ANOVA, use the following command:</p>
+<pre class="r"><code>aov_car(formula = rt ~ medit + Error(subj), data = wordsum)</code></pre>
+<pre><code>Contrasts set to contr.sum for the following variables: medit</code></pre>
+<pre><code>Anova Table (Type 3 tests)
+
+Response: rt
+  Effect     df     MSE         F ges p.value
+1  medit 2, 417 3812.97 11.11 *** .05  &lt;.0001
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;+&#39; 0.1 &#39; &#39; 1</code></pre>
+<div id="explanation-of-command" class="section level3">
+<h3>Explanation of command</h3>
+<p>The command <code>aov_car</code> is similar to the command <code>anovaBF</code>, but for traditional ANOVA. In most ways, this command works like <code>anovaBF</code>. For example, the part <code>formula = rt ~ medit</code> says we want to look at the effect of the <code>medit</code> (meditation) variable on the <code>rt</code> (reaction time) variable. The next bit, <code>+ Error(subj)</code> is also very similar to <code>anovaBF</code> - it tells <code>aov_car</code> which column contains the participant IDs (in this case, <code>subj</code>). The final part, <code>data = wordsum</code> tells the command where to find the data (just as with <code>anovaBF</code>).</p>
+</div>
+<div id="explanation-of-output" class="section level3">
+<h3>Explanation of output</h3>
+<p>Although there’s quite a lot in this output, the main thing to focus on is the number underneath <code>p.value</code>. In this case, the number is ‘&lt;.0001’. So, the p-value in this case is less than .0001, written as <code>p &lt; .0001</code>. Recall that <a href="evidence.html#p-wrong">p values are widely misinterpreted by psychologists</a>, but we have a convention that if the p value is less than .05, then people will believe there is a difference. In this case, the p value is less than .05, and so people will believe there is a difference.</p>
+<p>If you are reporting the results of a traditional ANOVA in a journal article, you are generally expected to report the <code>F</code> value, along with the degrees of freedom (<code>df</code>), as well as the p value. So, in this case, you would write:</p>
+<p>The two groups did not differ significantly, <em>F</em>(2, 417) = 11.11, <em>p</em> &lt; .0001.</p>
+<p>The F ratio and degrees of freedom are not particularly meaningful or useful information for the reader to have, but nonetheless journals normally require them when reporting traditional ANOVA. For further explanation, see the <a href="yet-more-on-anova.html">more on ANOVA</a> worksheet.</p>
+<p>One useful piece of information <code>aov_car</code> provides is <code>ges</code> - which is <code>.04</code> in this example. <code>ges</code> stands for “generalized eta-squared”. This is a measure of <a href="group-differences.html#effsize">effect size</a>, somewhat like Cohen’s d, but the scale is different. <code>ges</code> is much like a <a href="corr.html#corr">correlation co-efficient</a>, and ranges between 0 and 1. A large effect size for <code>ges</code> is around .26, a medium-sized effect is around .13, and a small effect is around .02 (<a href="https://www.psy.gla.ac.uk/~steve/best/effect.html">further details here</a>). It can be useful to report generalized eta squared, and this is reported as <span class="math inline">\(\eta_{g}^{2}\)</span>. So one could write:</p>
+<p>The two groups did not differ significantly, <em>F</em>(1, 58) = 2.62, <em>p</em> = .11, <span class="math inline">\(\eta_{g}^{2}\)</span> = .04.</p>
+<p>Note that some authors will instead report a related measure called <em>partial</em> eta-squared (<span class="math inline">\(\eta_{p}^{2}\)</span>). This is not the same thing and, in most circumstances, it is better to report generalized eta-squared. This point is discussed further <a href="https://stats.stackexchange.com/questions/301801/generalized-eta-squared">here</a>.</p>
+<p><a name="anovaWS"></a></p>
 </div>
 </div>
-<div id="tidying-data" class="section level1">
-<h1>Tidying data</h1>
-<p>The first thing you need to know to make sense of this dataset is that each row is one <em>trial</em> of the experiment. In a typical experiment, a <em>trial</em> begins with the presentation of a stimulus (in this case, a face) and ends with the participant making a response (in this case, a rating). Participants rate 32 pictures for masculinity, and then 24 pictures for confidence they’ve seen them before, leading to a total of 56 trials in this experiment, and hence 56 rows in this data frame.</p>
-<p>This is what’s sometimes called <a href="https://benwhalley.github.io/rmip/data-handling.html">tidy data</a>, which means there is one row for each observation (each trial, in this case). It is also called <em>long format</em> data, because it has more rows and fewer columns than the main alternative, which is to put all data from a single participant on the same row. This is called <em>wide</em> format, and in this case would result in a dataset with 1 row and 5656 columns.</p>
-<p>Most commands in R assume your data is in <em>long</em> format, so it’s good news our raw data is also in that format, even if it still needs a bunch of tidying up before we can analyse it. The first step is to go through the 101 columns and find those we actually need.</p>
-<div id="responses" class="section level2">
-<h2>Responses</h2>
-<p>One thing we’ll definitely need to know is how the participant responded on each trial of the experiment. If you scroll through the columns of <code>dat</code>, which are organised alphabetically, you’ll find a column called <code>response</code>. You’ll see that each row contains a number from 0 to 9. So, this is the rating the participant made on that trial. We’ll need to know that to analyse this data, so <code>response</code> is one of the columns we need to keep.</p>
-<p>Columns to keep: <code>response</code></p>
+<div id="one-within-subject-factor" class="section level1">
+<h1>One within-subject factor</h1>
+<p>First, preprocess the data for this example:</p>
+<pre class="r"><code>words &lt;- read_csv(&quot;wordnaming2.csv&quot;)
+wordctrl &lt;- words %&gt;% filter(medit == &quot;control&quot;)
+wordctrlCI &lt;- wordctrl %&gt;% filter(congru != &quot;neutral&quot;)
+wordctrlCIsum &lt;- wordctrlCI %&gt;%
+    group_by(subj, congru) %&gt;%
+    summarise(rt = mean(rt))
+wordctrlCIsum$congru &lt;- factor(wordctrlCIsum$congru)
+wordctrlCIsum$subj &lt;- factor(wordctrlCIsum$subj)</code></pre>
+<p>Now, this is the command to run a traditional within-subjects ANOVA:</p>
+<pre class="r"><code>aov_car(formula = rt ~ Error(subj/congru), data = wordctrlCIsum)</code></pre>
+<pre><code>Anova Table (Type 3 tests)
+
+Response: rt
+  Effect     df     MSE         F ges p.value
+1 congru 1, 139 4949.44 44.78 *** .11  &lt;.0001
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;+&#39; 0.1 &#39; &#39; 1</code></pre>
+<div id="explanation-of-command-1" class="section level2">
+<h2>Explanation of command</h2>
+<p>As before, <code>aov_car</code> works similarly to <code>anovaBF</code> - for example we specify a <code>formula</code> and the data set (<code>data</code>). It differs mainly in how the right-hand side of the formula (everything after the <code>~</code>) is laid out. To do a within-subjects test in <code>aov_car</code> we write <code>Error(x/y)</code>, where <code>x</code> is the column of data frame that contains the subject IDs (<code>subj</code> in this case), and <code>y</code> is the column of the data frame that contains the within-subjects condition (<code>congru</code> in this case).</p>
 </div>
-<div id="phases" class="section level2">
-<h2>Phases</h2>
-<p>We also need to know what kind of response the participant was making – a masculinity rating (first part of the experiment), or a confidence rating (second part). When an experiment has two or more different parts, we call those parts <em>phases</em>. And you’ll find there is a column called <code>phase</code>, which has the entries <code>exposure</code> (which is the first part of the experiment) and <code>test</code> (second part). So <code>phase</code> is another column we’ll need.</p>
-<p>Columns to keep: <code>phase</code>, <code>response</code></p>
-</div>
-<div id="trial-types" class="section level2">
-<h2>Trial types</h2>
-<p>In the second phase of the experiment, there are three different types of trial - unseen faces, seen faces, and prototypes. We’ll need to know what type of stimulus was presented in order to analyse these data. Scroll to the column called <code>type</code>, and you’ll see that for the second phase (rows 33 onwards), it contains this information. For the first phase it contains <code>NA</code>, meaning this is not relevant information for the first phase. So <code>type</code> is another column we’ll need to keep.</p>
-<p>Columns to keep: <code>phase</code>, <code>type</code>, <code>response</code></p>
-</div>
-<div id="trial-number" class="section level2">
-<h2>Trial number</h2>
-<p>There are many trials in each phase of this experiment, so it makes sense to include a column that says which trial within the phase each row refers to. If you scroll through the columns, you’ll find one called <code>live_row</code>. You’ll notice it counts up from zero to 31, and then from 0 to 23. So, this column contains trial numbers, first for the masculinity-rating part of the experiment, and then for the confidence-rating part of the experiment. Counting from zero might seem a bit weird, but it’s quite common in data collected by a computer.</p>
-<p>Columns to keep: <code>phase</code>, <code>live_row</code>, <code>type</code>, <code>response</code></p>
-</div>
-<div id="column-ordering" class="section level2">
-<h2>Column ordering</h2>
-<p>You may have noticed that the list of ‘columns to keep’ is not in alphabetical order. Instead, it follows the conventional ordering of <em>position in experiment</em> (<code>phase, live_row</code>), <em>stimulus</em> (<code>type</code>), <em>response</em>. Most experiments report their data in this order. Having conventions like these make it easier for others to read and understand our analyses.</p>
-<p><a name="select"></a></p>
-</div>
-</div>
-<div id="selecting-columns" class="section level1">
-<h1>Selecting columns</h1>
-<p>Having worked out which columns we need, we now tidy things up by selecting just the columns we need and putting them into a new data frame. This is done using R’s <code>select</code> command</p>
-<pre class="r"><code>tidydat &lt;- dat %&gt;% select(phase, live_row, type, response)</code></pre>
-<p><strong>Explanation of command</strong> - Our original data frame <code>dat</code> is piped (sent to, <code>%&gt;%</code>) the <code>select</code> command, which picks just the columns we name. These selected columns are put (<code>&lt;-</code>) into a new dataframe called <code>tidydat</code>.</p>
-<p>Click on <code>tidydat</code> in the <em>Environment</em> window. You’ll see we have a much easier-to-read data frame, still with 56 rows, but now only 4 columns.</p>
-<p><a name="rename"></a></p>
-</div>
-<div id="renaming-columns" class="section level1">
-<h1>Renaming columns</h1>
-<p>When working with data, it’s useful to have meaningful column names, because it makes it easier to remember what they contain. The column <code>live_row</code> could be more clearly named as <code>trial</code>, as that’s the information it contains. We rename columns in R using the <code>colnames</code> command:</p>
-<pre class="r"><code>colnames(tidydat) &lt;- c(&quot;phase&quot;, &quot;trial&quot;, &quot;type&quot;, &quot;response&quot;)</code></pre>
-<p><strong>Explanation of command</strong> - The command <code>c()</code> means <em>concatenate</em> i.e. put together. So <code>c(&quot;phase&quot;, &quot;trial&quot;, &quot;type&quot;, &quot;response&quot;)</code> is a way of putting the four names together so they can be sent somewhere. They are sent (<code>&lt;-</code>) to the <code>colnames()</code> command, which changes the column names of <code>tidydat</code>.</p>
-<p><a name="filter"></a></p>
-</div>
-<div id="filtering-rows" class="section level1">
-<h1>Filtering rows</h1>
-<p>We now have a clear, tidy dataframe (<code>tidydat</code>), which we can start to analyse. The expected result is that the participant will show high confidence ratings for having seen the prototype, despite not having seen it before. Does this participant show this pattern of results?</p>
-<p>Our predictions are about the test phase, but this data frame also contains data about the exposure phase (the masculinity ratings). So, the first thing we have to do is <em>filter</em> the data so that it only contains the test phase. As covered in <a href="group-differences.html#filter">Absolute Beginners’ Guide to R</a>, we use the <code>filter</code> command to do this, telling it which parts of the data we want to keep</p>
-<pre class="r"><code>testdat &lt;- tidydat %&gt;% filter(phase == &quot;test&quot;)</code></pre>
-<p><strong>Explanation of command</strong> - The <code>tidydat</code> data is passed (<code>%&gt;%</code>) to the <code>filter</code> command, which keeps only those rows (trials) where <code>phase == &quot;test&quot;</code>, i.e. where the column <code>phase</code> contains the word <code>test</code>. This filtered data is then written (<code>&lt;-</code>) to a new data frame called <code>testdat</code>.</p>
-<p>Click on <code>testdat</code> in the Environment window. You’ll see that now we just have 24 rows, all from the test phase.</p>
-<p><a name="summary"></a></p>
-</div>
-<div id="summarising-data" class="section level1">
-<h1>Summarising data</h1>
-<p>We can now use the <code>group_by</code> and <code>summarise</code> commands covered in <a href="group-differences.html#group">Absolute Beginners’ Guide to R</a> to answer our question.</p>
-<pre class="r"><code>testdat %&gt;% group_by(type) %&gt;% summarise(mean(response))</code></pre>
-<pre><code># A tibble: 3 x 2
-  type      `mean(response)`
-  &lt;chr&gt;                &lt;dbl&gt;
-1 prototype             4.75
-2 seen                  3.88
-3 unseen                5   </code></pre>
-<p><strong>Explanation of command</strong> - Our test-phase data (<code>testdat</code>) is piped to <code>group_by(type)</code>, which groups it into the three parts given by the <code>type</code> column (seen, unseen, prototype). This grouped data is then sent to <code>summarise</code> to work out a summary value for each group. We tell <code>summarise</code> what summary we want, in this case we want a <code>mean</code>. And we tell the <code>mean</code> command that the data we want a mean of is in the <code>response</code> column.</p>
-<p>Looking at the output, we can see that this participant was more confident they’d seen the prototypes (4.75) than that they’d seen the pictures they’d actually seen before (3.88). This fits our hypothesis. But, somewhat oddly, they were even more confident about other distortions they hadn’t seen (5). An alternative hypothesis (and the correct one in this case) is that this particular participant just randomly pressed the buttons, so any difference in the three scores is down to chance.</p>
-<p><a name="combine"></a></p>
-</div>
-<div id="combining-files" class="section level1">
-<h1>Combining files</h1>
-<p>Experiments generally involve testing relatively large numbers of people, in order to achieve good <a href="power.html">statistical power</a>. This means that another important part of preprocessing is to combine the data from different participants into a single data frame, so we can analyse the data from all the participants at the same time.</p>
-<div id="combining-two-files" class="section level2">
-<h2>Combining two files</h2>
-<p>We’ll start by loading in data from a second participant into a different dataframe:</p>
-<pre class="r"><code>dat2 &lt;- read_csv(&quot;rawdata/subject-12.csv&quot;)</code></pre>
-<p>To combine these two participants into a single dataframe, we use the <code>bind_rows</code> command:</p>
-<pre class="r"><code>alldat &lt;- bind_rows(dat, dat2)</code></pre>
-<p><strong>Explanation of command</strong> - The <code>bind_rows</code> command takes the <code>dat2</code> dataframe and adds it to the end of the <code>dat</code> dataframe. This combined data set is then written to (<code>&lt;-</code>) a new dataframe called <code>alldat</code>.</p>
-<p>Look at <code>alldat</code> in <em>Environment</em> window; you’ll see it now has 112 rows, the 56 rows from subject-11 and then the 56-rows from subject-12.</p>
-<p>The only problem is that <code>alldat</code> does not contain any information about which data came from which participant. We often need to know this to do analyses. So, we need to add the subject number to the data frame for each subject before we combine them. We can do this using the <code>add_column</code> command, which adds columns to existing data frames.</p>
-<pre class="r"><code>dat &lt;- dat %&gt;% add_column(subj = 11, .before = TRUE)</code></pre>
-<p><strong>Explanation of command</strong>: The <code>dat</code> dataframe is piped (<code>%&gt;%</code>) to the <code>add_column_</code> command, which adds a column called <code>subj</code>, in which every row contains the number <code>11</code> (the subject number). <code>.before = TRUE</code> means it adds the <code>subj</code> column before any of the others (i.e. on the left). Without this, it would add it at the end. This data frame with an added column is written back into <code>dat</code>, so it’s <code>dat</code> (rather than some new data frame) that contains the added column.</p>
-<p>We also need to add the subject number for <code>subject-12</code>:</p>
-<pre class="r"><code>dat2 &lt;- dat2 %&gt;% add_column(subj = 12, .before = TRUE)</code></pre>
-<p>Now, we combine the two data frames as before:</p>
-<pre class="r"><code>alldat &lt;- bind_rows(dat, dat2)</code></pre>
-<p>Now, when you click on <code>alldat</code>, you’ll see a dataframe with 112 rows and 102 columns, the first column being the subject number.</p>
-</div>
-<div id="combining-many-files" class="section level2">
-<h2>Combining many files</h2>
-<p>Generally, we have a lot more than two people in an experiment. You could use the same technique to combine the data of tens, hundreds, or thousands of participants. However, that would take a really long time and be quite tedious. Fortunately, R allows us to speed up this process so that, even if we have tens of thousands of participants, we can quickly combine their data without error.</p>
-<div id="list-of-files" class="section level3">
-<h3>List of files</h3>
-<p>The first thing we need to do to combine many participants is to get a list of the names of their data files (e.g. <code>subject-11.csv</code>). We do this using the <code>list.files</code> command:</p>
-<pre class="r"><code>fnamlist &lt;- list.files(&quot;rawdata&quot;, &quot;csv&quot;, full.names=TRUE)
-fnamlist</code></pre>
-<pre><code>[1] &quot;rawdata/subject-11.csv&quot; &quot;rawdata/subject-12.csv&quot;
-[3] &quot;rawdata/subject-13.csv&quot;</code></pre>
-<p><strong>Explanation of command</strong>: The first part of <code>list.files</code>, <code>&quot;rawdata&quot;</code>, tells R which folder the data files are in. Generally, it’s a good idea to keep all your data files inside a single folder, so it is easier for commands like this to find them. The second part of <code>list.files</code>, <code>&quot;csv&quot;</code> tells R to only give the names of files that contain <code>csv</code> somewhere in their name. This is useful, because sometimes raw data folders contain other files, too. For example, <code>rawdata</code> contains <code>README.md</code>, a file that generally provides information relating to the data, rather than being data itself. The third part, <code>full.names=TRUE</code>, tells R to give the name of the file including the name of the folder it is in, so <code>rawdata/subject-11.csv</code> rather than just <code>subject-11.csv</code>. The output of <code>list.files</code> is written to a <em>vector</em> called <code>fnamlist</code>, which is then printed to the screen by the command <code>fnamlist</code>. A vector is a dataframe with only one column, and R prints it across the screen rather than down, to save space.</p>
-</div>
-<div id="load-every-file" class="section level3">
-<h3>Load every file</h3>
-<p>We now have a vector called <code>fnamlist</code> that contains all the names of CSV files in the <code>rawdata</code> directory. We can use <code>fnamlist</code> to load every file and combine them all. To do this, we make use of a <code>for</code> loop. A loop is a way of getting R to do a bunch of commands several times. This is not something we’ve used before in these worksheets, so we’ll look closely at each line in turn:</p>
-<pre class="r"><code>alldat &lt;- NULL
-for(fnam in fnamlist) {
-  dat &lt;- read_csv(fnam)
-  alldat &lt;- bind_rows(alldat, dat)
-}</code></pre>
-<p><strong>Line 1</strong>: <code>alldat &lt;- NULL</code>. This creates a new data frame called <code>alldat</code> but doesn’t put anything in it yet (<code>NULL</code> means nothing, so <code>&lt;- NULL</code> means “make it have nothing in it”). This is the data frame we’ll put all the data into next.</p>
-<p><strong>Line 2</strong>: <code>for(fnam in fnams) {</code>. <code>fnams</code> is the vector of filenames we made earlier. <code>for(fnam in fnams) {</code> means &quot;do what follows for every filename (<code>fnam</code>) in that vector of filenames. So, R will take the first filename <code>rawdata/subject-11.csv</code> and set <code>fnam</code> to that. It’ll then run lines 3 and 4 (see below). When it gets to Line 5 (<code>}</code>), it will go back to line 2, set <code>fnam</code> to the second filename <code>rawdata/subject-12.csv</code>, and run lines 3 and 4 again. It’ll do this over and over again until it reaches the end of the filenames in <code>fnamlist</code></p>
-<p><strong>Line 3</strong>: <code>dat &lt;- read_csv(fnam)</code>. This reads in one data file, just like before. The difference is that rather than writing <code>&quot;rawdata/subject-11.csv&quot;</code> we say <code>fnam</code>. This means that a different file will be loaded each time we go around this for loop.</p>
-<p><strong>Line 4</strong>: <code>alldat &lt;- bind_rows(alldat, dat)</code>. This combines two data files, just like before. The difference is that <code>alldat</code> is always the first of the two files. That way, each time we go around the loop, the data file we just read gets added to the end of the files we’ve already combined.</p>
-<p><strong>Line 5</strong>: <code>}</code>. This means “this is the end of the loop”. It’s important to have this, otherwise R would try to loop around every subsequent command in your script, which would cause some weird errors.</p>
-<p>You may have noticed that the lines of code inside the loop (Lines 3-4) were <em>indented</em> i.e. there are a couple of spaces before the beginning of the text. R ignores these spaces, but we include them because it makes it easier for us to see which commands are inside a loop.</p>
-<p>If you look at <code>alldat</code> in the Environment window, you’ll see that it has 168 rows. This loop has combined all three participants, each with 56 trials, into one big data frame. Although with three participants we could have done this as quickly in other ways, generally we have much more data than this - typically somewhere between 30 and 300 participants in a single experiment. Using a loop saves a lot of time in these situations.</p>
-</div>
-<div id="anonymously-identifying-the-participant" class="section level3">
-<h3>(Anonymously) identifying the participant</h3>
-<p>Unfortunately, <code>alldat</code> doesn’t contain any information about which trials came from which participant. As before, we need to add a column that indicates which participant each row refers to. As before, we can use <code>add_column</code> to do this:</p>
-<pre class="r"><code>alldat &lt;- NULL
-for(fnam in fnamlist) {
-  dat &lt;- read_csv(fnam)
-  dat &lt;- dat %&gt;% add_column(subj = fnam, .before = TRUE)
-  alldat &lt;- bind_rows(alldat, dat)
-}</code></pre>
-<p>Only the fourth line of code above is new. When you run this code, you should notice that <code>alldat</code> has a new column that contains the filename. That’s OK, but it would be better if we could just have the participant number (e.g. <code>11</code>) because it’s more compact and easy to use like that. So, we need to be able to cut out the participant number <code>11</code> from the filename. We can do this using the <code>substr</code> command. Here’s an example of how <code>substr</code> works:</p>
-<pre class="r"><code>substr(&quot;investment&quot;, 3, 6)</code></pre>
-<pre><code>[1] &quot;vest&quot;</code></pre>
-<p><strong>Explanation of command</strong>: <code>substr</code> is short for “subset string”, with a string being a collection of characters (e.g. a word) and a subset being part of that string. The first number, <code>3</code> is the start of the substring, and the second number <code>6</code> is the end of the substring. So, if we take from the third to the sixth character in “investment”, we get “vest”.</p>
-<p>Looking at the filename <code>rawdata/subject-11.csv</code>, we can see that the participant number starts at the 17th position and ends at the 18th. This will be true for any two-digit participant number (a good reason to start subject numbers at 11 rather than at 1). So, putting this all together, we get:</p>
-<pre class="r"><code>alldat &lt;- NULL
-for(fnam in fnamlist) {
-  dat &lt;- read_csv(fnam)
-  dat &lt;- dat %&gt;% add_column(subj = substr(fnam, 17, 18), .before = TRUE)
-  alldat &lt;- bind_rows(alldat, dat)
-}</code></pre>
-<p>These six lines of code load and combine every data file, and add a participant number to each.</p>
+<div id="explanation-of-output-1" class="section level2">
+<h2>Explanation of output</h2>
+<p>The output can be read exactly the same way as in the last example. When reporting this analysis, one would write:</p>
+<p>The two conditions differed significantly, <em>F</em>(1, 139) = 44.78, <em>p</em> &lt; .0001, <span class="math inline">\(\eta_{g}^{2}\)</span> = .11.</p>
+<p><a name="three"></a></p>
 </div>
 </div>
-<div id="back-to-tidying" class="section level2">
-<h2>Back to tidying</h2>
-<p>Of course, this combined data file has the same problems as the individual files that make it up – there are over 100 columns, most of which we don’t need. We can fix this with the same commands as before; we just have to remember to also select the column containing the participant numbers:</p>
-<pre class="r"><code>tidydat &lt;- alldat %&gt;% select(subj, phase, live_row, type, response)
-colnames(tidydat) &lt;- c(&quot;subj&quot;, &quot;phase&quot;, &quot;trial&quot;, &quot;type&quot;, &quot;response&quot;)</code></pre>
-<p>Click on <code>tidydat</code>, you’ll see a human-readable data frame with 168 rows, and 5 columns. This is the full dataset for the experiment, so we can now start analyzing it.</p>
+<div id="more-than-two-levels" class="section level1">
+<h1>More than two levels</h1>
+<p>First, preprocess the data for this example:</p>
+<pre class="r"><code>wordctrlsum &lt;- wordctrl %&gt;%
+    group_by(subj, congru) %&gt;%
+    summarise(rt = mean(rt))
+wordctrlsum$congru &lt;- factor(wordctrlsum$congru)
+wordctrlsum$subj &lt;- factor(wordctrlsum$subj)</code></pre>
+<p>The command to run a traditional ANOVA with more than two levels is exactly the same as it is with two levels. For example, the within-subjects version is:</p>
+<pre class="r"><code>aov_car(formula = rt ~ Error(subj/congru), data = wordctrlsum)</code></pre>
+<pre><code>Anova Table (Type 3 tests)
+
+Response: rt
+  Effect           df     MSE         F ges p.value
+1 congru 1.05, 145.44 4842.14 43.75 *** .09  &lt;.0001
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;+&#39; 0.1 &#39; &#39; 1
+
+Sphericity correction method: GG </code></pre>
+<div id="explanation-of-output-2" class="section level2">
+<h2>Explanation of output</h2>
+<p>The output is read exactly the same way as before. In this example, you would write:</p>
+<p>Congruency significantly affected reaction time, <em>F</em>(1.05, 145.55) = 43.75, <em>p</em> &lt; .0001, <span class="math inline">\(\eta_{g}^{2}\)</span> = .09.</p>
+<p>There is one new aspect here, the statement at the end:</p>
+<p><code>Sphericity correction method: GG</code></p>
+<p>You’ll see something like this in traditional ANOVA outputs when a within-subjects factor has more than two levels. It turns out that traditional ANOVA methods generally get the p value wrong in these cases, because they make assumptions about the data which are normally untrue. The incorrect assumption they make is that the data is “spherical” – if you’re curious what that means, click <a href="https://en.wikipedia.org/wiki/Mauchly%27s_sphericity_test">here</a>.</p>
+<p>Fortunately, there are ways of correcting this error. These are called <em>sphericity corrections</em> (“sphericity” is the property of being spherical). The two main methods are Greenhouse-Geisser (<code>GG</code>) correction, and Huynh-Feldt (<code>HF</code>) correction. <code>aov_car</code> picks the most appropriate one, makes the correction, and tells you it’s done so by including that statement <code>Sphericity correction method: GG</code> at the end. Another way you can tell a sphericity correction has been applied is that the degrees of freedom (<code>df</code>) are normally not whole numbers (<code>1.05</code> and <code>145.44</code> in this case).</p>
+<p>You would normally report towards the begining of your results that you used such a correction. For example:</p>
+<p>“Greenhouse-Geisser corrections for non-sphericity were applied where appropriate.”</p>
+<p><a name="pairs"></a></p>
 </div>
-<div id="back-to-summarising" class="section level2">
-<h2>Back to summarising</h2>
-<p>Now we have this combined file, we summarise the test phase data for each participant using the same commands as before. We just need to include <code>subj</code> to the <code>group_by</code> command so we get a separate summary for each person:</p>
-<pre class="r"><code>test &lt;- tidydat %&gt;% filter(phase == &quot;test&quot;)
-test.sum &lt;- test %&gt;% group_by(subj, type) %&gt;% summarise(mean(response))</code></pre>
-<p>Clicking on <code>test.sum</code> in the <em>Environment</em> window, we can now see a summary for each participant. All three participants were more confident they’d seen the prototype than the pictures they’d actually seen, which supports our hypothesis. But they’re also all at least as confident about other unseen distortions, too. So, again, an alternative hypothesis is that participants were just pressing keys randomly. This was in fact the case for these data. In the next part of the worksheet, you’ll look at some data from a different experiment where the participants took the task more seriously.</p>
-<p><a name="ex1"></a></p>
+</div>
+<div id="pairwise-comparisons" class="section level1">
+<h1>Pairwise comparisons</h1>
+<p>You can do pairwise comparisons in traditional ANOVA in the same way you do them with <code>anovaBF</code>. In other words, filter the data to include just the two conditions you want to compare, and run the appropriate test. There are also other ways to do this, but we don’t cover them in these intermediate-level worksheets.</p>
+<p><a name="fact"></a></p>
+</div>
+<div id="factorial-anova" class="section level1">
+<h1>Factorial ANOVA</h1>
+<p>First, preprocess the data for this example:</p>
+<pre class="r"><code>wordsum &lt;-
+    words %&gt;%
+    group_by(subj, medit, congru) %&gt;%
+    summarise(rt = mean(rt))
+wordsum$subj &lt;- factor(wordsum$subj)
+wordsum$medit &lt;- factor(wordsum$medit)
+wordsum$congru &lt;- factor(wordsum$congru)</code></pre>
+<p>A traditional ANOVA with one within-subjects factor and one between-subjects factor is conducted like this:</p>
+<pre class="r"><code>aov_car(formula = rt ~ medit + Error(subj/congru), data = wordsum)</code></pre>
+<pre><code>Contrasts set to contr.sum for the following variables: medit</code></pre>
+<pre><code>Anova Table (Type 3 tests)
+
+Response: rt
+        Effect           df      MSE         F ges p.value
+1        medit       2, 417 11759.86 11.15 *** .04  &lt;.0001
+2       congru 1.05, 436.24  5093.68 48.44 *** .03  &lt;.0001
+3 medit:congru 2.09, 436.24  5093.68 13.39 *** .02  &lt;.0001
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;+&#39; 0.1 &#39; &#39; 1
+
+Sphericity correction method: GG </code></pre>
+<div id="explanation-of-command-2" class="section level2">
+<h2>Explanation of command</h2>
+<p>The <code>aov_car</code> command for this factorial ANOVA is just combines the formula we used for a single between-subjects factor, <code>rt ~ medit + Error(subj)</code> with the formula we used for a single within-subjects factor, <code>rt ~ Error(subj/congru)</code>, to give the full formula <code>rt ~ medit + Error(subj/congru)</code>. Note that the <code>+</code> sign is used to combine a within-subjects component with a between-subjects component, rather than the <code>*</code> sign we used in <code>anovaBF</code>. This is just because the two commands were written by different peoplel it doesn’t have any deeper significance.</p>
+</div>
+<div id="explanation-of-output-3" class="section level2">
+<h2>Explanation of output</h2>
+<p>The first two lines of the output are the main effect for <code>medit</code> and the <em>main effect</em> for <code>congru</code>, respectively. The third line, <code>medit:congru</code> is the <em>interaction</em> between these two factors. Everything else has the same meaning as in previous outputs. You’ll notice that the main effect F values are not quite the same as they were in the earlier examples on this worksheet. As we saw in our Bayesian ANOVA, different analyses can give different answers.</p>
+<p><a name="twoBS"></a></p>
 </div>
 </div>
-<div id="exercise" class="section level1">
-<h1>Exercise</h1>
-<p>In this section of the worksheet, you’ll preprocess the data from a different experiment. You’ll find the data in the folder called <code>lexdec</code>, and the OpenSesame implementation of this experiment in the <code>expt-scripts</code> folder.</p>
-<p>In this experiment, words are shown on the screen one at a time. Some are real words, others are made-up words (non-words). The participant’s job is to decide whether each is a word or non-word, as quickly as possible. The computer records for each decision whether they got it correct, and how long it took them to respond (their <em>response time</em>). The experiment begins with a practice phase, so participants can get used to the task. This is followed by the test phase, which is the part we analyse.</p>
-<p>Your task is to write R code that gives the mean reaction time for each participant, for both words and non-words. You should analyse only reaction times for trials in which they made the correct response, and you should not include the practice phase in your analysis.</p>
-<p>This can, and should, be done with less than 15 files of R code. When your code is working correctly, it will give you the following numbers:</p>
-<pre><code># A tibble: 6 x 3
-# Groups:   subj [3]
-  subj  type    `mean(rt)`
-  &lt;chr&gt; &lt;chr&gt;        &lt;dbl&gt;
-1 11    nonword      1158.
-2 11    word          888.
-3 12    nonword      1339 
-4 12    word         1818 
-5 13    nonword      1458.
-6 13    word         1526 </code></pre>
-<p><strong>Hints:</strong> Your code should first get a list of files, then use a loop to load all those files in and combine them. Don’t forget that <code>lexdec</code> is a shorter name than <code>rawdata</code>, so the <code>substr</code> command will have to change. Next you’ll have to find the relevant columns among the 100+ columns of the data file. Once you’ve found them, use <code>select</code> to select just those columns and use <code>colnames</code> to give the selected columns better names. Use <code>filter</code> to remove the practice phase and keep only the correct responses. Note that accuracy in this data file is a number, not a word, so the correct phrase is something like <code>acc == 1</code>, rather than <code>acc == &quot;1&quot;</code>. Finally, use <code>group_by</code> and <code>summarise</code> to report the mean response time for words and non words for each participant. Good luck!</p>
-<p><strong>Once you’re getting the right answers, paste your R code into PsycEL</strong>.</p>
-<hr />
+<div id="two-between-subject-factors" class="section level1">
+<h1>Two between-subject factors</h1>
+<p>First, preprocess the data for this example:</p>
+<pre class="r"><code>wordsum &lt;- words %&gt;% group_by(subj, sex, medit) %&gt;% summarise(rt = mean(rt))
+wordsum$sex &lt;- factor(wordsum$sex)
+wordsum$subj &lt;- factor(wordsum$subj)
+wordsum$medit &lt;- factor(wordsum$medit)</code></pre>
+<p>The command for a two between-subject factor traditional ANOVA is given below. This is much like previous commands, the only thing to note is that <code>*</code> is used to combine between-subjects factors in <code>aov_car</code>. The output can be interpreted in the same way as before.</p>
+<pre class="r"><code>aov_car(formula = rt ~ medit*sex + Error(subj), data = wordsum)</code></pre>
+<pre><code>Contrasts set to contr.sum for the following variables: medit, sex</code></pre>
+<pre><code>Anova Table (Type 3 tests)
+
+Response: rt
+     Effect     df     MSE         F  ges p.value
+1     medit 2, 414 3781.43 11.20 ***  .05  &lt;.0001
+2       sex 1, 414 3781.43    5.64 *  .01     .02
+3 medit:sex 2, 414 3781.43      0.42 .002     .66
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;+&#39; 0.1 &#39; &#39; 1</code></pre>
+<p><a name="twoWS"></a></p>
+</div>
+<div id="two-within-subject-factors" class="section level1">
+<h1>Two within-subject factors</h1>
+<p>First, preprocess the data for this example:</p>
+<pre class="r"><code>wordsum &lt;- words %&gt;% group_by(subj, congru, block) %&gt;% summarise(rt = mean(rt))
+wordsum$congru &lt;- factor(wordsum$congru)
+wordsum$subj &lt;- factor(wordsum$subj)
+wordsum$block &lt;- factor(wordsum$block)</code></pre>
+<p>The command for a two within-subject factor traditional ANOVA is given below. This is much like previous commands, the only thing to note is that <code>*</code> is used to combine within-subjects factors in <code>aov_car</code>. The output can be interpreted in the same way as before.</p>
+<pre class="r"><code>aov_car(formula = rt ~ Error(subj/congru*block), data = wordsum)</code></pre>
+<pre><code>Anova Table (Type 3 tests)
+
+Response: rt
+        Effect            df      MSE         F    ges p.value
+1       congru  1.04, 437.22 16222.93 45.80 ***    .03  &lt;.0001
+2        block  1.68, 702.77  1608.56    2.43 +  .0003     .10
+3 congru:block 3.76, 1576.44   421.40      1.34 &lt;.0001     .25
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;+&#39; 0.1 &#39; &#39; 1
+
+Sphericity correction method: GG </code></pre>
+<p><a name="complex"></a></p>
+</div>
+<div id="more-than-two-factors" class="section level1">
+<h1>More than two factors</h1>
+<p>Unlike Bayesian ANOVA, traditional ANOVA techniques can handle designs with more than two factors quite efficiently.</p>
+<p>First, preprocess the data for this example:</p>
+<pre class="r"><code>wordsum &lt;- words %&gt;% group_by(subj, sex, medit, congru, block) %&gt;% summarise(rt = mean(rt))
+wordsum$sex &lt;- factor(wordsum$sex)
+wordsum$subj &lt;- factor(wordsum$subj)
+wordsum$medit &lt;- factor(wordsum$medit)
+wordsum$congru &lt;- factor(wordsum$congru)
+wordsum$block &lt;- factor(wordsum$block)</code></pre>
+<p>Now, we can run an ANOVA with all four factors:</p>
+<pre class="r"><code>aov_car(formula = rt ~ sex*medit + Error(subj/congru*block), data = wordsum)</code></pre>
+<pre><code>Contrasts set to contr.sum for the following variables: sex, medit</code></pre>
+<pre><code>Anova Table (Type 3 tests)
+
+Response: rt
+                   Effect            df      MSE         F    ges p.value
+1                     sex        1, 414 34897.39    5.79 *   .009     .02
+2                   medit        2, 414 34897.39 11.43 ***    .03  &lt;.0001
+3               sex:medit        2, 414 34897.39      0.39   .001     .68
+4                  congru  1.05, 433.57 15058.29 49.17 ***    .03  &lt;.0001
+5              sex:congru  1.05, 433.57 15058.29   6.89 **   .005    .008
+6            medit:congru  2.09, 433.57 15058.29 13.83 ***    .02  &lt;.0001
+7        sex:medit:congru  2.09, 433.57 15058.29      0.61  .0009     .55
+8                   block  1.67, 692.52  1625.05      2.41  .0003     .10
+9               sex:block  1.67, 692.52  1625.05      0.23 &lt;.0001     .76
+10            medit:block  3.35, 692.52  1625.05      0.52  .0001     .69
+11        sex:medit:block  3.35, 692.52  1625.05      0.29 &lt;.0001     .85
+12           congru:block 3.76, 1557.63   419.60      1.35 &lt;.0001     .25
+13       sex:congru:block 3.76, 1557.63   419.60      1.45  .0001     .22
+14     medit:congru:block 7.52, 1557.63   419.60    1.80 +  .0002     .08
+15 sex:medit:congru:block 7.52, 1557.63   419.60      0.87  .0001     .53
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;+&#39; 0.1 &#39; &#39; 1
+
+Sphericity correction method: GG </code></pre>
+<p>We get some very extensive output. This is because, when we have more than two factors in an analysis, it’s possible that there will be <em>higher-order</em> interactions in our data (e.g. <code>sex:medit:congru</code>), and there are a large number of these higher-order interactions to consider. Generally speaking, people find higher-order interactions very hard to understand or relate to their hypotheses. Trying to make sense of them is beyond this intermediate-level worksheet.</p>
+<p>__</p>
 <p>This material is distributed under a <a href="https://creativecommons.org/">Creative Commons</a> licence. CC-BY-SA 4.0.</p>
 </div>
 
