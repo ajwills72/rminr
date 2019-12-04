@@ -101,15 +101,17 @@ The following materials are under development. Comments welcome:
 
 - [Revision](revision.html)
 
-- [Statistical power](power.html). 
+- [Statistical power](power.html) 
 
-- [Data preprocessing](preproc.html). 
+- [Data preprocessing](preproc.html)
 
-- [Evidence, part 2](anova1.html)
+- [Within-subject differences](anova1.html)
 
-The following materials are in the planning stage. So, on clicking these links, you may find just notes, or incomplete worksheets. 
+- [Understanding interactions](anova2.html) 
 
-- [Evidence, part 3](anova2.html). 
+- [Factorial differences](anova3.html)
+
+- [Factorial differences, part 2](anova4.html)
 
 
 ## 5. Going further with R
