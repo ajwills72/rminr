@@ -1,5 +1,5 @@
 ---
-title: "Evidence, part 4"
+title: "Factorial differences"
 author: "Andy Wills"
 output: html_document
 ---
@@ -15,8 +15,6 @@ knitr::opts_chunk$set(echo = TRUE, comment=NA, cache = TRUE)
 
 
 ```
-
-For the previous parts of this worksheet, see the [Absolute Beginners' Guide to R](evidence.html), and the [evidence, part 2](anova1.html) and [evidence, part 3](anova2.html) worksheets.
 
 # Contents
 
@@ -42,7 +40,7 @@ For the previous parts of this worksheet, see the [Absolute Beginners' Guide to 
 
 # Getting started
 
-We'll be using the same meditation training data we used in [evidence, part 3](anova2.html), so make sure you've completed that worksheet and have the preprocessed `MCwordsCIsum` data frame from that worksheet in your current R project. If for some reason you do not have that data frame, you can re-create it like this, as long as you have `wordnaming2.csv` in your R project (which is available from the _git_ repository we used [previously](preproc.html#load)):
+We'll be using the same meditation training data we used in the [understanding interactions](anova2.html) worksheet, so make sure you've completed that worksheet and have the preprocessed `MCwordsCIsum` data frame from that worksheet in your current R project. If for some reason you do not have that data frame, you can re-create it like this, as long as you have `wordnaming2.csv` in your R project (which is available from the _git_ repository we used [previously](preproc.html#load)):
 
 ```{r init, message=FALSE}
 library(tidyverse)
@@ -58,7 +56,7 @@ MCwordsCIsum <-
 
 # Introduction
 
-In this worksheet, we'll use the `anovaBF` command to analyse the data from an experiment with a _factorial_ design. In [evidence, part 3](anova2.html), we said that a _factorial_ experiment design is one where there are at least two factors (e.g. training type, trial type) and we have data for all combinations of those factors (e.g. meditate-congruent, meditate-incongruent, control-conrguent, control-incongruent). When you have a factorial design with two factors, there are three questions you can ask:
+In this worksheet, we'll use the `anovaBF` command to analyse the data from an experiment with a _factorial_ design. In the [understanding interactions](anova2.html) worksheet, we said that a _factorial_ experiment design is one where there are at least two factors (e.g. training type, trial type) and we have data for all combinations of those factors (e.g. meditate-congruent, meditate-incongruent, control-congruent, control-incongruent). When you have a factorial design with two factors, there are three questions you can ask:
 
 1. Is there a _main effect_ of the first factor (e.g. training type)?
 
@@ -72,7 +70,7 @@ The command `anovaBF` allows us to answer all these three questions in one go.
 
 # Defining factors
 
-Take a look at the data frame `MCwordsCIsum`. It gives the mean congruent reaction time, and mean incongruent reaction time, for each participant. As before, we have to tell R which of the columns of this data frame are _factors_. The columns `medit` and `congru` are factors - they are the two factors of the design. Recall that in analyses where there is a within-subjects factor, we also need to tell R that the participant ID is a factor. So, we need to set three of the four columns of `MCwordsCIsum` as factors, like this:
+Take a look at the data frame `MCwordsCIsum`. It gives the mean congruent reaction time, and mean incongruent reaction time, for each participant. As before, you have to tell R which of the columns of this data frame are _factors_. The columns `medit` and `congru` are factors - they are the two factors of the design. Recall that the participant ID is also a factor. So, you need to set three of the four columns of `MCwordsCIsum` as factors, like this:
 
 ```{r three-factors}
 MCwordsCIsum$subj <- factor(MCwordsCIsum$subj)
@@ -107,17 +105,19 @@ We'll  look at each part of this command but, rather than looking at each in tur
 
 `formula = rt ~ medit*congru + subj` 
 
-This tells `anovaBF` what type of ANOVA we want. It says that the dependent variable is the reaction time column `rt`, and that the independent variables are the training type `medit` and the trial type `congru`. The `*` means "do a factorial ANOVA". In other words, it means work out a Bayes Factor for the main effect of each factor, and for the interaction. The final part, `+ subj`, says that this experiment contains at least one within-subjects factor, and that the participant IDs are to be found in the `subj` column. 
+This tells `anovaBF` what type of ANOVA we want. It says that the dependent variable is the reaction time column `rt`, and that the independent variables are the training type `medit` and the trial type `congru`. The `*` means "do a factorial ANOVA". In other words, it means work out a Bayes Factor for the main effect of each factor, and for the interaction. The final part, `+ subj`, is something we always include in `anovaBF`, and just says that the participant IDs are to be found in the `subj` column. 
 
 ### Random factors
 
-The command `anovaBF` is smart enough to work out for itself that `medit` is between-subjects and `congru` is within-subjects. However, it does have to be told which factors are [random factors](anova1.html#anovaWS). In most cases we'll deal with in this guide, only the participant ID is a random factor. Hence:
+You also have to tell  `anovaBF`  which factors are [random factors](anova1.html#anovaWS). In most cases we'll deal with in this guide, only the participant ID is a random factor. Hence:
 
 `whichRandom = "subj"`
 
 ### Storing results in an object
 
-`bf <-` - As the calculation takes a while to run, it makes sense to save the results of the calculation, so we only ever have to do it once. This command writes the output of `anovaBF` to an _object_ called `bf`. Until now, most objects you've seen have been data frames. But there are other types of object in R, including ones, like this one, that contain the results of calculations.
+`bf <-` 
+
+As the calculation takes a while to run, it makes sense to save the results of the calculation, so we only ever have to do it once. This command writes the output of `anovaBF` to an _object_ called `bf`. Until now, most objects you've seen have been data frames. But there are other types of object in R including ones, like this one, that contain the results of calculations.
 
 ### Everything else
 
@@ -137,7 +137,7 @@ The exact figures in your output may be slightly different to those shown.
 
 The key parts of this output are the Bayes Factors, which are the numbers immediately after the colons. A couple of things to notice here. First, there are four Bayes factors, when we might have expected to see three. We'll come back to that later. Second, there are things like `±2.66%` after the Bayes Factors. This means that R has _estimated_ the Bayes Factors, and is able to tell you how accurate that estimate is. So, for example, `10 ± 10%` means the Bayes Factor is somewhere between 9 and 11. 
 
-We'll look at each of these Bayes factors in turn. Notice they are numbered, e.g. `[1]` - this will become useful later. Also notice that they all include  `+ subj`. This  just indicates that at least one of the factors is within-subjects, so we'll ignore the `+ subj` in our descriptions from here on.
+We'll look at each of these Bayes factors in turn. Notice they are numbered, e.g. `[1]` - this will become useful later. Also notice that they all include  `+ subj`. This  just reminds us that we've told `anovaBF` which data comes from which participant, so we'll ignore the `+ subj` in our descriptions from here on.
 
 
 ### `[1] medit`
@@ -158,7 +158,7 @@ From this, we can see that people in the meditation condition are about 30 ms fa
 
 ### `[2] congru`
 
-The is the **main effect** of congruence. Again, more specifically, it is the hypothesis that `congru`  affects `rt`. This is compared against the hypothesis that there is no effect of congruence.
+This is the **main effect** of congruence. More specifically, it is the hypothesis that `congru`  affects `rt`. This is compared against the hypothesis that there is no effect of congruence.
 
 The Bayes Factor is about 790, strong evidence for  a main effect of congruence. As before, we can find out which direction this effect is in:
 
@@ -166,7 +166,7 @@ The Bayes Factor is about 790, strong evidence for  a main effect of congruence.
 MCwordsCIsum %>% group_by(congru) %>% summarise(mean(rt))
 ```
 
-As expected, incongruent trials are slower than congruent trials, on average. Again the difference is around 30 ms.
+As expected, incongruent trials are slower than congruent trials, on average. 
 
 ### The interaction
 
@@ -200,7 +200,7 @@ This gives us a Bayes Factor for the interaction close to 6000. So, there is str
 
 # Exercise
 
-As covered in [Evidence, part 2](anova1.html#threeplus), one of the strengths of `anovaBF` is that it's not limited to factors with two levels. In our meditation experiment, there were three between-subjects training conditions (meditate, relaxation, none), and three within-subjects trial trials (congruent, incongruent, neutral). **The goal of this exercise is to write an R script to analyze the full experiment**. 
+As covered in the [within-subject differences](anova1.html#threeplus), one of the strengths of `anovaBF` is that it's not limited to factors with two levels. In our meditation experiment, there were three between-subjects training conditions (meditate, relaxation, none), and three within-subjects trial types (congruent, incongruent, neutral). **The goal of this exercise is to write an R script to analyse the full experiment**. 
 
 Below are further instructions. In some cases, there are also examples of what your output should look like at each stage if you've got it right (recall that your BF may be slightly different to those shown). Once your script is working correctly, **copy and paste it into PsycEL**.
 
@@ -283,7 +283,7 @@ gdat %>%
 
 # Pairwise comparisons
 
-Although that's the end of the exercise, in a full analysis you would probably want to go further and look at particular pairs of conditions within the experiment. You do this as before, by using the `filter` command to select the data you want to analyze. For more details, see the [Evidence, part 2](anova1.html) worksheet.
+Although that's the end of the exercise, in a full analysis you would probably want to go further and look at particular pairs of conditions within the experiment. You do this as before, by using the `filter` command to select the data you want to analyse. For more details, see the [within-subject differences](anova1.html) worksheet.
 
 <a name="bettergraphs"></a>
 
@@ -319,9 +319,9 @@ It's also important to include those references in your Reference section. R wil
 
 # Ordinal factors
 
-A final important thing to realize about ANOVA is that it does not care about the order of the levels in your factors. For example, the full data set you have been analyzing includes block number. Participants do 30 trials, then take a break, then do another 30 trials, and so on. So each response is either in block 1, 2, or 3. If people were getting tired, you might see reaction times rise from blocks 1 to 2 and again from blocks 2 to 3. You might also find Bayesian evidence for a main effect of block (e.g. BF = 30). 
+A final important thing to realise about ANOVA is that it does not care about the order of the levels in your factors. For example, the full data set you have been analyzing includes block number. Participants do 30 trials, then take a break, then do another 30 trials, and so on. So each response is either in block 1, 2, or 3. If people were getting tired, you might see reaction times rise from blocks 1 to 2 and again from blocks 2 to 3. You might also find Bayesian evidence for a main effect of block (e.g. BF = 30). 
 
-It's important to realise that this tells you only that the three groups differ, not that 3 is greater than 2 and 2 is greater than 1. There are two ways of finding evidence for that sort of question. First, you could do two pairwise comparions (1 vs. 2, and 2 vs. 3). Alternatively, you could use a different analysis method that takes account of the fact that block is an _ordinal_ factor (i.e. that it has a specific order). [Regression](https://benwhalley.github.io/just-enough-r/linear-models-simple.html) is often a good choice in these cases.
+It's important to realise that this ANOVA Bayes Factor tells you only that the three groups differ, not that 3 is greater than 2 and 2 is greater than 1. There are two ways of finding evidence for that sort of question. First, you could do two pairwise comparisons (1 vs. 2, and 2 vs. 3). Alternatively, you could use a different analysis method that takes account of the fact that block is an _ordinal_ factor (i.e. that it has a specific order). [Regression](https://benwhalley.github.io/just-enough-r/linear-models-simple.html) is often a good choice in these cases.
 
 
 ___

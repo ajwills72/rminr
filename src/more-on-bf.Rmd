@@ -19,6 +19,22 @@ cpsdata <- read_csv(url("http://www.willslab.org.uk/cps2.csv"))
 cpslow <- cpsdata %>% filter(income < 150000)
 ```
 
+# Contents
+
+- [Further explanation of `ttestBF` output](#ttestbf)
+
+- [How to interpret a Bayes Factor](#interpret)
+
+- [When p-values and Bayes Factors disagree](#pvbf)
+
+- [How likely is the null hypothesis?](#null-likely)
+
+- [Further explanation of `anovaBF1 output](#anovabf)
+
+<a name = "ttestbf"></a>
+
+# Further explanation of `ttestBF` output
+
 In the [Evidence](evidence.html) worksheet, we did the following Bayesian t-test:
 
 ```{r bfttest}
@@ -38,9 +54,7 @@ x<-seq(-10,10,by=0.1)
 plot(x, dcauchy(x, scale = .707),type="l", xlab = "Effect size", ylab = "")
 ```
 
-`18.25128` - The Bayes Factor (i.e. the main result of this analysis). This is sometimes described as the relative likelihood of a difference, compared to the absence of a difference. Under that description, the Bayes Factor reported here means it's about 18x more likely there is a difference than there isn't. But that's a bit of a simplification.
-
-This way of describing a Bayes Factor is only accurate if, before collecting the data, you thought the presence or absence of a difference were equally likely outcomes. If that is not the case, it is more accurate to consider the Bayes Factor as the extent to which you should update your beliefs. For example, say you think telepathy is really unlikely, perhaps because there is no known mechanism by which it can operate. You might express your skepticism by saying it's about million times more likely telepathy doesn't exist than it does (a '1 in a million' chance). Say you then run an experiment on telepathy and get a Bayes Factor of 20. This tells you you should adjust your belief from 1 in a million to 1 in 50,000. So, after the experiment, you still think it's more likely telepathy doesn't exist than it does. Bayes Factors are a way of rationally updating your beliefs as new data becomes available.
+`18.25128` - The Bayes Factor (i.e. the main result of this analysis). See the next section for further discussion
 
 `±0%` - Basically a confidence interval on the Bayes Factor. It's 0% here because we have so much data, but with smaller samples we might see something like `20 ±5%`, which would means the Bayes Factor is about 20, give or take 5%. So, it's between 19 and 21.
 
@@ -50,9 +64,19 @@ This way of describing a Bayes Factor is only accurate if, before collecting the
 
 `Bayes factor type: BFindepSample` - You're doing a Bayes Factor analysis; `indepSample` is short for `independent samples`, which is another way of saying "between-subjects test". `JZS` is short for Jeffreys, Zellner, and Siow - the surnames of three people who are credited with coming up with this particular way of working out Bayes Factors.
 
-## When p-values and Bayes Factors disagree
+<a name = "interpret"></a>
 
-So, what if your p-value is less than .05, but your Bayes Factor is less than 3? The short answer is ... 
+# How to interpret a Bayes Factor
+
+The Bayes Factor reported by the above analysis is sometimes described as the relative likelihood of a difference, compared to the absence of a difference. Under that description, the Bayes Factor reported above means it's about 18x more likely there is a difference than there isn't. But that's a bit of a simplification.
+
+This way of describing a Bayes Factor is only accurate if, before collecting the data, you thought the presence or absence of a difference were equally likely outcomes. If that is not the case, it is more accurate to consider the Bayes Factor as the extent to which you should update your beliefs. For example, say you think telepathy is really unlikely, perhaps because there is no known mechanism by which it can operate. You might express your skepticism by saying it's about million times more likely telepathy doesn't exist than it does (a '1 in a million' chance). Say you then run an experiment on telepathy and get a Bayes Factor of 20. This tells you you should adjust your belief from 1 in a million to 1 in 50,000. So, after the experiment, you still think it's more likely telepathy doesn't exist than it does. Bayes Factors are a way of rationally updating your beliefs as new data becomes available.
+
+<a name = "pvbf"></a>
+
+# When p-values and Bayes Factors disagree
+
+What if your p-value is less than .05, but your Bayes Factor is less than 3? The short answer is ... 
 believe the Bayes Factor, and ignore the p value. The p value is there for historical reasons and doesn't tell you anything you actually want to know. 
 
 ### Long answer
@@ -76,15 +100,72 @@ very  commonly in the .01 < p <.05 region.
 Put that all together and we begin to get a sense of one of the causes of the
 replication crisis, and how BF may help us escape it.
 
-## How likely is the null hypothesis?
+<a name = "null-likely"></a>
+
+# How likely is the null hypothesis?
 
 In our discussion of the Bargh paper in the [Evidence](evidence.html) worksheet, we estimated the probability of the null prior to data collection as .95. We also said that the probability of the null, after a t-test with p = .049, was around 50:50. This calculation also makes use of Bayesian maths, you can find details of the calculation [here](bayescalc.pdf).
+
+<a name = "anovabf"></a>
+
+# Further explanation of `anovaBF` output
+
+In the [within-subject differences](anova1.html#anovaWS) worksheet, we ran a single-factor within-subjects Bayesian ANOVA that produced output something like this:
+
+```
+Bayes factor analysis
+--------------
+[1] congru + subj : 43834950 ±2.29%
+
+Against denominator:
+  rt ~ subj 
+---
+Bayes factor type: BFlinearModel, JZS
+```
+
+The first part of this output is similar to the output for `ttestBF`. However, we then come to:
+
+```
+Against denominator:
+  rt ~ subj
+```
+
+which is a bit different to `ttestBF`. Recall that a Bayes Factor is a fraction - it's the evidence for one hypothesis divided by the evidence for another. The top of that fraction (the _numerator_) is given in the first part of the output as `congru + subj`. The bottom of that fraction (the _denominator_) is given as `rt ~ subj`. 
+
+The denominator is the _null_ hypothesis that reaction time is only affected by participant ID. In other words, it's a hypothesis that different people have different reaction times. This is compared to the _experimental_ hypothesis (the _numerator_), which was given earlier as `congru + subj`. This is the hypothesis that trial type (`congru`) has an effect on reaction times **and** that different people have different reaction times (`+ subj`)
+
+When we take the evidence for the experimental hypothesis (`congru + subj`) and divide it by the evidence for the null hypothesis (`subj`), we get a Bayes Factor that reflects the evidence for there being an effect of trial type.
+
+There's one further part of the output:
+
+```
+---
+Bayes factor type: BFlinearModel, JZS
+```
+
+This is says two things. First, it tells you which type of Bayesian calculation you're doing - `BFlinearModel`. ANOVA, and a number of other techniques, like regression, are special cases of a general approach called "General Linear Models". So, in pragmatic terms, this is just a not-very-clear way of saying you're doing an ANOVA. Finally, `JZS` has the same meaning as previously - it's short for Jeffreys, Zellner, and Siow - the surnames of three people who are credited with coming up with this particular way of working out Bayes Factors.
+
+## Output for interactions
+
+In the [factorial differences](anova3.html#bfact) worksheet, we also calculated a Bayes Factor for an interaction. It produces output like this:
+
+```
+Bayes factor analysis
+--------------
+[1] medit + congru + medit:congru + subj : 5963.887 ±3.28%
+
+Against denominator:
+  rt ~ medit + congru + subj 
+---
+Bayes factor type: BFlinearModel, JZS
+```
+
+The main difference here, relative to the last output we looked at, is that the denominator is different. As explained in the main worksheet, we calculate the Bayes Factor for an interaction by dividing the Bayes Factor for a hypothesis including the interaction and main effects, `medit + congru + medit:congru + subj` by a hypothesis including everything just the main effects, `medit + congru + subj`. In the output, this is shown by given `medit + congru + subj` as the denominator.
+
 ___
 
 
 #### Licence
 This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0. 
 
-___
 
-_version: 0.2_

@@ -1,5 +1,5 @@
 ---
-title: "Evidence, part 5"
+title: "Factorial differences, part 2"
 author: "Andy Wills"
 output: html_document
 ---
@@ -16,39 +16,31 @@ knitr::opts_chunk$set(echo = TRUE, comment=NA, cache = TRUE)
 
 ```
 
-For the previous parts of this worksheet, see the [Absolute Beginners' Guide to R](evidence.html), and the [evidence, part 2](anova1.html), [evidence, part 3](anova2.html) and [evidence, part 4](anova3.html) worksheets.
-
 # Contents
-
-- [Getting started](#start)
 
 - [Introduction](#intro)
 
-- [Defining factors](#factors) 
+- [Getting started](#start)
 
-- [Bayesian factorial ANOVA](#bfact)
+- [Two between-subject factors](#twoBS)
 
-- [Exercise](#ex1)
+- [Two within-subject factors](#twoWS)
 
-- [Pairwise comparisons](#pairc)
+- [One between-subject factor](#oneBS)
 
-- [Better graphs](#bettergraphs)
-
-- [Reporting Bayesian ANOVA](#report)
-
-- [Ordinal factors](#ordinal)
+- [More than two factors?](#three)
 
 <a name="intro"></a>
 
 # Introduction
 
-In the previous worksheet, we did a two-factor Bayesian ANOVA where one factor was within-subject and the other was between-subjects. In this worksheet, we'll use the same data frame to illustrate another couple of two-factor ANOVAs.
+In the [factorial differences](anova3.html) worksheet, we did a two-factor Bayesian ANOVA where one factor was within-subject and the other was between-subjects. In this worksheet, we'll use the same data frame to illustrate another couple of two-factor ANOVAs.
 
 <a name="start"></a>
 
 # Getting started
 
-We'll be using the same meditation training data we used in [evidence, part 4](anova3.html) exercise, so make sure you've completed that worksheet and have the  `words` data frame from that worksheet in your current R project. If for some reason you do not have that data frame, you can re-create it like this, as long as you have `wordnaming2.csv` in your R project (which is available from the _git_ repository we used [previously](preproc.html#load)):
+We'll be using the same meditation training data we used in [factorial differences](anova3.html) worksheet, so make sure you've completed that worksheet and have the  `words` data frame from that worksheet in your current R project. If for some reason you do not have that data frame, you can re-create it like this, as long as you have `wordnaming2.csv` in your R project (which is available from the _git_ repository we used [previously](preproc.html#load)):
 
 ```{r init, message=FALSE}
 library(tidyverse)
@@ -56,7 +48,7 @@ library(BayesFactor, quietly = TRUE)
 words <- read_csv("wordnaming2.csv")
 ```
 
-Now, we need to create a subject-level summary file that contains all the factors available in this dataset. This includes two factors we haven't analysed yet - `sex` (biological sex of the participant) and `block` (block of trials in the experiment: 1, 2, 3):
+Next, you need to create a subject-level summary file that contains all the factors available in this dataset. This includes two factors we haven't analysed yet - `sex` (biological sex of the participant) and `block` (block of trials in the experiment: 1, 2, 3):
 
 ```{r factsum, message=FALSE}
 wordsum <- words %>% group_by(subj, sex, medit, congru, block) %>% summarise(rt = mean(rt))
@@ -71,91 +63,143 @@ wordsum$block <- factor(wordsum$block)
 
 # Two between-subject factors
 
-We can use `anovaBF` to do a factorial Bayesian ANOVA where both factors are between-subjects. For example, `sex` and `medit`:
+We can use `anovaBF` to do a factorial Bayesian ANOVA where both factors are between-subjects. It works exactly the same way as before. For example, we can do a factorial Bayesian ANOVA for  `sex` and `medit` like this:
 
 ```{r bf-2bs}
-bf2bs <- anovaBF(formula = rt ~ medit*sex + subj, data = data.frame(wordsum))
+bf2bs <- anovaBF(
+    formula = rt ~ medit*sex + subj,
+    data = data.frame(wordsum),
+    whichRandom = 'subj')
 ```
-
-## Explanation of command
-
-The command is pretty much like a [one-factor between-subjects ANOVA](), we just add the additional factor:
-
-`formula = rt ~ medit*sex` 
-
-This tells `anovaBF` what type of ANOVA we want. It says that the dependent variable is the reaction time column `rt`, and that the independent variables are the training type `medit` and the biological sex of the participant `sex`. The `*` means "do a factorial ANOVA". In other words, it means work out a Bayes Factor for the main effect of each factor, and for the interaction. 
 
 ## Explanation of output
 
-Once calculation has finished, take a look at the results. You do this by typing in the name of the object you stored the results in:
+This analysis will take a long while to run (at least three minutes). The output is interpreted the same way as before: 
 
 ```{r reveal}
 bf2bs
 ```
 
-The exact figures in your output may be slightly different to those shown.
-
-The key parts of this output are the Bayes Factors, which are the numbers immediately after the colons. A couple of things to notice here. First, there are four Bayes factors, when we might have expected to see three. We'll come back to that later. Second, there are things like `±2.66%` after the Bayes Factors. This means that R has _estimated_ the Bayes Factors, and is able to tell you how accurate that estimate is. So, for example, `10 ± 10%` means the Bayes Factor is somewhere between 9 and 11. 
-
-We'll look at each of these Bayes factors in turn. Notice they are numbered, e.g. `[1]` - this will become useful later. Also notice that they all include  `+ subj`. This  just indicates that at least one of the factors is within-subjects, so we'll ignore the `+ subj` in our descriptions from here on.
-
 ### `[1] sex`
 
 The is the **main effect** of participant sex. More specifically, it is the hypothesis that `sex`  affects `rt`. This is compared against the hypothesis that there is no effect of sex.
 
-The Bayes Factor is about 140,000, strong evidence for  a main effect of sex. We can find out which direction this effect is in like this:
-
-```{r sexME}
-wordsum %>% group_by(sex) %>% summarise(mean(rt))
-```
-
-Overall, females are around 15 ms slower on this task. This is a small effect in absolute terms, but we have good evidence for it. The result may seem rather surprising, but let's go through the whole analysis before returning to this.
+The Bayes Factor is about 1.8, meaning the evidence for a main effect of sex is inconclusive.
 
 ### `[2] medit`
 
 This is the **main effect** of training type, `medit`. More specifically, it is a test of the hypothesis that `medit`, affects `rt`. 
 
-The Bayes Factor for this hypothesis is around $5 \times 10^{23}$, which is really strong evidence that there is a main effect of meditation training. But which direction is the main effect in? Does meditation training make you faster overall, or slower overall?
+The Bayes Factor for this hypothesis is around 980, which is strong evidence that there is a main effect of meditation training. If you've got a particularly good memory, you'll have noticed this isn't quite the same Bayes Factor as we saw for the main effect of meditation in [this analysis](anova3.html#ex1) of the same data. As with many forms of multi-factor ANOVA (including traditional, p-value, ones) the evidence terms you get depend somewhat on the formula you specify. Here, you included `sex` but not `congru` as factors; in the previous analysis, it was the other way around. This can affect the results you get. 
 
-We can find this out by using the `group_by` and `summarise` commands we have used several times before:
-
-```{r meditME}
-wordsum %>% group_by(medit) %>% summarise(mean(rt))
-```
-
-From this, we can see that people in the meditation condition are about 30 ms faster, on average, than those in the control condition. Meditation training seems to have led to a reduction in overall reaction times in this task.
-
-
-As expected, incongruent trials are slower than congruent trials, on average. Again the difference is around 30 ms.
+If the type of analysis you choose to conduct affects the central conclusions of your study, then that is normally an indication that you need to replicate your result with a larger sample. Conclusions should be robust to variations in analysis technique.
 
 ### The interaction
 
-`anovaBF` does not directly give us a Bayes Factor for the interaction of the two main effects. Instead, it gives us two Bayes Factors for things that we can use to work out the interaction BF. These are:
+As before, `anovaBF` does not directly give us a Bayes Factor for the interaction of the two main effects. Instead, it gives us two Bayes Factors for things that we can use to work out the interaction BF. These are:
 
-#### [3] `medit + congru`
+#### [3] `sex + medit`
 
-This the hypothesis that there is a main effect of both factors. There is no assumption that the two main effects are of the same size. This 'main effects' hypothesis is compared against the null hypothesis, i.e. that neither `medit` nor `congru` affect `rt`. 
+This the hypothesis that there is a main effect of both factors. There is no assumption that the two main effects are of the same size. This 'main effects' hypothesis is compared against the null hypothesis, i.e. that neither `medit` nor `sex` affect `rt`. 
 
-The BF for this hypothesis is large (about 300,000). We'd expect this, given that there was substantial evidence for both `congru` alone and `medit` alone.
+The BF for this hypothesis is large (about 2000). We'd expect this, given that there was substantial evidence for `medit` alone.
 
-#### [4] medit + congru + medit:congru
+#### [4] `sex + medit + sex:medit`
 
-This is the Bayes Factor for the hypothesis that there are main effects for both factors (`medit + congru`) _and_ that the two factors interact (`+ medit:congru`). This is again compared against the null hypothesis that neither `medit` nor `congru` have any effect. 
+This is the Bayes Factor for the hypothesis that there are main effects for both factors (`sex + medit`) _and_ that the two factors interact (`+ sex:medit`). This is again compared against the null hypothesis that neither `medit` nor `sex` have any effect. 
 
-The BF for this hypothesis is also large (about $1.8 \times 10^{9}$). We'd expect this, because there was substantial evidence for the 'main effects' hypothesis `medit + congru`. 
+The BF for this hypothesis is also large (about 160). We'd expect this, because there was substantial evidence for the 'main effects' hypothesis `medit + congru`. However, the BF is considerably lower than for this `main effects` hypothesis.
 
 #### Interaction BF
 
-Remember that a Bayes Factor is always a comparison of two types of evidence. So far, we've always compared some experimental hypothesis with  the null hypothesis. But we can also compare the evidence for two different experimental hypotheses. The hypothesis that there is an interaction is the hypothesis that there is something more going on that just the combination of main effects. For example, the hypothesis that the congruency effect is smaller after mediation. So, to get a Bayes Factor for the interaction, we compare the evidence for hypothesis `[4]` with the evidence for hypothesis `[3]`. To do this, we divide the Bayes Factor for `[4]` by the Bayes Factor for `[3]`. 
-
-In R we can use the `bf` object to do this:
+The Bayes Factor for the interaction is given, as before, by:
 
 ```{r int-fact}
-bf[4] / bf[3]
+bf2bs[4] / bf2bs[3]
 ```
 
-This gives us a Bayes Factor for the interaction close to 6000. So, there is strong evidence for the interaction, too.
+This gives us a Bayes Factor for the interaction close to 0.1. So, there's substantial evidence for the _absence_ of an interaction.
 
+<a name="twoWS"></a>
+
+# Two within-subject factors
+
+We can also use `anovaBF` to look at two within-subjects factors. Again, this works just the same way as before. For example, we can do a factorial Bayesian ANOVA for `congru` and `block` like this:
+
+```{r bf-2ws}
+bf2ws <- anovaBF(
+    formula = rt ~ congru*block + subj,
+    data = data.frame(wordsum),
+    whichRandom = 'subj')
+```
+
+## Explanation of output
+
+This analysis will take a long while to run (at least seven minutes). The output is interpreted the same way as before: 
+
+```{r reveal-2}
+bf2ws
+```
+
+### `[1] congru`
+
+The is the **main effect** of congruence. More specifically, it is the hypothesis that `congru`  affects `rt`. This is compared against the hypothesis that there is no effect of sex.
+
+The Bayes Factor is very large (about $1 \times 10^{58}$), meaning the evidence for a main effect of congruence is conclusive.
+
+### `[2] block`
+
+This is the **main effect** of test `block`. More specifically, it is a test of the hypothesis that `block`, affects `rt`. 
+
+The Bayes Factor for this hypothesis is around 0.01, which is strong evidence for the _absence_ of an effect of block. 
+
+### The interaction
+
+As before, `anovaBF` does not directly give us a Bayes Factor for the interaction of the two main effects. Instead, it gives us two Bayes Factors for things that we can use to work out the interaction BF. These are:
+
+#### [3] `congru + block`
+
+This the hypothesis that there is a main effect of both factors. There is no assumption that the two main effects are of the same size. This 'main effects' hypothesis is compared against the null hypothesis, i.e. that neither `congru` nor `block` affect `rt`. 
+
+The BF for this hypothesis is large - about $1 \times 10^{56}$. We'd expect this, given that there was substantial evidence for `congru` alone.
+
+#### [4] `congru + block + congru:block`
+
+This is the Bayes Factor for the hypothesis that there are main effects for both factors (`congru + block`) _and_ that the two factors interact (`+ congru:block`). This is again compared against the null hypothesis that neither `congru` nor `block` have any effect. 
+
+The BF for this hypothesis is also large - about $4 \times 10^{52}$. We'd expect this, because there was substantial evidence for the 'main effects' hypothesis `congru + block`. However, the BF is considerably lower than for the `main effects` hypothesis.
+
+#### Interaction BF
+
+The Bayes Factor for the interaction is given, as before, by:
+
+```{r int-fact-2}
+bf2ws[4] / bf2ws[3]
+```
+
+This gives us a Bayes Factor for the interaction close to 0.0004. So, there's substantial evidence for the _absence_ of an interaction.
+
+<a name="oneBS"></a>
+
+# Single between-subjects factor
+
+It is also possible to use `anovaBF` to analyse a single factor, between-subjects design. Where that factor has two levels, you could alternatively use [ttestBF](evidence.html#bayes-t), although note even in this case the Bayes Factors produced by the two commands will not be exactly the same. This is because `anovaBF` makes use of the factor of participant ID (`subj`), while `ttestBF` does not. The approach `anovaBF` takes is better, but also takes longer to run.  As before, if your choice of analysis technique changes the central conclusions of your study, this is normally an indication that you should replicate your study with a larger sample.
+
+One of the useful things about `anovaBF` is that, unlike `ttestBF`, you can use it in a one-factor design that has more than two levels. For example:
+
+```{r bf-1bs}
+bf1bs <- anovaBF(
+    formula = rt ~ medit + subj,
+    data = data.frame(wordsum),
+    whichRandom = 'subj')
+bf1bs
+```
+
+<a name="three"></a>
+
+# More than two factors?
+
+The previous analysis took several minutes to run. Although in principle it is possible to run Bayesian ANOVAs with more than two factors, they take hours or days to run with realistically large data sets. They also produce output that is considerably harder to interpret than the output of two-factor analyses. For these reasons, we only look at up to two-factor Bayesian ANOVA in these intermediate-level worksheets. If you need to conduct an ANOVA with more than two factors, consider using [traditional ANOVA](more-on-anova.html) techniques (bearing in mind, of course, the interpretative difficulties surrounding p values). 
 
 ___
 

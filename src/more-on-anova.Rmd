@@ -1,5 +1,5 @@
 ---
-title: "More on ANOVA"
+title: "Traditional ANOVA"
 author: "Andy Wills"
 output: html_document
 ---
@@ -11,7 +11,7 @@ output: html_document
 ## knitr::opts_chunk$set(echo = TRUE, message = FALSE, results='hide', fig.keep = 'none', comment=NA)
 
 ## Show commands and output.
-knitr::opts_chunk$set(echo = TRUE, comment=NA)
+knitr::opts_chunk$set(echo = TRUE, comment=NA, cache=TRUE)
 
 ```
 
@@ -19,25 +19,35 @@ knitr::opts_chunk$set(echo = TRUE, comment=NA)
 
 - [Introduction](#intro)
 
-- [Load the `afex` package](#afex)
+- [Getting started](#afex)
 
-- [Traditional ANOVA (between-subjects)](#anovaBS)
+- [One between-subject factor](#anovaBS)
 
-- [Traditional ANOVA (within-subjects)](#anovaWS)
+- [One wtihin-subject factor](#anovaWS)
+
+- [More than two levels](#three)
 
 - [Pairwise comparisons](#pairs)
+
+- [Factorial ANOVA](#fact)
+
+- [Two between-subject factors](#twoBS)
+
+- [Two within-subject factors](#twoWS)
+
+- [More than two factors](#complex)
 
 <a name="intro"></a>
 
 # Introduction
 
-In the [Evidence, part 2](anova1.html) and [Evidence, part 3](anova2.html) worksheets, we looked at Bayesian ANOVA methods. Throughout _Research Methods in R_ we focus on Bayesian, rather than traditional ("p value") methods, because Bayes Factors are more useful and easier to understand. However, psychologists have been using traditional ANOVA methods since the 1970s, and it was not until the 2010s that we started using Bayesian methods. So, there's a lot of older work out there that uses a technique you haven't yet been taught. There are also some psychologists who still expect to see the traditional analysis, with Bayesian analysis considered an optional addition to, rather than a replacement for, traditional methods. Although this view is hard to support in principled terms, it is probably still worth knowing how to do a traditional ANOVA, in case you are called upon to do so, and so you can interpret older published work in psychology. This is what we'll cover in this worksheet.
+In the [within-subject differences](anova1.html) and [factorial differences](anova2.html) worksheets, we looked at Bayesian ANOVA methods. Throughout _Research Methods in R_ we focus on Bayesian, rather than traditional ("p value") methods, because Bayes Factors are more useful and easier to understand. However, psychologists have been using traditional ANOVA methods since the 1970s, and it was not until the 2010s that we started using Bayesian methods. So, there's a lot of older work out there that uses a different technique. For this reason, it is probably still worth knowing how to do a traditional ANOVA. This is what we'll cover in this worksheet.
 
-The following assumes you have completed the [Evidence, part 2](anova1.html) worksheet.
+The following assumes you have completed the  [within-subject differences](anova1.html) and [factorial differences](anova2.html) worksheets. Make sure you are in your R project that contains the data downloaded from the _git_ repository - see the [preprocessing](preproc.html#load) worksheet for details.
 
 <a name="afex"></a>
 
-# Load the `afex` package
+# Getting started
 
 To do traditional ANVOA in R, you will need to load the `afex` package:
 
@@ -45,36 +55,42 @@ To do traditional ANVOA in R, you will need to load the `afex` package:
 library(afex)
 ```
 
-<a name="anovaBS"></a>
+You'll also need to load the data, preprocess it, and set factors, as we did for Bayesian ANOVA. Here's how:
 
-# Traditional ANOVA (between-subjects)
-
-Before you start, make sure you have loaded the data, and that you've told R which columns are factors:
-
-```{r init, message=FALSE}
-prod <- read_csv("production.csv")
-prod$cond <- factor(prod$cond)
+```{r started, message=FALSE}
+library(tidyverse)
+words <- read_csv("wordnaming2.csv")
+wordsum <-
+    words %>%
+    group_by(subj, medit) %>%
+    summarise(rt = mean(rt))
+wordsum$subj <- factor(wordsum$subj)
+wordsum$medit <- factor(wordsum$medit)
 ```
 
-Now, to do a traditional between-subjects ANOVA, use the command:
+<a name="anovaBS"></a>
+
+# One between-subject factor
+
+To do a traditional, one between-subject factor ANOVA, use the following command:
 
 ```{r anovaBS}
-aov_car(formula = phit ~ cond + Error(subj), data = prod)
+aov_car(formula = rt ~ medit + Error(subj), data = wordsum)
 ```
  
 ### Explanation of command
 
-The command `aov_car` is similar to the command `anovaBF`, but for traditional ANOVA. In most ways, this command works like `anovaBF`. For example, the part `formula = phit ~ cond` says we want to look at the effect of the `cond` variable (silent vs. read aloud) on the `phit` variable (memory performance, specifically probability of a hit). This is just like `anovaBF`. The main difference is that we also have `+ Error(subj)`. This tells `aov_car` which column contains the participant IDs (in this case, `subj`). The command `aov_car` always needs to be told this. Note that this is different to `anovaBF`, where we only have to say which column contains the participant IDs if we are doing a _within-subjects_ test. 
+The command `aov_car` is similar to the command `anovaBF`, but for traditional ANOVA. In most ways, this command works like `anovaBF`. For example, the part `formula = rt ~ medit` says we want to look at the effect of the `medit` (meditation) variable on the `rt` (reaction time) variable. The next bit, `+ Error(subj)` is also very similar to `anovaBF` - it  tells `aov_car` which column contains the participant IDs (in this case, `subj`). The final part, `data = wordsum` tells the command where to find the data (just as with `anovaBF`).
 
 ### Explanation of output
 
-Although there's quite a lot in this output, the main thing to focus on is the number underneath `p.value`. In this case, the number is '.11'. So, the p-value in this case is .11, written as `p = .11`. Recall that p values are widely misinterpreted by psychologists, but we have a convention that if the p value is less than .05, then people will believe there is a difference. In this case, the p value is greater than .05, and so people will be skeptical about any claim that the two groups differ. Note that p values do not ever give evidence for the null. In other words, they can never tell you the two groups are the same, just that you don't have evidence they are different. This is one of the reasons we generally talk about Bayes Factors  in these worksheets.
+Although there's quite a lot in this output, the main thing to focus on is the number underneath `p.value`. In this case, the number is '<.0001'. So, the p-value in this case is less than .0001, written as `p < .0001`. Recall that [p values are widely misinterpreted by psychologists](evidence.html#p-wrong), but we have a convention that if the p value is less than .05, then people will believe there is a difference. In this case, the p value is less than .05, and so people will believe there is a difference. 
 
 If you are reporting the results of a traditional ANOVA in a journal article, you are generally expected to report the `F` value, along with the degrees of freedom (`df`), as well as the p value. So, in this case, you would write:
 
-The two groups did not differ significantly, _F_(1, 58) = 2.62, _p_ = .11.
+The two groups did not differ significantly, _F_(2, 417) = 11.11, _p_ < .0001.
 
-The F ratio and degrees of freedom are not particularly meaningful or useful information for the reader to have, but nonetheless journals normally require them when reporting traditional ANOVA. For further explanation, see the [yet more on ANOVA](yet-more-on-anova.html) worksheet.
+The F ratio and degrees of freedom are not particularly meaningful or useful information for the reader to have, but nonetheless journals normally require them when reporting traditional ANOVA. For further explanation, see the [more on ANOVA](yet-more-on-anova.html) worksheet.
 
 One useful piece of information `aov_car` provides is `ges` - which is `.04` in this example. `ges` stands for "generalized eta-squared". This is a measure of [effect size](group-differences.html#effsize), somewhat like Cohen's d, but the scale is different. `ges` is much like a [correlation co-efficient](corr.html#corr), and ranges between 0 and 1. A large effect size for `ges` is around .26, a medium-sized effect is around .13, and a small effect is around .02 ([further details here](https://www.psy.gla.ac.uk/~steve/best/effect.html)). It can be useful to report generalized eta squared, and this is reported as $\eta_{g}^{2}$. So one could write:
 
@@ -84,9 +100,9 @@ Note that some authors will instead report a related measure called _partial_ et
 
 <a name="anovaWS"></a>
 
-# Traditional ANOVA (within-subjects)
+# One within-subject factor
 
-First, ensure you have loaded and preprocessed the data for this example:
+First, preprocess the data for this example:
 
 ```{r init2, message=FALSE}
 words <- read_csv("wordnaming2.csv")
@@ -99,7 +115,8 @@ wordctrlCIsum$congru <- factor(wordctrlCIsum$congru)
 wordctrlCIsum$subj <- factor(wordctrlCIsum$subj)
 ```
 
-This is the command to run a traditional within-subjects ANOVA:
+
+Now, this is the command to run a traditional within-subjects ANOVA:
 
 ```{r tradWS}
 aov_car(formula = rt ~ Error(subj/congru), data = wordctrlCIsum)
@@ -107,7 +124,7 @@ aov_car(formula = rt ~ Error(subj/congru), data = wordctrlCIsum)
 
 ## Explanation of command
 
-`aov_car` works similarly to `anovaBF` - for example we specify a `formula` and the data set (`data`). It differs mainly in how the right-hand side of the formula (everything after the `~`) is laid out. To do a within-subjects test in `aov_car` we write `Error(x/y)`, where `x` is the column of data frame that contains the subject IDs (`subj` in this case), and `y` is the column of the data frame that contains the within-subjects condition (`congru` in this case).
+As before, `aov_car` works similarly to `anovaBF` - for example we specify a `formula` and the data set (`data`). It differs mainly in how the right-hand side of the formula (everything after the `~`) is laid out. To do a within-subjects test in `aov_car` we write `Error(x/y)`, where `x` is the column of data frame that contains the subject IDs (`subj` in this case), and `y` is the column of the data frame that contains the within-subjects condition (`congru` in this case).
 
 ## Explanation of output
 
@@ -115,9 +132,11 @@ The output can be read exactly the same way as in the last example. When reporti
 
 The two conditions differed significantly, _F_(1, 139) = 44.78, _p_ < .0001, $\eta_{g}^{2}$ = .11.
 
-# Traditional ANOVA with more than two levels
+<a name="three"></a>
 
-First, ensure you have loaded and preprocessed the data for this example:
+# More than two levels
+
+First, preprocess the data for this example:
 
 ```{r init3, message=FALSE}
 wordctrlsum <- wordctrl %>%
@@ -157,7 +176,104 @@ You would normally report towards the begining of your results that you used suc
 
 You can do pairwise comparisons in traditional ANOVA in the same way you do them with `anovaBF`. In other words, filter the data to include just the two conditions you want to compare, and run the appropriate test. There are also other ways to do this, but we don't cover them in these intermediate-level worksheets.
 
+<a name="fact"></a>
+
+# Factorial ANOVA
+
+First, preprocess the data for this example:
+
+```{r fact-prep}
+wordsum <-
+    words %>%
+    group_by(subj, medit, congru) %>%
+    summarise(rt = mean(rt))
+wordsum$subj <- factor(wordsum$subj)
+wordsum$medit <- factor(wordsum$medit)
+wordsum$congru <- factor(wordsum$congru)
+```
+
+A traditional ANOVA with one within-subjects factor and one between-subjects factor is conducted like this:
+
+```{r fact-anova}
+aov_car(formula = rt ~ medit + Error(subj/congru), data = wordsum)
+```
+
+## Explanation of command
+
+The `aov_car` command for this factorial ANOVA is just combines the formula we used for a single between-subjects factor, `rt ~ medit + Error(subj)` with the formula we used for a single within-subjects factor, `rt ~ Error(subj/congru)`, to give the full formula `rt ~ medit + Error(subj/congru)`. Note that the `+` sign is used to combine  a within-subjects component with a between-subjects component, rather than the `*` sign we used in `anovaBF`. This is just because the two commands were written by different peoplel it doesn't have any deeper significance.
+
+## Explanation of output
+
+The first two lines of the output are the main effect for `medit` and the _main effect_ for `congru`, respectively. The third line, `medit:congru` is the _interaction_ between these two factors. Everything else has the same meaning as in previous outputs. You'll notice that the main effect F values are not quite the same as they were in the earlier examples on this worksheet. As we saw in our Bayesian ANOVA, different analyses can give different answers.
+
+<a name="twoBS"></a>
+
+# Two between-subject factors
+
+First, preprocess the data for this example:
+
+```{r more-prep}
+wordsum <- words %>% group_by(subj, sex, medit) %>% summarise(rt = mean(rt))
+wordsum$sex <- factor(wordsum$sex)
+wordsum$subj <- factor(wordsum$subj)
+wordsum$medit <- factor(wordsum$medit)
+```
+
+The command for a two between-subject factor traditional ANOVA is given below. 
+This is much like previous commands, the only thing to note is that `*` is used to combine between-subjects factors in `aov_car`. The output can be interpreted in the same way as before. 
+
+```{r twoBS}
+aov_car(formula = rt ~ medit*sex + Error(subj), data = wordsum)
+```
+
+<a name="twoWS"></a>
+
+# Two within-subject factors
+
+First, preprocess the data for this example:
+
+```{r more-prep-2}
+wordsum <- words %>% group_by(subj, congru, block) %>% summarise(rt = mean(rt))
+wordsum$congru <- factor(wordsum$congru)
+wordsum$subj <- factor(wordsum$subj)
+wordsum$block <- factor(wordsum$block)
+```
+
+The command for a two within-subject factor traditional ANOVA is given below. 
+This is much like previous commands, the only thing to note is that `*` is used to combine within-subjects factors in `aov_car`. The output can be interpreted in the same way as before.
+
+```{r twoWS}
+aov_car(formula = rt ~ Error(subj/congru*block), data = wordsum)
+```
+
+<a name="complex"></a>
+
+# More than two factors
+
+Unlike Bayesian ANOVA, traditional ANOVA techniques can handle designs with more than two factors quite efficiently. 
+
+First, preprocess the data for this example:
+
+```{r readiness}
+wordsum <- words %>% group_by(subj, sex, medit, congru, block) %>% summarise(rt = mean(rt))
+wordsum$sex <- factor(wordsum$sex)
+wordsum$subj <- factor(wordsum$subj)
+wordsum$medit <- factor(wordsum$medit)
+wordsum$congru <- factor(wordsum$congru)
+wordsum$block <- factor(wordsum$block)
+```
+
+Now, we can run an ANOVA with all four factors:
+
+```{r stupid}
+aov_car(formula = rt ~ sex*medit + Error(subj/congru*block), data = wordsum)
+```
+
+We get some very extensive output. This is because, when we have more than two factors in an analysis, it's possible that there will be _higher-order_ interactions in our data (e.g. `sex:medit:congru`), and there are a large number of these higher-order interactions to consider. Generally speaking, people find higher-order interactions very hard to understand or relate to their hypotheses. Trying to make sense of them is beyond this intermediate-level worksheet.
+
 __
+
+
 
 This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0. 
 

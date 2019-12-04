@@ -1,5 +1,5 @@
 ---
-title: "Evidence, part 3"
+title: "Understanding interactions"
 author: "Andy Wills"
 output: html_document
 ---
@@ -15,8 +15,6 @@ knitr::opts_chunk$set(echo = TRUE, comment=NA, cache = TRUE)
 
 
 ```
-
-For parts 1 and 2 of this worksheet, see the [Absolute Beginners' Guide to R](evidence.html), and the [evidence, part 2](anova1.html) worksheet.
 
 # Contents
 
@@ -40,17 +38,17 @@ For parts 1 and 2 of this worksheet, see the [Absolute Beginners' Guide to R](ev
 
 	- [Factorial designs, main effects, and interactions](#intmain)
 	
-	- [Exercise 1](#ex1) including [line graphs](#linegraph)
+	- [Exercise](#ex1) including [line graphs](#linegraph)
 
 <a name="into"></a>
 
 # Introduction
 
-In the [evidence, part 2](anova1.html) worksheet, we used a Bayesian within-subjects ANOVA to test for an effect of _word-picture congruence_ in word naming. Specifically, we looked at an experiment in which people had to read words out loud as quickly as possible. On some trials, those words were accompanied by _congruent_ pictures (e.g. the word 'dog' and a picture of a dog). On other trials, the words were accompanied by an _incongruent_ picture (e.g. the word 'dog' and a picture of a pencil). Participants were instructed to ignore the pictures ... but we found they could not do so. Reaction times were longer for _incongruent_ trials than _congruent_ trials, and there was substantial Bayesian evidence for that difference. In fact the Bayes Factor was over 40 million ($BF = 4.4 \times 10^{7}$). 
+In the [within-subject differences](anova1.html) worksheet, we used a Bayesian within-subjects ANOVA to test for an effect of _word-picture congruence_ in word naming. Specifically, we looked at an experiment in which people had to read words out loud as quickly as possible. On some trials, those words were accompanied by _congruent_ pictures (e.g. the word 'dog' and a picture of a dog). On other trials, the words were accompanied by an _incongruent_ picture (e.g. the word 'dog' and a picture of a pencil). Participants were instructed to ignore the pictures ... but we found they could not do so. Reaction times were longer for _incongruent_ trials than _congruent_ trials, and there was substantial Bayesian evidence for that difference. In fact the Bayes Factor was over 40 million ($BF = 4.4 \times 10^{7}$). 
 
 These kinds of _congruency_ effects are well known in psychology, and demonstrating them once again was not the main point of this experiment. Instead, the researchers were interested in the idea that learning how to meditate might increase your ability to attend to just the relevant aspects of a task. If this were true, the _congruency effect_ would be smaller for those trained in meditation than for those who did not receive such training. In other words, the difference between the incongruent reaction time and the congruent reaction time would be smaller for meditators than non-meditators.
 
-To test this idea, the experimenters randomly allocated 140 people to a week-long meditation training course, while another 140 people were randomly allocated to a no-training control condition. All these people then did a word-naming task. In this worksheet, and the next one, we'll look at how to analyze data from this kind of experiment.
+To test this idea, the experimenters randomly allocated 140 people to a week-long meditation training course, while another 140 people were randomly allocated to a no-training control condition. All these people then did a word-naming task. In this worksheet, and the next one, we'll look at how to analyse data from this kind of experiment.
 
 Specifically, our goal in these two worksheets is to work out the level of evidence for the hypothesis that meditation training reduces the size of the congruency effect. In order to do this, we need to make use of the concept of an _interaction_. This is a concept that for some people can take a while to grasp, so we're going to take it in little steps, and approach it in a few different ways. By the end of these two worksheets, things should be clearer. 
 
@@ -58,7 +56,7 @@ Specifically, our goal in these two worksheets is to work out the level of evide
 
 # Getting started
 
-This worksheet uses the same _git_ repository as the [preprocessing](preproc.html) and [evidence, part 2](anova1.html) worksheets. Go back to your R project that contains this git repositoryh now.
+This worksheet uses the same _git_ repository as the [preprocessing](preproc.html) and [within-subject differences](anova1.html) worksheets. Go back to your R project that contains this git repository now.
 
 Next, make sure you have loaded the data, and have loaded the R packages you need:
 
@@ -74,6 +72,8 @@ Take a look back at the [description of this data frame](anova1.html#wsubj) to r
 
 # Preprocessing
 
+As before, we need to preprocess this large data set before we can analyse it.
+
 <a name="filter"></a>
 
 ## Filtering
@@ -86,7 +86,7 @@ In the full experiment, there were actually three between-subject conditions: me
 MCwords <- words %>% filter(medit != "relax")
 ```
 
-_EXPECTED OUTPUT_: A new data framce called `MCwords` will be in your _Environment_. It will have 25,200 rows and 10 columns.
+_EXPECTED OUTPUT_: A new data frame called `MCwords` will be in your _Environment_. It will have 25,200 rows and 10 columns.
 
 The full experiment also included three types of trial: congruent, incongruent, and neutral. The first two are described above. In _neutral_ trials, the word is presented alone, without a picture. In this first example, we're only going to look at the congruent and incongruent trials. So,
 
@@ -104,7 +104,7 @@ _EXPECTED OUTPUT_: A new data frame called `MCwordsCI` will be in your _Environm
 
 The data frame `MCwordsCI` is still very long, because it contains every trial for every participant. What we want to know, for each participant, is their mean reaction time on congruent and incongruent trials (i.e. two numbers per person). So,
 
-**WRITE A COMMAND** to _group_ the data by participant ID (`subj`), trial type (`congru`) and between-subjects condition (i.e. meditation versus control, `medit`). Get the mean reaction times using the `summarise` command, and put this summarized data into a new data frame called `MCwordsCIsum`. If you need a reminder of how to group and summarise data, take a look at the [preprocessing](preproc.html#summary) worksheet. The column containing the RT data in this new data frame will need to have the name `rt`, because we assume this later on. You can set the column name within the `summarise` command. For example, `summarise(acc = mean(acc))` takes the mean of the column `acc` and puts the answer into a column called `acc` in your new data frame.
+**WRITE A COMMAND** to _group_ the data by participant ID (`subj`), trial type (`congru`) and between-subjects condition (i.e. meditation versus control, `medit`). Get the mean reaction times using the `summarise` command, and put this summarised data into a new data frame called `MCwordsCIsum`. If you need a reminder of how to group and summarise data, take a look at the [preprocessing](preproc.html#summary) worksheet. The column containing the RT data in this new data frame will need to have the name `rt`, because we assume this later on. You can set the column name within the `summarise` command. For example, `summarise(acc = mean(acc))` takes the mean of the column `acc` and puts the answer into a column called `acc` in your new data frame.
 
 ```{r sum1, echo=FALSE}
 
@@ -116,7 +116,7 @@ _EXPECTED OUTPUT_: A new data frame called `MCwordsCIsum` will be in your _Envir
 
 ## Pivoting and mutating
 
-Exactly as we did in the [evidence, part 2](anova1.html#preproc2) worksheet, we can now use the `pivot_wider` and `mutate` commands to work out a _difference score_ for each participant. This gives us the size of the _congruency effect_ for that participant, i.e. how much more time they take on incongruent trials than congruent trials (on average). 
+Exactly as we did in the [within-subject differences](anova1.html#preproc2) worksheet, we can now use the `pivot_wider` and `mutate` commands to work out a _difference score_ for each participant. This gives us the size of the _congruency effect_ for that participant, i.e. how much more time they take on incongruent trials than congruent trials (on average). 
 
 ```{r diffscore}
 medidiff <- MCwordsCIsum %>%
@@ -138,15 +138,15 @@ medidiff %>% ggplot(aes(diff, colour=medit)) +
     geom_vline(xintercept = 0, colour = 'purple')
 ```
 
-This plot is very much like the one we drew in [evidence, part 2](anova1.html#densediff), and the curve for the control condition is identical. So, as before, we can see that in the control condition, most _congruency scores_ are positive, although there is of course a range (from about -200 to +300 ms). 
+This plot is very much like the one we drew in the [within-subject differences](anova1.html#densediff) worksheet, and the curve for the control condition is identical. So, as before, we can see that in the control condition, most _congruency scores_ are positive, although there is of course a range (from about -200 to +300 ms). 
 
 The new part of this graph is that we also have a curve for the meditation condition. It is the `colour=medit` part of the command that causes this to happen - it draws one curve for each _level_ of the `medit` factor, and gives each a different colour.
 
-We can see that the curve for the `meditate` condition is approximately centered on zero. In other words, on average, there is no congruency effect after meditation training. 
+We can see that the curve for the `meditate` condition is approximately centred on zero. In other words, on average, there is no congruency effect after meditation training. 
 
 # Understanding interactions
 
-To summarise, we've found that the congruency effect is smaller after meditation training than after no training. The congruency effect is, as we have discussed, calculated as a difference between two average reaction times - the reaction time on incongruent trials minus the reaction time on congruent trials. This difference is smaller after meditation training than after no training. So, the results of this experiment can be described as a _difference of differences_. The RT difference is smaller for meditation than for control particiapnts. 
+To summarise, we've found that the congruency effect is smaller after meditation training than after no training. The congruency effect is, as we have discussed, calculated as a difference between two average reaction times - the reaction time on incongruent trials minus the reaction time on congruent trials. This difference is smaller after meditation training than after no training. So, the results of this experiment can be described as a _difference of differences_. The RT difference is smaller for meditation than for control participants. 
 
 The phrase _difference of differences_ is a bit clumsy, so we often use another, jargon, word for it. We say that the results of this experiment show an _interaction_ between trial type (congruent, incongruent) and training type (meditation, control). This is just another way of saying the size of the difference between trial types is affected by training type. This is what our density plot of differences (above) shows.
 
@@ -164,7 +164,7 @@ With a two-factor experiment like this one, there are three basic analysis quest
 
 3. Do these two main effects _interact_? So, for example, is the congruency effect smaller in the meditation condition than the control condition? This is known as the **interaction**. 
 
-For each of these questions, the answer can be either 'yes' or 'no'. If we don't have enough data, the answer could also be 'we don't know', but we'll come back to that later. So, when we analyze a two-factor experiment, there are eight different results we could get:
+For each of these questions, the answer can be either 'yes' or 'no'. If we don't have enough data, the answer could also be 'we don't know', but we'll come back to that later. So, when we analyse a two-factor experiment, there are eight different results we could get:
 
 | Main effect 1: (e.g. meditation) | Main effect 2: (e.g. congruence) | Interaction |
 | ----------------------- | ----------------------- | ----------- |
@@ -179,7 +179,7 @@ For each of these questions, the answer can be either 'yes' or 'no'. If we don't
 
 <a name="ex1"></a>
 
-## Exercise 1
+## Exercise 
 
 Below, you will find three graphs. Each shows four mean reaction times - mean reaction time for incongruent and congruent trials for both the meditation condition and the control condition. For each graph, decide whether there is a main effect of meditation, whether there is a main effect of congruence, and whether there is an interaction. **Write your answers into PsycEL in each case**.
 
@@ -205,7 +205,7 @@ intgraph(onegraph)
 
 **Is there a main effect of training type (meditation)?** No. There are two reaction times for the control group - 400 ms (bottom left) and 500 ms (top right). The average is 450 ms. There are two reaction times for the meditate group - 500 ms (top left) and 400 ms (bottom right). The average is 450 ms. So, the average reaction time in the two groups is the same, so there is no main effect of training type.
 
-**Is there an interaction?** Yes. Remember that an interaction is a difference of differences. In the control condition the incongruent RT is 500 ms and the congruent RT is 400 ms, so _incongruent - congruent = 100 ms_. In the meditate condition, the incongruent RT is 400 ms and the congruent RT is 500 ms, so _inconrguent - congruent = - 100 ms_. These two differences are different (one is +100 ms, the other is -100 ms), so there is an interaction. Another way of easily spotting an interaction is if the lines on the graph are at different angles. In the graph above, the two lines have very different angles (one goes up from left to right, the other goes down). Unless the lines are parallel there is an interaction.
+**Is there an interaction?** Yes. Remember that an interaction is a difference of differences. In the control condition the incongruent RT is 500 ms and the congruent RT is 400 ms, so _incongruent - congruent = 100 ms_. In the meditate condition, the incongruent RT is 400 ms and the congruent RT is 500 ms, so _incongruent - congruent = - 100 ms_. These two differences are different (one is +100 ms, the other is -100 ms), so there is an interaction. Another way of easily spotting an interaction is if the lines on the graph are at different angles. In the graph above, the two lines have very different angles (one goes up from left to right, the other goes down). Unless the lines are parallel there is an interaction.
 
 ### Graph 2
 
@@ -274,7 +274,7 @@ graph1 %>%
 
 This works in much the same way as the [histogram](exploring-incomes.html#graphs), [density](group-differences.html#density), [bar](face-recog.html), and [violin](illusions.html) plots you have made before:
 
-`onegraph %>%` - Send the filtered data to the  `ggplot` command that follows.
+`graph1 %>%` - Send the filtered data to the  `ggplot` command that follows.
 
 `ggplot()` - the command in R used to plot graphs.
 

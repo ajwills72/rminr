@@ -1,5 +1,5 @@
 ---
-title: "Evidence, part 2"
+title: "Within-subject differences"
 author: "Andy Wills"
 output: html_document
 ---
@@ -16,19 +16,11 @@ knitr::opts_chunk$set(echo = TRUE, comment=NA, cache = TRUE)
 
 ```
 
-For part 1 of this worksheet, see the [Absolute Beginners' Guide to R](evidence.html).
-
 # Contents
 
 - [Introduction](#intro)
 
-- [Getting started](#started)
-
-- [Factors](#factors)
-
-- [Bayesian ANOVA (between-subjects)](#anovaBS)
-
-- [Introduction to within-subjects tests](#wsubj)
+- [Loading data](#load)
 
 - [Preprocessing](#preproc): [filtering](#filter) and [summarising](#summarise)
 
@@ -52,88 +44,30 @@ For part 1 of this worksheet, see the [Absolute Beginners' Guide to R](evidence.
 
 # Introduction
 
-In the [Absolute Beginners' Guide to R](evidence.html#bf) and in the [revision worksheet](revision.html) we used a Bayesian between-subjects t-test to look at the strength of evidence for the presence (or absence) of a difference between groups. For example, in the revision worksheet, we looked at whether the way you experienced a word (silently read, or spoken out loud) affected how good your memory of it was. We found a Bayes Factor close to 1, indicating there was neither good evidence for, nor good evidence against, there being a difference (an indecisive result). Bayes Factors greater than 3 are generally considered to be evidence for a difference worth listening to, while Bayes Factors less than one-third (0.33) are generally considered to be evidence for the _absence_ of a difference that is worth listening to.
+In the [Absolute Beginners' Guide to R](evidence.html#bf) and in the [revision worksheet](revision.html) we used a Bayesian between-subjects t-test to look at the strength of evidence for the presence (or absence) of a difference _between_ groups. For example, in the revision worksheet, we looked at whether the way you experienced a word (silently read, or spoken out loud) affected how good your memory of it was. We found a Bayes Factor close to 1, indicating there was neither good evidence for, nor good evidence against, there being a difference (an indecisive result). Bayes Factors greater than 3 are generally considered to be evidence for a difference worth listening to, while Bayes Factors less than one-third (0.33) are generally considered to be evidence for the _absence_ of a difference that is worth listening to.
 
-In this worksheet, we're going to learn a different way of calculating Bayes Factors. In the first example, we'll use this new technique to do exactly the same thing as before. That might seem a bit odd, but the new technique is a lot more flexible than the one you've learned so far. In other words, it can be used in a broader range of situations. We'll later go on to look at other ways we can use this new technique.
+In this worksheet, we'll cover  how to calculate a Bayes Factor for a simple _within-subjects_ experiment. As we covered in the [statistical power](power.html#ws) worksheet, a within-subjects experiment is one where all the conditions are done by all the participants. Within-subjects designs are often a really good idea, because they are more efficient. In other words, they tend to allow us to give confident answers to questions while testing fewer people than would be needed in a between-subjects experiment.
 
-The new technique is called _ANOVA_, short for **AN**alysis **O**f **VA**riance. It's probably the most used analysis technique in psychology. Its name (ANOVA) has a long history that isn't really worth getting into here, particularly as it comes from our history in psychology of using p-values as evidence terms. As we've covered [previously](evidence.html#p-wrong), p-values have no interpretation that is simultaneously accurate, simple, and useful. In this worksheet, we focus on developments of these techniques that allow us to calculate Bayes Factors, which are more easily interpretable. If someone insists you also calculate a p-value, take a look at the [more on ANOVA](moreonanova.html) worksheet for how to do this within R.
+The technique we're going to use is called _ANOVA_, short for **AN**alysis **O**f **VA**riance. It's probably the most used analysis technique in psychology. Its name (ANOVA) has a long history that isn't really worth getting into here, particularly as it comes from our history in psychology of using p-values as evidence terms. As we've covered [previously](evidence.html#p-wrong), p-values have no interpretation that is simultaneously accurate, simple, and useful. In this worksheet, we focus on a form of ANOVA that calculates Bayes Factors, which are more easily interpretable. If you ever need to calculate a traditional ANOVA, take a look at the [traditional ANOVA](more-on-anova.html) worksheet.
 
-<a name="started"></a>
+<a name="load"></a>
 
-# Getting started
+# Loading data
 
-In the [preprocessing](preproc.html) worksheet, you loaded data from a _git_ repository into an R project. Go back to that project now, and load the data from the production effect experiment, like this:
-
-```{r load, message=FALSE}
-library(tidyverse)
-prod <- read_csv("production.csv")
-```
-
-Now, do a Bayesian t-test, looking at the evidence for the production effect. Do this just like you did it in the revision worksheet. In other words:
-
-```{r BFt}
-library(BayesFactor, quietly = TRUE)
-ttestBF(formula = phit ~ cond, data = data.frame(prod))
-```
-
-As we've just said, the Bayes Factor is close to 1 (0.78), and so we neither have evidence for nor against the claim there is a difference between the two conditions of this experiment.
-
-<a name="factors"></a>
-
-# Factors
-
-There is another command we can use, also part of the _BayesFactor_ package, that gives us exactly the same answer. Before we can use it, we have to tell R that the data in the _cond_ column of the _prod_ dataframe contains information about which condition each participant is in (i.e. the silent condition versus the read-aloud condition). We do this by saying that this column contains a _factor_. _Factor_ is a jargon phrase for a variable that contains information about the experimental condition.
-
-We tell R that _cond_ is a _factor_ like this:
-
-```{R factors}
-prod$cond <- factor(prod$cond)
-```
-
-**Explanation of command** - This command means "turn the `cond` column of the `prod` data frame into a `factor`". More specifically:
-
-`prod$cond` - This means the `cond` column of the `prod` data frame
-
-`factor(prod$cond)` - The `factor` command tells R that the column `prod$cond` is a factor.
-
-`<-` This means put the thing on the right of `<-` into the thing on the left. In other words, once `factor` has labelled `prod$cond` as a _factor_, record that change back into `prod$cond` (rather than, for example, sending the data to a different column).
-
-<a name="anovaBS"></a>
-
-# Bayesian ANOVA (between-subjects)
-
-Now that R knows that `cond` is a _factor_, we can use the command `anovaBF` to give us the same answer as before:
-
-```{r BFanova1, show.progress=FALSE}
-anovaBF(formula = phit ~ cond, data = data.frame(prod))
-```
-
-The first part of the output is just a way of showing a 'progress bar' on a worksheet. If you look closely, you'll notice there's a slight delay between entering the command into R and getting the answer. R shows you a progress bar going from 0% to 100% to let you know it's working on the answer. In later examples, it might take R up to one minute to work out the answer.
-
-Other than the progress bar, all that's changed is that we've typed `anovaBF` rather than `ttestBF`, and that the output looks slightly different, but we get exactly the same Bayes Factor. So, all we've done here is get the same answer in basically the same way. It was just a bit more involved to get to this point, because we had to use the `factor` command first to tell `anovaBF` that the `cond` column was a factor.
-
-Why is this added complexity worth it? Because `anovaBF` allows us to do a lot of other things, too. We're going to cover a couple of these in this worksheet, and some more in a later worksheet. 
-
-<a name="wsubj"></a>
-
-# Introduction to within-subjects tests
-
-The first thing `anovaBF` allows us to do is calculate a Bayes Factor for a _within-subjects_ experiment. As we covered in the [statistical power](power.html#ws) worksheet, a within-subjects experiment is one where all the conditions are done by all the participants. For example, in the production effect experiment we've just looked at, we could have asked people to read some words aloud, and other words silently. We could then compare memory for the spoken and silent words in the same individual. As we covered in the [statistical power](power.html#ws) worksheet, within-subjects designs are often a really good idea, because they are more efficient. In other words, they tend to allow us to give confident answers to questions while testing fewer people than would be needed in a between-subjects experiment.
-
-## A new data set
-
-For the rest of this worksheet, we're going to use a new dataset in our examples. It's more complicated than the _production effect_ data set, and it needs to be, because we're going to use it in a lot of different examples. So, in this section, we're going to load that data set and get familiar with it, before using it.
-
-The data set is available in the same _git_ repository as you're already using, you just have to load it:
+In the [preprocessing](preproc.html) worksheet, you loaded data from a _git_ repository into an R project. Go back to that project now, and load this new  data set: 
 
 ```{r newdat, message=FALSE}
+library(tidyverse)
 words <- read_csv("wordnaming2.csv")
 ```
 
-Now click on the `words` data frame in the _Environment_ tab, and take a look. You'll see that its a data frame with 10 columns and 37,800 rows. So, quite large!
+Now click on the `words` data frame in the _Environment_ tab, and take a look. You'll see that its a data frame with 10 columns and 37,800 rows. 
 
-It contains simulated data for a word-naming experiment. In the experiment, 
-participants just had to name (i.e. speak out loud) each written word as it appeared on the screen. However, on every trial, there was also a picture. Sometimes the picture matched the word (e.g. the word 'car' and a picture of a car). This is called a _congruent_ trial. Other times, the picture and word were different (e.g. the word ' boat' and a picture of a carrot). This is called an _incongruent_ trial. Participants were instructed to ignore the picture, but were they able to do so? If they can't help processing the picture, then they should be slower to name the word on incongruent trials than on congruent trials. There are a third type of trials, _neutral_ trials. These are trials on which just the word appears, with no picture.
+## Description of data set
+
+We'll be using this data set over the next few worksheets, so it's important to take some time here to understand the experiment it comes from.
+
+The data frame contains simulated data for a word-naming experiment. In the experiment, participants just had to name (i.e. speak out loud) each written word as it appeared on the screen. However, on every trial, there was also a picture. Sometimes the picture matched the word (e.g. the word 'car' and a picture of a car). This is called a _congruent_ trial. Other times, the picture and word were different (e.g. the word ' boat' and a picture of a carrot). This is called an _incongruent_ trial. Participants were instructed to ignore the picture, but were they able to do so? If they can't help processing the picture, then they should be slower to name the word on incongruent trials than on congruent trials. There are a third type of trials, _neutral_ trials. These are trials on which just the word appears, with no picture.
 
 In this experiment, the word naming task is being used to study the effects of meditation practice. Some psychologists have suggested that learning how to meditate can improve people's ability to ignore irrelevant information. If so, we should be able to improve people's performance on this word naming task by training them how to meditate first.
 
@@ -158,7 +92,7 @@ Here's a summary of what each of the columns in the data set contains:
 
 <a name="preproc"></a>
 
-This data set is based on the design of experiments that have really been done [REF](), and is realistic in terms of its size and complexity. However, it's important to remember that this is _generated_ data, not data actually collected from participants. So, you should not take the analyses you do of this simulated data as evidence for the effectiveness of meditation in improving attentional control. As is often the case, real data in this area is less clear, and more contoversial [REF]().
+**DISCLAIMER**: This data set is loosely based on the design of experiments that have [really been done](https://ajwills72.github.io/aspects-consciousness/altered-intro.pdf), and is realistic in terms of its size and complexity. However, it's important to remember that this is _generated_ data, not data actually collected from participants. So, you should not take the analyses you do of this simulated data as evidence for the effectiveness of meditation in improving attentional control. As is often the case, real data in this area is less clear, and more [controversial](https://ajwills72.github.io/aspects-consciousness/altered-intro.pdf).
 
 # Preprocessing
 
@@ -243,7 +177,7 @@ ctrl <- wordctrlCIsum %>% pivot_wider(names_from = congru, values_from = rt)
 
 and look at `ctrl` in the Environment window, we can see that it now has fewer rows (140). It has the same number of columns, but the column names are different. Specifically, we now have one row for each participant and we have one column for their congruent reaction time, and one column for their incongruent reaction time.
 
-**Explanation command:** The `pivot_wider` command has two components: `names_from` and `values_from`. The first one, `names_from`, tells R which column you want to use to as the column names in your new, wider data frame. In this case, we want to take them from the `congru` column of `wordctrlCIsum`. The `values_from` part tells R which column contains the data you want to put in these new columns. In this case, it's the `rt` column of `wordctrlCIsum`. 
+**Explanation of command:** The `pivot_wider` command has two components: `names_from` and `values_from`. The first one, `names_from`, tells R which column you want to use to as the column names in your new, wider data frame. In this case, we want to take them from the `congru` column of `wordctrlCIsum`. The `values_from` part tells R which column contains the data you want to put in these new columns. In this case, it's the `rt` column of `wordctrlCIsum`. 
 
 <a name="mutate"></a>
 
@@ -281,19 +215,32 @@ It is these differences, rather than the absolute reaction times for incongruent
 
 # Bayesian ANOVA (within-subjects)
 
-We use `anovaBF` to look at this _within-subjects_ effect of congruency. As before, we need to first tell R which columns of our data frame, `wordctrlCIsum`, are _factors_. One factor is _congruency_, recorded in the column `congru`. This column contains the condition of the experiment (congruent or incongruent), and so is a factor. We tell R this in the same way as before:
+We can use the command `anovaBF` to look at the evidence for this _within-subjects_ effect of congruency. This command takes data in the format of our `wordctrlCIsum` data frame, so we're almost ready to go. But, before we can do this analysis, we have to tell R which columns of this data frame are _factors_. 
+
+## Factors
+
+The word _factor_ is a jargon term for "column that contains information about the experimental design". To understand the meaning of this term, take a look at the `wordctrlCIsum` data frame in your _environment_. In `wordctrlCIsum`, the column `congru` is a _factor_ because it tells us whether the reaction time comes from an congruent trial (`cong`) or an incongruent trial (`incong`). The column `subj` is also a factor, because it tells us which participant the reaction time comes from. The `rt` column is **not** a factor, because it contains the data (reaction times) that we're analyzing.
+
+We tell R this in the following way:
 
 ```{r factor2}
 wordctrlCIsum$congru <- factor(wordctrlCIsum$congru)
-```
-
-What might seem a bit odd at first is that there is another _factor_ in this study, and that is the participant ID (`subj`). The way to think about this is that a within-subjects study is in fact a collection of tiny but complete experiments, with each participant providing a complete data set (i.e. a mean reaction time for both congruent and incongruent trials). So, another condition of this study, in addition to the type of trial, is the person the experiment was conducted with. So, `subj` is a factor in this study, and we need to tell R this is the case:
-
-```{r factor3}
 wordctrlCIsum$subj <- factor(wordctrlCIsum$subj)
 ```
 
-Now we've given R this information, we're ready to calculate a Bayes Factor for the difference. To do this, we use the command:
+**Explanation of command** - The first command means "turn the `congru` column of the `wordctrlCIsum` data frame into a `factor`". More specifically:
+
+`wordctrlCIsum$congru` - This means the `congru` column of the `wordctrlCIsum` data frame
+
+`factor(wordctrlCIsum$congru)` - The `factor` command tells R that the column `wordctrlCIsum$congru` is a factor.
+
+`<-` This means put the thing on the right of `<-` into the thing on the left. In other words, once `factor` has labelled `wordctrlCIsum$congru` as a _factor_, record that change back into `wordctrlCIsum$congru` (rather than, for example, sending the data to a different column).
+
+The second command works in the same way as the first.
+
+## Evidence
+
+Now we've given R this information about factors, we're ready to calculate a Bayes Factor for the difference between congruent and incongruent trials. To do this, we use the command:
 
 ```{r bfwithin}
 anovaBF(formula = rt ~ congru + subj,
@@ -301,19 +248,21 @@ anovaBF(formula = rt ~ congru + subj,
         whichRandom = "subj")
 ```
 
-## Explanation of command
+### Explanation of command
 
-Much of this `anovaBF` command is the same as before. For example, `formula = rt ~ congru` means we want to know the effect of the congruency condition (`congru`) on the dependent measure of reaction time (`rt`). 
+Much of this `anovaBF` command is the same as for a [Bayesian t-test](). For example, `formula = rt ~ congru` means we want to know the effect of the congruency condition (`congru`) on the dependent measure of reaction time (`rt`). 
 
-The first part that's new is that the `formula` now contains `+ subj`. We need to include this for any within-subjects design, so that `anovaBF` knows that it is looking at a within-subjects design. What we include is the name of the column that contains the subject IDs -- in this case, `subj`. 
+The first part that's new is that the `formula` contains `+ subj`. Unlike for `ttestBF`, we always need to include this for `anovaBF`, so it knows which data came from which participant. What we include is the name of the column that contains the subject IDs -- in this case, `subj`. 
 
 The other part that's new is `whichRandom = "subj"`. The command `whichRandom` means "tell me which _factors_ are **random** factors". A random factor is one where, if you ran the experiment again, the levels of the factor would be different. So, if you ran this experiment again, you'd almost certainly want to test different people, so the levels of the `subj` factor would be different if you re-ran the experiment. This makes it a _random_ factor. In contrast, if you wanted to re-run this experiment in the same way as before, you would still have congruent and incongruent trials, so the levels of the `congru` factor aren't random. They're generally described as _fixed_. The command `anovaBF` assumes factors are fixed unless you tell it they are random. 
 
-## Explanation of output
+The remaining part, `data = data.frame(wordctrlCIsum)`, just tells R where to find the data.
 
-The first part of the output is a representation of a progress bar. This analysis may take several seconds to run, so you may end up looking at this progress bar for a while.
+### Explanation of output
 
-The second part of the output gives the Bayes Factor. The key figure here is `43180615`, which is the Bayes Factor. **Note that your number might be slightly different**. This is what the `±2.29%` part of the above output indicates. The number `43180615` is the correct answer, to within about plus or minus 2%. It's like saying "this person is 2 metres tall, give or take 5cm". The command `anovaBF` can take a while to run, so we prioritise speed over accuracy to some extent. If it was important to get the Bayes Factor precisely correct, we could let R work on the problem for much longer (e.g. overnight). However, the extra time is usually not worth it, and we don't cover how to increase accuracy of the output in this worksheet.
+The first part of the output is just a way of showing a 'progress bar' on a worksheet. R shows you a progress bar going from 0% to 100% to let you know it's working on the answer. This analysis may take several seconds to run, so you may end up looking at this progress bar for a while.
+
+The second part of the output gives the Bayes Factor. The key figure here is `43834950`, which is the Bayes Factor. **Note that your number might be slightly different**. This is what the `±2.29%` part of the above output indicates. The number `43834950` is the correct answer, to within about plus or minus 2%. It's like saying "this person is 2 metres tall, give or take 5cm". The command `anovaBF` can take a while to run, so we prioritise speed over accuracy to some extent. If it was important to get the Bayes Factor precisely correct, we could let R work on the problem for much longer (e.g. overnight). However, the extra time is usually not worth it, and we don't cover how to increase accuracy of the output in this worksheet.
 
 The Bayes Factor on this occasion is around 40 **million**, meaning there is really very strong evidence in support of an effect of congruency. Pretty much however unlikely we thought it was beforehand that an incongruent picture would slow down word naming, we should now be pretty confident that it does. 
 
@@ -323,9 +272,9 @@ The rest of the output is not crucial to understand right now, but if you are cu
 
 # Bayesian ANOVA with more than two levels
 
-Another way in which `anovaBF` is more flexible than `ttestBF` is that it can cope with a _factor_ than has more than two _levels_. This is true for both between-subject and within-subject factors, although we'll focus on within-subject factors in this worksheet.
-
 In the above Bayes Factor calculation, we looked at just the congruent and incongruent trials of the experiment. However, this experiment had a third _level_ on the condition _factor_ -- there were also neutral trials where no picture was shown. These data are in the `wordctrl` data frame that you made. In this section, we're going to do an analysis using all three conditions.
+
+Unlike `ttestBF`, `anovaBF` can cope with a _factor_ than has more than two _levels_. This is true for both between-subject and within-subject factors, although we'll focus on within-subject factors in this worksheet.
 
 ## Summarising
 
@@ -357,7 +306,7 @@ The command `anovaBF` allows us to calculate a Bayes Factor across all three con
 
 **WRITE SOME COMMANDS** to perform an Bayesian ANOVA that includes all three levels of the congruency condition. 
 
-_EXPECTED OUTPUT_: The correct output is
+_EXPECTED OUTPUT_: The correct output is as follows (your Bayes Factor may be slightly different):
 
 ```{r bfwithin2, echo=FALSE}
 wordctrlsum$subj <- factor(wordctrlsum$subj)
@@ -383,7 +332,7 @@ Calculating the evidence for a particular pair in an experiment is called doing 
 
 The goal in this exercise is to look at the reaction time difference between congruent and neutral trials in the control condition of this experiment. 
 
-Specifically, the task is to write a new R script that contains _all_ the necessary commands, and _only_ the necessary commands, to do all of the following, in this order:
+**Specifically, the task is to write a new R script that contains _all_ the necessary commands, and _only_ the necessary commands, to do all of the following, in this order:**
 
 1. Start with the command `rm(list=ls()`. This command clears your _Environment_ and so ensures your script is not relying on commands you have previously run. 
 
@@ -391,7 +340,7 @@ Specifically, the task is to write a new R script that contains _all_ the necess
 
 3. Load the raw data (using `read_csv`).
 
-4. Preprocess the data to include only the control condition, and exclude the incongruent trials. Use the `filter` command to do this.
+4. Preprocess the data to include only the control condition, and **exclude the incongruent trials**. Use the `filter` command to do this.
 
 5. Generate a subject-level summary of these filtered data (use the `group_by` and `summarise` commands).
 
@@ -458,13 +407,13 @@ anovaBF(formula = rt ~ congru + subj,
 
 Just before we finish, some notes on the issue of _multiple comparisons_, just because this is something you may hear about elsewhere.
 
-To explain the concept of multiple comparisons, I'd like you to imagine you had a factor with five levels. The command `anovaBF` would cope just fine with this. But, with five levels, there are ten pairwise comparisons you could do (1 versus 2, 1 versus 3, etc.). In traditional ANOVA (i.e. techniques resulting in p values) you will sometimes hear people talking about 'correcting for multiple comparisons'. This is because the more tests you do, the more likely it is that one of them will be 'significant' ($p < .05$), even if there is in fact no difference between any of the levels of the factor. One common suggestion is to use a stricter significance level (e.g. $p < .01$) if you're doing a lot of tests. 
+To explain the concept of multiple comparisons, I'd like you to imagine you had a factor with five levels. The command `anovaBF` would cope just fine with this. But, with five levels, there are ten pairwise comparisons you could do (1 versus 2, 1 versus 3, etc.). In traditional analysis techniques (i.e. techniques resulting in p values) you will sometimes hear people talking about 'correcting for multiple comparisons'. This is because the more tests you do, the more likely it is that one of them will be 'significant' ($p < .05$), even if there is in fact no difference between any of the levels of the factor. One common suggestion is to use a stricter significance level (e.g. $p < .01$) if you're doing a lot of tests. 
 
-This is not an approach we advocate in these worksheets. This is for two reasons:
+This is not an approach covered  in these worksheets. This is for two reasons:
 
-First, we're using Bayesian methods, not traditional ANOVA. Although issue around multiple comparisons still occurs with Bayesian techniques, the issues are not the same, the solutions are not same, and the whole thing is just  a bit too complex for this intermediate-level worksheet.
+First, we're using Bayesian methods, not traditional ANOVA. Although issues around multiple comparisons still occur with Bayesian techniques, the issues are not the same, the solutions are not same, and the whole thing is just  a bit too complex for this intermediate-level worksheet.
 
-Second, correcting for multiple comparisons is seldom the answer anyway. If you knew you needed to compare those two conditions before you looked at the data, this is known as a _confirmatory_ analysis, and we don't generally adjust for multiple comparisons for such analyses. Alternatively, you might be exploring your data after you collected it. For example, you might observe a difference you didn't expect to see, and do a test on this. This is called _exploratory_ analysis, and it's fine --- it's good to fully explore your data. But, results from _exploratory_ analysis should normally be replicated before we are particularly convinced by them, whatever the p value (or Bayes Factor). In other words, you should run the study again, predict you would see the difference again, and then test for it. This is because, if you look long and hard enough, you'll always find some pattern in a set of data, even if there is not actually anything to be found. It's human nature.
+Second, correcting for multiple comparisons is seldom the answer anyway. If you knew you needed to compare those two conditions before you looked at the data, this is known as a _confirmatory_ analysis, and we don't generally adjust for multiple comparisons for such analyses. Alternatively, you might be exploring your data after you collected it. For example, you might observe a difference you didn't expect to see, and do a test on this. This is called _exploratory_ analysis, and it's fine --- it's good to fully explore your data. But, results from _exploratory_ analysis should normally be replicated before we are particularly convinced by them, whatever the p value (or Bayes Factor). In other words, you should run the study again, predict you would see the difference again, and then test for it. This is because, if you look long and hard enough, you'll always find some pattern in a set of data, even if there is not actually anything to be found. 
 
 ___
 
