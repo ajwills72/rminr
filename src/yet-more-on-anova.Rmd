@@ -26,6 +26,7 @@ knitr::opts_chunk$set(echo = TRUE, comment=NA)
 This worksheet provides detailed explanations of the output of traditional ANOVA calculations. It isn't required reading, but if you're curious, read on.
 
 ```{r load, echo = FALSE, message=FALSE}
+library(tidyverse)
 library(afex)
 prod <- read_csv("production.csv")
 prod$cond <- factor(prod$cond)

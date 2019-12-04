@@ -16,3 +16,38 @@ anovaBF(formula = diff ~ medit, data = data.frame(medidiff))
 The interpretation of this output is the same as before. The key figure here is the Bayes Factor, which is close to 5000 on this occasion. This is very substantial evidence in favour of a difference between conditions. If, prior to seeing this analysis, you thought it was about 50:50 whether meditation would affect attention in this experiment or not, this Bayes Factor tells you that you should now think that it is about 5000 times more likely there is an effect (in this experiment) than there isn't. 
 
 <a name="intsect"></a>
+
+
+# Factors
+
+There is another command we can use, also part of the _BayesFactor_ package, that gives us exactly the same answer. Before we can use it, we have to tell R that the data in the _cond_ column of the _prod_ dataframe contains information about which condition each participant is in (i.e. the silent condition versus the read-aloud condition). We do this by saying that this column contains a _factor_. _Factor_ is a jargon phrase for a variable that contains information about the experimental condition.
+
+We tell R that _cond_ is a _factor_ like this:
+
+```{R factors}
+prod$cond <- factor(prod$cond)
+```
+
+**Explanation of command** - This command means "turn the `cond` column of the `prod` data frame into a `factor`". More specifically:
+
+`prod$cond` - This means the `cond` column of the `prod` data frame
+
+`factor(prod$cond)` - The `factor` command tells R that the column `prod$cond` is a factor.
+
+`<-` This means put the thing on the right of `<-` into the thing on the left. In other words, once `factor` has labelled `prod$cond` as a _factor_, record that change back into `prod$cond` (rather than, for example, sending the data to a different column).
+
+<a name="anovaBS"></a>
+
+# Bayesian ANOVA (between-subjects)
+
+Now that R knows that `cond` is a _factor_, we can use the command `anovaBF` to give us the same answer as before:
+
+```{r BFanova1, show.progress=FALSE}
+anovaBF(formula = phit ~ cond, data = data.frame(prod))
+```
+
+The first part of the output is just a way of showing a 'progress bar' on a worksheet. If you look closely, you'll notice there's a slight delay between entering the command into R and getting the answer. R shows you a progress bar going from 0% to 100% to let you know it's working on the answer. In later examples, it might take R up to one minute to work out the answer.
+
+Other than the progress bar, all that's changed is that we've typed `anovaBF` rather than `ttestBF`, and that the output looks slightly different, but we get exactly the same Bayes Factor. So, all we've done here is get the same answer in basically the same way. It was just a bit more involved to get to this point, because we had to use the `factor` command first to tell `anovaBF` that the `cond` column was a factor.
+
+Why is this added complexity worth it? Because `anovaBF` allows us to do a lot of other things, too. We're going to cover a couple of these in this worksheet, and some more in a later worksheet. 
