@@ -1,0 +1,133 @@
+---
+title: "Better graphs"
+author: "Andy Wills"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+## DEVELOPERS: Uncomment one option, as appropriate
+
+## Show only commands.
+## knitr::opts_chunk$set(echo = TRUE, message = FALSE, results='hide', fig.keep = 'none', comment=NA)
+
+## Show commands and output.
+knitr::opts_chunk$set(echo = TRUE, comment=NA)
+
+```
+
+# Contents
+
+- [Introduction](#intro)
+
+- [Meaningful labels](#labels)
+
+- [Journal styling](#style)
+
+- [High-quality output](#hq)
+
+<a name = "intro"></a>
+
+# Introduction
+
+In this worksheet, we'll look at how to produce publication-quality graphs in R, using an example from a previous worksheet.
+
+Specifically, in the [within-subject differences](anova1.html#densediff) worksheet, we produced a density plot of the within-subject differences in reaction time for congruent versus incongruent trials
+
+```{r init, message=FALSE, echo=FALSE}
+library(tidyverse)
+words <- read_csv("wordnaming2.csv")
+wordctrl <- words %>% filter(medit == "control")
+wordctrlCI <- wordctrl %>% filter(congru != "neutral")
+wordctrlCIsum <- wordctrlCI %>% group_by(subj, congru) %>% summarise(rt = mean(rt))
+ctrl <- wordctrlCIsum %>% pivot_wider(names_from = congru, values_from = rt)
+ctrldiff <- ctrl %>% mutate(diff = incong - cong)
+```
+
+```{r graph}
+ctrldiff %>% ggplot(aes(diff)) +
+    geom_density(aes(y=..scaled..)) +
+    geom_vline(xintercept = 0, colour = 'red')
+```
+
+This graph looks OK, but would need some improvement before including in a report or journal article. Here are the steps of this makeover.
+
+<a name = "labels"></a>
+
+# Meaningful labels
+
+The first thing to do is change the axis labels to something a bit more human readable. We use the `xlab` and `ylab` commands for this. We covered these commands previously in the [Absolute Beginners' guide](exploring-incomes.html#custom-graphs):
+
+```{r graph2}
+ctrldiff %>% ggplot(aes(diff)) +
+    geom_density(aes(y=..scaled..)) +
+    geom_vline(xintercept = 0, colour = 'red') +
+    xlab("Incongruent RT - Congruent RT (ms)") +
+    ylab("Scaled density")
+```
+
+<a name = "style"></a>
+
+# Journal styling
+
+The default styling for `ggplot` is different to what is preferred in most psychology journals. Fortunately, we can use Tina Seabrooke's `theme_APA` to correct this. You'll find the code in the same _git_ repository as the data, so all you need to do is load in her code:
+
+```{r source}
+source("themeapa.R")
+```
+
+and then add it as a theme to your graph (much as you have used `theme_bw` in the past):
+
+```{r graph3}
+ctrldiff %>% ggplot(aes(diff)) +
+    geom_density(aes(y=..scaled..)) +
+    geom_vline(xintercept = 0, colour = 'red') +
+    xlab("Incongruent RT - Congruent RT (ms)") +
+    ylab("Scaled density") +
+    theme_APA
+```
+
+<a name = "hq"></a>
+
+# High-quality output
+
+If you are writing a report or journal article, it's generally a bad idea to screenshot your graphs, and it's also generally a bad idea to use the _export_ functionality within Rstudio. This is because both of these options produce graphics that are not high enough quality for publication.
+
+To produce high-quality output, you should first create an object for your graph, much as we created an [object for the output of analysis](anova3.html#bfact).
+
+```{r graph4}
+dgraph <- ctrldiff %>% ggplot(aes(diff)) +
+    geom_density(aes(y=..scaled..)) +
+    geom_vline(xintercept = 0, colour = 'red') +
+    xlab("Incongruent RT - Congruent RT (ms)") +
+    ylab("Scaled density") +
+    theme_APA
+dgraph
+```
+
+We can now use the `ggsave` command to save a high-quality version of that graph:
+
+```{r ggsave}
+ggsave(filename = "fig1.pdf", plot = dgraph, units = "cm", width = 15, height = 10)
+```
+
+## Explanation of command
+
+`filename = "fig1.pdf"` - Save the graph as _fig1.pdf_. Try to use PDF where possible, because it produces the best quality output and the smallest file size. However, if you're unfortunate enough to be using a wordprocessor than cannot import PDF graphs (e.g. Microsoft Word) then you can use PNG format instead. You do this by changing the filename, e.g. `filename = "fig1.png"`. If you send your paper to a journal for consideration, they will also require the PDF version of your graphs as a separate attachement, as PNG files are generally not good enough for professional publications. For most internal reports (and university coursework), PNG is generally good enough.
+
+`plot = dgraph` - Use the object called `dgraph` as the graph you want to save.
+
+`units = "cm"` - The following commands will set the size of the graph; this command says what units these are in. You usually want to use "cm" (centimetres) but if you live in a country that hasn't adopted the metric system, you can use "in" (inches) instead. 
+
+`width = 15` - The graph (including border etc.) should be 15 units wide (the units in this case being centimetres)
+
+`height = 10` - The graph (including border etc.) should be 10 units high (centimetres in this case). 
+
+## Explanation of output
+
+A file called _fig1.pdf_ will have appeared in your _Files_ window in RStudio. You can export this in the [usual way](using-projects.html#download).
+
+___
+
+This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0. 
+
+
