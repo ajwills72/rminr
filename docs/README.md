@@ -113,6 +113,7 @@ The following materials are under development. Comments welcome:
 
 - [Factorial differences, part 2](anova4.html)
 
+- [Bettter graphs](better-graphs.html)
 
 ## 5. Going further with R
 <a name="gfwr"></a>
