@@ -88,7 +88,7 @@ Although there's quite a lot in this output, the main thing to focus on is the n
 
 If you are reporting the results of a traditional ANOVA in a journal article, you are generally expected to report the `F` value, along with the degrees of freedom (`df`), as well as the p value. So, in this case, you would write:
 
-The two groups did not differ significantly, _F_(2, 417) = 11.11, _p_ < .0001.
+The two groups differed significantly, _F_(2, 417) = 11.11, _p_ < .0001.
 
 The F ratio and degrees of freedom are not particularly meaningful or useful information for the reader to have, but nonetheless journals normally require them when reporting traditional ANOVA. For further explanation, see the [more on ANOVA](yet-more-on-anova.html) worksheet.
 
