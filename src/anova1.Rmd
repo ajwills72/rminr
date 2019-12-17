@@ -1,6 +1,6 @@
 ---
 title: "Within-subject differences"
-author: "Andy Wills"
+author: "Andy Wills and Clare Walsh"
 output: html_document
 ---
 
