@@ -561,7 +561,9 @@ wordctrlCIsum$subj &lt;- factor(wordctrlCIsum$subj)</code></pre>
 </div>
 <div id="evidence" class="section level2">
 <h2>Evidence</h2>
-<p>Now we’ve given R this information about factors, we’re ready to calculate a Bayes Factor for the difference between congruent and incongruent trials. To do this, we use the command:</p>
+<p>Now we’ve given R this information about factors, we’re ready to calculate a Bayes Factor for the difference between congruent and incongruent trials. To do this, first we load the <em>BayesFactor</em> package as before:</p>
+<pre class="r"><code>library(BayesFactor, quietly = TRUE)</code></pre>
+<p>and then we use the command:</p>
 <pre class="r"><code>anovaBF(formula = rt ~ congru + subj,
         data = data.frame(wordctrlCIsum),
         whichRandom = &quot;subj&quot;)</code></pre>

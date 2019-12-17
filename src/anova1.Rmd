@@ -240,7 +240,13 @@ The second command works in the same way as the first.
 
 ## Evidence
 
-Now we've given R this information about factors, we're ready to calculate a Bayes Factor for the difference between congruent and incongruent trials. To do this, we use the command:
+Now we've given R this information about factors, we're ready to calculate a Bayes Factor for the difference between congruent and incongruent trials. To do this, first we load the _BayesFactor_ package as before:
+
+```{r bf-init}
+library(BayesFactor, quietly = TRUE)
+```
+
+and then we use the command:
 
 ```{r bfwithin}
 anovaBF(formula = rt ~ congru + subj,
