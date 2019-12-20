@@ -13,12 +13,16 @@ output: html_document
 ## Show commands and putout.
 knitr::opts_chunk$set(echo = TRUE, comment=NA, cache = TRUE)
 
-
+library(tidyverse)
+dat <- read_csv("rawdata/subject-11.csv")
+dat2 <- read_csv("rawdata/subject-12.csv")
 ```
 
 # Contents
 
 - [Introduction](#intro)
+
+- [Clearing the environment](#clear)
 
 - [Loading data](#load)
 
@@ -50,11 +54,27 @@ In this worksheet, we'll cover  how to calculate a Bayes Factor for a simple _wi
 
 The technique we're going to use is called _ANOVA_, short for **AN**alysis **O**f **VA**riance. It's probably the most used analysis technique in psychology. Its name (ANOVA) has a long history that isn't really worth getting into here, particularly as it comes from our history in psychology of using p-values as evidence terms. As we've covered [previously](evidence.html#p-wrong), p-values have no interpretation that is simultaneously accurate, simple, and useful. In this worksheet, we focus on a form of ANOVA that calculates Bayes Factors, which are more easily interpretable. If you ever need to calculate a traditional ANOVA, take a look at the [traditional ANOVA](more-on-anova.html) worksheet.
 
-<a name="load"></a>
+# Getting started, and clearing the environment
+
+In the [preprocessing](preproc.html) worksheet, you loaded data from a _git_ repository into an R project. Go back to that project now. You will notice that your _Environment_ still contains all the data frames from the previous worksheet. You can leave them there if you like, but some people prefer to start with a "clean slate". If that's you, you can remove data frames with the `rm` command (as in **r**e**m**ove). For example, to remove the `dat` data frame, type:
+
+```{r rm}
+rm(dat)
+```
+
+The `rm` command can also be used with the `ls()` command. The `ls()` command gives you a list of the names of the things in your environment. The command is called `ls` because it **l**i**s**ts them. We can use the `ls()` and `rm()` commands together to remove everything from our _Environment_, like this:
+
+```{r rmls}
+rm(list=ls())
+```
+
+Notice that your _Environment_ tab in Rstudio is now empty. This command only clears the _Environment_, it leaves all the files in your project as they were (you can still see them in the _Files_ panel). 
 
 # Loading data
 
-In the [preprocessing](preproc.html) worksheet, you loaded data from a _git_ repository into an R project. Go back to that project now, and load this new  data set: 
+<a name="load"></a>
+
+Now  load this new  data set: 
 
 ```{r newdat, message=FALSE}
 library(tidyverse)
@@ -128,7 +148,9 @@ _EXPECTED OUTPUT_: There will be a new data frame in your _Environment_ window t
 
 The data frame is still very long, because it contains data for every trial. What we want to know, for each participant, is whether they are quicker to name the words on the _congruent_ trials (where the picture and word match) than on the _incongruent_ trials (where the picture and word are different). So, we need to summarise each person's data down to just two numbers - their mean reaction time on congruent trials, and their mean reaction time on incongruent trials. So:
 
-**WRITE A COMMAND** to _group_ the data by participant and experimental condition, using the `group_by` command, get the mean reaction times using the `summarise` command, and put this summarised data into a new data frame called `wordctrlCIsum`. If you need a reminder of how to group and summarise data, take a look at the [preprocessing](preproc.html#filter) worksheet. The column containing the RT data in this new data frame will need to have the name `rt`, because we assume this later on. You can set the column name within the `summarise` command. For example, `summarise(acc = mean(acc))` takes the mean of the column `acc` and puts the answer into a column called `acc` in your new data frame.
+**WRITE A COMMAND** to _group_ the data by participant (`subj`) and experimental condition (`congru`), using the `group_by` command, get the mean reaction times using the `summarise` command, and put this summarised data into a new data frame called `wordctrlCIsum`. If you need a reminder of how to group and summarise data, take a look at the [preprocessing](preproc.html#filter) worksheet. 
+
+**Column names with `summarize`**: There is one new thing to learn here, though, relative to the previous worksheet. The column containing the RT data in this new data frame will need to have the name `rt`, because we use this name later on. You can set the column name within the `summarise` command. For example, `summarise(acc = mean(acc))` takes the mean of the column `acc` and puts the answer into a column called `acc` in your new data frame. If you just use `summarise(mean(acc))` then the column name you end up with is `mean(acc)` and this would be a pain to use in later commands, so we rename the column as `acc` by typing `summarise(acc = mean(acc))` instead.
 
 
 ```{r sum1, echo=FALSE}
@@ -143,7 +165,7 @@ _EXPECTED OUTPUT_: There will be a new data frame in your _Environment_ window  
 
 Now, as you did in the [Absolute Beginners' Guide to R](group-differences.html#group-density):
 
-**WRITE A COMMAND** to create a density plot, showing the distribution of reaction times in the two conditions. Click on the link above if you need to revise how to do this.
+**WRITE A COMMAND** to create a density plot of this summarised data (`wordctrlCIsum`), showing the distribution of reaction times in the two conditions. Click on the link above if you need to revise how to do this.
 
 If you get it right, it should look like this:
 

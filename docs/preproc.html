@@ -574,7 +574,7 @@ fnamlist</code></pre>
 <p>In this section of the worksheet, you’ll preprocess the data from a different experiment. You’ll find the data in the folder called <code>lexdec</code>, and the OpenSesame implementation of this experiment in the <code>expt-scripts</code> folder.</p>
 <p>In this experiment, words are shown on the screen one at a time. Some are real words, others are made-up words (non-words). The participant’s job is to decide whether each is a word or non-word, as quickly as possible. The computer records for each decision whether they got it correct, and how long it took them to respond (their <em>response time</em>). The experiment begins with a practice phase, so participants can get used to the task. This is followed by the test phase, which is the part we analyse.</p>
 <p>Your task is to write R code that gives the mean reaction time for each participant, for both words and non-words. You should analyse only reaction times for trials in which they made the correct response, and you should not include the practice phase in your analysis.</p>
-<p>This can, and should, be done with less than 15 files of R code. In fact, excluding the <code>library(tidverse)</code> command, it can be done in 10 lines. When your code is working correctly, it will give you the following numbers:</p>
+<p>This can, and should, be done with less than 15 files of R code (plus comments, see below). In fact, excluding the <code>library(tidverse)</code> command and comments, it can be done in 10 lines. When your code is working correctly, it will give you the following numbers:</p>
 <pre><code># A tibble: 6 x 3
 # Groups:   subj [3]
    subj type    `mean(rt)`
@@ -585,6 +585,13 @@ fnamlist</code></pre>
 4    12 word         1818 
 5    13 nonword      1458.
 6    13 word         1526 </code></pre>
+<p>Other requirements:</p>
+<ul>
+<li><p>Use short, meaningful names for data frames and column names.</p></li>
+<li><p>Use comments in your code to make it more human readable. Comments are any line that begins with <code>##</code> and are ignored by R. They are there to make your code easier for humans to understand. For example:</p></li>
+</ul>
+<pre class="r"><code>## Set up an empty data frame
+alldat &lt;- NULL</code></pre>
 <p><strong>Hints:</strong> Your code should first get a list of files, then use a loop to load all those files in and combine them. Next you’ll have to find the relevant columns among the 100+ columns of the data file. Once you’ve found them, use <code>select</code> to select just those columns and use <code>colnames</code> to give the selected columns better names. Use <code>filter</code> to remove the practice phase and keep only the correct responses. Note that accuracy in this data file is a number, not a word, so the correct phrase is something like <code>acc == 1</code>, rather than <code>acc == &quot;1&quot;</code>. Finally, use <code>group_by</code> and <code>summarise</code> to report the mean response time for words and non words for each participant. Good luck!</p>
 <p><strong>Once you’re getting the right answers, paste your R code into PsycEL</strong>.</p>
 <hr />

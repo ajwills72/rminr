@@ -303,7 +303,7 @@ In this experiment, words are shown on the screen one at a time. Some are real w
 
 Your task is to write R code that gives the mean reaction time for each participant, for both words and non-words. You should analyse only reaction times for trials in which they made the correct response, and you should not include the practice phase in your analysis. 
 
-This can, and should, be done with less than 15 files of R code. In fact, excluding the `library(tidverse)` command, it can be done in 10 lines. When your code is working correctly, it will give you the following numbers:
+This can, and should, be done with less than 15 files of R code (plus comments, see below). In fact, excluding the `library(tidverse)` command and comments, it can be done in 10 lines. When your code is working correctly, it will give you the following numbers:
 
 ```{r ex1, echo=FALSE, message=FALSE}
 library(tidyverse)
@@ -318,6 +318,17 @@ colnames(alldat) <- c("subj", "practice", "trial", "type", "acc", "rt")
 test <- alldat %>% filter(practice == "no") %>% filter(acc == 1) 
 test.sum <- test %>% group_by(subj, type) %>% summarise(mean(rt))
 test.sum
+```
+
+Other requirements:
+
+- Use short, meaningful names for data frames and column names.
+
+- Use comments in your code to make it more human readable. Comments are any line that begins with `##` and are ignored by R. They are there to make your code easier for humans to understand. For example:
+
+```{r clearcomm}
+## Set up an empty data frame
+alldat <- NULL
 ```
 
 **Hints:** Your code should first get a list of files, then use a loop to load all those files in and combine them. Next you'll have to find the relevant columns among the 100+ columns of the data file. Once you've found them, use `select` to select just those columns and use `colnames` to give the selected columns better names. Use `filter` to remove the practice phase and keep only the correct responses. Note that accuracy in this data file is a number, not a word, so the correct phrase is something like `acc == 1`, rather than `acc == "1"`. Finally, use `group_by` and `summarise` to report the mean response time for words and non words for each participant. Good luck!
