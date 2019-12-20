@@ -1,6 +1,6 @@
 ---
 title: "Preprocessing data from experiments"
-author: "Andy Wills"
+author: "Andy Wills, Clare Walsh and Chris Longmore"
 output: html_document
 ---
 
@@ -12,7 +12,6 @@ output: html_document
 
 ## Show commands and output.
 knitr::opts_chunk$set(echo = TRUE, comment=NA)
-
 ```
 
 # Contents
@@ -63,23 +62,21 @@ That's it! You should now see that your _Files_ window in RStudio has a number o
 
 Click on the name 'rawdata' in the Files window of RStudio. You'll see there are three CSV files, and one file called `README.md`. We'll use the CSV files in a minute. 
 
-Each CSV file (e.g. `subject-11.csv`) contains the data from one participant in a [facial prototypes](http://cabezalab.org/wp-content/uploads/2011/11/Cabeza99_PrototypeEffectFaceRecogExtensionLimits_MemCog.pdf) experiment. The experiment was run using [OpenSesame](https://osdoc.cogsci.nl/). OpenSesame, like R, is a free and open-source program. If you install OpenSesame on your machine, you can try out the experiment by exporting it from the `expt-scripts` folder of your project. You do this by clicking on `expt-scripts`, ticking the box next to `facialproto_short.osexp`, clicking 'More...' and clicking 'Download'.
+Each CSV file (e.g. `subject-11.csv`) contains the data from one participant in a [facial prototypes](http://cabezalab.org/wp-content/uploads/2011/11/Cabeza99_PrototypeEffectFaceRecogExtensionLimits_MemCog.pdf) experiment. The experiment was run using [OpenSesame](https://osdoc.cogsci.nl/). OpenSesame, like R, is a free and open-source program. Install OpenSesame on your machine and run the experiment on yourself. Export it from the `expt-scripts` folder of your project. You export by clicking on `expt-scripts`, ticking the box next to `facialproto_short.osexp`, clicking 'More...' and clicking 'Download'. Now open it on your machine using OpenSesame.
 
 ## Summary of the experiment
 
-You'll need a general sense of what happens in this experiment to understand the data it produces. You may find the following easier to understand if you've tried out the experiment yourself first. 
+In this experiment, people are shown some pictures of male faces. Each is a picture of a real face, but its internal features (eyes, nose, mouth, etc.) have been digitally stretched or compressed either along the x-axis or the y-axis. Each of these manipulations of real faces is shown exactly once. Participants rate each picture for masculinity (1-8 scale, higher numbers = more masculine), just as a way of encouraging them to look at each picture closely.
 
-In this experiment, people are shown some pictures of male faces. Each is a picture of a real face, but its internal features (eyes, nose, mouth, etc.) have been digitally stretched or compressed either along the x-axis or the y-axis. Participants rate each picture for masculinity (1-8 scale, higher numbers = more masculine), just as a way of encouraging them to look at each picture closely.
+After participants have been shown 32 pictures, they move to the test phase. They're shown another 24 pictures, and have to rate their confidence they've seen that _exact_ picture before (0 = definitely not seen, 9 = definitely seen). The pictures they're shown include the exact distortions they've seen before (`seen`), the undistorted version of the faces (`prototype`), which they have not been shown before, and some other distortions of the same faces that they haven't seen before (`unseen`).
 
-After participants have been shown 32 pictures, they move to the test phase. They're shown another 24 pictures, and have to rate their confidence they've seen that _exact_ picture before (0 = definitely not seen, 9 = definitely seen). The pictures they're shown include ones they've seen before (`seen`), the undistorted version of the faces they've seen (`prototype`), and some other distortions of the faces they haven't seen before (`unseen`).
-
-The expected result is that people are confident they've seen the `prototype` faces before, even though they haven't. One interpretation of this result is that we average across the pictures we see. The prototype is the average of the pictures we've seen of that face, so it seems familiar even though we've not seen it  before. 
+The expected result is that people are confident they've seen the `prototype` pictures before, even though they haven't. One interpretation of this result is that we average across the pictures we see. The prototype is the average of the pictures we've seen of that face, so it seems familiar even though we've not seen it  before. 
 
 In order to work out whether we get the expected result, we need to know the mean confidence rating each participant gave for each face type (`seen, unseen, prototype`). 
 
 ## Loading one participant
 
-We'll start by load the data for one of the participants, `subject-11.csv`. Recall that we can do this using the `read_csv` command. In this case, the CSV file we want to load is inside the `rawdata` folder of our project so we have to say `rawdata/subject-11.csv` rather than just `subject-11.csv`, so RStudio knows where to look for the file. 
+We'll start by loading the data for one of the participants, `subject-11.csv`. Recall that we can do this using the `read_csv` command. In this case, the CSV file we want to load is inside the `rawdata` folder of our project so we have to say `rawdata/subject-11.csv` rather than just `subject-11.csv`, so RStudio knows where to look for the file. 
 
 Start a new R script in your RStudio project, add the following commands to it, and run the script:
 
@@ -102,34 +99,42 @@ This is what's sometimes called  [tidy data](https://benwhalley.github.io/rmip/d
 
 Most commands in R assume your data is in _long_ format, so it's good news our raw data is also in that format, even if it still needs a bunch of tidying up before we can analyse it. The first step is to go through the 101 columns and find those we actually need.
 
+## Participant number
+
+It's important that we are able to anonymously identify the participant who generated the data. So, we're going to need their participant number, which is in the `subject_nr` column.
+
+Columns to keep: `subject_nr`
+
+Although this data file contains the participant number, this may not always be the case for other data sets. If you ever need to add participant numbers yourself, take a look at the [more on preprocessing](more-on-prepoc.html) worksheet.
+
 ## Responses
 
 One thing we'll definitely need to know is how the participant responded on each trial of the experiment. 
 If you scroll through the columns of `dat`, which are organised alphabetically, you'll find a column called `response`. You'll see that each row contains a number from 0 to 9. So, this is the rating the participant made on that trial. We'll need to know that to analyse this data, so `response` is one of the columns we need to keep.
 
-Columns to keep: `response`
+Columns to keep: `subject_nr`, `response`
 
 ## Phases
 
 We also need to know what kind of response the participant was making -- a masculinity rating (first part of the experiment), or a confidence rating (second part). When an experiment has two or more different parts, we call those parts _phases_. And you'll find there is a column called `phase`, which has the entries `exposure` (which is the first part of the experiment) and `test` (second part). So `phase` is another column we'll need.
 
-Columns to keep: `phase`, `response`
+Columns to keep: `subject_nr`, `phase`, `response`
 
 ## Trial types
 
 In the second phase of the experiment, there are three different types of trial - unseen faces, seen faces, and prototypes. We'll need to know what type of stimulus was presented in order to analyse these data. Scroll to the column called `type`, and you'll see that for the second phase (rows 33 onwards), it contains this information. For the first phase it contains `NA`, meaning this is not relevant information for the first phase. So `type` is another column we'll need to keep.
 
-Columns to keep: `phase`, `type`, `response`
+Columns to keep: `subject_nr`, `phase`, `type`, `response`
 
 ## Trial number
 
-There are many trials in each phase of this experiment, so it makes sense to include a column that says which trial within the phase each row refers to. If you scroll through the columns, you'll find one called `live_row`. You'll notice it counts up from zero to 31, and then from 0 to 23. So, this column contains trial numbers, first for the masculinity-rating part of the experiment, and then for the confidence-rating part of the experiment. Counting from zero might seem a bit weird, but it's quite common in data collected by a computer.
+There are many trials in each phase of this experiment, so it makes sense to include a column that says which trial within the phase each row refers to. Take a look at the data --- click on `dat` in the Environment panel if you have not already done so, and this will open a spreadsheet-like view of the data in the top left window of Rstudio. If you scroll through the columns, you'll find one called `live_row`. You'll notice it counts up from zero to 31, and then from 0 to 23. So, this column contains trial numbers, first for the masculinity-rating part of the experiment, and then for the confidence-rating part of the experiment. Counting from zero might seem a bit weird, but it's quite common in data collected by a computer.
 
-Columns to keep: `phase`, `live_row`, `type`, `response`
+Columns to keep: `subject_nr`, `phase`, `live_row`, `type`, `response`
 
 ## Column ordering
 
-You may have noticed that the list of 'columns to keep' is not in alphabetical order. Instead, it follows the conventional ordering of _position in experiment_ (`phase, live_row`), _stimulus_ (`type`), _response_. Most experiments report their data in this order. Having conventions like these make it easier for others to read and understand our analyses. 
+You may have noticed that the list of 'columns to keep' is not in alphabetical order. Instead, it follows the conventional ordering of _participant_ (`subject_nr`), _position in experiment_ (`phase, live_row`), _stimulus_ (`type`), _response_. Most experiments report their data in this order. Having conventions like these make it easier for others to read and understand our analyses. 
 
 <a name="select"></a>
 
@@ -138,24 +143,24 @@ You may have noticed that the list of 'columns to keep' is not in alphabetical o
 Having worked out which columns we need, we now tidy things up by selecting just the columns we need and putting them into a new data frame. This is done using R's `select` command
 
 ```{r select}
-tidydat <- dat %>% select(phase, live_row, type, response)
+tidydat <- dat %>% select(subject_nr, phase, live_row, type, response)
 ```
 
 **Explanation of command** - Our original data frame `dat` is piped (sent to, `%>%`) the `select` command, which picks just the columns we name. These selected columns are put (`<-`) into a new dataframe called `tidydat`. 
 
-Click on `tidydat` in the _Environment_ window. You'll see we have a much easier-to-read data frame, still with 56 rows, but now only 4 columns. 
+Click on `tidydat` in the _Environment_ window. You'll see we have a much easier-to-read data frame, still with 56 rows, but now only 5 columns. 
 
 <a name="rename"></a>
 
 # Renaming columns
 
-When working with data, it's useful to have meaningful column names, because it makes it easier to remember what they contain. The column `live_row` could be more clearly named as `trial`, as that's the information it contains. We rename columns in R using the `colnames` command:
+When working with data, it's useful to have meaningful column names, because it makes it easier to remember what they contain. The column `live_row` could be more clearly named as `trial`, as that's the information it contains. Also, `subject_nr` is longer than it needs to be, `subj` is clear, and quicker to type. We rename columns in R using the `colnames` command:
 
 ```{r rename}
-colnames(tidydat) <- c("phase", "trial", "type", "response")
+colnames(tidydat) <- c("subj", "phase", "trial", "type", "response")
 ```
 
-**Explanation of command** - The command `c()` means _concatenate_ i.e. put together. So `c("phase", "trial", "type", "response")` is a way of putting the four names together so they can be sent somewhere. They are  sent (`<-`) to the `colnames()` command, which changes the column names of `tidydat`.
+**Explanation of command** - The command `c()` means _concatenate_ i.e. put together. So `c("subj", "phase", "trial", "type", "response")` is a way of putting the four names together so they can be sent somewhere. They are  sent (`<-`) to the `colnames()` command, which changes the column names of `tidydat`.
 
 <a name="filter"></a>
 
@@ -211,28 +216,6 @@ alldat <- bind_rows(dat, dat2)
 
 Look at `alldat` in _Environment_ window; you'll see it now has 112 rows, the 56 rows from subject-11 and then the 56-rows from subject-12.
 
-The only problem is that `alldat` does not contain any information about which data came from which participant. We often need to know this to do analyses. So, we need to add the subject number to the data frame for each subject before we combine them. We can do this using the `add_column` command, which adds columns to existing data frames.
-
-```{r addcol}
-dat <- dat %>% add_column(subj = 11, .before = TRUE)
-```
-
-**Explanation of command**: The `dat` dataframe is piped (`%>%`) to the `add_column_` command, which adds a column called `subj`, in which every row contains the number `11` (the subject number). `.before = TRUE` means it adds the `subj` column before any of the others (i.e. on the left). Without this, it would add it at the end. This data frame with an added column is written back into `dat`, so it's `dat` (rather than some new data frame) that contains the added column. 
-
-We also need to add the subject number for  `subject-12`:
-
-```{r addcol2}
-dat2 <- dat2 %>% add_column(subj = 12, .before = TRUE)
-```
-
-Now, we combine the two data frames as before:
-
-```{r bind2}
-alldat <- bind_rows(dat, dat2)
-```
-
-Now, when you click on `alldat`, you'll see a dataframe with 112 rows and 102 columns, the first column being the subject number.
-
 ## Combining many files
 
 Generally, we have a lot more than two people in an experiment. You could use the same technique to combine the data of tens, hundreds, or thousands of participants. However, that would take a really long time and be quite tedious. Fortunately, R allows us to speed up this process so that, even if we have tens of thousands of participants, we can quickly combine their data without error.
@@ -250,70 +233,47 @@ fnamlist
 
 ### Load every file 
 
-We now have a vector called `fnamlist` that contains all the names of CSV files in the `rawdata` directory. We can use `fnamlist` to load every file and combine them all. To do this, we make use of a `for` loop. A loop is a way of getting R to do a bunch of commands several times. This is not something we've used before in these worksheets, so we'll look closely at each line in turn:
+We now have a vector called `fnamlist` that contains all the names of CSV files in the `rawdata` directory. We can use `fnamlist` to load every file and combine them all. To do this, we make use of a `for` loop. A loop is a way of getting R to do a bunch of commands several times. This is not something we've used before in these worksheets, so we'll look closely at each line in turn.
+
+The first thing we have to do is set up an empty new data frame for all the data to go in. We do that like this:
+
+```{r readinit,message=FALSE}
+alldat <- NULL
+```
+
+**Explanation of command**: `alldat <- NULL`. This creates a new data frame called `alldat` but doesn't put anything in it yet (`NULL` means nothing, so `<- NULL` means "make it have nothing in it"). This is the data frame we'll put all the data into next.
+
+Now, we use the following commands to add all the data files to this new data frame, one at a time:
 
 ```{r readin,message=FALSE}
-alldat <- NULL
 for(fnam in fnamlist) {
   dat <- read_csv(fnam)
   alldat <- bind_rows(alldat, dat)
 }
 ```
 
-**Line 1**: `alldat <- NULL`. This creates a new data frame called `alldat` but doesn't put anything in it yet (`NULL` means nothing, so `<- NULL` means "make it have nothing in it"). This is the data frame we'll put all the data into next.
+**Explanation of commands:**
 
-**Line 2**: `for(fnam in fnams) {`. `fnams` is the vector of filenames we made earlier. `for(fnam in fnams) {` means "do what follows for every filename (`fnam`) in that vector of filenames. So, R will take the first filename `rawdata/subject-11.csv` and set `fnam` to that. It'll then run lines 3 and 4 (see below). When it gets to Line 5 (`}`), it will go back to line 2, set `fnam` to the second filename `rawdata/subject-12.csv`, and run lines 3 and 4 again. It'll do this over and over again until it reaches the end of the filenames in `fnamlist`
+**Line 1**: `for(fnam in fnams) {`. `fnams` is the vector of filenames we made earlier. `for(fnam in fnams) {` means "do what follows for every filename (`fnam`) in that vector of filenames. So, R will take the first filename `rawdata/subject-11.csv` and set `fnam` to that. It'll then run lines 3 and 4 (see below). When it gets to Line 5 (`}`), it will go back to line 2, set `fnam` to the second filename `rawdata/subject-12.csv`, and run lines 3 and 4 again. It'll do this over and over again until it reaches the end of the filenames in `fnamlist`
 
-**Line 3**: `dat <- read_csv(fnam)`. This reads in one data file, just like before. The difference is that rather than writing `"rawdata/subject-11.csv"` we say `fnam`. This means that a different file will be loaded each time we go around this for loop.
+**Line 2**: `dat <- read_csv(fnam)`. This reads in one data file, just like before. The difference is that rather than writing `"rawdata/subject-11.csv"` we say `fnam`. This means that a different file will be loaded each time we go around this for loop.
 
-**Line 4**: `alldat <- bind_rows(alldat, dat)`. This combines two data files, just like before. The difference is that `alldat` is always the first of the two files. That way, each time we go around the loop, the data file we just read gets added to the end of the files we've already combined.
+**Line 3**: `alldat <- bind_rows(alldat, dat)`. This combines two data files, just like before. The difference is that `alldat` is always the first of the two files. That way, each time we go around the loop, the data file we just read gets added to the end of the files we've already combined.
 
-**Line 5**: `}`. This means "this is the end of the loop". It's important to have this, otherwise R would try to loop around every subsequent command in your script, which would cause some weird errors. 
+**Line 4**: `}`. This means "this is the end of the loop". It's important to have this, otherwise R would try to loop around every subsequent command in your script, which would cause some weird errors. 
 
-You may have noticed that the lines of code inside the loop (Lines 3-4) were _indented_ i.e. there are a couple of spaces before the beginning of the text. R ignores these spaces, but we include them because it makes it easier for us to see which commands are inside a loop.
+You may have noticed that the lines of code inside the loop (Lines 2-3) were _indented_ i.e. there are a couple of spaces before the beginning of the text. R ignores these spaces, but we include them because it makes it easier for us to see which commands are inside a loop.
 
 If you look at `alldat` in the Environment window, you'll see that it has 168 rows. This loop has combined all three participants, each with 56 trials, into one big data frame. Although with three participants we could have done this as quickly in other ways, generally we have much more data than this - typically somewhere between 30 and 300 participants in a single experiment. Using a loop saves a lot of time in these situations.
 
-### (Anonymously) identifying the participant
+## Back to tidying and summarizing
 
-Unfortunately, `alldat` doesn't contain any information about which trials came from which participant. As before, we need to add a column that indicates which participant each row refers to. As before, we can use `add_column` to do this:
+Of course, this combined data file has the same problems as the individual files that make it up -- there are over 100 columns, most of which we don't need. We can fix this with the same commands as before.
 
-```{r combwithf, message=FALSE}
-alldat <- NULL
-for(fnam in fnamlist) {
-  dat <- read_csv(fnam)
-  dat <- dat %>% add_column(subj = fnam, .before = TRUE)
-  alldat <- bind_rows(alldat, dat)
-}
-```
+**WRITE SOME COMMANDS** to select the relevant columns, put them into `tidydat` and then rename the columns.
 
-Only the fourth line of code above is new. When you run this code, you should notice that `alldat` has a new column that contains the filename. That's OK, but it would be better if we could just have the participant number (e.g. `11`) because it's more compact and easy to use like that. So, we need to be able to cut out the participant number `11` from the filename. We can do this using the `substr` command. Here's an example of how `substr` works:
-
-```{r substr}
-substr("investment", 3, 6)
-```
-
-**Explanation of command**: `substr` is short for "subset string", with a string being a collection of characters (e.g. a word) and a subset being part of that string. The first number, `3` is the start of the substring, and the second number `6` is the end of the substring. So, if we take from the third to the sixth character in "investment", we get "vest".
-
-Looking at the filename `rawdata/subject-11.csv`, we can see that the participant number starts at the 17th position and ends at the 18th. This will be true for any two-digit participant number (a good reason to start subject numbers at 11 rather than at 1). So, putting this all together, we get:
-
-```{r fulload, message=FALSE}
-alldat <- NULL
-for(fnam in fnamlist) {
-  dat <- read_csv(fnam)
-  dat <- dat %>% add_column(subj = substr(fnam, 17, 18), .before = TRUE)
-  alldat <- bind_rows(alldat, dat)
-}
-```
-
-These six lines of code load and combine every data file, and add a participant number to each.
-
-## Back to tidying
-
-Of course, this combined data file has the same problems as the individual files that make it up -- there are over 100 columns, most of which we don't need. We can fix this with the same commands as before; we just have to remember to also select the column containing the participant numbers:
-
-```{r tidyagain}
-tidydat <- alldat %>% select(subj, phase, live_row, type, response)
+```{r tidyagain, echo=FALSE}
+tidydat <- alldat %>% select(subject_nr, phase, live_row, type, response)
 colnames(tidydat) <- c("subj", "phase", "trial", "type", "response")
 ```
 
@@ -321,14 +281,17 @@ Click on `tidydat`, you'll see a human-readable data frame with 168 rows, and 5 
 
 ## Back to summarising
 
-Now we have this combined file, we summarise the test phase data for each participant using the same commands as before. We just need to include `subj` to the `group_by` command so we get a separate summary for each person:
+Now we have this combined file, we summarise the test phase data for each participant using the same commands as before. We just need to include `subj` in the `group_by` command, so `group_by(subj, type)`, so we get a separate summary for each person.
 
-```{r sumagain}
+**WRITE SOME COMMANDS** to filter the data to the test phase, and put that data into a data fram called `test`. Now use `test` to group by subject and trial type, and summarize using the mean response, and put the resulting summary into `test.sum`. If you've got this right, you'll end up with this summary. You can view it either by typing `test.sum`, or by clicking on `test.sum` in the _Environment_ window:
+
+```{r sumagain, echo=FALSE}
 test <- tidydat %>% filter(phase == "test")
 test.sum <- test %>% group_by(subj, type) %>% summarise(mean(response))
+test.sum
 ```
 
-Clicking on `test.sum` in the _Environment_ window, we can now see a summary for each participant. All three participants were more confident they'd seen the prototype than the pictures they'd actually seen, which supports our hypothesis. But they're also all at least as confident about other unseen distortions, too. So, again, an alternative hypothesis is that participants were just pressing keys randomly. This was in fact the case for these data. In the next part of the worksheet, you'll look at some data from a different experiment where the participants took the task more seriously. 
+Looking at the above summary, we can see that all three participants were more confident they'd seen the prototype than the pictures they'd actually seen, which supports our hypothesis. But they're also all at least as confident about other unseen distortions, too. So, again, an alternative hypothesis is that participants were just pressing keys randomly. This was in fact the case for these data. In the next part of the worksheet, you'll look at some data from a different experiment where the participants took the task more seriously. 
 
 <a name="ex1"></a>
 
@@ -340,25 +303,24 @@ In this experiment, words are shown on the screen one at a time. Some are real w
 
 Your task is to write R code that gives the mean reaction time for each participant, for both words and non-words. You should analyse only reaction times for trials in which they made the correct response, and you should not include the practice phase in your analysis. 
 
-This can, and should, be done with less than 15 files of R code. When your code is working correctly, it will give you the following numbers:
+This can, and should, be done with less than 15 files of R code. In fact, excluding the `library(tidverse)` command, it can be done in 10 lines. When your code is working correctly, it will give you the following numbers:
 
 ```{r ex1, echo=FALSE, message=FALSE}
+library(tidyverse)
 fnamlist <- list.files("lexdec", pattern = "csv", full.names=TRUE)
 alldat <- NULL
 for(fnam in fnamlist) {
   dat <- read_csv(fnam)
-  dat <- dat %>% add_column(subj = substr(fnam, 16, 17), .before = TRUE)
   alldat <- bind_rows(alldat, dat)
 }
-alldat <- alldat %>%
-    select(subj, practice, live_row, category, correct, response_time)
+alldat <- alldat %>% select(subject_nr, practice, live_row, category, correct, response_time)
 colnames(alldat) <- c("subj", "practice", "trial", "type", "acc", "rt")
 test <- alldat %>% filter(practice == "no") %>% filter(acc == 1) 
 test.sum <- test %>% group_by(subj, type) %>% summarise(mean(rt))
 test.sum
 ```
 
-**Hints:** Your code should first get a list of files, then use a loop to load all those files in and combine them. Don't forget that `lexdec` is a shorter name than `rawdata`, so the `substr` command will have to change. Next you'll have to find the relevant columns among the 100+ columns of the data file. Once you've found them, use `select` to select just those columns and use `colnames` to give the selected columns better names. Use `filter` to remove the practice phase and keep only the correct responses. Note that accuracy in this data file is a number, not a word, so the correct phrase is something like `acc == 1`, rather than `acc == "1"`. Finally, use `group_by` and `summarise` to report the mean response time for words and non words for each participant. Good luck!
+**Hints:** Your code should first get a list of files, then use a loop to load all those files in and combine them. Next you'll have to find the relevant columns among the 100+ columns of the data file. Once you've found them, use `select` to select just those columns and use `colnames` to give the selected columns better names. Use `filter` to remove the practice phase and keep only the correct responses. Note that accuracy in this data file is a number, not a word, so the correct phrase is something like `acc == 1`, rather than `acc == "1"`. Finally, use `group_by` and `summarise` to report the mean response time for words and non words for each participant. Good luck!
 
 **Once you're getting the right answers, paste your R code into PsycEL**.
 

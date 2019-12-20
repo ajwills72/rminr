@@ -1,0 +1,57 @@
+---
+title: "More on preprocessing data from experiments"
+author: "Andy Wills and Chris Longmore"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+## DEVELOPERS: Uncomment one option, as appropriate
+
+## Show only commands.
+## knitr::opts_chunk$set(echo = TRUE, message = FALSE, results='hide', fig.keep = 'none', comment=NA)
+
+## Show commands and output.
+knitr::opts_chunk$set(echo = TRUE, comment=NA)
+```
+
+# Adding participant numbers
+
+Sometimes, a data file does not contain a participant number within it, it's just provided as part of the filename. If you encounter this issue, here's how to resolve it using the `add_column` command. The following assumes you have a project in Rstudio associated with the _git_ repository used in the [preprocessing](preproc.html) worksheet.
+
+```{r load, message=FALSE}
+library(tidyverse)
+fnamlist <- list.files("rawdata", "csv", full.names=TRUE)
+alldat <- NULL
+for(fnam in fnamlist) {
+  dat <- read_csv(fnam)
+  dat <- dat %>% add_column(subj = fnam, .before = TRUE)
+  alldat <- bind_rows(alldat, dat)
+}
+```
+
+**Explanation of command**: Only the sixth line of code above is new. The `dat` dataframe is piped (`%>%`) to the `add_column_` command, which adds a column called `subj`, in which every row contains the number `11` (the subject number). `.before = TRUE` means it adds the `subj` column before any of the others (i.e. on the left). Without this, it would add it at the end. This data frame with an added column is written back into `dat`, so it's `dat` (rather than some new data frame) that contains the added column. 
+
+When you run this code, you should notice that `alldat` has a new column that contains the filename. That's OK, but it would be better if we could just have the participant number (e.g. `11`) because it's more compact and easy to use like that. So, we need to be able to cut out the participant number `11` from the filename. We can do this using the `substr` command. Here's an example of how `substr` works:
+
+```{r substr}
+substr("investment", 3, 6)
+```
+
+**Explanation of command**: `substr` is short for "subset string", with a string being a collection of characters (e.g. a word) and a subset being part of that string. The first number, `3` is the start of the substring, and the second number `6` is the end of the substring. So, if we take from the third to the sixth character in "investment", we get "vest".
+
+Looking at the filename `rawdata/subject-11.csv`, we can see that the participant number starts at the 17th position and ends at the 18th. This will be true for any two-digit participant number (a good reason to start subject numbers at 11 rather than at 1). So, putting this all together, we get:
+
+```{r fulload, message=FALSE}
+alldat <- NULL
+for(fnam in fnamlist) {
+  dat <- read_csv(fnam)
+  dat <- dat %>% add_column(subj = substr(fnam, 17, 18), .before = TRUE)
+  alldat <- bind_rows(alldat, dat)
+}
+```
+
+These six lines of code load and combine every data file, and add a participant number to each.
+
+___
+
+This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0. 
