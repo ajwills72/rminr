@@ -13,7 +13,7 @@ The advantages of R over other software packages are discussed [here](why-r-stud
 
 3. [A Very Brief Guide to R](#vbgtr)
 
-4. [Intermediate Guide to R](#rmip) (work in progress)
+4. [Intermediate Guide to R](#rmip) 
 
 5. [Going further with R](#gfwr) (work in progress)
 
@@ -97,28 +97,36 @@ The _Absolute Beginners' Guide to R_ and _Putting R to Work_ provide, between th
 
 These are intermediate-level materials, designed to follow on from _An Absolute Beginners' Guide to R_ and _Putting R to work_ (or from _A Very Brief Guide to R_, if you're in a hurry). They  provide analysis methods for conducting realistic, high-quality studies in psychology. They are aimed at a second-year undergraduate audience.
 
-The following materials are under development. Comments welcome:
+- [Revision](revision.html): A quick recap of key information covered in earlier courses.
 
-- [Revision](revision.html)
+- [Statistical power](power.html): How to calculate the statistical power of experiments. 
 
-- [Statistical power](power.html) 
+- [Data preprocessing](preproc.html): Getting data from lab-based (OpenSesame)
+  experiments into a format closer to something you can actually analyse, in
+  five steps: loading, selecting, filtering, summarising, and combining.
 
-- [Data preprocessing](preproc.html)
+- [Within-subject differences](anova1.html): Data preprocessing (pivoting and
+  mutating). One-factor within-subject Bayesian ANOVA.
 
-- [Within-subject differences](anova1.html)
+- [Understanding interactions](anova2.html): Learn what an interaction is, and
+  learn how to do line plots at the same time.
 
-- [Understanding interactions](anova2.html) 
+- [Factorial differences](anova3.html): Two-factor Bayesian ANOVA (one within,
+  one between)
 
-- [Factorial differences](anova3.html)
+- [Traditional ANOVA](more-on-anova.html): Just in case someone insists you use
+  the older, p-value based, approach to ANOVA ... and you don't feel like
+  saying 'no'.
 
-- [Factorial differences, part 2](anova4.html)
+- [Factorial differences, part 2](anova4.html): More on two-factor Bayesian ANOVA.
 
-- [Bettter graphs](better-graphs.html)
+- [Bettter graphs](better-graphs.html): Producing publication-quality graphs in R.
 
 ## 5. Going further with R
 <a name="gfwr"></a>
 
-The following materials are currently being developed, so on clicking these links, you may find just notes, or incomplete worksheets. 
+The following materials are currently being developed, so on clicking these
+links, you may find just notes, or incomplete worksheets.
 
 - [Other resources](gfwr-other.html): Links to external resources.
 
@@ -164,6 +172,6 @@ Charlie Reynolds, Matt Roser,
 Paul Sharpe, Alastair Smith, Julian Stander, 
 Sylvia Terbeck,
 Michael Verde,
-Ben Whalley.
+Clare Walsh, Ben Whalley.
 
 
