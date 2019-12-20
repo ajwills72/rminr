@@ -1,6 +1,6 @@
 ---
 title: "Revision"
-author: "Andy Wills"
+author: "Andy Wills and Clare Walsh"
 output: html_document
 ---
 
@@ -57,7 +57,9 @@ prod %>% ggplot(aes(phit, colour=factor(cond))) + geom_density(aes(y=..scaled..)
 
 ## Effect size
 
-[Previously](group-differences.html), you learned that effect size measures how big the difference between two groups is, relative to the amount of variability within each group. For example, you worked out that the gender pay gap in the U.S. is several thousand dollars a year, and that the effect size is small, because both men and women vary a lot in how much they earn. The variability of incomes in the U.S. is high because there are a wide range of incomes above and below the mean.
+In you have not previously been taught about effect sizes, take a look at the materials [here](group-differences.html) before proceeding. 
+
+In those materials, you learned that effect size measures how big the difference between two groups is, relative to the amount of variability within each group. For example, you worked out that the gender pay gap in the U.S. is several thousand dollars a year, and that the effect size is small, because both men and women vary a lot in how much they earn. The variability of incomes in the U.S. is high because there are a wide range of incomes above and below the mean.
 
 Calculate the [effect size](group-differences.html#effsize) for the current memory experiment. If you get it right, your output should look like this:
 
@@ -83,9 +85,9 @@ ttestBF(formula = phit ~ cond, data = data.frame(prod))
 
 This experiment didn't tell us anything worth listening to: the Bayes Factor was close to 1. 
 
-## Recording your work
+## All done!
 
-That's the end of the revision. **Copy and paste the R script you used for this exercise into PsycEL.**
+That's the end of the revision. You are now ready to start the intermediate-level guide to R.
 
 ___
 

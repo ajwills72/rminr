@@ -28,7 +28,7 @@ Before starting this exercise, you should have had a brief introduction to getti
 - [Drawing a density plot for each group](#group-density)
 - [Filtering data](#filter)
 - [More on filters](#more-filter)
-- [Calculating effect size](#effsize)
+- [Introducing effect size](#effsize)
 - [Exercise 1](#ex1)
 - [Excerise 2](#ex2)
 
@@ -185,6 +185,8 @@ So, the gender pay gap is visible in this graph. The graph also illustrates that
 
 **Note:** This doesn't mean that the gender pay gap is less (or more) important than income inequality. These kinds of questions of importance are moral, philosophical, and political. Statistics cannot directly answer these kinds of questions, but they can provide information to inform the debate. 
 
+<a name="effsize"></a>
+
 ## Introducing effect size
 
 *Effect size* is a way of talking about the size of the difference between group means, relative to the standard deviations of those groups. We often use the letter *d* to stand for effect size. 
@@ -198,8 +200,6 @@ Below are some examples of small, medium, and large effect sizes. In these examp
 ```{r generate d1, echo=FALSE, cache=FALSE}
 source("make-effect-sizes.R")
 ```
-
-<a name="effsize"></a>
 
 ## Calculating effect size
 In this section, we're going to calculate the effect size for the gender pay gap, in our sample of people who earn less than $150k. We could do this using the `mean` and `sd` summaries we used previously to calculate means and standard deviations. However, there is a quicker way, using the _effsize_ package. 
