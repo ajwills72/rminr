@@ -1,6 +1,6 @@
 ---
 title: "Factorial differences"
-author: "Andy Wills"
+author: "Andy Wills and Clare Walsh"
 output: html_document
 ---
 
@@ -204,7 +204,7 @@ As covered in the [within-subject differences](anova1.html#threeplus), one of th
 
 Below are further instructions. In some cases, there are also examples of what your output should look like at each stage if you've got it right (recall that your BF may be slightly different to those shown). Once your script is working correctly, **copy and paste it into PsycEL**.
 
-Start a new R script, and begin it with `rm(list=ls()` to make sure you've cleared everything from your environment. Then, write R commands to do the following (see below).
+Start a new R script, and begin it with `rm(list=ls())` to make sure you've cleared everything from your environment. Then, write R commands to do the following (see below).
 Only include the commands that are needed to do this, and use meaningful names for your variables.
 
 1. Load packages and data, 

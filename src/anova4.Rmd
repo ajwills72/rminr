@@ -1,6 +1,6 @@
 ---
 title: "Factorial differences, part 2"
-author: "Andy Wills"
+author: "Andy Wills and Clare Walsh"
 output: html_document
 ---
 
@@ -82,7 +82,7 @@ bf2bs
 
 ### `[1] sex`
 
-The is the **main effect** of participant sex. More specifically, it is the hypothesis that `sex`  affects `rt`. This is compared against the hypothesis that there is no effect of sex.
+This is the **main effect** of participant sex. More specifically, it is the hypothesis that `sex`  affects `rt`. This is compared against the hypothesis that there is no effect of sex.
 
 The Bayes Factor is about 1.8, meaning the evidence for a main effect of sex is inconclusive.
 

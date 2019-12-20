@@ -10,7 +10,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
-<meta name="author" content="Andy Wills" />
+<meta name="author" content="Andy Wills and Clare Walsh" />
 
 
 <title>Understanding interactions</title>
@@ -364,7 +364,7 @@ summary {
 
 
 <h1 class="title toc-ignore">Understanding interactions</h1>
-<h4 class="author">Andy Wills</h4>
+<h4 class="author">Andy Wills and Clare Walsh</h4>
 
 </div>
 
@@ -600,7 +600,7 @@ words &lt;- read_csv(&quot;wordnaming2.csv&quot;)</code></pre>
 </div>
 <div id="explanation-of-command" class="section level4">
 <h4>Explanation of command</h4>
-<p>This works in much the same way as the <a href="exploring-incomes.html#graphs">histogram</a>, <a href="group-differences.html#density">density</a>, <a href="face-recog.html">bar</a>, and <a href="illusions.html">violin</a> plots you have made before:</p>
+<p>This works in much the same way as the <a href="vbg_groups.html#group-density">density</a> plots you have made before:</p>
 <p><code>graph1 %&gt;%</code> - Send the filtered data to the <code>ggplot</code> command that follows.</p>
 <p><code>ggplot()</code> - the command in R used to plot graphs.</p>
 <p><code>aes(x = Trial, y = RT, group = Training)</code> - This tells ggplot that you want trial type (<code>Trial</code>) on the x axis of your graph, and reaction time (<code>RT</code>) on the y axis. It also tells ggplot you want two lines, one for each of the training conditions (<code>group = Training</code>)</p>
@@ -614,8 +614,9 @@ words &lt;- read_csv(&quot;wordnaming2.csv&quot;)</code></pre>
 <div id="graph-4" class="section level3">
 <h3>Graph 4</h3>
 <p>Now you know how to produce line plots, the final part of this exercise is to produce a plot in which there is an interaction, a main effect of trial type, and <strong>no</strong> main effect of training type.</p>
-<p>Download <code>interact.csv</code> to your local computer. Use a spreadsheet application to add in the missing reaction times for Graph 4, and upload it to RStudio. If you need to revise how to download and upload data from RStudio, see previous worksheets on <a href="exploring-incomes.html#writing">downloading</a> and <a href="entering-data-by-hand.html#upload">uploading</a>.</p>
-<p>Then, reload <code>interact.csv</code> using <code>read_csv</code> and use the code above to produce the graph.</p>
+<p>Download <code>interact.csv</code> to your local computer. Use a spreadsheet application to add in the missing reaction times for Graph 4, and upload it to RStudio.</p>
+<p>If you need instructions on how to do this, see these worksheets on <a href="exploring-incomes.html#writing">downloading</a> and <a href="entering-data-by-hand.html#upload">uploading</a>. If you’re having trouble finding files within Rstudio, make sure you are looking in the <em>Files</em> tab, and make sure you are in the correct <em>folder</em>. The folder you are currently in is listed just to the right of the little picture of a house. You should be looking in <code>Home &gt; rminr-data</code>.</p>
+<p>Next, reload <code>interact.csv</code> using <code>read_csv</code> and use the code above to produce the graph.</p>
 <p><strong>Export your graph, download it to your local machine, and upload it to PsycEL</strong>. If you need a reminder of how to do this, see <a href="exploring-incomes.html#writing">downloading</a>.</p>
 <hr />
 <p>This material is distributed under a <a href="https://creativecommons.org/">Creative Commons</a> licence. CC-BY-SA 4.0.</p>

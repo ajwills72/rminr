@@ -1,6 +1,6 @@
 ---
 title: "Understanding interactions"
-author: "Andy Wills"
+author: "Andy Wills and Clare Walsh"
 output: html_document
 ---
 
@@ -272,7 +272,7 @@ graph1 %>%
 
 #### Explanation of command
 
-This works in much the same way as the [histogram](exploring-incomes.html#graphs), [density](group-differences.html#density), [bar](face-recog.html), and [violin](illusions.html) plots you have made before:
+This works in much the same way as the [density](vbg_groups.html#group-density) plots you have made before:
 
 `graph1 %>%` - Send the filtered data to the  `ggplot` command that follows.
 
@@ -294,9 +294,11 @@ This works in much the same way as the [histogram](exploring-incomes.html#graphs
 
 Now you know how to produce line plots, the final part of this exercise is to produce a plot in which there is an interaction, a main effect of trial type, and **no** main effect of training type.
 
-Download `interact.csv` to your local computer. Use a spreadsheet application to add in the missing reaction times for Graph 4, and upload it to RStudio. If you need to revise how to download and upload data from RStudio, see previous worksheets on [downloading](exploring-incomes.html#writing) and [uploading](entering-data-by-hand.html#upload).
+Download `interact.csv` to your local computer. Use a spreadsheet application to add in the missing reaction times for Graph 4, and upload it to RStudio. 
 
-Then, reload `interact.csv` using `read_csv` and use the code above to produce the graph. 
+If you need instructions on how to do this, see these worksheets on [downloading](exploring-incomes.html#writing) and [uploading](entering-data-by-hand.html#upload). If you're having trouble finding files within Rstudio, make sure you are looking in the _Files_ tab, and make sure you are in the correct _folder_. The folder you are currently in is listed just to the right of the little picture of a house. You should be looking in `Home > rminr-data`.
+
+Next, reload `interact.csv` using `read_csv` and use the code above to produce the graph. 
 
 **Export your graph, download it to your local machine, and upload it to PsycEL**. If you need a reminder of how to do this, see [downloading](exploring-incomes.html#writing). 
 
