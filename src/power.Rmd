@@ -177,7 +177,7 @@ So, if you can only test 25 people in a within-subjects study, then you will onl
 
 # Improving power without increasing sample size
 
-Whether you use a within- or a between-subjects design, another really good way to improve the statistical power of your experiment is to increase the experiment's effect size. Effect size is the mean difference divided by the variability, so you can increase effect size by either increasing the mean difference, or decreasing the varaibility, or both. There are some suggestions of how to do this in the "[more on power](effsize_from_papers.html)" worksheet.
+Whether you use a within- or a between-subjects design, another really good way to improve the statistical power of your experiment is to increase the experiment's effect size. Effect size is the mean difference divided by the variability, so you can increase effect size by either increasing the mean difference, or decreasing the variability, or both. There are some suggestions of how to do this in the "[more on power](effsize_from_papers.html)" worksheet.
 
 Psychologists are often surprised how much difference small increases in effect size can make. The relationship between effect size and sample size for 80% power is not a straight line. The required sample size drops off very rapidly as effect size increases, as shown in the graph below:
 
