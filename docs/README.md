@@ -129,6 +129,8 @@ These are intermediate-level materials, designed to follow on from _An Absolute 
 ## 6. Going further with R
 <a name="gfwr"></a>
 
+These are slightly more advanced materials, aimed at a final-year undergraduate psychology audience.
+
 - [Traditional ANOVA](more-on-anova.html): Just in case someone insists you use
   the older, p-value based, approach to ANOVA ... and you don't feel like
   saying 'no'.
