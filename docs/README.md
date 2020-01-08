@@ -13,9 +13,11 @@ The advantages of R over other software packages are discussed [here](why-r-stud
 
 3. [A Very Brief Guide to R](#vbgtr)
 
-4. [Intermediate Guide to R](#rmip) 
+4. [Research Methods in Practice (Quantitative section)](#rmip)
 
-5. [Going further with R](#gfwr) (work in progress)
+5. [Intermediate Guide to R](#rmip) 
+
+6. [Going further with R](#gfwr) (work in progress)
 
 ## 1. Absolute Beginners' Guide to R
 <a name="beginners"></a>
@@ -92,7 +94,17 @@ The _Absolute Beginners' Guide to R_ and _Putting R to Work_ provide, between th
 * [Evidence, part 2](vbg_corr.html): Bayes and traditional correlation, scatterplot
 
 
-## 4. Intermediate Guide to R
+## 4. Research Methods in Practice (Quantitiative section)
+
+<a name="rmip"></a>
+
+These are intermediate-level materials, designed to follow on from _An Absolute Beginners' Guide to R_ and _Putting R to work_ (or from _A Very Brief Guide to R_, if you're in a hurry). They are maintained by Ben Whalley on a separate site,
+but have been designed to fit in here in this sequence of materials. Only the _quantitative_ section of Ben's site contains information concerning the usage of R.
+
+- [Research Methods in Practice](https://benwhalley.github.io/rmip/overview-quantitative.html): Data handling, multiple regression.
+
+## 5. Intermediate Guide to R
+
 <a name="rmip"></a>
 
 These are intermediate-level materials, designed to follow on from _An Absolute Beginners' Guide to R_ and _Putting R to work_ (or from _A Very Brief Guide to R_, if you're in a hurry). They  provide analysis methods for conducting realistic, high-quality studies in psychology. They are aimed at a second-year undergraduate audience.
@@ -122,7 +134,7 @@ These are intermediate-level materials, designed to follow on from _An Absolute 
 
 - [Bettter graphs](better-graphs.html): Producing publication-quality graphs in R.
 
-## 5. Going further with R
+## 6. Going further with R
 <a name="gfwr"></a>
 
 The following materials are currently being developed, so on clicking these
