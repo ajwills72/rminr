@@ -94,7 +94,7 @@ The _Absolute Beginners' Guide to R_ and _Putting R to Work_ provide, between th
 * [Evidence, part 2](vbg_corr.html): Bayes and traditional correlation, scatterplot
 
 
-## 4. Research Methods in Practice (Quantitiative section)
+## 4. Research Methods in Practice (Quantitative section)
 
 <a name="rmip"></a>
 
