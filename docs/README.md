@@ -126,6 +126,9 @@ These are intermediate-level materials, designed to follow on from _An Absolute 
 - [Factorial differences](anova3.html): Two-factor Bayesian ANOVA (one within,
   one between)
 
+## 6. Going further with R
+<a name="gfwr"></a>
+
 - [Traditional ANOVA](more-on-anova.html): Just in case someone insists you use
   the older, p-value based, approach to ANOVA ... and you don't feel like
   saying 'no'.
@@ -134,8 +137,6 @@ These are intermediate-level materials, designed to follow on from _An Absolute 
 
 - [Bettter graphs](better-graphs.html): Producing publication-quality graphs in R.
 
-## 6. Going further with R
-<a name="gfwr"></a>
 
 The following materials are currently being developed, so on clicking these
 links, you may find just notes, or incomplete worksheets.
