@@ -105,7 +105,7 @@ It's important that we are able to anonymously identify the participant who gene
 
 Columns to keep: `subject_nr`
 
-Although this data file contains the participant number, this may not always be the case for other data sets. If you ever need to add participant numbers yourself, take a look at the [more on preprocessing](more-on-prepoc.html) worksheet.
+Although this data file contains the participant number, this may not always be the case for other data sets. If you ever need to add participant numbers yourself, take a look at the [more on preprocessing](more-on-preproc.html) worksheet.
 
 ## Responses
 
