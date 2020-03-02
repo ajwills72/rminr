@@ -54,9 +54,13 @@ In this worksheet, we'll cover  how to calculate a Bayes Factor for a simple _wi
 
 The technique we're going to use is called _ANOVA_, short for **AN**alysis **O**f **VA**riance. It's probably the most used analysis technique in psychology. Its name (ANOVA) has a long history that isn't really worth getting into here, particularly as it comes from our history in psychology of using p-values as evidence terms. As we've covered [previously](evidence.html#p-wrong), p-values have no interpretation that is simultaneously accurate, simple, and useful. In this worksheet, we focus on a form of ANOVA that calculates Bayes Factors, which are more easily interpretable. If you ever need to calculate a traditional ANOVA, take a look at the [traditional ANOVA](more-on-anova.html) worksheet.
 
-# Getting started, and clearing the environment
+# Getting started 
 
-In the [preprocessing](preproc.html) worksheet, you loaded data from a _git_ repository into an R project. Go back to that project now. You will notice that your _Environment_ still contains all the data frames from the previous worksheet. You can leave them there if you like, but some people prefer to start with a "clean slate". If that's you, you can remove data frames with the `rm` command (as in **r**e**m**ove). For example, to remove the `dat` data frame, type:
+In the [preprocessing](preproc.html) worksheet, you loaded data from a _git_ repository into an R project. **Go back to that project now.** This is very important. Do not stay in your current project, change your Rstudio project using the the drop-down list on the top right of Rstudio. Change to the  `rminr-data` project you used for the preprocessing worksheet. If you do not do this, the rest of this worksheet will not work. 
+
+# Clearing the environment
+
+You will notice that your _Environment_ still contains all the data frames from the previous worksheet. You can leave them there if you like, but some people prefer to start with a "clean slate". If that's you, you can remove data frames with the `rm` command (as in **r**e**m**ove). For example, to remove the `dat` data frame, type:
 
 ```{r rm}
 rm(dat)
