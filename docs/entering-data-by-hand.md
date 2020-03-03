@@ -68,6 +68,8 @@ We don't use RStudio to enter data by hand. Instead, we use a spreadsheet applic
 
 11. Click "OK".
 
+**`unexpected response from server` error**:  In rare cases, you might experience this error message. If so, changing to a different browser (e.g. Explorer or Edge) sometimes resolves this issue. The issue may be caused by certain specialist software running on _your_ machine, for example software installed to support dyslexia. If you are running such software and encounter this error, report the issue to the person or company that installed your support software.
+
 <a name="repeat"></a>
 
 ## Repeated measures, long format
