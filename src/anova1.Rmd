@@ -370,7 +370,7 @@ The goal in this exercise is to look at the reaction time difference between con
 
 2. Load the packages you need (`tidyverse` and `BayesFactor`).
 
-3. Load the raw data (using `read_csv`).
+3. Load the data file _wordnaming2.csv_ (using `read_csv`).
 
 4. Preprocess the data to include only the control condition, and **exclude the incongruent trials**. Use the `filter` command to do this.
 
