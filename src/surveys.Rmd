@@ -1,0 +1,136 @@
+---
+title: "Analysing survey data"
+author: "Paul Sharpe, Sophie Homer"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+## DEVELOPERS: Uncomment one option, as appropriate
+
+## Show only commands.
+## knitr::opts_chunk$set(echo = TRUE, message = FALSE, results='hide', fig.keep = 'none', comment=NA)
+
+## Show commands and putout.
+knitr::opts_chunk$set(echo = TRUE, comment=NA, cache = TRUE)
+```
+
+# Contents
+
+- [Introduction](#intro)
+
+- [Getting started](#start)
+
+- [TODO: Reverse score some survey items](#reverse)
+
+- [TODO: Calculate a total score for pre and post](#score)
+
+- [TODO: Calculate cronbach’s alpha](#cronbach)
+
+- [TODO: Compare baseline SSES scores between conditions using a one-way ANOVA (hoping not to find differences at baseline)](#baseline)
+
+- [# TODO: Run a within-between ANOVA with time as the repeated measures factor and condition as the between-subjects factor](#prepost)
+
+<a name="intro"></a>
+
+# Introduction
+
+In this worksheet, we'll analyse data from a survey called the State Self-Esteem Scale (SSES). The SSES consists of 20 questions, each of which is scored from 0 (Not at all) to 4 (Extremely). 
+
+<a name="start"></a>
+
+# Getting started
+
+We'll be using data from an experiment which explored mental imagery and self-esteem. Create a new R project and upload the file `state-self-esteem.sav`, which you will find in the git repository we used [previously](preproc.html#load).
+
+FIXME <span style="color: red;">Add state-self-esteem.sav to rminr-data</span>
+
+```{r init-load, message=FALSE} 
+library(tidyverse)
+# TODO: Should we leave this as SPSS to teach read.spss()?
+library(foreign)
+sses <- read.spss(paste0('state-self-esteem.sav'), to.data.frame=TRUE)
+```
+
+## Pre-processing
+
+```{r pre-process}
+sses_pre_raw  <- sses %>% select(1, 5:25) %>%
+    set_names(~ str_to_lower(.) %>%
+                  str_replace_all("pre_sse_", "q")) %>%
+  mutate(condition = factor(condition))
+sses_post_raw <- sses %>% select(1, 25:45) %>%
+      set_names(~ str_to_lower(.) %>%
+                  str_replace_all("post_sse_", "q")) %>%
+  mutate(condition = factor(condition))
+```
+
+<a name="reverse"></a>
+
+# Reverse score survey
+
+Explain reverse coding.
+
+
+```{r reverse}
+# Reverse score survey items
+# @param scores raw scores
+# @param reverse character vector of columns to be reverse scored
+# @param max integer value of maximum score
+reverse_score_survey <- function(scores, reverse, max) {
+  reverse_score <- function(score) { max - score } # for scores which start at 0, for starting at 1, max + 1 - score
+  scores %>% mutate_at(reverse, reverse_score)
+}
+
+reverse_questions <- c('q2', 'q4', 'q5', 'q7', 'q8', 'q10', 'q13', 'q15', 'q16', 'q17', 'q18',
+                       'q19', 'q20')
+sses_pre <- sses_pre_raw %>%
+  group_by(condition) %>%
+  group_modify(~ reverse_score_survey(.x, reverse_questions, 4))
+sses_post <- sses_post_raw %>%
+  group_by(condition) %>%
+  group_modify(~ reverse_score_survey(.x, reverse_questions, 4))
+```
+
+<a name="score"></a>
+
+# Calculate a total score for pre and post
+
+<a name="cronbach"></a>
+
+# Calculate Cronbach’s alpha
+
+```{r cronbach}
+library(psy)
+sses_cronbach <- function(scores) {
+  cronbach <- cronbach(select(scores,q1:q20))
+  data.frame(cronbach$alpha)
+}
+
+sses_pre_cronbach <- sses_pre %>%
+  group_by(condition) %>%
+  group_modify(~ sses_cronbach(.x))
+
+sses_post_cronbach <- sses_post %>%
+  group_by(condition) %>%
+  group_modify(~ sses_cronbach(.x))
+```
+
+<a name="baseline"></a>
+
+# Compare baseline SSES scores between conditions
+
+* one-way ANOVA
+* hope not to find differences
+
+<a name="prepost"></a>
+
+# Pre-post
+
+* Within-between ANOVA sses ~ time*condition
+* time is the repeated measures factor
+* condition is the between-subjects factor
+
+___
+
+This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0. 
+
