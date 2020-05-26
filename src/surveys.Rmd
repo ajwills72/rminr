@@ -1,6 +1,6 @@
 ---
 title: "Analysing survey data"
-author: "Paul Sharpe, Sophie Homer"
+author: "Paul Sharpe, Sophie Homer, Andy Wills"
 output: html_document
 ---
 
@@ -20,21 +20,25 @@ knitr::opts_chunk$set(echo = TRUE, comment=NA, cache = TRUE)
 
 - [Getting started](#start)
 
-- [Reverse score some survey items](#reverse)
+- [Pre-processing](#preprocessing)
 
-- [Calculate a total score for pre and post](#score)
+- [Reverse scoring survey items](#reverse)
 
-- [Calculate cronbach’s alpha](#cronbach)
+- [Calculating survey scores](#score)
 
-- [Compare baseline SSES scores between conditions using a one-way ANOVA (hoping not to find differences at baseline)](#baseline)
+- [Calculating Cronbach’s alpha](#cronbach)
 
-- [Run a within-between ANOVA with time as the repeated measures factor and condition as the between-subjects factor](#prepost)
+- [Comparing baseline scores between conditions (one-way ANOVA)](#baseline)
+
+- [Comparing scores before and after an intervention (within-between ANOVA)](#prepost)
 
 <a name="intro"></a>
 
 # Introduction
 
-In this worksheet, we'll analyse data from a survey called the State Self-Esteem Scale (SSES). The SSES consists of 20 questions, each of which is scored from 0 (Not at all) to 4 (Extremely). 
+A wide range of psychological constructs are measured using surveys. A survey is a set of questions designed to measure a specific construct, for example self-esteem. Answers to survey questions are often Likert scales. These allow a participant to express how much they agree or disagree with a particular statement e.g. 0=Not at all, 1=A little, 2=Somewhat, 3=A lot, 4=Extremely. A participant's answers are used to calculate a score which measures the construct, e.g. level of depression. The questions themsleves are carefully chosen, often using a method called factor analysis. This ensures that the scale is a valid and relible. A scale is valid if it is a true measure of the construct, in this example it accurately reflects levels of self-esteeem, rather than something else. TODO explain internal and external reliability.
+
+In this worksheet, we'll cover some common techniques which you are likely to use when processing survey data. We'll be using real data from two different surveys. The DASS-21 is a 21-item scale for measuring depression, anxiety and stress. The State Self-Esteem Scale (SSES) is a 20-item survey used to measure short-lived (state) changes in self-esteem.
 
 <a name="start"></a>
 
@@ -50,26 +54,36 @@ rm(list = ls())
 library(tidyverse)
 ```
 
-## Pre-processing
+<a name="preprocessing"></a>
+
+# Pre-processing
+
+Many software packages can be used to collect survey data. These include [JISC](https://www.jisc.ac.uk/), [Gorilla Survey](https://gorilla.sc/), [OpenSesame](https://osdoc.cogsci.nl/),
+
+TODO any more...?
+
+Most of these software packages will allow you to save the survey data as a CSV file.
 
 ```{r pre-process-dass}
 dass21_raw <- read_csv("dass21.csv") %>%
   select(partID, Age:DASSS)
 ```
 
-### Missing data
+## Missing data
 
 ```{r missing}
 slice(dass21_raw, 73:76)
 dass21 <- dass21_raw %>% drop_na()
 ```
 
-For the remainder of the worksheet, we'll be using data from an experiment which explored mental imagery and self-esteem. This data was saved from SPSS. R can read SPSS `.sav` files into a data frame using the `read.spss()` function from the `foreign` package.
+We'll also be using data from an experiment which explored mental imagery and self-esteem. This data was saved from SPSS. R can read SPSS `.sav` files into a data frame using the `read.spss()` function from the `foreign` package.
 
 ```{r read-sses}
 library(foreign)
 sses <- read.spss(paste0('state-self-esteem.sav'), to.data.frame=TRUE)
 ```
+
+The SSES consists of 20 questions, each of which is scored from 0 (Not at all) to 4 (Extremely).
 
 ```{r pre-process-sses}
 sses_pre_raw  <- sses %>% select(1, 5:25) %>%
@@ -136,12 +150,19 @@ sses_post %>%
   summarise(mean = mean(total), sd = sd(total))
 ```
 
+## TODO Could show how to calculate subscale scores using DASS-21?
+
+DASS-21 came from the tech office with subscale scores already calculated.
+
 <a name="cronbach"></a>
 
 # Calculate Cronbach’s alpha
 
 ```{r cronbach}
 library(psy)
+
+#TODO overall alpha
+
 sses_cronbach <- function(scores) {
   cronbach <- cronbach(select(scores,q1:q20))
   data.frame(cronbach$alpha)
@@ -197,6 +218,12 @@ bf[4] / bf[3] # condition * time
 ```
 
 * TODO <span style="color: red;">Given that there's an interaction, how much should we say about [pairwise comparisons](https://ajwills72.github.io/rminr/anova1.html#pairs)?</span>
+
+# References
+
+Heatherton, T. F., & Polivy, J. (1991). Development and validation of a scale for measuring state self-esteem. _Journal of Personality and Social Psychology, 60(6)_, 895.
+
+Osman, A., Wong, J. L., Bagge, C. L., Freedenthal, S., Gutierrez, P. M., & Lozano, G. (2012). The Depression Anxiety Stress Scales—21 (DASS-21): Further Examination of Dimensions, Scale Reliability, and Correlates. _Journal of Clinical Psychology, 68(12)_, 1322–1338. https://doi.org/10.1002/jclp.21908
 
 ___
 
