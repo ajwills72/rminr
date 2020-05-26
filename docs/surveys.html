@@ -9,7 +9,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
-<meta name="author" content="Paul Sharpe, Sophie Homer" />
+<meta name="author" content="Paul Sharpe, Sophie Homer, Andy Wills" />
 
 
 <title>Analysing survey data</title>
@@ -363,7 +363,7 @@ summary {
 
 
 <h1 class="title toc-ignore">Analysing survey data</h1>
-<h4 class="author">Paul Sharpe, Sophie Homer</h4>
+<h4 class="author">Paul Sharpe, Sophie Homer, Andy Wills</h4>
 
 </div>
 
@@ -373,17 +373,19 @@ summary {
 <ul>
 <li><p><a href="#intro">Introduction</a></p></li>
 <li><p><a href="#start">Getting started</a></p></li>
-<li><p><a href="#reverse">Reverse score some survey items</a></p></li>
-<li><p><a href="#score">Calculate a total score for pre and post</a></p></li>
-<li><p><a href="#cronbach">Calculate cronbach’s alpha</a></p></li>
-<li><p><a href="#baseline">Compare baseline SSES scores between conditions using a one-way ANOVA (hoping not to find differences at baseline)</a></p></li>
-<li><p><a href="#prepost">Run a within-between ANOVA with time as the repeated measures factor and condition as the between-subjects factor</a></p></li>
+<li><p><a href="#preprocessing">Pre-processing</a></p></li>
+<li><p><a href="#reverse">Reverse scoring survey items</a></p></li>
+<li><p><a href="#score">Calculating survey scores</a></p></li>
+<li><p><a href="#cronbach">Calculating Cronbach’s alpha</a></p></li>
+<li><p><a href="#baseline">Comparing baseline scores between conditions (one-way ANOVA)</a></p></li>
+<li><p><a href="#prepost">Comparing scores before and after an intervention (within-between ANOVA)</a></p></li>
 </ul>
 <p><a name="intro"></a></p>
 </div>
 <div id="introduction" class="section level1">
 <h1>Introduction</h1>
-<p>In this worksheet, we’ll analyse data from a survey called the State Self-Esteem Scale (SSES). The SSES consists of 20 questions, each of which is scored from 0 (Not at all) to 4 (Extremely).</p>
+<p>A wide range of psychological constructs are measured using surveys. A survey is a set of questions designed to measure a specific construct, for example self-esteem. Answers to survey questions are often Likert scales. These allow a participant to express how much they agree or disagree with a particular statement e.g. 0=Not at all, 1=A little, 2=Somewhat, 3=A lot, 4=Extremely. A participant’s answers are used to calculate a score which measures the construct, e.g. level of depression. The questions themsleves are carefully chosen, often using a method called factor analysis. This ensures that the scale is a valid and relible. A scale is valid if it is a true measure of the construct, in this example it accurately reflects levels of self-esteeem, rather than something else. TODO explain internal and external reliability.</p>
+<p>In this worksheet, we’ll cover some common techniques which you are likely to use when processing survey data. We’ll be using real data from two different surveys. The DASS-21 is a 21-item scale for measuring depression, anxiety and stress. The State Self-Esteem Scale (SSES) is a 20-item survey used to measure short-lived (state) changes in self-esteem.</p>
 <p><a name="start"></a></p>
 </div>
 <div id="getting-started" class="section level1">
@@ -393,8 +395,13 @@ summary {
 <pre class="r"><code>## Clear the environment
 rm(list = ls())
 library(tidyverse)</code></pre>
-<div id="pre-processing" class="section level2">
-<h2>Pre-processing</h2>
+<p><a name="preprocessing"></a></p>
+</div>
+<div id="pre-processing" class="section level1">
+<h1>Pre-processing</h1>
+<p>Many software packages can be used to collect survey data. These include <a href="https://www.jisc.ac.uk/">JISC</a>, <a href="https://gorilla.sc/">Gorilla Survey</a>, <a href="https://osdoc.cogsci.nl/">OpenSesame</a>,</p>
+<p>TODO any more…?</p>
+<p>Most of these software packages will allow you to save the survey data as a CSV file.</p>
 <pre class="r"><code>dass21_raw &lt;- read_csv(&quot;dass21.csv&quot;) %&gt;%
   select(partID, Age:DASSS)</code></pre>
 <pre><code>Parsed with column specification:
@@ -407,8 +414,8 @@ cols(
   PageOrder = col_number()
 )</code></pre>
 <pre><code>See spec(...) for full column specifications.</code></pre>
-<div id="missing-data" class="section level3">
-<h3>Missing data</h3>
+<div id="missing-data" class="section level2">
+<h2>Missing data</h2>
 <pre class="r"><code>slice(dass21_raw, 73:76)</code></pre>
 <pre><code># A tibble: 4 x 29
   partID   Age Gender Stage DASS1 DASS2 DASS3 DASS4 DASS5 DASS6 DASS7 DASS8
@@ -422,9 +429,10 @@ cols(
 #   DASS17 &lt;dbl&gt;, DASS18 &lt;dbl&gt;, DASS19 &lt;dbl&gt;, DASS20 &lt;dbl&gt;, DASS21 &lt;dbl&gt;,
 #   DASSscore &lt;dbl&gt;, DASSA &lt;dbl&gt;, DASSD &lt;dbl&gt;, DASSS &lt;dbl&gt;</code></pre>
 <pre class="r"><code>dass21 &lt;- dass21_raw %&gt;% drop_na()</code></pre>
-<p>For the remainder of the worksheet, we’ll be using data from an experiment which explored mental imagery and self-esteem. This data was saved from SPSS. R can read SPSS <code>.sav</code> files into a data frame using the <code>read.spss()</code> function from the <code>foreign</code> package.</p>
+<p>We’ll also be using data from an experiment which explored mental imagery and self-esteem. This data was saved from SPSS. R can read SPSS <code>.sav</code> files into a data frame using the <code>read.spss()</code> function from the <code>foreign</code> package.</p>
 <pre class="r"><code>library(foreign)
 sses &lt;- read.spss(paste0(&#39;state-self-esteem.sav&#39;), to.data.frame=TRUE)</code></pre>
+<p>The SSES consists of 20 questions, each of which is scored from 0 (Not at all) to 4 (Extremely).</p>
 <pre class="r"><code>sses_pre_raw  &lt;- sses %&gt;% select(1, 5:25) %&gt;%
     set_names(~ str_to_lower(.) %&gt;%
                   str_replace_all(&quot;pre_sse_&quot;, &quot;q&quot;)) %&gt;%
@@ -441,7 +449,6 @@ sses_post_raw &lt;- sses %&gt;% select(1, 25:45) %&gt;%
 sses_post_raw$condition &lt;- recode_factor(sses_post_raw$condition, `0` = &#39;control&#39;,
                                         `1` = &#39;self&#39;, `2` = &#39;other&#39;)</code></pre>
 <p><a name="reverse"></a></p>
-</div>
 </div>
 </div>
 <div id="reverse-score-survey" class="section level1">
@@ -491,11 +498,18 @@ sses_post %&gt;%
 1 control    29.3  9.19
 2 self       37.7  7.58
 3 other      28.6  7.44</code></pre>
+<div id="todo-could-show-how-to-calculate-subscale-scores-using-dass-21" class="section level2">
+<h2>TODO Could show how to calculate subscale scores using DASS-21?</h2>
+<p>DASS-21 came from the tech office with subscale scores already calculated.</p>
 <p><a name="cronbach"></a></p>
+</div>
 </div>
 <div id="calculate-cronbachs-alpha" class="section level1">
 <h1>Calculate Cronbach’s alpha</h1>
 <pre class="r"><code>library(psy)
+
+#TODO overall alpha
+
 sses_cronbach &lt;- function(scores) {
   cronbach &lt;- cronbach(select(scores,q1:q20))
   data.frame(cronbach$alpha)
@@ -610,6 +624,11 @@ Bayes factor type: BFlinearModel, JZS</code></pre>
 <ul>
 <li>TODO <span style="color: red;">Given that there’s an interaction, how much should we say about <a href="https://ajwills72.github.io/rminr/anova1.html#pairs">pairwise comparisons</a>?</span></li>
 </ul>
+</div>
+<div id="references" class="section level1">
+<h1>References</h1>
+<p>Heatherton, T. F., &amp; Polivy, J. (1991). Development and validation of a scale for measuring state self-esteem. <em>Journal of Personality and Social Psychology, 60(6)</em>, 895.</p>
+<p>Osman, A., Wong, J. L., Bagge, C. L., Freedenthal, S., Gutierrez, P. M., &amp; Lozano, G. (2012). The Depression Anxiety Stress Scales—21 (DASS-21): Further Examination of Dimensions, Scale Reliability, and Correlates. <em>Journal of Clinical Psychology, 68(12)</em>, 1322–1338. <a href="https://doi.org/10.1002/jclp.21908" class="uri">https://doi.org/10.1002/jclp.21908</a></p>
 <hr />
 <p>This material is distributed under a <a href="https://creativecommons.org/">Creative Commons</a> licence. CC-BY-SA 4.0.</p>
 </div>
