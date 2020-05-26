@@ -57,14 +57,16 @@ sses <- read.spss(paste0('state-self-esteem.sav'), to.data.frame=TRUE)
 sses_pre_raw  <- sses %>% select(1, 5:25) %>%
     set_names(~ str_to_lower(.) %>%
                   str_replace_all("pre_sse_", "q")) %>%
-  mutate(condition = factor(condition))
+  mutate(subj = factor(partid), condition = factor(condition)) %>%
+  select(subj, condition, q1:q20)
 sses_pre_raw$condition <- recode_factor(sses_pre_raw$condition, `0` = 'control',
                                         `1` = 'self', `2` = 'other')
 
 sses_post_raw <- sses %>% select(1, 25:45) %>%
       set_names(~ str_to_lower(.) %>%
                   str_replace_all("post_sse_", "q")) %>%
-  mutate(condition = factor(condition))
+  mutate(subj = factor(partid), condition = factor(condition)) %>%
+  select(subj, condition, q1:q20)
 sses_post_raw$condition <- recode_factor(sses_post_raw$condition, `0` = 'control',
                                         `1` = 'self', `2` = 'other')
 
@@ -76,8 +78,7 @@ sses_post_raw$condition <- recode_factor(sses_post_raw$condition, `0` = 'control
 
 Explain reverse coding.
 
-Some surveys have some reverse code items because...
-
+Some surveys have some reverse coded items because...
 
 ```{r reverse}
 # Reverse score survey items
@@ -145,6 +146,11 @@ sses_post_cronbach
 
 * one-way ANOVA
 * hope not to find differences
+
+```{r baseline}
+library(afex)
+aov_car(formula = total ~ condition + Error(subj), data = sses_pre)
+```
 
 <a name="prepost"></a>
 
