@@ -20,15 +20,15 @@ knitr::opts_chunk$set(echo = TRUE, comment=NA, cache = TRUE)
 
 - [Getting started](#start)
 
-- [TODO: Reverse score some survey items](#reverse)
+- [Reverse score some survey items](#reverse)
 
-- [TODO: Calculate a total score for pre and post](#score)
+- [Calculate a total score for pre and post](#score)
 
-- [TODO: Calculate cronbach’s alpha](#cronbach)
+- [Calculate cronbach’s alpha](#cronbach)
 
-- [TODO: Compare baseline SSES scores between conditions using a one-way ANOVA (hoping not to find differences at baseline)](#baseline)
+- [Compare baseline SSES scores between conditions using a one-way ANOVA (hoping not to find differences at baseline)](#baseline)
 
-- [# TODO: Run a within-between ANOVA with time as the repeated measures factor and condition as the between-subjects factor](#prepost)
+- [Run a within-between ANOVA with time as the repeated measures factor and condition as the between-subjects factor](#prepost)
 
 <a name="intro"></a>
 
@@ -57,16 +57,16 @@ sses <- read.spss(paste0('state-self-esteem.sav'), to.data.frame=TRUE)
 sses_pre_raw  <- sses %>% select(1, 5:25) %>%
     set_names(~ str_to_lower(.) %>%
                   str_replace_all("pre_sse_", "q")) %>%
-  mutate(subj = factor(partid), condition = factor(condition)) %>%
-  select(subj, condition, q1:q20)
+  mutate(subj = factor(partid), condition = factor(condition), time = factor('pre')) %>%
+  select(subj, condition, time, q1:q20)
 sses_pre_raw$condition <- recode_factor(sses_pre_raw$condition, `0` = 'control',
                                         `1` = 'self', `2` = 'other')
 
 sses_post_raw <- sses %>% select(1, 25:45) %>%
       set_names(~ str_to_lower(.) %>%
                   str_replace_all("post_sse_", "q")) %>%
-  mutate(subj = factor(partid), condition = factor(condition)) %>%
-  select(subj, condition, q1:q20)
+  mutate(subj = factor(partid), condition = factor(condition), time = factor('post')) %>%
+  select(subj, condition, time, q1:q20)
 sses_post_raw$condition <- recode_factor(sses_post_raw$condition, `0` = 'control',
                                         `1` = 'self', `2` = 'other')
 
@@ -107,12 +107,12 @@ sses_post <- sses_post_raw %>%
 # Calculate a total score for pre and post
 
 ```{r score}
-sses_pre  <- sses_pre  %>% mutate(total = rowSums(.[3:22]))
+sses_pre <- sses_pre %>% mutate(total = rowSums(.[4:23]))
 sses_pre %>%
   group_by(condition) %>%
   summarise(mean = mean(total), sd = sd(total))
 
-sses_post <- sses_post %>% mutate(total = rowSums(.[3:22]))
+sses_post <- sses_post %>% mutate(total = rowSums(.[4:23]))
 sses_post %>%
   group_by(condition) %>%
   summarise(mean = mean(total), sd = sd(total))
@@ -148,8 +148,11 @@ sses_post_cronbach
 * hope not to find differences
 
 ```{r baseline}
-library(afex)
-aov_car(formula = total ~ condition + Error(subj), data = sses_pre)
+library(BayesFactor, quietly = TRUE)
+# FIXME: in base::try(expression, silent = silent) : not enough observations
+bf <- anovaBF(formula = total ~ condition + subj, data = sses_pre, whichRandom = 'subj')
+bf <- anovaBF(formula = total ~ condition, data = sses_pre)
+bf
 ```
 
 <a name="prepost"></a>
@@ -159,6 +162,23 @@ aov_car(formula = total ~ condition + Error(subj), data = sses_pre)
 * Within-between ANOVA sses ~ time*condition
 * time is the repeated measures factor
 * condition is the between-subjects factor
+
+```{r prepost}
+
+# FIXME: Is there a better way to combine time avoiding 'Unequal factor levels: ... ' warning
+sses_pre_post <- bind_rows(sses_pre, sses_post) %>%
+  mutate(time = factor(time))
+
+bf <- anovaBF(formula = total ~ time*condition + subj,
+              data = sses_pre_post, whichRandom = 'subj')
+
+bf
+bf[1]         # condition
+bf[2]         # time
+bf[4] / bf[3] # condition * time
+```
+
+* TODO <span style="color: red;">Given that there's an interaction, how much should we say about [pairwise comparisons](https://ajwills72.github.io/rminr/anova1.html#pairs)?</span>
 
 ___
 
