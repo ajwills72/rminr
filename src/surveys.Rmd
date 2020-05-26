@@ -58,10 +58,16 @@ sses_pre_raw  <- sses %>% select(1, 5:25) %>%
     set_names(~ str_to_lower(.) %>%
                   str_replace_all("pre_sse_", "q")) %>%
   mutate(condition = factor(condition))
+sses_pre_raw$condition <- recode_factor(sses_pre_raw$condition, `0` = 'control',
+                                        `1` = 'self', `2` = 'other')
+
 sses_post_raw <- sses %>% select(1, 25:45) %>%
       set_names(~ str_to_lower(.) %>%
                   str_replace_all("post_sse_", "q")) %>%
   mutate(condition = factor(condition))
+sses_post_raw$condition <- recode_factor(sses_post_raw$condition, `0` = 'control',
+                                        `1` = 'self', `2` = 'other')
+
 ```
 
 <a name="reverse"></a>
@@ -69,6 +75,8 @@ sses_post_raw <- sses %>% select(1, 25:45) %>%
 # Reverse score survey
 
 Explain reverse coding.
+
+Some surveys have some reverse code items because...
 
 
 ```{r reverse}
@@ -85,15 +93,29 @@ reverse_questions <- c('q2', 'q4', 'q5', 'q7', 'q8', 'q10', 'q13', 'q15', 'q16',
                        'q19', 'q20')
 sses_pre <- sses_pre_raw %>%
   group_by(condition) %>%
-  group_modify(~ reverse_score_survey(.x, reverse_questions, 4))
+  group_modify(~ reverse_score_survey(.x, reverse_questions, 4)) %>%
+  ungroup()
 sses_post <- sses_post_raw %>%
   group_by(condition) %>%
-  group_modify(~ reverse_score_survey(.x, reverse_questions, 4))
+  group_modify(~ reverse_score_survey(.x, reverse_questions, 4)) %>%
+  ungroup()
 ```
 
 <a name="score"></a>
 
 # Calculate a total score for pre and post
+
+```{r score}
+sses_pre  <- sses_pre  %>% mutate(total = rowSums(.[3:22]))
+sses_pre %>%
+  group_by(condition) %>%
+  summarise(mean = mean(total), sd = sd(total))
+
+sses_post <- sses_post %>% mutate(total = rowSums(.[3:22]))
+sses_post %>%
+  group_by(condition) %>%
+  summarise(mean = mean(total), sd = sd(total))
+```
 
 <a name="cronbach"></a>
 
@@ -109,10 +131,12 @@ sses_cronbach <- function(scores) {
 sses_pre_cronbach <- sses_pre %>%
   group_by(condition) %>%
   group_modify(~ sses_cronbach(.x))
+sses_pre_cronbach
 
 sses_post_cronbach <- sses_post %>%
   group_by(condition) %>%
   group_modify(~ sses_cronbach(.x))
+sses_post_cronbach
 ```
 
 <a name="baseline"></a>
