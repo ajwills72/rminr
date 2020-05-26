@@ -40,20 +40,38 @@ In this worksheet, we'll analyse data from a survey called the State Self-Esteem
 
 # Getting started
 
-We'll be using data from an experiment which explored mental imagery and self-esteem. Create a new R project and upload the file `state-self-esteem.sav`, which you will find in the git repository we used [previously](preproc.html#load).
+Create a new R project and upload the files `dass21.csv` and `state-self-esteem.sav`, which you will find in the git repository we used [previously](preproc.html#load).
 
-FIXME <span style="color: red;">Add state-self-esteem.sav to rminr-data</span>
+FIXME <span style="color: red;">Add data sets to rminr-data</span>
 
-```{r init-load, message=FALSE} 
+```{r init-load, message=FALSE}
+## Clear the environment
+rm(list = ls())
 library(tidyverse)
-# TODO: Should we leave this as SPSS to teach read.spss()?
-library(foreign)
-sses <- read.spss(paste0('state-self-esteem.sav'), to.data.frame=TRUE)
 ```
 
 ## Pre-processing
 
-```{r pre-process}
+```{r pre-process-dass}
+dass21_raw <- read_csv("dass21.csv") %>%
+  select(partID, Age:DASSS)
+```
+
+### Missing data
+
+```{r missing}
+slice(dass21_raw, 73:76)
+dass21 <- dass21_raw %>% drop_na()
+```
+
+For the remainder of the worksheet, we'll be using data from an experiment which explored mental imagery and self-esteem. This data was saved from SPSS. R can read SPSS `.sav` files into a data frame using the `read.spss()` function from the `foreign` package.
+
+```{r read-sses}
+library(foreign)
+sses <- read.spss(paste0('state-self-esteem.sav'), to.data.frame=TRUE)
+```
+
+```{r pre-process-sses}
 sses_pre_raw  <- sses %>% select(1, 5:25) %>%
     set_names(~ str_to_lower(.) %>%
                   str_replace_all("pre_sse_", "q")) %>%
