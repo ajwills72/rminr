@@ -145,7 +145,7 @@ sses_pre_raw$condition <- recode_factor(sses_pre_raw$condition, `0` = 'control',
 Our data frame now has intuitive column and factor names:
 
 ```{r, R.options = list(width = 100)}
-sses_pre_raw %>% head()
+sses_pre_raw %>% head(3)
 ```
 
 We use a similar pipeline to create a tidy data frame (`sses_post_raw`) containing the post-intervention SSES data.
@@ -160,7 +160,11 @@ sses_post_raw$condition <- recode_factor(sses_post_raw$condition, `0` = 'control
 
 ```
 
-**Explanation of command:** This is indentical to the previous pipeline, except that the post-intervention SSES data are in columns `26:45`, and these columns have the prefix `post_sse_` rather than `pre_sse_`.
+**Explanation of command:** This is indentical to the previous pipeline, except that the post-intervention SSES data are in columns `26:45`, these columns have the prefix `post_sse_` rather than `pre_sse_`, and we use the value `post` in our `time` factor.
+
+```{r, R.options = list(width = 100)}
+sses_post_raw %>% head(3)
+```
 
 <a name="reverse"></a>
 

@@ -464,14 +464,11 @@ sses &lt;- read.spss(paste0(&#39;state-self-esteem.sav&#39;), to.data.frame=TRUE
                                         `1` = &#39;self&#39;, `2` = &#39;other&#39;)</code></pre>
 <p><strong>Explanation of command:</strong> We use <code>recode_factor()</code> to rename the levels of the experimental condition (<code>sses_pre_raw$condition</code>). The current factor level name goes on the left hand side of the <code>=</code>, the new name goes on the right hand side. Notice that the numbers need to be in backticks. The renamed factor levels are reassigned to the same column <code>sses_pre_raw$condition</code>.</p>
 <p>Our data frame now has intuitive column and factor names:</p>
-<pre class="r"><code>sses_pre_raw %&gt;% head()</code></pre>
+<pre class="r"><code>sses_pre_raw %&gt;% head(3)</code></pre>
 <pre><code>  subj condition time q1 q2 q3 q4 q5 q6 q7 q8 q9 q10 q11 q12 q13 q14 q15 q16 q17 q18 q19 q20
 1   47   control  pre  3  0  2  2  1  3  4  3  3   4   4   3   2   3   4   2   1   2   3   1
 2   51   control  pre  2  1  3  2  3  3  4  4  3   2   2   3   1   3   4   4   2   4   2   2
-3   57   control  pre  3  4  0  4  4  0  0  4  2   4   2   3   4   4   4   4   4   4   4   4
-4   59   control  pre  2  1  0  2  2  0  3  1  2   2   2   2   1   1   3   1   1   2   3   4
-5   65   control  pre  2  3  2  2  3  2  2  2  2   3   2   2   3   2   3   3   3   3   2   2
-6   69   control  pre  2  3  3  4  3  1  4  2  2   3   2   1   3   1   4   3   4   4   4   4</code></pre>
+3   57   control  pre  3  4  0  4  4  0  0  4  2   4   2   3   4   4   4   4   4   4   4   4</code></pre>
 <p>We use a similar pipeline to create a tidy data frame (<code>sses_post_raw</code>) containing the post-intervention SSES data.</p>
 <pre class="r"><code>sses_post_raw &lt;- sses %&gt;% select(1, 25:45) %&gt;%
   set_names(~ str_to_lower(.) %&gt;% str_replace_all(&quot;post_sse_&quot;, &quot;q&quot;)) %&gt;%
@@ -479,7 +476,12 @@ sses &lt;- read.spss(paste0(&#39;state-self-esteem.sav&#39;), to.data.frame=TRUE
   select(subj, condition, time, q1:q20)
 sses_post_raw$condition &lt;- recode_factor(sses_post_raw$condition, `0` = &#39;control&#39;,
                                         `1` = &#39;self&#39;, `2` = &#39;other&#39;)</code></pre>
-<p><strong>Explanation of command:</strong> This is indentical to the previous pipeline, except that the post-intervention SSES data are in columns <code>26:45</code>, and these columns have the prefix <code>post_sse_</code> rather than <code>pre_sse_</code>.</p>
+<p><strong>Explanation of command:</strong> This is indentical to the previous pipeline, except that the post-intervention SSES data are in columns <code>26:45</code>, these columns have the prefix <code>post_sse_</code> rather than <code>pre_sse_</code>, and we use the value <code>post</code> in our <code>time</code> factor.</p>
+<pre class="r"><code>sses_post_raw %&gt;% head(3)</code></pre>
+<pre><code>  subj condition time q1 q2 q3 q4 q5 q6 q7 q8 q9 q10 q11 q12 q13 q14 q15 q16 q17 q18 q19 q20
+1   47   control post  3  2  3  2  3  2  4  3  3   4   4   3   2   2   4   3   2   3   3   3
+2   51   control post  3  1  3  1  3  3  3  3  4   3   2   2   2   3   4   4   2   4   2   2
+3   57   control post  3  4  0  4  4  2  0  4  2   4   2   3   4   4   4   4   4   4   4   4</code></pre>
 <p><a name="reverse"></a></p>
 </div>
 </div>
