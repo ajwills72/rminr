@@ -373,7 +373,7 @@ summary {
 <ul>
 <li><p><a href="#intro">Introduction</a></p></li>
 <li><p><a href="#start">Getting started</a></p></li>
-<li><p><a href="#preprocessing">Pre-processing</a></p></li>
+<li><p><a href="#preprocessing">Preprocessing</a></p></li>
 <li><p><a href="#reverse">Reverse scoring survey items</a></p></li>
 <li><p><a href="#score">Calculating survey scores</a></p></li>
 <li><p><a href="#cronbach">Calculating Cronbach’s alpha</a></p></li>
@@ -397,13 +397,16 @@ rm(list = ls())
 library(tidyverse)</code></pre>
 <p><a name="preprocessing"></a></p>
 </div>
-<div id="pre-processing" class="section level1">
-<h1>Pre-processing</h1>
+<div id="preprocessing" class="section level1">
+<h1>Preprocessing</h1>
 <p>Many software packages can be used to collect survey data. These include <a href="https://www.jisc.ac.uk/">JISC</a>, <a href="https://gorilla.sc/">Gorilla Survey</a>, <a href="https://osdoc.cogsci.nl/">OpenSesame</a>,</p>
 <p>TODO any more…?</p>
-<p>Most of these software packages will allow you to save the survey data as a CSV file.</p>
+<p>Most of these packages will allow you to save the survey data as a CSV file. The precise structure of the data varies between packages, so you are likely to have to start by preprocessing your data. Here we’ll cover the preprocessing tasks you’re likely to need when working with survey data. These build on the principles and programming techniques described in the <a href="preproc.html">preprocssing worksheet</a>.</p>
+<div id="loading-data" class="section level2">
+<h2>Loading data</h2>
+<p>We’ll start by preprocessing the DASS-21 data, which is a wide format (one row per participant) CSV file.</p>
 <pre class="r"><code>dass21_raw &lt;- read_csv(&quot;dass21.csv&quot;) %&gt;%
-  select(partID, Age:DASSS)</code></pre>
+  select(partID, Age:DASS21)</code></pre>
 <pre><code>Parsed with column specification:
 cols(
   .default = col_double(),
@@ -414,22 +417,39 @@ cols(
   PageOrder = col_number()
 )</code></pre>
 <pre><code>See spec(...) for full column specifications.</code></pre>
-<div id="missing-data" class="section level2">
-<h2>Missing data</h2>
+<p><strong>Explanation of command</strong> - We read the CSV file using <code>read.csv</code> and pipe the data into a <code>select</code> command, which picks just the columns we want, saving the results in <code>dass21_raw</code>. In the <code>select</code>, we include the participant ID using <code>partID</code>. To avoid having to type out long lists of column names, <code>select</code> also allows you to specify ranges of columns which are consecutive in a data frame by specifying the first and last column (left to right), separated by a <code>:</code>. In this case we use <code>Age:DASS21</code> to select all columns between <code>Age</code> and <code>DASS21</code>.</p>
+</div>
+<div id="handling-missing-data" class="section level2">
+<h2>Handling missing data</h2>
+<p>If participants don’t complete a survey, you will want to exclude their data from your analyses. If we look at a section of the DASS-21 data, we can see some that data is missing for some participats.</p>
 <pre class="r"><code>slice(dass21_raw, 73:76)</code></pre>
-<pre><code># A tibble: 4 x 29
+<pre><code># A tibble: 4 x 25
   partID   Age Gender Stage DASS1 DASS2 DASS3 DASS4 DASS5 DASS6 DASS7 DASS8
    &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
 1    106    NA     NA    NA    NA    NA    NA    NA    NA    NA    NA    NA
 2    107    19      1     0    NA    NA    NA    NA    NA    NA    NA    NA
 3    108    18      0     2     0     0     0     0     0     0     0     1
 4    109    20      2     3     1     0     1     1     1     1     0     0
-# … with 17 more variables: DASS9 &lt;dbl&gt;, DASS10 &lt;dbl&gt;, DASS11 &lt;dbl&gt;,
-#   DASS12 &lt;dbl&gt;, DASS13 &lt;dbl&gt;, DASS14 &lt;dbl&gt;, DASS15 &lt;dbl&gt;, DASS16 &lt;dbl&gt;,
-#   DASS17 &lt;dbl&gt;, DASS18 &lt;dbl&gt;, DASS19 &lt;dbl&gt;, DASS20 &lt;dbl&gt;, DASS21 &lt;dbl&gt;,
-#   DASSscore &lt;dbl&gt;, DASSA &lt;dbl&gt;, DASSD &lt;dbl&gt;, DASSS &lt;dbl&gt;</code></pre>
+  DASS9 DASS10 DASS11 DASS12 DASS13 DASS14 DASS15 DASS16 DASS17 DASS18 DASS19
+  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+1    NA     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
+2    NA     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
+3     0      0      0      0      0      0      0      0      0      0      1
+4     1      0      2      2      1      3      0      1      0      1      1
+  DASS20 DASS21
+   &lt;dbl&gt;  &lt;dbl&gt;
+1     NA     NA
+2     NA     NA
+3      0      0
+4      0      0</code></pre>
+<p>The first thing to notice is that we only have the columns that we selected in the commands above. Participants 108, and 109 (rows 3 and 4) have numbers in all columns, indicating that their data is complete. However, participants 106 and 107 have columns containing the value <code>NA</code>, which means these cells in the CSV file were empty. For participant 106, all columns are <code>NA</code> (perhaps they dropped out of the study), and for participant 107, all of the DASS-21 columns are <code>NA</code> (perphas they skipped this survey).</p>
+<p>We can exclude any rows with missing data as follows:</p>
 <pre class="r"><code>dass21 &lt;- dass21_raw %&gt;% drop_na()</code></pre>
-<p>We’ll also be using data from an experiment which explored mental imagery and self-esteem. This data was saved from SPSS. R can read SPSS <code>.sav</code> files into a data frame using the <code>read.spss()</code> function from the <code>foreign</code> package.</p>
+<p><strong>Explanation of command</strong> - We pipe the raw data into the <code>drop_na()</code> function (part of the <code>tidyverse</code> package). This drops any rows with a column containing <code>NA</code>. This code would also exclude participants who only partially complete a survey.</p>
+</div>
+<div id="tidying-a-data-frame" class="section level2">
+<h2>Tidying a data frame</h2>
+<p>This data was saved from SPSS. R can read SPSS <code>.sav</code> files into a data frame using the <code>read.spss()</code> function from the <code>foreign</code> package.</p>
 <pre class="r"><code>library(foreign)
 sses &lt;- read.spss(paste0(&#39;state-self-esteem.sav&#39;), to.data.frame=TRUE)</code></pre>
 <p>The SSES consists of 20 questions, each of which is scored from 0 (Not at all) to 4 (Extremely).</p>
@@ -478,6 +498,7 @@ sses_post &lt;- sses_post_raw %&gt;%
 </div>
 <div id="calculate-a-total-score-for-pre-and-post" class="section level1">
 <h1>Calculate a total score for pre and post</h1>
+<p>We’ll also be using data from an experiment which explored mental imagery and self-esteem.</p>
 <pre class="r"><code>sses_pre &lt;- sses_pre %&gt;% mutate(total = rowSums(.[4:23]))
 sses_pre %&gt;%
   group_by(condition) %&gt;%
@@ -545,8 +566,18 @@ sses_post_cronbach</code></pre>
 <li>one-way ANOVA</li>
 <li>hope not to find differences</li>
 </ul>
-<pre class="r"><code>library(BayesFactor, quietly = TRUE)
-# FIXME: in base::try(expression, silent = silent) : not enough observations
+<pre class="r"><code>library(BayesFactor, quietly = TRUE)</code></pre>
+<pre><code>
+Attaching package: &#39;Matrix&#39;</code></pre>
+<pre><code>The following objects are masked from &#39;package:tidyr&#39;:
+
+    expand, pack, unpack</code></pre>
+<pre><code>************
+Welcome to BayesFactor 0.9.12-4.2. If you have questions, please contact Richard Morey (richarddmorey@gmail.com).
+
+Type BFManual() to open the manual.
+************</code></pre>
+<pre class="r"><code># FIXME: in base::try(expression, silent = silent) : not enough observations
 bf &lt;- anovaBF(formula = total ~ condition + subj, data = sses_pre, whichRandom = &#39;subj&#39;)</code></pre>
 <pre><code>Warning: data coerced from tibble to data frame</code></pre>
 <pre><code>Error in base::try(expression, silent = silent) : not enough observations</code></pre>
@@ -585,10 +616,10 @@ into character vector</code></pre>
 <pre class="r"><code>bf</code></pre>
 <pre><code>Bayes factor analysis
 --------------
-[1] condition + subj                         : 3.735734  ±1.85%
-[2] time + subj                              : 0.1992851 ±2.96%
-[3] condition + time + subj                  : 0.719144  ±5.73%
-[4] condition + time + condition:time + subj : 6.789489  ±2.96%
+[1] condition + subj                         : 3.638207  ±1.59%
+[2] time + subj                              : 0.1916584 ±1.32%
+[3] condition + time + subj                  : 0.7824904 ±4.08%
+[4] condition + time + condition:time + subj : 7.176398  ±3.36%
 
 Against denominator:
   total ~ subj 
@@ -597,7 +628,7 @@ Bayes factor type: BFlinearModel, JZS</code></pre>
 <pre class="r"><code>bf[1]         # condition</code></pre>
 <pre><code>Bayes factor analysis
 --------------
-[1] condition + subj : 3.735734 ±1.85%
+[1] condition + subj : 3.638207 ±1.59%
 
 Against denominator:
   total ~ subj 
@@ -606,7 +637,7 @@ Bayes factor type: BFlinearModel, JZS</code></pre>
 <pre class="r"><code>bf[2]         # time</code></pre>
 <pre><code>Bayes factor analysis
 --------------
-[1] time + subj : 0.1992851 ±2.96%
+[1] time + subj : 0.1916584 ±1.32%
 
 Against denominator:
   total ~ subj 
@@ -615,7 +646,7 @@ Bayes factor type: BFlinearModel, JZS</code></pre>
 <pre class="r"><code>bf[4] / bf[3] # condition * time</code></pre>
 <pre><code>Bayes factor analysis
 --------------
-[1] condition + time + condition:time + subj : 9.441071 ±6.45%
+[1] condition + time + condition:time + subj : 9.171228 ±5.28%
 
 Against denominator:
   total ~ condition + time + subj 

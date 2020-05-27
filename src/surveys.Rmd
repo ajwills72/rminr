@@ -10,8 +10,9 @@ output: html_document
 ## Show only commands.
 ## knitr::opts_chunk$set(echo = TRUE, message = FALSE, results='hide', fig.keep = 'none', comment=NA)
 
-## Show commands and putout.
+## Show commands and output.
 knitr::opts_chunk$set(echo = TRUE, comment=NA, cache = TRUE)
+options(tibble.width = Inf) # show all columns in output
 ```
 
 # Contents
@@ -20,7 +21,7 @@ knitr::opts_chunk$set(echo = TRUE, comment=NA, cache = TRUE)
 
 - [Getting started](#start)
 
-- [Pre-processing](#preprocessing)
+- [Preprocessing](#preprocessing)
 
 - [Reverse scoring survey items](#reverse)
 
@@ -56,27 +57,46 @@ library(tidyverse)
 
 <a name="preprocessing"></a>
 
-# Pre-processing
+# Preprocessing
 
 Many software packages can be used to collect survey data. These include [JISC](https://www.jisc.ac.uk/), [Gorilla Survey](https://gorilla.sc/), [OpenSesame](https://osdoc.cogsci.nl/),
 
 TODO any more...?
 
-Most of these software packages will allow you to save the survey data as a CSV file.
+Most of these packages will allow you to save the survey data as a CSV file. The precise structure of the data varies between packages, so you are likely to have to start by preprocessing your data. Here we'll cover the preprocessing tasks you're likely to need when working with survey data. These build on the principles and programming techniques described in the [preprocssing worksheet](preproc.html).
+
+## Loading data
+
+We'll start by preprocessing the DASS-21 data, which is a wide format (one row per participant) CSV file.
 
 ```{r pre-process-dass}
 dass21_raw <- read_csv("dass21.csv") %>%
-  select(partID, Age:DASSS)
+  select(partID, Age:DASS21)
 ```
 
-## Missing data
+**Explanation of command** - We read the CSV file using `read.csv` and pipe the data into a `select` command, which picks just the columns we want, saving the results in `dass21_raw`. In the `select`, we include the participant ID using `partID`. To avoid having to type out long lists of column names, `select` also allows you to specify ranges of columns which are consecutive in a data frame by specifying the first and last column (left to right), separated by a `:`. In this case we use `Age:DASS21` to select all columns between `Age` and `DASS21`.
+
+## Handling missing data
+
+If participants don't complete a survey, you will want to exclude their data from your analyses. If we look at a section of the DASS-21 data, we can see some that data is missing for some participats.
 
 ```{r missing}
 slice(dass21_raw, 73:76)
+```
+
+The first thing to notice is that we only have the columns that we selected in the commands above. Participants 108, and 109 (rows 3 and 4) have numbers in all columns, indicating that their data is complete. However, participants 106 and 107 have columns containing the value `NA`, which means these cells in the CSV file were empty. For participant 106, all columns are `NA` (perhaps they dropped out of the study), and for participant 107, all of the DASS-21 columns are `NA` (perphas they skipped this survey).
+
+We can exclude any rows with missing data as follows:
+
+```{r exclude-missing}
 dass21 <- dass21_raw %>% drop_na()
 ```
 
-We'll also be using data from an experiment which explored mental imagery and self-esteem. This data was saved from SPSS. R can read SPSS `.sav` files into a data frame using the `read.spss()` function from the `foreign` package.
+**Explanation of command** - We pipe the raw data into the `drop_na()` function (part of the `tidyverse` package). This drops any rows with a column containing `NA`. This code would also exclude participants who only partially complete a survey.
+
+## Tidying a data frame
+
+This data was saved from SPSS. R can read SPSS `.sav` files into a data frame using the `read.spss()` function from the `foreign` package.
 
 ```{r read-sses}
 library(foreign)
@@ -137,6 +157,8 @@ sses_post <- sses_post_raw %>%
 <a name="score"></a>
 
 # Calculate a total score for pre and post
+
+We'll also be using data from an experiment which explored mental imagery and self-esteem. 
 
 ```{r score}
 sses_pre <- sses_pre %>% mutate(total = rowSums(.[4:23]))
