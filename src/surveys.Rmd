@@ -35,6 +35,10 @@ options(tibble.width = Inf) # show all columns in output
 
 <a name="intro"></a>
 
+# Before you start ...
+
+FIXME <span style="color: red;">Agree and list pre-requisites</span>
+
 # Introduction
 
 A wide range of psychological constructs are measured using surveys. A survey is a set of questions designed to measure a specific construct, for example self-esteem. Answers to survey questions are often Likert scales. These allow a participant to express how much they agree or disagree with a particular statement e.g. 0=Not at all, 1=A little, 2=Somewhat, 3=A lot, 4=Extremely. A participant's answers are used to calculate a score which measures the construct, e.g. level of depression. The questions themsleves are carefully chosen, often using a method called factor analysis. This ensures that the scale is a valid and relible. A scale is valid if it is a true measure of the construct, in this example it accurately reflects levels of self-esteeem, rather than something else. TODO explain internal and external reliability.
@@ -80,11 +84,12 @@ dass21_raw <- read_csv("dass21.csv") %>%
 
 If participants don't complete a survey, you will want to exclude their data from your analyses. If we look at a section of the DASS-21 data, we can see some that data is missing for some participats.
 
-```{r missing}
+```{r missing, R.options = list(width = 1000)}
+# FIXME: this doesn't make the output wide and scrolly
 slice(dass21_raw, 73:76)
 ```
 
-The first thing to notice is that we only have the columns that we selected in the commands above. Participants 108, and 109 (rows 3 and 4) have numbers in all columns, indicating that their data is complete. However, participants 106 and 107 have columns containing the value `NA`, which means these cells in the CSV file were empty. For participant 106, all columns are `NA` (perhaps they dropped out of the study), and for participant 107, all of the DASS-21 columns are `NA` (perphas they skipped this survey).
+The first thing to notice is that we only have the columns that we selected in the commands above. Participants 108, and 109 (rows 3 and 4) have numbers in all columns, indicating that their data is complete. However, participants 106 and 107 have cells containing the value `NA`, which means these cells in the CSV file were empty. For participant 106, all cells are `NA` (perhaps they dropped out of the study), and for participant 107, all of the DASS-21 cells are `NA` (perhaps they skipped this survey).
 
 We can exclude any rows with missing data as follows:
 
@@ -96,27 +101,58 @@ dass21 <- dass21_raw %>% drop_na()
 
 ## Tidying a data frame
 
-This data was saved from SPSS. R can read SPSS `.sav` files into a data frame using the `read.spss()` function from the `foreign` package.
+In addition to removing columns which aren't required in your analysis, there are some other preprocessing tasks which you often want to apply to survey data before running any analyses. 
+We'll demonstrate these using SSES data. We start by loading the data:
 
 ```{r read-sses}
 library(foreign)
 sses <- read.spss(paste0('state-self-esteem.sav'), to.data.frame=TRUE)
 ```
 
-The SSES consists of 20 questions, each of which is scored from 0 (Not at all) to 4 (Extremely).
+**Explanation of command** - The `.sav` file extension indicates that the SSES data was saved from SPSS. The `foreign` package allows R to read SPSS files into a data frame. We load the package, and then use `read.spss()` to read the data and store it in `sses`.
+ 
+The data comes from from an experiment in which self-esteem was measured before and after participants completed one of two mental imagery conditions, or a control condition. For the next steps in our analysis it will be useful to divide the data into two data frames, one for the pre-intervention SSES, the other for the post-intervention SSES. We can do that in a single pipeline.
 
-```{r pre-process-sses}
+```{r preprocess-sses-pre}
 sses_pre_raw  <- sses %>% select(1, 5:25) %>%
-    set_names(~ str_to_lower(.) %>%
-                  str_replace_all("pre_sse_", "q")) %>%
+  set_names(~ str_to_lower(.) %>% str_replace_all("pre_sse_", "q")) %>%
   mutate(subj = factor(partid), condition = factor(condition), time = factor('pre')) %>%
   select(subj, condition, time, q1:q20)
+```
+
+**Explanation of pipeline commands:**
+
+`sses_pre_raw  <- sses %>% select(1, 5:25)` - We save the output of the pipeline in `sses_pre_raw`. The first step pipes the full dataset, `sses` into a `select` which keeps column 1, and columns 5:25. Column 1 is the participant id, columns 5:24 are the SSES scores, and column 25 is the participant's condition.
+
+`set_names(~ str_to_lower(.) %>% str_replace_all("pre_sse_", "q"))` - Next, we use `set_names()` to rename our columns. The `~` is a way of telling `set_names()` to apply a function to the column name. The remainder of the command is the function itself. This is a mini-pipeline which tidies up the column name. The command `str_to_lower(.)` makes the column name lowercase. The command `str_replace_all("pre_sse_", "q"))` replaces columns with the prefix `pre_sse_` with the prefix `q`. All our columns are now lowercase, and the SSES questions are named `q1:q20`.
+
+`mutate(subj = factor(partid), condition = factor(condition), time = factor('pre'))` - Next, we use `mutate` to add and modify some columns. The argument `subj = factor(partid)` creates a new column named `subj` (which is a bit clearer than `partid`) by copying the `partid` column and making it a factor. The argument `condition = factor(condition)` makes the `condition` column a factor. The argument `time = factor('pre')` creates a new factor called `time` and sets all values to `pre`.
+
+`select(subj, condition, time, q1:q20)` - Finally, we use `select` to put the columns into a convenient order for viewing.
+
+## Recode factor levels
+
+Software for running experiments may use numbers to represent different levels of a factor. It's often clearer if these are converted to strings which describe the factor. In this experiment, participants in condition 1 visualised a negative mental image of themself, participants in condition 2 visualised a negative mental image of someone else, and condition 0 was a control condition.
+
+```{r}
 sses_pre_raw$condition <- recode_factor(sses_pre_raw$condition, `0` = 'control',
                                         `1` = 'self', `2` = 'other')
 
+```
+
+**Explanation of command:** We use `recode_factor()` to rename the levels of the experimental condition (`sses_pre_raw$condition`). The current factor level name goes on the left hand side of the `=`, the new name goes on the right hand side. Notice that the numbers need to be in backticks. The renamed factor levels are reassigned to the same column `sses_pre_raw$condition`.
+
+Our data frame now has intuitive column and factor names:
+
+```{r, R.options = list(width = 100)}
+sses_pre_raw %>% head()
+```
+
+We use a similar pipeline to create a tidy data frame (`sses_post_raw`) containing the post-intervention SSES data.
+
+```{r preprocess-sses-post}
 sses_post_raw <- sses %>% select(1, 25:45) %>%
-      set_names(~ str_to_lower(.) %>%
-                  str_replace_all("post_sse_", "q")) %>%
+  set_names(~ str_to_lower(.) %>% str_replace_all("post_sse_", "q")) %>%
   mutate(subj = factor(partid), condition = factor(condition), time = factor('post')) %>%
   select(subj, condition, time, q1:q20)
 sses_post_raw$condition <- recode_factor(sses_post_raw$condition, `0` = 'control',
@@ -124,10 +160,15 @@ sses_post_raw$condition <- recode_factor(sses_post_raw$condition, `0` = 'control
 
 ```
 
+**Explanation of command:** This is indentical to the previous pipeline, except that the post-intervention SSES data are in columns `26:45`, and these columns have the prefix `post_sse_` rather than `pre_sse_`.
+
 <a name="reverse"></a>
 
 # Reverse score survey
 
+FIXME: Work in progress from this point onwards
+
+The SSES consists of 20 questions, each of which is scored from 0 (Not at all) to 4 (Extremely). 
 Explain reverse coding.
 
 Some surveys have some reverse coded items because...
@@ -157,8 +198,6 @@ sses_post <- sses_post_raw %>%
 <a name="score"></a>
 
 # Calculate a total score for pre and post
-
-We'll also be using data from an experiment which explored mental imagery and self-esteem. 
 
 ```{r score}
 sses_pre <- sses_pre %>% mutate(total = rowSums(.[4:23]))
