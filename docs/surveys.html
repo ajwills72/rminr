@@ -384,7 +384,7 @@ summary {
 </div>
 <div id="before-you-start" class="section level1">
 <h1>Before you start …</h1>
-<p>FIXME <span style="color: red;">Agree and list pre-requisites</span></p>
+<p>This worksheet assumes you are familiar with the techniques described in the <a href="preproc.html">preprocssing</a> worksheet. If you’re getting stuck, then do that and return here.</p>
 </div>
 <div id="introduction" class="section level1">
 <h1>Introduction</h1>
@@ -403,9 +403,8 @@ library(tidyverse)</code></pre>
 </div>
 <div id="preprocessing" class="section level1">
 <h1>Preprocessing</h1>
-<p>Many software packages can be used to collect survey data. These include <a href="https://www.jisc.ac.uk/">JISC</a>, <a href="https://gorilla.sc/">Gorilla Survey</a>, <a href="https://osdoc.cogsci.nl/">OpenSesame</a>,</p>
-<p>TODO any more…?</p>
-<p>Most of these packages will allow you to save the survey data as a CSV file. The precise structure of the data varies between packages, so you are likely to have to start by preprocessing your data. Here we’ll cover the preprocessing tasks you’re likely to need when working with survey data. These build on the principles and programming techniques described in the <a href="preproc.html">preprocssing worksheet</a>.</p>
+<p>Survey data can be collected using <a href="https://www.jisc.ac.uk/">JISC</a>, <a href="https://gorilla.sc/">Gorilla Survey</a>, <a href="https://osdoc.cogsci.nl/">OpenSesame</a>, <a href="https://expfactory.github.io/experiments/">The Experiment Factory</a>, <a href="https://www.qualtrics.com/">Qualtrics</a> and many other software packages.</p>
+<p>Most software will allow you to save the survey data as a CSV file. The precise structure of the data varies between packages, so you are likely to have to start by preprocessing your data. The preprocessing tasks described in this worksheet should be useful regardless of the software you used to collect your survey data, although they might need slight modifications depending on the data you start with. The programming techniques described build on those covered in the <a href="preproc.html">preprocssing worksheet</a>.</p>
 <div id="loading-data" class="section level2">
 <h2>Loading data</h2>
 <p>We’ll start by preprocessing the DASS-21 data, which is a wide format (one row per participant) CSV file.</p>
@@ -533,8 +532,9 @@ sses_post %&gt;%
 1 control    29.3  9.19
 2 self       37.7  7.58
 3 other      28.6  7.44</code></pre>
-<div id="todo-could-show-how-to-calculate-subscale-scores-using-dass-21" class="section level2">
-<h2>TODO Could show how to calculate subscale scores using DASS-21?</h2>
+<div id="calculate-subscale-scores" class="section level2">
+<h2>Calculate subscale scores</h2>
+<p>using DASS-21</p>
 <p>DASS-21 came from the tech office with subscale scores already calculated.</p>
 <p><a name="cronbach"></a></p>
 </div>
@@ -576,10 +576,7 @@ sses_post_cronbach</code></pre>
 </div>
 <div id="compare-baseline-sses-scores-between-conditions" class="section level1">
 <h1>Compare baseline SSES scores between conditions</h1>
-<ul>
-<li>one-way ANOVA</li>
-<li>hope not to find differences</li>
-</ul>
+<p>Now that our we have calculated a total SSES score for each participant, we would like to check that there were no major differences between groups before our intervention. This should be the case if we successfully randomised participants to groups, but if there are baseline differences we would need to account for these when analysing post-intervention scores. We can use a <a href="anova1.html#anovaWS">within-subjects ANOVA</a> to compare the baseline SSES scores in our three groups.</p>
 <pre class="r"><code>library(BayesFactor, quietly = TRUE)</code></pre>
 <pre><code>
 Attaching package: &#39;Matrix&#39;</code></pre>
@@ -606,40 +603,28 @@ Against denominator:
   Intercept only 
 ---
 Bayes factor type: BFlinearModel, JZS</code></pre>
+<p>The Bayes factor of <code>0.68</code> is greater than the conventional <code>0.33</code> which would satisfy us that there were no differences between the groups. If we generate some descriptive statistics, we can see that the mean and standard deviation are slightly lower in the <code>other</code> group. We’ll address this issue in the next section.</p>
+<pre class="r"><code>sses_pre %&gt;% group_by(condition) %&gt;% summarise(mean = mean(total), sd = sd(total))</code></pre>
+<pre><code># A tibble: 3 x 3
+  condition  mean    sd
+  &lt;fct&gt;     &lt;dbl&gt; &lt;dbl&gt;
+1 control    31.1  9.34
+2 self       33.8  9.27
+3 other      27.8  6.79</code></pre>
 <p><a name="prepost"></a></p>
 </div>
-<div id="pre-post" class="section level1">
-<h1>Pre-post</h1>
-<ul>
-<li>Within-between ANOVA sses ~ time*condition</li>
-<li>time is the repeated measures factor</li>
-<li>condition is the between-subjects factor</li>
-</ul>
-<pre class="r"><code># FIXME: Is there a better way to combine time avoiding &#39;Unequal factor levels: ... &#39; warning
-sses_pre_post &lt;- bind_rows(sses_pre, sses_post) %&gt;%
+<div id="compare-pre-and-post-intervention-sses-scores-between-conditions" class="section level1">
+<h1>Compare pre and post intervention SSES scores between conditions</h1>
+<p>The main question we’re interest in answering is whether our two imagery interventions (visualising a negative mental image of oneself, or someone else) affected self esteem, relative to a control condition. We can use a <a href="anova3.html#bfact">factorial ANOVA</a> to compare SSES scores before and after the three interventions. In this design, <code>condition</code> is a between-subjects variable, and <code>time</code> (pre and post intervention) is a repeated measure.</p>
+<p>First we combine the pre and post data frames:</p>
+<pre class="r"><code>sses_pre_post &lt;- bind_rows(sses_pre, sses_post) %&gt;%
   mutate(time = factor(time))</code></pre>
-<pre><code>Warning in bind_rows_(x, .id): Unequal factor levels: coercing to character</code></pre>
-<pre><code>Warning in bind_rows_(x, .id): binding character and factor vector, coercing
-into character vector
-
-Warning in bind_rows_(x, .id): binding character and factor vector, coercing
-into character vector</code></pre>
+<p>Then we run our anova, including <code>subj</code> as a random factor:</p>
 <pre class="r"><code>bf &lt;- anovaBF(formula = total ~ time*condition + subj,
               data = sses_pre_post, whichRandom = &#39;subj&#39;)</code></pre>
 <pre><code>Warning: data coerced from tibble to data frame</code></pre>
-<pre class="r"><code>bf</code></pre>
-<pre><code>Bayes factor analysis
---------------
-[1] condition + subj                         : 3.638207  ±1.59%
-[2] time + subj                              : 0.1916584 ±1.32%
-[3] condition + time + subj                  : 0.7824904 ±4.08%
-[4] condition + time + condition:time + subj : 7.176398  ±3.36%
-
-Against denominator:
-  total ~ subj 
----
-Bayes factor type: BFlinearModel, JZS</code></pre>
-<pre class="r"><code>bf[1]         # condition</code></pre>
+<p>Our Bayes factors indicate that there is a main effect of <code>condition</code>,</p>
+<pre class="r"><code>bf[1]</code></pre>
 <pre><code>Bayes factor analysis
 --------------
 [1] condition + subj : 3.638207 ±1.59%
@@ -648,7 +633,8 @@ Against denominator:
   total ~ subj 
 ---
 Bayes factor type: BFlinearModel, JZS</code></pre>
-<pre class="r"><code>bf[2]         # time</code></pre>
+<p>no main effect of <code>time</code>,</p>
+<pre class="r"><code>bf[2]</code></pre>
 <pre><code>Bayes factor analysis
 --------------
 [1] time + subj : 0.1916584 ±1.32%
@@ -657,7 +643,8 @@ Against denominator:
   total ~ subj 
 ---
 Bayes factor type: BFlinearModel, JZS</code></pre>
-<pre class="r"><code>bf[4] / bf[3] # condition * time</code></pre>
+<p>and a <code>condition*time</code> interaction</p>
+<pre class="r"><code>bf[4] / bf[3]</code></pre>
 <pre><code>Bayes factor analysis
 --------------
 [1] condition + time + condition:time + subj : 9.171228 ±5.28%
@@ -666,9 +653,7 @@ Against denominator:
   total ~ condition + time + subj 
 ---
 Bayes factor type: BFlinearModel, JZS</code></pre>
-<ul>
-<li>TODO <span style="color: red;">Given that there’s an interaction, how much should we say about <a href="https://ajwills72.github.io/rminr/anova1.html#pairs">pairwise comparisons</a>?</span></li>
-</ul>
+<p>Given the interaction, we would probably want to carry out <a href="anova3.html#pairc">pairwise comparisons</a> to compare the imagery conditions against the control condition, and against each other. Finally, to address the small difference in baseline scores, we could run the same ANOVA on the <em>difference</em> between the pre and post scores, or we could include the baseline score as a covariate in an ANCOVA. These techniques are outside the scope of this worksheet.</p>
 </div>
 <div id="references" class="section level1">
 <h1>References</h1>
