@@ -214,13 +214,25 @@ Similarly, we reverse score the post-intervention surveys and assign the result 
 
 # Calculate a total score for pre and post
 
-```{r score}
-sses_pre <- sses_pre %>% mutate(total = rowSums(.[4:23]))
+Having done this preparation, it's now easy to calculate the SSES baseline scores:
+
+```{r pre-score}
+sses_pre <- mutate(sses_pre, total = rowSums(sses_pre[4:23]))
 sses_pre %>%
   group_by(condition) %>%
   summarise(mean = mean(total), sd = sd(total))
+```
 
-sses_post <- sses_post %>% mutate(total = rowSums(.[4:23]))
+**Explanation of commands:**
+
+First we use `mutate()` to create a `total` column for each row using `rowSums(sses_pre[4:23])` to add up the individual scores for each participant. We reassign the resulting data frame back to `sses_pre` effectively adding a `total` score column.
+
+We then `group_by(condition)` to generate a mean and standard deviation for each condition.
+
+We do the same for post-intervention scores:
+
+```{r post-score}
+sses_post <- mutate(sses_post, total = rowSums(sses_post[4:23]))
 sses_post %>%
   group_by(condition) %>%
   summarise(mean = mean(total), sd = sd(total))
@@ -228,9 +240,21 @@ sses_post %>%
 
 ## Calculate subscale scores
 
-using DASS-21
+As well as a total score, some surveys include subscales which measure more specific aspects of a construct. These can be calculated by adding together scores from specific items. For example, the DASS-21 has depression, anxiety and stress subscales. We can use `rowSums()` to add together the scores for items which make up these subscales:
 
-DASS-21 came from the tech office with subscale scores already calculated.
+```{r dass21-subscales}
+dass21 <- mutate(dass21, depression = rowSums(dass21[c(4+3,4+5,4+10,4+13,4+16,4+17,4+21)]))
+dass21 <- mutate(dass21, anxiety = rowSums(dass21[c(4+2,4+4,4+7,4+9,4+15,4+19,4+20)]))
+dass21 <- mutate(dass21, stress = rowSums(dass21[c(4+1,4+6,4+8,4+11,4+12,4+14,4+18)]))
+dass21 %>% head() %>% select(DASS1:stress)
+```
+
+**Explanation of commands:**
+
+We create a `depression` column which is the sum of items 3, 5, 10, 13, 16, 17 and 21. Item 1 is in column 5, so we add 4 to each one. We assign the result back to `dass21`.
+
+We use similar commands to create `anxiety` and `stress` columns based on the items which make up these subscales.
+
 
 <a name="cronbach"></a>
 
@@ -283,7 +307,7 @@ sses_pre %>% group_by(condition) %>% summarise(mean = mean(total), sd = sd(total
 
 # Compare pre and post intervention SSES scores between conditions
 
-The main question we're interest in answering is whether our two imagery interventions 
+The main question we'd like to answer is whether our two imagery interventions 
 (visualising a negative mental image of oneself, or someone else) affected self esteem, relative to a control condition.  We can use a [factorial ANOVA](anova3.html#bfact) to compare SSES scores before and after the three interventions. In this design, `condition` is a between-subjects variable, and `time` (pre and post intervention) is a repeated measure.
 
 First we combine the pre and post data frames:
