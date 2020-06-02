@@ -388,7 +388,7 @@ summary {
 </div>
 <div id="introduction" class="section level1">
 <h1>Introduction</h1>
-<p>A wide range of psychological constructs are measured using surveys. A survey is a set of questions designed to measure a specific construct, for example self-esteem. Answers to survey questions are often Likert scales. These allow a participant to express how much they agree or disagree with a particular statement e.g. 0=Not at all, 1=A little, 2=Somewhat, 3=A lot, 4=Extremely. A participant’s answers are used to calculate a score which measures the construct, e.g. level of depression. The questions themsleves are carefully chosen, often using a method called factor analysis. This ensures that the scale is a valid and relible. A scale is valid if it is a true measure of the construct, in this example it accurately reflects levels of self-esteeem, rather than something else. TODO explain internal and external reliability.</p>
+<p>A wide range of psychological constructs are measured using surveys. A survey is a set of questions designed to measure a specific construct, for example self-esteem. Answers to survey questions are often Likert scales. These allow a participant to express how much they agree or disagree with a particular statement e.g. 0=Not at all, 1=A little, 2=Somewhat, 3=A lot, 4=Extremely. A participant’s answers are used to calculate a score which measures the construct. The questions themsleves are carefully chosen, often using a method called factor analysis. This ensures that the scale is valid and relible. A scale is valid if it is a true measure of the construct, in this example it accurately reflects levels of self-esteem, rather than something else. A scale is reliable if it gives consistent results, i.e. it would produce similar scores for a person who completed the scale at different times, or for two people who are similar for the construct which the scale measures.</p>
 <p>In this worksheet, we’ll cover some common techniques which you are likely to use when processing survey data. We’ll be using real data from two different surveys. The DASS-21 is a 21-item scale for measuring depression, anxiety and stress. The State Self-Esteem Scale (SSES) is a 20-item survey used to measure short-lived (state) changes in self-esteem.</p>
 <p><a name="start"></a></p>
 </div>
@@ -458,7 +458,7 @@ sses &lt;- read.spss(paste0(&#39;state-self-esteem.sav&#39;), to.data.frame=TRUE
 </div>
 <div id="recode-factor-levels" class="section level2">
 <h2>Recode factor levels</h2>
-<p>Software for running experiments may use numbers to represent different levels of a factor. It’s often clearer if these are converted to strings which describe the factor. In this experiment, participants in condition 1 visualised a negative mental image of themself, participants in condition 2 visualised a negative mental image of someone else, and condition 0 was a control condition.</p>
+<p>Software for running experiments may use numbers to represent different levels of a factor. It’s often clearer if these are converted to strings which describe the factor. In this experiment, participants in condition 1 visualised a negative mental image of themself, participants in condition 2 visualised a negative mental image of someone else, and condition 0 was a control condition, in which participants did a card sorting task and did not think of any images.</p>
 <pre class="r"><code>sses_pre_raw$condition &lt;- recode_factor(sses_pre_raw$condition, `0` = &#39;control&#39;,
                                         `1` = &#39;self&#39;, `2` = &#39;other&#39;)</code></pre>
 <p><strong>Explanation of command:</strong> We use <code>recode_factor()</code> to rename the levels of the experimental condition (<code>sses_pre_raw$condition</code>). The current factor level name goes on the left hand side of the <code>=</code>, the new name goes on the right hand side. Notice that the numbers need to be in backticks. The renamed factor levels are reassigned to the same column <code>sses_pre_raw$condition</code>.</p>
@@ -486,28 +486,30 @@ sses_post_raw$condition &lt;- recode_factor(sses_post_raw$condition, `0` = &#39;
 </div>
 <div id="reverse-score-survey" class="section level1">
 <h1>Reverse score survey</h1>
-<p>FIXME: Work in progress from this point onwards</p>
-<p>The SSES consists of 20 questions, each of which is scored from 0 (Not at all) to 4 (Extremely). Explain reverse coding.</p>
-<p>Some surveys have some reverse coded items because…</p>
+<p>The SSES consists of 20 questions, each of which is scored from 0 (Not at all) to 4 (Extremely). Question 1 reads <code>I feel confident about my abilities</code>, so a higher score indicates higher self-esteem. Many surveys have questions which are reverse scored, for example to encourage participants to read each question carefully. A number of questions on the SSES are reverse scored. For example, question 1 reads <code>I am worried about whether I am regarded as a success or failure</code>, so in this case a higher score indcates lower self-esteem. Before totalling the SSES, we need to reverse the reverse scored items, so that a higher number means higher self-esteem for all scores.</p>
+<p>We can do this in R using a function:</p>
 <pre class="r"><code># Reverse score survey items
-# @param scores raw scores
+# @param scores raw scores data frame
 # @param reverse character vector of columns to be reverse scored
 # @param max integer value of maximum score
 reverse_score_survey &lt;- function(scores, reverse, max) {
-  reverse_score &lt;- function(score) { max - score } # for scores which start at 0, for starting at 1, max + 1 - score
+  reverse_score &lt;- function(score) { max - score } # for scores starting at 1, max + 1 - score
   scores %&gt;% mutate_at(reverse, reverse_score)
-}
-
-reverse_questions &lt;- c(&#39;q2&#39;, &#39;q4&#39;, &#39;q5&#39;, &#39;q7&#39;, &#39;q8&#39;, &#39;q10&#39;, &#39;q13&#39;, &#39;q15&#39;, &#39;q16&#39;, &#39;q17&#39;, &#39;q18&#39;,
+}</code></pre>
+<p><strong>Explanation of commands:</strong></p>
+<p>We name our function <code>reverse_score_survey</code> and indicate that it requires three arguments: <code>scores</code> is a data frame containing our raw survey responses, i.e. with some items reverse scored, <code>reverse</code> is a character vector containing the column names of the scores that are reverse scored, and <code>max</code> is the maximum score available for an item on the Likert scale.</p>
+<p>Inside this function, we define another function called <code>reverse_score</code> which takes a <code>score</code> argument, and reverses it using the calculation <code>max - score</code>. For example, <code>reverse_score(4)</code>, would return the value <code>0</code> (<code>4 - 4</code>). If your survey scores began at 1, you could adjust the calculation to <code>max + 1 - score</code>.</p>
+<p>The final line in <code>reverse_score_survey</code> pipes our raw scores into <code>mutate_at(reverse, reverse_score)</code>. The <code>mutate_at()</code> function applies a function to a subset of columns in a data frame. The first argument <code>reverse</code> is the list of column names to be reversed. The second argument <code>reverse_score</code> is the name of the function we wrote to reverse the score.</p>
+<p>When we call <code>reverse_score_survey</code>, the result will be a data frame with all scores adjusted to be from 0 to <code>max</code>.</p>
+<p>Now we can use <code>reverse_score_survey</code> to reverse score our pre and post intervention SSES scores:</p>
+<pre class="r"><code>reverse_questions &lt;- c(&#39;q2&#39;, &#39;q4&#39;, &#39;q5&#39;, &#39;q7&#39;, &#39;q8&#39;, &#39;q10&#39;, &#39;q13&#39;, &#39;q15&#39;, &#39;q16&#39;, &#39;q17&#39;, &#39;q18&#39;,
                        &#39;q19&#39;, &#39;q20&#39;)
-sses_pre &lt;- sses_pre_raw %&gt;%
-  group_by(condition) %&gt;%
-  group_modify(~ reverse_score_survey(.x, reverse_questions, 4)) %&gt;%
-  ungroup()
-sses_post &lt;- sses_post_raw %&gt;%
-  group_by(condition) %&gt;%
-  group_modify(~ reverse_score_survey(.x, reverse_questions, 4)) %&gt;%
-  ungroup()</code></pre>
+sses_pre  &lt;- reverse_score_survey(sses_pre_raw, reverse_questions, 4)
+sses_post &lt;- reverse_score_survey(sses_post_raw, reverse_questions, 4)</code></pre>
+<p><strong>Explanation of commands:</strong></p>
+<p>We set <code>reverse_questions</code> to be a vector of the column names of the SSES items that are reverse scored.</p>
+<p>Next we call the function <code>reverse_score_survey(sses_pre_raw, reverse_questions, 4)</code>. When the function is run, <code>sses_pre_raw</code> is assigned to the <code>scores</code> argument, <code>reverse_questions</code> to the <code>reverse</code> argument, and <code>4</code> to the <code>max</code> argument. The resulting data frame (higher score meaning higher self-esteem for all items) is assigned to <code>sses_pre</code>.</p>
+<p>Similarly, we reverse score the post-intervention surveys and assign the result to <code>sses_post</code>.</p>
 <p><a name="score"></a></p>
 </div>
 <div id="calculate-a-total-score-for-pre-and-post" class="section level1">
@@ -541,6 +543,7 @@ sses_post %&gt;%
 </div>
 <div id="calculate-cronbachs-alpha" class="section level1">
 <h1>Calculate Cronbach’s alpha</h1>
+<p>Cronbach’s alpha is a measure of the reliability of a scale.</p>
 <pre class="r"><code>library(psy)
 
 #TODO overall alpha
@@ -653,7 +656,7 @@ Against denominator:
   total ~ condition + time + subj 
 ---
 Bayes factor type: BFlinearModel, JZS</code></pre>
-<p>Given the interaction, we would probably want to carry out <a href="anova3.html#pairc">pairwise comparisons</a> to compare the imagery conditions against the control condition, and against each other. Finally, to address the small difference in baseline scores, we could run the same ANOVA on the <em>difference</em> between the pre and post scores, or we could include the baseline score as a covariate in an ANCOVA. These techniques are outside the scope of this worksheet.</p>
+<p>Given the interaction, we would probably want to carry out <a href="anova1.html#pairs">pairwise comparisons</a> to compare the imagery conditions against the control condition, and against each other. Finally, to address the small difference in baseline scores, we could run the same ANOVA on the <em>difference</em> between the pre and post scores, or we could include the baseline score as a covariate in an ANCOVA. These techniques are outside the scope of this worksheet.</p>
 </div>
 <div id="references" class="section level1">
 <h1>References</h1>

@@ -168,34 +168,47 @@ sses_post_raw %>% head(3)
 
 # Reverse score survey
 
-FIXME: Work in progress from this point onwards
+The SSES consists of 20 questions, each of which is scored from 0 (Not at all) to 4 (Extremely). Question 1 reads `I feel confident about my abilities`, so a higher score indicates higher self-esteem. Many surveys have questions which are reverse scored, for example to encourage participants to read each question carefully. A number of questions on the SSES are reverse scored. For example, question 1 reads `I am worried about whether I am regarded as a success or failure`, so in this case a higher score indcates lower self-esteem. Before totalling the SSES, we need to reverse the reverse scored items, so that a higher number means higher self-esteem for all scores.
 
-The SSES consists of 20 questions, each of which is scored from 0 (Not at all) to 4 (Extremely). 
-Explain reverse coding.
+We can do this in R using a function:
 
-Some surveys have some reverse coded items because...
-
-```{r reverse}
+```{r reverse-score-survey}
 # Reverse score survey items
-# @param scores raw scores
+# @param scores raw scores data frame
 # @param reverse character vector of columns to be reverse scored
 # @param max integer value of maximum score
 reverse_score_survey <- function(scores, reverse, max) {
-  reverse_score <- function(score) { max - score } # for scores which start at 0, for starting at 1, max + 1 - score
+  reverse_score <- function(score) { max - score } # for scores starting at 1, max + 1 - score
   scores %>% mutate_at(reverse, reverse_score)
 }
+```
 
+**Explanation of commands:**
+
+We name our function `reverse_score_survey` and indicate that it requires three arguments: `scores` is a data frame containing our raw survey responses, i.e. with some items reverse scored, `reverse` is a character vector containing the column names of the scores that are reverse scored, and `max` is the maximum score available for an item on the Likert scale.
+
+Inside this function, we define another function called `reverse_score` which takes a `score` argument, and reverses it using the calculation `max - score`. For example, `reverse_score(4)`, would return the value `0` (`4 - 4`).  If your survey scores began at 1, you could adjust the calculation to `max + 1 - score`.
+
+The final line in `reverse_score_survey` pipes our raw scores into `mutate_at(reverse, reverse_score)`. The `mutate_at()` function applies a function to a subset of columns in a data frame. The first argument `reverse` is the list of column names to be reversed. The second argument `reverse_score` is the name of the function we wrote to reverse the score.
+
+When we call `reverse_score_survey`, the result will be a data frame with all scores adjusted to be from 0 to `max`.
+
+Now we can use `reverse_score_survey` to reverse score our pre and post intervention SSES scores:
+
+```{r reverse-pre}
 reverse_questions <- c('q2', 'q4', 'q5', 'q7', 'q8', 'q10', 'q13', 'q15', 'q16', 'q17', 'q18',
                        'q19', 'q20')
-sses_pre <- sses_pre_raw %>%
-  group_by(condition) %>%
-  group_modify(~ reverse_score_survey(.x, reverse_questions, 4)) %>%
-  ungroup()
-sses_post <- sses_post_raw %>%
-  group_by(condition) %>%
-  group_modify(~ reverse_score_survey(.x, reverse_questions, 4)) %>%
-  ungroup()
+sses_pre  <- reverse_score_survey(sses_pre_raw, reverse_questions, 4)
+sses_post <- reverse_score_survey(sses_post_raw, reverse_questions, 4)
 ```
+
+**Explanation of commands:**
+
+We set `reverse_questions` to be a vector of the column names of the SSES items that are reverse scored.
+
+Next we call the function `reverse_score_survey(sses_pre_raw, reverse_questions, 4)`. When the function is run, `sses_pre_raw` is assigned to the `scores` argument, `reverse_questions` to the `reverse` argument, and `4` to the `max` argument. The resulting data frame (higher score meaning higher self-esteem for all items) is assigned to `sses_pre`.
+
+Similarly, we reverse score the post-intervention surveys and assign the result to `sses_post`.
 
 <a name="score"></a>
 
@@ -306,7 +319,7 @@ and a `condition*time` interaction
 bf[4] / bf[3]
 ```
 
-Given the interaction, we would probably want to carry out [pairwise comparisons](anova3.html#pairc) to compare the imagery conditions against the control condition, and against each other. Finally, to address the small difference in baseline scores, we could run the same ANOVA on the _difference_ between the pre and post scores, or we could include the baseline score as a covariate in an ANCOVA.  These techniques are outside the scope of this worksheet.
+Given the interaction, we would probably want to carry out [pairwise comparisons](anova1.html#pairs) to compare the imagery conditions against the control condition, and against each other. Finally, to address the small difference in baseline scores, we could run the same ANOVA on the _difference_ between the pre and post scores, or we could include the baseline score as a covariate in an ANCOVA.  These techniques are outside the scope of this worksheet.
 
 # References
 
