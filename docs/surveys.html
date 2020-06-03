@@ -581,17 +581,26 @@ dass21 %&gt;% head() %&gt;% select(DASS1:stress)</code></pre>
 </div>
 <div id="calculate-cronbachs-alpha" class="section level1">
 <h1>Calculate Cronbach’s alpha</h1>
-<p>Cronbach’s alpha is a measure of the reliability of a scale.</p>
+<p>Cronbach’s alpha is a measure of scale reliability based on the consistency of correlations between different groupings of the individual scale items. When a new scale is developed, it’s reliability is normally reported using Cronbach’s alpha. It’s wise to ensure that the Cronbach’s alpha for your sample is similar.</p>
+<p>We will use a function to calculate alpha for the SSES using the <code>cronbach()</code> function from the <code>psy</code> package:</p>
 <pre class="r"><code>library(psy)
 
-#TODO overall alpha
-
 sses_cronbach &lt;- function(scores) {
-  cronbach &lt;- cronbach(select(scores,q1:q20))
+  cronbach &lt;- cronbach(select(scores, q1:q20))
   data.frame(cronbach$alpha)
-}
-
-sses_pre_cronbach &lt;- sses_pre %&gt;%
+}</code></pre>
+<p><strong>Explanation of commands:</strong></p>
+<p>Our function <code>sses_cronbach</code> expects its <code>scores</code> argument to be a data frame containing SSES scores.</p>
+<p>The <code>cronbach()</code> function expects a data frame with one row per subject, and columns containing the scale scores. We supply this using the function <code>select(scores, q1:q20)</code>. Notice how we can use the column names in <code>scores</code> to specify the range of columns to <code>select()</code>.</p>
+<p>In addition to the value of alpha, <code>cronbach()</code> returns the number of subjects and the number of items. Here were only interested in alpha, which we return in a data frame. This will allow us to use the function for calculating alpha by group.</p>
+<p>We can now calculate an overall alpha for SSES by calling <code>sses_cronbach</code> with all of our SSES data, using <code>bind_rows(sses_pre, sses_post)</code>:</p>
+<pre class="r"><code>sses_cronbach_total &lt;- sses_cronbach(bind_rows(sses_pre, sses_post))
+sses_cronbach_total</code></pre>
+<pre><code>  cronbach.alpha
+1      0.6693976</code></pre>
+<p>This gives us a value of <code>0.67</code>, which is quite a bit lower than the <code>0.92</code> reported by the authors who developed the scale (Heatherton &amp; Polivy, 1991).</p>
+<p>We can use the same function to calculate alpha for SSES baseline scores:</p>
+<pre class="r"><code>sses_pre_cronbach &lt;- sses_pre %&gt;%
   group_by(condition) %&gt;%
   group_modify(~ sses_cronbach(.x))
 sses_pre_cronbach</code></pre>
@@ -602,6 +611,11 @@ sses_pre_cronbach</code></pre>
 1 control            0.742
 2 self               0.682
 3 other              0.478</code></pre>
+<p><strong>Explanation of pipeline commands:</strong></p>
+<p>We save the output of the pipeline in <code>sses_pre_cronbach</code>. We start by piping <code>sses_pre</code> into <code>group_by(condition)</code>.</p>
+<p>We pipe this grouped data frame into <code>group_modify(~ sses_cronbach(.x))</code>. The <code>group_modify()</code> function allows you to run a function for each group in a grouped data frame. The <code>~</code> tells <code>group_modify()</code> to treat the next argument as a function, in this case <code>sses_cronbach(.x)</code>. The <code>.x</code> means the subset of rows created by our <code>group_by()</code>. The function used to process data a <code>group_modify()</code> must return a data frame. That explains why we returned alpha in a data frame in <code>sses_cronbach()</code>. So this code runs <code>sses_cronbach()</code> once for each set of rows that makes up our three conditions, with the three values of alpha combined into a single data frame.</p>
+<p>You can see that <code>sses_pre_cronbach</code> has a <code>condition</code> column, and a column containing Cronbach’s alpha for each condition.</p>
+<p>We can use a similar pipeline to calculate post-interventiona alphas:</p>
 <pre class="r"><code>sses_post_cronbach &lt;- sses_post %&gt;%
   group_by(condition) %&gt;%
   group_modify(~ sses_cronbach(.x))
@@ -613,11 +627,12 @@ sses_post_cronbach</code></pre>
 1 control            0.742
 2 self               0.490
 3 other              0.498</code></pre>
+<p>These data show that alpha is especially low in the <code>self</code> and <code>other</code> conditions.</p>
 <p><a name="baseline"></a></p>
 </div>
 <div id="compare-baseline-sses-scores-between-conditions" class="section level1">
 <h1>Compare baseline SSES scores between conditions</h1>
-<p>Now that our we have calculated a total SSES score for each participant, we would like to check that there were no major differences between groups before our intervention. This should be the case if we successfully randomised participants to groups, but if there are baseline differences we would need to account for these when analysing post-intervention scores. We can use a <a href="anova1.html#anovaWS">within-subjects ANOVA</a> to compare the baseline SSES scores in our three groups.</p>
+<p>Now that our we have calculated a total SSES score for each participant, we would like to check that there were no major differences between groups before our intervention. This should be the case if we successfully randomised participants to groups. If there are baseline differences we would need to account for these when comparing them to post-intervention scores. We can use a <a href="anova1.html#anovaWS">within-subjects ANOVA</a> to compare the baseline SSES scores in our three groups.</p>
 <pre class="r"><code>library(BayesFactor, quietly = TRUE)</code></pre>
 <pre><code>
 Attaching package: &#39;Matrix&#39;</code></pre>

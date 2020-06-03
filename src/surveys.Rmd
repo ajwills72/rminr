@@ -260,34 +260,69 @@ We use similar commands to create `anxiety` and `stress` columns based on the it
 
 # Calculate Cronbach’s alpha
 
-Cronbach's alpha is a measure of the reliability of a scale.
+Cronbach's alpha is a measure of scale reliability based on the consistency of correlations between different groupings of the individual scale items. When a new scale is developed, it's reliability is normally reported using Cronbach's alpha. It's wise to ensure that the Cronbach's alpha for your sample is similar.
+
+We will use a function to calculate alpha for the SSES using the `cronbach()` function from the `psy` package:
 
 ```{r cronbach}
 library(psy)
 
-#TODO overall alpha
-
 sses_cronbach <- function(scores) {
-  cronbach <- cronbach(select(scores,q1:q20))
+  cronbach <- cronbach(select(scores, q1:q20))
   data.frame(cronbach$alpha)
 }
+```
 
+**Explanation of commands:**
+
+Our function `sses_cronbach` expects its `scores` argument to be a data frame containing SSES scores.
+
+The `cronbach()` function expects a data frame with one row per subject, and columns containing the scale scores. We supply this using the function `select(scores, q1:q20)`. Notice how we can use the column names in `scores` to specify the range of columns to `select()`.
+
+In addition to the value of alpha, `cronbach()` returns the number of subjects and the number of items. Here were only interested in alpha, which we return in a data frame. This will allow us to use the function for calculating alpha by group.
+
+We can now calculate an overall alpha for SSES by calling `sses_cronbach` with all of our SSES data, using `bind_rows(sses_pre, sses_post)`:
+
+```{r cronbach-all}
+sses_cronbach_total <- sses_cronbach(bind_rows(sses_pre, sses_post))
+sses_cronbach_total
+```
+
+This gives us a value of `0.67`, which is quite a bit lower than the `0.92` reported by the authors who developed the scale (Heatherton & Polivy, 1991).
+
+We can use the same function to calculate alpha for SSES baseline scores:
+
+```{r cronbach-pre}
 sses_pre_cronbach <- sses_pre %>%
   group_by(condition) %>%
   group_modify(~ sses_cronbach(.x))
 sses_pre_cronbach
+```
 
+**Explanation of pipeline commands:**
+
+We save the output of the pipeline in `sses_pre_cronbach`. We start by piping `sses_pre` into `group_by(condition)`.
+
+We pipe this grouped data frame into `group_modify(~ sses_cronbach(.x))`. The `group_modify()` function allows you to run a function for each group in a grouped data frame. The `~` tells `group_modify()` to treat the next argument as a function, in this case `sses_cronbach(.x)`. The `.x` means the subset of rows created by our `group_by()`. The function used to process data a `group_modify()` must return a data frame. That explains why we returned alpha in a data frame in `sses_cronbach()`. So this code runs `sses_cronbach()` once for each set of rows that makes up our three conditions, with the three values of alpha combined into a single data frame.
+
+You can see that `sses_pre_cronbach` has a `condition` column, and a column containing Cronbach's alpha for each condition.
+
+We can use a similar pipeline to calculate post-interventiona alphas:
+
+```{r cronbach-post}
 sses_post_cronbach <- sses_post %>%
   group_by(condition) %>%
   group_modify(~ sses_cronbach(.x))
 sses_post_cronbach
 ```
 
+These data show that alpha is especially low in the `self` and `other` conditions.
+
 <a name="baseline"></a>
 
 # Compare baseline SSES scores between conditions
 
-Now that our we have calculated a total SSES score for each participant, we would like to check that there were no major differences between groups before our intervention. This should be the case if we successfully randomised participants to groups, but if there are baseline differences we would need to account for these when analysing post-intervention scores. We can use a [within-subjects ANOVA](anova1.html#anovaWS) to compare the baseline SSES scores in our three groups.
+Now that our we have calculated a total SSES score for each participant, we would like to check that there were no major differences between groups before our intervention. This should be the case if we successfully randomised participants to groups. If there are baseline differences we would need to account for these when comparing them to post-intervention scores. We can use a [within-subjects ANOVA](anova1.html#anovaWS) to compare the baseline SSES scores in our three groups.
 
 ```{r baseline}
 library(BayesFactor, quietly = TRUE)
