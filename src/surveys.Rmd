@@ -40,6 +40,7 @@ options(tibble.width = Inf) # show all columns in output
 This worksheet assumes familiarity with the techniques described in the following worksheets:
 
 * [Preprocessing data from experiments](preproc.html)
+* [Within-subject differences](anova1.html)
 * [Factorial differences](anova3.html).
 
 If the techniques in this worksheet seem challenging, return here after reviewing the material in these worksheets.
@@ -50,7 +51,7 @@ A wide range of psychological constructs are measured using surveys. A survey is
 
 To ensure that a scale is valid and relible, the questions are often developed using a method called factor analysis. A scale is valid if it is a true measure of the construct, in this example it accurately reflects levels of self-esteem, rather than something else. A scale is reliable if it gives consistent results, i.e. a person who completed the scale at different times would produce similar scores, as would two people who are similar in terms of the construct.
 
-In this worksheet, we'll cover some common techniques which you are likely to use when processing survey data. We'll be using real data from two different surveys. The DASS-21 is a 21-item scale for measuring depression, anxiety and stress. The State Self-Esteem Scale (SSES) is a 20-item survey used to measure short-lived (state) changes in self-esteem.
+In this worksheet, we'll cover some common techniques which you are likely to use when processing survey data. We'll be using real data from two different surveys. The Depression Anxiety Stress Scales—21 (DASS-21, Heatherton & Polivy, 1991) is a 21-item scale for measuring depression, anxiety and stress. The State Self-Esteem Scale (SSES, Osman et al., 2012) is a 20-item survey used to measure short-lived (state) changes in self-esteem.
 
 <a name="start"></a>
 
@@ -192,7 +193,9 @@ sses_post_raw %>% head(3)
 
 The SSES consists of 20 questions, each of which is scored from `0 (Not at all)` to `4 (Extremely)`. Question 1 reads `I feel confident about my abilities`, so a higher score indicates higher self-esteem. A number of questions on the SSES are 'reverse scored'. For example, question 2 reads `I am worried about whether I am regarded as a success or failure`, so in this case a higher score indcates lower self-esteem. Surveys often use reverse scored questions to encourage participants to pay attention to the wording of each question.  
 
-Before totalling the SSES, we need to reverse the reverse scored items, so that a higher number means higher self-esteem for all scores. We can do this by creating a function. At this point you will be familiar with _using_ functions like `rm()` which are part of `R`, and functions like `read.csv()`, and `select()` which are provided by packages which you load using `library()` (another base `R` function). Using the `function()` function, we can define our own functions for tasks we want to do more than once. In this case we will want to reverse a number of reverse coded questions.
+Before totalling the SSES, we need to reverse the reverse scored items, so that a higher number means higher self-esteem for all scores. We have a number of reverse scored items which we need to reverse for each participant. It would be laborious to write code to do this for each one, so we'll create a function to reverse any reverse coded score.
+
+At this point you will be familiar with _using_ functions like `rm()` which are part of `R`, and functions like `read.csv()`, and `select()` which are provided by packages which you load using `library()` (another base `R` function). Using `function()` (yet another base `R` function!), we can define our own functions for tasks we want to do repeatedly. In this case we want a function to reverse reverse coded survey items.
 
 ```{r reverse-score-survey}
 # Reverse score survey items
@@ -207,7 +210,7 @@ reverse_score_survey <- function(scores, reverse, max) {
 
 **Explanation of commands:**
 
-We name our function `reverse_score_survey` and indicate that it requires three arguments: `scores` is a data frame containing our raw survey responses, i.e. with some items reverse scored, `reverse` is a character vector containing the column names of the scores that are reverse scored, and `max` is the maximum score available for an item on the Likert scale.
+The result of the `function()` function, is our custom function code. We assign this to the variable `reverse_score_survey`. Our `reverse_score_survey()` function requires three arguments: `scores` is a data frame containing raw survey responses, i.e. with some items reverse scored, `reverse` is a character vector containing the column names of the scores that are reverse scored, and `max` is the maximum score available for an item on the Likert scale.
 
 Inside this function, we define another function called `reverse_score` which takes a `score` argument, and reverses it using the calculation `max - score`. For example, `reverse_score(4)`, would return the value `0` (`4 - 4`).  If your survey scores began at 1, you could adjust the calculation to `max + 1 - score`.
 
@@ -228,18 +231,19 @@ sses_post <- reverse_score_survey(sses_post_raw, reverse_questions, 4)
 
 We set `reverse_questions` to be a vector of the column names of the SSES items that are reverse scored.
 
-Next we call the function `reverse_score_survey(sses_pre_raw, reverse_questions, 4)`. When the function is run, `sses_pre_raw` is assigned to the `scores` argument, `reverse_questions` to the `reverse` argument, and `4` to the `max` argument. The resulting data frame (higher score meaning higher self-esteem for all items) is assigned to `sses_pre`.
+Next we call the function `reverse_score_survey(sses_pre_raw, reverse_questions, 4)`. When the function is run, `sses_pre_raw` is assigned to the `scores` argument, `reverse_questions` to the `reverse` argument, and `4` to the `max` argument. The resulting data frame (higher score meaning higher self-esteem for all items) is assigned to `sses_pre`. We call the function with `sses_post_raw` to reverse score the post-intervention surveys and assign the result to `sses_post`.
 
-Similarly, we reverse score the post-intervention surveys and assign the result to `sses_post`.
+Notice that we could call this function with different arguments to reverse the reverse coded items on any survey in which questions are answered using a Likert scale.
 
 <a name="score"></a>
 
 # Calculate a total score for pre and post
 
-Having done this preparation, it's now easy to calculate the SSES baseline scores:
+Our data is now in a format which makes it easy to calculate the SSES baseline scores:
 
-```{r pre-score}
+```{r pre-score, R.options = list(width = 100)}
 sses_pre <- mutate(sses_pre, total = rowSums(sses_pre[4:23]))
+sses_pre %>% head(3)
 sses_pre %>%
   group_by(condition) %>%
   summarise(mean = mean(total), sd = sd(total))
@@ -262,13 +266,21 @@ sses_post %>%
 
 ## Calculate subscale scores
 
-As well as a total score, some surveys include subscales which measure more specific aspects of a construct. These can be calculated by adding together scores from specific items. For example, the DASS-21 has depression, anxiety and stress subscales. We can use `rowSums()` to add together the scores for items which make up these subscales:
+In addition to a total score, some surveys include subscales which measure more specific aspects of a construct. These can be calculated by adding together scores from specific items. For example, the DASS-21 has depression, anxiety and stress subscales. We can use `rowSums()` to add together the scores for items which make up these subscales:
 
 ```{r dass21-subscales}
 dass21 <- mutate(dass21, depression = rowSums(dass21[c(4+3,4+5,4+10,4+13,4+16,4+17,4+21)]))
 dass21 <- mutate(dass21, anxiety = rowSums(dass21[c(4+2,4+4,4+7,4+9,4+15,4+19,4+20)]))
 dass21 <- mutate(dass21, stress = rowSums(dass21[c(4+1,4+6,4+8,4+11,4+12,4+14,4+18)]))
-dass21 %>% head() %>% select(DASS1:stress)
+```
+
+```{r, echo=FALSE}
+dass21 %>%
+  head() %>%
+  select(DASS1:stress) %>%
+  kable("html") %>%
+  kable_styling("striped") %>%
+  scroll_box(width = "100%")
 ```
 
 **Explanation of commands:**
@@ -282,9 +294,9 @@ We use similar commands to create `anxiety` and `stress` columns based on the it
 
 # Calculate Cronbach’s alpha
 
-Cronbach's alpha is a measure of scale reliability based on the consistency of correlations between different groupings of the individual scale items. When a new scale is developed, it's reliability is normally reported using Cronbach's alpha. It's wise to ensure that the Cronbach's alpha for your sample is similar.
+Cronbach's alpha is a measure of scale reliability based on the consistency of correlations between different groupings of the individual scale items. When a new scale is developed, it's reliability is normally reported using Cronbach's alpha. It's wise to ensure that the Cronbach's alpha for your sample is similar to this value.
 
-We will use a function to calculate alpha for the SSES using the `cronbach()` function from the `psy` package:
+We'll write a function to calculate alpha for the SSES using the `cronbach()` function from the `psy` package:
 
 ```{r cronbach}
 library(psy)
@@ -301,7 +313,7 @@ Our function `sses_cronbach` expects its `scores` argument to be a data frame co
 
 The `cronbach()` function expects a data frame with one row per subject, and columns containing the scale scores. We supply this using the function `select(scores, q1:q20)`. Notice how we can use the column names in `scores` to specify the range of columns to `select()`.
 
-In addition to the value of alpha, `cronbach()` returns the number of subjects and the number of items. Here were only interested in alpha, which we return in a data frame. This will allow us to use the function for calculating alpha by group.
+In addition to the value of alpha, `cronbach()` returns the number of subjects and the number of items. Here were only interested in alpha, which we return in a data frame. Returning alpha in a data frame will help us to use the function for calculating alpha by group.
 
 We can now calculate an overall alpha for SSES by calling `sses_cronbach` with all of our SSES data, using `bind_rows(sses_pre, sses_post)`:
 
@@ -325,7 +337,7 @@ sses_pre_cronbach
 
 We save the output of the pipeline in `sses_pre_cronbach`. We start by piping `sses_pre` into `group_by(condition)`.
 
-We pipe this grouped data frame into `group_modify(~ sses_cronbach(.x))`. The `group_modify()` function allows you to run a function for each group in a grouped data frame. The `~` tells `group_modify()` to treat the next argument as a function, in this case `sses_cronbach(.x)`. The `.x` means the subset of rows created by our `group_by()`. The function used to process data a `group_modify()` must return a data frame. That explains why we returned alpha in a data frame in `sses_cronbach()`. So this code runs `sses_cronbach()` once for each set of rows that makes up our three conditions, with the three values of alpha combined into a single data frame.
+We pipe this grouped data frame into `group_modify(~ sses_cronbach(.x))`. The `group_modify()` function allows you to run a function for each group in a grouped data frame. The `~` tells `group_modify()` to treat the next argument as a function, in this case `sses_cronbach(.x)`. The `.x` means the subset of rows created by our `group_by()`. The function used within `group_modify()` must return its result as a data frame. This explains why we returned alpha in a data frame in `sses_cronbach()`. So this code runs `sses_cronbach()` once for each set of rows that makes up our three conditions, with the three values of alpha combined into a single data frame.
 
 You can see that `sses_pre_cronbach` has a `condition` column, and a column containing Cronbach's alpha for each condition.
 
@@ -344,7 +356,7 @@ These data show that alpha is especially low in the `self` and `other` condition
 
 # Compare baseline SSES scores between conditions
 
-Now that our we have calculated a total SSES score for each participant, we would like to check that there were no major differences between groups before our intervention. This should be the case if we successfully randomised participants to groups. If there are baseline differences we would need to account for these when comparing them to post-intervention scores. We can use a [within-subjects ANOVA](anova1.html#anovaWS) to compare the baseline SSES scores in our three groups.
+Now that we've calculated a total SSES score for each participant, we would like to check that there were no major differences between groups before our intervention. This should be the case if we successfully randomised participants to groups. If there are baseline differences we would need to account for these when comparing them to post-intervention scores. We can use a [within-subjects ANOVA](anova1.html#anovaWS) to compare the baseline SSES scores in our three groups.
 
 ```{r baseline}
 library(BayesFactor, quietly = TRUE)
@@ -365,7 +377,7 @@ sses_pre %>% group_by(condition) %>% summarise(mean = mean(total), sd = sd(total
 # Compare pre and post intervention SSES scores between conditions
 
 The main question we'd like to answer is whether our two imagery interventions 
-(visualising a negative mental image of oneself, or someone else) affected self esteem, relative to a control condition.  We can use a [factorial ANOVA](anova3.html#bfact) to compare SSES scores before and after the three interventions. In this design, `condition` is a between-subjects variable, and `time` (pre and post intervention) is a repeated measure.
+(visualising a negative mental image of oneself, or someone else) had effects on self esteem which differed from our control condition. We can test this using a [factorial ANOVA](anova3.html#bfact) to compare SSES scores before and after the three interventions. In this design, `condition` is a between-subjects variable, and `time` (pre and post intervention) is a repeated measure.
 
 First we combine the pre and post data frames:
 
