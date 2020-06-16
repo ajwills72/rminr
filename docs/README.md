@@ -147,6 +147,7 @@ links, you may find just notes, or incomplete worksheets.
 - [Preprocessing scales](preproc-scales.html): Handling missing data, subscale scores, tidying survey data, reverse scoring items, _user-defined functions_.
 
 - [Analysing scales](analyse-scales.html): Cronbach's alpha.
+
 ____
 
 #### Source code
