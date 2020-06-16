@@ -1,0 +1,104 @@
+---
+title: "Analysing scales"
+author: "Paul Sharpe, Sophie Homer"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+## DEVELOPERS: Uncomment one option, as appropriate
+
+## Data required to knit
+## https://github.com/ajwills72/rminr-data/tree/master/going-further/sses.csv
+##
+## I check out rminr-data and make a symbolic link to going-further
+
+## Show only commands.
+## knitr::opts_chunk$set(echo = TRUE, message = FALSE, results='hide', fig.keep = 'none', comment=NA)
+
+## Show commands and output.
+knitr::opts_chunk$set(echo = TRUE, comment=NA, cache = TRUE)
+options(tibble.width = Inf) # show all columns in output
+library(kableExtra)
+```
+
+# Contents
+
+- [Getting started](#start)
+
+- [Calculating Cronbach’s alpha](#cronbach)
+
+<a name="start"></a>
+
+# Getting started
+
+This worksheet builds on the script described in the [Preprocessing scales](preproc-scales.html) worksheet. Complete that worksheet before reading on.
+
+<a name="cronbach"></a>
+
+# Calculating Cronbach’s alpha
+
+Cronbach's alpha is a measure of scale reliability based on the consistency of correlations between different groupings of individual scale items. When a new scale is developed, its reliability is normally reported using Cronbach's alpha. It's wise to ensure that the Cronbach's alpha for your sample is similar to this value. We'll demonstrate the calculation of Cronbach's alpha for the State Self-Esteem Scale (SSES) data introduced in the [Preprocessing scales](preproc-scales.html) worksheet.
+
+Before we can calculate Cronbach's alpha, we need to preprocess our data. The preprocessing steps required for the SSES data are described in the [Preprocessing scales](preproc-scales.html) worksheet. When you have completed that worksheet, you will have a script named `scales.R`. Add the code below to `scales.R`, _after_ your SSES preprocessing.
+
+We'll write a function to calculate alpha for the SSES using the `cronbach()` function from the `psy` package:
+
+```{r cronbach}
+library(psy)
+
+sses_cronbach <- function(scores) {
+  cronbach <- cronbach(select(scores, q1:q20))
+  data.frame(cronbach$alpha)
+}
+```
+
+**Explanation of commands:**
+
+Our function `sses_cronbach` expects its `scores` argument to be a data frame containing SSES scores.
+
+The `cronbach()` function expects a data frame with one row per subject, and columns containing the scale scores. We supply this using the function `select(scores, q1:q20)`. Notice how we can use the column names in `scores` to specify the range of columns to `select()`.
+
+In addition to the value of alpha, `cronbach()` returns the number of subjects and the number of items. Here were only interested in alpha, which we return in a data frame. Returning alpha in a data frame will help us to use the function for calculating alpha by group.
+
+We can now calculate an overall alpha for SSES by calling `sses_cronbach` with all of our SSES data, using `bind_rows(sses_pre, sses_post)`:
+
+```{r cronbach-all}
+sses_cronbach_total <- sses_cronbach(bind_rows(sses_pre, sses_post))
+sses_cronbach_total
+```
+
+This gives us a value of `0.67`, which is quite a bit lower than the `0.92` reported by the authors who developed the scale (Heatherton & Polivy, 1991).
+
+We can use the same function to calculate alpha for SSES baseline scores:
+
+```{r cronbach-pre}
+sses_pre_cronbach <- sses_pre %>%
+  group_by(condition) %>%
+  group_modify(~ sses_cronbach(.x))
+sses_pre_cronbach
+```
+
+**Explanation of pipeline commands:**
+
+We save the output of the pipeline in `sses_pre_cronbach`. We start by piping `sses_pre` into `group_by(condition)`.
+
+We pipe this grouped data frame into `group_modify(~ sses_cronbach(.x))`. The `group_modify()` function allows you to run a function for each group in a grouped data frame. The `~` tells `group_modify()` to treat the next argument as a function, in this case `sses_cronbach(.x)`. The `.x` means the subset of rows created by our `group_by()`. The function used within `group_modify()` must return its result as a data frame. This explains why we returned alpha in a data frame in `sses_cronbach()`. So this code runs `sses_cronbach()` once for each set of rows that makes up our three conditions, with the three values of alpha combined into a single data frame.
+
+You can see that `sses_pre_cronbach` has a `condition` column, and a column containing Cronbach's alpha for each condition.
+
+We can use a similar pipeline to calculate post-intervention alphas:
+
+```{r cronbach-post}
+sses_post_cronbach <- sses_post %>%
+  group_by(condition) %>%
+  group_modify(~ sses_cronbach(.x))
+sses_post_cronbach
+```
+
+These data show that alpha is especially low in the `self` and `other` conditions.
+
+<a name="baseline"></a>
+___
+
+This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0. 
+
