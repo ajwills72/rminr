@@ -144,7 +144,7 @@ links, you may find just notes, or incomplete worksheets.
 
 - [Other resources](gfwr-other.html): Links to external resources.
 
-- [Preprocssing scales](preproc-sales.html): Handling missing data, subscale scores, tidying survey data, reverse scoring items, _user-defined functions_.
+- [Preprocessing scales](preproc-scales.html): Handling missing data, subscale scores, tidying survey data, reverse scoring items, _user-defined functions_.
 
 - [Analysing scales](analyse-scales.html): Cronbach's alpha.
 ____
