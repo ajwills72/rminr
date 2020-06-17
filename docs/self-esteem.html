@@ -932,7 +932,7 @@ sses_post_cronbach</code></pre>
 </div>
 <div id="compare-baseline-sses-scores-between-conditions" class="section level2">
 <h2>Compare baseline SSES scores between conditions</h2>
-<p>We would like to check that there were no major self-esteem differences between conditions before our intervention. This should be the case if we successfully randomised participants to conditions. If there are baseline differences we would need to account for these when comparing them to post-intervention scores. We can use a <a href="anova1.html#anovaWS">within-subjects ANOVA</a> to compare the baseline SSES scores in our three conditions.</p>
+<p>We would like to check that there were no major self-esteem differences between conditions before our intervention. This should be the case if we successfully randomised participants to conditions. If there are baseline differences we would need to account for these when comparing them to post-intervention scores. We can use a between-subjects ANOVA to compare the baseline SSES scores in our three conditions.</p>
 <pre class="r"><code>library(BayesFactor, quietly = TRUE)
 # FIXME: in base::try(expression, silent = silent) : not enough observations
 #bf &lt;- anovaBF(formula = total ~ condition + subj, data = sses_pre, whichRandom = &#39;subj&#39;)

@@ -207,7 +207,7 @@ These data show that alpha is especially low in the `self` and `other` condition
 
 ## Compare baseline SSES scores between conditions
 
-We would like to check that there were no major self-esteem differences between conditions before our intervention. This should be the case if we successfully randomised participants to conditions. If there are baseline differences we would need to account for these when comparing them to post-intervention scores. We can use a [within-subjects ANOVA](anova1.html#anovaWS) to compare the baseline SSES scores in our three conditions.
+We would like to check that there were no major self-esteem differences between conditions before our intervention. This should be the case if we successfully randomised participants to conditions. If there are baseline differences we would need to account for these when comparing them to post-intervention scores. We can use a between-subjects ANOVA to compare the baseline SSES scores in our three conditions.
 
 ```{r baseline}
 library(BayesFactor, quietly = TRUE)
