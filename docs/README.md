@@ -19,6 +19,8 @@ The advantages of R over other software packages are discussed [here](why-r-stud
 
 6. [Going further with R](#gfwr) (work in progress)
 
+7. [Case studies](#studies) (work in progress)
+
 ## 1. Absolute Beginners' Guide to R
 <a name="beginners"></a>
 
@@ -147,6 +149,8 @@ links, you may find just notes, or incomplete worksheets.
 - [Preprocessing scales](preproc-scales.html): Handling missing data, subscale scores, tidying survey data, reverse scoring items, _user-defined functions_.
 
 - [Analysing scales](analyse-scales.html): Cronbach's alpha.
+
+<a name="studies"></a>
 
 ## 7. Case studies
 These are full preprocessing and analysis pipelines, based on final-year undergraduate psychology projects.
