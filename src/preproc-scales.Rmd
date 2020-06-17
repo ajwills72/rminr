@@ -20,6 +20,7 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE, comment=NA, cache = TRUE)
 options(tibble.width = Inf) # show all columns in output
 library(kableExtra)
+library(pander)
 ```
 
 # Contents
@@ -50,13 +51,13 @@ This worksheet assumes familiarity with the techniques described in the followin
 
 # Introduction
 
-Intelligence, personality, and many other psychological constructs are often measured using scales. This type of data is normally collected using questionnaires (also called surveys). Answers to the questions are given numerical values, most commonly using a Likert scale. Likert scales associate numbers with a set of answers which express some degree of agreement each question e.g. `0=Not at all, 1=A little, 2=Somewhat, 3=A lot, 4=Extremely`. A formula is applied to the scores for each question, to calculate an overall number for the scale (more on this below).
+Intelligence, personality, and many other psychological constructs are often measured using scales. This type of data is normally collected using questionnaires (also called surveys). Answers to the questions are given numerical values, most commonly using a Likert scale. Likert scales associate numbers with a set of answers which express some degree of agreement each question e.g. `0=Not at all, 1=A little, 2=Somewhat, 3=A lot, 4=Extremely`. A formula is applied to the scores for questions which make up the construct to calculate an overall number for the scale. This could be all questions, or a subset for scales which contain subscales. The formula often just consists of adding up the individual scores (more on this below).
 
-A psychometric scale is a scale which has undergone some degree of testing, to ensure that it is valid and reliable. A valid scale is a true measure of the underlying construct, e.g. it measures intelligence, rather than something else. A reliable scale gives consistent results, i.e. a person who completed the scale at different times would produce similar scores, as would two people who are similar in terms of the construct. Most published scales have been tested to ensure they are valid and reliable, so it's advisable to use an existing scale if one exists, before creating your own questionnaire.
+A psychometric scale is a scale which has undergone some degree of testing to ensure that it is valid and reliable. A valid scale is a true measure of the underlying construct, e.g. it measures intelligence, rather than something else. A reliable scale gives consistent results, i.e. a person who completed the scale at different times would produce similar scores, as would two people who are similar in terms of the construct measured by the scale. Most published scales have been tested to ensure they are valid and reliable, so it's advisable to use an existing scale if one exists, before creating your own.
 
-Surveys can be created using [JISC](https://www.jisc.ac.uk/), [Gorilla Survey](https://gorilla.sc/), [OpenSesame](https://osdoc.cogsci.nl/), [The Experiment Factory](https://expfactory.github.io/experiments/), [Qualtrics](https://www.qualtrics.com/) and many other software packages. Most software will allow you to save your data as a CSV file. The precise structure of the data varies between packages, so you are likely to have to start by [preprocessing](preproc.html) your data. The preprocessing tasks described in this worksheet should be useful regardless of the software you used to collect your survey data, although they might need slight modifications depending on the data you start with.
+Surveys can be created using [JISC](https://www.jisc.ac.uk/), [Gorilla Survey](https://gorilla.sc/), [OpenSesame](https://osdoc.cogsci.nl/), [The Experiment Factory](https://expfactory.github.io/experiments/), [Qualtrics](https://www.qualtrics.com/) and many other software packages. Most software will allow you to save your data as a CSV file. The precise structure of the data varies between packages, so you are likely to have to start by [preprocessing](preproc.html) your data.
 
-In this worksheet, we'll cover some common techniques which you are likely to use to preprocess psychometric scale data.
+In this worksheet, we'll cover some common techniques which you are likely to use to preprocess psychometric scale data. These techniques should be useful regardless of the software you used to collect your survey data, although they will need slight modifications depending on the way your raw data is organised.
 
 <a name="start"></a>
 
@@ -70,7 +71,9 @@ To prepare for this worksheet, follow these steps:
 
 1. You will find the files `dass21.csv` and `state-self-esteem.sav` in the `going-further` folder in git repository we used [previously](preproc.html#load). Upload these files into the `going-further` folder you just created.
 
-1. Create a script named `scales.R` for storing the code in this worksheet.
+1. Create a script named `scales.R` and add the code in this worksheet to this script as you work through each section.
+
+We start with some lines to clear the workspace and load `tidyverse`.
 
 ```{r init-load, message=FALSE}
 rm(list = ls()) # clear the environment
@@ -81,7 +84,7 @@ library(tidyverse)
 
 # Selecting data
 
-The software used to administer your survey often generates files which include columns which aren't needed for data analysis. Our first step will be to remove these columns. We'll demonstrate this using some real data from the Depression Anxiety Stress Scales—21 (DASS-21, Heatherton & Polivy, 1991). The DASS-21 is a 21-item scale for measuring depression, anxiety and stress. This data is stored in the file `dass21.csv` which you added to your project above.
+Our first step will be to remove columns from the raw survey data which aren't needed for data analysis.  We'll demonstrate this using some real data from the Depression Anxiety Stress Scales—21 (DASS-21, Heatherton & Polivy, 1991). The DASS-21 is a 21-item scale for measuring depression, anxiety and stress. This data is stored in the file `dass21.csv` which you added to your project above.
 
 ```{r pre-process-dass}
 dass21_raw <- read_csv("going-further/dass21.csv")
@@ -92,15 +95,12 @@ dass21_raw <- select(dass21_raw, partID, Age:DASS21)
 
 1. We read the CSV file using `read_csv`, creating the data frame `dass21_raw`.
 
-1. We then `select()` just the columns in `dass21_raw` that we want to keep. The first column we `select()`, is the participant ID, which is stored in the `partID` column. Arguments to `select()` can also be consecutive ranges of columns in a data frame, consisting of the first and last column (left to right) name, separated by a `:`. This avoids having to type out long lists of column names.  Here we use `Age:DASS21` to select all columns between `Age` and `DASS21`.
+1. We then `select()` just the columns in `dass21_raw` that we want to keep. The first column we `select()`, is the participant ID, which is stored in the `partID` column. Arguments to `select()` can also be consecutive ranges of columns in a data frame, consisting of the first and last column name (ordered from left to right), separated by a `:`. This avoids having to type out long lists of column names.  Here we use `Age:DASS21` to select all columns between `Age` and `DASS21`.
 
 The table below shows the first few rows from `dass21_raw`. In this study, the data was recorded in "wide" format, i.e. one row for each participant. Notice that our data frame contains only the columns that we selected in the commands above. The DASS-21 scores are in columns `DASS1`-`DASS21`.
 
 ```{r dass21, echo=FALSE}
-head(dass21_raw) %>%
-  kable("html") %>%
-  kable_styling("striped") %>%
-  scroll_box(width = "100%")
+head(dass21_raw) %>% pander(split.table = Inf)
 ```
 
 <a name="missing"></a>
@@ -110,12 +110,8 @@ head(dass21_raw) %>%
 If participants don't complete (or partially complete) a survey, you may want to exclude their data from your analyses. If we look at a section of the DASS-21 data, we can see that data is missing for some participants.
 
 ```{r missing, echo=FALSE}
-slice(dass21_raw, 73:76) %>%
-  kable("html") %>%
-  kable_styling("striped") %>%
-  scroll_box(width = "100%")
+slice(dass21_raw, 73:76) %>% pander(split.table = Inf)
 ```
-
 
 Participants `108`, and `109` (rows 3 and 4) have numbers in all columns, indicating that their data is complete. However, participants `106` and `107` have cells containing the value `NA`, which means these cells in the CSV file were empty. For participant `106`, all cells are `NA` (perhaps they dropped out of the study), and for participant `107`, all of the DASS-21 cells are `NA` (perhaps they skipped this survey).
 
@@ -127,13 +123,17 @@ dass21 <- dass21_raw %>% drop_na()
 
 **Explanation of command:**
 
-1. We pipe the raw data into the `drop_na()` function (part of the `tidyverse` package). This drops any rows with a column containing `NA`. This code would also exclude participants who completed only part of a survey.
+1. We pipe the raw data into the `drop_na()` function (part of the `tidyverse` package). This drops any rows with a column containing `NA`, which includes data for participants `106` and `107`.
+
+```{r exclude, echo=FALSE}
+slice(dass21, 68:72) %>% pander(split.table = Inf)
+```
 
 <a name="subscales"></a>
 
 # Calculating subscale scores
 
-Our next step is to calculate the score for the construct measured by our scale. Many scales consist of groups of questions which measure multiple, distinct constructs. We'll refer to these as subscales. For the DASS-21, subscale scores for depression, anxiety and stress are calculated by adding together responses for specific items. We can do this using the `rowSums()` function:
+Our next step is to calculate the scores for the constructs measured by our scale. Many scales consist of groups of questions which measure multiple, distinct constructs. The DASS-21 is an example of a scale with subscale scores for depression, anxiety and stress. These are calculated by adding together responses for specific items, which we can do using the `rowSums()` function:
 
 ```{r dass21-subscales}
 dass21 <- mutate(dass21, depression = rowSums(dass21[c(4+3,4+5,4+10,4+13,4+16,4+17,4+21)]))
@@ -150,32 +150,24 @@ dass21 <- mutate(dass21, stress = rowSums(dass21[c(4+1,4+6,4+8,4+11,4+12,4+14,4+
 Our `dass21` data frame now looks has a depression, anxiety and stress score for each participant:
 
 ```{r, echo=FALSE}
-dass21 %>%
-  head() %>%
-  kable("html") %>%
-  kable_styling("striped") %>%
-  scroll_box(width = "100%")
+dass21 %>% head(3) %>% pander(split.table = Inf)
 ```
 
 <a name="tidy"></a>
 
 # Tidying survey data
 
-Some data benefits from a little more tidying than simply removing columns which aren't required. We'll demonstrate this more advanced preprocessing using data from the State Self-Esteem Scale (SSES, Osman et al., 2012). The SSES is a 20-item survey used to measure short-lived (state) changes in self-esteem. The SSES data is stored in the file `sses.csv` which you added to your project above. 
+Some data benefits from a little more tidying than simply removing columns which aren't required. We'll demonstrate this more advanced preprocessing the other dataset (`sses.csv`) which you added to your project above.This data comes from from an experiment in which self-esteem was measured before and after participants completed one of two mental imagery conditions, or a control condition. This experiment used the State Self-Esteem Scale (SSES, Osman et al., 2012), a 20-item scale used to measure short-lived (state) changes in self-esteem.
 
 ```{r, R.options = list(width = 100)}
 sses <- read_csv('going-further/sses.csv')
 ```
 
 ```{r, echo=FALSE}
-sses %>%
-  head(3) %>%
-  kable("html") %>%
-  kable_styling("striped") %>%
-  scroll_box(width = "100%")
+sses %>% head(3) %>% pander(split.table = Inf)
 ```
 
-This data comes from from an experiment in which self-esteem was measured before and after participants completed one of two mental imagery conditions, or a control condition. It will be easier to analyse if rename the columns. It will also be useful to divide the data into two data frames, one for the pre-intervention SSES, the other for the post-intervention SSES. We can do all of this in a single pipeline:
+The data will be easier to analyse if rename the columns. It will also be useful to divide the data into two data frames, one for the pre-intervention SSES, the other for the post-intervention SSES. We can do all of this in a single pipeline:
 
 ```{r preprocess-sses-pre}
 sses_pre_raw  <- sses %>% select(1, 5:25) %>%
@@ -188,7 +180,7 @@ sses_pre_raw  <- sses %>% select(1, 5:25) %>%
 
 1. `sses_pre_raw  <- sses %>% select(1, 5:25)` - We save the output of the pipeline in `sses_pre_raw`. First, we pipe the `sses` data frame into a `select` which keeps column 1, and columns 5:25. Column 1 is the participant id, columns 5:24 are the SSES scores, and column 25 is the participant's condition.
 
-1. `set_names(~ str_to_lower(.) %>% str_replace_all("pre_sse_", "q"))` - Next, we use the function `set_names()` to rename our columns. The `~` is a way of telling `set_names()` to apply a function each column name. The remainder of the command a sub-pipeline which tidies up the column name. The command `str_to_lower(.)` converts a string (the `.` means the current column name) to lower case. This lower case name is piped to `str_replace_all("pre_sse_", "q"))` which replaces any string with the prefix `pre_sse_` with `q`. All our columns are now lowercase, and the SSES questions are named `q1:q20`.
+1. `set_names(~ str_to_lower(.) %>% str_replace_all("pre_sse_", "q"))` - Next, we use the function `set_names()` to rename our columns. The `~` is a way of telling `set_names()` to apply a function each column name. The remainder of the command is a "sub-pipeline" which tidies up the column name. The command `str_to_lower(.)` converts a string (the `.` means the current column name) to lower case. This lower case name is piped to `str_replace_all("pre_sse_", "q"))` which replaces any string with the prefix `pre_sse_` with `q`. All our columns are now lowercase, and the SSES questions are named `q1:q20`.
 
 1. `mutate(subj = factor(partid), condition = factor(condition), time = factor('pre'))` - Next, we use `mutate` to add and modify some columns. The argument `subj = factor(partid)` creates a new column named `subj` (which is a bit clearer than `partid`) by copying the `partid` column and making it a factor. The argument `condition = factor(condition)` makes the `condition` column a factor. The argument `time = factor('pre')` creates a new factor called `time` and sets all values to `pre`.
 
@@ -197,11 +189,7 @@ sses_pre_raw  <- sses %>% select(1, 5:25) %>%
 We now have our pre-intervention SSES data in a data frame with clearer column headings:
 
 ```{r, echo=FALSE}
-sses_pre_raw %>%
-  head(3) %>%
-  kable("html") %>%
-  kable_styling("striped") %>%
-  scroll_box(width = "100%")
+sses_pre_raw %>% head(3) %>% pander(split.table = Inf)
 ```
 
 We use a similar pipeline to create a tidy data frame containing the post-intervention SSES data.
@@ -218,24 +206,22 @@ sses_post_raw <- sses %>% select(1, 25:45) %>%
 1. This is indentical to the previous pipeline, except that the post-intervention SSES data are in columns `26:45`, these columns have the prefix `post_sse_` rather than `pre_sse_`, and we use the value `post` in our `time` factor.
 
 ```{r, echo=FALSE}
-sses_post_raw %>%
-  head(3) %>%
-  kable("html") %>%
-  kable_styling("striped") %>%
-  scroll_box(width = "100%")
+sses_post_raw %>% head(3) %>% pander(split.table = Inf)
 ```
 
 <a name="reverse"></a>
 
 # Reverse scoring survey items
 
-The SSES consists of 20 questions, each of which is scored from `0 (Not at all)` to `4 (Extremely)`. Question 1 reads `I feel confident about my abilities`, so a higher score indicates higher self-esteem. However, a number of questions on the SSES are 'reverse scored'. For example, question 2 reads `I am worried about whether I am regarded as a success or failure`, so in this case a higher score indcates lower self-esteem. Surveys often use reverse scored questions to encourage participants to pay attention to the wording of each question. Before calculating a total SSES score, we would need to reverse the reverse scored items, so that a higher number means higher self-esteem for all items.  
+The SSES questions are scored from `0 (Not at all)` to `4 (Extremely)`. Question 1 reads `I feel confident about my abilities`, so a higher score indicates higher self-esteem. However, a number of questions on the SSES are 'reverse scored'. For example, question 2 reads `I am worried about whether I am regarded as a success or failure`, so in this case a higher score indcates lower self-esteem. Surveys often use reverse scored questions to encourage participants to pay attention to the wording of each question. Before calculating a total SSES score, we need to reverse the reverse scored items, so that a higher number means higher self-esteem for all items.  
 
-## User-defined functions
+## Writing a function to reverse score survey items
 
-We have a number of reverse scored items which we need to reverse for each participant. It would be laborious to write code to do this for each one, so we'll create a function to reverse any reverse coded score. Functions are reusable lines of code which perform a particular function, and are one of the most powerful features of programming languages such as R. At this point you will be familiar with _using_ functions, for example `rm()` is a function for removing objects from the R environment, and is part of the base `R` language. The `rm()` function is reusable in the sense that you can use the same function to do slightly different things. For example, `rm('foo')` would remove the single object `foo` from your environment. The string `foo` is called an _argument_ and is the data processed by `rm()`. The same function can also process a list of variable names, so calling `rm(ls())`, first calls `ls()` which lists all objects in your environment, and passes the results as an argument to `rm()` which removes them, thereby cleaning your environment of all objects. Similarly, you've used `read_csv()`, with filename arguments to read different data files. The `read_csv()` function is part of the `readr` package which is loaded when you call `library(tidyverse)` (`library()` is another base `R` function). 
+We have a number of reverse scored items which we need to reverse for each participant. It would be laborious to write code to do this for each one, so we'll write some reusable code which can reverse any reverse coded score. This requires a brief digression into an explanation of functions.
 
-Removing objects from the environment and reading files are such common tasks that they are part of `R` or standard packages. However, we can use a special base `R` function called `function()`, to define our own functions for tasks we want to do repeatedly. This is not particularly complicated, but requires a little explanation if you've never encountered this idea before . We'll explain the main steps in defining a function, with a simple function to reverse survey items which are reverse coded (you can find more details [in the R manual](https://cran.r-project.org/doc/manuals/r-release/R-intro.html#Writing-your-own-functions).
+Functions are reusable lines of code which perform a particular function (hence the name), and are one of the most powerful features of programming languages such as R. At this point you will be familiar with _using_ functions. For example `rm()` is a function for removing objects from the R environment, and is part of the base `R` language. The `rm()` function is reusable in the sense that you can use the same function to do slightly different things. For example, `rm('foo')` would remove the single object `foo` from your environment. The string `foo` is called an _argument_ and is the data processed by `rm()`. The same function can also process a list of variable names, so calling `rm(ls())`, first calls `ls()` which lists all objects in your environment, and passes the results as an argument to `rm()` which removes them, thereby cleaning your environment of all objects. Similarly, you've used `read_csv()`, with different filename arguments to read different data files. The `read_csv()` function is part of the `readr` package which is loaded when you call `library(tidyverse)` (`library()` is another base `R` function). 
+
+Removing objects from the environment and reading files are such common tasks that they are, respectively, part of base `R` and a package that you can load using `library()`. However, we can use a special base `R` function called `function()`, to define our own functions for more specific tasks that we want to do repeatedly. This is not particularly complicated, but requires a little explanation if you've never encountered user-defined functions before (you can find more details in [the R manual](https://cran.r-project.org/doc/manuals/r-release/R-intro.html#Writing-your-own-functions)). We'll explain the main steps in defining a function, by writing a simple function to reverse survey items which are reverse coded.
 
 ```{r reverse-score-survey}
 # Reverse score survey items
@@ -258,7 +244,7 @@ reverse_score_survey <- function(scores, reverse, max) {
 
 1. The final line in `reverse_score_survey()` pipes our raw scores into `mutate_at(reverse, reverse_score)`. The `mutate_at()` function applies a function to a subset of columns in a data frame. The first argument `reverse` is the list of column names to be reversed. The second argument `reverse_score` is the name of the function we wrote to reverse the score.
 
-1. When they are called, R functions return a single object. This is the last object which is created inside the function. In `reverse_score_survey()`, this will be a data frame with all scores adjusted to be from 0 to `max`.
+1. A function returns the last object it creates to the code that called it. In `reverse_score_survey()`, this will be a data frame with all scores adjusted to be from 0 to `max`.
 
 This was quite a long explanation for a simple, but very powerful four lines of code. By calling this function with different arguments, we can reverse the reverse coded items on any survey in which questions are answered using a Likert scale. To demonstrate this, we can now call `reverse_score_survey()` to reverse score our pre and post intervention SSES scores:
 
@@ -273,7 +259,7 @@ sses_post <- reverse_score_survey(sses_post_raw, reverse_questions, 4)
 
 1. We set `reverse_questions` to be a vector of the column names of the SSES items that are reverse scored.
 
-1. Then we call the `reverse_score_survey(sses_pre_raw, reverse_questions, 4)`. When the function is run, `sses_pre_raw` is assigned to the `scores` argument, `reverse_questions` to the `reverse` argument, and `4` to the `max` argument. The data frame returned by `reverse_score_survey()` (higher score meaning higher self-esteem for all items) is assigned to `sses_pre`.
+1. Then we call `reverse_score_survey(sses_pre_raw, reverse_questions, 4)`. When the function is run, `sses_pre_raw` is assigned to the `scores` argument, `reverse_questions` to the `reverse` argument, and `4` to the `max` argument. The data frame returned by `reverse_score_survey()` (higher score meaning higher self-esteem for all items) is assigned to `sses_pre`.
 
 1. Similarly, we call the same function with `sses_post_raw` to reverse score the post-intervention surveys and assign the result to `sses_post`.
 
@@ -281,6 +267,10 @@ Now that our items are all scored in the same direction, we can calculate the to
 
 ```{r pre-score, R.options = list(width = 100)}
 sses_pre <- mutate(sses_pre, total = rowSums(sses_pre[4:23]))
+```
+
+```{r, echo=FALSE}
+sses_pre %>% head(3) %>% pander(split.table = Inf)
 ```
 
 # References
