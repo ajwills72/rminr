@@ -28,7 +28,6 @@ options(tibble.width = Inf) # show all columns in output
 The techniques used in this processing pipeline are described in more detail in the following worksheets:
 
 - [Preprocessing scales](preproc-scales.html)
-- [Analysing scales](analyse-scales.html)
 
 # Introduction
 
