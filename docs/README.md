@@ -146,7 +146,7 @@ links, you may find just notes, or incomplete worksheets.
 
 - [Other resources](gfwr-other.html): Links to external resources.
 
-- [Preprocessing scales](preproc-scales.html): Handling missing data, subscale scores, tidying survey data, reverse scoring items, _user-defined functions_.
+- [Preprocessing scales](preproc-scales.html): Handling missing data, calculating subscale scores, tidying survey data, reverse scoring items, _user-defined functions_.
 
 - [Analysing scales](analyse-scales.html): Cronbach's alpha.
 
@@ -155,7 +155,7 @@ links, you may find just notes, or incomplete worksheets.
 ## 7. Case studies
 These are full preprocessing and analysis pipelines, based on final-year undergraduate psychology projects.
 
-- [The effects of negative mental imagery on self-esteem](self-esteem.html)
+- [The effects of negative mental imagery on self-esteem](cs-self-esteem.html)
 
 ____
 

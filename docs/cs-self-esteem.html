@@ -9,7 +9,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
-<meta name="author" content="Sophie Homer, Paul Sharpe, Andy Wills" />
+<meta name="author" content="Sophie Homer, Paul Sharpe" />
 
 
 <title>The effects of negative mental imagery on self-esteem</title>
@@ -363,7 +363,7 @@ summary {
 
 
 <h1 class="title toc-ignore">The effects of negative mental imagery on self-esteem</h1>
-<h4 class="author">Sophie Homer, Paul Sharpe, Andy Wills</h4>
+<h4 class="author">Sophie Homer, Paul Sharpe</h4>
 
 </div>
 
@@ -378,26 +378,15 @@ summary {
 </ul>
 <p><a name="intro"></a></p>
 </div>
-<div id="before-you-start" class="section level1">
-<h1>Before you start…</h1>
-<p>The techniques used in this processing pipeline are described in more detail in the following worksheets:</p>
-<ul>
-<li><a href="preproc.html">Preprocessing data from experiments</a></li>
-<li><a href="preproc-scales.html">Preprocessing scales</a></li>
-<li><a href="analyse-scales.html">Analysing scales</a></li>
-<li><a href="anova1.html">Within-subject differences</a></li>
-<li><a href="anova3.html">Factorial differences</a></li>
-</ul>
-</div>
 <div id="introduction" class="section level1">
 <h1>Introduction</h1>
-<p>This study was an experiment in which self-esteem was measured before and after participants completed one of two mental imagery conditions, or a control condition:</p>
+<p>This study was an experiment in which self-esteem was measured before and after a mental imagery intervention. Self-esteem was measured using the State Self-Esteem Scale (SSES, Osman et al., 2012), a 20-item survey used to measure short-lived (state) changes in self-esteem. Participants completed one of two mental imagery conditions, or a control condition:</p>
 <ul>
 <li>Condition 1: participants visualised a negative mental image of themself</li>
 <li>Condition 2: participants visualised a negative mental image of someone else</li>
 <li>Condition 0 (control): participants did a card sorting task and did not think of any images.</li>
 </ul>
-<p>Self-esteem was measured using the State Self-Esteem Scale (SSES, Osman et al., 2012). The SSES is a 20-item survey used to measure short-lived (state) changes in self-esteem.</p>
+<p>This was a 2 (time) x 3 (condition) mixed design.</p>
 <p><a name="start"></a></p>
 </div>
 <div id="getting-started" class="section level1">
@@ -407,15 +396,257 @@ summary {
 </div>
 <div id="preprocessing" class="section level1">
 <h1>Preprocessing</h1>
+<p>See also: <a href="preproc-scales.html">Preprocessing scales</a>.</p>
 <div id="tidy-data" class="section level2">
 <h2>Tidy data</h2>
-<p>We start by loading our data, selecting the columns we want, and tidying up the column names.</p>
+<p>We start by loading our data.</p>
 <pre class="r"><code>rm(list = ls()) # clear the environment
 library(tidyverse)
 
-sses &lt;- read_csv(&#39;going-further/sses.csv&#39;)
-
-sses_pre_raw  &lt;- sses %&gt;% select(1, 5:25) %&gt;%
+sses &lt;- read_csv(&#39;going-further/sses.csv&#39;)</code></pre>
+<table style="width:100%;">
+<colgroup>
+<col width="1%"></col>
+<col width="1%"></col>
+<col width="1%"></col>
+<col width="1%"></col>
+<col width="2%"></col>
+<col width="2%"></col>
+<col width="2%"></col>
+<col width="2%"></col>
+<col width="2%"></col>
+<col width="2%"></col>
+<col width="2%"></col>
+<col width="2%"></col>
+<col width="2%"></col>
+<col width="2%"></col>
+<col width="2%"></col>
+<col width="2%"></col>
+<col width="2%"></col>
+<col width="2%"></col>
+<col width="2%"></col>
+<col width="2%"></col>
+<col width="2%"></col>
+<col width="2%"></col>
+<col width="2%"></col>
+<col width="2%"></col>
+<col width="2%"></col>
+<col width="2%"></col>
+<col width="2%"></col>
+<col width="2%"></col>
+<col width="2%"></col>
+<col width="2%"></col>
+<col width="2%"></col>
+<col width="2%"></col>
+<col width="2%"></col>
+<col width="2%"></col>
+<col width="2%"></col>
+<col width="2%"></col>
+<col width="2%"></col>
+<col width="2%"></col>
+<col width="2%"></col>
+<col width="2%"></col>
+<col width="2%"></col>
+<col width="2%"></col>
+<col width="2%"></col>
+<col width="2%"></col>
+<col width="2%"></col>
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">partID</th>
+<th align="center">Age</th>
+<th align="center">Gender</th>
+<th align="center">Stage</th>
+<th align="center">Pre_SSE_1</th>
+<th align="center">Pre_SSE_2</th>
+<th align="center">Pre_SSE_3</th>
+<th align="center">Pre_SSE_4</th>
+<th align="center">Pre_SSE_5</th>
+<th align="center">Pre_SSE_6</th>
+<th align="center">Pre_SSE_7</th>
+<th align="center">Pre_SSE_8</th>
+<th align="center">Pre_SSE_9</th>
+<th align="center">Pre_SSE_10</th>
+<th align="center">Pre_SSE_11</th>
+<th align="center">Pre_SSE_12</th>
+<th align="center">Pre_SSE_13</th>
+<th align="center">Pre_SSE_14</th>
+<th align="center">Pre_SSE_15</th>
+<th align="center">Pre_SSE_16</th>
+<th align="center">Pre_SSE_17</th>
+<th align="center">Pre_SSE_18</th>
+<th align="center">Pre_SSE_19</th>
+<th align="center">Pre_SSE_20</th>
+<th align="center">Condition</th>
+<th align="center">Post_SSE_1</th>
+<th align="center">Post_SSE_2</th>
+<th align="center">Post_SSE_3</th>
+<th align="center">Post_SSE_4</th>
+<th align="center">Post_SSE_5</th>
+<th align="center">Post_SSE_6</th>
+<th align="center">Post_SSE_7</th>
+<th align="center">Post_SSE_8</th>
+<th align="center">Post_SSE_9</th>
+<th align="center">Post_SSE_10</th>
+<th align="center">Post_SSE_11</th>
+<th align="center">Post_SSE_12</th>
+<th align="center">Post_SSE_13</th>
+<th align="center">Post_SSE_14</th>
+<th align="center">Post_SSE_15</th>
+<th align="center">Post_SSE_16</th>
+<th align="center">Post_SSE_17</th>
+<th align="center">Post_SSE_18</th>
+<th align="center">Post_SSE_19</th>
+<th align="center">Post_SSE_20</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">47</td>
+<td align="center">20</td>
+<td align="center">1</td>
+<td align="center">2</td>
+<td align="center">3</td>
+<td align="center">0</td>
+<td align="center">2</td>
+<td align="center">2</td>
+<td align="center">1</td>
+<td align="center">3</td>
+<td align="center">4</td>
+<td align="center">3</td>
+<td align="center">3</td>
+<td align="center">4</td>
+<td align="center">4</td>
+<td align="center">3</td>
+<td align="center">2</td>
+<td align="center">3</td>
+<td align="center">4</td>
+<td align="center">2</td>
+<td align="center">1</td>
+<td align="center">2</td>
+<td align="center">3</td>
+<td align="center">1</td>
+<td align="center">0</td>
+<td align="center">3</td>
+<td align="center">2</td>
+<td align="center">3</td>
+<td align="center">2</td>
+<td align="center">3</td>
+<td align="center">2</td>
+<td align="center">4</td>
+<td align="center">3</td>
+<td align="center">3</td>
+<td align="center">4</td>
+<td align="center">4</td>
+<td align="center">3</td>
+<td align="center">2</td>
+<td align="center">2</td>
+<td align="center">4</td>
+<td align="center">3</td>
+<td align="center">2</td>
+<td align="center">3</td>
+<td align="center">3</td>
+<td align="center">3</td>
+</tr>
+<tr class="even">
+<td align="center">51</td>
+<td align="center">22</td>
+<td align="center">2</td>
+<td align="center">2</td>
+<td align="center">2</td>
+<td align="center">1</td>
+<td align="center">3</td>
+<td align="center">2</td>
+<td align="center">3</td>
+<td align="center">3</td>
+<td align="center">4</td>
+<td align="center">4</td>
+<td align="center">3</td>
+<td align="center">2</td>
+<td align="center">2</td>
+<td align="center">3</td>
+<td align="center">1</td>
+<td align="center">3</td>
+<td align="center">4</td>
+<td align="center">4</td>
+<td align="center">2</td>
+<td align="center">4</td>
+<td align="center">2</td>
+<td align="center">2</td>
+<td align="center">0</td>
+<td align="center">3</td>
+<td align="center">1</td>
+<td align="center">3</td>
+<td align="center">1</td>
+<td align="center">3</td>
+<td align="center">3</td>
+<td align="center">3</td>
+<td align="center">3</td>
+<td align="center">4</td>
+<td align="center">3</td>
+<td align="center">2</td>
+<td align="center">2</td>
+<td align="center">2</td>
+<td align="center">3</td>
+<td align="center">4</td>
+<td align="center">4</td>
+<td align="center">2</td>
+<td align="center">4</td>
+<td align="center">2</td>
+<td align="center">2</td>
+</tr>
+<tr class="odd">
+<td align="center">57</td>
+<td align="center">20</td>
+<td align="center">2</td>
+<td align="center">2</td>
+<td align="center">3</td>
+<td align="center">4</td>
+<td align="center">0</td>
+<td align="center">4</td>
+<td align="center">4</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">4</td>
+<td align="center">2</td>
+<td align="center">4</td>
+<td align="center">2</td>
+<td align="center">3</td>
+<td align="center">4</td>
+<td align="center">4</td>
+<td align="center">4</td>
+<td align="center">4</td>
+<td align="center">4</td>
+<td align="center">4</td>
+<td align="center">4</td>
+<td align="center">4</td>
+<td align="center">0</td>
+<td align="center">3</td>
+<td align="center">4</td>
+<td align="center">0</td>
+<td align="center">4</td>
+<td align="center">4</td>
+<td align="center">2</td>
+<td align="center">0</td>
+<td align="center">4</td>
+<td align="center">2</td>
+<td align="center">4</td>
+<td align="center">2</td>
+<td align="center">3</td>
+<td align="center">4</td>
+<td align="center">4</td>
+<td align="center">4</td>
+<td align="center">4</td>
+<td align="center">4</td>
+<td align="center">4</td>
+<td align="center">4</td>
+<td align="center">4</td>
+</tr>
+</tbody>
+</table>
+<p>To prepare for our analyses, we select the columns we want, and tidy up the column names.</p>
+<pre class="r"><code>sses_pre_raw  &lt;- sses %&gt;% select(1, 5:25) %&gt;%
   set_names(~ str_to_lower(.) %&gt;% str_replace_all(&quot;pre_sse_&quot;, &quot;q&quot;)) %&gt;%
   mutate(subj = factor(partid), condition = factor(condition), time = factor(&#39;pre&#39;)) %&gt;%
   select(subj, condition, time, q1:q20)</code></pre>
@@ -553,12 +784,14 @@ sses_pre_raw  &lt;- sses %&gt;% select(1, 5:25) %&gt;%
 </div>
 <div id="recode-factor-levels" class="section level2">
 <h2>Recode factor levels</h2>
-<p>Looking at the <code>condition</code> column above, we can see that the experimental software that generated our data used numbers to represent different levels <code>condition</code> factor. It’s often clearer if the numbers are converted to strings which describe the factor levels.</p>
+<p>Looking at the <code>condition</code> column above, we can see that the experimental software that generated our data used numbers to represent different levels of this factor. It’s often clearer if the numbers are converted to strings which describe the factor levels.</p>
 <pre class="r"><code>sses_pre_raw$condition &lt;- recode_factor(sses_pre_raw$condition, `0` = &#39;control&#39;,
                                         `1` = &#39;self&#39;, `2` = &#39;other&#39;)</code></pre>
 <p><strong>Explanation of command:</strong></p>
-<p>We use <code>recode_factor()</code> to rename the levels of the experimental condition (<code>sses_pre_raw$condition</code>). The current factor level name goes on the left hand side of the <code>=</code>, the new name goes on the right hand side. Notice that the numbers need to be in backticks. The renamed factor levels are reassigned to the same column <code>sses_pre_raw$condition</code>.</p>
-<p>Our data frame now has intuitive column and factor names:</p>
+<ol style="list-style-type: decimal">
+<li>We use <code>recode_factor()</code> to rename the levels of the experimental condition (<code>sses_pre_raw$condition</code>). The current factor level name goes on the left hand side of the <code>=</code>, the new name goes on the right hand side. Notice that the numbers need to be in backticks. The renamed factor levels are reassigned to the same column <code>sses_pre_raw$condition</code>.</li>
+</ol>
+<p>Our <code>condition</code> factor now has intuitive level names:</p>
 <table style="width:100%;">
 <colgroup>
 <col width="5%"></col>
@@ -697,6 +930,137 @@ sses_pre_raw  &lt;- sses %&gt;% select(1, 5:25) %&gt;%
   select(subj, condition, time, q1:q20)
 sses_post_raw$condition &lt;- recode_factor(sses_post_raw$condition, `0` = &#39;control&#39;,
                                         `1` = &#39;self&#39;, `2` = &#39;other&#39;)</code></pre>
+<table style="width:100%;">
+<colgroup>
+<col width="5%"></col>
+<col width="8%"></col>
+<col width="5%"></col>
+<col width="3%"></col>
+<col width="3%"></col>
+<col width="3%"></col>
+<col width="3%"></col>
+<col width="3%"></col>
+<col width="3%"></col>
+<col width="3%"></col>
+<col width="3%"></col>
+<col width="3%"></col>
+<col width="4%"></col>
+<col width="4%"></col>
+<col width="4%"></col>
+<col width="4%"></col>
+<col width="4%"></col>
+<col width="4%"></col>
+<col width="4%"></col>
+<col width="4%"></col>
+<col width="4%"></col>
+<col width="4%"></col>
+<col width="4%"></col>
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">subj</th>
+<th align="center">condition</th>
+<th align="center">time</th>
+<th align="center">q1</th>
+<th align="center">q2</th>
+<th align="center">q3</th>
+<th align="center">q4</th>
+<th align="center">q5</th>
+<th align="center">q6</th>
+<th align="center">q7</th>
+<th align="center">q8</th>
+<th align="center">q9</th>
+<th align="center">q10</th>
+<th align="center">q11</th>
+<th align="center">q12</th>
+<th align="center">q13</th>
+<th align="center">q14</th>
+<th align="center">q15</th>
+<th align="center">q16</th>
+<th align="center">q17</th>
+<th align="center">q18</th>
+<th align="center">q19</th>
+<th align="center">q20</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">47</td>
+<td align="center">control</td>
+<td align="center">post</td>
+<td align="center">3</td>
+<td align="center">2</td>
+<td align="center">3</td>
+<td align="center">2</td>
+<td align="center">3</td>
+<td align="center">2</td>
+<td align="center">4</td>
+<td align="center">3</td>
+<td align="center">3</td>
+<td align="center">4</td>
+<td align="center">4</td>
+<td align="center">3</td>
+<td align="center">2</td>
+<td align="center">2</td>
+<td align="center">4</td>
+<td align="center">3</td>
+<td align="center">2</td>
+<td align="center">3</td>
+<td align="center">3</td>
+<td align="center">3</td>
+</tr>
+<tr class="even">
+<td align="center">51</td>
+<td align="center">control</td>
+<td align="center">post</td>
+<td align="center">3</td>
+<td align="center">1</td>
+<td align="center">3</td>
+<td align="center">1</td>
+<td align="center">3</td>
+<td align="center">3</td>
+<td align="center">3</td>
+<td align="center">3</td>
+<td align="center">4</td>
+<td align="center">3</td>
+<td align="center">2</td>
+<td align="center">2</td>
+<td align="center">2</td>
+<td align="center">3</td>
+<td align="center">4</td>
+<td align="center">4</td>
+<td align="center">2</td>
+<td align="center">4</td>
+<td align="center">2</td>
+<td align="center">2</td>
+</tr>
+<tr class="odd">
+<td align="center">57</td>
+<td align="center">control</td>
+<td align="center">post</td>
+<td align="center">3</td>
+<td align="center">4</td>
+<td align="center">0</td>
+<td align="center">4</td>
+<td align="center">4</td>
+<td align="center">2</td>
+<td align="center">0</td>
+<td align="center">4</td>
+<td align="center">2</td>
+<td align="center">4</td>
+<td align="center">2</td>
+<td align="center">3</td>
+<td align="center">4</td>
+<td align="center">4</td>
+<td align="center">4</td>
+<td align="center">4</td>
+<td align="center">4</td>
+<td align="center">4</td>
+<td align="center">4</td>
+<td align="center">4</td>
+</tr>
+</tbody>
+</table>
 <p><a name="reverse"></a></p>
 </div>
 <div id="reverse-score-sses-items" class="section level2">
@@ -892,6 +1256,7 @@ sses_pre %&gt;% head(3) %&gt;% pander(split.table = Inf)</code></pre>
 </div>
 <div id="calculate-cronbachs-alpha" class="section level2">
 <h2>Calculate Cronbach’s alpha</h2>
+<p>See also: <a href="analyse-scales.html">Analysing scales</a>.</p>
 <p>We calculate an overall Cronbach’s alpha for the pre and post SSES.</p>
 <pre class="r"><code>library(psy)
 
@@ -903,8 +1268,8 @@ sses_cronbach_total &lt;- sses_cronbach(bind_rows(sses_pre, sses_post))
 sses_cronbach_total</code></pre>
 <pre><code>  cronbach.alpha
 1      0.6693976</code></pre>
-<p>This gives us a value of <code>0.67</code>, which is quite a bit lower than the <code>0.92</code> reported by the authors who developed the scale (Heatherton &amp; Polivy, 1991).</p>
-<p>We can also look at Cronbach’s alpha pre and post intervention:</p>
+<p>This gives us a value of <code>0.67</code>, which is quite a bit lower than the <code>0.92</code> reported by the authors who developed the SSES (Heatherton &amp; Polivy, 1991).</p>
+<p>We also look at Cronbach’s alpha pre and post intervention:</p>
 <pre class="r"><code>sses_pre_cronbach &lt;- sses_pre %&gt;%
   group_by(condition) %&gt;%
   group_modify(~ sses_cronbach(.x))
@@ -927,15 +1292,14 @@ sses_post_cronbach</code></pre>
 1 control            0.742
 2 self               0.490
 3 other              0.498</code></pre>
-<p>These data show that alpha is especially low in the <code>self</code> and <code>other</code> conditions.</p>
+<p>Alpha looks especially low in the <code>self</code> and <code>other</code> conditions.</p>
 <p><a name="baseline"></a></p>
 </div>
 <div id="compare-baseline-sses-scores-between-conditions" class="section level2">
 <h2>Compare baseline SSES scores between conditions</h2>
+<p>See also: <a href="anova1.html">Within-subject differences</a>.</p>
 <p>We would like to check that there were no major self-esteem differences between conditions before our intervention. This should be the case if we successfully randomised participants to conditions. If there are baseline differences we would need to account for these when comparing them to post-intervention scores. We can use a between-subjects ANOVA to compare the baseline SSES scores in our three conditions.</p>
 <pre class="r"><code>library(BayesFactor, quietly = TRUE)
-# FIXME: in base::try(expression, silent = silent) : not enough observations
-#bf &lt;- anovaBF(formula = total ~ condition + subj, data = sses_pre, whichRandom = &#39;subj&#39;)
 bf &lt;- anovaBF(formula = total ~ condition, data = as.data.frame(sses_pre))
 bf</code></pre>
 <pre><code>Bayes factor analysis
@@ -960,6 +1324,7 @@ Bayes factor type: BFlinearModel, JZS</code></pre>
 </div>
 <div id="compare-pre-and-post-intervention-sses-scores-between-conditions" class="section level1">
 <h1>Compare pre and post intervention SSES scores between conditions</h1>
+<p>See also: <a href="anova3.html">Factorial differences</a>.</p>
 <p>The main question we’d like to answer is whether our two imagery interventions (visualising a negative mental image of oneself, or someone else) had effects on self esteem which differed from our control condition. We can test this using a <a href="anova3.html#bfact">factorial ANOVA</a> to compare SSES scores before and after the three interventions. In this design, <code>condition</code> is a between-subjects variable, and <code>time</code> (pre and post intervention) is a repeated measure.</p>
 <pre class="r"><code>sses_pre_post &lt;- bind_rows(sses_pre, sses_post) %&gt;%
   mutate(time = factor(time))
@@ -971,7 +1336,7 @@ bf &lt;- anovaBF(formula = total ~ time*condition + subj,
 <pre class="r"><code>bf[1]</code></pre>
 <pre><code>Bayes factor analysis
 --------------
-[1] condition + subj : 3.652467 ±1.47%
+[1] condition + subj : 3.876945 ±4.13%
 
 Against denominator:
   total ~ subj 
@@ -981,7 +1346,7 @@ Bayes factor type: BFlinearModel, JZS</code></pre>
 <pre class="r"><code>bf[2]</code></pre>
 <pre><code>Bayes factor analysis
 --------------
-[1] time + subj : 0.1942987 ±2.31%
+[1] time + subj : 0.1912399 ±1.1%
 
 Against denominator:
   total ~ subj 
@@ -991,14 +1356,14 @@ Bayes factor type: BFlinearModel, JZS</code></pre>
 <pre class="r"><code>bf[4] / bf[3]</code></pre>
 <pre><code>Bayes factor analysis
 --------------
-[1] condition + time + condition:time + subj : 10.13063 ±4.46%
+[1] condition + time + condition:time + subj : 9.942473 ±4.15%
 
 Against denominator:
   total ~ condition + time + subj 
 ---
 Bayes factor type: BFlinearModel, JZS</code></pre>
-<p>Given the interaction, we would probably want to carry out <a href="anova1.html#pairs">pairwise comparisons</a> to compare the imagery conditions against the control condition, and against each other.</p>
-<p>Finally, to address the small difference in baseline scores, we could run the same ANOVA on the <em>difference</em> between the pre and post scores, or we could include the baseline score as a covariate in an ANCOVA. These techniques are outside the scope of this worksheet.</p>
+<p>Given the interaction, we would might want to make <a href="anova1.html#pairs">pairwise comparisons</a>, to compare the imagery conditions against the control condition, and against each other.</p>
+<p>Finally, to address the difference in baseline scores, we could run the same ANOVA on the <em>difference</em> between the pre and post scores, or we could include the baseline score as a covariate in an ANCOVA. These techniques are outside the scope of this worksheet.</p>
 </div>
 <div id="references" class="section level1">
 <h1>References</h1>

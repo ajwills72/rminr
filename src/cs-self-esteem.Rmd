@@ -1,6 +1,6 @@
 ---
 title: "The effects of negative mental imagery on self-esteem"
-author: "Sophie Homer, Paul Sharpe, Andy Wills"
+author: "Sophie Homer, Paul Sharpe"
 output: html_document
 ---
 
@@ -32,25 +32,15 @@ options(tibble.width = Inf) # show all columns in output
 
 <a name="intro"></a>
 
-# Before you start...
-
-The techniques used in this processing pipeline are described in more detail in the following worksheets:
-
-* [Preprocessing data from experiments](preproc.html)
-* [Preprocessing scales](preproc-scales.html)
-* [Analysing scales](analyse-scales.html)
-* [Within-subject differences](anova1.html)
-* [Factorial differences](anova3.html)
-
 # Introduction
 
-This study was an experiment in which self-esteem was measured before and after participants completed one of two mental imagery conditions, or a control condition:
+This study was an experiment in which self-esteem was measured before and after a mental imagery intervention. Self-esteem was measured using the State Self-Esteem Scale (SSES, Osman et al., 2012), a 20-item survey used to measure short-lived (state) changes in self-esteem. Participants completed one of two mental imagery conditions, or a control condition:
 
  * Condition 1: participants visualised a negative mental image of themself
  * Condition 2: participants visualised a negative mental image of someone else
  * Condition 0 (control): participants did a card sorting task and did not think of any images.
 
-Self-esteem was measured using the State Self-Esteem Scale (SSES, Osman et al., 2012). The SSES is a 20-item survey used to measure short-lived (state) changes in self-esteem. 
+This was a 2 (time) x 3 (condition) mixed design.
 
 <a name="start"></a>
 
@@ -62,16 +52,27 @@ Create a new R project and upload the file `sses.csv`, which you will find in th
 
 # Preprocessing
 
+See also: [Preprocessing scales](preproc-scales.html).
+
 ## Tidy data
 
-We start by loading our data, selecting the columns we want, and tidying up the column names.
+We start by loading our data.
 
-```{r preprocess-sses-pre, message=FALSE}
+```{r load-sses, message=FALSE}
 rm(list = ls()) # clear the environment
 library(tidyverse)
 
 sses <- read_csv('going-further/sses.csv')
+```
 
+```{r, echo=FALSE}
+library(pander)
+sses %>% head(3) %>% pander(split.table = Inf)
+```
+
+To prepare for our analyses, we select the columns we want, and tidy up the column names.
+
+```{r tidy-sses-pre}
 sses_pre_raw  <- sses %>% select(1, 5:25) %>%
   set_names(~ str_to_lower(.) %>% str_replace_all("pre_sse_", "q")) %>%
   mutate(subj = factor(partid), condition = factor(condition), time = factor('pre')) %>%
@@ -85,7 +86,7 @@ sses_pre_raw %>% head(3) %>% pander(split.table = Inf)
 
 ## Recode factor levels
 
-Looking at the `condition` column above, we can see that the experimental software that generated our data used numbers to represent different levels `condition` factor. It's often clearer if the numbers are converted to strings which describe the factor levels.
+Looking at the `condition` column above, we can see that the experimental software that generated our data used numbers to represent different levels of this factor. It's often clearer if the numbers are converted to strings which describe the factor levels.
 
 ```{r}
 sses_pre_raw$condition <- recode_factor(sses_pre_raw$condition, `0` = 'control',
@@ -95,9 +96,9 @@ sses_pre_raw$condition <- recode_factor(sses_pre_raw$condition, `0` = 'control',
 
 **Explanation of command:**
 
-We use `recode_factor()` to rename the levels of the experimental condition (`sses_pre_raw$condition`). The current factor level name goes on the left hand side of the `=`, the new name goes on the right hand side. Notice that the numbers need to be in backticks. The renamed factor levels are reassigned to the same column `sses_pre_raw$condition`.
+1. We use `recode_factor()` to rename the levels of the experimental condition (`sses_pre_raw$condition`). The current factor level name goes on the left hand side of the `=`, the new name goes on the right hand side. Notice that the numbers need to be in backticks. The renamed factor levels are reassigned to the same column `sses_pre_raw$condition`.
 
-Our data frame now has intuitive column and factor names:
+Our `condition` factor now has intuitive level names:
 
 ```{r, echo=FALSE}
 sses_pre_raw %>% head(3) %>% pander(split.table = Inf)
@@ -113,6 +114,10 @@ sses_post_raw <- sses %>% select(1, 25:45) %>%
 sses_post_raw$condition <- recode_factor(sses_post_raw$condition, `0` = 'control',
                                         `1` = 'self', `2` = 'other')
 
+```
+
+```{r, echo=FALSE}
+sses_post_raw %>% head(3) %>% pander(split.table = Inf)
 ```
 
 <a name="reverse"></a>
@@ -172,6 +177,8 @@ sses_post %>%
 
 ## Calculate Cronbach’s alpha
 
+See also: [Analysing scales](analyse-scales.html).
+
 We calculate an overall Cronbach's alpha for the pre and post SSES.
 
 ```{r cronbach-all}
@@ -185,9 +192,9 @@ sses_cronbach_total <- sses_cronbach(bind_rows(sses_pre, sses_post))
 sses_cronbach_total
 ```
 
-This gives us a value of `0.67`, which is quite a bit lower than the `0.92` reported by the authors who developed the scale (Heatherton & Polivy, 1991).
+This gives us a value of `0.67`, which is quite a bit lower than the `0.92` reported by the authors who developed the SSES (Heatherton & Polivy, 1991).
 
-We can also look at Cronbach's alpha pre and post intervention:
+We also look at Cronbach's alpha pre and post intervention:
 
 ```{r cronbach-pre-post}
 sses_pre_cronbach <- sses_pre %>%
@@ -201,18 +208,18 @@ sses_post_cronbach <- sses_post %>%
 sses_post_cronbach
 ```
 
-These data show that alpha is especially low in the `self` and `other` conditions.
+Alpha looks especially low in the `self` and `other` conditions.
 
 <a name="baseline"></a>
 
 ## Compare baseline SSES scores between conditions
 
+See also: [Within-subject differences](anova1.html).
+
 We would like to check that there were no major self-esteem differences between conditions before our intervention. This should be the case if we successfully randomised participants to conditions. If there are baseline differences we would need to account for these when comparing them to post-intervention scores. We can use a between-subjects ANOVA to compare the baseline SSES scores in our three conditions.
 
 ```{r baseline}
 library(BayesFactor, quietly = TRUE)
-# FIXME: in base::try(expression, silent = silent) : not enough observations
-#bf <- anovaBF(formula = total ~ condition + subj, data = sses_pre, whichRandom = 'subj')
 bf <- anovaBF(formula = total ~ condition, data = as.data.frame(sses_pre))
 bf
 ```
@@ -226,6 +233,8 @@ sses_pre %>% group_by(condition) %>% summarise(mean = mean(total), sd = sd(total
 <a name="prepost"></a>
 
 # Compare pre and post intervention SSES scores between conditions
+
+See also: [Factorial differences](anova3.html).
 
 The main question we'd like to answer is whether our two imagery interventions 
 (visualising a negative mental image of oneself, or someone else) had effects on self esteem which differed from our control condition. We can test this using a [factorial ANOVA](anova3.html#bfact) to compare SSES scores before and after the three interventions. In this design, `condition` is a between-subjects variable, and `time` (pre and post intervention) is a repeated measure.
@@ -257,9 +266,9 @@ and a `condition*time` interaction
 bf[4] / bf[3]
 ```
 
-Given the interaction, we would probably want to carry out [pairwise comparisons](anova1.html#pairs) to compare the imagery conditions against the control condition, and against each other.
+Given the interaction, we would might want to make [pairwise comparisons](anova1.html#pairs), to compare the imagery conditions against the control condition, and against each other.
 
-Finally, to address the small difference in baseline scores, we could run the same ANOVA on the _difference_ between the pre and post scores, or we could include the baseline score as a covariate in an ANCOVA.  These techniques are outside the scope of this worksheet.
+Finally, to address the difference in baseline scores, we could run the same ANOVA on the _difference_ between the pre and post scores, or we could include the baseline score as a covariate in an ANCOVA. These techniques are outside the scope of this worksheet.
 
 # References
 
