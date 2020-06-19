@@ -48,7 +48,7 @@ This was a 2 (time) x 3 (condition) mixed design.
 
 1. Open the project you used to complete the [Preprocessing scales](preproc-scales.html) worksheet.
 
-1. Add the code in this worksheet to the end of `scales.R`, which you created in the preprocessing scales worksheet.
+1. You should have a script names `scales.R`. Add the code in this worksheet to the end of that script.
 
 <a name="preprocessing"></a>
 
