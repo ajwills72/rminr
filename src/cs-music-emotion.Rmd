@@ -1,0 +1,125 @@
+---
+title: "The Effect of Alternative Music on Emotional Response in Alternative Music Subcultures"
+author: "Helen Lloyd, Elizabeth Dark, Paul Sharpe"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+## DEVELOPERS: Uncomment one option, as appropriate
+
+## Data required to knit
+## https://github.com/ajwills72/rminr-data/tree/master/going-further/music-emotion.csv
+##
+## I check out rminr-data and make a symbolic link to going-further
+
+## Show only commands.
+## knitr::opts_chunk$set(echo = TRUE, message = FALSE, results='hide', fig.keep = 'none', comment=NA)
+
+## Show commands and output.
+knitr::opts_chunk$set(echo = TRUE, comment=NA, cache = TRUE)
+options(tibble.width = Inf) # show all columns in output
+library(pander)
+```
+
+# Contents
+
+- [Introduction](#intro)
+
+- [Getting started](#start)
+
+- [Preprocessing](#preprocessing)
+
+<a name="intro"></a>
+
+# Introduction
+
+* PANAS-SF (20 item) pre and post
+* ERS ACA administered after post-PANAS-SF
+
+## TODO: Exclusion criteria
+
+<a name="start"></a>
+
+# Getting started
+
+```{r init-load, message=FALSE}
+rm(list = ls()) # clear the environment
+library(tidyverse)
+```
+
+<a name="preprocessing"></a>
+
+# Preprocessing
+
+See also: [Preprocessing scales](#preproc-scales.html)
+
+```{r tidy, message=FALSE}
+data1 <- read_csv('going-further/music-emotion-1.csv')
+
+d1 <- data1 %>%
+  set_names(~ str_to_lower(.)) %>%
+  mutate(subj = factor(partexpid), subculture = factor(subcultureauto)) %>%
+  select(subj, interestedpre:afraidpost, subculture)
+d1 %>% head(3) %>% pander(split.table = Inf)
+```
+
+```{r score}
+d1 <- d1 %>% mutate(pre_emotion = rowSums(across(interestedpre:afraidpre)),
+                    pre_pa = rowSums(across(c(interestedpre, excitedpre, strongpre, enthusiasticpre,
+                                            proudpre, alertpre, inspiredpre, determinedpre, attentivepre,
+                                            activepre))),
+                    pre_na = rowSums(across(c(distressedpre, upsetpre, guiltypre, scaredpre,
+                                                  hostilepre, irritablepre, ashamedpre, nervouspre,
+                                                  jitterypre, afraidpre))),
+                    post_emotion = rowSums(across(interestedpost:afraidpost)),
+                    post_pa = rowSums(across(c(interestedpost, excitedpost, strongpost, enthusiasticpost,
+                                            proudpost, alertpost, inspiredpost, determinedpost, attentivepost,
+                                            activepost))),
+                    post_na = rowSums(across(c(distressedpost, upsetpost, guiltypost, scaredpost,
+                                                  hostilepost, irritablepost, ashamedpost, nervouspost,
+                                                  jitterypost, afraidpost))),
+                    ) %>%
+  select(subj, subculture, pre_emotion:post_na)
+d1 %>% head(3) %>% pander(split.table = Inf)
+```
+
+## ERS scoring
+
+QUESTION: Should we simplify things by using data1.csv for the ERS analyses?
+
+
+"The Emotion Regulation Strategies for Artistic Creative Activities Scale (ERS ACA)
+(Fancourt, Garnett, Spiro, West, Mullensiefen 2019) is an 18 item inventory with a 5
+point scale from ‘strongly disagree’ to ‘strongly agree’. This was designed to
+measure the extent to which a person uses regulation strategies while engaging with
+an art activity. An overall general strategy use is calculated, as well as 3 subscales
+of strategies: Avoidance, Approach, and Self Development Strategies."
+
+QUESTION: Score the ERS as per Fancourt et al. (2019, Table 3)? No reversed items?
+
+```{r data2}
+data2 <- read_csv('going-further/music-emotion-2.csv')
+```
+
+# Results
+
+## TODO: Tables: for each emotion,PA,NA: mean(sd), time*subculture (Appendix 2)
+
+## TODO: 3 ANOVA plots: : PANAS ~ subculture(4)*time(2) (Appendices 6-8)
+
+## TODO: 3 mixed ANOVAs: PANAS ~ subculture(4)*time(2)
+
+## TODO: 1-way ANOVAs: overal ERS ~ subculture
+
+## TODO: 3 Kruskal-Wallis H tests: ERS_subscale ~ subculture
+
+# References
+
+Watson, D., Clark, L. A., & Tellegen, A. (1988). Development and validation of brief measures of positive and negative affect: The PANAS scales. Journal of Personality and Social Psychology, 54(6), 1063.
+
+Fancourt, D., Garnett, C., Spiro, N., West, R., & Müllensiefen, D. (2019). How do artistic creative activities regulate our emotions? Validation of the Emotion Regulation Strategies for Artistic Creative Activities Scale (ERS-ACA). PLOS ONE, 14(2), e0211362. https://doi.org/10.1371/journal.pone.0211362
+
+___
+
+This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0. 
+
