@@ -371,21 +371,19 @@ summary {
 <div id="contents" class="section level1">
 <h1>Contents</h1>
 <ul>
-<li><p><a href="#start">Getting started</a></p></li>
+<li><p><a href="#intro">Introduction</a></p></li>
 <li><p><a href="#cronbach">Calculating Cronbach’s alpha</a></p></li>
 </ul>
-<p><a name="start"></a></p>
+<p><a name="intro"></a></p>
 </div>
-<div id="getting-started" class="section level1">
-<h1>Getting started</h1>
-<p>This worksheet assumes familiarity with the techniques described in the following worksheets:</p>
-<ul>
-<li><a href="preproc-scales.html">Preprocessing scales</a></li>
-</ul>
+<div id="introduction" class="section level1">
+<h1>Introduction</h1>
+<p>This worksheet describes analyses you are likely to need when working with pscyhometric scales.</p>
 <p><a name="cronbach"></a></p>
 </div>
 <div id="calculating-cronbachs-alpha" class="section level1">
 <h1>Calculating Cronbach’s alpha</h1>
+<p>See also: <a href="preproc-scales.html">Preprocessing scales</a>.</p>
 <p>Cronbach’s alpha measures the internal consistency of a scale, using correlations between different groupings of individual scale items. Values of alpha range from 0-1, with higher numbers indicating a more reliable scale. When a new scale is developed, its reliability is normally reported using Cronbach’s alpha. It’s wise to ensure that the alpha for your sample data is similar to this value.</p>
 <p>We’ll demonstrate the calculation of Cronbach’s alpha for the State Self-Esteem Scale (SSES). This scale and the preprocessing steps required to prepare our example data for analysis are described in the <a href="preproc-scales.html">Preprocessing scales</a> worksheet. When you have completed that worksheet, you will have a script named <code>scales.R</code>. Add the code below to <code>scales.R</code>, <em>after</em> the SSES preprocessing code.</p>
 <p>We’ll write a function to calculate alpha for the SSES using the <code>cronbach()</code> function from the <code>psy</code> package:</p>

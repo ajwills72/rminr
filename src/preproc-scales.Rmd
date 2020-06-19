@@ -39,14 +39,6 @@ library(pander)
 
 - [Reverse scoring survey items](#reverse)
 
-<a name="start"></a>
-
-# Getting started
-
-This worksheet assumes familiarity with the techniques described in the following worksheets:
-
-* [Preprocessing data from experiments](preproc.html)
-
 <a name="intro"></a>
 
 # Introduction
@@ -267,6 +259,7 @@ Now that our items are all scored in the same direction, we can calculate the to
 
 ```{r pre-score, R.options = list(width = 100)}
 sses_pre <- mutate(sses_pre, total = rowSums(sses_pre[4:23]))
+sses_post <- mutate(sses_post, total = rowSums(sses_post[4:23]))
 ```
 
 ```{r, echo=FALSE}

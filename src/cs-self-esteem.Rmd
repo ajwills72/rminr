@@ -46,87 +46,29 @@ This was a 2 (time) x 3 (condition) mixed design.
 
 # Getting started
 
-Create a new R project and upload the file `sses.csv`, which you will find in the `going-further` folder in git repository we used [previously](preproc.html#load).
+1. Open the project you used to complete the [Preprocessing scales](preproc-scales.html) worksheet.
+
+1. Add the code in this worksheet to the end of `scales.R`, which you created in the preprocessing scales worksheet.
 
 <a name="preprocessing"></a>
 
 # Preprocessing
 
-See also: [Preprocessing scales](preproc-scales.html).
+Run `scales.R` to preprocess the SSES data.
 
-## Tidy data
-
-We start by loading our data.
-
-```{r load-sses, message=FALSE}
+```{r preprocessing}
 rm(list = ls()) # clear the environment
 library(tidyverse)
 
 sses <- read_csv('going-further/sses.csv')
-```
-
-```{r, echo=FALSE}
-library(pander)
-sses %>% head(3) %>% pander(split.table = Inf)
-```
-
-To prepare for our analyses, we select the columns we want, and tidy up the column names.
-
-```{r tidy-sses-pre}
 sses_pre_raw  <- sses %>% select(1, 5:25) %>%
   set_names(~ str_to_lower(.) %>% str_replace_all("pre_sse_", "q")) %>%
   mutate(subj = factor(partid), condition = factor(condition), time = factor('pre')) %>%
   select(subj, condition, time, q1:q20)
-```
-
-```{r, echo=FALSE}
-library(pander)
-sses_pre_raw %>% head(3) %>% pander(split.table = Inf)
-```
-
-## Recode factor levels
-
-Looking at the `condition` column above, we can see that the experimental software that generated our data used numbers to represent different levels of this factor. It's often clearer if the numbers are converted to strings which describe the factor levels.
-
-```{r}
-sses_pre_raw$condition <- recode_factor(sses_pre_raw$condition, `0` = 'control',
-                                        `1` = 'self', `2` = 'other')
-
-```
-
-**Explanation of command:**
-
-1. We use `recode_factor()` to rename the levels of the experimental condition (`sses_pre_raw$condition`). The current factor level name goes on the left hand side of the `=`, the new name goes on the right hand side. Notice that the numbers need to be in backticks. The renamed factor levels are reassigned to the same column `sses_pre_raw$condition`.
-
-Our `condition` factor now has intuitive level names:
-
-```{r, echo=FALSE}
-sses_pre_raw %>% head(3) %>% pander(split.table = Inf)
-```
-
-We use a similar pipeline to create a tidy data frame containing the post-intervention SSES data.
-
-```{r preprocess-sses-post}
 sses_post_raw <- sses %>% select(1, 25:45) %>%
   set_names(~ str_to_lower(.) %>% str_replace_all("post_sse_", "q")) %>%
   mutate(subj = factor(partid), condition = factor(condition), time = factor('post')) %>%
   select(subj, condition, time, q1:q20)
-sses_post_raw$condition <- recode_factor(sses_post_raw$condition, `0` = 'control',
-                                        `1` = 'self', `2` = 'other')
-
-```
-
-```{r, echo=FALSE}
-sses_post_raw %>% head(3) %>% pander(split.table = Inf)
-```
-
-<a name="reverse"></a>
-
-## Reverse score SSES items
-
-For the SSES, questions 2, 4, 5, 7, 8, 10, 13, 15-19 and 20 are reverse scored. We need to reverse these items before calcuating each participants' score.
-
-```{r reverse-score-survey}
 # Reverse score survey items
 # @param scores raw scores data frame
 # @param reverse character vector of columns to be reverse scored
@@ -135,23 +77,40 @@ reverse_score_survey <- function(scores, reverse, max) {
   reverse_score <- function(score) { max - score } # for scores starting at 1, max + 1 - score
   scores %>% mutate_at(reverse, reverse_score)
 }
-
 reverse_questions <- c('q2', 'q4', 'q5', 'q7', 'q8', 'q10', 'q13', 'q15', 'q16', 'q17', 'q18',
                        'q19', 'q20')
 sses_pre  <- reverse_score_survey(sses_pre_raw, reverse_questions, 4)
 sses_post <- reverse_score_survey(sses_post_raw, reverse_questions, 4)
+sses_pre  <- mutate(sses_pre, total = rowSums(sses_pre[4:23]))
+sses_post <- mutate(sses_post, total = rowSums(sses_post[4:23]))
 ```
 
-<a name="score"></a>
+If you've done this correctly, `sses_pre` will look like this:
 
-## Calculate SSES scores
-
-Now we add up the individual responses for each participant to calculate their `total` SSES score. We do this for the SESS administered pre and post intervention.
-
-```{r score}
-sses_pre <- mutate(sses_pre, total = rowSums(sses_pre[4:23]))
+```{r}
+library(pander)
 sses_pre %>% head(3) %>% pander(split.table = Inf)
-sses_post <- mutate(sses_post, total = rowSums(sses_post[4:23]))
+```
+
+## Recode factor levels
+
+Looking at the `condition` column above, we can see that the experimental software that generated our data used numbers to represent different levels of this factor. It's often clearer if the numbers are converted to strings which describe the factor levels.
+
+```{r}
+sses_pre$condition <- recode_factor(sses_pre$condition, `0` = 'control',
+                                        `1` = 'self', `2` = 'other')
+sses_post$condition <- recode_factor(sses_post$condition, `0` = 'control',
+                                        `1` = 'self', `2` = 'other')
+```
+
+**Explanation of command:**
+
+1. We use `recode_factor()` to rename the levels of the experimental condition (`sses_pre_raw$condition`). The current factor level name goes on the left hand side of the `=`, the new name goes on the right hand side. Notice that the numbers need to be in backticks. The renamed factor levels are reassigned to the same column `sses_pre_raw$condition`.
+
+Our `condition` factor now has intuitive level names:
+
+```{r}
+sses_pre %>% head(3) %>% pander(split.table = Inf)
 ```
 
 <a name="results"></a>
