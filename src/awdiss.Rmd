@@ -1,0 +1,186 @@
+---
+title: "The Perruchet Effect"
+author: "Andy Wills and Paul Sharpe"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+## DEVELOPERS: Uncomment one option, as appropriate
+
+## Show only commands.
+## knitr::opts_chunk$set(echo = TRUE, message = FALSE, results='hide', fig.keep = 'none', comment=NA)
+
+## Show commands and output.
+knitr::opts_chunk$set(echo = TRUE, comment=NA, cache = TRUE)
+```
+
+## Before you start...
+
+This is an advanced worksheet, which assumes you have completed the [Absolute Beginners' Guide to R](https://ajwills72.github.io/rminr/#beginners) course, the [Research Methods in Practice (Quantitative section)](https://benwhalley.github.io/rmip/overview-quantitative.html), and the [Intermediate Guide to R](https://ajwills72.github.io/rminr/#rmip) course. 
+
+## Overview
+
+This worksheet describes a full analysis pipeline for an undergraduate student project on the Perruchet Effect. The project was basically identical to the experiment described by [McAndrew et al. (2012)](https://www.researchgate.net/profile/IPL_Mclaren/publication/221752843_Dissociating_Expectancy_of_Shock_and_Changes_in_Skin_Conductance_An_Investigation_of_the_Perruchet_Effect_Using_an_Electrodermal_Paradigm/links/0a85e53c10b74f291a000000.pdf), except that the electric shock was replaced by a loud unpleasant noise (a metal garden fork scraping across slate). For details of the procedure, see the McAndrew paper, but here's a very brief summary:
+
+A shape (brown cylinder, known as a 'CS') appears on the screen for 8 seconds. On 50% of occasions, this is then followed by the unpleasant noise (the 'US'). The participant's reaction to each CS is measured in two ways: 
+
+(1) While the CS is on the screen, they are asked to rate their expectancy of the US on each trial, using a numerical scale. Higher ratings indicate greater conscious expectation of the unpleasant noise.
+
+(2) Throughout the experiment, their Galvanic Skin Reponse, a.k.a. electrodermal activity is measured. This is a measure of physiological arousal, greater numbers mean more arousal. Higher arousal is interpeted as greater unconscious expectancy of the unpleasant noise.
+
+So, we have two dependent variables - expectancy ratings, and GSR. There is also one independent variable - "run length". This relates to how many trials in a row you have experienced (or not experienced) the noise. For example, a "+3" trial means you have experience the noise three times in a row; a "-2" trial means you have experienced the absence of the noise two trials in a row. The run lengths in this experiment range from -3 to +3.
+
+The first prediction is that the GSR with increase with run length, because the unconscious association between the shape and the noise will grow with repeated pairings. The second prediction is that the conscious expectancies will decrease with run length. This is known as Gamblers' Fallacy - in this case, the belief that, even though the sequence is random, a run of unpleasant noises means the next trial is more likely to be silent. This result is often taken to be one of the strongest pieces of evidence for a dual-process theory of learning, i.e. that we have unconscious and conscious learning processes that act somewhat independently of each other. This is because it can be hard to see how a single learning process could believe two things at the same time e.g. that on the +3 trials, it was simultaneously most and least likely that an unpleasant noise would occur.
+
+## Getting data from a public repository
+
+A basic principle of open science is that you publicly share your raw data (in anonymized form). Many psychologists, including the ones who ran this study, choose the [OSF](https://osf.io/) website to do this. So, the first thing you need to do is download the data from OSF. Of course, there's an R package for that (`osfr`). You may need to install this package before you can use it for the first time -- if so, use `install.packages("osfr")`
+
+So, first, [create a new project](using-projects.html) in R. Then, this is how you download data from OSF into your R project:
+
+```{r osf, message=FALSE, results='hide'}
+library(osfr)
+proj  <- osf_retrieve_node("r7axw")
+files  <- osf_ls_files(proj)
+osf_download(files, conflicts = "skip")
+```
+
+### Explanation of commands
+
+The first line loads the `osfr` pacakge. 
+
+The second line asks the OSF website for the information it needs to download the data. To do this, we need the last part of the web address. This repository is at https://osf.io/r7axw/, so we need to use `r7axw`. 
+
+The third line gets a list of the files in the repository, much as we did for local files in [Preprocessing data from experiments](preproc.html#combine). 
+
+The final file actually downloads those files to your R project. In this case, you'll find that you now have a directory called `data`, which contains those files. The component `conflicts = "skip"` means that, if these files are already in your project, you should not overwrite them, but leave them as they are.
+
+### Looking at the downloaded files
+
+You can ignore the file `MAIN.csv`, which we're not going to use. The first file you should open is `codebook.md`. A codebook is a file that explains what each of the columns in a data files means. Read the codebook and, while you're reading through, look at the data file it is talking about, `DATA.csv`). It is this file on which all the following analysis is based.
+
+## Loading and tidying data
+
+As with any analysis, the first step is to load the data into R. We're also going to tidy it up a little bit:
+
+```{r load, message=FALSE}
+library(tidyverse)
+raw <- read_csv("data/DATA.csv")
+colnames(raw) <- c("subj", "time", "key", "value")
+raw <- distinct(raw)
+raw  <- raw %>% filter(subj > 161)
+```
+
+### Explanation of command
+
+The first two lines should be very familiar by now; we nearly always need the `tidyverse` package, and we use the `read_csv` command to load the data. The `data/` part of the filename `data/DATA.csv` says that the file `DATA.csv` is to be found in the directory (folder) called `data`. 
+
+The third line renames the columns, as covered in the [Preprocessing data from experiments](preproc.html#rename) worksheet. I didn't like the names of the columns very much so I changed them to something more comprehensible and quicker to type, using the `colnames` command. 
+
+The fourth line, `raw <- distinct(raw)` is a very handy command for tidying up data in cases where people have made the [grave error](https://arstechnica.com/tech-policy/2013/04/microsoft-excel-the-ruiner-of-global-economies/) of trying to use Excel for serious research. What happened in this case is that the experiment was run by three people over many different days. They then tried to stitch all the data files together by copying-and-pasting them into one big file in Excel. This would have been easy using R, as covered in  [Preprocessing data from experiments](preproc.html#combine) but, unfortunately, no one had taught them how to use R. Predictably, they could not do this combination of files in Excel without error (few people could), and they ended up copying some of the data twice. In this case, it's easy to detect and fix in R, because no two rows of this data can be identical - the subject number or the time is always going to be different. So, we can remove duplicates by telling R to give us just one copy of each of the different rows in the data set. The command `distinct` does that for us. 
+
+The final line, `raw  <- raw %>% filter(subj > 161)` should be now also be very familiar; we are keeping only those participants whose subject number is greater than 161. This is because, in this study, we first ran a short pilot experiment, looked at the data, and made a few changes to the experiment. Here, we only want to analyze the main study, so we remove the pilot participants.
+
+## Exploring the GSR data
+
+The GSR data from this experiment is very rich, with a skin conductance measure taken from each participant approximately twenty times a second throughout the whole 30-40 minutes. To 'get a feel' for these data, and also to check that the equipment was working properly, we need to plot that GSR as a graph, with time on the x-axis and GSR on the y-axis. We'll need to do this one participant at a time, otherwise the graph will be really hard to read:
+
+```{r gsr}
+dat  <- raw %>% filter(subj == 168)
+gsr <- dat %>% filter(key == "GS")
+gplot <- gsr %>% ggplot(aes(x=time, y=value)) + geom_line()
+gplot
+```
+
+### Explanation of commands
+
+The first line should be familiar, we've filtering the data to include just one participant (168).
+
+The second line is also a simple filter operation - we're keeping just those rows where the `key` column says `GS`. From `codebook.md`, we can see that this means the rows of the data file that contain GSR readings. 
+
+The third line should also be pretty familiar, we're just doing a standard line graph, as we previously covered in, for example, the [Understanding Interactions](anova2.html#ex1) worksheet. In this case, we save the line plot in an object called `gplot`, and then show the graph by typing `gplot` as the last command. We do it this way so we can add other things to the graph later.
+
+### Explanation of output
+
+We can see the GSR going up and down over time. Why is it doing that? Our assumption is that this is people reacting to the CS (cylinder), which is sometimes followed by the US (noise). We can check this by adding a vertical time to the graph for the time each CS occurs:
+
+```{r cs}
+cs <- dat %>% filter(key == "CO")
+cs_time <- cs %>% select(time)
+gplot <- gplot + geom_vline(data=cs_time, mapping=aes(xintercept=time),
+                            colour="blue")
+gplot
+```
+
+### Explanation of commands
+
+The first two lines should be familar. In the first line, we are selecting those rows of the data that contain the key `CO`, which `codebook.md` tells us are the timings of the CS onsets. In the second line, we're selecting just the column that contains the actual times, which is all we need for this graph.
+
+We've also come across `geom_vline` before, as part of the [Putting R to work](risk-rat.html) worksheet - it just plots a vertical line at a place we ask it to. The new part of this command is `data=cs_time, mapping=aes(xintercept=time)`. Previously, we've just told R manually where we want the line (e.g. `xintercept = 4.35`). Now, we're telling it that we want a bunch of lines, that the `data` for the position of those lines is to be found in `cs_time` data frame, and that the `time` column of that data frame should be used to find them.
+
+Here, we're adding the vertical lines to the plot we've already made `gplot <- gplot + geom_vline...`, and then showing the updated graph, `gplot`. 
+
+### Explanation of output
+
+There appears to be a missing blue line in the middle. Actually, there isn't, it's just that the participant was given a break half way through the experiment, so there wasn't a CS for a while. What we can also see, however, is that the GSR seems to go up each time there's a CS, and then go back down again. Sometimes that's quite a big rise, and sometimes, less big. If the experiment worked out as we expected, then the size of the GSR reaction will depend on the run length. We'll look at this later on, but first we need to do some preprocessing.
+
+## Preprocessing GSR data
+
+One problem with GSR data (and much other neuroscience data, e.g. EEG, fMRI) is that it's both highly variable ("noisy"), and changes systematically over time ("drift"). By 'noisy', we mean that, for a given event in the world, the GSR response to that event varies quite a lot, even if the event itself is objectively identical. In order to deal with this noise, we average the participant's GSR over many trials, and so get a sense of what they're typical response is. 
+
+By 'drift', we mean that these differences across trials are not random, they are affected by systematic changes in the participant over time. For example, as they hear more and more unpleasant noises, perhaps the noise becomes less unpleasant to them ("habituation"), and so their GSR reaction late in the experiment might be smaller than their GSR reaction early in the experiment. Another example -- once someone's GSR goes up, it can take quite a lot of time to go back down again ("return to baseline"). In this experiment, we waited a long time between trials, the _inter-trial interval_ was around 30 seconds. However, this is often not enough, and we find that sometimes their GSR has not returned to baseline by the time the next CS appears.
+
+The combination of noise and drift means that, not only do we need to average across a lot of trials, we also need to try and make those trials more comparable to each other before we average them. The process we use to do that here is _baseline correction_. This is simply a substraction. We calculate the average GSR response in the 500 ms before the CS arrives (the _baseline_), and then we subtract that baseline from all the GSR readings while the CS is present. 
+
+Let's illustrate this with a single trial from participant 168. For no particular reason, let's take trial 10:
+
+```{r select}
+onset  <- cs$time[10]
+full <- gsr %>% filter(time >= onset - 500 & time <= onset + 8000)
+full %>% ggplot(aes(x=time, y=value)) + geom_line()
+```
+### Explanation of commands
+
+Line 1 - In order to find a single trial, we need to know at what time the CS began on that trial. We already have those CS onset times from doing the last graph, so we just ask R for the `10`th row of the `time` column of that `cs` data frame - `cs$time[10]` - and record it as `onset` (with `onset <- `)
+
+Line 2 - Now we know where the CS starts, we need to take all the GSR readings from 500 ms before that (our _baseline_), up to 8000 ms after that (when the CS ends). We use the now-familiar `filter` command to do this. 
+
+Line 3 - Just a plain old line graph.
+
+### Explanation of output
+
+What we see in the graph is just a 'zoomed in' part of the previous graph - for the 10th trial, 500 ms before the CS onset to 8000ms after the CS onset. The x-axis has large numbers because time is counted from the start of the experiment. The line looks a bit 'jagged' because the equipment is only so accurate in measuring GSR.
+
+### Baseline correction
+
+Now, we need to do two things. 
+
+First, we need to apply the baseline correction to these data. In other words, we work out the average GSR in the 500ms before the CS arrives; we then subtract that average from every data point, so the first 500 ms of the graph will always be around zero. 
+
+Second, we're going to need to average all these trials, so we need the x-axis to be the same for all of them. To do this, we subtract the onset time from all the values on the x-axis, meaning we end up with data that goes from -500 ms to +8000 ms.
+
+We can do all this in four lines of code, plus one to plot the new graph:
+
+```{r correct}
+precs  <- gsr %>% filter(time >= onset - 500 & time < onset)
+correct  <- mean(precs$value)
+full <- full %>% mutate(cval = value - correct)
+full <- full %>% mutate(rtime = time - onset)
+full %>% ggplot(aes(x=rtime, y=cval)) + geom_line()
+```
+
+### Explanation of commands
+
+Line 1 - Use `filter` to select the GSR values for the baseline period i.e. 500ms before the CS onset until the CS onset, and put them in a dataframe called `precs`.
+
+Line 2 - Calculate the mean of the GSR values in this pre-CS period (`precs$value`) 
+
+Line 3 - Using the command `mutate`, we create a new column in the `full` data frame called `cval` (for "corrected value"). This column contains the numbers in the `value` column, minus the baseline correction we've just calculated (`correct`). The name `mutate` is perhaps a bit odd, but "mutate" is just another word for "change" (over and above it's other biological, and sci-fi connotations...). So, `mutate` here just means create a new column by changing an existing one.
+
+Line 4 - Using `mutate` again, we create another column called `rtime` (for "relative time"). This is just the actual time, minus the time the CS arrived. So, the CS arrival time will always be zero.
+
+Line 5 - Just another line graph
+
+### Explanation of output
+
+We get another graph, which at first sight looks exactly like the last one. The thing to notice is that the x-axis and y-axis now have different numbers - the CS onset is at 0 ms rather than 318000 ms, and the GSR line starts at 0 rather than around 2.5. 
