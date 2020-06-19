@@ -31,7 +31,7 @@ knitr::opts_chunk$set(echo = TRUE, comment=NA, cache = TRUE)
 
 # Introduction
 
-Data is often easier to read in tabular format. This worksheet provides `R` code to produce the types of table which are frequently useful in papers describing psychological research.  Although tables can be produced using a Word processor, generating them using `R` reduces copy-paste errors when producing reports.
+Data is often easier to read in tabular format. This worksheet provides `R` code to produce the types of table which are frequently useful in papers describing psychological research.  Although tables can be produced using a Word processor, generating them using `R` reduces copy-paste errors when writing reports.
 
 There are numerous `R` packages for presenting data as tables. We've chosen to use the `kableExtra` package, as it's capable of producing almost any table you might need in your reports. The tables produced by kableExtra are in [HTML format](https://haozhu233.github.io/kableExtra/awesome_table_in_html.html). You can simply copy-paste these into Microsoft Word or LibreOffice Writer. If you are using the online version of RStudio, select `Export > Save as Web Page`, then select the table copy-paste into your word processor.
 
@@ -106,7 +106,7 @@ demographics$gender <- recode_factor(demographics$gender, Male = 'male', Female 
 demographics %>% head(3) %>% pander(split.table = Inf)
 ```
 
-We extract the noun comprehension data into its own data frame, convert the column names to lower case, select the noun comprehension columns (`mountain:wellyboots`). Again, we create a sequential subject number factor.
+We extract the noun comprehension data into its own data frame, convert the column names to lower case, and select the noun comprehension columns (`mountain:wellyboots`). Again, we create a sequential subject number factor. We'll use this later to join our data frames together.
 
 ```{r noun-comprehension}
 nc <- data %>%
@@ -116,7 +116,7 @@ nc <- data %>%
 nc$subj <- factor(seq.int(nrow(nc)))
 ```
 
-Next we want to calculate an accuracy score for noun comprehension. Cells containing `C` indicate that the child could comprehend the noun. Cells containing `C*` indicate that the child could comprehend a synonym for the noun. In this experiment both of these values are correct responses.
+Next we want to calculate an accuracy score for noun comprehension. Cells containing `C` indicate that the child could comprehend the picture on the card for noun named by this column. Cells containing `C*` indicate that the child knew a synonym for the noun. In this experiment, both of these values are considered correct responses.
 
 ```{r score-nc}
 nc <- nc %>% mutate(nc = rowSums(. == 'C' | . == 'C*')) %>%
@@ -131,7 +131,7 @@ nc %>% head(5) %>% pander(split.table = Inf)
 
 ## TODO: exlusion critera
 
-We use a similar code to create data frames containing accuracy scores for the noun production, predicate comprehension and predicate production tests. For the purposes of this worksheet, you can ignore the recoding of the `cards` column.
+We use similar code to create data frames containing accuracy scores for the noun production, predicate comprehension and predicate production tests. For the purposes of this worksheet, you can ignore the recoding of the `cards` column.
 
 ```{r np-pc-pp}
 np <- data %>%
@@ -163,7 +163,7 @@ pp <- pp %>% mutate(pp = rowSums(. == 'C' | . == 'C*')) %>%
 pp %>% head(5) %>% pander(split.table = Inf)
 ```
 
-Having preprocessed our data. We now combine the data for the four tests into a single data frame, in preparation for calculating our descriptive statistics:
+We now recombine the data for the four tests into a single data frame, in preparation for calculating our descriptive statistics:
 
 ```{r join}
 tidy_data <- left_join(demographics, nc, by='subj') %>%

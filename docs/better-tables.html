@@ -388,7 +388,7 @@ summary {
 </div>
 <div id="introduction" class="section level1">
 <h1>Introduction</h1>
-<p>Data is often easier to read in tabular format. This worksheet provides <code>R</code> code to produce the types of table which are frequently useful in papers describing psychological research. Although tables can be produced using a Word processor, generating them using <code>R</code> reduces copy-paste errors when producing reports.</p>
+<p>Data is often easier to read in tabular format. This worksheet provides <code>R</code> code to produce the types of table which are frequently useful in papers describing psychological research. Although tables can be produced using a Word processor, generating them using <code>R</code> reduces copy-paste errors when writing reports.</p>
 <p>There are numerous <code>R</code> packages for presenting data as tables. We’ve chosen to use the <code>kableExtra</code> package, as it’s capable of producing almost any table you might need in your reports. The tables produced by kableExtra are in <a href="https://haozhu233.github.io/kableExtra/awesome_table_in_html.html">HTML format</a>. You can simply copy-paste these into Microsoft Word or LibreOffice Writer. If you are using the online version of RStudio, select <code>Export &gt; Save as Web Page</code>, then select the table copy-paste into your word processor.</p>
 <p><a name="start"></a></p>
 </div>
@@ -1754,13 +1754,13 @@ demographics %&gt;% head(3) %&gt;% pander(split.table = Inf)</code></pre>
 </tr>
 </tbody>
 </table>
-<p>We extract the noun comprehension data into its own data frame, convert the column names to lower case, select the noun comprehension columns (<code>mountain:wellyboots</code>). Again, we create a sequential subject number factor.</p>
+<p>We extract the noun comprehension data into its own data frame, convert the column names to lower case, and select the noun comprehension columns (<code>mountain:wellyboots</code>). Again, we create a sequential subject number factor. We’ll use this later to join our data frames together.</p>
 <pre class="r"><code>nc &lt;- data %&gt;%
   filter(sheet == &#39;Noun Comprehension&#39;) %&gt;%
   set_names(~ str_to_lower(.)) %&gt;%
   select(mountain:wellyboots)
 nc$subj &lt;- factor(seq.int(nrow(nc)))</code></pre>
-<p>Next we want to calculate an accuracy score for noun comprehension. Cells containing <code>C</code> indicate that the child could comprehend the noun. Cells containing <code>C*</code> indicate that the child could comprehend a synonym for the noun. In this experiment both of these values are correct responses.</p>
+<p>Next we want to calculate an accuracy score for noun comprehension. Cells containing <code>C</code> indicate that the child could comprehend the picture on the card for noun named by this column. Cells containing <code>C*</code> indicate that the child knew a synonym for the noun. In this experiment, both of these values are considered correct responses.</p>
 <pre class="r"><code>nc &lt;- nc %&gt;% mutate(nc = rowSums(. == &#39;C&#39; | . == &#39;C*&#39;)) %&gt;%
   select(subj, nc)
 nc %&gt;% head(5) %&gt;% pander(split.table = Inf)</code></pre>
@@ -1805,7 +1805,7 @@ nc %&gt;% head(5) %&gt;% pander(split.table = Inf)</code></pre>
 </ol>
 <div id="todo-exlusion-critera" class="section level2">
 <h2>TODO: exlusion critera</h2>
-<p>We use a similar code to create data frames containing accuracy scores for the noun production, predicate comprehension and predicate production tests. For the purposes of this worksheet, you can ignore the recoding of the <code>cards</code> column.</p>
+<p>We use similar code to create data frames containing accuracy scores for the noun production, predicate comprehension and predicate production tests. For the purposes of this worksheet, you can ignore the recoding of the <code>cards</code> column.</p>
 <pre class="r"><code>np &lt;- data %&gt;%
   filter(sheet == &#39;Noun Production&#39;) %&gt;%
   set_names(~ str_to_lower(.)) %&gt;%
@@ -1940,7 +1940,7 @@ pp %&gt;% head(5) %&gt;% pander(split.table = Inf)</code></pre>
 </tr>
 </tbody>
 </table>
-<p>Having preprocessed our data. We now combine the data for the four tests into a single data frame, in preparation for calculating our descriptive statistics:</p>
+<p>We now recombine the data for the four tests into a single data frame, in preparation for calculating our descriptive statistics:</p>
 <pre class="r"><code>tidy_data &lt;- left_join(demographics, nc, by=&#39;subj&#39;) %&gt;%
   left_join(., np, by=&#39;subj&#39;) %&gt;%
   left_join(., pc, by=&#39;subj&#39;) %&gt;%
