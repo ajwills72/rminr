@@ -37,7 +37,7 @@ Here's how to create a new project:
 
 ![Project dialog #2](pics/create2.png)
 
-4. Next, type in a name for the project that makes sense to you in the "Directory name" box. I've typed _psyc411_, a module code. Then click "Create project".
+4. Next, type in a name for the project that makes sense to you in the "Directory name" box. I've typed _psyc411_, a module code. Then click "Create project". **NB**: You must not use most punctuation, including spaces, in project names (`_` and `-` are OK). For example, both `Fish & Chips` and `Fish&Chips` will cause non-obvious errors later on. Use one of these instead: `FishChips`, `fishchips`, Fish_and_Chips`, `Fish-Chips`.
 
 ![Project dialog #3](pics/create3.png)
 

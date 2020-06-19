@@ -92,8 +92,10 @@ creative %>% group_by(Cond) %>% summarise(mean(score))
 Your output will look similar to this, but the numbers will probably be different. In this example, it looks like there's a small difference, with the creativity ratings slightly higher in the Nature environment -- but how does this between-group difference compare to the within-group variability? As we covered in the _Group Differences_ worksheet, this is most easily looked at with a scaled density plot:
 
 ```{r density}
-creative %>% ggplot(aes(score, colour=factor(Cond))) + geom_density(aes(y=..scaled..))
+creative %>% ggplot(aes(score, colour=factor(Cond))) + geom_density(aes(y=..scaled..)) + xlim(0, 100)
 ```
+
+**Explanation of command:** The only new part here is `xlim(0, 100)`, which sets **lim**its on the **x**-axis of your graph. Specifically, it forces the lowest value on the x-axis to be 0 and the highest value to be 100. Without `xlim`, R chooses limits that it thinks are sensible. Like all computer programs, R isn't that bright, so often it makes sense to tell it more precisely what you want. 
 
 In this example, the graph tells a somewhat different story to the means - although a difference between groups is visible, it is small compared to the variability within each group.
 

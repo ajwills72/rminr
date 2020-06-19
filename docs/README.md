@@ -19,6 +19,8 @@ The advantages of R over other software packages are discussed [here](why-r-stud
 
 6. [Going further with R](#gfwr) (work in progress)
 
+7. [Case studies](#studies) (work in progress)
+
 ## 1. Absolute Beginners' Guide to R
 <a name="beginners"></a>
 
@@ -65,7 +67,7 @@ If you are a current undergraduate student at Plymouth University, you should co
 
 * [Visual illusions](illusions.html). Filtering data, means, **violin plot**, Bayesian t-test.
 
-* [Facial attractiveness](face-attract.html). Means, standard deivations, **inter-quartile range**, and _density plots_. 
+* [Facial attractiveness](face-attract.html). Means, standard deviations, **inter-quartile range**, and _density plots_. 
 
 * [Police lineup](lineup.html). Contingency table, mosaic plot, Bayesian contingency test, means, density plot, Bayesian t-test
 
@@ -101,7 +103,7 @@ The _Absolute Beginners' Guide to R_ and _Putting R to Work_ provide, between th
 These are intermediate-level materials, designed to follow on from _An Absolute Beginners' Guide to R_ and _Putting R to work_ (or from _A Very Brief Guide to R_, if you're in a hurry). They are maintained by Ben Whalley on a separate site,
 but have been designed to fit in here in this sequence of materials. Only the _quantitative_ section of Ben's site contains information concerning the usage of R.
 
-- [Research Methods in Practice](https://benwhalley.github.io/rmip/overview-quantitative.html): Data handling, multiple regression.
+- [Research Methods in Practice](https://benwhalley.github.io/rmip/overview-quantitative.html): Data handling, [fitting lines](https://benwhalley.github.io/rmip/regression.html) - _scatterplot with best fit line_ , multiple regression.
 
 ## 5. Intermediate Guide to R
 
@@ -137,13 +139,25 @@ These are slightly more advanced materials, aimed at a final-year undergraduate 
 
 - [Factorial differences, part 2](anova4.html): More on two-factor Bayesian ANOVA.
 
-- [Bettter graphs](better-graphs.html): Producing publication-quality graphs in R.
-
+- [Better graphs](better-graphs.html): Producing publication-quality graphs in R.
 
 The following materials are currently being developed, so on clicking these
 links, you may find just notes, or incomplete worksheets.
 
 - [Other resources](gfwr-other.html): Links to external resources.
+
+- [Better tables](better-tables.html): Producing publication-quality tables in R.
+
+- [Preprocessing scales](preproc-scales.html): _Handling missing data_, **calculating subscale scores**, **tidying survey data**, **reverse scoring items**, **user-defined functions**.
+
+- [Analysing scales](analyse-scales.html): **Cronbach's alpha**.
+
+<a name="studies"></a>
+
+## 7. Case studies
+These are full preprocessing and analysis pipelines, based on final-year undergraduate psychology projects.
+
+- [The effects of negative mental imagery on self-esteem](cs-self-esteem.html): _Preprocessing scales_, _analysing scales_, **recoding factor levels**, _1-way ANOVA_, _2-way mixed ANOVA_.
 
 ____
 

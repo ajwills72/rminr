@@ -1,0 +1,134 @@
+---
+title: "Socioeconomic factors in depression, anxiety and stress"
+author: "Alyson Norman, Chelsea Hill, Paul Sharpe"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+## DEVELOPERS: Uncomment one option, as appropriate
+
+## Data required to knit
+##
+## I check out rminr-data and make a symbolic link to going-further
+
+## Show only commands.
+## knitr::opts_chunk$set(echo = TRUE, message = FALSE, results='hide', fig.keep = 'none', comment=NA)
+
+## Show commands and output.
+knitr::opts_chunk$set(echo = TRUE, comment=NA, cache = TRUE)
+options(tibble.width = Inf) # show all columns in output
+```
+
+# Contents
+
+<a name="intro"></a>
+
+# Before you start...
+
+The techniques used in this processing pipeline are described in more detail in the following worksheets:
+
+- [Preprocessing scales](preproc-scales.html)
+
+# Introduction
+
+<a name="start"></a>
+
+# Getting started
+
+Create a new R project and upload the file `ses-dass.csv`, which you will find in the `case-studies` folder in git repository we used [previously](preproc.html#load).
+
+```{r init-load, message=FALSE}
+rm(list = ls()) # clear the environment
+library(tidyverse)
+```
+
+<a name="preprocessing"></a>
+
+# Preprocessing
+
+```{r preprocess-sses-pre}
+data <- read_csv('case-studies/ses-dass.csv') %>%
+  set_names(~ str_to_lower(.) %>%
+              str_replace_all('overall_', '')) %>%
+  mutate(ses = factor(ses), ses_category = factor(ses_category), ses_level = factor(ses_level))
+data$subj <- factor(seq.int(nrow(data)))
+
+anxiety <- data %>%
+  select(subj, ses, ses_category, contains('anxiety'))
+anxiety <- mutate(anxiety, total = rowSums(anxiety[4:17]))
+
+depression <- data %>%
+  select(subj, ses, ses_category, contains('depression'))
+depression <- mutate(depression, total = rowSums(depression[4:17]))
+
+stress <- data %>%
+  select(subj, ses, ses_category, contains('stress'))
+stress <- mutate(stress, total = rowSums(stress[4:17]))
+```
+
+TODO: Calculate low, medium, high SES categories
+
+# Compare SES levels against anxiety, stress and depression
+
+```{r anova-anxiety}
+library(BayesFactor, quietly = TRUE)
+# FIXME: can't use subj as random factor as only 1 observation per subj
+# Error in base::try(expression, silent = silent) : not enough observations
+bf <- anovaBF(formula = total ~ ses, data = anxiety)
+bf
+```
+
+```{r anova-depression}
+bf <- anovaBF(formula = total ~ ses, data = depression)
+bf
+```
+
+```{r anova-stress}
+bf <- anovaBF(formula = total ~ ses, data = stress)
+bf
+```
+
+# SES category descriptives
+
+```{r category-descriptives}
+anxiety %>%
+  group_by(ses_category) %>%
+  summarise(mean = mean(total), sd = sd(total))
+
+depression %>%
+  group_by(ses_category) %>%
+  summarise(mean = mean(total), sd = sd(total))
+
+stress %>%
+  group_by(ses_category) %>%
+  summarise(mean = mean(total), sd = sd(total))
+```
+
+# Compare SES categories against anxiety, stress and depression
+
+```{r anova-anxiety-category}
+bf <- anovaBF(formula = total ~ ses_category, data = anxiety)
+bf
+```
+```{r anova-depression-category}
+bf <- anovaBF(formula = total ~ ses_category, data = depression)
+bf
+```
+
+```{r anova-stress-category}
+bf <- anovaBF(formula = total ~ ses_category, data = stress)
+bf
+```
+
+# Pearson correlations
+
+* depression ~ anxiety
+* depression ~ stress
+* anxiety ~ stress
+
+# Table 2: top 10 experiences that participants believed had impacted their feelings of depression, anxiety and stress
+
+___
+
+This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0. 
+

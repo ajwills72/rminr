@@ -1,0 +1,268 @@
+---
+title: "Better tables"
+author: "Paul Sharpe"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+## DEVELOPERS: Uncomment one option, as appropriate
+
+## Data required to knit
+## https://github.com/ajwills72/rminr-data/tree/master/going-further/picture-naming.csv
+##
+## I check out rminr-data and make a symbolic link to going-further
+
+## Show only commands.
+## knitr::opts_chunk$set(echo = TRUE, message = FALSE, results='hide', fig.keep = 'none', comment=NA)
+
+## Show commands and output.
+knitr::opts_chunk$set(echo = TRUE, comment=NA, cache = TRUE)
+```
+
+# Contents
+
+- [Introduction](#intro)
+
+- [Getting started](#start)
+
+- [Table of descriptive statistics](#descriptives)
+
+<a name="intro"></a>
+
+# Introduction
+
+Data is often easier to read in tabular format. This worksheet provides `R` code to produce the types of table which are frequently useful in papers describing psychological research.  Although tables can be produced using a Word processor, generating them using `R` reduces copy-paste errors when writing reports.
+
+There are numerous `R` packages for presenting data as tables. We've chosen to use the `kableExtra` package, as it's capable of producing almost any table you might need in your reports. The tables produced by kableExtra are in [HTML format](https://haozhu233.github.io/kableExtra/awesome_table_in_html.html). You can simply copy-paste these into Microsoft Word or LibreOffice Writer. If you are using the online version of RStudio, select `Export > Save as Web Page`, then select the table copy-paste into your word processor.
+
+<a name="start"></a>
+
+# Getting started
+
+To prepare for this worksheet, follow these steps:
+
+1. If you haven't already done so, create a new R project named `going-further`.
+
+1. In your project, create a folder named `going-further`.
+
+1. You will find the file `picture-naming.xlsx` in the `going-further` folder in git repository we used [previously](preproc.html#load). Upload this file into the `going-further` folder you just created.
+
+1. Create a script named `tables.R` and add the code in this worksheet to this script as you work through each section.
+
+We start with some lines to clear the workspace and load `tidyverse` and `pander`.
+
+```{r init-load, message=FALSE}
+rm(list = ls()) # clear the environment
+library(tidyverse)
+library(pander)
+```
+
+<a name="descriptives"></a>
+
+# Table of descriptive statistics
+
+See also: [Data preprocessing](preproc.html), [Preprocessing scales](preproc-scales.html).
+
+We'll produce a table of descriptive statistics using data from an experiment which tested children's language comprehension and production using picture cards. The experiment consisted of four tests: noun comprehension, noun production, predicate comprehension and predicate production. The data for each test was as a sub-sheet of an Excel spreadsheet. There was also a sub-sheet containing demographic data.
+
+We start by reading all sub-sheets into a single data frame.
+
+```{r excel, message=FALSE}
+library(readxl)
+path <- 'going-further/picture-naming.xlsx'
+data <- path %>%
+  excel_sheets() %>%
+  .[-1] %>%
+  set_names() %>%
+  map_df(~ read_excel(path = path, sheet = .x, range = "A1:V20"), .id = "sheet")
+```
+
+**Explanation of commands:**
+
+1. `library(readxl)` loads a package containing functions for reading Excel spreadsheets.
+1. `path <- 'going-further/picture-naming.xlsx'` is the location of our spreadsheet (see above).
+1. `path %>% excel_sheets()` creates a vector containing the names of the sub-sheets.
+1. `.[-1]` removes the first item from this vector, as it's a sub-sheet that doesn't contain data.
+1. `set_names()` names each item in the vector after its sub-sheet name (see next step).
+1. The last stage in the pipeline reads the data. `map_df()` processes each item in the vector, assigning it to `.x` and then running the function `read_excel(path = path, sheet = .x, range = "A1:V20")`. For each sub-sheet of the spreadsheet file (`path`), this reads data from the range `A1:V20`, which are the only cells we need. The argument `.id = "sheet"` creates a column named `sheet` with the name associated with `.x` (see previous step). The whole thing is returned as a data frame.
+1. Because `map_df()` adds the results of each of function call to the end of the previously created data frame, `data` is assigned a single data frame containing the data from all sub-sheets.
+
+Here's a slice of each of the data from each sub-sheet:
+
+```{r}
+data %>% slice(1:2, 20:21, 39:40, 58:59, 77:78) %>% pander(split.table = Inf)
+```
+
+We extract the demographics data into its own data frame, convert the column names to lower case, select the columns we want to keep, convert `gender` to be a factor with lower case levels, and create a sequential subject number factor.
+
+```{r preprocess}
+demographics <- data %>%
+  filter(sheet == 'Demographic') %>%
+  set_names(~ str_to_lower(.)) %>%
+  select(gender, cdi_u, cdi_s) %>%
+  mutate(gender = factor(gender))
+demographics$subj <- factor(seq.int(nrow(demographics)))
+demographics$gender <- recode_factor(demographics$gender, Male = 'male', Female = 'female')
+demographics %>% head(3) %>% pander(split.table = Inf)
+```
+
+We extract the noun comprehension data into its own data frame, convert the column names to lower case, and select the noun comprehension columns (`mountain:wellyboots`). Again, we create a sequential subject number factor. We'll use this later to join our data frames together.
+
+```{r noun-comprehension}
+nc <- data %>%
+  filter(sheet == 'Noun Comprehension') %>%
+  set_names(~ str_to_lower(.)) %>%
+  select(mountain:wellyboots)
+nc$subj <- factor(seq.int(nrow(nc)))
+```
+
+Next we want to calculate an accuracy score for noun comprehension. Cells containing `C` indicate that the child could comprehend the picture on the card for noun named by this column. Cells containing `C*` indicate that the child knew a synonym for the noun. In this experiment, both of these values are considered correct responses.
+
+```{r score-nc}
+nc <- nc %>% mutate(nc = rowSums(. == 'C' | . == 'C*')) %>%
+  select(subj, nc)
+nc %>% head(5) %>% pander(split.table = Inf)
+```
+
+**Explanation of commands:**
+
+1. `nc %>% mutate(nc = rowSums(. == 'C' | . == 'C*'))` creates a new column `nc` with a value for each row which is the sum of the number of columns containing `C` or `C*` (`|` means 'or').
+1. We select just the subject number `subj` and noun comprehension accuracy score `nc` columns.
+
+## TODO: exlusion critera
+
+We use similar code to create data frames containing accuracy scores for the noun production, predicate comprehension and predicate production tests. For the purposes of this worksheet, you can ignore the recoding of the `cards` column.
+
+```{r np-pc-pp}
+np <- data %>%
+  filter(sheet == 'Noun Production') %>%
+  set_names(~ str_to_lower(.)) %>%
+  select(cards:gloves)
+np$subj <- factor(seq.int(nrow(np)))
+np$cards <- recode_factor(np$cards, `1` = 'italian', `2` = 'english')
+np <- np %>% mutate(np = rowSums(. == 'C' | . == 'C*')) %>%
+  select(subj, cards, np)
+np %>% head(5) %>% pander(split.table = Inf)
+
+pc <- data %>%
+  filter(sheet == 'Predicate Comprehension') %>%
+  set_names(~ str_to_lower(.)) %>%
+  select(big:pulling)
+pc$subj <- factor(seq.int(nrow(pc)))
+pc <- pc %>% mutate(pc = rowSums(. == 'C' | . == 'C*')) %>%
+  select(subj, pc)
+pc %>% head(5) %>% pander(split.table = Inf)
+
+pp <- data %>%
+  filter(sheet == 'Predicate Production') %>%
+  set_names(~ str_to_lower(.)) %>%
+  select(small:pushing)
+pp$subj <- factor(seq.int(nrow(pp)))
+pp <- pp %>% mutate(pp = rowSums(. == 'C' | . == 'C*')) %>%
+  select(subj, pp)
+pp %>% head(5) %>% pander(split.table = Inf)
+```
+
+We now recombine the data for the four tests into a single data frame, in preparation for calculating our descriptive statistics:
+
+```{r join}
+tidy_data <- left_join(demographics, nc, by='subj') %>%
+  left_join(., np, by='subj') %>%
+  left_join(., pc, by='subj') %>%
+  left_join(., pp, by='subj') %>%
+  select(subj, gender, nc, np, pc, pp, cards, cdi_u, cdi_s)
+tidy_data %>% head(5) %>% pander(split.table = Inf)
+```
+
+**Explanation of commands:**
+
+1. `left_join(demographics, nc, by='subj')` combines columns from the `demographics` and `nc` data frames where the value of the `subj` column matches.
+1. We do the same for the `np`, `pc` and `pp` data frames.
+1. We reorder the resulting columns and assign the data frame to `tidy_data`.
+
+Our test scores are currently in wide format. We'll convert these columns to long format so we can calcluate our summary statistics.
+
+```{r pivot}
+tidy_data <- tidy_data %>%
+  pivot_longer(cols = c(nc, np, pc, pp),
+               names_to = 'task',
+               values_to = 'correct')
+tidy_data %>% head(5) %>% pander(split.table = Inf)
+```
+
+**Explanation of commands:**
+
+1. `pivot_longer()` converts columns from wide to long format. The columns to be converted are specified with `cols = c(nc, np, pc, pp)`. These column names will be converted to factors in the column specified by `names_to`, in this case `task`. The values from each of the wide column are moved to the column specified by `values_to`, in this case `correct`.
+
+We can now make a data frame containing summary statistics.
+
+```{r descriptives-1}
+task_descriptives <- function(df, y) {
+  df %>%
+    summarise(mean = mean(correct), sd = sd(correct)) %>%
+    mutate_if(is.numeric, round, 2) # see across()
+}
+
+descriptives <- tidy_data %>%
+  group_by(task, gender) %>%
+  group_modify(task_descriptives) %>%
+  ungroup()
+descriptives %>% pander(split.table = Inf)
+```
+
+**Explanation of commands:**
+
+1. The function `task_descriptives()` accepts a data frame in argument `df`, and returns a data frame with `mean` and `sd` columns containing the mean and standard deviation of `df$correct` rounded to two decimal places. We'll use this function in the pipeline below.
+1. We group `tidy_data` by gender within task and use `group_modify()` to call `task_descriptives()` for each group, returning a data frame with the summary statistics 
+
+We pivot this to a wider format with rows containing tests, and columns containing the mean and sd by gender.
+
+```{r descriptives-2}
+descriptives <- descriptives %>%
+  pivot_wider(names_from = gender, values_from = c(mean, sd)) %>%
+  select(task, mean_male, sd_male, mean_female, sd_female)
+descriptives %>% pander(split.table = Inf)
+```
+
+We do some final formatting in prepration for producing our table:
+
+```{r descriptives-3}
+descriptives <- descriptives %>%
+  unite("male", mean_male:sd_male, sep=' (') %>%
+  unite("female", mean_female:sd_female, sep=' (') %>%
+  mutate(male = paste0(male, ')'), female = paste0(female, ')'), task = factor(task))
+descriptives$task <- recode_factor(descriptives$task, nc = 'Noun Comprehension',
+                                   np = 'Noun Production',
+                                   pc = 'Predicate Comprehension',
+                                   pp = 'Predicate Production')
+descriptives %>% pander(split.table = Inf)
+```
+
+**Explanation of commands:**
+
+1. `unite("male", mean_male:sd_male, sep=' (')` converts the `mean_male` and `sd_male` column values to a column `male` separated by ` (`.
+1. We do the same for the `mean_female` and `sd_female` columns.
+1. `mutate(male = paste0(male, ')'), female = paste0(female, ')'), task = factor(task))` adds the trailing `)` to the `male` and `female` columns and converts `task` to a factor.
+1. We recode `task` factor levels to more meaningful strings.
+
+Having prepared our table, it's simple to produce an HTML table which can be copy-pasted into a Word processor. 
+
+```{r kable}
+library(kableExtra)
+descriptives %>% kable(
+  col.names = c('Task', 'Male', 'Female')) %>%
+  kable_styling()
+```
+
+**Explanation of commands:**
+
+1. `library(kableExtra)` loads the package containing the `kable()` function.
+1. We pipe our data into `kable()` using `col.names` to create meaningful column headings, and `kable_styling()` to produce a reasonably tidy HTML table.
+
+
+# Tables of t-tests
+
+___
+
+This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0. 
+
