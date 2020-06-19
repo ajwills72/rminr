@@ -83,6 +83,8 @@ d1 <- d1 %>% mutate(pre_emotion = rowSums(across(interestedpre:afraidpre)),
 d1 %>% head(3) %>% pander(split.table = Inf)
 ```
 
+QUESTION: these scores matched those in the data, so presumably I scored the PANAS-SF correctly?
+
 ## ERS scoring
 
 QUESTION: Should we simplify things by using data1.csv for the ERS analyses?
