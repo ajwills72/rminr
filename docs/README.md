@@ -139,12 +139,14 @@ These are slightly more advanced materials, aimed at a final-year undergraduate 
 
 - [Factorial differences, part 2](anova4.html): More on two-factor Bayesian ANOVA.
 
-- [Bettter graphs](better-graphs.html): Producing publication-quality graphs in R.
+- [Better graphs](better-graphs.html): Producing publication-quality graphs in R.
 
 The following materials are currently being developed, so on clicking these
 links, you may find just notes, or incomplete worksheets.
 
 - [Other resources](gfwr-other.html): Links to external resources.
+
+- [Better tables](better-tables.html): Producing publication-quality tables in R.
 
 - [Preprocessing scales](preproc-scales.html): _Handling missing data_, **calculating subscale scores**, **tidying survey data**, **reverse scoring items**, **user-defined functions**.
 
