@@ -1,0 +1,433 @@
+---
+title: "The Perruchet Effect"
+author: "Andy Wills and Paul Sharpe"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+## DEVELOPERS: Uncomment one option, as appropriate
+
+## Show only commands.
+## knitr::opts_chunk$set(echo = TRUE, message = FALSE, results='hide', fig.keep = 'none', comment=NA)
+
+## Show commands and output.
+knitr::opts_chunk$set(echo = TRUE, comment=NA, cache = TRUE)
+```
+
+## Before you start...
+
+This is an advanced worksheet, which assumes you have completed the [Absolute Beginners' Guide to R](https://ajwills72.github.io/rminr/#beginners) course, the [Research Methods in Practice (Quantitative section)](https://benwhalley.github.io/rmip/overview-quantitative.html) course, and the [Intermediate Guide to R](https://ajwills72.github.io/rminr/#rmip) course. 
+
+## Overview
+
+This worksheet describes a full analysis pipeline for an undergraduate student project on the Perruchet Effect. The project was basically identical to the experiment described by [McAndrew et al. (2012)](https://www.researchgate.net/profile/IPL_Mclaren/publication/221752843_Dissociating_Expectancy_of_Shock_and_Changes_in_Skin_Conductance_An_Investigation_of_the_Perruchet_Effect_Using_an_Electrodermal_Paradigm/links/0a85e53c10b74f291a000000.pdf), except that the electric shock was replaced by a loud unpleasant noise (a metal garden fork scraping across slate). For details of the procedure, see the McAndrew paper, but here's a very brief summary:
+
+A shape (brown cylinder, known as a 'CS') appears on the screen for 8 seconds. On 50% of occasions, this is then followed by the unpleasant noise (the 'US'). The participant's reaction to each CS is measured in two ways: 
+
+(1) While the CS is on the screen, they are asked to rate their expectancy of the US on each trial, using a numerical scale. Higher ratings indicate greater conscious expectation of the unpleasant noise.
+
+(2) Throughout the experiment, their Galvanic Skin Reponse, a.k.a. electrodermal activity is measured. This is a measure of physiological arousal, greater numbers mean more arousal. Higher arousal is interpeted as greater unconscious expectancy of the unpleasant noise.
+
+So, we have two dependent variables - expectancy ratings, and GSR. There is also one independent variable - "run length". This relates to how many trials in a row you have experienced (or not experienced) the noise. For example, a "+3" trial means you have experienced the noise three times in a row; a "-2" trial means you have experienced the absence of the noise two trials in a row. The run lengths in this experiment range from -3 to +3.
+
+There are two predictions. The first prediction is that the GSR will increase with run length, because the unconscious association between the shape and the noise will grow with repeated pairings. The second prediction is that the conscious expectancies will decrease with run length. This is known as Gamblers' Fallacy - in this case, the belief that, even though the sequence is random, a run of unpleasant noises means the next trial is more likely to be silent. This result is often taken to be one of the strongest pieces of evidence for a dual-process theory of learning, i.e. that we have unconscious and conscious learning processes that act somewhat independently of each other. This is because it can be hard to see how a single learning process could believe two things at the same time e.g. that on the +3 trials, it was simultaneously most and least likely that an unpleasant noise would occur.
+
+## Getting data from a public repository
+
+A basic principle of open science is that you publicly share your raw data (in anonymized form). Many psychologists, including the ones who ran this study, choose the [OSF](https://osf.io/) website to do this. So, the first thing you need to do is download the data from OSF. Of course, there's an R package for that (`osfr`). You may need to install this package before you can use it for the first time -- if so, use `install.packages("osfr")`
+
+So, first, [create a new project](using-projects.html) in R. Then, this is how you download data from OSF into your R project:
+
+```{r osf, message=FALSE, results='hide'}
+library(osfr)
+proj  <- osf_retrieve_node("r7axw")
+files  <- osf_ls_files(proj)
+osf_download(files, conflicts = "skip")
+```
+
+### Explanation of commands
+
+The first line loads the `osfr` pacakge. 
+
+The second line asks the OSF website for the information it needs to download the data. To do this, we need the last part of the web address. This repository is at https://osf.io/r7axw/, so we need to use `r7axw`. 
+
+The third line gets a list of the files in the repository, much as we did for local files in [Preprocessing data from experiments](preproc.html#combine). 
+
+The final file actually downloads those files to your R project. In this case, you'll find that you now have a directory called `data`, which contains those files. The component `conflicts = "skip"` means that, if these files are already in your project, you should not overwrite them, but leave them as they are.
+
+### Looking at the downloaded files
+
+You can ignore the file `MAIN.csv`, which we're not going to use. The first file you should open is `codebook.md`. A codebook is a file that explains what each of the columns in a data files means. Read the codebook and, while you're reading through, look at the data file it is talking about, `DATA.csv`. It is this file on which all the following analysis is based.
+
+## Loading the  data
+
+As with any analysis, the first step is to load the data into R:
+
+```{r load, message=FALSE}
+library(tidyverse)
+raw <- read_csv("data/DATA.csv")
+colnames(raw) <- c("subj", "time", "key", "value")
+```
+
+### Explanation of command
+
+The first two lines should be very familiar by now; we nearly always need the `tidyverse` package, and we use the `read_csv` command to load the data. The `data/` part of the filename `data/DATA.csv` says that the file `DATA.csv` is to be found in the directory (folder) called `data`. 
+
+The third line renames the columns, as covered in the [Preprocessing data from experiments](preproc.html#rename) worksheet. I didn't like the names of the columns very much so I changed them to something more comprehensible and quicker to type, using the `colnames` command. 
+
+## De-duplicating and filtering
+
+We're now going to get the data into a state where we can meaningfully analyse it:
+
+```{r tidy, message=FALSE}
+raw <- distinct(raw)
+raw  <- raw %>% filter(subj > 161)
+```
+
+### Explanation of command
+
+The first line, `raw <- distinct(raw)` is a _de-duplication_ command. It's a very handy command for tidying up data in cases where people have made the [grave error](https://arstechnica.com/tech-policy/2013/04/microsoft-excel-the-ruiner-of-global-economies/) of trying to use Excel for serious research. What happened in this case was that the experiment was run by three people over many different days. They then tried to stitch all the data files together by copying-and-pasting them into one big file in Excel. This would have been easy using R, as covered in  [Preprocessing data from experiments](preproc.html#combine) but, unfortunately, no one had taught them how to use R. Predictably, they could not do this combination of files in Excel without error (few people could), and they ended up copying some of the data twice. In this case, it's easy to detect and fix in R, because no two rows of this data can be identical - the subject number or the time is always going to be different. So, we can remove duplicates by telling R to give us just one copy of each of the different rows in the data set. The command `distinct` does that for us. 
+
+The second line, `raw  <- raw %>% filter(subj > 161)` should by now be very familiar; we are keeping only those participants whose subject number is greater than 161. This is because, in this study, we first ran a short pilot experiment, looked at the data, and made a few changes to the experiment. Here, we only wanted to analyze the main study, so we removed the pilot participants.
+
+## Exploring the GSR data
+
+The GSR data from this experiment is very rich, with a skin conductance measure taken from each participant approximately twenty times a second throughout the whole 30-40 minutes. To 'get a feel' for these data, and also to check that the equipment was working properly, we need to plot that GSR as a graph, with time on the x-axis and GSR on the y-axis. We'll need to do this one participant at a time, otherwise the graph will be really hard to read:
+
+```{r gsr}
+dat  <- raw %>% filter(subj == 168)
+gsr <- dat %>% filter(key == "GS")
+gplot <- gsr %>% ggplot(aes(x=time, y=value)) + geom_line()
+gplot
+```
+
+### Explanation of commands
+
+The first line should be familiar, we've filtered the data to include just one participant (168).
+
+The second line is also a simple filter operation - we're keeping just those rows where the `key` column says `GS`. From `codebook.md`, we can see that this means the rows of the data file that contain GSR readings. 
+
+The third line should also be pretty familiar, we're just doing a standard line graph, as we previously covered in, for example, the [Understanding Interactions](anova2.html#ex1) worksheet. In this case, we save the line plot in an object called `gplot`, and then show the graph by typing `gplot` as the last command. We do it this way so we can add other things to the graph later.
+
+### Explanation of output
+
+We can see the GSR going up and down over time. Why is it doing that? Our assumption is that this is people reacting to the CS (cylinder), which is sometimes followed by the US (noise). We can check this by adding a vertical line to the graph for the time each CS occurs.
+
+## Adding CS onsets to our graph
+
+We can add CS onset times like this: 
+
+```{r cs}
+cs <- dat %>% filter(key == "CO")
+gplot <- gplot + geom_vline(data=cs, mapping=aes(xintercept=time),
+                            colour="blue")
+gplot
+```
+
+### Explanation of commands
+
+The first line should be familar - we are selecting those rows of the data that contain the key `CO`, which `codebook.md` tells us are the timings of the CS onsets. 
+
+We've also come across `geom_vline` before, as part of the [Putting R to work](risk-rat.html) worksheet - it just plots a vertical line at a place we ask it to. The new part of this command is `data=cs, mapping=aes(xintercept=time)`. Previously, we've just told R manually where we want the line (e.g. `xintercept = 4.35`). Now, we're telling it that we want a bunch of lines, that the `data` for the position of those lines is to be found in `cs` data frame, and that the `time` column of that data frame should be used to find them.
+
+Here, we're adding the vertical lines to the plot we've already made `gplot <- gplot + geom_vline...`, and then showing the updated graph, `gplot`. 
+
+### Explanation of output
+
+There appears to be a missing blue line in the middle. Actually, there isn't, it's just that the participant was given a break half way through the experiment, so there wasn't a CS for a while. What we can also see, however, is that the GSR seems to go up each time there's a CS, and then go back down again. Sometimes that's quite a big rise, and sometimes, less big. If the experiment worked out as we expected, then the size of the GSR reaction will depend on the run length. We'll look at this later on, but first we need to do some preprocessing.
+
+## Preprocessing GSR data
+
+One problem with GSR data (and much other neuroscience data, e.g. EEG, fMRI) is that it's both highly variable ("noisy"), and changes systematically over time ("drift"). By 'noisy', we mean that, for a given event in the world, the GSR response to that event varies quite a lot, even if the event itself is objectively identical. In order to deal with this noise, we average the participant's GSR over several trials, and so get a sense of what they're typical response is. 
+
+By 'drift', we mean that these differences across trials are not random, they are affected by systematic changes in the participant over time. For example, as they hear more and more unpleasant noises, perhaps the noise becomes less unpleasant to them ("habituation"), and so their GSR reaction late in the experiment might be smaller than their GSR reaction early in the experiment. Another example -- once someone's GSR goes up, it can take quite a lot of time to go back down again ("return to baseline"). In this experiment, we waited a long time between trials, the _inter-trial interval_ was around 30 seconds. However, this is often not enough, and we find that sometimes their GSR has not returned to baseline by the time the next CS appears.
+
+The combination of noise and drift means that, not only do we need to average across a lot of trials, we also need to try and make those trials more comparable to each other before we average them. The process we use to do that here is _baseline correction_. This is simply a subtraction. We calculate the average GSR response in the 500 ms before the CS arrives (the _baseline_), and then we subtract that baseline from all the GSR readings while the CS is present. 
+
+Let's illustrate this with a single trial from participant 168. For no particular reason, let's take trial 10:
+
+```{r select}
+onset  <- cs$time[10]
+full <- gsr %>% filter(time >= onset - 500 & time <= onset + 8000)
+full %>% ggplot(aes(x=time, y=value)) + geom_line()
+```
+
+### Explanation of commands
+
+Line 1 - In order to find a single trial, we need to know at what time the CS began on that trial. We already have those CS onset times from doing the last graph, so we just ask R for the `10`th row of the `time` column of that `cs` data frame - `cs$time[10]` - and record it as `onset` (with `onset <- `)
+
+Line 2 - Now we know where the CS starts, we need to take all the GSR readings from 500 ms before that (our _baseline_), up to 8000 ms after that (when the CS ends). We use the now-familiar `filter` command to do this. 
+
+Line 3 - Just a plain old line graph.
+
+### Explanation of output
+
+What we see in the graph is just a 'zoomed in' part of the previous graph - for the 10th trial, 500 ms before the CS onset to 8000ms after the CS onset. The x-axis has large numbers because time is counted from the start of the experiment. The line looks a bit 'jagged' because the equipment is has limited accuracy in measuring GSR.
+
+## Baseline correction
+
+Now, we need to do two things. 
+
+First, we need to apply the baseline correction to these data. In other words, we work out the average GSR in the 500ms before the CS arrives; we then subtract that average from every data point, so the first 500 ms of the graph will always be around zero. 
+
+Second, we're going to need to average all these trials, so we need the x-axis to be the same for all of them. To do this, we subtract the onset time from all the values on the x-axis, meaning we end up with data that goes from -500 ms to +8000 ms.
+
+We can do all this in four lines of code, plus one to plot the new graph:
+
+```{r correct}
+precs  <- gsr %>% filter(time >= onset - 500 & time < onset)
+correct  <- mean(precs$value)
+full <- full %>% mutate(cval = value - correct)
+full <- full %>% mutate(rtime = time - onset)
+full %>% ggplot(aes(x=rtime, y=cval)) + geom_line()
+```
+
+### Explanation of commands
+
+Line 1 - Use `filter` to select the GSR values for the baseline period i.e. 500ms before the CS onset until the CS onset, and put them in a dataframe called `precs`.
+
+Line 2 - Calculate the mean of the GSR values in this pre-CS period (`precs$value`) and store it in `correct`.
+
+Line 3 - Using the command `mutate`, we create a new column in the `full` data frame called `cval` (for "corrected value"). This column contains the numbers in the `value` column, minus the baseline correction we've just calculated (`correct`). The name `mutate` is perhaps a bit odd, but "mutate" is just another word for "change" (over and above it's other biological, and sci-fi connotations...). So, `mutate` here just means create a new column by changing an existing one.
+
+Line 4 - Using `mutate` again, we create another column called `rtime` (for "relative time"). This is just the actual time, minus the time the CS arrived. So, the CS arrival time will always be zero.
+
+Line 5 - Just another line graph
+
+### Explanation of output
+
+We get another graph, which at first sight looks exactly like the last one. The thing to notice is that the x-axis and y-axis now have different numbers - the CS onset is at 0 ms rather than 318000 ms, and the GSR line starts at 0 rather than around 2.5. 
+
+## Scaling up with a function and a loop
+
+In principle, we could do this baseline correction for each trial of each participant in the same way as the above example. However, this would be really tedious, because there are about 50 participants and 50 trials per paricipant, so about 2,500 trials in total! 
+
+When we want R to do the same thing many things, we can use _functions_ and _loops_ to achieve this. We'll look at _functions_ first. 
+
+## Defining a function
+
+Pretty much every command you run in R is a function that someone has written. For example, `mean(precs$value`) uses the function `mean()`, which is built in to R. The command `read_csv` is a function added to R by loading the `tidyverse` library. You can also write your own functions. Here's a function that contains all the commands we used to baseline-correct one trial of participant 168:
+
+```{r basefunc}
+base.correct  <- function(trial) {
+    onset  <- cs$time[trial]
+    full <- gsr %>% filter(time >= onset - 500 & time <= onset + 8000)
+    precs  <- gsr %>% filter(time >= onset - 500 & time < onset)
+    correct  <- mean(precs$value)
+    full <- full %>% mutate(cval = value - correct)
+    full <- full %>% mutate(rtime = time - onset)
+    full  <- full %>% add_column(trial = trial, run = cs$value[trial])
+    return(full)
+}
+```
+
+Ignoring the first and the last three lines for a moment, notice that these commands are almost identical to the ones we just used. The only difference is that we've changed `cs$time[10]` to `cs$time[trial]`. So, instead of always looking at trial 10, we look at whatever trial is specificied by `trial`, and that is set by calling the function. So, for example, we can now look at trial 9 like this:
+
+```{r callfunc}
+eg  <- base.correct(9)
+eg %>% ggplot(aes(x=rtime, y=cval)) + geom_line()
+```
+
+The first and last two lines of the `base.correct` code are what makes it a _function_. The first line tells R to create a `function` called `base.correct`, and that this function takes an input called `trial`. The `{` indicates the start of the commands in the function. The `}` in the last line of code indicates the end of the set of commands in the function. The penultimate line, `return(full)`, means that the function returns the `full` data frame it has calculated. 
+
+So, when we type `eg <- base.correct(9)`, the function we have written does the baseline correction for trial 9, and returns the answers. We put these answers into `eg` (using `eg <- `), and then plot the graph.
+
+There's one line of the function we have not yet discussed:
+
+`full  <- full %>% add_column(trial = trial, run = cs$value[trial])`
+
+The key aspect of this command is `add_column` which, perhaps unsurprisingly, adds new columns to a data frame. In this case, we are adding two columns to the right hand side of the data frame. These are going to be useful later. The first column contains the `trial` number, and the second column contains the _run length_ (-3 to +3, see description of experiment). The run length is recorded along with the CS onset time data, in the `value` column (see `codebook.md`) so we read the run length for the current trial using `cs$value[trial]`. 
+
+## Using a loop
+
+We can now use a loop to run this function for every trial of one participant. We've used loops in a similar way before, to combine data files from multiple participants using `bind_rows`, see [Preprocessing data from experiments](preproc.html#combine).
+
+```{r one-s-loop}
+onep  <- NULL
+for(trial in 1:46) {
+    onep  <- bind_rows(onep, base.correct(trial))
+}
+```
+
+### Explanation of command
+
+The loop runs `base.correct(trial)` for each of the 46 trials the participant did, and adds them all to one big data frame called `onep`. In more detail:
+
+`onep <- NULL` - Set up an empty (`NULL`) dataframe to put our results in.
+
+`for(trial in 1:46) {` - `1:46` means the whole numbers from 1 to 46. So, the first time we go round this loop, `trial` is `1`, the second time it is `2`, and so on. When we get to `46`, the loop runs for the last time.
+
+`onep <- bind_rows(onep, ...)` - Bind (attach) some new rows to `onep` :
+
+`base.correct(trial)` - The trials to bind are those that come out of `base.correct(trial`). 
+
+## Summarizing GSR data
+
+Let's take a look at what we've generated:
+
+```{r peek}
+onep
+```
+
+The dataframe `onep` contains all the GSR data during the CS presentations(and the baseline) for one participant, including columns that record the trial each reading comes from, and the _run length_ of that trial (see experiment description). Each trial is 8.5 seconds of readings at about 20 readings a second and 46 trials, giving us about 7820 readings in total for this participant. 
+
+For the purposes of analysis, we need to summarize this data down to just one number per trial, representing how large the GSR was on that trial. There's a few ways one could do this; here we're just going to take the average GSR for trial:
+
+```{r gsr-av}
+gsr.sum  <- onep %>%
+    filter(rtime >= 0) %>%
+    group_by(trial, run) %>%
+    summarise(cval = mean(cval))
+gsr.sum
+```
+
+### Explanation of command
+
+Line 2 - We remove all GSR recordings from the baseline period (where `rtime` is less than zero)
+
+Lines 3-4 - We group the data by `trial` and by `run` length, and then `summarise` this group data by taking the mean corrected value, `cval`. 
+
+### Explanation of output
+
+The output shows the contents of `gsr.sum`. Each row is one trial. For each trial, we have the _run length_, and the mean GSR response `cval`. Later on, we'll analyze these data - but first, we have to finish the preprocesssing.
+
+## Preprocessing expectancy ratings
+
+The data frame `onep` contains a GSR for each trial, but there is also an expectancy rating for each trial. It will make it easier to look at these data if we also include these expectancy ratings into `onep`. So, using the following commands, we first create a new data frame with the expectancy ratings:
+
+```{r add-expect}
+expect <- dat %>% filter(key == "ER") %>% add_column(trial = 1:46) %>% select(subj, trial, value)
+expect
+```
+
+### Explanation of command
+
+We take the full data for one participant (`dat`) and then `filter` it to retain only the rows marked `ER` (the _expectany rating_ rows, see `codebook.md`). When then add a new column (`add_column`) that is called `trial` and contains the numbers 1 to 46 (`1:46`). Finally, we select just the `trial`, and `value` columns of that dataframe, and place it into `expect`. 
+
+### Explanation of output
+
+The dataframe `expect` contains one row for each trial, and the column `value` contains the expectancy rating for that trial. 
+
+## Combining expectancy and GSR data
+
+In the final step of preprocessing this participant, we join the expectancy ratings `expect` and the mean GSRs (`gsr.sum`) into a single data frame:
+
+```{r one frame}
+comb.data  <- full_join(gsr.sum, expect, by = "trial")
+comb.data
+```
+
+### Explanation of command
+
+The command `full_join` joins together two seperate data frames, using a column they have in common. In this case, the `gsr.sum` and `exepct` data frames have the `trial` column in common. 
+
+## List of participant numbers
+
+We've now completed the preprocessing of one participant (`168`). In principle, we could go through all the same steps for each of the other approximately 50 participants, but that would be rather tedious. Instead, we can use a _loop_ to automate this for us, as we'll see in a minute, but first we need to get a list of participant numbers
+
+```{r ppts}
+subjs <- enframe(unique(raw$subj))
+subjs
+```
+
+### Explanation
+
+We need a list of the different participant numbers used in this experiment. We can get this using the `subj` column of the `raw` data, so `raw$subj`. The only problem is that each subject number occurs many times (once for each GSR recording, so 20 times a second. We want just one copy of each different subject number. The command `unique` does that for us, so the command `subjs <- enframe(unique(raw$subj))` gives us the participant numbers (`enframe` just means 'put in a data frame').
+
+## Preprocessing all participants
+
+We now use a loop to go through the same set of steps for each participant:
+
+```{r preproc-loop}
+sum.data  <- NULL
+for(this.subj in subjs$value) {
+    dat  <- raw %>% filter(subj == this.subj)
+    gsr <- dat %>% filter(key == "GS")
+    cs <- dat %>% filter(key == "CO")
+    onep  <- NULL
+    for(trial in 1:46) {
+        onep  <- bind_rows(onep, base.correct(trial))
+    }
+    gsr.sum  <- onep %>%
+        filter(rtime >= 0) %>%
+        group_by(trial, run) %>%
+        summarise(cval = mean(cval))
+    expect <- dat %>%
+        filter(key == "ER") %>%
+        add_column(trial = 1:46) %>%
+        select(subj, trial, value)
+    comb.data  <- full_join(gsr.sum, expect, by = "trial")
+    sum.data  <- bind_rows(sum.data, comb.data)
+}
+sum.data
+```
+
+### Explanation of output
+
+Our full set of preprocessed data, one row per participant per trial. We'll use this in our analyses in the next step. 
+
+### Explanation of commands
+
+You can safely ignore everything apart from the first two lines and the last three lines of commands. This is because the bit in the middle is  exactly the same commands as we've been building up throughout this worksheet. They take one participant, baseline correct all their GSRs, take a mean GSR for each trial, and record that along with the expectancy rating, and information about trial (participant number, trial number, run length). 
+
+All of these commands are placed inside a `for` loop, which we've used before (see the second and penultimate line of the commands above). We use the set of participant numbers (`subj$value`) we just collected and use the for loop to set  `this.subj` to each of these values in turn. All the data is combined together in `sum.data`, using the `bind_rows` command we've used before.
+
+## Further preprocessing - log transform
+
+There are three further preprocessing steps we have to take before we can analyze these data. First, studies of GSR data normally _log transform_ it before analysis. Log transforming data means to take the [logarithm](https://en.wikipedia.org/wiki/Logarithm) of the data, in this case the [natural logarithm](https://en.wikipedia.org/wiki/Natural_logarithm)). Two reasonable questions about this preprocessing are: (a) what does that mean, and (b) why would you do it?
+
+To answer the first question, a log transform compresses the range of the data. The following graph should help visualize this:
+
+```{r log plot}
+plot(1:50,log(1:50))
+```
+
+On the x-axis we have the numbers 1 to 50. On the y-axis, we have the natural logarithm of those numbers. As you can see, whil the x-axis rises from 1 to 50, the y-axis rises from zero to around 4. You should also be able to notice that for each increase in x, the increase in y gets smaller. So, for example, where x rises from 1 to 2, log(x) rises from 0 to about .8; but where x rises from 2 to 3, log(x) rises by about 0.4. 
+
+As a result, a log transform doesn't change small numbers very much, but reduces large numbers a lot more. This can be useful if, for example, a few participants have unsually large GSRs. These very large GSRs would increase the _variance_ of the data substantially, and this can make it harder to detect real differences between groups. A log transform can reduce that problem, and hence can make it easier to find real effects in such situations. So, this also answers the second part of the question - we apply a log transform to GSR data because it can make it easier to find real effects.
+
+We log transform our GSR data using the `mutate` command that we used earlier:
+
+```{r log trans}
+sum.data  <- sum.data %>% mutate(lcval = log(cval+1))
+```
+
+The command `log` takes the natural logarithm. We calculate `log(cval+1)` rather than `log(cval)` because the `log(0)` is an infinitely small number, which is something that cannot be analyzed. By adding 1 we don't hit this problem (unless cval is -1 or smaller, which it seldom is).
+
+## Further preprocessing - Removing unusable trials
+
+In our Perruchet Effect experiment, we have runs of various lengths. For example, for something to be a `+2` run there must be a sequence of four trials in the following order `NSSN` where N means no sound, and S means sound. The third trial in that sequence is a +2 trial, because there have been two sounds in a row, and the following trial there will not be a sound so the run will end. Importantly, at least the way people normally analyse these data, the second trial in that sequence has no definable run length. One might say it is a `+1` trial because, at that point, there has only been one sound in a row. However, the experimenter knows that the run will continue on the next trial, so calling it a `+1` trial somehow doesn't seem quite right (although, from the perspective of the participant, at the time they are reacting to that trial, clearly it is a `+1` trial). 
+
+Normally, these experimenter-ambiguous trials are described as having a zero run length, and are excluded from the analysis. We remove them like this:
+
+```{r no-zero}
+sum.data  <- sum.data %>% filter(run != 0)
+```
+
+This is a standard `filter` command. The `!=` part reads as 'not equal to'. So, this command keeps all the non-zero run lengths.
+
+## Further preprocessing - From run length to 'level'
+
+Another convention of analyzing Perruchet effect experiments is that you convert run length (-3 to +3) into a dependent variable called "Level". This involves coding `-3` and `+1` as Level 1, `-2` and `+2` as Level 2, and `-1` and `+3` as Level 3. If GSR rises from -3 to +3, it will also rise from Level 1 to Level 3. Equally, if GSR drops from -3 to +3, it will also drop from Level 1 to Level 3. The reasons for recoding the dependent variable in this way are not straight forward, and are a matter of some debate in the literature. Nonetheless, as this experiment is essentially an attempt to replicate McAndrew et al.'s paper with an unpleasant noise, we choose to use the same analyses they did, and that involves recoding the run length as Level. 
+
+We covered recoding data in the _Cleaning up questionniare data_ part of [Research Methods in Practice](https://benwhalley.github.io/rmip/overview-quantitative.html). To recode some data, we need to take two steps. First, we define the _mapping_ - so, for each run length, what Level is that? We do this as follows:
+
+```{r def-levels}
+level.code  <- c(`-3` = 1, `-2` = 2, `-1` = 3, `1` = 1, `2` = 2, `3` = 3)
+```
+
+So, for example, a run length of `-2` becomes a Level of `2`. 
+
+Once we have our mapping, we can use it, via `mutate` to create a new column called `level`. We use the `recode` command to do this, convertinig the column `run` using the mapping `level.code` we've just written. The `!!!` part probably isn't worth spending the time to understand deeply, but if you'd like to dig deeper, see the explanation in  [Research Methods in Practice](https://benwhalley.github.io/rmip/overview-quantitative.html).
+
+```{r recode}
+sum.data <- sum.data %>% mutate(level = recode(run, !!!level.code))
+```
+
+## Results - Looking at the means
+
+```{r means}
+lvl.sum  <- sum.data %>% group_by(subj, level) %>% summarise(lcval = mean(lcval), expect = mean(value))
+sum.data %>% group_by(level) %>% summarise(lcval = mean(lcval), expect = mean(value))
+sum.data %>% group_by(run) %>% summarise(lcval = mean(lcval), expect = mean(value))
+```
