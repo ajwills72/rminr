@@ -429,7 +429,7 @@ data &lt;- path %&gt;%
 <li>The last stage in the pipeline reads the data. <code>map_df()</code> processes each item in the vector, assigning it to <code>.x</code> and then running the function <code>read_excel(path = path, sheet = .x, range = &quot;A1:V20&quot;)</code>. For each sub-sheet of the spreadsheet file (<code>path</code>), this reads data from the range <code>A1:V20</code>, which are the only cells we need. The argument <code>.id = &quot;sheet&quot;</code> creates a column named <code>sheet</code> with the name associated with <code>.x</code> (see previous step). The whole thing is returned as a data frame.</li>
 <li>Because <code>map_df()</code> adds the results of each of function call to the end of the previously created data frame, <code>data</code> is assigned a single data frame containing the data from all sub-sheets.</li>
 </ol>
-<p>Here’s a slice of each of the data from each sub-sheet:</p>
+<p>Here’s a slice of the data from each sub-sheet:</p>
 <pre class="r"><code>data %&gt;% slice(1:2, 20:21, 39:40, 58:59, 77:78) %&gt;% pander(split.table = Inf)</code></pre>
 <table style="width:100%;">
 <colgroup>
@@ -1714,8 +1714,7 @@ data &lt;- path %&gt;%
   filter(sheet == &#39;Demographic&#39;) %&gt;%
   set_names(~ str_to_lower(.)) %&gt;%
   select(gender, cdi_u, cdi_s) %&gt;%
-  mutate(gender = factor(gender))
-demographics$subj &lt;- factor(seq.int(nrow(demographics)))
+  mutate(gender = factor(gender), subj = factor(seq.int(nrow(.))))
 demographics$gender &lt;- recode_factor(demographics$gender, Male = &#39;male&#39;, Female = &#39;female&#39;)
 demographics %&gt;% head(3) %&gt;% pander(split.table = Inf)</code></pre>
 <table style="width:46%;">
@@ -1758,8 +1757,130 @@ demographics %&gt;% head(3) %&gt;% pander(split.table = Inf)</code></pre>
 <pre class="r"><code>nc &lt;- data %&gt;%
   filter(sheet == &#39;Noun Comprehension&#39;) %&gt;%
   set_names(~ str_to_lower(.)) %&gt;%
-  select(mountain:wellyboots)
-nc$subj &lt;- factor(seq.int(nrow(nc)))</code></pre>
+  select(mountain:wellyboots) %&gt;%
+  mutate(subj = factor(seq.int(nrow(.))))
+nc %&gt;% head(3) %&gt;% pander(split.table = Inf)</code></pre>
+<table>
+<colgroup>
+<col width="6%"></col>
+<col width="6%"></col>
+<col width="5%"></col>
+<col width="3%"></col>
+<col width="4%"></col>
+<col width="3%"></col>
+<col width="3%"></col>
+<col width="3%"></col>
+<col width="3%"></col>
+<col width="4%"></col>
+<col width="3%"></col>
+<col width="5%"></col>
+<col width="5%"></col>
+<col width="5%"></col>
+<col width="6%"></col>
+<col width="6%"></col>
+<col width="4%"></col>
+<col width="3%"></col>
+<col width="3%"></col>
+<col width="7%"></col>
+<col width="3%"></col>
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">mountain</th>
+<th align="center">motorbike</th>
+<th align="center">penguin</th>
+<th align="center">box</th>
+<th align="center">apple</th>
+<th align="center">iron</th>
+<th align="center">cow</th>
+<th align="center">doll</th>
+<th align="center">hat</th>
+<th align="center">watch</th>
+<th align="center">sofa</th>
+<th align="center">clouds</th>
+<th align="center">hammer</th>
+<th align="center">glasses</th>
+<th align="center">elephant</th>
+<th align="center">backyard</th>
+<th align="center">spoon</th>
+<th align="center">bib</th>
+<th align="center">sink</th>
+<th align="center">wellyboots</th>
+<th align="center">subj</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">D</td>
+<td align="center">C</td>
+<td align="center">C</td>
+<td align="center">C</td>
+<td align="center">C</td>
+<td align="center">P</td>
+<td align="center">C</td>
+<td align="center">C</td>
+<td align="center">C</td>
+<td align="center">P</td>
+<td align="center">D</td>
+<td align="center">C</td>
+<td align="center">D</td>
+<td align="center">C</td>
+<td align="center">C</td>
+<td align="center">P</td>
+<td align="center">C</td>
+<td align="center">P</td>
+<td align="center">P</td>
+<td align="center">C</td>
+<td align="center">1</td>
+</tr>
+<tr class="even">
+<td align="center">C</td>
+<td align="center">C</td>
+<td align="center">C</td>
+<td align="center">C</td>
+<td align="center">C</td>
+<td align="center">C</td>
+<td align="center">C</td>
+<td align="center">C</td>
+<td align="center">C</td>
+<td align="center">C</td>
+<td align="center">C</td>
+<td align="center">C</td>
+<td align="center">C</td>
+<td align="center">NR</td>
+<td align="center">C</td>
+<td align="center">D</td>
+<td align="center">C</td>
+<td align="center">C</td>
+<td align="center">C</td>
+<td align="center">C</td>
+<td align="center">2</td>
+</tr>
+<tr class="odd">
+<td align="center">C</td>
+<td align="center">C</td>
+<td align="center">C</td>
+<td align="center">C</td>
+<td align="center">C</td>
+<td align="center">C</td>
+<td align="center">C</td>
+<td align="center">C</td>
+<td align="center">C</td>
+<td align="center">C</td>
+<td align="center">C</td>
+<td align="center">C</td>
+<td align="center">C</td>
+<td align="center">C</td>
+<td align="center">NR</td>
+<td align="center">NR</td>
+<td align="center">C</td>
+<td align="center">C</td>
+<td align="center">C</td>
+<td align="center">C</td>
+<td align="center">3</td>
+</tr>
+</tbody>
+</table>
 <p>Next we want to calculate an accuracy score for noun comprehension. Cells containing <code>C</code> indicate that the child could comprehend the picture on the card for noun named by this column. Cells containing <code>C*</code> indicate that the child knew a synonym for the noun. In this experiment, both of these values are considered correct responses.</p>
 <pre class="r"><code>nc &lt;- nc %&gt;% mutate(nc = rowSums(. == &#39;C&#39; | . == &#39;C*&#39;)) %&gt;%
   select(subj, nc)
@@ -1809,8 +1930,8 @@ nc %&gt;% head(5) %&gt;% pander(split.table = Inf)</code></pre>
 <pre class="r"><code>np &lt;- data %&gt;%
   filter(sheet == &#39;Noun Production&#39;) %&gt;%
   set_names(~ str_to_lower(.)) %&gt;%
-  select(cards:gloves)
-np$subj &lt;- factor(seq.int(nrow(np)))
+  select(cards:gloves) %&gt;%
+  mutate(subj = factor(seq.int(nrow(.))))
 np$cards &lt;- recode_factor(np$cards, `1` = &#39;italian&#39;, `2` = &#39;english&#39;)
 np &lt;- np %&gt;% mutate(np = rowSums(. == &#39;C&#39; | . == &#39;C*&#39;)) %&gt;%
   select(subj, cards, np)
@@ -1859,8 +1980,8 @@ np %&gt;% head(5) %&gt;% pander(split.table = Inf)</code></pre>
 <pre class="r"><code>pc &lt;- data %&gt;%
   filter(sheet == &#39;Predicate Comprehension&#39;) %&gt;%
   set_names(~ str_to_lower(.)) %&gt;%
-  select(big:pulling)
-pc$subj &lt;- factor(seq.int(nrow(pc)))
+  select(big:pulling) %&gt;%
+  mutate(subj = factor(seq.int(nrow(.))))
 pc &lt;- pc %&gt;% mutate(pc = rowSums(. == &#39;C&#39; | . == &#39;C*&#39;)) %&gt;%
   select(subj, pc)
 pc %&gt;% head(5) %&gt;% pander(split.table = Inf)</code></pre>
@@ -1901,8 +2022,8 @@ pc %&gt;% head(5) %&gt;% pander(split.table = Inf)</code></pre>
 <pre class="r"><code>pp &lt;- data %&gt;%
   filter(sheet == &#39;Predicate Production&#39;) %&gt;%
   set_names(~ str_to_lower(.)) %&gt;%
-  select(small:pushing)
-pp$subj &lt;- factor(seq.int(nrow(pp)))
+  select(small:pushing) %&gt;%
+  mutate(subj = factor(seq.int(nrow(.))))
 pp &lt;- pp %&gt;% mutate(pp = rowSums(. == &#39;C&#39; | . == &#39;C*&#39;)) %&gt;%
   select(subj, pp)
 pp %&gt;% head(5) %&gt;% pander(split.table = Inf)</code></pre>
@@ -2305,8 +2426,13 @@ descriptives %&gt;% pander(split.table = Inf)</code></pre>
 <li>We recode <code>task</code> factor levels to more meaningful strings.</li>
 </ol>
 <p>Having prepared our table, it’s simple to produce an HTML table which can be copy-pasted into a Word processor.</p>
-<pre class="r"><code>library(kableExtra)
-descriptives %&gt;% kable(
+<pre class="r"><code>library(kableExtra)</code></pre>
+<pre><code>
+Attaching package: &#39;kableExtra&#39;</code></pre>
+<pre><code>The following object is masked from &#39;package:dplyr&#39;:
+
+    group_rows</code></pre>
+<pre class="r"><code>descriptives %&gt;% kable(
   col.names = c(&#39;Task&#39;, &#39;Male&#39;, &#39;Female&#39;)) %&gt;%
   kable_styling()</code></pre>
 <table class="table" style="margin-left: auto; margin-right: auto;">

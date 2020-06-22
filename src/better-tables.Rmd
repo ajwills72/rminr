@@ -87,7 +87,7 @@ data <- path %>%
 1. The last stage in the pipeline reads the data. `map_df()` processes each item in the vector, assigning it to `.x` and then running the function `read_excel(path = path, sheet = .x, range = "A1:V20")`. For each sub-sheet of the spreadsheet file (`path`), this reads data from the range `A1:V20`, which are the only cells we need. The argument `.id = "sheet"` creates a column named `sheet` with the name associated with `.x` (see previous step). The whole thing is returned as a data frame.
 1. Because `map_df()` adds the results of each of function call to the end of the previously created data frame, `data` is assigned a single data frame containing the data from all sub-sheets.
 
-Here's a slice of each of the data from each sub-sheet:
+Here's a slice of the data from each sub-sheet:
 
 ```{r}
 data %>% slice(1:2, 20:21, 39:40, 58:59, 77:78) %>% pander(split.table = Inf)
@@ -100,8 +100,7 @@ demographics <- data %>%
   filter(sheet == 'Demographic') %>%
   set_names(~ str_to_lower(.)) %>%
   select(gender, cdi_u, cdi_s) %>%
-  mutate(gender = factor(gender))
-demographics$subj <- factor(seq.int(nrow(demographics)))
+  mutate(gender = factor(gender), subj = factor(seq.int(nrow(.))))
 demographics$gender <- recode_factor(demographics$gender, Male = 'male', Female = 'female')
 demographics %>% head(3) %>% pander(split.table = Inf)
 ```
@@ -112,8 +111,9 @@ We extract the noun comprehension data into its own data frame, convert the colu
 nc <- data %>%
   filter(sheet == 'Noun Comprehension') %>%
   set_names(~ str_to_lower(.)) %>%
-  select(mountain:wellyboots)
-nc$subj <- factor(seq.int(nrow(nc)))
+  select(mountain:wellyboots) %>%
+  mutate(subj = factor(seq.int(nrow(.))))
+nc %>% head(3) %>% pander(split.table = Inf)
 ```
 
 Next we want to calculate an accuracy score for noun comprehension. Cells containing `C` indicate that the child could comprehend the picture on the card for noun named by this column. Cells containing `C*` indicate that the child knew a synonym for the noun. In this experiment, both of these values are considered correct responses.
@@ -137,8 +137,8 @@ We use similar code to create data frames containing accuracy scores for the nou
 np <- data %>%
   filter(sheet == 'Noun Production') %>%
   set_names(~ str_to_lower(.)) %>%
-  select(cards:gloves)
-np$subj <- factor(seq.int(nrow(np)))
+  select(cards:gloves) %>%
+  mutate(subj = factor(seq.int(nrow(.))))
 np$cards <- recode_factor(np$cards, `1` = 'italian', `2` = 'english')
 np <- np %>% mutate(np = rowSums(. == 'C' | . == 'C*')) %>%
   select(subj, cards, np)
@@ -147,8 +147,8 @@ np %>% head(5) %>% pander(split.table = Inf)
 pc <- data %>%
   filter(sheet == 'Predicate Comprehension') %>%
   set_names(~ str_to_lower(.)) %>%
-  select(big:pulling)
-pc$subj <- factor(seq.int(nrow(pc)))
+  select(big:pulling) %>%
+  mutate(subj = factor(seq.int(nrow(.))))
 pc <- pc %>% mutate(pc = rowSums(. == 'C' | . == 'C*')) %>%
   select(subj, pc)
 pc %>% head(5) %>% pander(split.table = Inf)
@@ -156,8 +156,8 @@ pc %>% head(5) %>% pander(split.table = Inf)
 pp <- data %>%
   filter(sheet == 'Predicate Production') %>%
   set_names(~ str_to_lower(.)) %>%
-  select(small:pushing)
-pp$subj <- factor(seq.int(nrow(pp)))
+  select(small:pushing) %>%
+  mutate(subj = factor(seq.int(nrow(.))))
 pp <- pp %>% mutate(pp = rowSums(. == 'C' | . == 'C*')) %>%
   select(subj, pp)
 pp %>% head(5) %>% pander(split.table = Inf)
