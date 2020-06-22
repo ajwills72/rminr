@@ -383,6 +383,7 @@ summary {
 <li><p><a href="#intro">Introduction</a></p></li>
 <li><p><a href="#start">Getting started</a></p></li>
 <li><p><a href="#descriptives">Table of descriptive statistics</a></p></li>
+<li><p><a href="#t-tests">Table of t-tests</a></p></li>
 </ul>
 <p><a name="intro"></a></p>
 </div>
@@ -1757,12 +1758,12 @@ demographics %&gt;% head(3) %&gt;% pander(split.table = Inf)</code></pre>
 <pre class="r"><code>nc &lt;- data %&gt;%
   filter(sheet == &#39;Noun Comprehension&#39;) %&gt;%
   set_names(~ str_to_lower(.)) %&gt;%
-  select(mountain:wellyboots) %&gt;%
+  select(mountain:wellyboots, cards) %&gt;%
   mutate(subj = factor(seq.int(nrow(.))))
 nc %&gt;% head(3) %&gt;% pander(split.table = Inf)</code></pre>
-<table>
+<table style="width:100%;">
 <colgroup>
-<col width="6%"></col>
+<col width="5%"></col>
 <col width="6%"></col>
 <col width="5%"></col>
 <col width="3%"></col>
@@ -1773,16 +1774,17 @@ nc %&gt;% head(3) %&gt;% pander(split.table = Inf)</code></pre>
 <col width="3%"></col>
 <col width="4%"></col>
 <col width="3%"></col>
+<col width="4%"></col>
+<col width="4%"></col>
 <col width="5%"></col>
 <col width="5%"></col>
 <col width="5%"></col>
-<col width="6%"></col>
-<col width="6%"></col>
 <col width="4%"></col>
 <col width="3%"></col>
 <col width="3%"></col>
-<col width="7%"></col>
-<col width="3%"></col>
+<col width="6%"></col>
+<col width="4%"></col>
+<col width="4%"></col>
 </colgroup>
 <thead>
 <tr class="header">
@@ -1806,6 +1808,7 @@ nc %&gt;% head(3) %&gt;% pander(split.table = Inf)</code></pre>
 <th align="center">bib</th>
 <th align="center">sink</th>
 <th align="center">wellyboots</th>
+<th align="center">cards</th>
 <th align="center">subj</th>
 </tr>
 </thead>
@@ -1831,6 +1834,7 @@ nc %&gt;% head(3) %&gt;% pander(split.table = Inf)</code></pre>
 <td align="center">P</td>
 <td align="center">P</td>
 <td align="center">C</td>
+<td align="center">2</td>
 <td align="center">1</td>
 </tr>
 <tr class="even">
@@ -1854,220 +1858,299 @@ nc %&gt;% head(3) %&gt;% pander(split.table = Inf)</code></pre>
 <td align="center">C</td>
 <td align="center">C</td>
 <td align="center">C</td>
-<td align="center">2</td>
-</tr>
-<tr class="odd">
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">NR</td>
-<td align="center">NR</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">3</td>
-</tr>
-</tbody>
-</table>
-<p>Next we want to calculate an accuracy score for noun comprehension. Cells containing <code>C</code> indicate that the child could comprehend the picture on the card for noun named by this column. Cells containing <code>C*</code> indicate that the child knew a synonym for the noun. In this experiment, both of these values are considered correct responses.</p>
-<pre class="r"><code>nc &lt;- nc %&gt;% mutate(nc = rowSums(. == &#39;C&#39; | . == &#39;C*&#39;)) %&gt;%
-  select(subj, nc)
-nc %&gt;% head(5) %&gt;% pander(split.table = Inf)</code></pre>
-<table style="width:19%;">
-<colgroup>
-<col width="9%"></col>
-<col width="9%"></col>
-</colgroup>
-<thead>
-<tr class="header">
-<th align="center">subj</th>
-<th align="center">nc</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
 <td align="center">1</td>
-<td align="center">12</td>
-</tr>
-<tr class="even">
 <td align="center">2</td>
-<td align="center">18</td>
 </tr>
 <tr class="odd">
+<td align="center">C</td>
+<td align="center">C</td>
+<td align="center">C</td>
+<td align="center">C</td>
+<td align="center">C</td>
+<td align="center">C</td>
+<td align="center">C</td>
+<td align="center">C</td>
+<td align="center">C</td>
+<td align="center">C</td>
+<td align="center">C</td>
+<td align="center">C</td>
+<td align="center">C</td>
+<td align="center">C</td>
+<td align="center">NR</td>
+<td align="center">NR</td>
+<td align="center">C</td>
+<td align="center">C</td>
+<td align="center">C</td>
+<td align="center">C</td>
+<td align="center">2</td>
 <td align="center">3</td>
-<td align="center">18</td>
-</tr>
-<tr class="even">
-<td align="center">4</td>
-<td align="center">17</td>
-</tr>
-<tr class="odd">
-<td align="center">5</td>
-<td align="center">17</td>
 </tr>
 </tbody>
 </table>
-<p><strong>Explanation of commands:</strong></p>
-<ol style="list-style-type: decimal">
-<li><code>nc %&gt;% mutate(nc = rowSums(. == &#39;C&#39; | . == &#39;C*&#39;))</code> creates a new column <code>nc</code> with a value for each row which is the sum of the number of columns containing <code>C</code> or <code>C*</code> (<code>|</code> means ‘or’).</li>
-<li>We select just the subject number <code>subj</code> and noun comprehension accuracy score <code>nc</code> columns.</li>
-</ol>
-<div id="todo-exlusion-critera" class="section level2">
-<h2>TODO: exlusion critera</h2>
-<p>We use similar code to create data frames containing accuracy scores for the noun production, predicate comprehension and predicate production tests. For the purposes of this worksheet, you can ignore the recoding of the <code>cards</code> column.</p>
-<pre class="r"><code>np &lt;- data %&gt;%
-  filter(sheet == &#39;Noun Production&#39;) %&gt;%
-  set_names(~ str_to_lower(.)) %&gt;%
-  select(cards:gloves) %&gt;%
-  mutate(subj = factor(seq.int(nrow(.))))
-np$cards &lt;- recode_factor(np$cards, `1` = &#39;italian&#39;, `2` = &#39;english&#39;)
-np &lt;- np %&gt;% mutate(np = rowSums(. == &#39;C&#39; | . == &#39;C*&#39;)) %&gt;%
-  select(subj, cards, np)
-np %&gt;% head(5) %&gt;% pander(split.table = Inf)</code></pre>
-<table style="width:31%;">
+<p>We create a <code>cards</code> data frame and recode the <code>cards</code> factor to make it clear which card set was used with each subject. Again, we’ll use <code>cards</code> later when we join our data frames together.</p>
+<pre class="r"><code>cards &lt;- nc %&gt;%
+  select(subj, cards) %&gt;%
+  mutate(cards = recode_factor(.$cards, `1` = &#39;italian&#39;, `2` = &#39;english&#39;))
+cards %&gt;% pander()</code></pre>
+<table style="width:24%;">
 <colgroup>
 <col width="9%"></col>
 <col width="13%"></col>
-<col width="6%"></col>
 </colgroup>
 <thead>
 <tr class="header">
 <th align="center">subj</th>
 <th align="center">cards</th>
-<th align="center">np</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td align="center">1</td>
 <td align="center">english</td>
-<td align="center">4</td>
 </tr>
 <tr class="even">
 <td align="center">2</td>
 <td align="center">italian</td>
-<td align="center">12</td>
 </tr>
 <tr class="odd">
 <td align="center">3</td>
 <td align="center">english</td>
-<td align="center">13</td>
 </tr>
 <tr class="even">
 <td align="center">4</td>
 <td align="center">italian</td>
-<td align="center">11</td>
 </tr>
 <tr class="odd">
 <td align="center">5</td>
 <td align="center">english</td>
+</tr>
+<tr class="even">
+<td align="center">6</td>
+<td align="center">italian</td>
+</tr>
+<tr class="odd">
+<td align="center">7</td>
+<td align="center">english</td>
+</tr>
+<tr class="even">
+<td align="center">8</td>
+<td align="center">italian</td>
+</tr>
+<tr class="odd">
+<td align="center">9</td>
+<td align="center">english</td>
+</tr>
+<tr class="even">
+<td align="center">10</td>
+<td align="center">italian</td>
+</tr>
+<tr class="odd">
+<td align="center">11</td>
+<td align="center">english</td>
+</tr>
+<tr class="even">
+<td align="center">12</td>
+<td align="center">italian</td>
+</tr>
+<tr class="odd">
+<td align="center">13</td>
+<td align="center">english</td>
+</tr>
+<tr class="even">
+<td align="center">14</td>
+<td align="center">italian</td>
+</tr>
+<tr class="odd">
 <td align="center">15</td>
+<td align="center">english</td>
+</tr>
+<tr class="even">
+<td align="center">16</td>
+<td align="center">italian</td>
+</tr>
+<tr class="odd">
+<td align="center">17</td>
+<td align="center">english</td>
+</tr>
+<tr class="even">
+<td align="center">18</td>
+<td align="center">italian</td>
+</tr>
+<tr class="odd">
+<td align="center">19</td>
+<td align="center">italian</td>
 </tr>
 </tbody>
 </table>
-<pre class="r"><code>pc &lt;- data %&gt;%
+<div id="excluding-data" class="section level2">
+<h2>Excluding data</h2>
+<p>Before we go any further, we need to apply some exclusion criteria to our data. In this case, we want to exclude:</p>
+<ol style="list-style-type: decimal">
+<li>Any participant with the value ‘N/A’ for one of the first 17 words in a task. The value ‘N/A’ indicates that there was some kind of interruption (e.g. the child began crying). This criterion excludes children with insufficient data for analysis for a task.</li>
+<li>Any participant (in the remaining data) whose accuracy was less than two standard deviations below the mean. This is a more general criterion to exlude participants who had especially low scores for various reasons.</li>
+</ol>
+<pre class="r"><code>exclude &lt;- function(df) {
+  # exclude if N/A in item 17 or lower
+  logical_matrix &lt;- df == &#39;N/A&#39;
+  q17 &lt;- logical_matrix %&gt;%
+    which(arr.ind = TRUE) %&gt;%
+    data.frame() %&gt;%
+    group_by(row) %&gt;%
+    summarise(min = min(col)) %&gt;%
+    mutate(subj = factor(row)) %&gt;%
+    select(subj, min)
+  q17 &lt;- left_join(df, q17, by=&#39;subj&#39;) %&gt;%
+    replace_na(list(min = 20))
+  q17 &lt;- q17 %&gt;% filter(min &gt; 17) %&gt;% select(-min)
+
+  # calculate total correct
+  q17 &lt;- q17 %&gt;% mutate(correct = rowSums(. == &#39;C&#39; | . == &#39;C*&#39;))
+  
+  # exclude participants with scores &lt; 2 sd below the mean
+  q17 %&gt;% filter(correct &lt; mean(correct) + 2 * sd(correct))      
+}</code></pre>
+<p><strong>Explanation of commands:</strong></p>
+<ol style="list-style-type: decimal">
+<li>Our function <code>exclude()</code> accepts a data frame <code>df</code> which are the raw scores for the noun and predicate comprehension and production sub-tests.</li>
+<li><code>logical_matrix &lt;- df == &#39;N/A&#39;</code> creates a matrix of values which are <code>TRUE</code> where a cell in <code>df</code> contained the string <code>N/A</code>, or <code>FALSE</code> otherwise.</li>
+<li><code>which(arr.ind = TRUE)</code> creates a matrix with columns <code>row</code> (the same as our subject number) and <code>col</code> containing the row and column number of any cells with the value <code>TRUE</code> (i.e. those cells that contained <code>N/A</code>).</li>
+<li><code>data.frame() %&gt;% group_by(row) %&gt;% summarise(min = min(col))</code> summarises this as a single row containing the minimum column number that contained <code>N/A</code>.</li>
+<li><code>mutate(subj = factor(row)) %&gt;% select(subj, min)</code> creates a factor <code>subj</code> from <code>row</code>, and selects this along with the column number of the first column that contained <code>N/A</code>. We have now converted our original data into a data from with rows for any participants who had at least one <code>N/A</code> and the word number of their first <code>N/A</code>.</li>
+<li><code>q17 &lt;- left_join(df, q17, by=&#39;subj&#39;)</code> joins this data frame to the data frame we passed to <code>exclude()</code>. For rows where there is no matching <code>subj</code>, <code>min</code> gets the value <code>NA</code>. <code>replace_na(list(min = 20))</code> converts these <code>NA</code>s to the value <code>20</code>, indicating the child provided an answer for all words.</li>
+<li>Finally, <code>q17 &lt;- q17 %&gt;% filter(min &gt; 17) %&gt;% select(-min)</code> selects only children who provided answers beyond word 17, and then removes the <code>min</code> column.</li>
+<li>Next we calculate an accuracy score for each subject across all words. <code>q17 &lt;- q17 %&gt;% mutate(correct = rowSums(. == &#39;C&#39; | . == &#39;C*&#39;))</code> creates a new column <code>correct</code> with a value for each row which is the sum of the number of columns containing <code>C</code> or <code>C*</code> (<code>|</code> means ‘or’). Cells containing <code>C</code> indicate that the child could responded correct for the picture on the card for the the word in this column. Cells containing <code>C*</code> indicate that the child knew a synonym for the noun. In this experiment, both of these values are considered correct responses.</li>
+<li><code>q17 %&gt;% filter(correct &lt; mean(correct) + 2 * sd(correct))</code> calculates the mean and standard deviation for <code>correct</code>, and then filters any subjects whose value for <code>correct</code> was less than two standard deviations below the mean.</li>
+<li>We return the data frame without rows meeting our two exclusion critera.</li>
+</ol>
+<p>If we call <code>exclude(nc)</code>, we can see that subject <code>18</code> was excluded from the noun comprehension task:</p>
+<pre class="r"><code>nc &lt;- exclude(nc)</code></pre>
+<pre><code>`summarise()` ungrouping output (override with `.groups` argument)</code></pre>
+<pre class="r"><code>nc_by_subj &lt;- select(nc, subj, correct)
+nc_by_subj %&gt;% pander()</code></pre>
+<table style="width:24%;">
+<colgroup>
+<col width="9%"></col>
+<col width="13%"></col>
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">subj</th>
+<th align="center">correct</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">1</td>
+<td align="center">12</td>
+</tr>
+<tr class="even">
+<td align="center">2</td>
+<td align="center">18</td>
+</tr>
+<tr class="odd">
+<td align="center">3</td>
+<td align="center">18</td>
+</tr>
+<tr class="even">
+<td align="center">4</td>
+<td align="center">17</td>
+</tr>
+<tr class="odd">
+<td align="center">5</td>
+<td align="center">17</td>
+</tr>
+<tr class="even">
+<td align="center">6</td>
+<td align="center">18</td>
+</tr>
+<tr class="odd">
+<td align="center">7</td>
+<td align="center">17</td>
+</tr>
+<tr class="even">
+<td align="center">8</td>
+<td align="center">18</td>
+</tr>
+<tr class="odd">
+<td align="center">9</td>
+<td align="center">20</td>
+</tr>
+<tr class="even">
+<td align="center">10</td>
+<td align="center">7</td>
+</tr>
+<tr class="odd">
+<td align="center">11</td>
+<td align="center">19</td>
+</tr>
+<tr class="even">
+<td align="center">12</td>
+<td align="center">19</td>
+</tr>
+<tr class="odd">
+<td align="center">13</td>
+<td align="center">19</td>
+</tr>
+<tr class="even">
+<td align="center">14</td>
+<td align="center">17</td>
+</tr>
+<tr class="odd">
+<td align="center">15</td>
+<td align="center">20</td>
+</tr>
+<tr class="even">
+<td align="center">16</td>
+<td align="center">17</td>
+</tr>
+<tr class="odd">
+<td align="center">17</td>
+<td align="center">19</td>
+</tr>
+<tr class="even">
+<td align="center">19</td>
+<td align="center">16</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Explanation of commands:</strong></p>
+<p>We use similar code to create data frames containing accuracy scores for subjects who met the inclusion critera for the noun production, predicate comprehension and predicate production tests.</p>
+<pre class="r"><code>np &lt;- data %&gt;%
+  filter(sheet == &#39;Noun Production&#39;) %&gt;%
+  set_names(~ str_to_lower(.)) %&gt;%
+  select(beach:gloves) %&gt;%
+  mutate(subj = factor(seq.int(nrow(.))))
+
+np &lt;- exclude(np)</code></pre>
+<pre><code>`summarise()` ungrouping output (override with `.groups` argument)</code></pre>
+<pre class="r"><code>np_by_subj &lt;- np %&gt;% select(subj, correct)
+
+pc &lt;- data %&gt;%
   filter(sheet == &#39;Predicate Comprehension&#39;) %&gt;%
   set_names(~ str_to_lower(.)) %&gt;%
   select(big:pulling) %&gt;%
   mutate(subj = factor(seq.int(nrow(.))))
-pc &lt;- pc %&gt;% mutate(pc = rowSums(. == &#39;C&#39; | . == &#39;C*&#39;)) %&gt;%
-  select(subj, pc)
-pc %&gt;% head(5) %&gt;% pander(split.table = Inf)</code></pre>
-<table style="width:19%;">
-<colgroup>
-<col width="9%"></col>
-<col width="9%"></col>
-</colgroup>
-<thead>
-<tr class="header">
-<th align="center">subj</th>
-<th align="center">pc</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="center">1</td>
-<td align="center">1</td>
-</tr>
-<tr class="even">
-<td align="center">2</td>
-<td align="center">17</td>
-</tr>
-<tr class="odd">
-<td align="center">3</td>
-<td align="center">17</td>
-</tr>
-<tr class="even">
-<td align="center">4</td>
-<td align="center">15</td>
-</tr>
-<tr class="odd">
-<td align="center">5</td>
-<td align="center">15</td>
-</tr>
-</tbody>
-</table>
-<pre class="r"><code>pp &lt;- data %&gt;%
+pc &lt;- exclude(pc)</code></pre>
+<pre><code>`summarise()` ungrouping output (override with `.groups` argument)</code></pre>
+<pre class="r"><code>pc_by_subj &lt;- pc %&gt;% select(subj, correct)
+
+pp &lt;- data %&gt;%
   filter(sheet == &#39;Predicate Production&#39;) %&gt;%
   set_names(~ str_to_lower(.)) %&gt;%
   select(small:pushing) %&gt;%
   mutate(subj = factor(seq.int(nrow(.))))
-pp &lt;- pp %&gt;% mutate(pp = rowSums(. == &#39;C&#39; | . == &#39;C*&#39;)) %&gt;%
-  select(subj, pp)
-pp %&gt;% head(5) %&gt;% pander(split.table = Inf)</code></pre>
-<table style="width:19%;">
-<colgroup>
-<col width="9%"></col>
-<col width="9%"></col>
-</colgroup>
-<thead>
-<tr class="header">
-<th align="center">subj</th>
-<th align="center">pp</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="center">1</td>
-<td align="center">0</td>
-</tr>
-<tr class="even">
-<td align="center">2</td>
-<td align="center">9</td>
-</tr>
-<tr class="odd">
-<td align="center">3</td>
-<td align="center">9</td>
-</tr>
-<tr class="even">
-<td align="center">4</td>
-<td align="center">12</td>
-</tr>
-<tr class="odd">
-<td align="center">5</td>
-<td align="center">10</td>
-</tr>
-</tbody>
-</table>
-<p>We now recombine the data for the four tests into a single data frame, in preparation for calculating our descriptive statistics:</p>
-<pre class="r"><code>tidy_data &lt;- left_join(demographics, nc, by=&#39;subj&#39;) %&gt;%
-  left_join(., np, by=&#39;subj&#39;) %&gt;%
-  left_join(., pc, by=&#39;subj&#39;) %&gt;%
-  left_join(., pp, by=&#39;subj&#39;) %&gt;%
+pp &lt;- exclude(pp)</code></pre>
+<pre><code>`summarise()` ungrouping output (override with `.groups` argument)</code></pre>
+<pre class="r"><code>pp_by_subj &lt;- pp %&gt;% select(subj, correct)</code></pre>
+<p>We now join the data for the four word tests into a single data frame, in preparation for calculating our descriptive statistics. Notice how this sets the value <code>NA</code> for participants who were excluded for any of the tests.</p>
+<pre class="r"><code>task_by_subj &lt;- left_join(demographics, nc_by_subj, by=&#39;subj&#39;) %&gt;%
+  left_join(., np_by_subj, by=&#39;subj&#39;, suffix = c(&#39;_nc&#39;,&#39;_np&#39;)) %&gt;%
+  left_join(., pc_by_subj, by=&#39;subj&#39;) %&gt;%
+  left_join(., pp_by_subj, by=&#39;subj&#39;, suffix = c(&#39;_pc&#39;, &#39;_pp&#39;)) %&gt;%
+  left_join(., cards, by=&#39;subj&#39;) %&gt;%
+  mutate(nc = correct_nc, np = correct_np, pc = correct_pc, pp = correct_pp) %&gt;%
   select(subj, gender, nc, np, pc, pp, cards, cdi_u, cdi_s)
-tidy_data %&gt;% head(5) %&gt;% pander(split.table = Inf)</code></pre>
+task_by_subj %&gt;% pander()</code></pre>
 <table style="width:86%;">
 <colgroup>
 <col width="9%"></col>
@@ -2099,8 +2182,8 @@ tidy_data %&gt;% head(5) %&gt;% pander(split.table = Inf)</code></pre>
 <td align="center">female</td>
 <td align="center">12</td>
 <td align="center">4</td>
-<td align="center">1</td>
-<td align="center">0</td>
+<td align="center">NA</td>
+<td align="center">NA</td>
 <td align="center">english</td>
 <td align="center">62</td>
 <td align="center">38</td>
@@ -2149,20 +2232,174 @@ tidy_data %&gt;% head(5) %&gt;% pander(split.table = Inf)</code></pre>
 <td align="center">66</td>
 <td align="center">66</td>
 </tr>
+<tr class="even">
+<td align="center">6</td>
+<td align="center">male</td>
+<td align="center">18</td>
+<td align="center">11</td>
+<td align="center">15</td>
+<td align="center">7</td>
+<td align="center">italian</td>
+<td align="center">47</td>
+<td align="center">32</td>
+</tr>
+<tr class="odd">
+<td align="center">7</td>
+<td align="center">male</td>
+<td align="center">17</td>
+<td align="center">10</td>
+<td align="center">13</td>
+<td align="center">9</td>
+<td align="center">english</td>
+<td align="center">39</td>
+<td align="center">27</td>
+</tr>
+<tr class="even">
+<td align="center">8</td>
+<td align="center">female</td>
+<td align="center">18</td>
+<td align="center">14</td>
+<td align="center">19</td>
+<td align="center">11</td>
+<td align="center">italian</td>
+<td align="center">35</td>
+<td align="center">31</td>
+</tr>
+<tr class="odd">
+<td align="center">9</td>
+<td align="center">male</td>
+<td align="center">20</td>
+<td align="center">14</td>
+<td align="center">16</td>
+<td align="center">9</td>
+<td align="center">english</td>
+<td align="center">22</td>
+<td align="center">39</td>
+</tr>
+<tr class="even">
+<td align="center">10</td>
+<td align="center">male</td>
+<td align="center">7</td>
+<td align="center">2</td>
+<td align="center">NA</td>
+<td align="center">NA</td>
+<td align="center">italian</td>
+<td align="center">34</td>
+<td align="center">10</td>
+</tr>
+<tr class="odd">
+<td align="center">11</td>
+<td align="center">female</td>
+<td align="center">19</td>
+<td align="center">12</td>
+<td align="center">14</td>
+<td align="center">8</td>
+<td align="center">english</td>
+<td align="center">49</td>
+<td align="center">28</td>
+</tr>
+<tr class="even">
+<td align="center">12</td>
+<td align="center">female</td>
+<td align="center">19</td>
+<td align="center">14</td>
+<td align="center">16</td>
+<td align="center">6</td>
+<td align="center">italian</td>
+<td align="center">98</td>
+<td align="center">85</td>
+</tr>
+<tr class="odd">
+<td align="center">13</td>
+<td align="center">female</td>
+<td align="center">19</td>
+<td align="center">10</td>
+<td align="center">16</td>
+<td align="center">7</td>
+<td align="center">english</td>
+<td align="center">50</td>
+<td align="center">36</td>
+</tr>
+<tr class="even">
+<td align="center">14</td>
+<td align="center">female</td>
+<td align="center">17</td>
+<td align="center">11</td>
+<td align="center">17</td>
+<td align="center">5</td>
+<td align="center">italian</td>
+<td align="center">62</td>
+<td align="center">56</td>
+</tr>
+<tr class="odd">
+<td align="center">15</td>
+<td align="center">female</td>
+<td align="center">20</td>
+<td align="center">16</td>
+<td align="center">17</td>
+<td align="center">10</td>
+<td align="center">english</td>
+<td align="center">81</td>
+<td align="center">60</td>
+</tr>
+<tr class="even">
+<td align="center">16</td>
+<td align="center">male</td>
+<td align="center">17</td>
+<td align="center">13</td>
+<td align="center">13</td>
+<td align="center">5</td>
+<td align="center">italian</td>
+<td align="center">83</td>
+<td align="center">59</td>
+</tr>
+<tr class="odd">
+<td align="center">17</td>
+<td align="center">female</td>
+<td align="center">19</td>
+<td align="center">13</td>
+<td align="center">13</td>
+<td align="center">8</td>
+<td align="center">english</td>
+<td align="center">87</td>
+<td align="center">88</td>
+</tr>
+<tr class="even">
+<td align="center">18</td>
+<td align="center">female</td>
+<td align="center">NA</td>
+<td align="center">NA</td>
+<td align="center">NA</td>
+<td align="center">NA</td>
+<td align="center">italian</td>
+<td align="center">49</td>
+<td align="center">19</td>
+</tr>
+<tr class="odd">
+<td align="center">19</td>
+<td align="center">female</td>
+<td align="center">16</td>
+<td align="center">11</td>
+<td align="center">18</td>
+<td align="center">10</td>
+<td align="center">italian</td>
+<td align="center">63</td>
+<td align="center">63</td>
+</tr>
 </tbody>
 </table>
 <p><strong>Explanation of commands:</strong></p>
 <ol style="list-style-type: decimal">
-<li><code>left_join(demographics, nc, by=&#39;subj&#39;)</code> combines columns from the <code>demographics</code> and <code>nc</code> data frames where the value of the <code>subj</code> column matches.</li>
-<li>We do the same for the <code>np</code>, <code>pc</code> and <code>pp</code> data frames.</li>
-<li>We reorder the resulting columns and assign the data frame to <code>tidy_data</code>.</li>
+<li><code>left_join(demographics, nc_by_subj, by=&#39;subj&#39;)</code> combines columns from the <code>demographics</code> and <code>nc_by_subj</code> data frames where the value of the <code>subj</code> column matches.</li>
+<li>We do the same for the <code>np_by_subj</code>, <code>pc_by_subj</code>, <code>pp_by_subj</code> and <code>cards</code> data frames.</li>
+<li>We rename and reorder the resulting columns and assign the resulting data frame to <code>task_by_subj</code>.</li>
 </ol>
 <p>Our test scores are currently in wide format. We’ll convert these columns to long format so we can calcluate our summary statistics.</p>
-<pre class="r"><code>tidy_data &lt;- tidy_data %&gt;%
+<pre class="r"><code>task_by_subj &lt;- task_by_subj %&gt;%
   pivot_longer(cols = c(nc, np, pc, pp),
                names_to = &#39;task&#39;,
                values_to = &#39;correct&#39;)
-tidy_data %&gt;% head(5) %&gt;% pander(split.table = Inf)</code></pre>
+task_by_subj %&gt;% head(5) %&gt;% pander(split.table = Inf)</code></pre>
 <table style="width:82%;">
 <colgroup>
 <col width="9%"></col>
@@ -2210,7 +2447,7 @@ tidy_data %&gt;% head(5) %&gt;% pander(split.table = Inf)</code></pre>
 <td align="center">62</td>
 <td align="center">38</td>
 <td align="center">pc</td>
-<td align="center">1</td>
+<td align="center">NA</td>
 </tr>
 <tr class="even">
 <td align="center">1</td>
@@ -2219,7 +2456,7 @@ tidy_data %&gt;% head(5) %&gt;% pander(split.table = Inf)</code></pre>
 <td align="center">62</td>
 <td align="center">38</td>
 <td align="center">pp</td>
-<td align="center">0</td>
+<td align="center">NA</td>
 </tr>
 <tr class="odd">
 <td align="center">2</td>
@@ -2239,21 +2476,24 @@ tidy_data %&gt;% head(5) %&gt;% pander(split.table = Inf)</code></pre>
 <p>We can now make a data frame containing summary statistics.</p>
 <pre class="r"><code>task_descriptives &lt;- function(df, y) {
   df %&gt;%
-    summarise(mean = mean(correct), sd = sd(correct)) %&gt;%
-    mutate_if(is.numeric, round, 2) # see across()
+    summarise(mean = mean(correct, na.rm = TRUE),
+              sd = sd(correct, na.rm = TRUE),
+              n = sum(! is.na(correct))) %&gt;%
+    mutate_if(is.numeric, round, 2)
 }
 
-descriptives &lt;- tidy_data %&gt;%
+descriptives &lt;- task_by_subj %&gt;%
   group_by(task, gender) %&gt;%
   group_modify(task_descriptives) %&gt;%
   ungroup()
 descriptives %&gt;% pander(split.table = Inf)</code></pre>
-<table style="width:44%;">
+<table style="width:53%;">
 <colgroup>
 <col width="9%"></col>
 <col width="12%"></col>
 <col width="11%"></col>
-<col width="11%"></col>
+<col width="9%"></col>
+<col width="9%"></col>
 </colgroup>
 <thead>
 <tr class="header">
@@ -2261,6 +2501,7 @@ descriptives %&gt;% pander(split.table = Inf)</code></pre>
 <th align="center">gender</th>
 <th align="center">mean</th>
 <th align="center">sd</th>
+<th align="center">n</th>
 </tr>
 </thead>
 <tbody>
@@ -2269,58 +2510,67 @@ descriptives %&gt;% pander(split.table = Inf)</code></pre>
 <td align="center">male</td>
 <td align="center">16.29</td>
 <td align="center">4.23</td>
+<td align="center">7</td>
 </tr>
 <tr class="even">
 <td align="center">nc</td>
 <td align="center">female</td>
-<td align="center">16.5</td>
-<td align="center">4.46</td>
+<td align="center">17.64</td>
+<td align="center">2.2</td>
+<td align="center">11</td>
 </tr>
 <tr class="odd">
 <td align="center">np</td>
 <td align="center">male</td>
 <td align="center">10.43</td>
 <td align="center">3.95</td>
+<td align="center">7</td>
 </tr>
 <tr class="even">
 <td align="center">np</td>
 <td align="center">female</td>
-<td align="center">11.25</td>
-<td align="center">4.25</td>
+<td align="center">12.09</td>
+<td align="center">3.24</td>
+<td align="center">11</td>
 </tr>
 <tr class="odd">
 <td align="center">pc</td>
 <td align="center">male</td>
-<td align="center">12.71</td>
-<td align="center">5.79</td>
+<td align="center">14.83</td>
+<td align="center">1.6</td>
+<td align="center">6</td>
 </tr>
 <tr class="even">
 <td align="center">pc</td>
 <td align="center">female</td>
-<td align="center">13.58</td>
-<td align="center">6.33</td>
+<td align="center">16.2</td>
+<td align="center">1.81</td>
+<td align="center">10</td>
 </tr>
 <tr class="odd">
 <td align="center">pp</td>
 <td align="center">male</td>
-<td align="center">7.29</td>
-<td align="center">3.86</td>
+<td align="center">8.5</td>
+<td align="center">2.35</td>
+<td align="center">6</td>
 </tr>
 <tr class="even">
 <td align="center">pp</td>
 <td align="center">female</td>
-<td align="center">7</td>
-<td align="center">3.72</td>
+<td align="center">8.4</td>
+<td align="center">1.96</td>
+<td align="center">10</td>
 </tr>
 </tbody>
 </table>
 <p><strong>Explanation of commands:</strong></p>
 <ol style="list-style-type: decimal">
 <li>The function <code>task_descriptives()</code> accepts a data frame in argument <code>df</code>, and returns a data frame with <code>mean</code> and <code>sd</code> columns containing the mean and standard deviation of <code>df$correct</code> rounded to two decimal places. We’ll use this function in the pipeline below.</li>
-<li>We group <code>tidy_data</code> by gender within task and use <code>group_modify()</code> to call <code>task_descriptives()</code> for each group, returning a data frame with the summary statistics</li>
+<li>We group <code>tidy_data</code> by gender within task and use <code>group_modify()</code> to call <code>task_descriptives()</code> for each group, returning a data frame with the summary statistics.</li>
 </ol>
-<p>We pivot this to a wider format with rows containing tests, and columns containing the mean and sd by gender.</p>
+<p>For presenting our data, we pivot this to a wider format with rows containing tests, and columns containing the mean and sd by gender.</p>
 <pre class="r"><code>descriptives &lt;- descriptives %&gt;%
+  select(-n) %&gt;%
   pivot_wider(names_from = gender, values_from = c(mean, sd)) %&gt;%
   select(task, mean_male, sd_male, mean_female, sd_female)
 descriptives %&gt;% pander(split.table = Inf)</code></pre>
@@ -2346,29 +2596,29 @@ descriptives %&gt;% pander(split.table = Inf)</code></pre>
 <td align="center">nc</td>
 <td align="center">16.29</td>
 <td align="center">4.23</td>
-<td align="center">16.5</td>
-<td align="center">4.46</td>
+<td align="center">17.64</td>
+<td align="center">2.2</td>
 </tr>
 <tr class="even">
 <td align="center">np</td>
 <td align="center">10.43</td>
 <td align="center">3.95</td>
-<td align="center">11.25</td>
-<td align="center">4.25</td>
+<td align="center">12.09</td>
+<td align="center">3.24</td>
 </tr>
 <tr class="odd">
 <td align="center">pc</td>
-<td align="center">12.71</td>
-<td align="center">5.79</td>
-<td align="center">13.58</td>
-<td align="center">6.33</td>
+<td align="center">14.83</td>
+<td align="center">1.6</td>
+<td align="center">16.2</td>
+<td align="center">1.81</td>
 </tr>
 <tr class="even">
 <td align="center">pp</td>
-<td align="center">7.29</td>
-<td align="center">3.86</td>
-<td align="center">7</td>
-<td align="center">3.72</td>
+<td align="center">8.5</td>
+<td align="center">2.35</td>
+<td align="center">8.4</td>
+<td align="center">1.96</td>
 </tr>
 </tbody>
 </table>
@@ -2380,44 +2630,7 @@ descriptives %&gt;% pander(split.table = Inf)</code></pre>
 descriptives$task &lt;- recode_factor(descriptives$task, nc = &#39;Noun Comprehension&#39;,
                                    np = &#39;Noun Production&#39;,
                                    pc = &#39;Predicate Comprehension&#39;,
-                                   pp = &#39;Predicate Production&#39;)
-descriptives %&gt;% pander(split.table = Inf)</code></pre>
-<table style="width:78%;">
-<colgroup>
-<col width="36%"></col>
-<col width="20%"></col>
-<col width="20%"></col>
-</colgroup>
-<thead>
-<tr class="header">
-<th align="center">task</th>
-<th align="center">male</th>
-<th align="center">female</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="center">Noun Comprehension</td>
-<td align="center">16.29 (4.23)</td>
-<td align="center">16.5 (4.46)</td>
-</tr>
-<tr class="even">
-<td align="center">Noun Production</td>
-<td align="center">10.43 (3.95)</td>
-<td align="center">11.25 (4.25)</td>
-</tr>
-<tr class="odd">
-<td align="center">Predicate Comprehension</td>
-<td align="center">12.71 (5.79)</td>
-<td align="center">13.58 (6.33)</td>
-</tr>
-<tr class="even">
-<td align="center">Predicate Production</td>
-<td align="center">7.29 (3.86)</td>
-<td align="center">7 (3.72)</td>
-</tr>
-</tbody>
-</table>
+                                   pp = &#39;Predicate Production&#39;)</code></pre>
 <p><strong>Explanation of commands:</strong></p>
 <ol style="list-style-type: decimal">
 <li><code>unite(&quot;male&quot;, mean_male:sd_male, sep=&#39; (&#39;)</code> converts the <code>mean_male</code> and <code>sd_male</code> column values to a column <code>male</code> separated by <code>(</code>.</li>
@@ -2458,7 +2671,7 @@ Noun Comprehension
 16.29 (4.23)
 </td>
 <td style="text-align:left;">
-16.5 (4.46)
+17.64 (2.2)
 </td>
 </tr>
 <tr>
@@ -2469,7 +2682,7 @@ Noun Production
 10.43 (3.95)
 </td>
 <td style="text-align:left;">
-11.25 (4.25)
+12.09 (3.24)
 </td>
 </tr>
 <tr>
@@ -2477,10 +2690,10 @@ Noun Production
 Predicate Comprehension
 </td>
 <td style="text-align:left;">
-12.71 (5.79)
+14.83 (1.6)
 </td>
 <td style="text-align:left;">
-13.58 (6.33)
+16.2 (1.81)
 </td>
 </tr>
 <tr>
@@ -2488,10 +2701,10 @@ Predicate Comprehension
 Predicate Production
 </td>
 <td style="text-align:left;">
-7.29 (3.86)
+8.5 (2.35)
 </td>
 <td style="text-align:left;">
-7 (3.72)
+8.4 (1.96)
 </td>
 </tr>
 </tbody>
@@ -2501,10 +2714,477 @@ Predicate Production
 <li><code>library(kableExtra)</code> loads the package containing the <code>kable()</code> function.</li>
 <li>We pipe our data into <code>kable()</code> using <code>col.names</code> to create meaningful column headings, and <code>kable_styling()</code> to produce a reasonably tidy HTML table.</li>
 </ol>
+<p><a name="t-tests"></a></p>
 </div>
 </div>
-<div id="tables-of-t-tests" class="section level1">
-<h1>Tables of t-tests</h1>
+<div id="table-of-t-tests" class="section level1">
+<h1>Table of t-tests</h1>
+<p>Where a number of related t-tests need to be reported, these are often easiest to read as a table. The children in this experiment were tested using one of two different sets of picture cards. One set is used in the Italian version of these tasks, the other in the English version. We’ll produce a table of t-tests comparing accuracy for each word in the noun comprehension task between the cards used in the Italian and English tasks.</p>
+<pre class="r"><code>nc_long &lt;- nc %&gt;%
+  select(-correct) %&gt;%
+  mutate(cards = factor(cards)) %&gt;%
+  mutate(cards = recode_factor(.$cards, `1` = &#39;italian&#39;, `2` = &#39;english&#39;)) %&gt;%
+  pivot_longer(cols=(mountain:wellyboots),
+               names_to = &#39;word&#39;,
+               values_to = &#39;answer&#39;)
+nc_long %&gt;% filter(subj == 1) %&gt;% pander(split.table = Inf)</code></pre>
+<table style="width:54%;">
+<colgroup>
+<col width="13%"></col>
+<col width="9%"></col>
+<col width="18%"></col>
+<col width="12%"></col>
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">cards</th>
+<th align="center">subj</th>
+<th align="center">word</th>
+<th align="center">answer</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">english</td>
+<td align="center">1</td>
+<td align="center">mountain</td>
+<td align="center">D</td>
+</tr>
+<tr class="even">
+<td align="center">english</td>
+<td align="center">1</td>
+<td align="center">motorbike</td>
+<td align="center">C</td>
+</tr>
+<tr class="odd">
+<td align="center">english</td>
+<td align="center">1</td>
+<td align="center">penguin</td>
+<td align="center">C</td>
+</tr>
+<tr class="even">
+<td align="center">english</td>
+<td align="center">1</td>
+<td align="center">box</td>
+<td align="center">C</td>
+</tr>
+<tr class="odd">
+<td align="center">english</td>
+<td align="center">1</td>
+<td align="center">apple</td>
+<td align="center">C</td>
+</tr>
+<tr class="even">
+<td align="center">english</td>
+<td align="center">1</td>
+<td align="center">iron</td>
+<td align="center">P</td>
+</tr>
+<tr class="odd">
+<td align="center">english</td>
+<td align="center">1</td>
+<td align="center">cow</td>
+<td align="center">C</td>
+</tr>
+<tr class="even">
+<td align="center">english</td>
+<td align="center">1</td>
+<td align="center">doll</td>
+<td align="center">C</td>
+</tr>
+<tr class="odd">
+<td align="center">english</td>
+<td align="center">1</td>
+<td align="center">hat</td>
+<td align="center">C</td>
+</tr>
+<tr class="even">
+<td align="center">english</td>
+<td align="center">1</td>
+<td align="center">watch</td>
+<td align="center">P</td>
+</tr>
+<tr class="odd">
+<td align="center">english</td>
+<td align="center">1</td>
+<td align="center">sofa</td>
+<td align="center">D</td>
+</tr>
+<tr class="even">
+<td align="center">english</td>
+<td align="center">1</td>
+<td align="center">clouds</td>
+<td align="center">C</td>
+</tr>
+<tr class="odd">
+<td align="center">english</td>
+<td align="center">1</td>
+<td align="center">hammer</td>
+<td align="center">D</td>
+</tr>
+<tr class="even">
+<td align="center">english</td>
+<td align="center">1</td>
+<td align="center">glasses</td>
+<td align="center">C</td>
+</tr>
+<tr class="odd">
+<td align="center">english</td>
+<td align="center">1</td>
+<td align="center">elephant</td>
+<td align="center">C</td>
+</tr>
+<tr class="even">
+<td align="center">english</td>
+<td align="center">1</td>
+<td align="center">backyard</td>
+<td align="center">P</td>
+</tr>
+<tr class="odd">
+<td align="center">english</td>
+<td align="center">1</td>
+<td align="center">spoon</td>
+<td align="center">C</td>
+</tr>
+<tr class="even">
+<td align="center">english</td>
+<td align="center">1</td>
+<td align="center">bib</td>
+<td align="center">P</td>
+</tr>
+<tr class="odd">
+<td align="center">english</td>
+<td align="center">1</td>
+<td align="center">sink</td>
+<td align="center">P</td>
+</tr>
+<tr class="even">
+<td align="center">english</td>
+<td align="center">1</td>
+<td align="center">wellyboots</td>
+<td align="center">C</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Explanation of commands:</strong></p>
+<ol style="list-style-type: decimal">
+<li>Starting with our noun comprehension data <code>nc</code>, we remove the column containing the numer of <code>correct</code> answers for each participant that we generated previously.</li>
+<li>We create our <code>cards</code> factor.</li>
+<li>We <code>pivot_longer()</code>, moving the noun column names into the column <code>word</code>, and the vaules to the column <code>answer</code>.</li>
+</ol>
+<p>Next we calculate the number of correct responses for each card type (Italian or English), for each subject, for each word:</p>
+<pre class="r"><code>correct_word &lt;- function(df, group) {
+  df %&gt;% select(answer) %&gt;% summarise(correct = colSums(. == &#39;C&#39; | . == &#39;C*&#39;))
+}
+nc_long_correct &lt;- nc_long %&gt;%
+  group_by(word, subj, cards) %&gt;%
+  group_modify(correct_word)</code></pre>
+<p><strong>Explanation of commands:</strong></p>
+<ol style="list-style-type: decimal">
+<li>Our function <code>correct_word()</code> accepts a an argument <code>df</code>, which is a data frame containing a column named <code>answer</code>.</li>
+<li>It returns a data frame with a single column <code>correct</code>, which contains <code>1</code> if the subject could comprehend the word (or a synonym), and <code>0</code> if not.</li>
+<li><code>nc_long %&gt;% group_by(word, subj, cards)</code> groups <code>nc_long</code> by <code>cards</code> within <code>subj</code> within <code>word</code>.</li>
+<li><code>group_modify(correct_word)</code> replaces the raw data for each group with our value of <code>1</code> or <code>0</code> for <code>correct</code>.</li>
+</ol>
+<p>We can see that all participants knew the word <code>apple</code>, regardless of which set of cards was used:</p>
+<pre class="r"><code>nc_long_correct %&gt;% filter(word == &#39;apple&#39;) %&gt;% pander(split.table = Inf)</code></pre>
+<table style="width:49%;">
+<colgroup>
+<col width="11%"></col>
+<col width="9%"></col>
+<col width="13%"></col>
+<col width="13%"></col>
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">word</th>
+<th align="center">subj</th>
+<th align="center">cards</th>
+<th align="center">correct</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">apple</td>
+<td align="center">1</td>
+<td align="center">english</td>
+<td align="center">1</td>
+</tr>
+<tr class="even">
+<td align="center">apple</td>
+<td align="center">2</td>
+<td align="center">italian</td>
+<td align="center">1</td>
+</tr>
+<tr class="odd">
+<td align="center">apple</td>
+<td align="center">3</td>
+<td align="center">english</td>
+<td align="center">1</td>
+</tr>
+<tr class="even">
+<td align="center">apple</td>
+<td align="center">4</td>
+<td align="center">italian</td>
+<td align="center">1</td>
+</tr>
+<tr class="odd">
+<td align="center">apple</td>
+<td align="center">5</td>
+<td align="center">english</td>
+<td align="center">1</td>
+</tr>
+<tr class="even">
+<td align="center">apple</td>
+<td align="center">6</td>
+<td align="center">italian</td>
+<td align="center">1</td>
+</tr>
+<tr class="odd">
+<td align="center">apple</td>
+<td align="center">7</td>
+<td align="center">english</td>
+<td align="center">1</td>
+</tr>
+<tr class="even">
+<td align="center">apple</td>
+<td align="center">8</td>
+<td align="center">italian</td>
+<td align="center">1</td>
+</tr>
+<tr class="odd">
+<td align="center">apple</td>
+<td align="center">9</td>
+<td align="center">english</td>
+<td align="center">1</td>
+</tr>
+<tr class="even">
+<td align="center">apple</td>
+<td align="center">10</td>
+<td align="center">italian</td>
+<td align="center">1</td>
+</tr>
+<tr class="odd">
+<td align="center">apple</td>
+<td align="center">11</td>
+<td align="center">english</td>
+<td align="center">1</td>
+</tr>
+<tr class="even">
+<td align="center">apple</td>
+<td align="center">12</td>
+<td align="center">italian</td>
+<td align="center">1</td>
+</tr>
+<tr class="odd">
+<td align="center">apple</td>
+<td align="center">13</td>
+<td align="center">english</td>
+<td align="center">1</td>
+</tr>
+<tr class="even">
+<td align="center">apple</td>
+<td align="center">14</td>
+<td align="center">italian</td>
+<td align="center">1</td>
+</tr>
+<tr class="odd">
+<td align="center">apple</td>
+<td align="center">15</td>
+<td align="center">english</td>
+<td align="center">1</td>
+</tr>
+<tr class="even">
+<td align="center">apple</td>
+<td align="center">16</td>
+<td align="center">italian</td>
+<td align="center">1</td>
+</tr>
+<tr class="odd">
+<td align="center">apple</td>
+<td align="center">17</td>
+<td align="center">english</td>
+<td align="center">1</td>
+</tr>
+<tr class="even">
+<td align="center">apple</td>
+<td align="center">19</td>
+<td align="center">italian</td>
+<td align="center">1</td>
+</tr>
+</tbody>
+</table>
+<p>Now we can run our t-tests to compare accuracy for the Italian and English cards:</p>
+<pre class="r"><code>library(BayesFactor, quietly = TRUE)</code></pre>
+<pre><code>
+Attaching package: &#39;Matrix&#39;</code></pre>
+<pre><code>The following objects are masked from &#39;package:tidyr&#39;:
+
+    expand, pack, unpack</code></pre>
+<pre><code>************
+Welcome to BayesFactor 0.9.12-4.2. If you have questions, please contact Richard Morey (richarddmorey@gmail.com).
+
+Type BFManual() to open the manual.
+************</code></pre>
+<pre class="r"><code>t_words &lt;- function(df, group) {
+  bf &lt;- ttestBF(formula=correct ~ cards, data = data.frame(df))
+  extractBF(bf)
+}
+
+nc_bf &lt;- nc_long_correct %&gt;%
+  filter(! word %in% c(&#39;apple&#39;, &#39;cow&#39;, &#39;penguin&#39;,&#39;hat&#39;,&#39;motorbike&#39;)) %&gt;%
+  group_by(word) %&gt;%
+  group_modify(t_words) %&gt;%
+  mutate(bf = round(bf,2)) %&gt;%
+  select(word, bf)</code></pre>
+<p><strong>Explanation of commands:</strong></p>
+<ol style="list-style-type: decimal">
+<li><code>library(BayesFactor, quietly = TRUE)</code> loads the package containing <code>ttestBF()</code>.</li>
+<li>Our function <code>t_words()</code> accepts a data frame in <code>df</code>.</li>
+<li><code>bf &lt;- ttestBF(formula=correct ~ cards, data = data.frame(df))</code> computes a between-subjects Bayesian t-test which compares the number of <code>correct</code> responses between the Italian and English <code>cards</code>.</li>
+<li><code>extractBF(bf)</code> returns the result as a data frame.</li>
+<li>All participants had a correct score for <code>apple</code> which would produce an error on our t-test, so we remove this and similar words with <code>nc_long_correct %&gt;% filter(! word %in% c(&#39;apple&#39;, &#39;cow&#39;, &#39;penguin&#39;,&#39;hat&#39;,&#39;motorbike&#39;))</code>.</li>
+<li>We group the remaining rows by <code>word</code> and run <code>t_words()</code> to return a Bayes factor for each word.</li>
+<li>We round <code>bf</code> to two decimal places, and select it along with <code>word</code>.</li>
+</ol>
+<p>Finally, we turn out results into an HTML table:</p>
+<pre class="r"><code>nc_bf %&gt;% kable(
+  col.names = c(&#39;Word&#39;, &#39;Bayes Factor&#39;)) %&gt;%
+  kable_styling()</code></pre>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Word
+</th>
+<th style="text-align:right;">
+Bayes Factor
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+backyard
+</td>
+<td style="text-align:right;">
+0.41
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+bib
+</td>
+<td style="text-align:right;">
+0.83
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+box
+</td>
+<td style="text-align:right;">
+0.63
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+clouds
+</td>
+<td style="text-align:right;">
+0.58
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+doll
+</td>
+<td style="text-align:right;">
+0.47
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+elephant
+</td>
+<td style="text-align:right;">
+0.41
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+glasses
+</td>
+<td style="text-align:right;">
+0.88
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+hammer
+</td>
+<td style="text-align:right;">
+0.47
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+iron
+</td>
+<td style="text-align:right;">
+0.57
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+mountain
+</td>
+<td style="text-align:right;">
+0.96
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+sink
+</td>
+<td style="text-align:right;">
+0.47
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+sofa
+</td>
+<td style="text-align:right;">
+0.41
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+spoon
+</td>
+<td style="text-align:right;">
+0.58
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+watch
+</td>
+<td style="text-align:right;">
+0.63
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+wellyboots
+</td>
+<td style="text-align:right;">
+0.58
+</td>
+</tr>
+</tbody>
+</table>
 <hr />
 <p>This material is distributed under a <a href="https://creativecommons.org/">Creative Commons</a> licence. CC-BY-SA 4.0.</p>
 </div>
