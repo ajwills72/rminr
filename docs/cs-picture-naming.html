@@ -9,10 +9,10 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
-<meta name="author" content="Paul Sharpe" />
+<meta name="author" content="Allegra Cattani, Adele Conn, Paul Sharpe" />
 
 
-<title>Better tables</title>
+<title>Reliability of Targets in a Picture Naming Task</title>
 
 <script>/*! jQuery v1.11.3 | (c) 2005, 2015 jQuery Foundation, Inc. | jquery.org/license */
 !function(a,b){"object"==typeof module&&"object"==typeof module.exports?module.exports=a.document?b(a,!0):function(a){if(!a.document)throw new Error("jQuery requires a window with a document");return b(a)}:b(a)}("undefined"!=typeof window?window:this,function(a,b){var c=[],d=c.slice,e=c.concat,f=c.push,g=c.indexOf,h={},i=h.toString,j=h.hasOwnProperty,k={},l="1.11.3",m=function(a,b){return new m.fn.init(a,b)},n=/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g,o=/^-ms-/,p=/-([\da-z])/gi,q=function(a,b){return b.toUpperCase()};m.fn=m.prototype={jquery:l,constructor:m,selector:"",length:0,toArray:function(){return d.call(this)},get:function(a){return null!=a?0>a?this[a+this.length]:this[a]:d.call(this)},pushStack:function(a){var b=m.merge(this.constructor(),a);return b.prevObject=this,b.context=this.context,b},each:function(a,b){return m.each(this,a,b)},map:function(a){return this.pushStack(m.map(this,function(b,c){return a.call(b,c,b)}))},slice:function(){return this.pushStack(d.apply(this,arguments))},first:function(){return this.eq(0)},last:function(){return this.eq(-1)},eq:function(a){var b=this.length,c=+a+(0>a?b:0);return this.pushStack(c>=0&&b>c?[this[c]]:[])},end:function(){return this.prevObject||this.constructor(null)},push:f,sort:c.sort,splice:c.splice},m.extend=m.fn.extend=function(){var a,b,c,d,e,f,g=arguments[0]||{},h=1,i=arguments.length,j=!1;for("boolean"==typeof g&&(j=g,g=arguments[h]||{},h++),"object"==typeof g||m.isFunction(g)||(g={}),h===i&&(g=this,h--);i>h;h++)if(null!=(e=arguments[h]))for(d in e)a=g[d],c=e[d],g!==c&&(j&&c&&(m.isPlainObject(c)||(b=m.isArray(c)))?(b?(b=!1,f=a&&m.isArray(a)?a:[]):f=a&&m.isPlainObject(a)?a:{},g[d]=m.extend(j,f,c)):void 0!==c&&(g[d]=c));return g},m.extend({expando:"jQuery"+(l+Math.random()).replace(/\D/g,""),isReady:!0,error:function(a){throw new Error(a)},noop:function(){},isFunction:function(a){return"function"===m.type(a)},isArray:Array.isArray||function(a){return"array"===m.type(a)},isWindow:function(a){return null!=a&&a==a.window},isNumeric:function(a){return!m.isArray(a)&&a-parseFloat(a)+1>=0},isEmptyObject:function(a){var b;for(b in a)return!1;return!0},isPlainObject:function(a){var b;if(!a||"object"!==m.type(a)||a.nodeType||m.isWindow(a))return!1;try{if(a.constructor&&!j.call(a,"constructor")&&!j.call(a.constructor.prototype,"isPrototypeOf"))return!1}catch(c){return!1}if(k.ownLast)for(b in a)return j.call(a,b);for(b in a);return void 0===b||j.call(a,b)},type:function(a){return null==a?a+"":"object"==typeof a||"function"==typeof a?h[i.call(a)]||"object":typeof a},globalEval:function(b){b&&m.trim(b)&&(a.execScript||function(b){a.eval.call(a,b)})(b)},camelCase:function(a){return a.replace(o,"ms-").replace(p,q)},nodeName:function(a,b){return a.nodeName&&a.nodeName.toLowerCase()===b.toLowerCase()},each:function(a,b,c){var d,e=0,f=a.length,g=r(a);if(c){if(g){for(;f>e;e++)if(d=b.apply(a[e],c),d===!1)break}else for(e in a)if(d=b.apply(a[e],c),d===!1)break}else if(g){for(;f>e;e++)if(d=b.call(a[e],e,a[e]),d===!1)break}else for(e in a)if(d=b.call(a[e],e,a[e]),d===!1)break;return a},trim:function(a){return null==a?"":(a+"").replace(n,"")},makeArray:function(a,b){var c=b||[];return null!=a&&(r(Object(a))?m.merge(c,"string"==typeof a?[a]:a):f.call(c,a)),c},inArray:function(a,b,c){var d;if(b){if(g)return g.call(b,a,c);for(d=b.length,c=c?0>c?Math.max(0,d+c):c:0;d>c;c++)if(c in b&&b[c]===a)return c}return-1},merge:function(a,b){var c=+b.length,d=0,e=a.length;while(c>d)a[e++]=b[d++];if(c!==c)while(void 0!==b[d])a[e++]=b[d++];return a.length=e,a},grep:function(a,b,c){for(var d,e=[],f=0,g=a.length,h=!c;g>f;f++)d=!b(a[f],f),d!==h&&e.push(a[f]);return e},map:function(a,b,c){var d,f=0,g=a.length,h=r(a),i=[];if(h)for(;g>f;f++)d=b(a[f],f,c),null!=d&&i.push(d);else for(f in a)d=b(a[f],f,c),null!=d&&i.push(d);return e.apply([],i)},guid:1,proxy:function(a,b){var c,e,f;return"string"==typeof b&&(f=a[b],b=a,a=f),m.isFunction(a)?(c=d.call(arguments,2),e=function(){return a.apply(b||this,c.concat(d.call(arguments)))},e.guid=a.guid=a.guid||m.guid++,e):void 0},now:function(){return+new Date},support:k}),m.each("Boolean Number String Function Array Date RegExp Object Error".split(" "),function(a,b){h["[object "+b+"]"]=b.toLowerCase()});function r(a){var b="length"in a&&a.length,c=m.type(a);return"function"===c||m.isWindow(a)?!1:1===a.nodeType&&b?!0:"array"===c||0===b||"number"==typeof b&&b>0&&b-1 in a}var s=function(a){var b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u="sizzle"+1*new Date,v=a.document,w=0,x=0,y=ha(),z=ha(),A=ha(),B=function(a,b){return a===b&&(l=!0),0},C=1<<31,D={}.hasOwnProperty,E=[],F=E.pop,G=E.push,H=E.push,I=E.slice,J=function(a,b){for(var c=0,d=a.length;d>c;c++)if(a[c]===b)return c;return-1},K="checked|selected|async|autofocus|autoplay|controls|defer|disabled|hidden|ismap|loop|multiple|open|readonly|required|scoped",L="[\\x20\\t\\r\\n\\f]",M="(?:\\\\.|[\\w-]|[^\\x00-\\xa0])+",N=M.replace("w","w#"),O="\\["+L+"*("+M+")(?:"+L+"*([*^$|!~]?=)"+L+"*(?:'((?:\\\\.|[^\\\\'])*)'|\"((?:\\\\.|[^\\\\\"])*)\"|("+N+"))|)"+L+"*\\]",P=":("+M+")(?:\\((('((?:\\\\.|[^\\\\'])*)'|\"((?:\\\\.|[^\\\\\"])*)\")|((?:\\\\.|[^\\\\()[\\]]|"+O+")*)|.*)\\)|)",Q=new RegExp(L+"+","g"),R=new RegExp("^"+L+"+|((?:^|[^\\\\])(?:\\\\.)*)"+L+"+$","g"),S=new RegExp("^"+L+"*,"+L+"*"),T=new RegExp("^"+L+"*([>+~]|"+L+")"+L+"*"),U=new RegExp("="+L+"*([^\\]'\"]*?)"+L+"*\\]","g"),V=new RegExp(P),W=new RegExp("^"+N+"$"),X={ID:new RegExp("^#("+M+")"),CLASS:new RegExp("^\\.("+M+")"),TAG:new RegExp("^("+M.replace("w","w*")+")"),ATTR:new RegExp("^"+O),PSEUDO:new RegExp("^"+P),CHILD:new RegExp("^:(only|first|last|nth|nth-last)-(child|of-type)(?:\\("+L+"*(even|odd|(([+-]|)(\\d*)n|)"+L+"*(?:([+-]|)"+L+"*(\\d+)|))"+L+"*\\)|)","i"),bool:new RegExp("^(?:"+K+")$","i"),needsContext:new RegExp("^"+L+"*[>+~]|:(even|odd|eq|gt|lt|nth|first|last)(?:\\("+L+"*((?:-\\d)?\\d*)"+L+"*\\)|)(?=[^-]|$)","i")},Y=/^(?:input|select|textarea|button)$/i,Z=/^h\d$/i,$=/^[^{]+\{\s*\[native \w/,_=/^(?:#([\w-]+)|(\w+)|\.([\w-]+))$/,aa=/[+~]/,ba=/'|\\/g,ca=new RegExp("\\\\([\\da-f]{1,6}"+L+"?|("+L+")|.)","ig"),da=function(a,b,c){var d="0x"+b-65536;return d!==d||c?b:0>d?String.fromCharCode(d+65536):String.fromCharCode(d>>10|55296,1023&d|56320)},ea=function(){m()};try{H.apply(E=I.call(v.childNodes),v.childNodes),E[v.childNodes.length].nodeType}catch(fa){H={apply:E.length?function(a,b){G.apply(a,I.call(b))}:function(a,b){var c=a.length,d=0;while(a[c++]=b[d++]);a.length=c-1}}}function ga(a,b,d,e){var f,h,j,k,l,o,r,s,w,x;if((b?b.ownerDocument||b:v)!==n&&m(b),b=b||n,d=d||[],k=b.nodeType,"string"!=typeof a||!a||1!==k&&9!==k&&11!==k)return d;if(!e&&p){if(11!==k&&(f=_.exec(a)))if(j=f[1]){if(9===k){if(h=b.getElementById(j),!h||!h.parentNode)return d;if(h.id===j)return d.push(h),d}else if(b.ownerDocument&&(h=b.ownerDocument.getElementById(j))&&t(b,h)&&h.id===j)return d.push(h),d}else{if(f[2])return H.apply(d,b.getElementsByTagName(a)),d;if((j=f[3])&&c.getElementsByClassName)return H.apply(d,b.getElementsByClassName(j)),d}if(c.qsa&&(!q||!q.test(a))){if(s=r=u,w=b,x=1!==k&&a,1===k&&"object"!==b.nodeName.toLowerCase()){o=g(a),(r=b.getAttribute("id"))?s=r.replace(ba,"\\$&"):b.setAttribute("id",s),s="[id='"+s+"'] ",l=o.length;while(l--)o[l]=s+ra(o[l]);w=aa.test(a)&&pa(b.parentNode)||b,x=o.join(",")}if(x)try{return H.apply(d,w.querySelectorAll(x)),d}catch(y){}finally{r||b.removeAttribute("id")}}}return i(a.replace(R,"$1"),b,d,e)}function ha(){var a=[];function b(c,e){return a.push(c+" ")>d.cacheLength&&delete b[a.shift()],b[c+" "]=e}return b}function ia(a){return a[u]=!0,a}function ja(a){var b=n.createElement("div");try{return!!a(b)}catch(c){return!1}finally{b.parentNode&&b.parentNode.removeChild(b),b=null}}function ka(a,b){var c=a.split("|"),e=a.length;while(e--)d.attrHandle[c[e]]=b}function la(a,b){var c=b&&a,d=c&&1===a.nodeType&&1===b.nodeType&&(~b.sourceIndex||C)-(~a.sourceIndex||C);if(d)return d;if(c)while(c=c.nextSibling)if(c===b)return-1;return a?1:-1}function ma(a){return function(b){var c=b.nodeName.toLowerCase();return"input"===c&&b.type===a}}function na(a){return function(b){var c=b.nodeName.toLowerCase();return("input"===c||"button"===c)&&b.type===a}}function oa(a){return ia(function(b){return b=+b,ia(function(c,d){var e,f=a([],c.length,b),g=f.length;while(g--)c[e=f[g]]&&(c[e]=!(d[e]=c[e]))})})}function pa(a){return a&&"undefined"!=typeof a.getElementsByTagName&&a}c=ga.support={},f=ga.isXML=function(a){var b=a&&(a.ownerDocument||a).documentElement;return b?"HTML"!==b.nodeName:!1},m=ga.setDocument=function(a){var b,e,g=a?a.ownerDocument||a:v;return g!==n&&9===g.nodeType&&g.documentElement?(n=g,o=g.documentElement,e=g.defaultView,e&&e!==e.top&&(e.addEventListener?e.addEventListener("unload",ea,!1):e.attachEvent&&e.attachEvent("onunload",ea)),p=!f(g),c.attributes=ja(function(a){return a.className="i",!a.getAttribute("className")}),c.getElementsByTagName=ja(function(a){return a.appendChild(g.createComment("")),!a.getElementsByTagName("*").length}),c.getElementsByClassName=$.test(g.getElementsByClassName),c.getById=ja(function(a){return o.appendChild(a).id=u,!g.getElementsByName||!g.getElementsByName(u).length}),c.getById?(d.find.ID=function(a,b){if("undefined"!=typeof b.getElementById&&p){var c=b.getElementById(a);return c&&c.parentNode?[c]:[]}},d.filter.ID=function(a){var b=a.replace(ca,da);return function(a){return a.getAttribute("id")===b}}):(delete d.find.ID,d.filter.ID=function(a){var b=a.replace(ca,da);return function(a){var c="undefined"!=typeof a.getAttributeNode&&a.getAttributeNode("id");return c&&c.value===b}}),d.find.TAG=c.getElementsByTagName?function(a,b){return"undefined"!=typeof b.getElementsByTagName?b.getElementsByTagName(a):c.qsa?b.querySelectorAll(a):void 0}:function(a,b){var c,d=[],e=0,f=b.getElementsByTagName(a);if("*"===a){while(c=f[e++])1===c.nodeType&&d.push(c);return d}return f},d.find.CLASS=c.getElementsByClassName&&function(a,b){return p?b.getElementsByClassName(a):void 0},r=[],q=[],(c.qsa=$.test(g.querySelectorAll))&&(ja(function(a){o.appendChild(a).innerHTML="<a id='"+u+"'></a><select id='"+u+"-\f]' msallowcapture=''><option selected=''></option></select>",a.querySelectorAll("[msallowcapture^='']").length&&q.push("[*^$]="+L+"*(?:''|\"\")"),a.querySelectorAll("[selected]").length||q.push("\\["+L+"*(?:value|"+K+")"),a.querySelectorAll("[id~="+u+"-]").length||q.push("~="),a.querySelectorAll(":checked").length||q.push(":checked"),a.querySelectorAll("a#"+u+"+*").length||q.push(".#.+[+~]")}),ja(function(a){var b=g.createElement("input");b.setAttribute("type","hidden"),a.appendChild(b).setAttribute("name","D"),a.querySelectorAll("[name=d]").length&&q.push("name"+L+"*[*^$|!~]?="),a.querySelectorAll(":enabled").length||q.push(":enabled",":disabled"),a.querySelectorAll("*,:x"),q.push(",.*:")})),(c.matchesSelector=$.test(s=o.matches||o.webkitMatchesSelector||o.mozMatchesSelector||o.oMatchesSelector||o.msMatchesSelector))&&ja(function(a){c.disconnectedMatch=s.call(a,"div"),s.call(a,"[s!='']:x"),r.push("!=",P)}),q=q.length&&new RegExp(q.join("|")),r=r.length&&new RegExp(r.join("|")),b=$.test(o.compareDocumentPosition),t=b||$.test(o.contains)?function(a,b){var c=9===a.nodeType?a.documentElement:a,d=b&&b.parentNode;return a===d||!(!d||1!==d.nodeType||!(c.contains?c.contains(d):a.compareDocumentPosition&&16&a.compareDocumentPosition(d)))}:function(a,b){if(b)while(b=b.parentNode)if(b===a)return!0;return!1},B=b?function(a,b){if(a===b)return l=!0,0;var d=!a.compareDocumentPosition-!b.compareDocumentPosition;return d?d:(d=(a.ownerDocument||a)===(b.ownerDocument||b)?a.compareDocumentPosition(b):1,1&d||!c.sortDetached&&b.compareDocumentPosition(a)===d?a===g||a.ownerDocument===v&&t(v,a)?-1:b===g||b.ownerDocument===v&&t(v,b)?1:k?J(k,a)-J(k,b):0:4&d?-1:1)}:function(a,b){if(a===b)return l=!0,0;var c,d=0,e=a.parentNode,f=b.parentNode,h=[a],i=[b];if(!e||!f)return a===g?-1:b===g?1:e?-1:f?1:k?J(k,a)-J(k,b):0;if(e===f)return la(a,b);c=a;while(c=c.parentNode)h.unshift(c);c=b;while(c=c.parentNode)i.unshift(c);while(h[d]===i[d])d++;return d?la(h[d],i[d]):h[d]===v?-1:i[d]===v?1:0},g):n},ga.matches=function(a,b){return ga(a,null,null,b)},ga.matchesSelector=function(a,b){if((a.ownerDocument||a)!==n&&m(a),b=b.replace(U,"='$1']"),!(!c.matchesSelector||!p||r&&r.test(b)||q&&q.test(b)))try{var d=s.call(a,b);if(d||c.disconnectedMatch||a.document&&11!==a.document.nodeType)return d}catch(e){}return ga(b,n,null,[a]).length>0},ga.contains=function(a,b){return(a.ownerDocument||a)!==n&&m(a),t(a,b)},ga.attr=function(a,b){(a.ownerDocument||a)!==n&&m(a);var e=d.attrHandle[b.toLowerCase()],f=e&&D.call(d.attrHandle,b.toLowerCase())?e(a,b,!p):void 0;return void 0!==f?f:c.attributes||!p?a.getAttribute(b):(f=a.getAttributeNode(b))&&f.specified?f.value:null},ga.error=function(a){throw new Error("Syntax error, unrecognized expression: "+a)},ga.uniqueSort=function(a){var b,d=[],e=0,f=0;if(l=!c.detectDuplicates,k=!c.sortStable&&a.slice(0),a.sort(B),l){while(b=a[f++])b===a[f]&&(e=d.push(f));while(e--)a.splice(d[e],1)}return k=null,a},e=ga.getText=function(a){var b,c="",d=0,f=a.nodeType;if(f){if(1===f||9===f||11===f){if("string"==typeof a.textContent)return a.textContent;for(a=a.firstChild;a;a=a.nextSibling)c+=e(a)}else if(3===f||4===f)return a.nodeValue}else while(b=a[d++])c+=e(b);return c},d=ga.selectors={cacheLength:50,createPseudo:ia,match:X,attrHandle:{},find:{},relative:{">":{dir:"parentNode",first:!0}," ":{dir:"parentNode"},"+":{dir:"previousSibling",first:!0},"~":{dir:"previousSibling"}},preFilter:{ATTR:function(a){return a[1]=a[1].replace(ca,da),a[3]=(a[3]||a[4]||a[5]||"").replace(ca,da),"~="===a[2]&&(a[3]=" "+a[3]+" "),a.slice(0,4)},CHILD:function(a){return a[1]=a[1].toLowerCase(),"nth"===a[1].slice(0,3)?(a[3]||ga.error(a[0]),a[4]=+(a[4]?a[5]+(a[6]||1):2*("even"===a[3]||"odd"===a[3])),a[5]=+(a[7]+a[8]||"odd"===a[3])):a[3]&&ga.error(a[0]),a},PSEUDO:function(a){var b,c=!a[6]&&a[2];return X.CHILD.test(a[0])?null:(a[3]?a[2]=a[4]||a[5]||"":c&&V.test(c)&&(b=g(c,!0))&&(b=c.indexOf(")",c.length-b)-c.length)&&(a[0]=a[0].slice(0,b),a[2]=c.slice(0,b)),a.slice(0,3))}},filter:{TAG:function(a){var b=a.replace(ca,da).toLowerCase();return"*"===a?function(){return!0}:function(a){return a.nodeName&&a.nodeName.toLowerCase()===b}},CLASS:function(a){var b=y[a+" "];return b||(b=new RegExp("(^|"+L+")"+a+"("+L+"|$)"))&&y(a,function(a){return b.test("string"==typeof a.className&&a.className||"undefined"!=typeof a.getAttribute&&a.getAttribute("class")||"")})},ATTR:function(a,b,c){return function(d){var e=ga.attr(d,a);return null==e?"!="===b:b?(e+="","="===b?e===c:"!="===b?e!==c:"^="===b?c&&0===e.indexOf(c):"*="===b?c&&e.indexOf(c)>-1:"$="===b?c&&e.slice(-c.length)===c:"~="===b?(" "+e.replace(Q," ")+" ").indexOf(c)>-1:"|="===b?e===c||e.slice(0,c.length+1)===c+"-":!1):!0}},CHILD:function(a,b,c,d,e){var f="nth"!==a.slice(0,3),g="last"!==a.slice(-4),h="of-type"===b;return 1===d&&0===e?function(a){return!!a.parentNode}:function(b,c,i){var j,k,l,m,n,o,p=f!==g?"nextSibling":"previousSibling",q=b.parentNode,r=h&&b.nodeName.toLowerCase(),s=!i&&!h;if(q){if(f){while(p){l=b;while(l=l[p])if(h?l.nodeName.toLowerCase()===r:1===l.nodeType)return!1;o=p="only"===a&&!o&&"nextSibling"}return!0}if(o=[g?q.firstChild:q.lastChild],g&&s){k=q[u]||(q[u]={}),j=k[a]||[],n=j[0]===w&&j[1],m=j[0]===w&&j[2],l=n&&q.childNodes[n];while(l=++n&&l&&l[p]||(m=n=0)||o.pop())if(1===l.nodeType&&++m&&l===b){k[a]=[w,n,m];break}}else if(s&&(j=(b[u]||(b[u]={}))[a])&&j[0]===w)m=j[1];else while(l=++n&&l&&l[p]||(m=n=0)||o.pop())if((h?l.nodeName.toLowerCase()===r:1===l.nodeType)&&++m&&(s&&((l[u]||(l[u]={}))[a]=[w,m]),l===b))break;return m-=e,m===d||m%d===0&&m/d>=0}}},PSEUDO:function(a,b){var c,e=d.pseudos[a]||d.setFilters[a.toLowerCase()]||ga.error("unsupported pseudo: "+a);return e[u]?e(b):e.length>1?(c=[a,a,"",b],d.setFilters.hasOwnProperty(a.toLowerCase())?ia(function(a,c){var d,f=e(a,b),g=f.length;while(g--)d=J(a,f[g]),a[d]=!(c[d]=f[g])}):function(a){return e(a,0,c)}):e}},pseudos:{not:ia(function(a){var b=[],c=[],d=h(a.replace(R,"$1"));return d[u]?ia(function(a,b,c,e){var f,g=d(a,null,e,[]),h=a.length;while(h--)(f=g[h])&&(a[h]=!(b[h]=f))}):function(a,e,f){return b[0]=a,d(b,null,f,c),b[0]=null,!c.pop()}}),has:ia(function(a){return function(b){return ga(a,b).length>0}}),contains:ia(function(a){return a=a.replace(ca,da),function(b){return(b.textContent||b.innerText||e(b)).indexOf(a)>-1}}),lang:ia(function(a){return W.test(a||"")||ga.error("unsupported lang: "+a),a=a.replace(ca,da).toLowerCase(),function(b){var c;do if(c=p?b.lang:b.getAttribute("xml:lang")||b.getAttribute("lang"))return c=c.toLowerCase(),c===a||0===c.indexOf(a+"-");while((b=b.parentNode)&&1===b.nodeType);return!1}}),target:function(b){var c=a.location&&a.location.hash;return c&&c.slice(1)===b.id},root:function(a){return a===o},focus:function(a){return a===n.activeElement&&(!n.hasFocus||n.hasFocus())&&!!(a.type||a.href||~a.tabIndex)},enabled:function(a){return a.disabled===!1},disabled:function(a){return a.disabled===!0},checked:function(a){var b=a.nodeName.toLowerCase();return"input"===b&&!!a.checked||"option"===b&&!!a.selected},selected:function(a){return a.parentNode&&a.parentNode.selectedIndex,a.selected===!0},empty:function(a){for(a=a.firstChild;a;a=a.nextSibling)if(a.nodeType<6)return!1;return!0},parent:function(a){return!d.pseudos.empty(a)},header:function(a){return Z.test(a.nodeName)},input:function(a){return Y.test(a.nodeName)},button:function(a){var b=a.nodeName.toLowerCase();return"input"===b&&"button"===a.type||"button"===b},text:function(a){var b;return"input"===a.nodeName.toLowerCase()&&"text"===a.type&&(null==(b=a.getAttribute("type"))||"text"===b.toLowerCase())},first:oa(function(){return[0]}),last:oa(function(a,b){return[b-1]}),eq:oa(function(a,b,c){return[0>c?c+b:c]}),even:oa(function(a,b){for(var c=0;b>c;c+=2)a.push(c);return a}),odd:oa(function(a,b){for(var c=1;b>c;c+=2)a.push(c);return a}),lt:oa(function(a,b,c){for(var d=0>c?c+b:c;--d>=0;)a.push(d);return a}),gt:oa(function(a,b,c){for(var d=0>c?c+b:c;++d<b;)a.push(d);return a})}},d.pseudos.nth=d.pseudos.eq;for(b in{radio:!0,checkbox:!0,file:!0,password:!0,image:!0})d.pseudos[b]=ma(b);for(b in{submit:!0,reset:!0})d.pseudos[b]=na(b);function qa(){}qa.prototype=d.filters=d.pseudos,d.setFilters=new qa,g=ga.tokenize=function(a,b){var c,e,f,g,h,i,j,k=z[a+" "];if(k)return b?0:k.slice(0);h=a,i=[],j=d.preFilter;while(h){(!c||(e=S.exec(h)))&&(e&&(h=h.slice(e[0].length)||h),i.push(f=[])),c=!1,(e=T.exec(h))&&(c=e.shift(),f.push({value:c,type:e[0].replace(R," ")}),h=h.slice(c.length));for(g in d.filter)!(e=X[g].exec(h))||j[g]&&!(e=j[g](e))||(c=e.shift(),f.push({value:c,type:g,matches:e}),h=h.slice(c.length));if(!c)break}return b?h.length:h?ga.error(a):z(a,i).slice(0)};function ra(a){for(var b=0,c=a.length,d="";c>b;b++)d+=a[b].value;return d}function sa(a,b,c){var d=b.dir,e=c&&"parentNode"===d,f=x++;return b.first?function(b,c,f){while(b=b[d])if(1===b.nodeType||e)return a(b,c,f)}:function(b,c,g){var h,i,j=[w,f];if(g){while(b=b[d])if((1===b.nodeType||e)&&a(b,c,g))return!0}else while(b=b[d])if(1===b.nodeType||e){if(i=b[u]||(b[u]={}),(h=i[d])&&h[0]===w&&h[1]===f)return j[2]=h[2];if(i[d]=j,j[2]=a(b,c,g))return!0}}}function ta(a){return a.length>1?function(b,c,d){var e=a.length;while(e--)if(!a[e](b,c,d))return!1;return!0}:a[0]}function ua(a,b,c){for(var d=0,e=b.length;e>d;d++)ga(a,b[d],c);return c}function va(a,b,c,d,e){for(var f,g=[],h=0,i=a.length,j=null!=b;i>h;h++)(f=a[h])&&(!c||c(f,d,e))&&(g.push(f),j&&b.push(h));return g}function wa(a,b,c,d,e,f){return d&&!d[u]&&(d=wa(d)),e&&!e[u]&&(e=wa(e,f)),ia(function(f,g,h,i){var j,k,l,m=[],n=[],o=g.length,p=f||ua(b||"*",h.nodeType?[h]:h,[]),q=!a||!f&&b?p:va(p,m,a,h,i),r=c?e||(f?a:o||d)?[]:g:q;if(c&&c(q,r,h,i),d){j=va(r,n),d(j,[],h,i),k=j.length;while(k--)(l=j[k])&&(r[n[k]]=!(q[n[k]]=l))}if(f){if(e||a){if(e){j=[],k=r.length;while(k--)(l=r[k])&&j.push(q[k]=l);e(null,r=[],j,i)}k=r.length;while(k--)(l=r[k])&&(j=e?J(f,l):m[k])>-1&&(f[j]=!(g[j]=l))}}else r=va(r===g?r.splice(o,r.length):r),e?e(null,g,r,i):H.apply(g,r)})}function xa(a){for(var b,c,e,f=a.length,g=d.relative[a[0].type],h=g||d.relative[" "],i=g?1:0,k=sa(function(a){return a===b},h,!0),l=sa(function(a){return J(b,a)>-1},h,!0),m=[function(a,c,d){var e=!g&&(d||c!==j)||((b=c).nodeType?k(a,c,d):l(a,c,d));return b=null,e}];f>i;i++)if(c=d.relative[a[i].type])m=[sa(ta(m),c)];else{if(c=d.filter[a[i].type].apply(null,a[i].matches),c[u]){for(e=++i;f>e;e++)if(d.relative[a[e].type])break;return wa(i>1&&ta(m),i>1&&ra(a.slice(0,i-1).concat({value:" "===a[i-2].type?"*":""})).replace(R,"$1"),c,e>i&&xa(a.slice(i,e)),f>e&&xa(a=a.slice(e)),f>e&&ra(a))}m.push(c)}return ta(m)}function ya(a,b){var c=b.length>0,e=a.length>0,f=function(f,g,h,i,k){var l,m,o,p=0,q="0",r=f&&[],s=[],t=j,u=f||e&&d.find.TAG("*",k),v=w+=null==t?1:Math.random()||.1,x=u.length;for(k&&(j=g!==n&&g);q!==x&&null!=(l=u[q]);q++){if(e&&l){m=0;while(o=a[m++])if(o(l,g,h)){i.push(l);break}k&&(w=v)}c&&((l=!o&&l)&&p--,f&&r.push(l))}if(p+=q,c&&q!==p){m=0;while(o=b[m++])o(r,s,g,h);if(f){if(p>0)while(q--)r[q]||s[q]||(s[q]=F.call(i));s=va(s)}H.apply(i,s),k&&!f&&s.length>0&&p+b.length>1&&ga.uniqueSort(i)}return k&&(w=v,j=t),r};return c?ia(f):f}return h=ga.compile=function(a,b){var c,d=[],e=[],f=A[a+" "];if(!f){b||(b=g(a)),c=b.length;while(c--)f=xa(b[c]),f[u]?d.push(f):e.push(f);f=A(a,ya(e,d)),f.selector=a}return f},i=ga.select=function(a,b,e,f){var i,j,k,l,m,n="function"==typeof a&&a,o=!f&&g(a=n.selector||a);if(e=e||[],1===o.length){if(j=o[0]=o[0].slice(0),j.length>2&&"ID"===(k=j[0]).type&&c.getById&&9===b.nodeType&&p&&d.relative[j[1].type]){if(b=(d.find.ID(k.matches[0].replace(ca,da),b)||[])[0],!b)return e;n&&(b=b.parentNode),a=a.slice(j.shift().value.length)}i=X.needsContext.test(a)?0:j.length;while(i--){if(k=j[i],d.relative[l=k.type])break;if((m=d.find[l])&&(f=m(k.matches[0].replace(ca,da),aa.test(j[0].type)&&pa(b.parentNode)||b))){if(j.splice(i,1),a=f.length&&ra(j),!a)return H.apply(e,f),e;break}}}return(n||h(a,o))(f,b,!p,e,aa.test(a)&&pa(b.parentNode)||b),e},c.sortStable=u.split("").sort(B).join("")===u,c.detectDuplicates=!!l,m(),c.sortDetached=ja(function(a){return 1&a.compareDocumentPosition(n.createElement("div"))}),ja(function(a){return a.innerHTML="<a href='#'></a>","#"===a.firstChild.getAttribute("href")})||ka("type|href|height|width",function(a,b,c){return c?void 0:a.getAttribute(b,"type"===b.toLowerCase()?1:2)}),c.attributes&&ja(function(a){return a.innerHTML="<input/>",a.firstChild.setAttribute("value",""),""===a.firstChild.getAttribute("value")})||ka("value",function(a,b,c){return c||"input"!==a.nodeName.toLowerCase()?void 0:a.defaultValue}),ja(function(a){return null==a.getAttribute("disabled")})||ka(K,function(a,b,c){var d;return c?void 0:a[b]===!0?b.toLowerCase():(d=a.getAttributeNode(b))&&d.specified?d.value:null}),ga}(a);m.find=s,m.expr=s.selectors,m.expr[":"]=m.expr.pseudos,m.unique=s.uniqueSort,m.text=s.getText,m.isXMLDoc=s.isXML,m.contains=s.contains;var t=m.expr.match.needsContext,u=/^<(\w+)\s*\/?>(?:<\/\1>|)$/,v=/^.[^:#\[\.,]*$/;function w(a,b,c){if(m.isFunction(b))return m.grep(a,function(a,d){return!!b.call(a,d,a)!==c});if(b.nodeType)return m.grep(a,function(a){return a===b!==c});if("string"==typeof b){if(v.test(b))return m.filter(b,a,c);b=m.filter(b,a)}return m.grep(a,function(a){return m.inArray(a,b)>=0!==c})}m.filter=function(a,b,c){var d=b[0];return c&&(a=":not("+a+")"),1===b.length&&1===d.nodeType?m.find.matchesSelector(d,a)?[d]:[]:m.find.matches(a,m.grep(b,function(a){return 1===a.nodeType}))},m.fn.extend({find:function(a){var b,c=[],d=this,e=d.length;if("string"!=typeof a)return this.pushStack(m(a).filter(function(){for(b=0;e>b;b++)if(m.contains(d[b],this))return!0}));for(b=0;e>b;b++)m.find(a,d[b],c);return c=this.pushStack(e>1?m.unique(c):c),c.selector=this.selector?this.selector+" "+a:a,c},filter:function(a){return this.pushStack(w(this,a||[],!1))},not:function(a){return this.pushStack(w(this,a||[],!0))},is:function(a){return!!w(this,"string"==typeof a&&t.test(a)?m(a):a||[],!1).length}});var x,y=a.document,z=/^(?:\s*(<[\w\W]+>)[^>]*|#([\w-]*))$/,A=m.fn.init=function(a,b){var c,d;if(!a)return this;if("string"==typeof a){if(c="<"===a.charAt(0)&&">"===a.charAt(a.length-1)&&a.length>=3?[null,a,null]:z.exec(a),!c||!c[1]&&b)return!b||b.jquery?(b||x).find(a):this.constructor(b).find(a);if(c[1]){if(b=b instanceof m?b[0]:b,m.merge(this,m.parseHTML(c[1],b&&b.nodeType?b.ownerDocument||b:y,!0)),u.test(c[1])&&m.isPlainObject(b))for(c in b)m.isFunction(this[c])?this[c](b[c]):this.attr(c,b[c]);return this}if(d=y.getElementById(c[2]),d&&d.parentNode){if(d.id!==c[2])return x.find(a);this.length=1,this[0]=d}return this.context=y,this.selector=a,this}return a.nodeType?(this.context=this[0]=a,this.length=1,this):m.isFunction(a)?"undefined"!=typeof x.ready?x.ready(a):a(m):(void 0!==a.selector&&(this.selector=a.selector,this.context=a.context),m.makeArray(a,this))};A.prototype=m.fn,x=m(y);var B=/^(?:parents|prev(?:Until|All))/,C={children:!0,contents:!0,next:!0,prev:!0};m.extend({dir:function(a,b,c){var d=[],e=a[b];while(e&&9!==e.nodeType&&(void 0===c||1!==e.nodeType||!m(e).is(c)))1===e.nodeType&&d.push(e),e=e[b];return d},sibling:function(a,b){for(var c=[];a;a=a.nextSibling)1===a.nodeType&&a!==b&&c.push(a);return c}}),m.fn.extend({has:function(a){var b,c=m(a,this),d=c.length;return this.filter(function(){for(b=0;d>b;b++)if(m.contains(this,c[b]))return!0})},closest:function(a,b){for(var c,d=0,e=this.length,f=[],g=t.test(a)||"string"!=typeof a?m(a,b||this.context):0;e>d;d++)for(c=this[d];c&&c!==b;c=c.parentNode)if(c.nodeType<11&&(g?g.index(c)>-1:1===c.nodeType&&m.find.matchesSelector(c,a))){f.push(c);break}return this.pushStack(f.length>1?m.unique(f):f)},index:function(a){return a?"string"==typeof a?m.inArray(this[0],m(a)):m.inArray(a.jquery?a[0]:a,this):this[0]&&this[0].parentNode?this.first().prevAll().length:-1},add:function(a,b){return this.pushStack(m.unique(m.merge(this.get(),m(a,b))))},addBack:function(a){return this.add(null==a?this.prevObject:this.prevObject.filter(a))}});function D(a,b){do a=a[b];while(a&&1!==a.nodeType);return a}m.each({parent:function(a){var b=a.parentNode;return b&&11!==b.nodeType?b:null},parents:function(a){return m.dir(a,"parentNode")},parentsUntil:function(a,b,c){return m.dir(a,"parentNode",c)},next:function(a){return D(a,"nextSibling")},prev:function(a){return D(a,"previousSibling")},nextAll:function(a){return m.dir(a,"nextSibling")},prevAll:function(a){return m.dir(a,"previousSibling")},nextUntil:function(a,b,c){return m.dir(a,"nextSibling",c)},prevUntil:function(a,b,c){return m.dir(a,"previousSibling",c)},siblings:function(a){return m.sibling((a.parentNode||{}).firstChild,a)},children:function(a){return m.sibling(a.firstChild)},contents:function(a){return m.nodeName(a,"iframe")?a.contentDocument||a.contentWindow.document:m.merge([],a.childNodes)}},function(a,b){m.fn[a]=function(c,d){var e=m.map(this,b,c);return"Until"!==a.slice(-5)&&(d=c),d&&"string"==typeof d&&(e=m.filter(d,e)),this.length>1&&(C[a]||(e=m.unique(e)),B.test(a)&&(e=e.reverse())),this.pushStack(e)}});var E=/\S+/g,F={};function G(a){var b=F[a]={};return m.each(a.match(E)||[],function(a,c){b[c]=!0}),b}m.Callbacks=function(a){a="string"==typeof a?F[a]||G(a):m.extend({},a);var b,c,d,e,f,g,h=[],i=!a.once&&[],j=function(l){for(c=a.memory&&l,d=!0,f=g||0,g=0,e=h.length,b=!0;h&&e>f;f++)if(h[f].apply(l[0],l[1])===!1&&a.stopOnFalse){c=!1;break}b=!1,h&&(i?i.length&&j(i.shift()):c?h=[]:k.disable())},k={add:function(){if(h){var d=h.length;!function f(b){m.each(b,function(b,c){var d=m.type(c);"function"===d?a.unique&&k.has(c)||h.push(c):c&&c.length&&"string"!==d&&f(c)})}(arguments),b?e=h.length:c&&(g=d,j(c))}return this},remove:function(){return h&&m.each(arguments,function(a,c){var d;while((d=m.inArray(c,h,d))>-1)h.splice(d,1),b&&(e>=d&&e--,f>=d&&f--)}),this},has:function(a){return a?m.inArray(a,h)>-1:!(!h||!h.length)},empty:function(){return h=[],e=0,this},disable:function(){return h=i=c=void 0,this},disabled:function(){return!h},lock:function(){return i=void 0,c||k.disable(),this},locked:function(){return!i},fireWith:function(a,c){return!h||d&&!i||(c=c||[],c=[a,c.slice?c.slice():c],b?i.push(c):j(c)),this},fire:function(){return k.fireWith(this,arguments),this},fired:function(){return!!d}};return k},m.extend({Deferred:function(a){var b=[["resolve","done",m.Callbacks("once memory"),"resolved"],["reject","fail",m.Callbacks("once memory"),"rejected"],["notify","progress",m.Callbacks("memory")]],c="pending",d={state:function(){return c},always:function(){return e.done(arguments).fail(arguments),this},then:function(){var a=arguments;return m.Deferred(function(c){m.each(b,function(b,f){var g=m.isFunction(a[b])&&a[b];e[f[1]](function(){var a=g&&g.apply(this,arguments);a&&m.isFunction(a.promise)?a.promise().done(c.resolve).fail(c.reject).progress(c.notify):c[f[0]+"With"](this===d?c.promise():this,g?[a]:arguments)})}),a=null}).promise()},promise:function(a){return null!=a?m.extend(a,d):d}},e={};return d.pipe=d.then,m.each(b,function(a,f){var g=f[2],h=f[3];d[f[1]]=g.add,h&&g.add(function(){c=h},b[1^a][2].disable,b[2][2].lock),e[f[0]]=function(){return e[f[0]+"With"](this===e?d:this,arguments),this},e[f[0]+"With"]=g.fireWith}),d.promise(e),a&&a.call(e,e),e},when:function(a){var b=0,c=d.call(arguments),e=c.length,f=1!==e||a&&m.isFunction(a.promise)?e:0,g=1===f?a:m.Deferred(),h=function(a,b,c){return function(e){b[a]=this,c[a]=arguments.length>1?d.call(arguments):e,c===i?g.notifyWith(b,c):--f||g.resolveWith(b,c)}},i,j,k;if(e>1)for(i=new Array(e),j=new Array(e),k=new Array(e);e>b;b++)c[b]&&m.isFunction(c[b].promise)?c[b].promise().done(h(b,k,c)).fail(g.reject).progress(h(b,j,i)):--f;return f||g.resolveWith(k,c),g.promise()}});var H;m.fn.ready=function(a){return m.ready.promise().done(a),this},m.extend({isReady:!1,readyWait:1,holdReady:function(a){a?m.readyWait++:m.ready(!0)},ready:function(a){if(a===!0?!--m.readyWait:!m.isReady){if(!y.body)return setTimeout(m.ready);m.isReady=!0,a!==!0&&--m.readyWait>0||(H.resolveWith(y,[m]),m.fn.triggerHandler&&(m(y).triggerHandler("ready"),m(y).off("ready")))}}});function I(){y.addEventListener?(y.removeEventListener("DOMContentLoaded",J,!1),a.removeEventListener("load",J,!1)):(y.detachEvent("onreadystatechange",J),a.detachEvent("onload",J))}function J(){(y.addEventListener||"load"===event.type||"complete"===y.readyState)&&(I(),m.ready())}m.ready.promise=function(b){if(!H)if(H=m.Deferred(),"complete"===y.readyState)setTimeout(m.ready);else if(y.addEventListener)y.addEventListener("DOMContentLoaded",J,!1),a.addEventListener("load",J,!1);else{y.attachEvent("onreadystatechange",J),a.attachEvent("onload",J);var c=!1;try{c=null==a.frameElement&&y.documentElement}catch(d){}c&&c.doScroll&&!function e(){if(!m.isReady){try{c.doScroll("left")}catch(a){return setTimeout(e,50)}I(),m.ready()}}()}return H.promise(b)};var K="undefined",L;for(L in m(k))break;k.ownLast="0"!==L,k.inlineBlockNeedsLayout=!1,m(function(){var a,b,c,d;c=y.getElementsByTagName("body")[0],c&&c.style&&(b=y.createElement("div"),d=y.createElement("div"),d.style.cssText="position:absolute;border:0;width:0;height:0;top:0;left:-9999px",c.appendChild(d).appendChild(b),typeof b.style.zoom!==K&&(b.style.cssText="display:inline;margin:0;border:0;padding:1px;width:1px;zoom:1",k.inlineBlockNeedsLayout=a=3===b.offsetWidth,a&&(c.style.zoom=1)),c.removeChild(d))}),function(){var a=y.createElement("div");if(null==k.deleteExpando){k.deleteExpando=!0;try{delete a.test}catch(b){k.deleteExpando=!1}}a=null}(),m.acceptData=function(a){var b=m.noData[(a.nodeName+" ").toLowerCase()],c=+a.nodeType||1;return 1!==c&&9!==c?!1:!b||b!==!0&&a.getAttribute("classid")===b};var M=/^(?:\{[\w\W]*\}|\[[\w\W]*\])$/,N=/([A-Z])/g;function O(a,b,c){if(void 0===c&&1===a.nodeType){var d="data-"+b.replace(N,"-$1").toLowerCase();if(c=a.getAttribute(d),"string"==typeof c){try{c="true"===c?!0:"false"===c?!1:"null"===c?null:+c+""===c?+c:M.test(c)?m.parseJSON(c):c}catch(e){}m.data(a,b,c)}else c=void 0}return c}function P(a){var b;for(b in a)if(("data"!==b||!m.isEmptyObject(a[b]))&&"toJSON"!==b)return!1;
@@ -371,8 +371,8 @@ summary {
 
 
 
-<h1 class="title toc-ignore">Better tables</h1>
-<h4 class="author">Paul Sharpe</h4>
+<h1 class="title toc-ignore">Reliability of Targets in a Picture Naming Task</h1>
+<h4 class="author">Allegra Cattani, Adele Conn, Paul Sharpe</h4>
 
 </div>
 
@@ -382,1339 +382,44 @@ summary {
 <ul>
 <li><p><a href="#intro">Introduction</a></p></li>
 <li><p><a href="#start">Getting started</a></p></li>
-<li><p><a href="#descriptives">Table of descriptive statistics</a></p></li>
-<li><p><a href="#t-tests">Table of t-tests</a></p></li>
+<li><p><a href="#preprocessing">Preprocessing</a></p></li>
+<li><p><a href="#results">Results</a></p></li>
 </ul>
 <p><a name="intro"></a></p>
 </div>
 <div id="introduction" class="section level1">
 <h1>Introduction</h1>
-<p>Data is often easier to read in tabular format. This worksheet explains how to use <code>R</code> to produce the types of table which are useful in papers describing psychological research. Although tables can be produced using a Word processor, generating them using <code>R</code> reduces copy-paste errors when writing reports.</p>
-<p>There are numerous <code>R</code> packages for presenting data as tables. We’ve chosen to use the <code>kableExtra</code> package, as it’s capable of producing almost any table you might need in your reports. The tables produced by kableExtra are in <a href="https://haozhu233.github.io/kableExtra/awesome_table_in_html.html">HTML format</a>. You can simply copy-paste these into Microsoft Word or LibreOffice Writer. If you are using the online version of RStudio, select <code>Export &gt; Save as Web Page</code>, then select the table copy-paste into your word processor.</p>
+<p>This study was an experiment which evaluated Words in Game (WinG) test, a tool for assessing children’s language development. WinG consists of a set of picture cards which are used in four tests: noun comprehension, noun production, predicate comprehension, and predicate production. The Italian and English versions of the WinG cards use different pictures to depict the associated words. The experiment tested whether English-speaking children produce similar responses for the two sets of cards. This was a 4 (test) x 2 (cards) mixed design.</p>
+<p>The data for each test was recorded on a sub-sheet of an Excel spreadsheet. There was also a sub-sheet containing demographic data.</p>
 <p><a name="start"></a></p>
 </div>
 <div id="getting-started" class="section level1">
 <h1>Getting started</h1>
 <p>To prepare for this worksheet, follow these steps:</p>
 <ol style="list-style-type: decimal">
-<li><p>If you haven’t already done so, create a new R project named <code>going-further</code>.</p></li>
-<li><p>In your project, create a folder named <code>going-further</code>.</p></li>
-<li><p>You will find the file <code>picture-naming.xlsx</code> in the <code>going-further</code> folder in <a href="preproc.html#load">the git repository we used previously</a>. Upload this file into the <code>going-further</code> folder you just created.</p></li>
-<li><p>Create a script named <code>tables.R</code> and add the code in this worksheet to <code>tables.R</code> as you work through each section.</p></li>
+<li>Open the project you used to complete the <a href="better-scales.html">Better scales</a> worksheet.</li>
 </ol>
-<p>We start with some lines to clear the workspace and load <code>tidyverse</code> and <code>pander</code>.</p>
+<p><a name="preprocessing"></a></p>
+</div>
+<div id="preprocessing" class="section level1">
+<h1>Preprocessing</h1>
+<p>See also: <a href="#better-tables.html">Better tables</a></p>
+<p>We summarise the preprocessing steps here. They explained in full in the <a href="#better-tables.html">Better tables</a> worksheet.</p>
+<p>We start by reading the data from <code>picture-naming.xlsx</code> and preprocessing the demographics sub-sheet. This includes scores for the Communicative Development Inventory (CDI). The CDI is a list of 100 words with columns ‘understands’ and ‘says’. For each word, parents place a tick in these columns if they think their child can understand and/or say the word. The scores for ‘understands’ (<code>cdi_u</code>) and ‘says’ (<code>cdi_s</code>) is a total of the ticked boxes in the two columns.</p>
 <pre class="r"><code>rm(list = ls()) # clear the environment
 library(tidyverse)
-library(pander)</code></pre>
-<p><a name="descriptives"></a></p>
-</div>
-<div id="table-of-descriptive-statistics" class="section level1">
-<h1>Table of descriptive statistics</h1>
-<p>See also: <a href="preproc.html">Data preprocessing</a>, <a href="preproc-scales.html">Preprocessing scales</a>.</p>
-<p>We’ll start by producing a table of descriptive statistics. The data we’ll use comes from an experiment which tested children’s language comprehension and production using picture cards. The experiment consisted of four tests: noun comprehension, noun production, predicate comprehension and predicate production. The data for each test was recorded on a sub-sheet of an Excel spreadsheet. There was also a sub-sheet containing demographic data.</p>
-<p>We start by reading all sub-sheets into a single data frame.</p>
-<pre class="r"><code># read data
+library(pander)
+
+# read data
 library(readxl)
 path &lt;- &#39;going-further/picture-naming.xlsx&#39;
 data &lt;- path %&gt;%
   excel_sheets() %&gt;%
   .[-1] %&gt;%
   set_names() %&gt;%
-  map_df(~ read_excel(path = path, sheet = .x, range = &quot;A1:V20&quot;), .id = &quot;sheet&quot;)</code></pre>
-<p><strong>Explanation of commands:</strong></p>
-<ol style="list-style-type: decimal">
-<li><code>library(readxl)</code> loads a package containing functions for reading Excel spreadsheets.</li>
-<li><code>path &lt;- &#39;going-further/picture-naming.xlsx&#39;</code> is the location of our spreadsheet (see above).</li>
-<li><code>path %&gt;% excel_sheets()</code> creates a vector containing the names of the sub-sheets.</li>
-<li><code>.[-1]</code> removes the first item from this vector, as it’s a sub-sheet that doesn’t contain any data.</li>
-<li><code>set_names()</code> names each item in the vector after its sub-sheet name (see next step).</li>
-<li><code>map_df()</code> processes each item in the vector, assigning it to <code>.x</code> and then running the function <code>read_excel(path = path, sheet = .x, range = &quot;A1:V20&quot;)</code>. For each sub-sheet of the spreadsheet file (<code>path</code>), this reads data from the range <code>A1:V20</code> on the sheet (the cells containing the data we need). The argument <code>.id = &quot;sheet&quot;</code> creates a column named <code>sheet</code> with the name associated with <code>.x</code> (the name of the sub-sheet, see previous step). The whole thing is returned as a data frame.</li>
-<li>Because <code>map_df()</code> adds the results of each of function call to the end of the previously created data frame, <code>data</code> is assigned a single data frame containing the data from all sub-sheets.</li>
-</ol>
-<p>Here’s a slice of the data showing what was read from each sub-sheet:</p>
-<pre class="r"><code>data %&gt;% slice(1:2, 20:21, 39:40, 58:59, 77:78) %&gt;% pander(split.table = Inf)</code></pre>
-<table style="width:100%;">
-<colgroup>
-<col width="2%"></col>
-<col width="1%"></col>
-<col width="2%"></col>
-<col width="2%"></col>
-<col width="2%"></col>
-<col width="0%"></col>
-<col width="1%"></col>
-<col width="1%"></col>
-<col width="1%"></col>
-<col width="0%"></col>
-<col width="0%"></col>
-<col width="0%"></col>
-<col width="0%"></col>
-<col width="0%"></col>
-<col width="0%"></col>
-<col width="0%"></col>
-<col width="0%"></col>
-<col width="0%"></col>
-<col width="0%"></col>
-<col width="0%"></col>
-<col width="0%"></col>
-<col width="0%"></col>
-<col width="0%"></col>
-<col width="0%"></col>
-<col width="0%"></col>
-<col width="0%"></col>
-<col width="0%"></col>
-<col width="0%"></col>
-<col width="0%"></col>
-<col width="1%"></col>
-<col width="0%"></col>
-<col width="0%"></col>
-<col width="0%"></col>
-<col width="0%"></col>
-<col width="0%"></col>
-<col width="0%"></col>
-<col width="1%"></col>
-<col width="0%"></col>
-<col width="0%"></col>
-<col width="0%"></col>
-<col width="0%"></col>
-<col width="0%"></col>
-<col width="1%"></col>
-<col width="0%"></col>
-<col width="1%"></col>
-<col width="1%"></col>
-<col width="1%"></col>
-<col width="0%"></col>
-<col width="0%"></col>
-<col width="0%"></col>
-<col width="0%"></col>
-<col width="0%"></col>
-<col width="0%"></col>
-<col width="0%"></col>
-<col width="0%"></col>
-<col width="0%"></col>
-<col width="0%"></col>
-<col width="1%"></col>
-<col width="1%"></col>
-<col width="1%"></col>
-<col width="0%"></col>
-<col width="0%"></col>
-<col width="0%"></col>
-<col width="1%"></col>
-<col width="0%"></col>
-<col width="1%"></col>
-<col width="1%"></col>
-<col width="0%"></col>
-<col width="0%"></col>
-<col width="0%"></col>
-<col width="1%"></col>
-<col width="0%"></col>
-<col width="1%"></col>
-<col width="0%"></col>
-<col width="1%"></col>
-<col width="1%"></col>
-<col width="1%"></col>
-<col width="1%"></col>
-<col width="1%"></col>
-<col width="1%"></col>
-<col width="1%"></col>
-<col width="1%"></col>
-<col width="0%"></col>
-<col width="1%"></col>
-<col width="0%"></col>
-<col width="1%"></col>
-<col width="1%"></col>
-<col width="0%"></col>
-<col width="0%"></col>
-<col width="1%"></col>
-<col width="0%"></col>
-<col width="0%"></col>
-<col width="1%"></col>
-<col width="1%"></col>
-<col width="1%"></col>
-<col width="0%"></col>
-<col width="0%"></col>
-<col width="1%"></col>
-<col width="1%"></col>
-<col width="0%"></col>
-<col width="1%"></col>
-<col width="1%"></col>
-<col width="0%"></col>
-<col width="1%"></col>
-</colgroup>
-<thead>
-<tr class="header">
-<th align="center">sheet</th>
-<th align="center">Code</th>
-<th align="center">Parental_Education(M)</th>
-<th align="center">Parental_Education(F)</th>
-<th align="center">Highest_Education</th>
-<th align="center">Gender</th>
-<th align="center">DOB</th>
-<th align="center">Test_Date</th>
-<th align="center">Age (M)</th>
-<th align="center">CDI_U</th>
-<th align="center">CDI_S</th>
-<th align="center">…11</th>
-<th align="center">…12</th>
-<th align="center">…13</th>
-<th align="center">…14</th>
-<th align="center">…15</th>
-<th align="center">…16</th>
-<th align="center">…17</th>
-<th align="center">…18</th>
-<th align="center">…19</th>
-<th align="center">…20</th>
-<th align="center">…21</th>
-<th align="center">…22</th>
-<th align="center">Cards</th>
-<th align="center">Beach</th>
-<th align="center">Lorry</th>
-<th align="center">Seal</th>
-<th align="center">Bag</th>
-<th align="center">Banana</th>
-<th align="center">Picture</th>
-<th align="center">Hen</th>
-<th align="center">Book</th>
-<th align="center">Socks</th>
-<th align="center">Comb</th>
-<th align="center">Table</th>
-<th align="center">Roof</th>
-<th align="center">Umberella</th>
-<th align="center">Fork</th>
-<th align="center">Lion</th>
-<th align="center">Flags</th>
-<th align="center">Glass</th>
-<th align="center">Nappy</th>
-<th align="center">Radiator</th>
-<th align="center">Gloves</th>
-<th align="center">Mountain</th>
-<th align="center">Motorbike</th>
-<th align="center">Penguin</th>
-<th align="center">Box</th>
-<th align="center">Apple</th>
-<th align="center">Iron</th>
-<th align="center">Cow</th>
-<th align="center">Doll</th>
-<th align="center">Hat</th>
-<th align="center">Watch</th>
-<th align="center">Sofa</th>
-<th align="center">Clouds</th>
-<th align="center">Hammer</th>
-<th align="center">Glasses</th>
-<th align="center">Elephant</th>
-<th align="center">Backyard</th>
-<th align="center">Spoon</th>
-<th align="center">Bib</th>
-<th align="center">Sink</th>
-<th align="center">Wellyboots</th>
-<th align="center">Small</th>
-<th align="center">Spinning</th>
-<th align="center">Swimming</th>
-<th align="center">Empty</th>
-<th align="center">Heavy</th>
-<th align="center">Inside</th>
-<th align="center">Kissing</th>
-<th align="center">Clean</th>
-<th align="center">Falling</th>
-<th align="center">Eating</th>
-<th align="center">Washing</th>
-<th align="center">Smiling</th>
-<th align="center">In-front</th>
-<th align="center">Playing</th>
-<th align="center">Phoning</th>
-<th align="center">Far-apart</th>
-<th align="center">Driving</th>
-<th align="center">Opening</th>
-<th align="center">Long</th>
-<th align="center">Pushing</th>
-<th align="center">Big</th>
-<th align="center">Swinging</th>
-<th align="center">Climbing</th>
-<th align="center">Full</th>
-<th align="center">Tall</th>
-<th align="center">Outside</th>
-<th align="center">Waving</th>
-<th align="center">Dirty</th>
-<th align="center">Running</th>
-<th align="center">Drinking</th>
-<th align="center">Hugging</th>
-<th align="center">Biting</th>
-<th align="center">Behind</th>
-<th align="center">Walking</th>
-<th align="center">Building</th>
-<th align="center">Near</th>
-<th align="center">Sweeping</th>
-<th align="center">Combing</th>
-<th align="center">Short</th>
-<th align="center">Pulling</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="center">Demographic</td>
-<td align="center">WinG30-01</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">Female</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">62</td>
-<td align="center">38</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-</tr>
-<tr class="even">
-<td align="center">Demographic</td>
-<td align="center">WinG30-02</td>
-<td align="center">2</td>
-<td align="center">2</td>
-<td align="center">2</td>
-<td align="center">Male</td>
-<td align="center">2017-06-25</td>
-<td align="center">2020-01-09</td>
-<td align="center">30</td>
-<td align="center">60</td>
-<td align="center">59</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-</tr>
-<tr class="odd">
-<td align="center">Noun Production</td>
-<td align="center">WinG30-01</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">2</td>
-<td align="center">NR</td>
-<td align="center">NTS</td>
-<td align="center">NT</td>
-<td align="center">NR</td>
-<td align="center">C*</td>
-<td align="center">NR</td>
-<td align="center">C</td>
-<td align="center">NT</td>
-<td align="center">C</td>
-<td align="center">NTS</td>
-<td align="center">NT</td>
-<td align="center">NT</td>
-<td align="center">NT</td>
-<td align="center">NTS</td>
-<td align="center">NTS</td>
-<td align="center">NT</td>
-<td align="center">NTS</td>
-<td align="center">NT</td>
-<td align="center">NR</td>
-<td align="center">C</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-</tr>
-<tr class="even">
-<td align="center">Noun Production</td>
-<td align="center">WinG30-02</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">1</td>
-<td align="center">NT-S</td>
-<td align="center">C</td>
-<td align="center">NR</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">NT</td>
-<td align="center">C</td>
-<td align="center">NT</td>
-<td align="center">C</td>
-<td align="center">NTS</td>
-<td align="center">C</td>
-<td align="center">NTS</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">NT</td>
-<td align="center">NT</td>
-<td align="center">C</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-</tr>
-<tr class="odd">
-<td align="center">Noun Comprehension</td>
-<td align="center">WinG30-01</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">2</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">D</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">P</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">P</td>
-<td align="center">D</td>
-<td align="center">C</td>
-<td align="center">D</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">P</td>
-<td align="center">C</td>
-<td align="center">P</td>
-<td align="center">P</td>
-<td align="center">C</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-</tr>
-<tr class="even">
-<td align="center">Noun Comprehension</td>
-<td align="center">WinG30-02</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">1</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">NR</td>
-<td align="center">C</td>
-<td align="center">D</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-</tr>
-<tr class="odd">
-<td align="center">Predicate Production</td>
-<td align="center">WinG30-01</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">2</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NT</td>
-<td align="center">NT</td>
-<td align="center">N/A</td>
-<td align="center">N/A</td>
-<td align="center">N/A</td>
-<td align="center">N/A</td>
-<td align="center">N/A</td>
-<td align="center">N/A</td>
-<td align="center">N/A</td>
-<td align="center">N/A</td>
-<td align="center">N/A</td>
-<td align="center">N/A</td>
-<td align="center">N/A</td>
-<td align="center">N/A</td>
-<td align="center">N/A</td>
-<td align="center">N/A</td>
-<td align="center">N/A</td>
-<td align="center">N/A</td>
-<td align="center">N/A</td>
-<td align="center">N/A</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-</tr>
-<tr class="even">
-<td align="center">Predicate Production</td>
-<td align="center">WinG30-02</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">1</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NTS</td>
-<td align="center">NTS</td>
-<td align="center">C</td>
-<td align="center">NT</td>
-<td align="center">NT</td>
-<td align="center">NT</td>
-<td align="center">C</td>
-<td align="center">NT</td>
-<td align="center">NTS</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">NT</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">NT</td>
-<td align="center">C</td>
-<td align="center">NT</td>
-<td align="center">NT</td>
-<td align="center">C</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-</tr>
-<tr class="odd">
-<td align="center">Predicate Comprehension</td>
-<td align="center">WinG30-01</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">2</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">P</td>
-<td align="center">C</td>
-<td align="center">N/A</td>
-<td align="center">N/A</td>
-<td align="center">N/A</td>
-<td align="center">N/A</td>
-<td align="center">N/A</td>
-<td align="center">N/A</td>
-<td align="center">N/A</td>
-<td align="center">N/A</td>
-<td align="center">N/A</td>
-<td align="center">N/A</td>
-<td align="center">N/A</td>
-<td align="center">N/A</td>
-<td align="center">N/A</td>
-<td align="center">N/A</td>
-<td align="center">N/A</td>
-<td align="center">N/A</td>
-<td align="center">N/A</td>
-<td align="center">N/A</td>
-</tr>
-<tr class="even">
-<td align="center">Predicate Comprehension</td>
-<td align="center">WinG30-02</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">1</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">D</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">D</td>
-<td align="center">C</td>
-<td align="center">P</td>
-</tr>
-</tbody>
-</table>
-<div id="extract-demographics-data" class="section level2">
-<h2>Extract demographics data</h2>
-<p>We extract the demographics data into its own data frame, convert the column names to lower case, select the columns we want to keep, convert <code>gender</code> to be a factor with lower case levels, and create a sequential subject number factor. The <code>cdi_u</code> and <code>cdi_s</code> columns aren’t used in this worksheet.</p>
-<pre class="r"><code># demographics data
+  map_df(~ read_excel(path = path, sheet = .x, range = &quot;A1:V20&quot;), .id = &quot;sheet&quot;)
+
+# demographics data
 demographics &lt;- data %&gt;%
   filter(sheet == &#39;Demographic&#39;) %&gt;%
   set_names(~ str_to_lower(.)) %&gt;%
@@ -1758,10 +463,17 @@ demographics %&gt;% head(3) %&gt;% pander()</code></pre>
 </tr>
 </tbody>
 </table>
-</div>
-<div id="extract-task-data" class="section level2">
-<h2>Extract task data</h2>
-<p>We extract the noun comprehension data into its own data frame, convert the column names to lower case, and select the noun comprehension columns (<code>mountain:wellyboots</code>). Again, we create a sequential subject number factor. We’ll use this later to join our data frames together.</p>
+<p>Next we preprocess the WinG data. When the experimenters administer WinG, they use a textual coding scheme to record each child’s responses. The codes we’ll use for the analyses in this worksheet are:</p>
+<ul>
+<li><code>N/A</code> (not to be confused with the <code>R</code> data type <code>NA</code>) - researchers use this code to indicate that there was some kind of interruption to the task (e.g. the child began crying).</li>
+<li><code>C</code> or <code>C*</code> - <code>C</code> indicates that the child responded correctly for the picture on the card, <code>C*</code> indicates that the response was a correct synonym. In this experiment, both of these values are considered correct responses.</li>
+</ul>
+<p>The <code>exclude()</code> function applies the following exclusion criteria to our data:</p>
+<ol style="list-style-type: decimal">
+<li>Any subject ‘N/A’ for one of the first 17 words in a task. This criterion excludes children with insufficient data for analysis for a task.</li>
+<li>Any subject in the remaining data whose accuracy was less than two standard deviations below the mean. This is a more general criterion to exlude subjects who had especially low scores for various reasons.</li>
+</ol>
+<p><code>exclude()</code> also calculates the total score for each WinG task (noun and predicate comprehension and production).</p>
 <pre class="r"><code># task data
 nc &lt;- data %&gt;%
   filter(sheet == &#39;Noun Comprehension&#39;) %&gt;%
@@ -1895,7 +607,6 @@ nc %&gt;% head(3) %&gt;% pander(split.table = Inf)</code></pre>
 </tr>
 </tbody>
 </table>
-<p>We create a <code>cards</code> data frame and recode the numbers in the <code>cards</code> factor to words which make it clearer whether the subject was tested using the English or Italian card set. Again, we’ll use this data frame when we join our data together (see below).</p>
 <pre class="r"><code>cards &lt;- nc %&gt;%
   select(subj, cards) %&gt;%
   mutate(cards = recode_factor(.$cards, `1` = &#39;italian&#39;, `2` = &#39;english&#39;))
@@ -1990,15 +701,6 @@ cards %&gt;% pander()</code></pre>
 </tr>
 </tbody>
 </table>
-</div>
-<div id="excluding-data" class="section level2">
-<h2>Excluding data</h2>
-<p>Before we go any further, we need to apply some exclusion criteria to our data. In this case, we want to exclude:</p>
-<ol style="list-style-type: decimal">
-<li>Any subject with the string ‘N/A’ (not to be confused with the <code>R</code> data type <code>NA</code>) for one of the first 17 words in a task. The value ‘N/A’ was entered by the researchers to indicate that there was some kind of interruption to the task (e.g. the child began crying). This criterion excludes children with insufficient data for analysis for a task.</li>
-<li>Any subject in the remaining data whose accuracy was less than two standard deviations below the mean. This is a more general criterion to exlude subjects who had especially low scores for various reasons.</li>
-</ol>
-<p>To apply our exclusion criteria, we’ll write a function which we can reuse for the data from each of the four sub-tests. User-defined functions were introduced in the <a href="preproc-scales.html">Preprocessing scale</a> worksheet.</p>
 <pre class="r"><code># apply exclusion criteria to sub-test data
 exclude &lt;- function(df) {
   # exclude if N/A in item 17 or lower
@@ -2013,28 +715,15 @@ exclude &lt;- function(df) {
   q17 &lt;- left_join(df, q17, by=&#39;subj&#39;) %&gt;%
     replace_na(list(min = 20))
   q17 &lt;- q17 %&gt;% filter(min &gt; 17) %&gt;% select(-min)
-
+  
   # calculate total correct
   q17 &lt;- q17 %&gt;% mutate(correct = rowSums(. == &#39;C&#39; | . == &#39;C*&#39;))
-
-  # exclude subjects with scores &lt; 2 sd below the mean
+  
+  # exclude participants with scores &lt; 2 sd below the mean
   q17 %&gt;% filter(correct &lt; mean(correct) + 2 * sd(correct))
-}</code></pre>
-<p><strong>Explanation of commands:</strong></p>
-<ol style="list-style-type: decimal">
-<li>Our function <code>exclude()</code> accepts a data frame <code>df</code> containing the data recorded for a sub-test.</li>
-<li><code>logical_matrix &lt;- df == &#39;N/A&#39;</code> converts <code>df</code> to a matrix containgin the value <code>TRUE</code> where a cell in <code>df</code> contained the string <code>N/A</code>, or <code>FALSE</code> otherwise.</li>
-<li><code>which(arr.ind = TRUE)</code> creates a matrix with columns <code>row</code> (this will be the same as our subject number) and <code>col</code> containing the row and column number of any cells with the value <code>TRUE</code> (i.e. those cells that contained <code>N/A</code>).</li>
-<li><code>data.frame() %&gt;% group_by(row) %&gt;% summarise(min = min(col))</code> summarises this as a single row containing the lowest column number that contained <code>N/A</code>.</li>
-<li><code>mutate(subj = factor(row)) %&gt;% select(subj, min)</code> creates a factor <code>subj</code> from <code>row</code>, and selects this along with the column number of the first column that contained <code>N/A</code>. We have now converted our original data into a data from with rows for any subjects who had at least one <code>N/A</code> and the number of the first word where the task was interrupted.</li>
-<li><code>q17 &lt;- left_join(df, q17, by=&#39;subj&#39;)</code> joins this data frame to the data frame we passed to <code>exclude()</code>. For rows where there is no matching <code>subj</code>, <code>min</code> gets the value <code>NA</code>. <code>replace_na(list(min = 20))</code> converts these <code>NA</code>s to the value <code>20</code>, indicating the child provided an answer for all words.</li>
-<li>Finally, <code>q17 &lt;- q17 %&gt;% filter(min &gt; 17) %&gt;% select(-min)</code> selects only children who provided answers beyond word 17, and then removes the <code>min</code> column.</li>
-<li>Next we calculate an accuracy score for each subject across all words. <code>q17 &lt;- q17 %&gt;% mutate(correct = rowSums(. == &#39;C&#39; | . == &#39;C*&#39;))</code> creates a new column <code>correct</code> with a value for each row which is the sum of the number of columns containing <code>C</code> or <code>C*</code> (<code>|</code> means ‘or’). Cells containing <code>C</code> indicate that the child responded correctly for the picture on the card for the the word in this column. Cells containing <code>C*</code> indicates that the response was a correct synonym. In this experiment, both of these values are considered correct responses.</li>
-<li><code>q17 %&gt;% filter(correct &lt; mean(correct) + 2 * sd(correct))</code> calculates the mean and standard deviation for <code>correct</code>, and then filters any subjects whose value for <code>correct</code> was less than two standard deviations below the mean.</li>
-<li>We return the data frame without rows meeting our two exclusion critera.</li>
-</ol>
-<p>Calling <code>exclude(nc)</code> applies our exclusion criteria, and also calculates a total accuracy score for each subject. We can see that subject <code>18</code> was excluded from the noun comprehension task:</p>
-<pre class="r"><code>nc &lt;- exclude(nc)</code></pre>
+}
+
+nc &lt;- exclude(nc)</code></pre>
 <pre><code>`summarise()` ungrouping output (override with `.groups` argument)</code></pre>
 <pre class="r"><code>nc_by_subj &lt;- select(nc, subj, correct)
 nc_by_subj %&gt;% pander()</code></pre>
@@ -2124,7 +813,6 @@ nc_by_subj %&gt;% pander()</code></pre>
 </tr>
 </tbody>
 </table>
-<p>We use similar code to create data frames containing accuracy scores for subjects who met the inclusion critera for the noun production, predicate comprehension and predicate production tests.</p>
 <pre class="r"><code>np &lt;- data %&gt;%
   filter(sheet == &#39;Noun Production&#39;) %&gt;%
   set_names(~ str_to_lower(.)) %&gt;%
@@ -2151,17 +839,17 @@ pp &lt;- data %&gt;%
   mutate(subj = factor(seq.int(nrow(.))))
 pp &lt;- exclude(pp)</code></pre>
 <pre><code>`summarise()` ungrouping output (override with `.groups` argument)</code></pre>
-<pre class="r"><code>pp_by_subj &lt;- pp %&gt;% select(subj, correct)</code></pre>
-<p>We now join the data for the four word tests into a single data frame, in preparation for calculating our descriptive statistics. Notice how this sets the value <code>NA</code> for subjects who were excluded for any of the tests.</p>
-<pre class="r"><code># join data
+<pre class="r"><code>pp_by_subj &lt;- pp %&gt;% select(subj, correct)
+
+# join data
 task_by_subj &lt;- left_join(demographics, nc_by_subj, by=&#39;subj&#39;) %&gt;%
   left_join(., np_by_subj, by=&#39;subj&#39;, suffix = c(&#39;_nc&#39;,&#39;_np&#39;)) %&gt;%
   left_join(., pc_by_subj, by=&#39;subj&#39;) %&gt;%
   left_join(., pp_by_subj, by=&#39;subj&#39;, suffix = c(&#39;_pc&#39;, &#39;_pp&#39;)) %&gt;%
   left_join(., cards, by=&#39;subj&#39;) %&gt;%
   mutate(nc = correct_nc, np = correct_np, pc = correct_pc, pp = correct_pp) %&gt;%
-  select(subj, gender, nc, np, pc, pp, cards, cdi_u, cdi_s)
-task_by_subj %&gt;% pander()</code></pre>
+  select(subj, gender, nc, np, pc, pp, cards, cdi_u, cdi_s)</code></pre>
+<p>Our preprocessed data has a subject number (<code>subj</code>), the child’s <code>gender</code>, their WinG scores (or <code>NA</code> if they were excluded from one of the tests, <code>nc</code>, <code>np</code>, <code>pc</code>, <code>pp</code>), the <code>cards</code> they were tested with, and their parents’ CDI ‘understands’ (<code>cdi_u</code>) and ‘says’ (<code>cdi_s</code>) ratings.</p>
 <table style="width:86%;">
 <colgroup>
 <col width="9%"></col>
@@ -2399,93 +1087,27 @@ task_by_subj %&gt;% pander()</code></pre>
 </tr>
 </tbody>
 </table>
-<p><strong>Explanation of commands:</strong></p>
-<ol style="list-style-type: decimal">
-<li><code>left_join(demographics, nc_by_subj, by=&#39;subj&#39;)</code> combines columns from the <code>demographics</code> and <code>nc_by_subj</code> data frames where the value of the <code>subj</code> column matches.</li>
-<li>We do the same for the <code>np_by_subj</code>, <code>pc_by_subj</code>, <code>pp_by_subj</code> and <code>cards</code> data frames.</li>
-<li>We rename and reorder the resulting columns and assign the resulting data frame to <code>task_by_subj</code>.</li>
-</ol>
-<p>Our test scores are currently in wide format. We’ll convert these columns to long format so we can calcluate our summary statistics.</p>
+<p><a name="results"></a></p>
+</div>
+<div id="results" class="section level1">
+<h1>Results</h1>
+<div id="cdi-bayesian-t-tests-without-exlusions" class="section level2">
+<h2>CDI: Bayesian t-tests <em>without</em> exlusions</h2>
+<ul>
+<li>NOTE: Their t(22) is becuause 6 @ 24m + 16 @ 30m = 22</li>
+</ul>
+<p>“A t-test confirmed that there were no significant differences between the two groups in the scores for the CDI ‘understands’ (Italian card group M=53.08, SD= 26.47, English card group M=58.33, SD= 21.36), t(22)= -.535, p= .598.”</p>
+<p>&quot; there were no significant differences between the scores for the two groups for the CDI ‘says’ (Italian card group M=40.5, SD=24.76, English card group M=44.75, SD= 23.96), t(22)= -.427, p= .673. Demonstrating that the two groups are of similar abilities and so any differences we find will be due to the differences between the two sets of WinG cards rather than differing abilities between the groups.&quot;</p>
+</div>
+<div id="descriptive-statistics" class="section level2">
+<h2>Descriptive statistics</h2>
+<p>See also: <a href="#better-tables.html">Better tables</a></p>
 <pre class="r"><code>task_by_subj &lt;- task_by_subj %&gt;%
   pivot_longer(cols = c(nc, np, pc, pp),
                names_to = &#39;task&#39;,
                values_to = &#39;correct&#39;)
-task_by_subj %&gt;% head(5) %&gt;% pander()</code></pre>
-<table style="width:82%;">
-<colgroup>
-<col width="9%"></col>
-<col width="12%"></col>
-<col width="13%"></col>
-<col width="11%"></col>
-<col width="11%"></col>
-<col width="9%"></col>
-<col width="13%"></col>
-</colgroup>
-<thead>
-<tr class="header">
-<th align="center">subj</th>
-<th align="center">gender</th>
-<th align="center">cards</th>
-<th align="center">cdi_u</th>
-<th align="center">cdi_s</th>
-<th align="center">task</th>
-<th align="center">correct</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="center">1</td>
-<td align="center">female</td>
-<td align="center">english</td>
-<td align="center">62</td>
-<td align="center">38</td>
-<td align="center">nc</td>
-<td align="center">12</td>
-</tr>
-<tr class="even">
-<td align="center">1</td>
-<td align="center">female</td>
-<td align="center">english</td>
-<td align="center">62</td>
-<td align="center">38</td>
-<td align="center">np</td>
-<td align="center">4</td>
-</tr>
-<tr class="odd">
-<td align="center">1</td>
-<td align="center">female</td>
-<td align="center">english</td>
-<td align="center">62</td>
-<td align="center">38</td>
-<td align="center">pc</td>
-<td align="center">NA</td>
-</tr>
-<tr class="even">
-<td align="center">1</td>
-<td align="center">female</td>
-<td align="center">english</td>
-<td align="center">62</td>
-<td align="center">38</td>
-<td align="center">pp</td>
-<td align="center">NA</td>
-</tr>
-<tr class="odd">
-<td align="center">2</td>
-<td align="center">male</td>
-<td align="center">italian</td>
-<td align="center">60</td>
-<td align="center">59</td>
-<td align="center">nc</td>
-<td align="center">18</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Explanation of commands:</strong></p>
-<ol style="list-style-type: decimal">
-<li><code>pivot_longer()</code> converts columns from wide to long format. The columns to be converted are specified with <code>cols = c(nc, np, pc, pp)</code>. These column names will be converted to factors in the column specified by <code>names_to</code>, in this case <code>task</code>. The values from each of the wide column are moved to the column specified by <code>values_to</code>, in this case <code>correct</code>.</li>
-</ol>
-<p>We can now make a data frame containing summary statistics:</p>
-<pre class="r"><code>task_descriptives &lt;- function(df, y) {
+
+task_descriptives &lt;- function(df, y) {
   df %&gt;%
     summarise(mean = mean(correct, na.rm = TRUE),
               sd = sd(correct, na.rm = TRUE),
@@ -2497,164 +1119,20 @@ descriptives &lt;- task_by_subj %&gt;%
   group_by(task, gender) %&gt;%
   group_modify(task_descriptives) %&gt;%
   ungroup()
-descriptives %&gt;% pander()</code></pre>
-<table style="width:53%;">
-<colgroup>
-<col width="9%"></col>
-<col width="12%"></col>
-<col width="11%"></col>
-<col width="9%"></col>
-<col width="9%"></col>
-</colgroup>
-<thead>
-<tr class="header">
-<th align="center">task</th>
-<th align="center">gender</th>
-<th align="center">mean</th>
-<th align="center">sd</th>
-<th align="center">n</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="center">nc</td>
-<td align="center">male</td>
-<td align="center">16.29</td>
-<td align="center">4.23</td>
-<td align="center">7</td>
-</tr>
-<tr class="even">
-<td align="center">nc</td>
-<td align="center">female</td>
-<td align="center">17.64</td>
-<td align="center">2.2</td>
-<td align="center">11</td>
-</tr>
-<tr class="odd">
-<td align="center">np</td>
-<td align="center">male</td>
-<td align="center">10.43</td>
-<td align="center">3.95</td>
-<td align="center">7</td>
-</tr>
-<tr class="even">
-<td align="center">np</td>
-<td align="center">female</td>
-<td align="center">12.09</td>
-<td align="center">3.24</td>
-<td align="center">11</td>
-</tr>
-<tr class="odd">
-<td align="center">pc</td>
-<td align="center">male</td>
-<td align="center">14.83</td>
-<td align="center">1.6</td>
-<td align="center">6</td>
-</tr>
-<tr class="even">
-<td align="center">pc</td>
-<td align="center">female</td>
-<td align="center">16.2</td>
-<td align="center">1.81</td>
-<td align="center">10</td>
-</tr>
-<tr class="odd">
-<td align="center">pp</td>
-<td align="center">male</td>
-<td align="center">8.5</td>
-<td align="center">2.35</td>
-<td align="center">6</td>
-</tr>
-<tr class="even">
-<td align="center">pp</td>
-<td align="center">female</td>
-<td align="center">8.4</td>
-<td align="center">1.96</td>
-<td align="center">10</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Explanation of commands:</strong></p>
-<ol style="list-style-type: decimal">
-<li>The function <code>task_descriptives()</code> accepts a data frame in argument <code>df</code>, and returns a data frame with <code>mean</code>, <code>sd</code> and <code>n</code> columns containing the mean and standard deviation of <code>df$correct</code> rounded to two decimal places, and the number of subjects for each subgroup. We’ll use this function in the pipeline below.</li>
-<li>We group <code>task_by_subject</code> by gender within task and use <code>group_modify()</code> to call <code>task_descriptives()</code> for each group, returning a data frame with the summary statistics.</li>
-</ol>
-<p>For presenting our data, we pivot this to a wider format with rows containing tests, and columns containing the mean and sd by gender.</p>
-<pre class="r"><code>descriptives &lt;- descriptives %&gt;%
+
+descriptives &lt;- descriptives %&gt;%
   select(-n) %&gt;%
   pivot_wider(names_from = gender, values_from = c(mean, sd)) %&gt;%
   select(task, mean_male, sd_male, mean_female, sd_female)
-descriptives %&gt;% pander()</code></pre>
-<table style="width:79%;">
-<colgroup>
-<col width="9%"></col>
-<col width="16%"></col>
-<col width="13%"></col>
-<col width="19%"></col>
-<col width="19%"></col>
-</colgroup>
-<thead>
-<tr class="header">
-<th align="center">task</th>
-<th align="center">mean_male</th>
-<th align="center">sd_male</th>
-<th align="center">mean_female</th>
-<th align="center">sd_female</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="center">nc</td>
-<td align="center">16.29</td>
-<td align="center">4.23</td>
-<td align="center">17.64</td>
-<td align="center">2.2</td>
-</tr>
-<tr class="even">
-<td align="center">np</td>
-<td align="center">10.43</td>
-<td align="center">3.95</td>
-<td align="center">12.09</td>
-<td align="center">3.24</td>
-</tr>
-<tr class="odd">
-<td align="center">pc</td>
-<td align="center">14.83</td>
-<td align="center">1.6</td>
-<td align="center">16.2</td>
-<td align="center">1.81</td>
-</tr>
-<tr class="even">
-<td align="center">pp</td>
-<td align="center">8.5</td>
-<td align="center">2.35</td>
-<td align="center">8.4</td>
-<td align="center">1.96</td>
-</tr>
-</tbody>
-</table>
-<p>We do some final formatting in prepration for producing our table:</p>
-<pre class="r"><code>descriptives &lt;- descriptives %&gt;%
+
+descriptives &lt;- descriptives %&gt;%
   unite(&quot;male&quot;, mean_male:sd_male, sep=&#39; (&#39;) %&gt;%
   unite(&quot;female&quot;, mean_female:sd_female, sep=&#39; (&#39;) %&gt;%
   mutate(male = paste0(male, &#39;)&#39;), female = paste0(female, &#39;)&#39;), task = factor(task),
          task = recode_factor(.$task, nc = &#39;Noun Comprehension&#39;, np = &#39;Noun Production&#39;,
-                                  pc = &#39;Predicate Comprehension&#39;, pp = &#39;Predicate Production&#39;))</code></pre>
-<p><strong>Explanation of commands:</strong></p>
-<ol style="list-style-type: decimal">
-<li><code>unite(&quot;male&quot;, mean_male:sd_male, sep=&#39; (&#39;)</code> converts the <code>mean_male</code> and <code>sd_male</code> column values to a column <code>male</code> separated by <code>(</code>.</li>
-<li>We do the same for the <code>mean_female</code> and <code>sd_female</code> columns.</li>
-<li><code>mutate(male = paste0(male, &#39;)&#39;), female = paste0(female, &#39;)&#39;), task = factor(task))</code> adds the trailing <code>)</code> to the <code>male</code> and <code>female</code> columns and converts <code>task</code> to a factor.</li>
-<li>We recode <code>task</code> factor levels to more meaningful strings.</li>
-</ol>
-<p>Having prepared our table, it’s simple to produce an HTML table which can be copy-pasted into a Word processor.</p>
-<pre class="r"><code>library(kableExtra)</code></pre>
-<pre><code>
-Attaching package: &#39;kableExtra&#39;</code></pre>
-<pre><code>The following object is masked from &#39;package:dplyr&#39;:
+                              pc = &#39;Predicate Comprehension&#39;, pp = &#39;Predicate Production&#39;))
 
-    group_rows</code></pre>
-<pre class="r"><code>descriptives %&gt;% kable(
+descriptives %&gt;% kable(
   col.names = c(&#39;Task&#39;, &#39;Male&#39;, &#39;Female&#39;)) %&gt;%
   kable_styling()</code></pre>
 <table class="table" style="margin-left: auto; margin-right: auto;">
@@ -2718,482 +1196,68 @@ Predicate Production
 </tr>
 </tbody>
 </table>
-<p><strong>Explanation of commands:</strong></p>
-<ol style="list-style-type: decimal">
-<li><code>library(kableExtra)</code> loads the package containing the <code>kable()</code> function.</li>
-<li>We pipe our data into <code>kable()</code> using <code>col.names</code> to create meaningful column headings, and <code>kable_styling()</code> to produce a reasonably tidy HTML table.</li>
-</ol>
-<p><a name="t-tests"></a></p>
 </div>
 </div>
-<div id="table-of-t-tests" class="section level1">
-<h1>Table of t-tests</h1>
-<p>Where a number of related t-tests need to be reported, these are often easiest to read as a table. The children in this experiment were tested using one of two different sets of picture cards. One set is used in the Italian version of these tasks, the other in the English version. We’ll produce a table of t-tests comparing accuracy for each word in the noun comprehension task between the cards used in the Italian and English tasks.</p>
-<pre class="r"><code>nc_long &lt;- nc %&gt;%
-  select(-correct) %&gt;%
-  mutate(cards = factor(cards)) %&gt;%
-  mutate(cards = recode_factor(.$cards, `1` = &#39;italian&#39;, `2` = &#39;english&#39;)) %&gt;%
-  pivot_longer(cols=(mountain:wellyboots),
-               names_to = &#39;word&#39;,
-               values_to = &#39;answer&#39;)
-nc_long %&gt;% filter(subj == 1) %&gt;% pander(split.table = Inf)</code></pre>
-<table style="width:54%;">
-<colgroup>
-<col width="13%"></col>
-<col width="9%"></col>
-<col width="18%"></col>
-<col width="12%"></col>
-</colgroup>
-<thead>
-<tr class="header">
-<th align="center">cards</th>
-<th align="center">subj</th>
-<th align="center">word</th>
-<th align="center">answer</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="center">english</td>
-<td align="center">1</td>
-<td align="center">mountain</td>
-<td align="center">D</td>
-</tr>
-<tr class="even">
-<td align="center">english</td>
-<td align="center">1</td>
-<td align="center">motorbike</td>
-<td align="center">C</td>
-</tr>
-<tr class="odd">
-<td align="center">english</td>
-<td align="center">1</td>
-<td align="center">penguin</td>
-<td align="center">C</td>
-</tr>
-<tr class="even">
-<td align="center">english</td>
-<td align="center">1</td>
-<td align="center">box</td>
-<td align="center">C</td>
-</tr>
-<tr class="odd">
-<td align="center">english</td>
-<td align="center">1</td>
-<td align="center">apple</td>
-<td align="center">C</td>
-</tr>
-<tr class="even">
-<td align="center">english</td>
-<td align="center">1</td>
-<td align="center">iron</td>
-<td align="center">P</td>
-</tr>
-<tr class="odd">
-<td align="center">english</td>
-<td align="center">1</td>
-<td align="center">cow</td>
-<td align="center">C</td>
-</tr>
-<tr class="even">
-<td align="center">english</td>
-<td align="center">1</td>
-<td align="center">doll</td>
-<td align="center">C</td>
-</tr>
-<tr class="odd">
-<td align="center">english</td>
-<td align="center">1</td>
-<td align="center">hat</td>
-<td align="center">C</td>
-</tr>
-<tr class="even">
-<td align="center">english</td>
-<td align="center">1</td>
-<td align="center">watch</td>
-<td align="center">P</td>
-</tr>
-<tr class="odd">
-<td align="center">english</td>
-<td align="center">1</td>
-<td align="center">sofa</td>
-<td align="center">D</td>
-</tr>
-<tr class="even">
-<td align="center">english</td>
-<td align="center">1</td>
-<td align="center">clouds</td>
-<td align="center">C</td>
-</tr>
-<tr class="odd">
-<td align="center">english</td>
-<td align="center">1</td>
-<td align="center">hammer</td>
-<td align="center">D</td>
-</tr>
-<tr class="even">
-<td align="center">english</td>
-<td align="center">1</td>
-<td align="center">glasses</td>
-<td align="center">C</td>
-</tr>
-<tr class="odd">
-<td align="center">english</td>
-<td align="center">1</td>
-<td align="center">elephant</td>
-<td align="center">C</td>
-</tr>
-<tr class="even">
-<td align="center">english</td>
-<td align="center">1</td>
-<td align="center">backyard</td>
-<td align="center">P</td>
-</tr>
-<tr class="odd">
-<td align="center">english</td>
-<td align="center">1</td>
-<td align="center">spoon</td>
-<td align="center">C</td>
-</tr>
-<tr class="even">
-<td align="center">english</td>
-<td align="center">1</td>
-<td align="center">bib</td>
-<td align="center">P</td>
-</tr>
-<tr class="odd">
-<td align="center">english</td>
-<td align="center">1</td>
-<td align="center">sink</td>
-<td align="center">P</td>
-</tr>
-<tr class="even">
-<td align="center">english</td>
-<td align="center">1</td>
-<td align="center">wellyboots</td>
-<td align="center">C</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Explanation of commands:</strong></p>
-<ol style="list-style-type: decimal">
-<li>Starting with our noun comprehension data <code>nc</code>, we remove the column containing the numer of <code>correct</code> answers for each subject that we generated previously.</li>
-<li>We create our <code>cards</code> factor.</li>
-<li>We <code>pivot_longer()</code>, moving the noun column names into the column <code>word</code>, and the vaules to the column <code>answer</code>.</li>
-</ol>
-<p>Next we calculate the number of correct responses for each card type (Italian or English), for each subject, for each word:</p>
-<pre class="r"><code>correct_word &lt;- function(df, group) {
-  df %&gt;% select(answer) %&gt;% summarise(correct = colSums(. == &#39;C&#39; | . == &#39;C*&#39;))
-}
-nc_long_correct &lt;- nc_long %&gt;%
-  group_by(word, subj, cards) %&gt;%
-  group_modify(correct_word)</code></pre>
-<p><strong>Explanation of commands:</strong></p>
-<ol style="list-style-type: decimal">
-<li>Our function <code>correct_word()</code> accepts a an argument <code>df</code>, which is a data frame containing a column named <code>answer</code>.</li>
-<li>It returns a data frame with a single column <code>correct</code>, which contains <code>1</code> if the subject could comprehend the word (or a synonym), and <code>0</code> if not.</li>
-<li><code>nc_long %&gt;% group_by(word, subj, cards)</code> groups <code>nc_long</code> by <code>cards</code> within <code>subj</code> within <code>word</code>.</li>
-<li><code>group_modify(correct_word)</code> replaces the raw data for each group with our value of <code>1</code> or <code>0</code> for <code>correct</code>.</li>
-</ol>
-<p>We can see that all children knew the word <code>apple</code>, regardless of which set of cards was used:</p>
-<pre class="r"><code>nc_long_correct %&gt;% filter(word == &#39;apple&#39;) %&gt;% pander(split.table = Inf)</code></pre>
-<table style="width:49%;">
-<colgroup>
-<col width="11%"></col>
-<col width="9%"></col>
-<col width="13%"></col>
-<col width="13%"></col>
-</colgroup>
-<thead>
-<tr class="header">
-<th align="center">word</th>
-<th align="center">subj</th>
-<th align="center">cards</th>
-<th align="center">correct</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="center">apple</td>
-<td align="center">1</td>
-<td align="center">english</td>
-<td align="center">1</td>
-</tr>
-<tr class="even">
-<td align="center">apple</td>
-<td align="center">2</td>
-<td align="center">italian</td>
-<td align="center">1</td>
-</tr>
-<tr class="odd">
-<td align="center">apple</td>
-<td align="center">3</td>
-<td align="center">english</td>
-<td align="center">1</td>
-</tr>
-<tr class="even">
-<td align="center">apple</td>
-<td align="center">4</td>
-<td align="center">italian</td>
-<td align="center">1</td>
-</tr>
-<tr class="odd">
-<td align="center">apple</td>
-<td align="center">5</td>
-<td align="center">english</td>
-<td align="center">1</td>
-</tr>
-<tr class="even">
-<td align="center">apple</td>
-<td align="center">6</td>
-<td align="center">italian</td>
-<td align="center">1</td>
-</tr>
-<tr class="odd">
-<td align="center">apple</td>
-<td align="center">7</td>
-<td align="center">english</td>
-<td align="center">1</td>
-</tr>
-<tr class="even">
-<td align="center">apple</td>
-<td align="center">8</td>
-<td align="center">italian</td>
-<td align="center">1</td>
-</tr>
-<tr class="odd">
-<td align="center">apple</td>
-<td align="center">9</td>
-<td align="center">english</td>
-<td align="center">1</td>
-</tr>
-<tr class="even">
-<td align="center">apple</td>
-<td align="center">10</td>
-<td align="center">italian</td>
-<td align="center">1</td>
-</tr>
-<tr class="odd">
-<td align="center">apple</td>
-<td align="center">11</td>
-<td align="center">english</td>
-<td align="center">1</td>
-</tr>
-<tr class="even">
-<td align="center">apple</td>
-<td align="center">12</td>
-<td align="center">italian</td>
-<td align="center">1</td>
-</tr>
-<tr class="odd">
-<td align="center">apple</td>
-<td align="center">13</td>
-<td align="center">english</td>
-<td align="center">1</td>
-</tr>
-<tr class="even">
-<td align="center">apple</td>
-<td align="center">14</td>
-<td align="center">italian</td>
-<td align="center">1</td>
-</tr>
-<tr class="odd">
-<td align="center">apple</td>
-<td align="center">15</td>
-<td align="center">english</td>
-<td align="center">1</td>
-</tr>
-<tr class="even">
-<td align="center">apple</td>
-<td align="center">16</td>
-<td align="center">italian</td>
-<td align="center">1</td>
-</tr>
-<tr class="odd">
-<td align="center">apple</td>
-<td align="center">17</td>
-<td align="center">english</td>
-<td align="center">1</td>
-</tr>
-<tr class="even">
-<td align="center">apple</td>
-<td align="center">19</td>
-<td align="center">italian</td>
-<td align="center">1</td>
-</tr>
-</tbody>
-</table>
-<p>Now we can run our t-tests to compare accuracy for the Italian and English cards:</p>
-<pre class="r"><code>library(BayesFactor, quietly = TRUE)</code></pre>
-<pre><code>
-Attaching package: &#39;Matrix&#39;</code></pre>
-<pre><code>The following objects are masked from &#39;package:tidyr&#39;:
-
-    expand, pack, unpack</code></pre>
-<pre><code>************
-Welcome to BayesFactor 0.9.12-4.2. If you have questions, please contact Richard Morey (richarddmorey@gmail.com).
-
-Type BFManual() to open the manual.
-************</code></pre>
-<pre class="r"><code>t_words &lt;- function(df, group) {
-  bf &lt;- ttestBF(formula=correct ~ cards, data = data.frame(df))
-  extractBF(bf)
-}
-
-nc_bf &lt;- nc_long_correct %&gt;%
-  filter(! word %in% c(&#39;apple&#39;, &#39;cow&#39;, &#39;penguin&#39;,&#39;hat&#39;,&#39;motorbike&#39;)) %&gt;%
-  group_by(word) %&gt;%
-  group_modify(t_words) %&gt;%
-  mutate(bf = round(bf,2)) %&gt;%
-  select(word, bf)</code></pre>
-<p><strong>Explanation of commands:</strong></p>
-<ol style="list-style-type: decimal">
-<li><code>library(BayesFactor, quietly = TRUE)</code> loads the package containing <code>ttestBF()</code>.</li>
-<li>Our function <code>t_words()</code> accepts a data frame in <code>df</code>.</li>
-<li><code>bf &lt;- ttestBF(formula=correct ~ cards, data = data.frame(df))</code> computes a between-subjects Bayesian t-test which compares the number of <code>correct</code> responses between the Italian and English <code>cards</code>.</li>
-<li><code>extractBF(bf)</code> returns the result as a data frame.</li>
-<li>All children had a correct score for <code>apple</code> which would produce an error on our t-test, so we remove this and similar words with <code>nc_long_correct %&gt;% filter(! word %in% c(&#39;apple&#39;, &#39;cow&#39;, &#39;penguin&#39;,&#39;hat&#39;,&#39;motorbike&#39;))</code>.</li>
-<li>We group the remaining rows by <code>word</code> and run <code>t_words()</code> to return a Bayes factor for each word.</li>
-<li>We round <code>bf</code> to two decimal places, and select it along with <code>word</code>.</li>
-</ol>
-<p>Finally, we turn out results into an HTML table:</p>
-<pre class="r"><code>nc_bf %&gt;% kable(
-  col.names = c(&#39;Word&#39;, &#39;Bayes Factor&#39;)) %&gt;%
-  kable_styling()</code></pre>
-<table class="table" style="margin-left: auto; margin-right: auto;">
-<thead>
-<tr>
-<th style="text-align:left;">
-Word
-</th>
-<th style="text-align:right;">
-Bayes Factor
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-backyard
-</td>
-<td style="text-align:right;">
-0.41
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-bib
-</td>
-<td style="text-align:right;">
-0.83
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-box
-</td>
-<td style="text-align:right;">
-0.63
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-clouds
-</td>
-<td style="text-align:right;">
-0.58
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-doll
-</td>
-<td style="text-align:right;">
-0.47
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-elephant
-</td>
-<td style="text-align:right;">
-0.41
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-glasses
-</td>
-<td style="text-align:right;">
-0.88
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-hammer
-</td>
-<td style="text-align:right;">
-0.47
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-iron
-</td>
-<td style="text-align:right;">
-0.57
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-mountain
-</td>
-<td style="text-align:right;">
-0.96
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-sink
-</td>
-<td style="text-align:right;">
-0.47
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-sofa
-</td>
-<td style="text-align:right;">
-0.41
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-spoon
-</td>
-<td style="text-align:right;">
-0.58
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-watch
-</td>
-<td style="text-align:right;">
-0.63
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-wellyboots
-</td>
-<td style="text-align:right;">
-0.58
-</td>
-</tr>
-</tbody>
-</table>
+<div id="table-of-independent-t-test-data-comparing-performance-between-genders" class="section level1">
+<h1>Table of Independent t-test data comparing performance between genders</h1>
+<p>C means correct, C* means correct synonym. These are combined to form correct total.</p>
+<pre class="r"><code># Table 11
+# accuracy (C+C*) ~ NC, NP, PC, PP: M/F BF (t-test)</code></pre>
+</div>
+<div id="cdi_u-correlations" class="section level1">
+<h1>CDI_U correlations</h1>
+<p>Correlations @ 30m, ignore dfs below, ours will be 16 - exclusions for subtest</p>
+<ul>
+<li>CDI_U ~ NC (rs(22) = .396, p= .055)</li>
+<li>CDI_U ~ PC (rs(16) = .027, p= .915)</li>
+</ul>
+</div>
+<div id="cdi_s-correlations" class="section level1">
+<h1>CDI_S correlations</h1>
+<ul>
+<li>CDI_S ~ NP (rs(22) = .771, p&lt;.001)</li>
+<li>CDI_S ~ PP (rs(16) = .260, p=.298)</li>
+</ul>
+</div>
+<div id="comparison-of-english-and-italian-cards" class="section level1">
+<h1>Comparison of English and Italian cards</h1>
+<ul>
+<li><p>Plot mean correct response ~ NC/NP * E/I with CI bars</p></li>
+<li><p>“The number of correct responses for the English cards (mean rank = 15.04) and the Italian cards (mean rank = 9.96) were not statistically significantly different, U = 41.5, z = 1.779, p = .078, using an exact sampling distribution for U (Dineen &amp; Blakesley, 1973).”</p></li>
+<li><p>“The number of correct responses for the English cards (mean rank = 13.08) and the Italian cards (mean rank = 11.92) were not statistically significantly different, U = 65, z = .406, p = .713,”</p></li>
+<li><p>Plot mean correct response ~ PC/PP * E/I with CI bars</p></li>
+</ul>
+<p>C+C* ~ PC/PP * E/I</p>
+<ul>
+<li><p>“The number of correct responses for the English cards (mean rank =7.95) and the Italian cards (mean rank = 11.44) were not statistically significantly different, U = 24.5, z = -1.398, p = .173”</p></li>
+<li><p>“The number of correct responses for the English cards (mean rank = 9.20) and the Italian cards (mean rank = 9.88) were not statistically significantly different, U = 37, z = -.269, p = .829”</p></li>
+</ul>
+</div>
+<div id="non-target-but-semantically-related-errors" class="section level1">
+<h1>Non-target but semantically related errors</h1>
+<p>NTS means non-target but semantically related e.g. the card was “house” but they said “hut”.</p>
+<p>NTS ~ Production(NP/PP) * Card Language(E/I)</p>
+<ul>
+<li>Plot mean semantically related responses (NTS) ~ NNTS/PNTS * E/I with CI bars</li>
+</ul>
+<p>TODO: Allegra says mean rank (order lowest-&gt;highest take middle value) is best way to report Mann Whitney descriptives. This looks the same as the median. Check if there’s a difference.</p>
+<ul>
+<li><p>“A Mann-Whitney-U test was run to determine if there were any statistically significant differences in the number of non-target but semantically related errors elicited by the English WinG cards and the Italian WinG cards in the noun production sub-test. … The number of non-target but semantically related errors was not statistically significantly different between the English cards (Mdn = 3) and the Italian cards (Mdn = 3), U = 65, z = .415, p = .713”</p></li>
+<li><p>“A Mann-Whitney-U test was run to determine if there were differences in the number of non-target but semantically related errors elicited by the English WinG cards and the Italian WinG cards in the predicate production sub-test. Distributions of the scores for the English cards and the Italian cards were not similar, as assessed by visual inspection. The number of correct responses for the English cards (mean rank = 8.60) and the Italian cards (mean rank = 10.62) were not statistically significantly different, U = 31, z = -.821, p = .460”</p></li>
+</ul>
+</div>
+<div id="individual-cards" class="section level1">
+<h1>Individual cards</h1>
+<p>“As Study One found differences in the ratings of individual cards an independent samples t-test was then conducted on the data from Study Two to determine whether there were any significant differences between individual cards in the two sets of WinG cards. The data was coded so that it could be analysed, correct answers were coded as ‘1’ and incorrect answers were coded as ‘0’, (tables with all results from the t-test can be found in the appendices).”</p>
+<p>“For one card it was not possible to conduct a t-test because the standard deviations of both groups were 0, this was for the card Apple.”</p>
+<p>t-tests @ 30m</p>
+<pre class="r"><code># Tables 12-15
+# NC card correct response ~ language M, SD, BF (t-test)</code></pre>
+<p>IV = language DV = correct (C+C*) (by card in sub-test)</p>
+<p>“The independent samples t-test showed that there were only significant differences between three individual cards, Mountain in the noun comprehension sub-test, the English card (M=.833, SD=.389) elicited statistically significantly more correct responses than the Italian card (M=.417, SD=.515), M= -0.42, 95% CI [-0.80, -0.03], t(20.477)=-2.236, p=.037, Book in the noun production sub-test, the English card (M=.750, SD=.452) elicited statistically significantly more correct answers than the Italian card (M=.333, SD=.492), M= -0.42, 95% CI [-0.82, -0.02], t(22)=-2.159, p=.042, and Short in the predicate comprehension sub-test, the English cards (M = 1, SD= .316) elicited significantly more correct responses than the Italian card (M= .625, SD= .518), M= 0.525 , 95% CI [0.066, 0.984], t(11.04)= 2.158, p= .029.”</p>
+</div>
+<div id="references" class="section level1">
+<h1>References</h1>
 <hr />
 <p>This material is distributed under a <a href="https://creativecommons.org/">Creative Commons</a> licence. CC-BY-SA 4.0.</p>
 </div>

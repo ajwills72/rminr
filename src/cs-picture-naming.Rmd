@@ -1,0 +1,350 @@
+---
+title: "Reliability of Targets in a Picture Naming Task"
+author: "Allegra Cattani, Adele Conn, Paul Sharpe"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+## DEVELOPERS: Uncomment one option, as appropriate
+
+## Data required to knit
+## https://github.com/ajwills72/rminr-data/tree/master/going-further/picture-naming.csv
+##
+## I check out rminr-data and make a symbolic link to going-further
+
+## Show only commands.
+## knitr::opts_chunk$set(echo = TRUE, message = FALSE, results='hide', fig.keep = 'none', comment=NA)
+
+## Show commands and output.
+knitr::opts_chunk$set(echo = TRUE, comment=NA, cache = TRUE)
+options(tibble.width = Inf) # show all columns in output
+library(pander)
+```
+
+# Contents
+
+- [Introduction](#intro)
+
+- [Getting started](#start)
+
+- [Preprocessing](#preprocessing)
+
+- [Results](#results)
+
+<a name="intro"></a>
+
+# Introduction
+
+This study was an experiment which evaluated Words in Game (WinG) test, a tool for assessing children’s language development. WinG consists of a set of picture cards which are used in four tests: noun comprehension, noun production, predicate comprehension, and predicate production. The Italian and English versions of the WinG cards use different pictures to depict the associated words. The experiment tested whether English-speaking children produce similar responses for the two sets of cards. This was a 4 (test) x 2 (cards) mixed design.
+
+The data for each test was recorded on a sub-sheet of an Excel spreadsheet. There was also a sub-sheet containing demographic data.
+
+<a name="start"></a>
+
+# Getting started
+
+To prepare for this worksheet, follow these steps:
+
+1. Open the project you used to complete the [Better scales](better-scales.html) worksheet.
+
+<a name="preprocessing"></a>
+
+# Preprocessing
+
+See also: [Better tables](#better-tables.html)
+
+We summarise the preprocessing steps here. They explained in full in the [Better tables](#better-tables.html) worksheet.
+
+We start by reading the data from `picture-naming.xlsx` and preprocessing the demographics sub-sheet. This includes scores for the Communicative Development Inventory (CDI). The CDI is a list of 100 words with columns 'understands' and 'says'. For each word, parents place a tick in these columns if they think their child can understand and/or say the word. The scores for 'understands' (`cdi_u`) and 'says' (`cdi_s`) is a total of the ticked boxes in the two columns.
+
+```{r demographics, message=FALSE}
+rm(list = ls()) # clear the environment
+library(tidyverse)
+library(pander)
+
+# read data
+library(readxl)
+path <- 'going-further/picture-naming.xlsx'
+data <- path %>%
+  excel_sheets() %>%
+  .[-1] %>%
+  set_names() %>%
+  map_df(~ read_excel(path = path, sheet = .x, range = "A1:V20"), .id = "sheet")
+
+# demographics data
+demographics <- data %>%
+  filter(sheet == 'Demographic') %>%
+  set_names(~ str_to_lower(.)) %>%
+  select(gender, cdi_u, cdi_s) %>%
+  mutate(gender = factor(gender), subj = factor(seq.int(nrow(.))))
+demographics$gender <- recode_factor(demographics$gender, Male = 'male', Female = 'female')
+demographics %>% head(3) %>% pander()
+```
+
+Next we preprocess the WinG data. When the experimenters administer WinG, they use a textual coding scheme to record each child's responses. The codes we'll use for the analyses in this worksheet are:
+
+* `N/A` (not to be confused with the `R` data type `NA`) - researchers use this code to indicate that there was some kind of interruption to the task (e.g. the child began crying).
+* `C` or `C*` - `C` indicates that the child responded correctly for the picture on the card, `C*` indicates that the response was a correct synonym. In this experiment, both of these values are considered correct responses.
+
+The `exclude()` function applies the following exclusion criteria to our data:
+
+1. Any subject 'N/A' for one of the first 17 words in a task. This criterion excludes children with insufficient data for analysis for a task.
+1. Any subject in the remaining data whose accuracy was less than two standard deviations below the mean. This is a more general criterion to exlude subjects who had especially low scores for various reasons.
+
+`exclude()` also calculates the total score for each WinG task (noun and predicate comprehension and production).
+
+```{r WinG}
+# task data
+nc <- data %>%
+  filter(sheet == 'Noun Comprehension') %>%
+  set_names(~ str_to_lower(.)) %>%
+  select(mountain:wellyboots, cards) %>%
+  mutate(subj = factor(seq.int(nrow(.))))
+nc %>% head(3) %>% pander(split.table = Inf)
+
+cards <- nc %>%
+  select(subj, cards) %>%
+  mutate(cards = recode_factor(.$cards, `1` = 'italian', `2` = 'english'))
+cards %>% pander()
+
+# apply exclusion criteria to sub-test data
+exclude <- function(df) {
+  # exclude if N/A in item 17 or lower
+  logical_matrix <- df == 'N/A'
+  q17 <- logical_matrix %>%
+    which(arr.ind = TRUE) %>%
+    data.frame() %>%
+    group_by(row) %>%
+    summarise(min = min(col)) %>%
+    mutate(subj = factor(row)) %>%
+    select(subj, min)
+  q17 <- left_join(df, q17, by='subj') %>%
+    replace_na(list(min = 20))
+  q17 <- q17 %>% filter(min > 17) %>% select(-min)
+  
+  # calculate total correct
+  q17 <- q17 %>% mutate(correct = rowSums(. == 'C' | . == 'C*'))
+  
+  # exclude participants with scores < 2 sd below the mean
+  q17 %>% filter(correct < mean(correct) + 2 * sd(correct))
+}
+
+nc <- exclude(nc)
+nc_by_subj <- select(nc, subj, correct)
+nc_by_subj %>% pander()
+
+np <- data %>%
+  filter(sheet == 'Noun Production') %>%
+  set_names(~ str_to_lower(.)) %>%
+  select(beach:gloves) %>%
+  mutate(subj = factor(seq.int(nrow(.))))
+
+np <- exclude(np)
+np_by_subj <- np %>% select(subj, correct)
+
+pc <- data %>%
+  filter(sheet == 'Predicate Comprehension') %>%
+  set_names(~ str_to_lower(.)) %>%
+  select(big:pulling) %>%
+  mutate(subj = factor(seq.int(nrow(.))))
+pc <- exclude(pc)
+
+pc_by_subj <- pc %>% select(subj, correct)
+
+pp <- data %>%
+  filter(sheet == 'Predicate Production') %>%
+  set_names(~ str_to_lower(.)) %>%
+  select(small:pushing) %>%
+  mutate(subj = factor(seq.int(nrow(.))))
+pp <- exclude(pp)
+
+pp_by_subj <- pp %>% select(subj, correct)
+
+# join data
+task_by_subj <- left_join(demographics, nc_by_subj, by='subj') %>%
+  left_join(., np_by_subj, by='subj', suffix = c('_nc','_np')) %>%
+  left_join(., pc_by_subj, by='subj') %>%
+  left_join(., pp_by_subj, by='subj', suffix = c('_pc', '_pp')) %>%
+  left_join(., cards, by='subj') %>%
+  mutate(nc = correct_nc, np = correct_np, pc = correct_pc, pp = correct_pp) %>%
+  select(subj, gender, nc, np, pc, pp, cards, cdi_u, cdi_s)
+```
+
+Our preprocessed data has a subject number (`subj`), the child's `gender`, their WinG scores (or `NA` if they were excluded from one of the tests, `nc`, `np`, `pc`, `pp`), the `cards` they were tested with, and their parents' CDI 'understands' (`cdi_u`) and 'says' (`cdi_s`) ratings.
+
+```{r echo=FALSE}
+task_by_subj %>% pander()
+```
+
+<a name="results"></a>
+
+# Results
+
+## CDI: Bayesian t-tests _without_ exlusions
+
+
+
+* NOTE: Their t(22) is becuause 6 @ 24m + 16 @ 30m = 22
+
+"A t-test confirmed that there were no significant differences between the
+two groups in the scores for the CDI ‘understands’ (Italian card group M=53.08, SD=
+26.47, English card group M=58.33, SD= 21.36), t(22)= -.535, p= .598."
+
+```{r cdi-understands}
+```
+
+" there were no significant differences between the scores for the
+two groups for the CDI ‘says’ (Italian card group M=40.5, SD=24.76, English card
+group M=44.75, SD= 23.96), t(22)= -.427, p= .673. Demonstrating that the two
+groups are of similar abilities and so any differences we find will be due to the
+differences between the two sets of WinG cards rather than differing abilities
+between the groups."
+
+```{r cdi-says}
+```
+ 
+## Descriptive statistics
+
+See also: [Better tables](#better-tables.html)
+
+```{r descriptives}
+
+task_by_subj <- task_by_subj %>%
+  pivot_longer(cols = c(nc, np, pc, pp),
+               names_to = 'task',
+               values_to = 'correct')
+
+task_descriptives <- function(df, y) {
+  df %>%
+    summarise(mean = mean(correct, na.rm = TRUE),
+              sd = sd(correct, na.rm = TRUE),
+              n = sum(! is.na(correct))) %>%
+    mutate_if(is.numeric, round, 2)
+}
+
+descriptives <- task_by_subj %>%
+  group_by(task, gender) %>%
+  group_modify(task_descriptives) %>%
+  ungroup()
+
+descriptives <- descriptives %>%
+  select(-n) %>%
+  pivot_wider(names_from = gender, values_from = c(mean, sd)) %>%
+  select(task, mean_male, sd_male, mean_female, sd_female)
+
+descriptives <- descriptives %>%
+  unite("male", mean_male:sd_male, sep=' (') %>%
+  unite("female", mean_female:sd_female, sep=' (') %>%
+  mutate(male = paste0(male, ')'), female = paste0(female, ')'), task = factor(task),
+         task = recode_factor(.$task, nc = 'Noun Comprehension', np = 'Noun Production',
+                              pc = 'Predicate Comprehension', pp = 'Predicate Production'))
+
+descriptives %>% kable(
+  col.names = c('Task', 'Male', 'Female')) %>%
+  kable_styling()
+```
+
+# Table of Independent t-test data comparing performance between genders
+
+C means correct, C* means correct synonym. These are combined to form correct total.
+
+```{r table-task-by-gender}
+# Table 11
+# accuracy (C+C*) ~ NC, NP, PC, PP: M/F BF (t-test)
+```
+
+# CDI_U correlations
+
+Correlations @ 30m, ignore dfs below, ours will be 16 - exclusions for subtest
+
+* CDI_U ~ NC (rs(22) = .396, p= .055)
+* CDI_U ~ PC (rs(16) = .027, p= .915)
+
+# CDI_S correlations
+
+* CDI_S ~ NP (rs(22) = .771, p<.001)
+* CDI_S ~ PP (rs(16) = .260, p=.298)
+
+# Comparison of English and Italian cards
+
+* Plot mean correct response ~ NC/NP * E/I with CI bars
+
+* "The number of correct responses for the English cards (mean rank
+= 15.04) and the Italian cards (mean rank = 9.96) were not statistically significantly
+different, U = 41.5, z = 1.779, p = .078, using an exact sampling distribution for U
+(Dineen & Blakesley, 1973)."
+
+* "The number of correct responses for the English cards (mean rank = 13.08) and the
+Italian cards (mean rank = 11.92) were not statistically significantly different, U = 65,
+z = .406, p = .713,"
+
+* Plot mean correct response ~ PC/PP * E/I with CI bars
+
+C+C* ~ PC/PP * E/I
+
+* "The number of correct responses for the English cards (mean rank =7.95) and the Italian cards (mean rank = 11.44) were not statistically significantly different, U = 24.5, z = -1.398,
+p = .173"
+
+* "The number of correct responses for the English cards (mean rank = 9.20) and the Italian cards (mean rank = 9.88) were not statistically significantly different, U = 37, z = -.269, p = .829"
+
+# Non-target but semantically related errors
+
+NTS means non-target but semantically related e.g. the card was "house" but they said "hut".
+
+NTS ~ Production(NP/PP) * Card Language(E/I)
+
+* Plot mean semantically related responses (NTS) ~ NNTS/PNTS * E/I with CI bars
+
+TODO: Allegra says mean rank (order lowest->highest take middle value) is best way to report Mann Whitney descriptives. This looks the same as the median. Check if there's a difference.
+
+* "A Mann-Whitney-U test was run to determine if there were any statistically
+significant differences in the number of non-target but semantically related errors
+elicited by the English WinG cards and the Italian WinG cards in the noun production
+sub-test. ... The number of non-target but semantically related errors was not statistically significantly different between the English cards (Mdn = 3) and the Italian cards (Mdn = 3), U = 65, z = .415, p = .713"
+
+* "A Mann-Whitney-U test was run to determine if there were differences in the
+number of non-target but semantically related errors elicited by the English WinG
+cards and the Italian WinG cards in the predicate production sub-test. Distributions of
+the scores for the English cards and the Italian cards were not similar, as assessed
+by visual inspection. The number of correct responses for the English cards (mean
+rank = 8.60) and the Italian cards (mean rank = 10.62) were not statistically
+significantly different, U = 31, z = -.821, p = .460"
+
+# Individual cards
+
+"As Study One found differences in the ratings of individual cards an
+independent samples t-test was then conducted on the data from Study Two to
+determine whether there were any significant differences between individual cards in
+the two sets of WinG cards. The data was coded so that it could be analysed, correct
+answers were coded as ‘1’ and incorrect answers were coded as ‘0’, (tables with all
+results from the t-test can be found in the appendices)."
+
+"For one card it was not possible to conduct a t-test because the standard deviations of both groups were 0, this was for the card Apple."
+
+t-tests @ 30m
+
+```{r tables-test-language}
+# Tables 12-15
+# NC card correct response ~ language M, SD, BF (t-test)
+```
+
+IV = language
+DV = correct (C+C*) (by card in sub-test)
+
+"The independent samples t-test showed that there were only significant
+differences between three individual cards, Mountain in the noun comprehension
+sub-test, the English card (M=.833, SD=.389) elicited statistically significantly more
+correct responses than the Italian card (M=.417, SD=.515), M= -0.42, 95% CI [-0.80,
+-0.03], t(20.477)=-2.236, p=.037, Book in the noun production sub-test, the English
+card (M=.750, SD=.452) elicited statistically significantly more correct answers than
+the Italian card (M=.333, SD=.492), M= -0.42, 95% CI [-0.82, -0.02], t(22)=-2.159,
+p=.042, and Short in the predicate comprehension sub-test, the English cards (M = 1,
+SD= .316) elicited significantly more correct responses than the Italian card (M= .625,
+SD= .518), M= 0.525 , 95% CI [0.066, 0.984], t(11.04)= 2.158, p= .029."
+
+# References
+
+___
+
+This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0. 
+
