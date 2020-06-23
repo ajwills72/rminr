@@ -389,7 +389,7 @@ summary {
 </div>
 <div id="introduction" class="section level1">
 <h1>Introduction</h1>
-<p>This study was an experiment which evaluated Words in Game (WinG) test, a tool for assessing children’s language development. WinG consists of a set of picture cards which are used in four tests: noun comprehension, noun production, predicate comprehension, and predicate production. The Italian and English versions of the WinG cards use different pictures to depict the associated words. The experiment tested whether English-speaking children produce similar responses for the two sets of cards. This was a 4 (test) x 2 (cards) mixed design.</p>
+<p>This study was an experiment which evaluated Words in Game (WinG) test, a tool for assessing children’s language development. WinG consists of a set of picture cards which are used in four tests: noun comprehension, noun production, predicate comprehension, and predicate production. The Italian and English versions of the WinG cards use different pictures to depict the associated words. The experiment tested whether English-speaking children aged approximately 30 months, produce similar responses for the two sets of cards. This was a 4 (test) x 2 (cards) mixed design.</p>
 <p>The data for each test was recorded on a sub-sheet of an Excel spreadsheet. There was also a sub-sheet containing demographic data.</p>
 <p><a name="start"></a></p>
 </div>
@@ -848,8 +848,9 @@ task_by_subj &lt;- left_join(demographics, nc_by_subj, by=&#39;subj&#39;) %&gt;%
   left_join(., pp_by_subj, by=&#39;subj&#39;, suffix = c(&#39;_pc&#39;, &#39;_pp&#39;)) %&gt;%
   left_join(., cards, by=&#39;subj&#39;) %&gt;%
   mutate(nc = correct_nc, np = correct_np, pc = correct_pc, pp = correct_pp) %&gt;%
-  select(subj, gender, nc, np, pc, pp, cards, cdi_u, cdi_s)</code></pre>
-<p>Our preprocessed data has a subject number (<code>subj</code>), the child’s <code>gender</code>, their WinG scores (or <code>NA</code> if they were excluded from one of the tests, <code>nc</code>, <code>np</code>, <code>pc</code>, <code>pp</code>), the <code>cards</code> they were tested with, and their parents’ CDI ‘understands’ (<code>cdi_u</code>) and ‘says’ (<code>cdi_s</code>) ratings.</p>
+  select(subj, gender, nc, np, pc, pp, cards, cdi_u, cdi_s)
+task_by_subj &lt;- as.data.frame(task_by_subj)</code></pre>
+<p>Our preprocessed data, <code>task_by_subj</code>, includes a subject number (<code>subj</code>), the child’s <code>gender</code>, their WinG scores (or <code>NA</code> if they were excluded from one of the tests, <code>nc</code>, <code>np</code>, <code>pc</code>, <code>pp</code>), the <code>cards</code> they were tested with, and their parents’ CDI ‘understands’ (<code>cdi_u</code>) and ‘says’ (<code>cdi_s</code>) ratings.</p>
 <table style="width:86%;">
 <colgroup>
 <col width="9%"></col>
@@ -1091,17 +1092,38 @@ task_by_subj &lt;- left_join(demographics, nc_by_subj, by=&#39;subj&#39;) %&gt;%
 </div>
 <div id="results" class="section level1">
 <h1>Results</h1>
-<div id="cdi-bayesian-t-tests-without-exlusions" class="section level2">
-<h2>CDI: Bayesian t-tests <em>without</em> exlusions</h2>
-<ul>
-<li>NOTE: Their t(22) is becuause 6 @ 24m + 16 @ 30m = 22</li>
-</ul>
-<p>“A t-test confirmed that there were no significant differences between the two groups in the scores for the CDI ‘understands’ (Italian card group M=53.08, SD= 26.47, English card group M=58.33, SD= 21.36), t(22)= -.535, p= .598.”</p>
-<p>&quot; there were no significant differences between the scores for the two groups for the CDI ‘says’ (Italian card group M=40.5, SD=24.76, English card group M=44.75, SD= 23.96), t(22)= -.427, p= .673. Demonstrating that the two groups are of similar abilities and so any differences we find will be due to the differences between the two sets of WinG cards rather than differing abilities between the groups.&quot;</p>
+<div id="compare-language-ability-between-groups" class="section level2">
+<h2>Compare language ability between groups</h2>
+<p>See also: <a href="evidence.html">Evidence</a></p>
+<p>For our first analysis, we want to check that there were no differences between the children assigned to the Italian and English card groups. We do this using t-tests of their parents’ CDI ratings.</p>
+<pre class="r"><code>library(BayesFactor, quietly=TRUE)
+cdi_u_bf &lt;- ttestBF(formula=cdi_u ~ cards, data = task_by_subj)
+cdi_u_bf</code></pre>
+<pre><code>Bayes factor analysis
+--------------
+[1] Alt., r=0.707 : 0.404659 ±0%
+
+Against denominator:
+  Null, mu1-mu2 = 0 
+---
+Bayes factor type: BFindepSample, JZS</code></pre>
+<pre class="r"><code>cdi_s_bf &lt;- ttestBF(formula=cdi_s ~ cards, data = task_by_subj)
+cdi_s_bf</code></pre>
+<pre><code>Bayes factor analysis
+--------------
+[1] Alt., r=0.707 : 0.4518936 ±0%
+
+Against denominator:
+  Null, mu1-mu2 = 0 
+---
+Bayes factor type: BFindepSample, JZS</code></pre>
+<pre class="r"><code># NOTE: Their t(22) is becuause 6 @ 24m + 16 @ 30m = 22</code></pre>
+<p>Our Bayes factors (CDI understands = <code>0.40</code>; CDI says = <code>0.45</code>) do not provide evidence of differences between the children tested using the Italian and English cards, giving us some confidence that the two groups are matched on language ability.</p>
 </div>
 <div id="descriptive-statistics" class="section level2">
 <h2>Descriptive statistics</h2>
 <p>See also: <a href="#better-tables.html">Better tables</a></p>
+<p>Next we produce a table of descriptive statistics. We start by calculating means and standard deviations for each WinG task by gender.</p>
 <pre class="r"><code>task_by_subj &lt;- task_by_subj %&gt;%
   pivot_longer(cols = c(nc, np, pc, pp),
                names_to = &#39;task&#39;,
@@ -1125,15 +1147,137 @@ descriptives &lt;- descriptives %&gt;%
   pivot_wider(names_from = gender, values_from = c(mean, sd)) %&gt;%
   select(task, mean_male, sd_male, mean_female, sd_female)
 
-descriptives &lt;- descriptives %&gt;%
+descriptives %&gt;% pander()</code></pre>
+<table style="width:79%;">
+<colgroup>
+<col width="9%"></col>
+<col width="16%"></col>
+<col width="13%"></col>
+<col width="19%"></col>
+<col width="19%"></col>
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">task</th>
+<th align="center">mean_male</th>
+<th align="center">sd_male</th>
+<th align="center">mean_female</th>
+<th align="center">sd_female</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">nc</td>
+<td align="center">16.29</td>
+<td align="center">4.23</td>
+<td align="center">17.64</td>
+<td align="center">2.2</td>
+</tr>
+<tr class="even">
+<td align="center">np</td>
+<td align="center">10.43</td>
+<td align="center">3.95</td>
+<td align="center">12.09</td>
+<td align="center">3.24</td>
+</tr>
+<tr class="odd">
+<td align="center">pc</td>
+<td align="center">14.83</td>
+<td align="center">1.6</td>
+<td align="center">16.2</td>
+<td align="center">1.81</td>
+</tr>
+<tr class="even">
+<td align="center">pp</td>
+<td align="center">8.5</td>
+<td align="center">2.35</td>
+<td align="center">8.4</td>
+<td align="center">1.96</td>
+</tr>
+</tbody>
+</table>
+<p>We’ll add to this data frame some t-tests comparing accuracy by gender for each WinG test.</p>
+<pre class="r"><code># t-test for accuracy by gender
+t_gender &lt;- function(df, group) {
+  df &lt;- drop_na(df) # remove data for excluded subjects
+  bf &lt;- ttestBF(formula=correct ~ gender, data = data.frame(df))
+  extractBF(bf)
+}
+
+gender_bf &lt;- task_by_subj %&gt;%
+  group_by(task) %&gt;%
+  group_modify(t_gender) %&gt;%
+  mutate(bf = round(bf,2)) %&gt;%
+  select(task, bf)
+
+descriptives &lt;- left_join(descriptives, gender_bf, by = &#39;task&#39;)
+
+descriptives %&gt;% pander()</code></pre>
+<table style="width:86%;">
+<colgroup>
+<col width="9%"></col>
+<col width="16%"></col>
+<col width="13%"></col>
+<col width="19%"></col>
+<col width="16%"></col>
+<col width="9%"></col>
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">task</th>
+<th align="center">mean_male</th>
+<th align="center">sd_male</th>
+<th align="center">mean_female</th>
+<th align="center">sd_female</th>
+<th align="center">bf</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">nc</td>
+<td align="center">16.29</td>
+<td align="center">4.23</td>
+<td align="center">17.64</td>
+<td align="center">2.2</td>
+<td align="center">0.55</td>
+</tr>
+<tr class="even">
+<td align="center">np</td>
+<td align="center">10.43</td>
+<td align="center">3.95</td>
+<td align="center">12.09</td>
+<td align="center">3.24</td>
+<td align="center">0.58</td>
+</tr>
+<tr class="odd">
+<td align="center">pc</td>
+<td align="center">14.83</td>
+<td align="center">1.6</td>
+<td align="center">16.2</td>
+<td align="center">1.81</td>
+<td align="center">0.91</td>
+</tr>
+<tr class="even">
+<td align="center">pp</td>
+<td align="center">8.5</td>
+<td align="center">2.35</td>
+<td align="center">8.4</td>
+<td align="center">1.96</td>
+<td align="center">0.44</td>
+</tr>
+</tbody>
+</table>
+<p>We tidy up the data and then present the data frame as a table.</p>
+<pre class="r"><code>descriptives &lt;- descriptives %&gt;%
   unite(&quot;male&quot;, mean_male:sd_male, sep=&#39; (&#39;) %&gt;%
   unite(&quot;female&quot;, mean_female:sd_female, sep=&#39; (&#39;) %&gt;%
   mutate(male = paste0(male, &#39;)&#39;), female = paste0(female, &#39;)&#39;), task = factor(task),
          task = recode_factor(.$task, nc = &#39;Noun Comprehension&#39;, np = &#39;Noun Production&#39;,
                               pc = &#39;Predicate Comprehension&#39;, pp = &#39;Predicate Production&#39;))
 
+library(kableExtra)
 descriptives %&gt;% kable(
-  col.names = c(&#39;Task&#39;, &#39;Male&#39;, &#39;Female&#39;)) %&gt;%
+  col.names = c(&#39;Task&#39;, &#39;Male&#39;, &#39;Female&#39;, &#39;Bayes Factor&#39;)) %&gt;%
   kable_styling()</code></pre>
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <thead>
@@ -1146,6 +1290,9 @@ Male
 </th>
 <th style="text-align:left;">
 Female
+</th>
+<th style="text-align:right;">
+Bayes Factor
 </th>
 </tr>
 </thead>
@@ -1160,6 +1307,9 @@ Noun Comprehension
 <td style="text-align:left;">
 17.64 (2.2)
 </td>
+<td style="text-align:right;">
+0.55
+</td>
 </tr>
 <tr>
 <td style="text-align:left;">
@@ -1170,6 +1320,9 @@ Noun Production
 </td>
 <td style="text-align:left;">
 12.09 (3.24)
+</td>
+<td style="text-align:right;">
+0.58
 </td>
 </tr>
 <tr>
@@ -1182,6 +1335,9 @@ Predicate Comprehension
 <td style="text-align:left;">
 16.2 (1.81)
 </td>
+<td style="text-align:right;">
+0.91
+</td>
 </tr>
 <tr>
 <td style="text-align:left;">
@@ -1193,16 +1349,14 @@ Predicate Production
 <td style="text-align:left;">
 8.4 (1.96)
 </td>
+<td style="text-align:right;">
+0.44
+</td>
 </tr>
 </tbody>
 </table>
+<p>The Bayes factors provide no evidence of differences in accuracy between male and female children, suggesting that test scores are not influenced by gender differences.</p>
 </div>
-</div>
-<div id="table-of-independent-t-test-data-comparing-performance-between-genders" class="section level1">
-<h1>Table of Independent t-test data comparing performance between genders</h1>
-<p>C means correct, C* means correct synonym. These are combined to form correct total.</p>
-<pre class="r"><code># Table 11
-# accuracy (C+C*) ~ NC, NP, PC, PP: M/F BF (t-test)</code></pre>
 </div>
 <div id="cdi_u-correlations" class="section level1">
 <h1>CDI_U correlations</h1>

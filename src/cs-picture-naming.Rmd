@@ -17,8 +17,6 @@ output: html_document
 
 ## Show commands and output.
 knitr::opts_chunk$set(echo = TRUE, comment=NA, cache = TRUE)
-options(tibble.width = Inf) # show all columns in output
-library(pander)
 ```
 
 # Contents
@@ -35,7 +33,7 @@ library(pander)
 
 # Introduction
 
-This study was an experiment which evaluated Words in Game (WinG) test, a tool for assessing children’s language development. WinG consists of a set of picture cards which are used in four tests: noun comprehension, noun production, predicate comprehension, and predicate production. The Italian and English versions of the WinG cards use different pictures to depict the associated words. The experiment tested whether English-speaking children produce similar responses for the two sets of cards. This was a 4 (test) x 2 (cards) mixed design.
+This study was an experiment which evaluated Words in Game (WinG) test, a tool for assessing children’s language development. WinG consists of a set of picture cards which are used in four tests: noun comprehension, noun production, predicate comprehension, and predicate production. The Italian and English versions of the WinG cards use different pictures to depict the associated words. The experiment tested whether English-speaking children aged approximately 30 months, produce similar responses for the two sets of cards. This was a 4 (test) x 2 (cards) mixed design.
 
 The data for each test was recorded on a sub-sheet of an Excel spreadsheet. There was also a sub-sheet containing demographic data.
 
@@ -168,9 +166,10 @@ task_by_subj <- left_join(demographics, nc_by_subj, by='subj') %>%
   left_join(., cards, by='subj') %>%
   mutate(nc = correct_nc, np = correct_np, pc = correct_pc, pp = correct_pp) %>%
   select(subj, gender, nc, np, pc, pp, cards, cdi_u, cdi_s)
+task_by_subj <- as.data.frame(task_by_subj)
 ```
 
-Our preprocessed data has a subject number (`subj`), the child's `gender`, their WinG scores (or `NA` if they were excluded from one of the tests, `nc`, `np`, `pc`, `pp`), the `cards` they were tested with, and their parents' CDI 'understands' (`cdi_u`) and 'says' (`cdi_s`) ratings.
+Our preprocessed data, `task_by_subj`, includes a subject number (`subj`), the child's `gender`, their WinG scores (or `NA` if they were excluded from one of the tests, `nc`, `np`, `pc`, `pp`), the `cards` they were tested with, and their parents' CDI 'understands' (`cdi_u`) and 'says' (`cdi_s`) ratings.
 
 ```{r echo=FALSE}
 task_by_subj %>% pander()
@@ -180,35 +179,33 @@ task_by_subj %>% pander()
 
 # Results
 
-## CDI: Bayesian t-tests _without_ exlusions
+## Compare language ability between groups
 
+See also: [Evidence](evidence.html)
 
+For our first analysis, we want to check that there were no differences between the children assigned to the Italian and English card groups. We do this using t-tests of their parents' CDI ratings.
 
-* NOTE: Their t(22) is becuause 6 @ 24m + 16 @ 30m = 22
-
-"A t-test confirmed that there were no significant differences between the
-two groups in the scores for the CDI ‘understands’ (Italian card group M=53.08, SD=
-26.47, English card group M=58.33, SD= 21.36), t(22)= -.535, p= .598."
-
-```{r cdi-understands}
+```{r cdi}
+library(BayesFactor, quietly=TRUE)
+cdi_u_bf <- ttestBF(formula=cdi_u ~ cards, data = task_by_subj)
+cdi_u_bf
+cdi_s_bf <- ttestBF(formula=cdi_s ~ cards, data = task_by_subj)
+cdi_s_bf
 ```
 
-" there were no significant differences between the scores for the
-two groups for the CDI ‘says’ (Italian card group M=40.5, SD=24.76, English card
-group M=44.75, SD= 23.96), t(22)= -.427, p= .673. Demonstrating that the two
-groups are of similar abilities and so any differences we find will be due to the
-differences between the two sets of WinG cards rather than differing abilities
-between the groups."
-
-```{r cdi-says}
+```{r eval=FALSE}
+# NOTE: Their t(22) is becuause 6 @ 24m + 16 @ 30m = 22
 ```
- 
+
+Our Bayes factors (CDI understands = `0.40`; CDI says = `0.45`) do not provide evidence of differences between the children tested using the Italian and English cards, giving us some confidence that the two groups are matched on language ability.
+
 ## Descriptive statistics
 
 See also: [Better tables](#better-tables.html)
 
-```{r descriptives}
+Next we produce a table of descriptive statistics. We start by calculating means and standard deviations for each WinG task by gender.
 
+```{r descriptives}
 task_by_subj <- task_by_subj %>%
   pivot_longer(cols = c(nc, np, pc, pp),
                names_to = 'task',
@@ -232,6 +229,33 @@ descriptives <- descriptives %>%
   pivot_wider(names_from = gender, values_from = c(mean, sd)) %>%
   select(task, mean_male, sd_male, mean_female, sd_female)
 
+descriptives %>% pander()
+```
+
+We'll add to this data frame some t-tests comparing accuracy by gender for each WinG test.
+
+```{r WinG-t-by-gender}
+# t-test for accuracy by gender
+t_gender <- function(df, group) {
+  df <- drop_na(df) # remove data for excluded subjects
+  bf <- ttestBF(formula=correct ~ gender, data = data.frame(df))
+  extractBF(bf)
+}
+
+gender_bf <- task_by_subj %>%
+  group_by(task) %>%
+  group_modify(t_gender) %>%
+  mutate(bf = round(bf,2)) %>%
+  select(task, bf)
+
+descriptives <- left_join(descriptives, gender_bf, by = 'task')
+
+descriptives %>% pander()
+```
+
+We tidy up the data and then present the data frame as a table.
+
+```{r descriptives-presentation}
 descriptives <- descriptives %>%
   unite("male", mean_male:sd_male, sep=' (') %>%
   unite("female", mean_female:sd_female, sep=' (') %>%
@@ -239,19 +263,13 @@ descriptives <- descriptives %>%
          task = recode_factor(.$task, nc = 'Noun Comprehension', np = 'Noun Production',
                               pc = 'Predicate Comprehension', pp = 'Predicate Production'))
 
+library(kableExtra)
 descriptives %>% kable(
-  col.names = c('Task', 'Male', 'Female')) %>%
+  col.names = c('Task', 'Male', 'Female', 'Bayes Factor')) %>%
   kable_styling()
 ```
 
-# Table of Independent t-test data comparing performance between genders
-
-C means correct, C* means correct synonym. These are combined to form correct total.
-
-```{r table-task-by-gender}
-# Table 11
-# accuracy (C+C*) ~ NC, NP, PC, PP: M/F BF (t-test)
-```
+The Bayes factors provide no evidence of differences in accuracy between male and female children, suggesting that test scores are not influenced by gender differences.
 
 # CDI_U correlations
 
