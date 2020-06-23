@@ -49,7 +49,7 @@ To prepare for this worksheet, follow these steps:
 
 # Preprocessing
 
-See also: [Better tables](#better-tables.html)
+Relevant worksheets: [Better tables](#better-tables.html)
 
 We summarise the preprocessing steps here. They explained in full in the [Better tables](#better-tables.html) worksheet.
 
@@ -181,7 +181,7 @@ task_by_subj %>% pander()
 
 ## Compare language ability between groups
 
-See also: [Evidence](evidence.html)
+Relevant worksheets: [Evidence](evidence.html)
 
 For our first analysis, we want to check that there were no differences between the children assigned to the Italian and English card groups. We do this using t-tests of their parents' CDI ratings.
 
@@ -201,12 +201,12 @@ Our Bayes factors (CDI understands = `0.40`; CDI says = `0.45`) do not provide e
 
 ## Descriptive statistics
 
-See also: [Better tables](#better-tables.html)
+Relevant worksheets: [Better tables](#better-tables.html)
 
 Next we produce a table of descriptive statistics. We start by calculating means and standard deviations for each WinG task by gender.
 
 ```{r descriptives}
-task_by_subj <- task_by_subj %>%
+task_by_subj_l <- task_by_subj %>%
   pivot_longer(cols = c(nc, np, pc, pp),
                names_to = 'task',
                values_to = 'correct')
@@ -219,7 +219,7 @@ task_descriptives <- function(df, y) {
     mutate_if(is.numeric, round, 2)
 }
 
-descriptives <- task_by_subj %>%
+descriptives <- task_by_subj_l %>%
   group_by(task, gender) %>%
   group_modify(task_descriptives) %>%
   ungroup()
@@ -242,7 +242,7 @@ t_gender <- function(df, group) {
   extractBF(bf)
 }
 
-gender_bf <- task_by_subj %>%
+gender_bf <- task_by_subj_l %>%
   group_by(task) %>%
   group_modify(t_gender) %>%
   mutate(bf = round(bf,2)) %>%
@@ -271,17 +271,33 @@ descriptives %>% kable(
 
 The Bayes factors provide no evidence of differences in accuracy between male and female children, suggesting that test scores are not influenced by gender differences.
 
-# CDI_U correlations
+## Correlations between CDI and WinG
 
-Correlations @ 30m, ignore dfs below, ours will be 16 - exclusions for subtest
+Relevant worksheets: [Relationships, part 2](corr.html)
 
-* CDI_U ~ NC (rs(22) = .396, p= .055)
-* CDI_U ~ PC (rs(16) = .027, p= .915)
+Next we look at correlations between parents' ratings of their child's comprehension (CDI understands) and the child's comprehension scores on the noun and predicate tests. We use the `spearman` method of calculating the correlation between `task_by_subj$cdi_u` and `task_by_subj$nc`. The option `use="complete.obs"` deletes any cases with a value of `NA`. We set cells to `NA` above to indicate that a subject was excluded from a test. 
 
-# CDI_S correlations
+```{r cdi_u_correlations}
+cor(method = 'spearman', task_by_subj$cdi_u, task_by_subj$nc, use="complete.obs")
+correlationBF(task_by_subj$cdi_u, task_by_subj$nc)
 
-* CDI_S ~ NP (rs(22) = .771, p<.001)
-* CDI_S ~ PP (rs(16) = .260, p=.298)
+cor(method = 'spearman', task_by_subj$cdi_u, task_by_subj$pc, use="complete.obs")
+correlationBF(task_by_subj$cdi_u, task_by_subj$pc)
+```
+
+The Bayes factors for correlations of 0.70 for noun comprehension, and 0.55 for predicate comprehension do not provide evidence for a correlation between the childrens' comprehension scores and their parents' ratings of their comprehension. 
+
+We look at similar correlations between parents' ratings of their child's ability to say words (CDI says), and the childrens' noun and predicate production scores.
+
+```{r cdi_s_correlations}
+cor(method = 'spearman', task_by_subj$cdi_s, task_by_subj$np, use="complete.obs")
+correlationBF(task_by_subj$cdi_s, task_by_subj$np)
+
+cor(method = 'spearman', task_by_subj$cdi_s, task_by_subj$pp, use="complete.obs")
+correlationBF(task_by_subj$cdi_s, task_by_subj$pp)
+```
+
+Here there was a strong positive correlation (_r_ = 0.57, _BF_ = 5.09) between the parents' ratings of the words their children could say and the children's scores on the noun production test. There was no evidence for a correlation between CDI says and predicate production scores (_BF_ = 0.59).
 
 # Comparison of English and Italian cards
 

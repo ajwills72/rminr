@@ -403,7 +403,7 @@ summary {
 </div>
 <div id="preprocessing" class="section level1">
 <h1>Preprocessing</h1>
-<p>See also: <a href="#better-tables.html">Better tables</a></p>
+<p>Relevant worksheets: <a href="#better-tables.html">Better tables</a></p>
 <p>We summarise the preprocessing steps here. They explained in full in the <a href="#better-tables.html">Better tables</a> worksheet.</p>
 <p>We start by reading the data from <code>picture-naming.xlsx</code> and preprocessing the demographics sub-sheet. This includes scores for the Communicative Development Inventory (CDI). The CDI is a list of 100 words with columns ‘understands’ and ‘says’. For each word, parents place a tick in these columns if they think their child can understand and/or say the word. The scores for ‘understands’ (<code>cdi_u</code>) and ‘says’ (<code>cdi_s</code>) is a total of the ticked boxes in the two columns.</p>
 <pre class="r"><code>rm(list = ls()) # clear the environment
@@ -1094,7 +1094,7 @@ task_by_subj &lt;- as.data.frame(task_by_subj)</code></pre>
 <h1>Results</h1>
 <div id="compare-language-ability-between-groups" class="section level2">
 <h2>Compare language ability between groups</h2>
-<p>See also: <a href="evidence.html">Evidence</a></p>
+<p>Relevant worksheets: <a href="evidence.html">Evidence</a></p>
 <p>For our first analysis, we want to check that there were no differences between the children assigned to the Italian and English card groups. We do this using t-tests of their parents’ CDI ratings.</p>
 <pre class="r"><code>library(BayesFactor, quietly=TRUE)
 cdi_u_bf &lt;- ttestBF(formula=cdi_u ~ cards, data = task_by_subj)
@@ -1122,9 +1122,9 @@ Bayes factor type: BFindepSample, JZS</code></pre>
 </div>
 <div id="descriptive-statistics" class="section level2">
 <h2>Descriptive statistics</h2>
-<p>See also: <a href="#better-tables.html">Better tables</a></p>
+<p>Relevant worksheets: <a href="#better-tables.html">Better tables</a></p>
 <p>Next we produce a table of descriptive statistics. We start by calculating means and standard deviations for each WinG task by gender.</p>
-<pre class="r"><code>task_by_subj &lt;- task_by_subj %&gt;%
+<pre class="r"><code>task_by_subj_l &lt;- task_by_subj %&gt;%
   pivot_longer(cols = c(nc, np, pc, pp),
                names_to = &#39;task&#39;,
                values_to = &#39;correct&#39;)
@@ -1137,7 +1137,7 @@ task_descriptives &lt;- function(df, y) {
     mutate_if(is.numeric, round, 2)
 }
 
-descriptives &lt;- task_by_subj %&gt;%
+descriptives &lt;- task_by_subj_l %&gt;%
   group_by(task, gender) %&gt;%
   group_modify(task_descriptives) %&gt;%
   ungroup()
@@ -1204,7 +1204,7 @@ t_gender &lt;- function(df, group) {
   extractBF(bf)
 }
 
-gender_bf &lt;- task_by_subj %&gt;%
+gender_bf &lt;- task_by_subj_l %&gt;%
   group_by(task) %&gt;%
   group_modify(t_gender) %&gt;%
   mutate(bf = round(bf,2)) %&gt;%
@@ -1357,21 +1357,62 @@ Predicate Production
 </table>
 <p>The Bayes factors provide no evidence of differences in accuracy between male and female children, suggesting that test scores are not influenced by gender differences.</p>
 </div>
+<div id="correlations-between-cdi-and-wing" class="section level2">
+<h2>Correlations between CDI and WinG</h2>
+<p>Relevant worksheets: <a href="corr.html">Relationships, part 2</a></p>
+<p>Next we look at correlations between parents’ ratings of their child’s comprehension (CDI understands) and the child’s comprehension scores on the noun and predicate tests. We use the <code>spearman</code> method of calculating the correlation between <code>task_by_subj$cdi_u</code> and <code>task_by_subj$nc</code>. The option <code>use=&quot;complete.obs&quot;</code> deletes any cases with a value of <code>NA</code>. We set cells to <code>NA</code> above to indicate that a subject was excluded from a test.</p>
+<pre class="r"><code>cor(method = &#39;spearman&#39;, task_by_subj$cdi_u, task_by_subj$nc, use=&quot;complete.obs&quot;)</code></pre>
+<pre><code>[1] 0.06225014</code></pre>
+<pre class="r"><code>correlationBF(task_by_subj$cdi_u, task_by_subj$nc)</code></pre>
+<pre><code>Ignored 1 rows containing missing observations.</code></pre>
+<pre><code>Bayes factor analysis
+--------------
+[1] Alt., r=0.333 : 0.6982793 ±0%
+
+Against denominator:
+  Null, rho = 0 
+---
+Bayes factor type: BFcorrelation, Jeffreys-beta*</code></pre>
+<pre class="r"><code>cor(method = &#39;spearman&#39;, task_by_subj$cdi_u, task_by_subj$pc, use=&quot;complete.obs&quot;)</code></pre>
+<pre><code>[1] -0.100163</code></pre>
+<pre class="r"><code>correlationBF(task_by_subj$cdi_u, task_by_subj$pc)</code></pre>
+<pre><code>Ignored 3 rows containing missing observations.</code></pre>
+<pre><code>Bayes factor analysis
+--------------
+[1] Alt., r=0.333 : 0.5543404 ±0%
+
+Against denominator:
+  Null, rho = 0 
+---
+Bayes factor type: BFcorrelation, Jeffreys-beta*</code></pre>
+<p>The Bayes factors for correlations of 0.70 for noun comprehension, and 0.55 for predicate comprehension do not provide evidence for a correlation between the childrens’ comprehension scores and their parents’ ratings of their comprehension.</p>
+<p>We look at similar correlations between parents’ ratings of their child’s ability to say words (CDI says), and the childrens’ noun and predicate production scores.</p>
+<pre class="r"><code>cor(method = &#39;spearman&#39;, task_by_subj$cdi_s, task_by_subj$np, use=&quot;complete.obs&quot;)</code></pre>
+<pre><code>[1] 0.5673528</code></pre>
+<pre class="r"><code>correlationBF(task_by_subj$cdi_s, task_by_subj$np)</code></pre>
+<pre><code>Ignored 1 rows containing missing observations.</code></pre>
+<pre><code>Bayes factor analysis
+--------------
+[1] Alt., r=0.333 : 5.094892 ±0%
+
+Against denominator:
+  Null, rho = 0 
+---
+Bayes factor type: BFcorrelation, Jeffreys-beta*</code></pre>
+<pre class="r"><code>cor(method = &#39;spearman&#39;, task_by_subj$cdi_s, task_by_subj$pp, use=&quot;complete.obs&quot;)</code></pre>
+<pre><code>[1] -0.02759308</code></pre>
+<pre class="r"><code>correlationBF(task_by_subj$cdi_s, task_by_subj$pp)</code></pre>
+<pre><code>Ignored 3 rows containing missing observations.</code></pre>
+<pre><code>Bayes factor analysis
+--------------
+[1] Alt., r=0.333 : 0.5874633 ±0%
+
+Against denominator:
+  Null, rho = 0 
+---
+Bayes factor type: BFcorrelation, Jeffreys-beta*</code></pre>
+<p>Here there was a strong positive correlation (<em>r</em> = 0.57, <em>BF</em> = 5.09) between the parents’ ratings of the words their children could say and the children’s scores on the noun production test. There was no evidence for a correlation between CDI says and predicate production scores (<em>BF</em> = 0.59).</p>
 </div>
-<div id="cdi_u-correlations" class="section level1">
-<h1>CDI_U correlations</h1>
-<p>Correlations @ 30m, ignore dfs below, ours will be 16 - exclusions for subtest</p>
-<ul>
-<li>CDI_U ~ NC (rs(22) = .396, p= .055)</li>
-<li>CDI_U ~ PC (rs(16) = .027, p= .915)</li>
-</ul>
-</div>
-<div id="cdi_s-correlations" class="section level1">
-<h1>CDI_S correlations</h1>
-<ul>
-<li>CDI_S ~ NP (rs(22) = .771, p&lt;.001)</li>
-<li>CDI_S ~ PP (rs(16) = .260, p=.298)</li>
-</ul>
 </div>
 <div id="comparison-of-english-and-italian-cards" class="section level1">
 <h1>Comparison of English and Italian cards</h1>
