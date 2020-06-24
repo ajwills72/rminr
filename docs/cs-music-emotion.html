@@ -379,25 +379,31 @@ summary {
 </div>
 <div id="introduction" class="section level1">
 <h1>Introduction</h1>
+<p>JISC</p>
 <ul>
 <li>PANAS-SF (20 item) pre and post</li>
 <li>ERS ACA administered after post-PANAS-SF</li>
 </ul>
-<div id="todo-exclusion-criteria" class="section level2">
-<h2>TODO: Exclusion criteria</h2>
 <p><a name="start"></a></p>
-</div>
 </div>
 <div id="getting-started" class="section level1">
 <h1>Getting started</h1>
-<pre class="r"><code>rm(list = ls()) # clear the environment
-library(tidyverse)</code></pre>
 <p><a name="preprocessing"></a></p>
 </div>
 <div id="preprocessing" class="section level1">
 <h1>Preprocessing</h1>
 <p>See also: <a href="#preproc-scales.html">Preprocessing scales</a></p>
-<pre class="r"><code>data1 &lt;- read_csv(&#39;going-further/music-emotion-1.csv&#39;)
+<pre class="r"><code>rm(list = ls()) # clear the environment
+library(tidyverse)
+
+# &quot;I think this is the data before exclusions. It&#39;s the earliest form I have, there are a couple of incomplete data sets in there though. The only thing I&#39;ve changed is removed the email addresses of participants.&quot;
+original &lt;- read_csv(&#39;going-further/music-emotion.csv&#39;) # n=303
+
+# from SPSS
+spss1 &lt;- read_csv(&#39;going-further/music-emotion-1.csv&#39;) # n=294
+spss2 &lt;- read_csv(&#39;going-further/music-emotion-2.csv&#39;) # n=289
+
+data1 &lt;- spss1
 
 d1 &lt;- data1 %&gt;%
   set_names(~ str_to_lower(.)) %&gt;%
@@ -630,6 +636,7 @@ d1 %&gt;% head(3) %&gt;% pander(split.table = Inf)</code></pre>
 </tr>
 </tbody>
 </table>
+<p>These scores matched those in the data, so presumably I scored the PANAS-SF correctly.</p>
 <pre class="r"><code>d1 &lt;- d1 %&gt;% mutate(pre_emotion = rowSums(across(interestedpre:afraidpre)),
                     pre_pa = rowSums(across(c(interestedpre, excitedpre, strongpre, enthusiasticpre,
                                             proudpre, alertpre, inspiredpre, determinedpre, attentivepre,
@@ -703,10 +710,13 @@ d1 %&gt;% head(3) %&gt;% pander(split.table = Inf)</code></pre>
 </tr>
 </tbody>
 </table>
-<p>QUESTION: these scores matched those in the data, so presumably I scored the PANAS-SF correctly?</p>
+<div id="todo-exclusion-criteria" class="section level2">
+<h2>TODO: Exclusion criteria</h2>
+<p>QUESTION: How to get from n in original data to the n in the 2 SPSS files?</p>
+</div>
 <div id="ers-scoring" class="section level2">
 <h2>ERS scoring</h2>
-<p>QUESTION: Should we simplify things by using data1.csv for the ERS analyses?</p>
+<p>QUESTION: Should we simplify things by using the same dataset for the ERS analyses?</p>
 <p>“The Emotion Regulation Strategies for Artistic Creative Activities Scale (ERS ACA) (Fancourt, Garnett, Spiro, West, Mullensiefen 2019) is an 18 item inventory with a 5 point scale from ‘strongly disagree’ to ‘strongly agree’. This was designed to measure the extent to which a person uses regulation strategies while engaging with an art activity. An overall general strategy use is calculated, as well as 3 subscales of strategies: Avoidance, Approach, and Self Development Strategies.”</p>
 <p>QUESTION: Score the ERS as per Fancourt et al. (2019, Table 3)? No reversed items?</p>
 <pre class="r"><code>data2 &lt;- read_csv(&#39;going-further/music-emotion-2.csv&#39;)</code></pre>
@@ -729,6 +739,7 @@ cols(
 </div>
 <div id="todo-3-anova-plots-panas-subculture4time2-appendices-6-8" class="section level2">
 <h2>TODO: 3 ANOVA plots: : PANAS ~ subculture(4)*time(2) (Appendices 6-8)</h2>
+<p>QUESTION: How are “estimated marginal means” calculated?</p>
 </div>
 <div id="todo-3-mixed-anovas-panas-subculture4time2" class="section level2">
 <h2>TODO: 3 mixed ANOVAs: PANAS ~ subculture(4)*time(2)</h2>
@@ -736,8 +747,8 @@ cols(
 <div id="todo-1-way-anovas-overal-ers-subculture" class="section level2">
 <h2>TODO: 1-way ANOVAs: overal ERS ~ subculture</h2>
 </div>
-<div id="todo-3-kruskal-wallis-h-tests-ers_subscale-subculture" class="section level2">
-<h2>TODO: 3 Kruskal-Wallis H tests: ERS_subscale ~ subculture</h2>
+<div id="todo-3-kruskal-wallis-h-tests-ers_subscale-subculture-4" class="section level2">
+<h2>TODO: 3 Kruskal-Wallis H tests: ERS_subscale ~ subculture (4)</h2>
 </div>
 </div>
 <div id="references" class="section level1">
