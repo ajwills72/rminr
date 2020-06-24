@@ -152,7 +152,7 @@ links, you may find just notes, or incomplete worksheets.
 
 - [Analysing scales](analyse-scales.html): **Cronbach's alpha**.
 
-- [Traditional non-parametric test](non-parametric.html): **Mann-Whitney U**.
+- [Traditional non-parametric tests](non-parametric.html): **Mann-Whitney U**.
 
 <a name="studies"></a>
 
