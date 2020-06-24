@@ -1,0 +1,223 @@
+---
+title: "Traditional non-parametric tests"
+author: "Paul Sharpe"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+## DEVELOPERS: Uncomment one option, as appropriate
+
+## Data required to knit
+## https://github.com/ajwills72/rminr-data/tree/master/going-further/picture-naming.csv
+##
+## I check out rminr-data and make a symbolic link to going-further
+
+## Show only commands.
+## knitr::opts_chunk$set(echo = TRUE, message = FALSE, results='hide', fig.keep = 'none', comment=NA)
+
+## Mann-Whitney based on https://stackoverflow.com/questions/43033884/r-mann-whitney-u-test-output-like-in-spss
+##
+## Show commands and output.
+knitr::opts_chunk$set(echo = TRUE, comment=NA, cache = TRUE)
+```
+
+# Contents
+
+- [Introduction](#intro)
+
+- [Mann-Whitney U test](#wilcox)
+
+- [Kruskal-Wallis test](#kruskal-wallis)
+
+<a name="intro"></a>
+
+# Introduction
+
+This worksheet describes common, traditional (frequentist) non-parametric statistical tests. The statistical tests used to analyse differences and relationships in other worksheets are collectively known as **parametric tests**. For their results to be valid, parametric tests require that the data being analysed comes from a population with a particular probability distribution with known parameters. In most cases, the probability distribution is the normal (Gaussian) distribution, and the parameters are the mean and standard deviation. **Non-parametric tests** do not rely on meeting these assumptions, and can therefore be used to analyse data which is not normally distributed. Parametric tests make some additional assumptions which aren't discussed in this worksheet. Our aim is to give an overview of these two categories of statistical tests to help you decide which test is most appropriate for analysing your data.
+
+If your data meet the criteria for a parametric test, this is the best choice as parametric tests normally provide greater [statistical power](power.html) than the equivalent non-parametric test. When you learnt about the central limit theorem, you saw that a large enough sample will have a normal distribution, regardless of the distribution of the underlying data from which it was sampled. Given the size of most effects in psychology, to reliably detect differences between conditions would require sample sizes which ensure that the data is normally distributed (about 30 and above). Therefore, the most likely scenario in which you would use a _non-parametric test_ is when you have a small sample, which is not normally distributed.
+
+Many non-parametric tests work by ranking data values from lowest to highest, and performing a test on the ranks, rather than the values themselves. This avoids the disproportional effect that outlier values have on the mean, one of the key parameters in parametric tests.
+
+<a name="wilcox"></a>
+
+# Mann-Whitney U test
+
+Related worksheets: [Better tables](better-tables.html).
+
+The Mann-Whitney U test (also known as the Wilcoxon rank sum test) is a non-parametric equivalent of a between-subjects t-test. We'll demonstrate this test using data from the WinG study which was introduced in the [Better tables](better-tables.html) worksheet.
+
+To run the code:
+
+1. Open the project you used to complete the [Better tables](better-tables.html) worksheet.
+1. Create a script namned `non-parametric.R` and add the code below.
+
+The preprocessing steps are described in the [Better tables](better-tables.html) worksheet.
+
+```{r preprocessing}
+rm(list = ls()) # clear the environment
+library(tidyverse)
+library(pander)
+
+# read data
+library(readxl)
+path <- 'going-further/picture-naming.xlsx'
+data <- path %>%
+  excel_sheets() %>%
+  .[-1] %>%
+  set_names() %>%
+  map_df(~ read_excel(path = path, sheet = .x, range = "A1:V20"), .id = "sheet")
+
+# demographics data
+demographics <- data %>%
+  filter(sheet == 'Demographic') %>%
+  set_names(~ str_to_lower(.)) %>%
+  select(gender, cdi_u, cdi_s) %>%
+  mutate(gender = factor(gender), subj = factor(seq.int(nrow(.))))
+demographics$gender <- recode_factor(demographics$gender, Male = 'male', Female = 'female')
+
+# task data
+nc <- data %>%
+  filter(sheet == 'Noun Comprehension') %>%
+  set_names(~ str_to_lower(.)) %>%
+  select(mountain:wellyboots, cards) %>%
+  mutate(subj = factor(seq.int(nrow(.))))
+
+cards <- nc %>%
+  select(subj, cards) %>%
+  mutate(cards = recode_factor(.$cards, `1` = 'italian', `2` = 'english'))
+
+# apply exclusion criteria to sub-test data
+exclude <- function(df) {
+  # exclude if N/A in item 17 or lower
+  logical_matrix <- df == 'N/A'
+  q17 <- logical_matrix %>%
+    which(arr.ind = TRUE) %>%
+    data.frame() %>%
+    group_by(row) %>%
+    summarise(min = min(col)) %>%
+    mutate(subj = factor(row)) %>%
+    select(subj, min)
+  q17 <- left_join(df, q17, by='subj') %>%
+    replace_na(list(min = 20))
+  q17 <- q17 %>% filter(min > 17) %>% select(-min)
+  
+  # calculate total correct
+  q17 <- q17 %>% mutate(correct = rowSums(. == 'C' | . == 'C*'))
+  
+  # exclude participants with scores < 2 sd below the mean
+  q17 %>% filter(correct < mean(correct) + 2 * sd(correct))
+}
+
+nc <- exclude(nc)
+nc_by_subj <- select(nc, subj, correct)
+
+np <- data %>%
+  filter(sheet == 'Noun Production') %>%
+  set_names(~ str_to_lower(.)) %>%
+  select(beach:gloves) %>%
+  mutate(subj = factor(seq.int(nrow(.))))
+
+np <- exclude(np)
+np_by_subj <- np %>% select(subj, correct)
+
+pc <- data %>%
+  filter(sheet == 'Predicate Comprehension') %>%
+  set_names(~ str_to_lower(.)) %>%
+  select(big:pulling) %>%
+  mutate(subj = factor(seq.int(nrow(.))))
+pc <- exclude(pc)
+
+pc_by_subj <- pc %>% select(subj, correct)
+
+pp <- data %>%
+  filter(sheet == 'Predicate Production') %>%
+  set_names(~ str_to_lower(.)) %>%
+  select(small:pushing) %>%
+  mutate(subj = factor(seq.int(nrow(.))))
+pp <- exclude(pp)
+
+pp_by_subj <- pp %>% select(subj, correct)
+
+# join data
+task_by_subj <- left_join(demographics, nc_by_subj, by='subj') %>%
+  left_join(., np_by_subj, by='subj', suffix = c('_nc','_np')) %>%
+  left_join(., pc_by_subj, by='subj') %>%
+  left_join(., pp_by_subj, by='subj', suffix = c('_pc', '_pp')) %>%
+  left_join(., cards, by='subj') %>%
+  mutate(nc = correct_nc, np = correct_np, pc = correct_pc, pp = correct_pp) %>%
+  select(subj, gender, nc, np, pc, pp, cards, cdi_u, cdi_s)
+
+task_by_subj_l <- task_by_subj %>%
+  pivot_longer(cols = c(nc, np, pc, pp),
+               names_to = 'task',
+               values_to = 'correct')
+
+task_by_subj_l %>% head(12) %>% pander()
+```
+
+We'll use Mann-Whitney U tests to see if there were any differences between scores for the Italian and English cards on the noun comprehension (`nc`), noun production (`np`), predicate comprehension (`pc`) and predicate production (`pp`) tests.
+
+We define a function to calculate a Mann-Whitney U for each task in our data.
+
+```{r mann-whitney}
+mann_whitney <- function(df, group) {
+  df <- drop_na(df)                    # remove excluded subjects
+  n1 <- sum(as.integer(df$cards) == 1) # n in first group
+  wilcox.test(correct ~ cards, df) %>%
+    with(tibble(U = statistic,
+              W = statistic + n1 * (n1 + 1) / 2,
+              Z = qnorm(p.value / 2),
+              p = p.value))
+}
+```
+
+**Explanation of commands:**
+
+1. Our function `mann_whitney()` accepts a `df` argument which is a data frame containing test scores.
+1. `df <- drop_na(df)` excludes subjects with missing data for the test.
+1. `n1 <- sum(as.integer(df$cards) == 1)` calculates the number of subjects in the first of the two groups used when calculating the U statistic. We use this to produce some additional statistics which are generated by `SPSS`.
+1. In `R`, `wilcox.test()`, with the argument `paired = FALSE` (the default) is the same as a Mann-Whitney U test. The command `wilcox.test(correct ~ cards, df)` runs the test to compare the `correct` scores for the Italian and English `cards`.
+1. We pipe the output of this command into some code to report the same values as `SPSS`. The `W` statistic generated by `R` is the same as `U` in SPSS. The `p` value in `R` is the same as `SPSS`. The `W` and `Z` statistics reported by `SPSS` are not calculated by `wilcox.test()`, so we calculate these manually.
+
+We can now call the test for each task in our data:
+
+```{r}
+win_g_mann_whitney <- task_by_subj_l %>%
+  group_by(task) %>%
+  group_modify(mann_whitney) %>%
+  ungroup() %>%
+  mutate(task = recode_factor(.$task, nc = 'Noun Comprehension',
+                              np = 'Noun Production',
+                              pc = 'Predicate Comprehension',
+                              pp = 'Predicate Production'))
+pander(win_g_mann_whitney)
+```
+
+All _p_ values were > 0.05, suggesting there were no differences between the Italian and English cards on any of the tests.
+
+The following some summary statistics may be useful when reporting a Mann-Whitney U test.
+
+```{r cards-rank}
+task_by_subj_l %>%
+  group_by(task, cards) %>%
+  drop_na() %>%
+  summarise(n = n(),
+            median = median(correct),
+            mean_rank = mean(rank(correct)),
+            sum_rank = sum(rank(correct)))
+```
+
+**Explanation of commands:**
+
+1. We group our data by the two card sets, within the four tests.
+1. `drop_na()` removes any subjects where were excluded from a test (we assigned these the value `NA` in our preprocessing).
+1. We use `summarise`, to calculate the number of cases in each group `n()`, and the `median()` score. The `rank()` function orders the scores (lowest to highest), and assigns each a number according to their position. We use `mean(rank(correct)` to calculate the "mean rank" score and `sum(rank(correct)` to calculate the "sum rank" score.
+
+<a name="kruskal-wallis"></a>
+
+# Kruskal-Wallis test
+
+http://www.sthda.com/english/wiki/kruskal-wallis-test-in-r
+
+"Kruskal-Wallis test by rank is a non-parametric alternative to one-way ANOVA test, which extends the two-samples Wilcoxon test in the situation where there are more than two groups. It’s recommended when the assumptions of one-way ANOVA test are not met. This tutorial describes how to compute Kruskal-Wallis test in R software."

@@ -299,27 +299,47 @@ correlationBF(task_by_subj$cdi_s, task_by_subj$pp)
 
 Here there was a strong positive correlation (_r_ = 0.57, _BF_ = 5.09) between the parents' ratings of the words their children could say and the children's scores on the noun production test. There was no evidence for a correlation between CDI says and predicate production scores (_BF_ = 0.59).
 
-# Comparison of English and Italian cards
+## Comparison of English and Italian cards
+
+Relevant worksheets: [Traditional non-parametric tests](non-parametric.html).
 
 * Plot mean correct response ~ NC/NP * E/I with CI bars
-
-* "The number of correct responses for the English cards (mean rank
-= 15.04) and the Italian cards (mean rank = 9.96) were not statistically significantly
-different, U = 41.5, z = 1.779, p = .078, using an exact sampling distribution for U
-(Dineen & Blakesley, 1973)."
-
-* "The number of correct responses for the English cards (mean rank = 13.08) and the
-Italian cards (mean rank = 11.92) were not statistically significantly different, U = 65,
-z = .406, p = .713,"
-
 * Plot mean correct response ~ PC/PP * E/I with CI bars
 
-C+C* ~ PC/PP * E/I
+Now we look at the differences between scores for the Italian and English cards on each of the tests. In this study, this was done using a Mann-Whitney U test. We start by creating some the summary statistics which are used to interpret the Mann-Whitney U test.
 
-* "The number of correct responses for the English cards (mean rank =7.95) and the Italian cards (mean rank = 11.44) were not statistically significantly different, U = 24.5, z = -1.398,
-p = .173"
+```{r cards-rank}
+task_by_subj_l %>%
+  group_by(task, cards) %>%
+  drop_na() %>%
+  summarise(n = n(),
+            median = median(correct),
+            mean_rank = mean(rank(correct)),
+            sum_rank = sum(rank(correct)))
+```
 
-* "The number of correct responses for the English cards (mean rank = 9.20) and the Italian cards (mean rank = 9.88) were not statistically significantly different, U = 37, z = -.269, p = .829"
+Next we run the Mann-Whitney U for each group.
+
+```{r mann-whitney}
+# independent 2-group Mann-Whitney U Test
+mann_whitney <- function(df, group) {
+  df <- drop_na(df) # remove excluded subjects
+  n1 <- sum(as.integer(df$cards) == 1) # n in first group
+  wilcox.test(correct ~ cards, df) %>%
+    with(tibble(U = statistic,
+              W = statistic + n1 * (n1 + 1) / 2,
+              Z = qnorm(p.value / 2),
+              p = p.value))
+}
+
+wing_mann_whitney <- task_by_subj_l %>%
+  group_by(task) %>%
+  group_modify(mann_whitney)
+
+pander(wing_mann_whitney)
+```
+
+All _p_ values were > 0.05, suggesting there were no differences between the Italian and English cards on any of the tests.
 
 # Non-target but semantically related errors
 
@@ -329,7 +349,6 @@ NTS ~ Production(NP/PP) * Card Language(E/I)
 
 * Plot mean semantically related responses (NTS) ~ NNTS/PNTS * E/I with CI bars
 
-TODO: Allegra says mean rank (order lowest->highest take middle value) is best way to report Mann Whitney descriptives. This looks the same as the median. Check if there's a difference.
 
 * "A Mann-Whitney-U test was run to determine if there were any statistically
 significant differences in the number of non-target but semantically related errors
