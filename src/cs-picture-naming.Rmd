@@ -299,7 +299,7 @@ correlationBF(task_by_subj$cdi_s, task_by_subj$pp)
 
 Here there was a strong positive correlation (_r_ = 0.57, _BF_ = 5.09) between the parents' ratings of the words their children could say and the children's scores on the noun production test. There was no evidence for a correlation between CDI says and predicate production scores (_BF_ = 0.59).
 
-## Comparison of English and Italian cards
+## Comparison of Italian and English cards
 
 Relevant worksheets: [Traditional non-parametric tests](non-parametric.html).
 
