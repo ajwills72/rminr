@@ -49,7 +49,7 @@ To prepare for this worksheet, follow these steps:
 
 # Preprocessing
 
-Relevant worksheets: [Better tables](#better-tables.html)
+Relevant worksheets: [Better tables](#better-tables.html).
 
 We summarise the preprocessing steps here. They explained in full in the [Better tables](#better-tables.html) worksheet.
 
@@ -134,7 +134,7 @@ nc_by_subj %>% pander()
 np <- data %>%
   filter(sheet == 'Noun Production') %>%
   set_names(~ str_to_lower(.)) %>%
-  select(beach:gloves) %>%
+  select(cards, beach:gloves) %>%
   mutate(subj = factor(seq.int(nrow(.))))
 
 np <- exclude(np)
@@ -143,7 +143,7 @@ np_by_subj <- np %>% select(subj, correct)
 pc <- data %>%
   filter(sheet == 'Predicate Comprehension') %>%
   set_names(~ str_to_lower(.)) %>%
-  select(big:pulling) %>%
+  select(cards, big:pulling) %>%
   mutate(subj = factor(seq.int(nrow(.))))
 pc <- exclude(pc)
 
@@ -152,7 +152,7 @@ pc_by_subj <- pc %>% select(subj, correct)
 pp <- data %>%
   filter(sheet == 'Predicate Production') %>%
   set_names(~ str_to_lower(.)) %>%
-  select(small:pushing) %>%
+  select(cards, small:pushing) %>%
   mutate(subj = factor(seq.int(nrow(.))))
 pp <- exclude(pp)
 
@@ -301,12 +301,129 @@ Here there was a strong positive correlation (_r_ = 0.57, _BF_ = 5.09) between t
 
 ## Comparison of Italian and English cards
 
-Relevant worksheets: [Traditional non-parametric tests](non-parametric.html).
+Relevant worksheets:  [Better graphs](better-graphs.html), [Traditional non-parametric tests](non-parametric.html).
 
-* Plot mean correct response ~ NC/NP * E/I with CI bars
-* Plot mean correct response ~ PC/PP * E/I with CI bars
+```{r flat-violin, echo=FALSE}
+"%||%" <- function(a, b) {
+  if (!is.null(a)) a else b
+}
 
-Now we look at the differences between scores for the Italian and English cards on each of the tests. In this study, this was done using a Mann-Whitney U test. We start by creating some the summary statistics which are used to interpret the Mann-Whitney U test.
+geom_flat_violin <- function(mapping = NULL, data = NULL, stat = "ydensity",
+                             position = "dodge", trim = TRUE, scale = "area",
+                             show.legend = NA, inherit.aes = TRUE, ...) {
+  layer(
+    data = data,
+    mapping = mapping,
+    stat = stat,
+    geom = GeomFlatViolin,
+    position = position,
+    show.legend = show.legend,
+    inherit.aes = inherit.aes,
+    params = list(
+      trim = trim,
+      scale = scale,
+      ...
+    )
+  )
+}
+
+GeomFlatViolin <-
+  ggproto("GeomFlatViolin", Geom,
+    setup_data = function(data, params) {
+      data$width <- data$width %||%
+        params$width %||% (resolution(data$x, FALSE) * 0.9)
+
+      # ymin, ymax, xmin, and xmax define the bounding rectangle for each group
+      data %>%
+        group_by(group) %>%
+        mutate(
+          ymin = min(y),
+          ymax = max(y),
+          xmin = x,
+          xmax = x + width / 2
+        )
+    },
+
+    draw_group = function(data, panel_scales, coord) {
+      # Find the points for the line to go all the way around
+      data <- transform(data,
+        xminv = x,
+        xmaxv = x + violinwidth * (xmax - x)
+      )
+
+      # Make sure it's sorted properly to draw the outline
+      newdata <- rbind(
+        plyr::arrange(transform(data, x = xminv), y),
+        plyr::arrange(transform(data, x = xmaxv), -y)
+      )
+
+      # Close the polygon: set first and last point the same
+      # Needed for coord_polar and such
+      newdata <- rbind(newdata, newdata[1, ])
+
+      ggplot2:::ggname("geom_flat_violin", GeomPolygon$draw_panel(newdata, panel_scales, coord))
+    },
+
+    draw_key = draw_key_polygon,
+
+    default_aes = aes(
+      weight = 1, colour = "grey20", fill = "white", size = 0.5,
+      alpha = NA, linetype = "solid"
+    ),
+
+    required_aes = c("x", "y")
+  )
+```
+
+We create a raincloud plot for the noun tasks:
+
+```{r noun-cloud}
+noun_tasks <- task_by_subj_l %>%
+    filter(task %in% (c('np','nc')))
+noun_tasks$task <- recode_factor(noun_tasks$task, nc = 'Noun Comprehension', np = 'Noun Production')
+
+x_dodge <- .1
+palette <- 'Set1'
+
+raincloud <- ggplot(noun_tasks, aes(x = task, y = correct, fill = cards)) +
+  geom_flat_violin(aes(fill = cards), position = position_nudge(x = x_dodge, y = 0), adjust = 1.5, trim = FALSE, alpha = .5, colour = NA) +
+  geom_point(aes(x = as.numeric(task)-.15, y = correct, colour = cards), position = position_jitter(width = .05), size = .25, shape = 20) +
+  stat_summary(geom="errorbar", position = position_nudge(x = x_dodge, y = 0), mapping = aes(colour = cards), width = .1, fun.data=mean_cl_boot) +
+  stat_summary(geom="point", position = position_nudge(x = x_dodge, y = 0), mapping = aes(colour = cards), fun.data=mean_cl_boot) +
+  stat_summary(geom="line", position = position_nudge(x = x_dodge, y = 0), mapping = aes(group = cards, colour = cards), fun.data=mean_cl_boot, linetype = 3) +
+  scale_colour_brewer(palette = palette) +
+  scale_fill_brewer(palette = palette)
+
+raincloud
+
+ggsave(filename = "noun_cloud.pdf", plot = raincloud, units = "cm", width = 15, height = 10)
+```
+
+```{r predicate-cloud}
+predicate_tasks <- task_by_subj_l %>%
+    filter(task %in% (c('pc','pp')))
+predicate_tasks$task <- recode_factor(predicate_tasks$task, nc = 'Noun Comprehension', np = 'Noun Production')
+
+x_dodge <- .1
+palette <- 'Set1'
+
+raincloud <- ggplot(predicate_tasks, aes(x = task, y = correct, fill = cards)) +
+  geom_flat_violin(aes(fill = cards), position = position_nudge(x = x_dodge, y = 0), adjust = 1.5, trim = FALSE, alpha = .5, colour = NA) +
+  geom_point(aes(x = as.numeric(task)-.15, y = correct, colour = cards), position = position_jitter(width = .05), size = .25, shape = 20) +
+  stat_summary(geom="errorbar", position = position_nudge(x = x_dodge, y = 0), mapping = aes(colour = cards), width = .1, fun.data=mean_cl_boot) +
+  stat_summary(geom="point", position = position_nudge(x = x_dodge, y = 0), mapping = aes(colour = cards), fun.data=mean_cl_boot) +
+  stat_summary(geom="line", position = position_nudge(x = x_dodge, y = 0), mapping = aes(group = cards, colour = cards), fun.data=mean_cl_boot, linetype = 3) +
+  scale_colour_brewer(palette = palette) +
+  scale_fill_brewer(palette = palette)
+
+raincloud
+
+ggsave(filename = "predicate_cloud.pdf", plot = raincloud, units = "cm", width = 15, height = 10)
+```
+
+The raincloud plot for the noun tasks indicates that the data was not normally distributed. Given the small sample sizes, a non-parametric test is most suited for analysing this data. Although the predicate data looks normally distributed, in this study, a Mann-Whitney U test was used to compare the scores for the Italian and English cards for both the noun and predicate tasks.
+
+We start by creating some the summary statistics which are used to interpret the Mann-Whitney U test.
 
 ```{r cards-rank}
 task_by_subj_l %>%
@@ -363,39 +480,126 @@ by visual inspection. The number of correct responses for the English cards (mea
 rank = 8.60) and the Italian cards (mean rank = 10.62) were not statistically
 significantly different, U = 31, z = -.821, p = .460"
 
-# Individual cards
+# Differences for individual cards
 
-"As Study One found differences in the ratings of individual cards an
-independent samples t-test was then conducted on the data from Study Two to
-determine whether there were any significant differences between individual cards in
-the two sets of WinG cards. The data was coded so that it could be analysed, correct
-answers were coded as ‘1’ and incorrect answers were coded as ‘0’, (tables with all
-results from the t-test can be found in the appendices)."
+Relevant worksheets: [Better tables](#better-tables.html).
 
-"For one card it was not possible to conduct a t-test because the standard deviations of both groups were 0, this was for the card Apple."
+We would like to know if there were any accuracy differences between the individual Italian and English cards in each task. We can summarise this data as a table of t-tests. Running a t-test where both groups have identical scores produces an error, so we remove these cards from our tests. For noun comprehension, this was the case for the words 'apple', 'cow', 'penguin','hat', and 'motorbike'.
 
-t-tests @ 30m
+```{r t-nc}
+nc_long <- nc %>%
+  select(-correct) %>%
+  mutate(cards = factor(cards)) %>%
+  mutate(cards = recode_factor(.$cards, `1` = 'italian', `2` = 'english')) %>%
+  pivot_longer(cols=(mountain:wellyboots),
+               names_to = 'word',
+               values_to = 'answer')
 
-```{r tables-test-language}
-# Tables 12-15
-# NC card correct response ~ language M, SD, BF (t-test)
+correct_word <- function(df, group) {
+  df %>% select(answer) %>% summarise(correct = colSums(. == 'C' | . == 'C*'))
+}
+nc_long_correct <- nc_long %>%
+  group_by(word, subj, cards) %>%
+  group_modify(correct_word)
+
+t_words <- function(df, group) {
+  bf <- ttestBF(formula=correct ~ cards, data = data.frame(df))
+  extractBF(bf)
+}
+
+nc_bf <- nc_long_correct %>%
+  filter(! word %in% c('apple', 'cow', 'penguin','hat','motorbike')) %>%
+  group_by(word) %>%
+  group_modify(t_words) %>%
+  mutate(bf = round(bf,2)) %>%
+  select(word, bf)
+
+nc_bf %>% kable(
+  col.names = c('Word', 'Bayes Factor')) %>%
+  kable_styling()
 ```
 
-IV = language
-DV = correct (C+C*) (by card in sub-test)
+We generate similar tables for noun production ...
 
-"The independent samples t-test showed that there were only significant
-differences between three individual cards, Mountain in the noun comprehension
-sub-test, the English card (M=.833, SD=.389) elicited statistically significantly more
-correct responses than the Italian card (M=.417, SD=.515), M= -0.42, 95% CI [-0.80,
--0.03], t(20.477)=-2.236, p=.037, Book in the noun production sub-test, the English
-card (M=.750, SD=.452) elicited statistically significantly more correct answers than
-the Italian card (M=.333, SD=.492), M= -0.42, 95% CI [-0.82, -0.02], t(22)=-2.159,
-p=.042, and Short in the predicate comprehension sub-test, the English cards (M = 1,
-SD= .316) elicited significantly more correct responses than the Italian card (M= .625,
-SD= .518), M= 0.525 , 95% CI [0.066, 0.984], t(11.04)= 2.158, p= .029."
+```{r t-np}
+np_long <- np %>%
+  select(-correct) %>%
+  mutate(cards = factor(cards)) %>%
+  mutate(cards = recode_factor(.$cards, `1` = 'italian', `2` = 'english')) %>%
+  pivot_longer(cols=(beach:gloves),
+               names_to = 'word',
+               values_to = 'answer')
 
-# References
+np_long_correct <- np_long %>%
+  group_by(word, subj, cards) %>%
+  group_modify(correct_word)
+
+np_bf <- np_long_correct %>%
+  group_by(word) %>%
+  group_modify(t_words) %>%
+  mutate(bf = round(bf,2)) %>%
+  select(word, bf)
+
+np_bf %>% kable(
+  col.names = c('Word', 'Bayes Factor')) %>%
+  kable_styling()
+```
+
+... predicate comprehension ...
+
+```{r t-pc}
+pc_long <- pc %>%
+  select(-correct) %>%
+  mutate(cards = factor(cards)) %>%
+  mutate(cards = recode_factor(.$cards, `1` = 'italian', `2` = 'english')) %>%
+  pivot_longer(cols=(big:pulling),
+               names_to = 'word',
+               values_to = 'answer')
+
+pc_long_correct <- pc_long %>%
+  filter(! word %in% c('climbing','waving', 'running', 'drinking', 'walking')) %>%
+  group_by(word, subj, cards) %>%
+  group_modify(correct_word)
+
+pc_bf <- pc_long_correct %>%
+  group_by(word) %>%
+  group_modify(t_words) %>%
+  mutate(bf = round(bf,2)) %>%
+  select(word, bf)
+
+pc_bf %>% kable(
+  col.names = c('Word', 'Bayes Factor')) %>%
+  kable_styling()
+```
+
+... and predicate production.
+
+```{r t-pp}
+pp_long <- pp %>%
+  select(-correct) %>%
+  mutate(cards = factor(cards)) %>%
+  mutate(cards = recode_factor(.$cards, `1` = 'italian', `2` = 'english')) %>%
+  pivot_longer(cols=(small:pushing),
+               names_to = 'word',
+               values_to = 'answer')
+
+pp_long_correct <- pp_long %>%
+    filter(! word %in% c('far-apart', 'heavy', 'in-front')) %>%
+  group_by(word, subj, cards) %>%
+  group_modify(correct_word)
+
+pp_bf <- pp_long_correct %>%
+  group_by(word) %>%
+  group_modify(t_words) %>%
+  mutate(bf = round(bf,2)) %>%
+  select(word, bf)
+
+pp_bf %>% kable(
+  col.names = c('Word', 'Bayes Factor')) %>%
+  kable_styling()
+```
+
+The only Bayes factor which provide evidence of a difference between the cards was `bag` on the noun production task.
 
 ___
 
