@@ -49,7 +49,7 @@ To prepare for this worksheet, follow these steps:
 
 # Preprocessing
 
-Relevant worksheets: [Better tables](#better-tables.html)
+Relevant worksheets: [Better tables](#better-tables.html).
 
 We summarise the preprocessing steps here. They explained in full in the [Better tables](#better-tables.html) worksheet.
 
@@ -301,12 +301,129 @@ Here there was a strong positive correlation (_r_ = 0.57, _BF_ = 5.09) between t
 
 ## Comparison of Italian and English cards
 
-Relevant worksheets: [Traditional non-parametric tests](non-parametric.html).
+Relevant worksheets:  [Better graphs](better-graphs.html), [Traditional non-parametric tests](non-parametric.html).
 
-* Plot mean correct response ~ NC/NP * E/I with CI bars
-* Plot mean correct response ~ PC/PP * E/I with CI bars
+```{r flat-violin, echo=FALSE}
+"%||%" <- function(a, b) {
+  if (!is.null(a)) a else b
+}
 
-Now we look at the differences between scores for the Italian and English cards on each of the tests. In this study, this was done using a Mann-Whitney U test. We start by creating some the summary statistics which are used to interpret the Mann-Whitney U test.
+geom_flat_violin <- function(mapping = NULL, data = NULL, stat = "ydensity",
+                             position = "dodge", trim = TRUE, scale = "area",
+                             show.legend = NA, inherit.aes = TRUE, ...) {
+  layer(
+    data = data,
+    mapping = mapping,
+    stat = stat,
+    geom = GeomFlatViolin,
+    position = position,
+    show.legend = show.legend,
+    inherit.aes = inherit.aes,
+    params = list(
+      trim = trim,
+      scale = scale,
+      ...
+    )
+  )
+}
+
+GeomFlatViolin <-
+  ggproto("GeomFlatViolin", Geom,
+    setup_data = function(data, params) {
+      data$width <- data$width %||%
+        params$width %||% (resolution(data$x, FALSE) * 0.9)
+
+      # ymin, ymax, xmin, and xmax define the bounding rectangle for each group
+      data %>%
+        group_by(group) %>%
+        mutate(
+          ymin = min(y),
+          ymax = max(y),
+          xmin = x,
+          xmax = x + width / 2
+        )
+    },
+
+    draw_group = function(data, panel_scales, coord) {
+      # Find the points for the line to go all the way around
+      data <- transform(data,
+        xminv = x,
+        xmaxv = x + violinwidth * (xmax - x)
+      )
+
+      # Make sure it's sorted properly to draw the outline
+      newdata <- rbind(
+        plyr::arrange(transform(data, x = xminv), y),
+        plyr::arrange(transform(data, x = xmaxv), -y)
+      )
+
+      # Close the polygon: set first and last point the same
+      # Needed for coord_polar and such
+      newdata <- rbind(newdata, newdata[1, ])
+
+      ggplot2:::ggname("geom_flat_violin", GeomPolygon$draw_panel(newdata, panel_scales, coord))
+    },
+
+    draw_key = draw_key_polygon,
+
+    default_aes = aes(
+      weight = 1, colour = "grey20", fill = "white", size = 0.5,
+      alpha = NA, linetype = "solid"
+    ),
+
+    required_aes = c("x", "y")
+  )
+```
+
+We create a raincloud plot for the noun tasks:
+
+```{r noun-cloud}
+noun_tasks <- task_by_subj_l %>%
+    filter(task %in% (c('np','nc')))
+noun_tasks$task <- recode_factor(noun_tasks$task, nc = 'Noun Comprehension', np = 'Noun Production')
+
+x_dodge <- .1
+palette <- 'Set1'
+
+raincloud <- ggplot(noun_tasks, aes(x = task, y = correct, fill = cards)) +
+  geom_flat_violin(aes(fill = cards), position = position_nudge(x = x_dodge, y = 0), adjust = 1.5, trim = FALSE, alpha = .5, colour = NA) +
+  geom_point(aes(x = as.numeric(task)-.15, y = correct, colour = cards), position = position_jitter(width = .05), size = .25, shape = 20) +
+  stat_summary(geom="errorbar", position = position_nudge(x = x_dodge, y = 0), mapping = aes(colour = cards), width = .1, fun.data=mean_cl_boot) +
+  stat_summary(geom="point", position = position_nudge(x = x_dodge, y = 0), mapping = aes(colour = cards), fun.data=mean_cl_boot) +
+  stat_summary(geom="line", position = position_nudge(x = x_dodge, y = 0), mapping = aes(group = cards, colour = cards), fun.data=mean_cl_boot, linetype = 3) +
+  scale_colour_brewer(palette = palette) +
+  scale_fill_brewer(palette = palette)
+
+raincloud
+
+ggsave(filename = "noun_cloud.pdf", plot = raincloud, units = "cm", width = 15, height = 10)
+```
+
+```{r predicate-cloud}
+predicate_tasks <- task_by_subj_l %>%
+    filter(task %in% (c('pc','pp')))
+predicate_tasks$task <- recode_factor(predicate_tasks$task, nc = 'Noun Comprehension', np = 'Noun Production')
+
+x_dodge <- .1
+palette <- 'Set1'
+
+raincloud <- ggplot(predicate_tasks, aes(x = task, y = correct, fill = cards)) +
+  geom_flat_violin(aes(fill = cards), position = position_nudge(x = x_dodge, y = 0), adjust = 1.5, trim = FALSE, alpha = .5, colour = NA) +
+  geom_point(aes(x = as.numeric(task)-.15, y = correct, colour = cards), position = position_jitter(width = .05), size = .25, shape = 20) +
+  stat_summary(geom="errorbar", position = position_nudge(x = x_dodge, y = 0), mapping = aes(colour = cards), width = .1, fun.data=mean_cl_boot) +
+  stat_summary(geom="point", position = position_nudge(x = x_dodge, y = 0), mapping = aes(colour = cards), fun.data=mean_cl_boot) +
+  stat_summary(geom="line", position = position_nudge(x = x_dodge, y = 0), mapping = aes(group = cards, colour = cards), fun.data=mean_cl_boot, linetype = 3) +
+  scale_colour_brewer(palette = palette) +
+  scale_fill_brewer(palette = palette)
+
+raincloud
+
+ggsave(filename = "predicate_cloud.pdf", plot = raincloud, units = "cm", width = 15, height = 10)
+```
+
+The raincloud plot for the noun tasks indicates that the data was not normally distributed. Given the small sample sizes, a non-parametric test is most suited for analysing this data. Although the predicate data looks normally distributed, in this study, a Mann-Whitney U test was used to compare the scores for the Italian and English cards for both the noun and predicate tasks.
+
+We start by creating some the summary statistics which are used to interpret the Mann-Whitney U test.
 
 ```{r cards-rank}
 task_by_subj_l %>%
@@ -364,6 +481,8 @@ rank = 8.60) and the Italian cards (mean rank = 10.62) were not statistically
 significantly different, U = 31, z = -.821, p = .460"
 
 # Individual cards
+
+Relevant worksheets: [Better tables](#better-tables.html).
 
 "As Study One found differences in the ratings of individual cards an
 independent samples t-test was then conducted on the data from Study Two to
