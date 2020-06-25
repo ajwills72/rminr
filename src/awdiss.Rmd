@@ -18,19 +18,44 @@ knitr::opts_chunk$set(echo = TRUE, comment=NA, cache = TRUE)
 
 This is an advanced worksheet, which assumes you have completed the [Absolute Beginners' Guide to R](https://ajwills72.github.io/rminr/#beginners) course, the [Research Methods in Practice (Quantitative section)](https://benwhalley.github.io/rmip/overview-quantitative.html) course, and the [Intermediate Guide to R](https://ajwills72.github.io/rminr/#rmip) course. 
 
+## Contents
+
+- [Overview](#overview)
+- [Getting data from OSF](#osf)
+- [Loading data](#load)
+- [De-duplicating data](#dedup)
+- [Excluding participants](#exclude)
+- [Graphing GSR](#graphGSR)
+- [Baseline correction](#baseline)
+- [Functions and loops](#funcloop)
+- [Trial-level summary](#trialsum)
+- [Adding a second DV](#addDV)
+- [List participant numbers](#list)
+- [More on loops](#loop2)
+- [Log transform](#log)
+- [Removing trials](#rmtrials)
+- [Recoding data](#recode)
+- [Reporting means](#means)
+- [Better graphs](#graphs)
+- [More on Bayesian linear regression](#lmbf)
+
+<a name="overview"></a>
+
 ## Overview
 
-This worksheet describes a full analysis pipeline for an undergraduate student project on the Perruchet Effect. The project was basically identical to the experiment described by [McAndrew et al. (2012)](https://www.researchgate.net/profile/IPL_Mclaren/publication/221752843_Dissociating_Expectancy_of_Shock_and_Changes_in_Skin_Conductance_An_Investigation_of_the_Perruchet_Effect_Using_an_Electrodermal_Paradigm/links/0a85e53c10b74f291a000000.pdf), except that the electric shock was replaced by a loud unpleasant noise (a metal garden fork scraping across slate). For details of the procedure, see the McAndrew paper, but here's a very brief summary:
+This worksheet describes a full analysis pipeline for an undergraduate student dissertation on the Perruchet Effect. The experiment was basically identical to the experiment described by [McAndrew et al. (2012)](https://www.researchgate.net/profile/IPL_Mclaren/publication/221752843_Dissociating_Expectancy_of_Shock_and_Changes_in_Skin_Conductance_An_Investigation_of_the_Perruchet_Effect_Using_an_Electrodermal_Paradigm/links/0a85e53c10b74f291a000000.pdf), except that the electric shock was replaced by a loud unpleasant noise (a metal garden fork scraping across slate). For details of the procedure, see the McAndrew paper, but here's a very brief summary:
 
 A shape (brown cylinder, known as a 'CS') appears on the screen for 8 seconds. On 50% of occasions, this is then followed by the unpleasant noise (the 'US'). The participant's reaction to each CS is measured in two ways: 
 
 (1) While the CS is on the screen, they are asked to rate their expectancy of the US on each trial, using a numerical scale. Higher ratings indicate greater conscious expectation of the unpleasant noise.
 
-(2) Throughout the experiment, their Galvanic Skin Reponse, a.k.a. electrodermal activity is measured. This is a measure of physiological arousal, greater numbers mean more arousal. Higher arousal is interpeted as greater unconscious expectancy of the unpleasant noise.
+(2) Throughout the experiment, their Galvanic Skin Response, a.k.a. [electrodermal activity](https://en.wikipedia.org/wiki/Electrodermal_activity) is measured. This is a measure of physiological arousal, greater numbers mean more arousal. Higher arousal is interpreted as greater unconscious expectancy of the unpleasant noise.
 
-So, we have two dependent variables - expectancy ratings, and GSR. There is also one independent variable - "run length". This relates to how many trials in a row you have experienced (or not experienced) the noise. For example, a "+3" trial means you have experienced the noise three times in a row; a "-2" trial means you have experienced the absence of the noise two trials in a row. The run lengths in this experiment range from -3 to +3.
+So, we have two dependent variables - expectancy ratings, and GSR. There is also one independent variable - "run length". This relates to how many trials in a row you have experienced the unpleasant noise. For example, a "+3" trial means you have experienced the noise three times in a row; a "-2" trial means you have experienced the absence of the noise two trials in a row. The run lengths in this experiment range from -3 to +3.
 
-There are two predictions. The first prediction is that the GSR will increase with run length, because the unconscious association between the shape and the noise will grow with repeated pairings. The second prediction is that the conscious expectancies will decrease with run length. This is known as Gamblers' Fallacy - in this case, the belief that, even though the sequence is random, a run of unpleasant noises means the next trial is more likely to be silent. This result is often taken to be one of the strongest pieces of evidence for a dual-process theory of learning, i.e. that we have unconscious and conscious learning processes that act somewhat independently of each other. This is because it can be hard to see how a single learning process could believe two things at the same time e.g. that on the +3 trials, it was simultaneously most and least likely that an unpleasant noise would occur.
+There are two predictions. The first prediction is that the GSR will increase with run length, because the unconscious association between the shape and the noise will grow with repeated pairings. The second prediction is that the conscious expectancies will do the opposite - they will _decrease_ with run length. This is known as [Gamblers' Fallacy](https://ajwills72.github.io/critical-thinking/EvaluatingRisk.html) - in this case, the belief that, even though the sequence is random, a run of unpleasant noises means the next trial is more likely to be silent. This result is often taken to be one of the strongest pieces of evidence for a dual-process theory of learning, i.e. that we have unconscious and conscious learning processes that act somewhat independently of each other. This is because it can be hard to see how a single learning process could believe two things at the same time e.g. that on the +3 trials, it was simultaneously most and least likely that an unpleasant noise would occur.
+
+<a name="osf"></a>
 
 ## Getting data from a public repository
 
@@ -47,7 +72,7 @@ osf_download(files, conflicts = "skip")
 
 ### Explanation of commands
 
-The first line loads the `osfr` pacakge. 
+The first line loads the `osfr` package. 
 
 The second line asks the OSF website for the information it needs to download the data. To do this, we need the last part of the web address. This repository is at https://osf.io/r7axw/, so we need to use `r7axw`. 
 
@@ -59,7 +84,9 @@ The final file actually downloads those files to your R project. In this case, y
 
 You can ignore the file `MAIN.csv`, which we're not going to use. The first file you should open is `codebook.md`. A codebook is a file that explains what each of the columns in a data files means. Read the codebook and, while you're reading through, look at the data file it is talking about, `DATA.csv`. It is this file on which all the following analysis is based.
 
-## Loading the  data
+<a name="load"></a>
+
+## Loading data
 
 As with any analysis, the first step is to load the data into R:
 
@@ -69,13 +96,15 @@ raw <- read_csv("data/DATA.csv")
 colnames(raw) <- c("subj", "time", "key", "value")
 ```
 
-### Explanation of command
+### Explanation of commands
 
-The first two lines should be very familiar by now; we nearly always need the `tidyverse` package, and we use the `read_csv` command to load the data. The `data/` part of the filename `data/DATA.csv` says that the file `DATA.csv` is to be found in the directory (folder) called `data`. 
+The first two lines should be familiar from previous worksheets; we nearly always need the `tidyverse` package, and we use the `read_csv` command to load the data. The `data/` part of the filename `data/DATA.csv` says that the file `DATA.csv` is to be found in the directory (folder) called `data`. 
 
 The third line renames the columns, as covered in the [Preprocessing data from experiments](preproc.html#rename) worksheet. I didn't like the names of the columns very much so I changed them to something more comprehensible and quicker to type, using the `colnames` command. 
 
-## De-duplicating and filtering
+<a name="dedup"></a>
+
+## De-duplicating data
 
 We're now going to get the data into a state where we can meaningfully analyse it:
 
@@ -84,15 +113,55 @@ raw <- distinct(raw)
 raw  <- raw %>% filter(subj > 161)
 ```
 
-### Explanation of command
+### Explanation of commands
 
 The first line, `raw <- distinct(raw)` is a _de-duplication_ command. It's a very handy command for tidying up data in cases where people have made the [grave error](https://arstechnica.com/tech-policy/2013/04/microsoft-excel-the-ruiner-of-global-economies/) of trying to use Excel for serious research. What happened in this case was that the experiment was run by three people over many different days. They then tried to stitch all the data files together by copying-and-pasting them into one big file in Excel. This would have been easy using R, as covered in  [Preprocessing data from experiments](preproc.html#combine) but, unfortunately, no one had taught them how to use R. Predictably, they could not do this combination of files in Excel without error (few people could), and they ended up copying some of the data twice. In this case, it's easy to detect and fix in R, because no two rows of this data can be identical - the subject number or the time is always going to be different. So, we can remove duplicates by telling R to give us just one copy of each of the different rows in the data set. The command `distinct` does that for us. 
 
-The second line, `raw  <- raw %>% filter(subj > 161)` should by now be very familiar; we are keeping only those participants whose subject number is greater than 161. This is because, in this study, we first ran a short pilot experiment, looked at the data, and made a few changes to the experiment. Here, we only wanted to analyze the main study, so we removed the pilot participants.
+The second line, `raw  <- raw %>% filter(subj > 161)` should be familiar from previous worksheets; we are keeping only those participants whose subject number is greater than 161. This is because, in this study, we first ran a short pilot experiment, looked at the data, and made a few changes to the experiment. Here, we only wanted to analyze the main study, so we removed the pilot participants.
 
-## Exploring the GSR data
+<a name="exclude"></a>
 
-The GSR data from this experiment is very rich, with a skin conductance measure taken from each participant approximately twenty times a second throughout the whole 30-40 minutes. To 'get a feel' for these data, and also to check that the equipment was working properly, we need to plot that GSR as a graph, with time on the x-axis and GSR on the y-axis. We'll need to do this one participant at a time, otherwise the graph will be really hard to read:
+## Excluding participants
+
+Participants in this experiment were told to rate their expectancy of the US during the CS, _on every trial_. However, they only had 8 seconds to do this, and the experimenters noticed that sometimes people failed to make a rating. The experimental apparatus records this as a rating of zero. 
+
+Participants who miss a lot of ratings aren't really following the instructions, making their data hard to interpret. In such cases, we normally exclude those participants from further analysis. First, we need to find out how widespread this problem is. One way to do this is to calculate the number of zero ratings each participant makes:
+
+```{r zeros}
+inspect  <- raw %>% filter(key == "ER") %>% filter(value == 0)
+table(inspect$subj)
+```
+
+### Explanation of commands
+
+The first line filters to those rows of the raw data that contain expectancy ratings (`key == "ER"`, see `codebook.md`) and then to cases where that rating is zero (`value == 0`). This is then stored in the data frame `inspect`. One could look at this manually, but it's more efficient and less error prone to get R to tell us how many times each participant has a zero rating. This is that the second line, `table(inspect$subj)` does - it counts the number of times each subject number occurs in `inspect`.
+
+### Explanation of output
+
+The output shows the number of trials on which each participant failed to give an expectancy rating. If a participant never made a zero rating, their participant number does not appear on the table. We can see that sixteen participants missed at least one rating, at that six participants missed more than 3 (one participant never made a rating, missing all 46 trials of the experiment!). 
+
+### Removing participants from the dataset
+
+In this case, we decided to exclude all participants who missed more than three ratings:
+
+```{r exclude}
+exclude  <- c(164, 166, 176, 199, 236, 239)
+raw  <- raw %>% filter(!(subj %in% exclude))
+```
+
+### Explanation of commands
+
+The first line creates a list of the participant numbers we wish to exclude. In the second line, we remove those participants from the `raw` data frame. The `filter` command will be familiar from previous worksheets. The command `subj %in% exclude` means 'any participant whose subject number is in our list `exclude`. The use of `!()` in the filter statement means `not`. So, `filter(!(subj %in% exclude))` means keep the participants whose subject number is not in the `exclude` list. 
+
+### Note
+
+There are still a few trials where the participant makes no expectancy rating, and the computer records this as an expectancy of zero. There's a good case to be made for recoding the rating on those trials as either `NA` (meaning 'missing data') or `3`, meaning "participant is unsure whether the noise will occur". For brevity, we don't make these changes here, but once you've gone through the whole worksheet, perhaps try to work out how one might do this. 
+
+<a name="graphGSR"></a>
+
+## Graphing GSR
+
+The GSR data from this experiment is very rich, with a skin conductance measure taken from each participant approximately twenty times a second throughout the whole 30-40 minutes of the experiment. To 'get a feel' for these data, and also to check that the equipment was working properly, we need to plot that GSR as a graph, with time on the x-axis and GSR on the y-axis. We'll need to do this one participant at a time, otherwise the graph will be really hard to read:
 
 ```{r gsr}
 dat  <- raw %>% filter(subj == 168)
@@ -126,7 +195,7 @@ gplot
 
 ### Explanation of commands
 
-The first line should be familar - we are selecting those rows of the data that contain the key `CO`, which `codebook.md` tells us are the timings of the CS onsets. 
+The first line should be familiar - we are selecting those rows of the data that contain the key `CO`, which `codebook.md` tells us are the timings of the CS onsets. 
 
 We've also come across `geom_vline` before, as part of the [Putting R to work](risk-rat.html) worksheet - it just plots a vertical line at a place we ask it to. The new part of this command is `data=cs, mapping=aes(xintercept=time)`. Previously, we've just told R manually where we want the line (e.g. `xintercept = 4.35`). Now, we're telling it that we want a bunch of lines, that the `data` for the position of those lines is to be found in `cs` data frame, and that the `time` column of that data frame should be used to find them.
 
@@ -136,9 +205,11 @@ Here, we're adding the vertical lines to the plot we've already made `gplot <- g
 
 There appears to be a missing blue line in the middle. Actually, there isn't, it's just that the participant was given a break half way through the experiment, so there wasn't a CS for a while. What we can also see, however, is that the GSR seems to go up each time there's a CS, and then go back down again. Sometimes that's quite a big rise, and sometimes, less big. If the experiment worked out as we expected, then the size of the GSR reaction will depend on the run length. We'll look at this later on, but first we need to do some preprocessing.
 
-## Preprocessing GSR data
+<a name="baseline"></a>
 
-One problem with GSR data (and much other neuroscience data, e.g. EEG, fMRI) is that it's both highly variable ("noisy"), and changes systematically over time ("drift"). By 'noisy', we mean that, for a given event in the world, the GSR response to that event varies quite a lot, even if the event itself is objectively identical. In order to deal with this noise, we average the participant's GSR over several trials, and so get a sense of what they're typical response is. 
+## Baseline correction
+
+One problem with GSR data (and much other neuroscience data, e.g. EEG, fMRI) is that it's both highly variable ("noisy"), and changes systematically over time ("drift"). By 'noisy', we mean that, for a given event in the world, the GSR response to that event varies quite a lot, even if the event itself is objectively identical. In order to deal with this noise, we average the participant's GSR over several trials, and so get a sense of what their typical response is. 
 
 By 'drift', we mean that these differences across trials are not random, they are affected by systematic changes in the participant over time. For example, as they hear more and more unpleasant noises, perhaps the noise becomes less unpleasant to them ("habituation"), and so their GSR reaction late in the experiment might be smaller than their GSR reaction early in the experiment. Another example -- once someone's GSR goes up, it can take quite a lot of time to go back down again ("return to baseline"). In this experiment, we waited a long time between trials, the _inter-trial interval_ was around 30 seconds. However, this is often not enough, and we find that sometimes their GSR has not returned to baseline by the time the next CS appears.
 
@@ -162,9 +233,9 @@ Line 3 - Just a plain old line graph.
 
 ### Explanation of output
 
-What we see in the graph is just a 'zoomed in' part of the previous graph - for the 10th trial, 500 ms before the CS onset to 8000ms after the CS onset. The x-axis has large numbers because time is counted from the start of the experiment. The line looks a bit 'jagged' because the equipment is has limited accuracy in measuring GSR.
+What we see in the graph is just a 'zoomed in' part of the previous graph - for the 10th trial, 500 ms before the CS onset to 8000ms after the CS onset. The x-axis has large numbers because time is counted from the start of the experiment, in milliseconds. The line looks a bit 'jagged' because the equipment is has limited accuracy in measuring GSR.
 
-## Baseline correction
+## Applying baseline correction
 
 Now, we need to do two things. 
 
@@ -198,13 +269,16 @@ Line 5 - Just another line graph
 
 We get another graph, which at first sight looks exactly like the last one. The thing to notice is that the x-axis and y-axis now have different numbers - the CS onset is at 0 ms rather than 318000 ms, and the GSR line starts at 0 rather than around 2.5. 
 
-## Scaling up with a function and a loop
 
-In principle, we could do this baseline correction for each trial of each participant in the same way as the above example. However, this would be really tedious, because there are about 50 participants and 50 trials per paricipant, so about 2,500 trials in total! 
+<a name="funcloop"></a>
 
-When we want R to do the same thing many things, we can use _functions_ and _loops_ to achieve this. We'll look at _functions_ first. 
+## Functions and loops
 
-## Defining a function
+In principle, we could do this baseline correction for each trial of each participant in the same way as the above example. However, this would be really tedious, because there are about 50 participants and 50 trials per participant, so about 2,500 trials in total! 
+
+When we want R to do the same thing many times, we can use _functions_ and _loops_ to achieve this. We'll look at _functions_ first. 
+
+### Defining a function
 
 Pretty much every command you run in R is a function that someone has written. For example, `mean(precs$value`) uses the function `mean()`, which is built in to R. The command `read_csv` is a function added to R by loading the `tidyverse` library. You can also write your own functions. Here's a function that contains all the commands we used to baseline-correct one trial of participant 168:
 
@@ -221,7 +295,7 @@ base.correct  <- function(trial) {
 }
 ```
 
-Ignoring the first and the last three lines for a moment, notice that these commands are almost identical to the ones we just used. The only difference is that we've changed `cs$time[10]` to `cs$time[trial]`. So, instead of always looking at trial 10, we look at whatever trial is specificied by `trial`, and that is set by calling the function. So, for example, we can now look at trial 9 like this:
+Ignoring the first and the last three lines for a moment, notice that these commands are almost identical to the ones we just used. The only difference is that we've changed `cs$time[10]` to `cs$time[trial]`. So, instead of always looking at trial 10, we look at whatever trial is specified by `trial`, and that is set by calling the function. So, for example, we can now look at trial 9 like this:
 
 ```{r callfunc}
 eg  <- base.correct(9)
@@ -238,9 +312,9 @@ There's one line of the function we have not yet discussed:
 
 The key aspect of this command is `add_column` which, perhaps unsurprisingly, adds new columns to a data frame. In this case, we are adding two columns to the right hand side of the data frame. These are going to be useful later. The first column contains the `trial` number, and the second column contains the _run length_ (-3 to +3, see description of experiment). The run length is recorded along with the CS onset time data, in the `value` column (see `codebook.md`) so we read the run length for the current trial using `cs$value[trial]`. 
 
-## Using a loop
+### Using a loop
 
-We can now use a loop to run this function for every trial of one participant. We've used loops in a similar way before, to combine data files from multiple participants using `bind_rows`, see [Preprocessing data from experiments](preproc.html#combine).
+We can now use a loop to run this function for every trial of one participant. We've used loops in a similar way before, to combine data files from multiple participants using `bind_rows`, see the [preprocessing data from experiments](preproc.html#combine) worksheet.
 
 ```{r one-s-loop}
 onep  <- NULL
@@ -261,7 +335,9 @@ The loop runs `base.correct(trial)` for each of the 46 trials the participant di
 
 `base.correct(trial)` - The trials to bind are those that come out of `base.correct(trial`). 
 
-## Summarizing GSR data
+<a name="trialsum"></a>
+
+## Trial-level summary
 
 Let's take a look at what we've generated:
 
@@ -291,7 +367,9 @@ Lines 3-4 - We group the data by `trial` and by `run` length, and then `summaris
 
 The output shows the contents of `gsr.sum`. Each row is one trial. For each trial, we have the _run length_, and the mean GSR response `cval`. Later on, we'll analyze these data - but first, we have to finish the preprocesssing.
 
-## Preprocessing expectancy ratings
+<a name="addDV"></a>
+
+## Adding a second dependent variable
 
 The data frame `onep` contains a GSR for each trial, but there is also an expectancy rating for each trial. It will make it easier to look at these data if we also include these expectancy ratings into `onep`. So, using the following commands, we first create a new data frame with the expectancy ratings:
 
@@ -302,13 +380,13 @@ expect
 
 ### Explanation of command
 
-We take the full data for one participant (`dat`) and then `filter` it to retain only the rows marked `ER` (the _expectany rating_ rows, see `codebook.md`). When then add a new column (`add_column`) that is called `trial` and contains the numbers 1 to 46 (`1:46`). Finally, we select just the `trial`, and `value` columns of that dataframe, and place it into `expect`. 
+We take the full data for one participant (`dat`) and then `filter` it to retain only the rows marked `ER` (the _expectancy rating_ rows, see `codebook.md`). When then add a new column (`add_column`) that is called `trial` and contains the numbers 1 to 46 (`1:46`). Finally, we select just the `trial`, and `value` columns of that dataframe, and place it into `expect`. 
 
 ### Explanation of output
 
 The dataframe `expect` contains one row for each trial, and the column `value` contains the expectancy rating for that trial. 
 
-## Combining expectancy and GSR data
+### Combining expectancy and GSR data
 
 In the final step of preprocessing this participant, we join the expectancy ratings `expect` and the mean GSRs (`gsr.sum`) into a single data frame:
 
@@ -319,7 +397,9 @@ comb.data
 
 ### Explanation of command
 
-The command `full_join` joins together two seperate data frames, using a column they have in common. In this case, the `gsr.sum` and `exepct` data frames have the `trial` column in common. 
+The command `full_join` joins together two separate data frames, using a column they have in common. In this case, the `gsr.sum` and `expect` data frames have the `trial` column in common. 
+
+<a name="list"></a>
 
 ## List of participant numbers
 
@@ -334,7 +414,9 @@ subjs
 
 We need a list of the different participant numbers used in this experiment. We can get this using the `subj` column of the `raw` data, so `raw$subj`. The only problem is that each subject number occurs many times (once for each GSR recording, so 20 times a second. We want just one copy of each different subject number. The command `unique` does that for us, so the command `subjs <- enframe(unique(raw$subj))` gives us the participant numbers (`enframe` just means 'put in a data frame').
 
-## Preprocessing all participants
+<a name="loop2"></a>
+
+## More on loops
 
 We now use a loop to go through the same set of steps for each participant:
 
@@ -370,11 +452,13 @@ Our full set of preprocessed data, one row per participant per trial. We'll use 
 
 You can safely ignore everything apart from the first two lines and the last three lines of commands. This is because the bit in the middle is  exactly the same commands as we've been building up throughout this worksheet. They take one participant, baseline correct all their GSRs, take a mean GSR for each trial, and record that along with the expectancy rating, and information about trial (participant number, trial number, run length). 
 
-All of these commands are placed inside a `for` loop, which we've used before (see the second and penultimate line of the commands above). We use the set of participant numbers (`subj$value`) we just collected and use the for loop to set  `this.subj` to each of these values in turn. All the data is combined together in `sum.data`, using the `bind_rows` command we've used before.
+All of these commands are placed inside a `for` loop, which we've used before in this worksheet. We use the set of participant numbers (`subj$value`) we just collected and use the for loop to set  `this.subj` to each of these values in turn. All the data is combined together in `sum.data`, using the `bind_rows` command we've used before.
 
-## Further preprocessing - log transform
+<a name="log"></a>
 
-There are three further preprocessing steps we have to take before we can analyze these data. First, studies of GSR data normally _log transform_ it before analysis. Log transforming data means to take the [logarithm](https://en.wikipedia.org/wiki/Logarithm) of the data, in this case the [natural logarithm](https://en.wikipedia.org/wiki/Natural_logarithm)). Two reasonable questions about this preprocessing are: (a) what does that mean, and (b) why would you do it?
+## Log transform
+
+There are three further preprocessing steps we have to take before we can analyze these data. First, studies of GSR data normally _log transform_ it before analysis. Log transforming data means to take the [logarithm](https://en.wikipedia.org/wiki/Logarithm) of the data, in this case the [natural logarithm](https://en.wikipedia.org/wiki/Natural_logarithm). Two reasonable questions about this preprocessing are: (a) what does that mean, and (b) why would you do it?
 
 To answer the first question, a log transform compresses the range of the data. The following graph should help visualize this:
 
@@ -382,9 +466,9 @@ To answer the first question, a log transform compresses the range of the data. 
 plot(1:50,log(1:50))
 ```
 
-On the x-axis we have the numbers 1 to 50. On the y-axis, we have the natural logarithm of those numbers. As you can see, whil the x-axis rises from 1 to 50, the y-axis rises from zero to around 4. You should also be able to notice that for each increase in x, the increase in y gets smaller. So, for example, where x rises from 1 to 2, log(x) rises from 0 to about .8; but where x rises from 2 to 3, log(x) rises by about 0.4. 
+On the x-axis we have the numbers 1 to 50. On the y-axis, we have the natural logarithm of those numbers. As you can see, while the x-axis rises from 1 to 50, the y-axis rises from zero to around 4. You should also be able to notice that for each increase in x, the increase in y gets smaller. So, for example, where x rises from 1 to 2, log(x) rises from 0 to about .8; but where x rises from 2 to 3, log(x) rises by about 0.4. 
 
-As a result, a log transform doesn't change small numbers very much, but reduces large numbers a lot more. This can be useful if, for example, a few participants have unsually large GSRs. These very large GSRs would increase the _variance_ of the data substantially, and this can make it harder to detect real differences between groups. A log transform can reduce that problem, and hence can make it easier to find real effects in such situations. So, this also answers the second part of the question - we apply a log transform to GSR data because it can make it easier to find real effects.
+As a result, a log transform doesn't change small numbers very much, but reduces large numbers a lot more. This can be useful if, for example, a few participants have unusually large GSRs. These very large GSRs would increase the _variance_ of the data substantially, and this can make it harder to detect real differences between conditions. A log transform can reduce that problem, and hence can make it easier to find real effects in such situations. So, this also answers the second part of the question - we apply a log transform to GSR data because it can make it easier to find real effects.
 
 We log transform our GSR data using the `mutate` command that we used earlier:
 
@@ -394,7 +478,9 @@ sum.data  <- sum.data %>% mutate(lcval = log(cval+1))
 
 The command `log` takes the natural logarithm. We calculate `log(cval+1)` rather than `log(cval)` because the `log(0)` is an infinitely small number, which is something that cannot be analyzed. By adding 1 we don't hit this problem (unless cval is -1 or smaller, which it seldom is).
 
-## Further preprocessing - Removing unusable trials
+<a name="rmtrials"></a>
+
+## Removing trials
 
 In our Perruchet Effect experiment, we have runs of various lengths. For example, for something to be a `+2` run there must be a sequence of four trials in the following order `NSSN` where N means no sound, and S means sound. The third trial in that sequence is a +2 trial, because there have been two sounds in a row, and the following trial there will not be a sound so the run will end. Importantly, at least the way people normally analyse these data, the second trial in that sequence has no definable run length. One might say it is a `+1` trial because, at that point, there has only been one sound in a row. However, the experimenter knows that the run will continue on the next trial, so calling it a `+1` trial somehow doesn't seem quite right (although, from the perspective of the participant, at the time they are reacting to that trial, clearly it is a `+1` trial). 
 
@@ -406,11 +492,13 @@ sum.data  <- sum.data %>% filter(run != 0)
 
 This is a standard `filter` command. The `!=` part reads as 'not equal to'. So, this command keeps all the non-zero run lengths.
 
-## Further preprocessing - From run length to 'level'
+<a name="recode"></a>
 
-Another convention of analyzing Perruchet effect experiments is that you convert run length (-3 to +3) into a dependent variable called "Level". This involves coding `-3` and `+1` as Level 1, `-2` and `+2` as Level 2, and `-1` and `+3` as Level 3. If GSR rises from -3 to +3, it will also rise from Level 1 to Level 3. Equally, if GSR drops from -3 to +3, it will also drop from Level 1 to Level 3. The reasons for recoding the dependent variable in this way are not straight forward, and are a matter of some debate in the literature. Nonetheless, as this experiment is essentially an attempt to replicate McAndrew et al.'s paper with an unpleasant noise, we choose to use the same analyses they did, and that involves recoding the run length as Level. 
+## Recoding data
 
-We covered recoding data in the _Cleaning up questionniare data_ part of [Research Methods in Practice](https://benwhalley.github.io/rmip/overview-quantitative.html). To recode some data, we need to take two steps. First, we define the _mapping_ - so, for each run length, what Level is that? We do this as follows:
+Another convention of analyzing Perruchet effect experiments is that you convert run length (-3 to +3) into a dependent variable called "Level". This involves coding `-3` and `+1` as Level 1, `-2` and `+2` as Level 2, and `-1` and `+3` as Level 3. If GSR rises from -3 to +3 run lengths, it will also rise from Level 1 to Level 3. Equally, if GSR drops from -3 to +3, it will also drop from Level 1 to Level 3. The reasons for recoding the dependent variable in this way are not straight forward, and are a matter of some debate. Nonetheless, as this experiment is essentially an attempt to replicate McAndrew et al.'s paper with an unpleasant noise, we chose to use the same analyses they did, and that involves recoding the run length as Level. 
+
+We covered recoding data in the _Cleaning up questionnaire data_ part of [Research Methods in Practice (Quantitative Section)](https://benwhalley.github.io/rmip/overview-quantitative.html). To recode some data, we need to take two steps. First, we define the _mapping_ - so, for each run length, what Level is that? We do this as follows:
 
 ```{r def-levels}
 level.code  <- c(`-3` = 1, `-2` = 2, `-1` = 3, `1` = 1, `2` = 2, `3` = 3)
@@ -418,16 +506,175 @@ level.code  <- c(`-3` = 1, `-2` = 2, `-1` = 3, `1` = 1, `2` = 2, `3` = 3)
 
 So, for example, a run length of `-2` becomes a Level of `2`. 
 
-Once we have our mapping, we can use it, via `mutate` to create a new column called `level`. We use the `recode` command to do this, convertinig the column `run` using the mapping `level.code` we've just written. The `!!!` part probably isn't worth spending the time to understand deeply, but if you'd like to dig deeper, see the explanation in  [Research Methods in Practice](https://benwhalley.github.io/rmip/overview-quantitative.html).
+Once we have our mapping, we can use it, via `mutate` to create a new column called `level`. We use the `recode` command to do this, converting the column `run` using the mapping `level.code` we've just written. The `!!!` part probably isn't worth spending the time to understand deeply, but if you'd like to dig deeper, see the explanation in  [Research Methods in Practice (Quantitative Section)](https://benwhalley.github.io/rmip/overview-quantitative.html).
 
 ```{r recode}
 sum.data <- sum.data %>% mutate(level = recode(run, !!!level.code))
 ```
 
-## Results - Looking at the means
+Finally, we create a new participant-level summary of our data, using `level` (rather than `run`, as `sum.data` did):
+
+```{r recode2}
+lvl.sum  <- sum.data %>%
+    group_by(subj, level) %>%
+    summarise(lcval = mean(lcval), expect = mean(value))
+```
+<a name="means"></a>
+
+## Reporting means
+
+The preprocessing is done! As a first, quick test of our hypotheses, we can just take a peek at the mean GSR and expectancy rating, across all participants, for each Level. We use the familiar `group_by` and `summarise` commands to do this:
 
 ```{r means}
-lvl.sum  <- sum.data %>% group_by(subj, level) %>% summarise(lcval = mean(lcval), expect = mean(value))
-sum.data %>% group_by(level) %>% summarise(lcval = mean(lcval), expect = mean(value))
-sum.data %>% group_by(run) %>% summarise(lcval = mean(lcval), expect = mean(value))
+mdata  <- lvl.sum %>% group_by(level) %>% summarise(lcval = mean(lcval), expect = mean(expect))
+mdata
 ```
+
+From these results, we can see that expectancy reduces with Level, as expected. Somewhat surprisingly, the GSR (`lcval`) shows the _same_ trend, GSR reduces with increased Level. This is opposite to what McAndrew et al. reported in their experiment. Below, we'll investigate further, first using graphs and then using linear regression.
+
+<a name="graphs"></a>
+
+## Better graphs
+
+The simplest graph we could produce here would be to just plot the three means reported above, but this wouldn't really add anything to what we've already done; the trend is clear just from the three numbers. 
+
+Generally, when we graph data from psychology experiments, we try to give an indication of the variability between participants - is everyone exactly like the mean, or do people differ? One common way of doing this it to plot some kind of 'error bar'; for example, as shown in Figure 1 of  [McAndrew et al. (2012)](https://www.researchgate.net/profile/IPL_Mclaren/publication/221752843_Dissociating_Expectancy_of_Shock_and_Changes_in_Skin_Conductance_An_Investigation_of_the_Perruchet_Effect_Using_an_Electrodermal_Paradigm/links/0a85e53c10b74f291a000000.pdf). McAndrew et al., are not clear how they calculated these bars, but it's quite likely that they are the standard errors, considering each Level separately -- because this is the most common plot of this type. Such error bars are not particularly informative because, for example, they represent the variability _between_ participants at each Level, when the experiment is a _repeated measures_ design and so it is the variability of the trends across Level that is most relevant.
+
+In this project, we instead plot one line for each participant, and then overlay this with the means to emphasize the overall trend. Here's the final plot:
+
+```{r final-plot, echo= FALSE}
+source('themeapa.R')
+base  <- ggplot()
+lns  <- geom_line(aes(x=level, y=expect, group=subj, colour=subj), data = lvl.sum, alpha = .25)
+mline  <- geom_line(aes(x=level, y=expect), data = mdata, colour="black")
+mdot  <- geom_point(aes(x=level, y=expect), data = mdata, colour="black")
+eplot  <- base + lns + mline + mdot + xlab("Level") +
+    ylab("Expectancy rating") + ylim(1,5) + scale_x_continuous(breaks = c(1,2,3))  + theme_APA +
+    theme(legend.position="none")
+eplot
+```
+
+From this plot, it's clear that: (a) the overall trend is downwards, (b) most but not all participants individually show this trend, and (c) there is some variation in the absolute ratings people use.
+
+### Building up the graph, piece by piece
+
+This graph is a bit more complex than the ones we've produce before, but R and, in particular, `ggplot`, allows us to build up complex graphs like this piece by piece, from familiar components. The way to do this is to start with a blank page, which we do by just using the `ggplot` command on its own:
+
+```{r blank}
+base  <- ggplot()
+base
+```
+
+Next, we add a line for each participant:
+
+
+```{r lines}
+lns  <- geom_line(aes(x=level, y=expect, group=subj, colour=subj), data = lvl.sum, alpha = .25)
+base + lns
+```
+
+In line 1 above, we use the familiar `geom_line` to draw a line graph, much as we did to plot the individual GSR readings. The difference here is that we set `group=subj`, giving us a different line for each participant (the participant number is in the `subj` column of the `lvl.sum` data frame). These lines are easier to distinguish from each other if they are not all the same colour, so we all set `colour=subj`, so each gets a different colour (in this case, the default is that they all get a slightly different shade of blue). The final part, `alpha = .25`, makes the lines fainter, so that the mean trend line we're going to add next is more noticeable.
+
+In line 2, we display our new line graph on top of the background: `base + lns`. 
+
+Next, we add an indication of the mean rating at each level. We already calculated those means earlier, so we can just use those calculations, which we stored in `mdata`:
+
+```{r mean.trend}
+mline  <- geom_line(aes(x=level, y=expect), data = mdata, colour="black")
+base + lns + mline
+```
+
+We can make the mean line more prominent by also including plot points on it:
+
+```{r mean.trend.dots}
+mdots  <- geom_point(aes(x=level, y=expect), data = mdata, colour="black")
+base + lns + mline + mdots
+```
+
+Now, we can do various things to make the graph look nicer. First, graph a copy of the `themeapa.R` file from 
+[Better graphs](better-graphs.html#style) and put it in your project directory. You can then load this theme and add it to the graph:
+
+```{r apa}
+source("themeapa.R")
+base + lns + mline + mdots + theme_APA + theme(legend.position="none")
+```
+
+This makes the graph more in keeping with the style of graphs one normally sees in psychology journals. We also added the command `theme(legend.position=")`, which removes the legend (i.e. the key relating participant number to shade of blue, which isn't informative). 
+
+Finally, we tidy up the x and y axis labels:
+
+```{r apa.final}
+source("themeapa.R")
+base + lns + mline + mdots + theme_APA + theme(legend.position="none") +
+    xlab("Level") + ylab("Expectancy rating") +
+    ylim(1,5) + scale_x_continuous(breaks = c(1,2,3))
+```
+
+Most of these commands we've used in previous worksheets. The command `scale_x_continuous` allows us to set exactly what the 'tick marks' on the x-axis are going to be - it makes no sense to have a Level of e.g. 1.5 marked on the graph, because such levels do not exist in the experiment.
+
+If we were planning to put this graph in another document (e.g. a dissertation write-up) then we'd want to use `ggsave` to do this, see the [Better Graphs](better-graphs.html#hq) worksheet.
+
+### Graphing GSR
+
+We can now follow exactly the same procedure to produce a second graph, for GSR:
+
+```{r final-plot-gsr}
+lns  <- geom_line(aes(x=level, y=lcval, group=subj, colour=subj), data = lvl.sum, alpha = .25)
+mline  <- geom_line(aes(x=level, y=lcval), data = mdata, colour="black")
+mdot  <- geom_point(aes(x=level, y=lcval), data = mdata, colour="black")
+base + lns + mline + mdot + xlab("Level") +
+    ylab("Mean log GSR (uS)") + scale_x_continuous(breaks = c(1,2,3))  + theme_APA +
+    theme(legend.position="none")
+```
+
+We can see from this plot that the GSR data is a lot more variable than the expectancy data, and that the downward trend is less obvious at the level of individual participants - many participants show either largely flat lines, or lines that clearly do not show an overall downward trend. 
+
+## More on Bayesian linear regression
+
+In the [within-subject differences](anova1.html#anovaWS) worksheet you learned how to apply a Bayesian ANOVA to data from within-subjects manipulations, and in the [Research Methods in Practice (Quantitative Section)](https://benwhalley.github.io/rmip/overview-quantitative.html) course, you learned how to apply a Bayesian linear regression to a set of between-subjects data. To analyze these data, we need to combine those two techniques.
+
+First, some preliminaries:
+
+```{r bf.setup}
+library(BayesFactor, quietly=TRUE)
+lvl.sum$subj  <- factor(lvl.sum$subj)
+```
+
+In line 1, we load the `BayesFactor` package, which we use to do Bayesian ANOVAs and regressions. In line 2, we set the participant numbers as factors, for the reasons discussed in the [within-subject differences](anova1.html#anovaWS) worksheet. Note that we don't set the Level column of `lvl.sum` as a factor, because the our three Levels are ordered - 1, 2, 3. 
+
+The first step in our analysis is identical to a Bayesian ANOVA, except we use the command `lmBF` instead of `anovaBF`. Note that, just like in `anovaBF`, we need to tell R that these data come from many different participants, hence the `+ subj` and `whichRandom = "subj"` parts of the command:
+
+```{r bf.lm.1}
+g.level  <- lmBF(lcval ~ level + subj, data = data.frame(lvl.sum), whichRandom = "subj")
+g.level
+```
+
+Looking at this output, it is tempting to see the Bayes Factor of around 35 million as overwhelming support for the hypothesis that GSR decreases with Level. This would be a mis-interpretation of this output. Recall that a Bayes Factor is always a comparison of two hypotheses - this means you always have to look closely at what the null hypothesis was. The null hypothesis is shown here under `Against denominator`, and it's the hypothesis that literally nothing is going on. Specifically, the hypothesis is not only that Level has no effect on GSR (`level`) but also that there are no individual differences (i.e. that `subj` has no effect). 
+
+It's pretty self-evident from the graphs that there are some individual differences. More critically, if we want evidence that it is specifically the Level that affects GSR, over and above individual differences, then we need to compare our experimental hypothesis (`lcval ~ level + subj`) with the alternative hypothesis that there are just individual differences (`lcval ~ subj`). We do this in much the same way that we test for [an interaction in a Bayesian ANOVA](anova3.html#bfact). 
+
+More specifically, we create a model in which only individual difference affect expectancy ratings...
+
+```{r bf.lm.2}
+g.subj  <- lmBF(lcval ~ subj, data = data.frame(lvl.sum), whichRandom = "subj")
+```
+
+...and then we compare the two models by dividing one by the other:
+
+```{r bf.lm.3}
+g.level / g.subj
+```
+
+From the output, we can see that the relevant Bayes Factor is around 1.9. So, there is some evidence for the hypothesis that GSR drops with Level in our experiment, but that evidence is quite weak (BF < 3). 
+
+### Linear regression of expectancies
+
+We can now follow the same procedure for the expectancy ratings:
+
+```{r bf.lm.expect}
+e.level  <- lmBF(expect ~ level + subj, data = data.frame(lvl.sum), whichRandom = "subj")
+e.subj  <- lmBF(expect ~ subj, data = data.frame(lvl.sum), whichRandom = "subj")
+e.level / e.subj
+```
+
+The Bayesian evidence for the hypothesis that expectancy reduces with Level ("gamblers' fallacy") is overwhelming, with a Bayes Factor of around 260 million! 
