@@ -9,7 +9,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
-<meta name="author" content="Allegra Cattani, Adele Conn, Paul Sharpe" />
+<meta name="author" content="Allegra Cattani, Adele Conn, Paul Sharpe and Andy Wills" />
 
 
 <title>Reliability of Targets in a Picture Naming Task</title>
@@ -372,40 +372,41 @@ summary {
 
 
 <h1 class="title toc-ignore">Reliability of Targets in a Picture Naming Task</h1>
-<h4 class="author">Allegra Cattani, Adele Conn, Paul Sharpe</h4>
+<h4 class="author">Allegra Cattani, Adele Conn, Paul Sharpe and Andy Wills</h4>
 
 </div>
 
 
+<div id="before-you-start" class="section level2">
+<h2>Before you start</h2>
+<p>This is an advanced worksheet, which assumes you have completed the <a href="https://ajwills72.github.io/rminr/#beginners">Absolute Beginners’ Guide to R</a> course, the <a href="https://benwhalley.github.io/rmip/overview-quantitative.html">Research Methods in Practice (Quantitative section)</a> course, and the <a href="https://ajwills72.github.io/rminr/#rmip">Intermediate Guide to R</a> course.</p>
+</div>
 <div id="contents" class="section level1">
 <h1>Contents</h1>
 <ul>
-<li><p><a href="#intro">Introduction</a></p></li>
-<li><p><a href="#start">Getting started</a></p></li>
-<li><p><a href="#preprocessing">Preprocessing</a></p></li>
-<li><p><a href="#results">Results</a></p></li>
+<li><a href="#intro">Introduction</a></li>
+<li><a href="#excel">Reading data from Excel</a></li>
+<li><a href="#preproc-demographics">Preprocessing demographics data</a></li>
+<li><a href="#preproc-wing">Preprocessing WinG data</a></li>
+<li><a href="#cdi-diffs">Comparing parents’ ratings of their child’s language ability</a></li>
+<li><a href="#table-descriptives">Generating a table of statistics</a></li>
+<li><a href="#correlate-cdi-wing">Exploring correlations between CDI and WinG</a></li>
+<li><a href="#plot-task">Plotting WinG task scores (raincloud plot)</a></li>
+<li><a href="#mann-whitney">Comparing Italian and English cards using Mann-Whitney U tests</a></li>
+<li><a href="compare-production">Comparing Italian and English semantically related production errors</a></li>
+<li><a href="#table-cards">Comparing individual cards</a></li>
 </ul>
 <p><a name="intro"></a></p>
 </div>
 <div id="introduction" class="section level1">
 <h1>Introduction</h1>
-<p>This study was an experiment which evaluated Words in Game (WinG) test, a tool for assessing children’s language development. WinG consists of a set of picture cards which are used in four tests: noun comprehension, noun production, predicate comprehension, and predicate production. The Italian and English versions of the WinG cards use different pictures to depict the associated words. The experiment tested whether English-speaking children aged approximately 30 months, produce similar responses for the two sets of cards. This was a 4 (test) x 2 (cards) mixed design.</p>
-<p>The data for each test was recorded on a sub-sheet of an Excel spreadsheet. There was also a sub-sheet containing demographic data.</p>
-<p><a name="start"></a></p>
+<p>This worksheet describes a full analysis pipeline for an undergraduate student dissertation on children’s language development. This study was an experiment which evaluated Words in Game (WinG) test. WinG consists of a set of picture cards which are used in four tests: noun comprehension, noun production, predicate comprehension, and predicate production. The Italian and English versions of the WinG cards use different pictures to depict the associated words. The experiment tested whether English-speaking children aged approximately 30 months, produce similar responses for the two sets of cards. This was a 4 (test) x 2 (cards) mixed design.</p>
+<p><a name="excel"></a></p>
 </div>
-<div id="getting-started" class="section level1">
-<h1>Getting started</h1>
-<p>To prepare for this worksheet, follow these steps:</p>
-<ol style="list-style-type: decimal">
-<li>Open the project you used to complete the <a href="better-scales.html">Better scales</a> worksheet.</li>
-</ol>
-<p><a name="preprocessing"></a></p>
-</div>
-<div id="preprocessing" class="section level1">
-<h1>Preprocessing</h1>
-<p>Relevant worksheets: <a href="#better-tables.html">Better tables</a>.</p>
-<p>We summarise the preprocessing steps here. They explained in full in the <a href="#better-tables.html">Better tables</a> worksheet.</p>
-<p>We start by reading the data from <code>picture-naming.xlsx</code> and preprocessing the demographics sub-sheet. This includes scores for the Communicative Development Inventory (CDI). The CDI is a list of 100 words with columns ‘understands’ and ‘says’. For each word, parents place a tick in these columns if they think their child can understand and/or say the word. The scores for ‘understands’ (<code>cdi_u</code>) and ‘says’ (<code>cdi_s</code>) is a total of the ticked boxes in the two columns.</p>
+<div id="reading-data-from-excel" class="section level1">
+<h1>Reading data from Excel</h1>
+<p>The data you need for this worksheet was introduced in the <a href="better-scales.html">Better scales</a> worksheet, so open the project you used to complete that worksheet.</p>
+<p>The data for each WinG test was recorded on a sub-sheet of an Excel spreadsheet. There was also a sub-sheet containing demographic data. We start by reading this data from <code>picture-naming.xlsx</code>.</p>
 <pre class="r"><code>rm(list = ls()) # clear the environment
 library(tidyverse)
 library(pander)
@@ -417,9 +418,12 @@ data &lt;- path %&gt;%
   excel_sheets() %&gt;%
   .[-1] %&gt;%
   set_names() %&gt;%
-  map_df(~ read_excel(path = path, sheet = .x, range = &quot;A1:V20&quot;), .id = &quot;sheet&quot;)
-
-# demographics data
+  map_df(~ read_excel(path = path, sheet = .x, range = &quot;A1:V20&quot;), .id = &quot;sheet&quot;)</code></pre>
+<p><a name="preproc-demographics"></a></p>
+<div id="preprocessing-demographics-data" class="section level2">
+<h2>Preprocessing demographics data</h2>
+<p>First we preprocess the demographics sub-sheet. This includes scores for the Communicative Development Inventory (CDI). The CDI is a list of 100 words with columns ‘understands’ and ‘says’. For each word, parents place a tick in these columns if they think their child can understand and/or say the word. The scores for ‘understands’ (<code>cdi_u</code>) and ‘says’ (<code>cdi_s</code>) is a total of the ticked boxes in the two columns.</p>
+<pre class="r"><code># demographics data
 demographics &lt;- data %&gt;%
   filter(sheet == &#39;Demographic&#39;) %&gt;%
   set_names(~ str_to_lower(.)) %&gt;%
@@ -463,9 +467,13 @@ demographics %&gt;% head(3) %&gt;% pander()</code></pre>
 </tr>
 </tbody>
 </table>
-<p>Next we preprocess the WinG data. When the experimenters administer WinG, they use a textual coding scheme to record each child’s responses. The codes we’ll use for the analyses in this worksheet are:</p>
+<p><a name="preproc-wing"></a></p>
+</div>
+<div id="preprocessing-wing-data" class="section level2">
+<h2>Preprocessing WinG data</h2>
+<p>Next we preprocess the WinG data. When the experimenters administer WinG, they use a textual coding scheme to record each child’s responses. The first codes we’re interested in are:</p>
 <ul>
-<li><code>N/A</code> (not to be confused with the <code>R</code> data type <code>NA</code>) - researchers use this code to indicate that there was some kind of interruption to the task (e.g. the child began crying).</li>
+<li><code>N/A</code> (not to be confused with the <code>R</code> data type <code>NA</code>) - researchers used this code to indicate that there was some kind of interruption to the task (e.g. the child began crying).</li>
 <li><code>C</code> or <code>C*</code> - <code>C</code> indicates that the child responded correctly for the picture on the card, <code>C*</code> indicates that the response was a correct synonym. In this experiment, both of these values are considered correct responses.</li>
 </ul>
 <p>The <code>exclude()</code> function applies the following exclusion criteria to our data:</p>
@@ -1088,14 +1096,11 @@ task_by_subj &lt;- as.data.frame(task_by_subj)</code></pre>
 </tr>
 </tbody>
 </table>
-<p><a name="results"></a></p>
+<p><a name="cdi-diffs"></a></p>
 </div>
-<div id="results" class="section level1">
-<h1>Results</h1>
-<div id="compare-language-ability-between-groups" class="section level2">
-<h2>Compare language ability between groups</h2>
-<p>Relevant worksheets: <a href="evidence.html">Evidence</a></p>
-<p>For our first analysis, we want to check that there were no differences between the children assigned to the Italian and English card groups. We do this using t-tests of their parents’ CDI ratings.</p>
+<div id="comparing-parents-ratings-of-their-childs-language-ability" class="section level2">
+<h2>Comparing parents’ ratings of their child’s language ability</h2>
+<p>For our first analysis, we want to check that there were no differences between the children assigned to the Italian and English card groups. We do this using t-tests of their parents’ CDI ratings. Bayesian t-tests were introduced in the <a href="evidence.html">Evidence worksheet</a>.</p>
 <pre class="r"><code>library(BayesFactor, quietly=TRUE)</code></pre>
 <pre><code>
 Attaching package: &#39;Matrix&#39;</code></pre>
@@ -1127,13 +1132,12 @@ Against denominator:
   Null, mu1-mu2 = 0 
 ---
 Bayes factor type: BFindepSample, JZS</code></pre>
-<pre class="r"><code># NOTE: Their t(22) is becuause 6 @ 24m + 16 @ 30m = 22</code></pre>
 <p>Our Bayes factors (CDI understands = <code>0.40</code>; CDI says = <code>0.45</code>) do not provide evidence of differences between the children tested using the Italian and English cards, giving us some confidence that the two groups are matched on language ability.</p>
+<p><a name="table-descriptives"></a></p>
 </div>
-<div id="descriptive-statistics" class="section level2">
-<h2>Descriptive statistics</h2>
-<p>Relevant worksheets: <a href="#better-tables.html">Better tables</a></p>
-<p>Next we produce a table of descriptive statistics. We start by calculating means and standard deviations for each WinG task by gender.</p>
+<div id="generating-a-table-of-statistics" class="section level2">
+<h2>Generating a table of statistics</h2>
+<p>Next we produce a table of descriptive statistics. This is described in more detail in the <a href="#better-tables.html">Better tables worksheet</a>. We start by calculating means and standard deviations for each WinG task by gender.</p>
 <pre class="r"><code>task_by_subj_l &lt;- task_by_subj %&gt;%
   pivot_longer(cols = c(nc, np, pc, pp),
                names_to = &#39;task&#39;,
@@ -1371,11 +1375,11 @@ Predicate Production
 </tbody>
 </table>
 <p>The Bayes factors provide no evidence of differences in accuracy between male and female children, suggesting that test scores are not influenced by gender differences.</p>
+<p><a name="correlate-cdi-wing"></a></p>
 </div>
-<div id="correlations-between-cdi-and-wing" class="section level2">
-<h2>Correlations between CDI and WinG</h2>
-<p>Relevant worksheets: <a href="corr.html">Relationships, part 2</a></p>
-<p>Next we look at correlations between parents’ ratings of their child’s comprehension (CDI understands) and the child’s comprehension scores on the noun and predicate tests. We use the <code>spearman</code> method of calculating the correlation between <code>task_by_subj$cdi_u</code> and <code>task_by_subj$nc</code>. The option <code>use=&quot;complete.obs&quot;</code> deletes any cases with a value of <code>NA</code>. We set cells to <code>NA</code> above to indicate that a subject was excluded from a test.</p>
+<div id="exploring-correlations-between-cdi-and-wing" class="section level2">
+<h2>Exploring correlations between CDI and WinG</h2>
+<p>Next we look at correlations between parents’ ratings of their child’s comprehension (CDI understands) and the child’s comprehension scores on the noun and predicate tests. Correlation was introduced in the <a href="corr.html">Relationships, part 2 worksheets</a>. We use the <code>spearman</code> method of calculating the correlation between <code>task_by_subj$cdi_u</code> and <code>task_by_subj$nc</code>. The option <code>use=&quot;complete.obs&quot;</code> deletes any cases with a value of <code>NA</code>. In the code above, we assigned the value <code>NA</code> to cells for subjects who were excluded from a test.</p>
 <pre class="r"><code>cor(method = &#39;spearman&#39;, task_by_subj$cdi_u, task_by_subj$nc, use=&quot;complete.obs&quot;)</code></pre>
 <pre><code>[1] 0.06225014</code></pre>
 <pre class="r"><code>correlationBF(task_by_subj$cdi_u, task_by_subj$nc)</code></pre>
@@ -1427,11 +1431,13 @@ Against denominator:
 ---
 Bayes factor type: BFcorrelation, Jeffreys-beta*</code></pre>
 <p>Here there was a strong positive correlation (<em>r</em> = 0.57, <em>BF</em> = 5.09) between the parents’ ratings of the words their children could say and the children’s scores on the noun production test. There was no evidence for a correlation between CDI says and predicate production scores (<em>BF</em> = 0.59).</p>
+<p><a name="plot-task"></a></p>
 </div>
-<div id="comparison-of-italian-and-english-cards" class="section level2">
-<h2>Comparison of Italian and English cards</h2>
-<p>Relevant worksheets: <a href="better-graphs.html">Better graphs</a>, <a href="non-parametric.html">Traditional non-parametric tests</a>.</p>
-<p>We create a raincloud plot for the noun tasks:</p>
+<div id="plotting-wing-task-scores-raincloud-plot" class="section level2">
+<h2>Plotting WinG task scores (raincloud plot)</h2>
+<p>We’ll create a raincloud plot to visualise the scores for the noun tasks. Raincloud plots were introduced in the <a href="better-graphs.html">Better graphs worksheet</a>.</p>
+<p>First we define the function <code>gemo_flat_violin()</code> to produce the “cloud”.</p>
+<p>Now we generate a plot for the noun tasks.</p>
 <pre class="r"><code>noun_tasks &lt;- task_by_subj_l %&gt;%
     filter(task %in% (c(&#39;np&#39;,&#39;nc&#39;)))
 noun_tasks$task &lt;- recode_factor(noun_tasks$task, nc = &#39;Noun Comprehension&#39;, np = &#39;Noun Production&#39;)
@@ -1465,6 +1471,7 @@ Warning: Removed 2 rows containing non-finite values (stat_summary).
 
 Warning: Removed 2 rows containing non-finite values (stat_summary).</code></pre>
 <pre><code>Warning: Removed 2 rows containing missing values (geom_point).</code></pre>
+<p>We generate a separate plot for the predicate tasks.</p>
 <pre class="r"><code>predicate_tasks &lt;- task_by_subj_l %&gt;%
     filter(task %in% (c(&#39;pc&#39;,&#39;pp&#39;)))
 predicate_tasks$task &lt;- recode_factor(predicate_tasks$task, nc = &#39;Noun Comprehension&#39;, np = &#39;Noun Production&#39;)
@@ -1499,7 +1506,11 @@ Warning: Removed 6 rows containing non-finite values (stat_summary).
 Warning: Removed 6 rows containing non-finite values (stat_summary).</code></pre>
 <pre><code>Warning: Removed 6 rows containing missing values (geom_point).</code></pre>
 <p>The raincloud plot for the noun tasks indicates that the data was not normally distributed. Given the small sample sizes, a non-parametric test is most suited for analysing this data. Although the predicate data looks normally distributed, in this study, a Mann-Whitney U test was used to compare the scores for the Italian and English cards for both the noun and predicate tasks.</p>
-<p>We start by creating some the summary statistics which are used to interpret the Mann-Whitney U test.</p>
+<p><a name="mann-whitney"></a></p>
+</div>
+<div id="comparing-italian-and-english-cards-using-mann-whitney-u-tests" class="section level2">
+<h2>Comparing Italian and English cards using Mann-Whitney U tests</h2>
+<p>The Mann-Whitney U is explained in the <a href="non-parametric.html">Traditional non-parametric tests worksheets</a>. We start by creating some the summary statistics which are used to interpret this test.</p>
 <pre class="r"><code>task_by_subj_l %&gt;%
   group_by(task, cards) %&gt;%
   drop_na() %&gt;%
@@ -1520,7 +1531,7 @@ Warning: Removed 6 rows containing non-finite values (stat_summary).</code></pre
 6 pc    english     8   15.5       4.5       36
 7 pp    italian     8    8         4.5       36
 8 pp    english     8    9         4.5       36</code></pre>
-<p>Next we run the Mann-Whitney U for each group.</p>
+<p>Now we run a test to compare the Italian and English cards for each WinG task.</p>
 <pre class="r"><code># independent 2-group Mann-Whitney U Test
 mann_whitney &lt;- function(df, group) {
   df &lt;- drop_na(df) # remove excluded subjects
@@ -1593,21 +1604,20 @@ cannot compute exact p-value with ties</code></pre>
 </tbody>
 </table>
 <p>All <em>p</em> values were &gt; 0.05, suggesting there were no differences between the Italian and English cards on any of the tests.</p>
+<p><a name="compare-production"></a></p>
 </div>
-</div>
-<div id="non-target-but-semantically-related-errors" class="section level1">
-<h1>Non-target but semantically related errors</h1>
+<div id="comparing-italian-and-english-semantically-related-production-errors" class="section level2">
+<h2>Comparing Italian and English semantically related production errors</h2>
 <p>NTS means non-target but semantically related e.g. the card was “house” but they said “hut”.</p>
-<p>NTS ~ Production(NP/PP) * Card Language(E/I)</p>
 <ul>
-<li><p>Plot mean semantically related responses (NTS) ~ NNTS/PNTS * E/I with CI bars</p></li>
+<li><p>raincloud NTS ~ Production(NP/PP) * Card Language(E/I)</p></li>
 <li><p>“A Mann-Whitney-U test was run to determine if there were any statistically significant differences in the number of non-target but semantically related errors elicited by the English WinG cards and the Italian WinG cards in the noun production sub-test. … The number of non-target but semantically related errors was not statistically significantly different between the English cards (Mdn = 3) and the Italian cards (Mdn = 3), U = 65, z = .415, p = .713”</p></li>
 <li><p>“A Mann-Whitney-U test was run to determine if there were differences in the number of non-target but semantically related errors elicited by the English WinG cards and the Italian WinG cards in the predicate production sub-test. Distributions of the scores for the English cards and the Italian cards were not similar, as assessed by visual inspection. The number of correct responses for the English cards (mean rank = 8.60) and the Italian cards (mean rank = 10.62) were not statistically significantly different, U = 31, z = -.821, p = .460”</p></li>
 </ul>
+<p><a name="table-cards"></a></p>
 </div>
-<div id="differences-for-individual-cards" class="section level1">
-<h1>Differences for individual cards</h1>
-<p>Relevant worksheets: <a href="#better-tables.html">Better tables</a>.</p>
+<div id="comparing-individual-cards" class="section level2">
+<h2>Comparing individual cards</h2>
 <p>We would like to know if there were any accuracy differences between the individual Italian and English cards in each task. We can summarise this data as a table of t-tests. Running a t-test where both groups have identical scores produces an error, so we remove these cards from our tests. For noun comprehension, this was the case for the words ‘apple’, ‘cow’, ‘penguin’,‘hat’, and ‘motorbike’.</p>
 <pre class="r"><code>nc_long &lt;- nc %&gt;%
   select(-correct) %&gt;%
@@ -2299,9 +2309,10 @@ washing
 </tr>
 </tbody>
 </table>
-<p>The only Bayes factor which provide evidence of a difference between the cards was <code>bag</code> on the noun production task.</p>
+<p>The only Bayes factor which provided evidence of a difference between the cards was <code>bag</code> on the noun production task.</p>
 <hr />
 <p>This material is distributed under a <a href="https://creativecommons.org/">Creative Commons</a> licence. CC-BY-SA 4.0.</p>
+</div>
 </div>
 
 
