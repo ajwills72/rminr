@@ -162,6 +162,9 @@ These are full preprocessing and analysis pipelines, based on final-year undergr
 - [The effects of negative mental imagery on self-esteem](cs-self-esteem.html): _Preprocessing scales_, _analysing scales_, **recoding factor levels**, _1-way ANOVA_, _2-way mixed ANOVA_.
 
 - [The Perruchet Effect](awdiss.html): **Downloading from OSF**, **De-duplicating data**, **Excluding participants**, _line graphs_, **baseline correction of neuroscience data**, **functions**, _loops_, _merging data frames_, **list of participant numbers**, **log transforms**, _recoding data_, **decent graphs for within-subject designs**, **Bayesian linear regression for within-subjects designs**.
+
+- [Reliability of Targets in a Picture Naming Task](cs-picture-naming.html): **Reading data from Excel**, _Bayesian t-tests_, _functions_, **Generating a table of statistics**, _correlations_, **raincloud plots**, **Mann-Whitney U test**
+
 ____
 
 #### Source code

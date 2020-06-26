@@ -33,8 +33,8 @@ This is an advanced worksheet, which assumes you have completed the [Absolute Be
 - [Generating a table of statistics](#table-descriptives)
 - [Exploring correlations between CDI and WinG](#correlate-cdi-wing)
 - [Plotting WinG task scores (raincloud plot)](#plot-task)
-- [Comparing Italian and English cards using Mann-Whitney U tests](#mann-whitney)
-- [Comparing Italian and English semantically related production errors](compare-production)
+- [Comparing cards using Mann-Whitney U tests](#mann-whitney)
+- [Comparing semantically related production errors](#compare-production)
 - [Comparing individual cards](#table-cards)
 
 <a name="intro"></a>
@@ -129,14 +129,15 @@ exclude <- function(df) {
   q17 <- q17 %>% filter(min > 17) %>% select(-min)
   
   # calculate total correct
-  q17 <- q17 %>% mutate(correct = rowSums(. == 'C' | . == 'C*'))
+  q17 <- q17 %>% mutate(correct = rowSums(. == 'C' | . == 'C*'),
+                        related = rowSums(. == 'NTS'))
   
   # exclude participants with scores < 2 sd below the mean
   q17 %>% filter(correct < mean(correct) + 2 * sd(correct))
 }
 
 nc <- exclude(nc)
-nc_by_subj <- select(nc, subj, correct)
+nc_by_subj <- select(nc, subj, correct, related)
 nc_by_subj %>% pander()
 
 np <- data %>%
@@ -146,7 +147,7 @@ np <- data %>%
   mutate(subj = factor(seq.int(nrow(.))))
 
 np <- exclude(np)
-np_by_subj <- np %>% select(subj, correct)
+np_by_subj <- np %>% select(subj, correct, related)
 
 pc <- data %>%
   filter(sheet == 'Predicate Comprehension') %>%
@@ -155,7 +156,7 @@ pc <- data %>%
   mutate(subj = factor(seq.int(nrow(.))))
 pc <- exclude(pc)
 
-pc_by_subj <- pc %>% select(subj, correct)
+pc_by_subj <- pc %>% select(subj, correct, related)
 
 pp <- data %>%
   filter(sheet == 'Predicate Production') %>%
@@ -164,17 +165,18 @@ pp <- data %>%
   mutate(subj = factor(seq.int(nrow(.))))
 pp <- exclude(pp)
 
-pp_by_subj <- pp %>% select(subj, correct)
+pp_by_subj <- pp %>% select(subj, correct, related)
 
 # join data
-task_by_subj <- left_join(demographics, nc_by_subj, by='subj') %>%
+data_by_subj <- left_join(demographics, nc_by_subj, by='subj') %>%
   left_join(., np_by_subj, by='subj', suffix = c('_nc','_np')) %>%
   left_join(., pc_by_subj, by='subj') %>%
   left_join(., pp_by_subj, by='subj', suffix = c('_pc', '_pp')) %>%
   left_join(., cards, by='subj') %>%
   mutate(nc = correct_nc, np = correct_np, pc = correct_pc, pp = correct_pp) %>%
-  select(subj, gender, nc, np, pc, pp, cards, cdi_u, cdi_s)
-task_by_subj <- as.data.frame(task_by_subj)
+  as.data.frame()
+
+task_by_subj <- select(data_by_subj, subj, gender, cards, nc:pp, cdi_u, cdi_s)
 ```
 
 Our preprocessed data, `task_by_subj`, includes a subject number (`subj`), the child's `gender`, their WinG scores (or `NA` if they were excluded from one of the tests, `nc`, `np`, `pc`, `pp`), the `cards` they were tested with, and their parents' CDI 'understands' (`cdi_u`) and 'says' (`cdi_s`) ratings.
@@ -431,7 +433,7 @@ The raincloud plot for the noun tasks indicates that the data was not normally d
 
 <a name="mann-whitney"></a>
 
-## Comparing Italian and English cards using Mann-Whitney U tests
+## Comparing cards using Mann-Whitney U tests
 
 The Mann-Whitney U is explained in the [Traditional non-parametric tests worksheets](non-parametric.html). We start by creating some the summary statistics which are used to interpret this test.
 
@@ -470,11 +472,40 @@ All _p_ values were > 0.05, suggesting there were no differences between the Ita
 
 <a name="compare-production"></a>
 
-## Comparing Italian and English semantically related production errors
+## Comparing semantically related production errors
 
-NTS means non-target but semantically related e.g. the card was "house" but they said "hut".
+In the noun and predicate production tests, the code `NTS` means "non-target but semantically related". For example the card was a house but the child said "hut". We would like to know if there were any differences on these semantically related errors between the two sets of cards. A raincloud plot suggests there wasn't.
 
-* raincloud NTS ~ Production(NP/PP) * Card Language(E/I)
+```{r nts-production-plot}
+semantically_related <-
+  select(data_by_subj, subj, cards, related_np, related_pp) %>%
+  rename(np = 'related_np', pp = 'related_pp') %>%
+  pivot_longer(cols = c(np, pp),
+               names_to = 'task',
+               values_to = 'correct') %>%
+  mutate(task = recode_factor(.$task, np = 'Noun Production', pp = 'Predicate Production'))
+
+related_cloud <- ggplot(semantically_related, aes(x = task, y = correct, fill = cards)) +
+  geom_flat_violin(aes(fill = cards), position = position_nudge(x = x_dodge, y = 0), adjust = 1.5, trim = FALSE, alpha = .5, colour = NA) +
+  geom_point(aes(x = as.numeric(task)-.15, y = correct, colour = cards), position = position_jitter(width = .05), size = .25, shape = 20) +
+  stat_summary(geom="errorbar", position = position_nudge(x = x_dodge, y = 0), mapping = aes(colour = cards), width = .1, fun.data=mean_cl_boot) +
+  stat_summary(geom="point", position = position_nudge(x = x_dodge, y = 0), mapping = aes(colour = cards), fun.data=mean_cl_boot) +
+  stat_summary(geom="line", position = position_nudge(x = x_dodge, y = 0), mapping = aes(group = cards, colour = cards), fun.data=mean_cl_boot, linetype = 3) +
+  scale_colour_brewer(palette = palette) +
+  scale_fill_brewer(palette = palette)
+
+related_cloud
+```
+
+Mann-Whitney U tests confirm this, with both _p_ values > 0.05.
+
+```{r nts-production-mw}
+production_mann_whitney <- semantically_related %>%
+  group_by(task) %>%
+  group_modify(mann_whitney)
+
+pander(production_mann_whitney)
+```
 
 * "A Mann-Whitney-U test was run to determine if there were any statistically
 significant differences in the number of non-target but semantically related errors
