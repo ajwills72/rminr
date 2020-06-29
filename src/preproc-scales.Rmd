@@ -135,7 +135,7 @@ dass21 <- mutate(dass21, stress = rowSums(dass21[4 + c(1,6,8,11,12,14,18)]))
 
 **Explanation of commands:**
 
-1. We use `mutate()` to create a `depression` column which is the sum of items 3, 5, 10, 13, 16, 17 and 21. Item 1 of the DASS-21 data is in column 5 of `dass21`, so we add 4 to each item number to select the correct columns to add together. We assign the result back to `dass21` to create a `depression` column for each row.
+1. We use `mutate()` to create a `depression` column which is the sum of items 3, 5, 10, 13, 16, 17 and 21. Item 1 of the DASS-21 data is in column 5 of `dass21`, so we add 4 to each item number to select the correct columns to add together. The command `dass21[4 + c(3,5,10,13,16,17,21)]` is an example of "vectorised addition". It adds `4` to each of the columns defined in the vector to the right of the `+`. We assign the result back to `dass21` to create a `depression` column for each row.
 
 1. We use similar commands to create `anxiety` and `stress` columns based on the items which make up these subscales.
 
@@ -207,63 +207,31 @@ sses_post_raw %>% head(3) %>% pander(split.table = Inf)
 
 The SSES questions are scored from `0 (Not at all)` to `4 (Extremely)`. Question 1 reads `I feel confident about my abilities`, so a higher score indicates higher self-esteem. However, a number of questions on the SSES are 'reverse scored'. For example, question 2 reads `I am worried about whether I am regarded as a success or failure`, so in this case a higher score indicates lower self-esteem. Surveys often use reverse scored questions to encourage participants to pay attention to the wording of each question. Before calculating a total SSES score, we need to reverse the reverse scored items, so that a higher number means higher self-esteem for all items.  
 
-## Writing a function to reverse score survey items
+```{r reverse}
+sses_raw <- bind_rows(sses_pre_raw, sses_post_raw)
+reverse_questions <- c('q2', 'q4', 'q5', 'q7', 'q8', 'q10', 'q13', 'q15', 'q16', 'q17', 'q18', 'q19', 'q20')
 
-We have a number of reverse scored items which we need to reverse for each participant. It would be laborious to write code to do this for each one, so we'll write some reusable code which can reverse any reverse coded score. This requires a brief digression into an explanation of functions.
-
-Functions are reusable lines of code which perform a particular function (hence the name), and are one of the most powerful features of programming languages such as R. At this point you will be familiar with _using_ functions. For example `rm()` is a function for removing objects from the R environment, and is part of the base `R` language. The `rm()` function is reusable in the sense that you can use the same function to do slightly different things. For example, `rm('foo')` would remove the single object `foo` from your environment. The string `foo` is called an _argument_ and is the data processed by `rm()`. The same function can also process a list of variable names, so calling `rm(ls())`, first calls `ls()` which lists all objects in your environment, and passes the results as an argument to `rm()` which removes them, thereby cleaning your environment of all objects. Similarly, you've used `read_csv()`, with different filename arguments to read different data files. The `read_csv()` function is part of the `readr` package which is loaded when you call `library(tidyverse)` (`library()` is another base `R` function). 
-
-Removing objects from the environment and reading files are such common tasks that they are, respectively, part of base `R` and a package that you can load using `library()`. However, we can use a special base `R` function called `function()`, to define our own functions for more specific tasks that we want to do repeatedly. This is not particularly complicated, but requires a little explanation if you've never encountered user-defined functions before (you can find more details in [the R manual](https://cran.r-project.org/doc/manuals/r-release/R-intro.html#Writing-your-own-functions)). We'll explain the main steps in defining a function, by writing a simple function to reverse survey items which are reverse coded.
-
-```{r reverse-score-survey}
-# Reverse score survey items
-# @param scores raw scores data frame
-# @param reverse character vector of columns to be reverse scored
-# @param max integer value of maximum score
-reverse_score_survey <- function(scores, reverse, max) {
-  reverse_score <- function(score) { max - score } # for scores starting at 1, max + 1 - score
-  scores %>% mutate_at(reverse, reverse_score)
-}
+sses_rev <- sses_raw
+sses_rev[,reverse_questions] <- 4 - sses_raw[,reverse_questions]
 ```
 
 **Explanation of commands:**
 
-1. Just like functions we use, our function consists of some reusable code, and the data which it processes. We create our function using the `function()` function. The arguments that our function accepts, `scores`, `reverse`, and `max` go inside the parentheses `()`. The code goes inside the curly brackets `{` and `}`. We name our function by assigning the result of `function(...) { ... }` to the variable `reverse_score_survey`.
-
-1. Our `reverse_score_survey()` function requires three arguments: `scores` is a data frame containing raw survey responses, i.e. with some items reverse scored, `reverse` is a character vector containing the column names in `scores` that are reverse scored, and `max` is the maximum score available for an item on the Likert scale used for each item.
-
-1. Inside `reverse_score_survey()`, we define another function called `reverse_score()`. Defining one function within another function is perfectly allowable in R. The `reverse_score()` function takes a `score` argument, and reverses it using the calculation `max - score`. For example, `reverse_score(4)`, would return the value `0` (`4 - 4`).  If your survey scores began at 1, you could adjust the calculation to `max + 1 - score`.
-
-1. The final line in `reverse_score_survey()` pipes our raw scores into `mutate_at(reverse, reverse_score)`. The `mutate_at()` function applies a function to a subset of columns in a data frame. The first argument `reverse` is the list of column names to be reversed. The second argument `reverse_score` is the name of the function we wrote to reverse the score.
-
-1. A function returns the last object it creates to the code that called it. In `reverse_score_survey()`, this will be a data frame with all scores adjusted to be from 0 to `max`.
-
-This was quite a long explanation for a simple, but very powerful four lines of code. By calling this function with different arguments, we can reverse the reverse coded items on any survey in which questions are answered using a Likert scale. To demonstrate this, we can now call `reverse_score_survey()` to reverse score our pre and post intervention SSES scores:
-
-```{r reverse-pre}
-reverse_questions <- c('q2', 'q4', 'q5', 'q7', 'q8', 'q10', 'q13', 'q15', 'q16', 'q17', 'q18',
-                       'q19', 'q20')
-sses_pre  <- reverse_score_survey(sses_pre_raw, reverse_questions, 4)
-sses_post <- reverse_score_survey(sses_post_raw, reverse_questions, 4)
-```
-
-**Explanation of commands:**
+1. Because the remaining preprocessing applies to both pre- and post- data, we join them together using `sses_raw <- bind_rows(sses_pre_raw, sses_post_raw)`.
 
 1. We set `reverse_questions` to be a vector of the column names of the SSES items that are reverse scored.
 
-1. Then we call `reverse_score_survey(sses_pre_raw, reverse_questions, 4)`. When the function is run, `sses_pre_raw` is assigned to the `scores` argument, `reverse_questions` to the `reverse` argument, and `4` to the `max` argument. The data frame returned by `reverse_score_survey()` (higher score meaning higher self-esteem for all items) is assigned to `sses_pre`.
+1. `4 - sses_raw[,reverse_questions]` reverses the scores for the reversed items. There's a lot going on here, so we'll explain each part of the command:
 
-1. Similarly, we call the same function with `sses_post_raw` to reverse score the post-intervention surveys and assign the result to `sses_post`.
+    1. The values inside the square brackets of `sses_raw[,reverse_questions]` select a subset of rows and columns from `sses_raw`. The first argument after `[` specifies which rows to select. Leaving this empty, means 'all rows'. The argument after the `,` specifies which columns to select. Here we specify the reversed item columns that we defined in `reverse_questions`.
+    1. Having selected just the rows and columns containing values we neeed to reverse score,  `4 - ` applies a vectorised subtraction to subtract each value on the right-hand side of the `-` from `4`, thereby reversing the score. This is similar to the vectorised addition we used above. So if a reversed score was `4` (the maximum on the Likert scale), this command would convert it to `0` (`4 - 4`). The same applies to any other value on the scale.
+    1. We assign the results of the subtractions back to the same subset of rows and columns with `sses_rev[,reverse_questions] <-` 
 
-Now that our items are all scored in the same direction, we can calculate the total SSES baseline scores using the same technique we used for [calculating subscale scores](#subscales):
+Now that our items are all scored in the same direction, we can calculate the SSES scores using the same technique we used for [calculating subscale scores](#subscales):
 
 ```{r pre-score, R.options = list(width = 100)}
-sses_pre <- mutate(sses_pre, total = rowSums(sses_pre[4:23]))
-sses_post <- mutate(sses_post, total = rowSums(sses_post[4:23]))
-```
-
-```{r, echo=FALSE}
-sses_pre %>% head(3) %>% pander(split.table = Inf)
+sses_raw <- mutate(sses_raw, total = rowSums(sses_raw[4:23]))
+sses_raw %>% head(3) %>% pander(split.table = Inf)
 ```
 
 # References
