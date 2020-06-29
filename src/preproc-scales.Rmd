@@ -162,7 +162,7 @@ sses %>% head(3) %>% pander(split.table = Inf)
 The data will be easier to analyse if we rename the columns. It will also be useful to divide the data into two data frames, one for the pre-intervention SSES, the other for the post-intervention SSES. We can do all of this in a single pipeline:
 
 ```{r preprocess-sses-pre}
-sses_pre_raw  <- sses %>% select(1, 5:25) %>%
+sses_pre_raw  <- select(sses, 1, 5:25) %>%
   set_names(~ str_to_lower(.) %>% str_replace_all("pre_sse_", "q")) %>%
   mutate(subj = factor(partid), condition = factor(condition), time = factor('pre')) %>%
   select(subj, condition, time, q1:q20)
@@ -170,7 +170,7 @@ sses_pre_raw  <- sses %>% select(1, 5:25) %>%
 
 **Explanation of pipeline commands:**
 
-1. `sses_pre_raw  <- sses %>% select(1, 5:25)` - We save the output of the pipeline in `sses_pre_raw`. First, we pipe the `sses` data frame into a `select` which keeps column 1, and columns 5:25. Column 1 is the participant id, columns 5:24 are the SSES scores, and column 25 is the participant's condition.
+1. `sses_pre_raw  <- select(sses, 1, 5:25)` - We save the output of the pipeline in `sses_pre_raw`. First, we pipe the `sses` data frame into a `select` which keeps column 1, and columns 5:25. Column 1 is the participant id, columns 5:24 are the SSES scores, and column 25 is the participant's condition.
 
 1. `set_names(~ str_to_lower(.) %>% str_replace_all("pre_sse_", "q"))` - Next, we use the function `set_names()` to rename our columns. The `~` is a way of telling `set_names()` to apply a function each column name. The remainder of the command is a "sub-pipeline" which tidies up the column name. The command `str_to_lower(.)` converts a string (the `.` means the current column name) to lower case. This lower case name is piped to `str_replace_all("pre_sse_", "q"))` which replaces any string with the prefix `pre_sse_` with `q`. All our columns are now lowercase, and the SSES questions are named `q1:q20`.
 
@@ -187,7 +187,7 @@ sses_pre_raw %>% head(3) %>% pander(split.table = Inf)
 We use a similar pipeline to create a tidy data frame containing the post-intervention SSES data.
 
 ```{r preprocess-sses-post}
-sses_post_raw <- sses %>% select(1, 25:45) %>%
+sses_post_raw <- select(sses, 1, 25:45) %>%
   set_names(~ str_to_lower(.) %>% str_replace_all("post_sse_", "q")) %>%
   mutate(subj = factor(partid), condition = factor(condition), time = factor('post')) %>%
   select(subj, condition, time, q1:q20)
