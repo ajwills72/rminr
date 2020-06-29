@@ -43,13 +43,13 @@ library(pander)
 
 # Introduction
 
-Intelligence, personality, and many other psychological constructs are often measured using scales. This type of data is normally collected using questionnaires (also called surveys). Answers to the questions are given numerical values, most commonly using a Likert scale. Likert scales associate numbers with a set of answers which express some degree of agreement each question e.g. `0=Not at all, 1=A little, 2=Somewhat, 3=A lot, 4=Extremely`. A formula is applied to the scores for questions which make up the construct to calculate an overall number for the scale. This could be all questions, or a subset for scales which contain subscales. The formula often just consists of adding up the individual scores (more on this below).
+Intelligence, personality, and many other psychological constructs are often measured using scales. This type of data is normally collected using questionnaires (also called surveys). Answers to the questions are given numerical values, most commonly using a Likert scale. Likert scales associate numbers with a set of answers which express some degree of agreement each question e.g. `0=Not at all, 1=A little, 2=Somewhat, 3=A lot, 4=Extremely`. A formula is applied to the scores for some or all of the questions to calculate an overall score for the scale. The formula often just consists of adding up the individual scores (more on this below).
 
-A psychometric scale is a scale which has undergone some degree of testing to ensure that it is valid and reliable. A valid scale is a true measure of the underlying construct, e.g. it measures intelligence, rather than something else. A reliable scale gives consistent results, i.e. a person who completed the scale at different times would produce similar scores, as would two people who are similar in terms of the construct measured by the scale. Most published scales have been tested to ensure they are valid and reliable, so it's advisable to use an existing scale if one exists, before creating your own.
+A psychometric scale is a scale which has undergone some degree of testing to ensure that it is valid and reliable measure of the underlying construct. For example, a valid intelligence scale would truely measure intelligence, rather than some other constructy (e.g. memory). A reliable scale gives consistent results, i.e. a person who completed the scale at different times would produce similar scores, as would two people who are similar in terms of the construct measured by the scale. Most published scales have been tested to ensure they are valid and reliable, so it's advisable to use an existing scale if one exists, before creating your own.
 
 Surveys can be created using [JISC](https://www.jisc.ac.uk/), [Gorilla Survey](https://gorilla.sc/), [OpenSesame](https://osdoc.cogsci.nl/), [The Experiment Factory](https://expfactory.github.io/experiments/), [Qualtrics](https://www.qualtrics.com/) and many other software packages. Most software will allow you to save your data as a CSV file. The precise structure of the data varies between packages, so you are likely to have to start by [preprocessing](preproc.html) your data.
 
-In this worksheet, we'll cover some common techniques which you are likely to use to preprocess psychometric scale data. These techniques should be useful regardless of the software you used to collect your survey data, although they will need slight modifications depending on the way your raw data is organised.
+In this worksheet, we'll cover some common techniques which you are likely to use to preprocess psychometric scale data. These techniques should be useful regardless of the software you used to administer your survey data, although they will need slight modifications depending on the way your raw data is organised.
 
 <a name="start"></a>
 
@@ -76,7 +76,7 @@ library(tidyverse)
 
 # Selecting data
 
-Our first step will be to remove columns from the raw survey data which aren't needed for data analysis.  We'll demonstrate this using some real data from the Depression Anxiety Stress Scales—21 (DASS-21, Heatherton & Polivy, 1991). The DASS-21 is a 21-item scale for measuring depression, anxiety and stress. This data is stored in the file `going-further/dass21.csv`.
+Our first step will be to remove columns from the raw survey data which aren't needed for data analysis.  We'll demonstrate this using some real data from the Depression Anxiety Stress Scales—21 (DASS-21, Henry & Crawford, 2005). The DASS-21 is a 21-item scale for measuring depression, anxiety and stress. This data is stored in the file `going-further/dass21.csv`.
 
 ```{r pre-process-dass}
 dass21_raw <- read_csv("going-further/dass21.csv")
@@ -236,9 +236,9 @@ sses_raw %>% head(3) %>% pander(split.table = Inf)
 
 # References
 
-Heatherton, T. F., & Polivy, J. (1991). Development and validation of a scale for measuring state self-esteem. _Journal of Personality and Social Psychology, 60(6)_, 895.
+Heatherton, T. F., & Polivy, J. (1991). [Development and validation of a scale for measuring state self-esteem](http://www.academia.edu/download/37381608/91_Heatherton_Polivy_JPSP.pdf) _Journal of Personality and Social Psychology, 60(6)_, 895.
 
-Osman, A., Wong, J. L., Bagge, C. L., Freedenthal, S., Gutierrez, P. M., & Lozano, G. (2012). The Depression Anxiety Stress Scales—21 (DASS-21): Further Examination of Dimensions, Scale Reliability, and Correlates. _Journal of Clinical Psychology, 68(12)_, 1322–1338. https://doi.org/10.1002/jclp.21908
+Henry, J. D., & Crawford, J. R. (2005). [The short-form version of the Depression Anxiety Stress Scales (DASS-21): Construct validity and normative data in a large non-clinical sample](https://onlinelibrary.wiley.com/doi/pdf/10.1348/014466505X29657?casa_token=qL449BGkw4EAAAAA:qrRVqngwUjujoSuG3WwppU0Cma7Kv0YD03eAy6xrmIkLFpyr3mOv7bMv-LiWkpS46Cqr7rgDay5b-A) British Journal of Clinical Psychology, 44(2), 227–239.
 
 ___
 
