@@ -55,15 +55,15 @@ In this worksheet, we'll cover some common techniques which you are likely to us
 
 # Getting started
 
-To prepare for this worksheet, follow these steps:
+To prepare for this worksheet
 
-1. Create a new R project.
+1. Open the `rminr-data` project we used [previously](preproc.html#load).
 
-1. In your project, create a folder named `going-further` 
+1. If you don't see a folder named `going-further`, it means you created your project _before_ the data required for this worksheet was added to the `rminr-data` git repository. You can get the latest files by asking git to "`pull`" the repository. Select the `Git` tab, which is located in the row of tabs which includes the `Environment` tab. Click the `Pull` button with a downward pointing arrow. A window will open showing the files which have been pulled from the repository. Close the `Git pull` window.
 
-1. You will find the files `dass21.csv` and `state-self-esteem.sav` in the `going-further` folder in git repository we used [previously](preproc.html#load). Upload these files into the `going-further` folder you just created.
+1. Open the `Files` tab. The `going-further` folder should contain the files `dass21.csv` and `sses.sav`.
 
-1. Create a script named `scales.R` and add the code in this worksheet to this script as you work through each section.
+1. Create a script named `scales.R` in the `rminr-data` folder (the folder above `going-further`). Add the code to this script as you work through each section of the worksheet.
 
 We start with some lines to clear the workspace and load `tidyverse`.
 
@@ -76,7 +76,7 @@ library(tidyverse)
 
 # Selecting data
 
-Our first step will be to remove columns from the raw survey data which aren't needed for data analysis.  We'll demonstrate this using some real data from the Depression Anxiety Stress Scales—21 (DASS-21, Heatherton & Polivy, 1991). The DASS-21 is a 21-item scale for measuring depression, anxiety and stress. This data is stored in the file `dass21.csv` which you added to your project above.
+Our first step will be to remove columns from the raw survey data which aren't needed for data analysis.  We'll demonstrate this using some real data from the Depression Anxiety Stress Scales—21 (DASS-21, Heatherton & Polivy, 1991). The DASS-21 is a 21-item scale for measuring depression, anxiety and stress. This data is stored in the file `going-further/dass21.csv`.
 
 ```{r pre-process-dass}
 dass21_raw <- read_csv("going-further/dass21.csv")
@@ -139,7 +139,7 @@ dass21 <- mutate(dass21, stress = rowSums(dass21[c(4+1,4+6,4+8,4+11,4+12,4+14,4+
 
 1. We use similar commands to create `anxiety` and `stress` columns based on the items which make up these subscales.
 
-Our `dass21` data frame now looks has a depression, anxiety and stress score for each participant:
+Our `dass21` data frame now has a depression, anxiety and stress score for each participant:
 
 ```{r, echo=FALSE}
 dass21 %>% head(3) %>% pander(split.table = Inf)
@@ -149,7 +149,7 @@ dass21 %>% head(3) %>% pander(split.table = Inf)
 
 # Tidying survey data
 
-Some data benefits from a little more tidying than simply removing columns which aren't required. We'll demonstrate this more advanced preprocessing the other dataset (`sses.csv`) which you added to your project above.This data comes from from an experiment in which self-esteem was measured before and after participants completed one of two mental imagery conditions, or a control condition. This experiment used the State Self-Esteem Scale (SSES, Osman et al., 2012), a 20-item scale used to measure short-lived (state) changes in self-esteem.
+Some data benefits from a little more tidying than simply removing columns which aren't required. We'll demonstrate this more advanced preprocessing using the `sses.csv` dataset. This data comes from from an experiment in which self-esteem was measured before and after participants completed one of two mental imagery conditions, or a control condition. This experiment used the State Self-Esteem Scale (SSES, Osman et al., 2012), a 20-item scale used to measure short-lived (state) changes in self-esteem.
 
 ```{r, R.options = list(width = 100)}
 sses <- read_csv('going-further/sses.csv')
@@ -159,7 +159,7 @@ sses <- read_csv('going-further/sses.csv')
 sses %>% head(3) %>% pander(split.table = Inf)
 ```
 
-The data will be easier to analyse if rename the columns. It will also be useful to divide the data into two data frames, one for the pre-intervention SSES, the other for the post-intervention SSES. We can do all of this in a single pipeline:
+The data will be easier to analyse if we rename the columns. It will also be useful to divide the data into two data frames, one for the pre-intervention SSES, the other for the post-intervention SSES. We can do all of this in a single pipeline:
 
 ```{r preprocess-sses-pre}
 sses_pre_raw  <- sses %>% select(1, 5:25) %>%
@@ -195,7 +195,7 @@ sses_post_raw <- sses %>% select(1, 25:45) %>%
 
 **Explanation of command:**
 
-1. This is indentical to the previous pipeline, except that the post-intervention SSES data are in columns `26:45`, these columns have the prefix `post_sse_` rather than `pre_sse_`, and we use the value `post` in our `time` factor.
+1. This is identical to the previous pipeline, except that the post-intervention SSES data are in columns `26:45`, these columns have the prefix `post_sse_` rather than `pre_sse_`, and we use the value `post` in our `time` factor.
 
 ```{r, echo=FALSE}
 sses_post_raw %>% head(3) %>% pander(split.table = Inf)
@@ -205,7 +205,7 @@ sses_post_raw %>% head(3) %>% pander(split.table = Inf)
 
 # Reverse scoring survey items
 
-The SSES questions are scored from `0 (Not at all)` to `4 (Extremely)`. Question 1 reads `I feel confident about my abilities`, so a higher score indicates higher self-esteem. However, a number of questions on the SSES are 'reverse scored'. For example, question 2 reads `I am worried about whether I am regarded as a success or failure`, so in this case a higher score indcates lower self-esteem. Surveys often use reverse scored questions to encourage participants to pay attention to the wording of each question. Before calculating a total SSES score, we need to reverse the reverse scored items, so that a higher number means higher self-esteem for all items.  
+The SSES questions are scored from `0 (Not at all)` to `4 (Extremely)`. Question 1 reads `I feel confident about my abilities`, so a higher score indicates higher self-esteem. However, a number of questions on the SSES are 'reverse scored'. For example, question 2 reads `I am worried about whether I am regarded as a success or failure`, so in this case a higher score indicates lower self-esteem. Surveys often use reverse scored questions to encourage participants to pay attention to the wording of each question. Before calculating a total SSES score, we need to reverse the reverse scored items, so that a higher number means higher self-esteem for all items.  
 
 ## Writing a function to reverse score survey items
 
