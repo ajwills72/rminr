@@ -128,9 +128,9 @@ slice(dass21, 68:72) %>% pander(split.table = Inf)
 Our next step is to calculate the scores for the constructs measured by our scale. Many scales consist of groups of questions which measure multiple, distinct constructs. The DASS-21 is an example of a scale with subscale scores for depression, anxiety and stress. These are calculated by adding together responses for specific items, which we can do using the `rowSums()` function:
 
 ```{r dass21-subscales}
-dass21 <- mutate(dass21, depression = rowSums(dass21[c(4+3,4+5,4+10,4+13,4+16,4+17,4+21)]))
-dass21 <- mutate(dass21, anxiety = rowSums(dass21[c(4+2,4+4,4+7,4+9,4+15,4+19,4+20)]))
-dass21 <- mutate(dass21, stress = rowSums(dass21[c(4+1,4+6,4+8,4+11,4+12,4+14,4+18)]))
+dass21 <- mutate(dass21, depression = rowSums(dass21[4 + c(3,5,10,13,16,17,21)]))
+dass21 <- mutate(dass21, anxiety = rowSums(dass21[4 + c(2,4,7,9,15,19,20)]))
+dass21 <- mutate(dass21, stress = rowSums(dass21[4 + c(1,6,8,11,12,14,18)]))
 ```
 
 **Explanation of commands:**
