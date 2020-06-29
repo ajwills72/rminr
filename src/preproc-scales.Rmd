@@ -1,6 +1,6 @@
 ---
 title: "Preprocessing scales"
-author: "Paul Sharpe, Sophie Homer"
+author: "Paul Sharpe, Andy Wills, Sophie Homer"
 output: html_document
 ---
 
@@ -76,7 +76,7 @@ library(tidyverse)
 
 # Selecting data
 
-Our first step will be to remove columns from the raw survey data which aren't needed for data analysis.  We'll demonstrate this using some real data from the Depression Anxiety Stress Scales—21 (DASS-21, Henry & Crawford, 2005). The DASS-21 is a 21-item scale for measuring depression, anxiety and stress. This data is stored in the file `going-further/dass21.csv`.
+Our first step will be to remove columns from the raw survey data which aren't needed for data analysis.  We'll demonstrate this using some real data from the Depression Anxiety Stress Scales—21 (DASS-21, Henry & Crawford, 2005), a 21-item scale for measuring depression, anxiety and stress.
 
 ```{r pre-process-dass}
 dass21_raw <- read_csv("going-further/dass21.csv")
@@ -85,11 +85,11 @@ dass21_raw <- select(dass21_raw, partID, Age:DASS21)
 
 **Explanation of command:**
 
-1. We read the CSV file using `read_csv`, creating the data frame `dass21_raw`.
+1. We read the DASS-21 CSV file into the data frame `dass21_raw`.
 
 1. We then `select()` just the columns in `dass21_raw` that we want to keep. The first column we `select()`, is the participant ID, which is stored in the `partID` column. Arguments to `select()` can also be consecutive ranges of columns in a data frame, consisting of the first and last column name (ordered from left to right), separated by a `:`. This avoids having to type out long lists of column names.  Here we use `Age:DASS21` to select all columns between `Age` and `DASS21`.
 
-The table below shows the first few rows from `dass21_raw`. In this study, the data was recorded in "wide" format, i.e. one row for each participant. Notice that our data frame contains only the columns that we selected in the commands above. The DASS-21 scores are in columns `DASS1`-`DASS21`.
+The table below shows the first few rows from `dass21_raw`. In this study, the data was recorded in "wide" format (one row for each participant). Notice that our data frame contains only the columns that we selected in the commands above. The DASS-21 scores are in columns `DASS1`-`DASS21`.
 
 ```{r dass21, echo=FALSE}
 head(dass21_raw) %>% pander(split.table = Inf)
@@ -115,7 +115,7 @@ dass21 <- dass21_raw %>% drop_na()
 
 **Explanation of command:**
 
-1. We pipe the raw data into the `drop_na()` function (part of the `tidyverse` package). This drops any rows with a column containing `NA`, which includes data for participants `106` and `107`.
+* We pipe the raw data into the `drop_na()` function (part of the `tidyverse` package). This drops any rows with a column containing `NA`, which includes data for participants `106` and `107`.
 
 ```{r exclude, echo=FALSE}
 slice(dass21, 68:72) %>% pander(split.table = Inf)
@@ -133,9 +133,13 @@ dass21 <- mutate(dass21, anxiety = rowSums(dass21[4 + c(2,4,7,9,15,19,20)]))
 dass21 <- mutate(dass21, stress = rowSums(dass21[4 + c(1,6,8,11,12,14,18)]))
 ```
 
+```{r, echo=FALSE, eval=FALSE}
+# calculating anxiety and stress are good candidates for an exercise.
+```
+
 **Explanation of commands:**
 
-1. We use `mutate()` to create a `depression` column which is the sum of items 3, 5, 10, 13, 16, 17 and 21. Item 1 of the DASS-21 data is in column 5 of `dass21`, so we add 4 to each item number to select the correct columns to add together. The command `dass21[4 + c(3,5,10,13,16,17,21)]` is an example of "vectorised addition". It adds `4` to each of the columns defined in the vector to the right of the `+`. We assign the result back to `dass21` to create a `depression` column for each row.
+1. We use `mutate()` to create a `depression` column which is the sum of items 3, 5, 10, 13, 16, 17 and 21. Item 1 of the DASS-21 data is in column 5 of `dass21`, so we add 4 to each item number to select the correct columns to add together. The command `dass21[4 + c(3,5,10,13,16,17,21)]` is an example of "vectorised addition". It adds `4` to each of the columns defined in the vector to the right of the `+`. For each row, the values in the resulting columns are added together using `rowSums()`. We assign the result back to `dass21`, thereby creating a `depression` column for each row.
 
 1. We use similar commands to create `anxiety` and `stress` columns based on the items which make up these subscales.
 
@@ -149,7 +153,7 @@ dass21 %>% head(3) %>% pander(split.table = Inf)
 
 # Tidying survey data
 
-Some data benefits from a little more tidying than simply removing columns which aren't required. We'll demonstrate this more advanced preprocessing using the `sses.csv` dataset. This data comes from from an experiment in which self-esteem was measured before and after participants completed one of two mental imagery conditions, or a control condition. This experiment used the State Self-Esteem Scale (SSES, Osman et al., 2012), a 20-item scale used to measure short-lived (state) changes in self-esteem.
+Some data benefits from a little more tidying than simply removing columns which aren't required. We'll demonstrate this more advanced preprocessing using a different dataset. This data came from from an experiment in which self-esteem was measured before and after participants completed one of two mental imagery conditions, or a control condition. The experiment used the State Self-Esteem Scale (SSES, Heatherton & Polivy, 1991), a 20-item scale used to measure short-lived (state) changes in self-esteem.
 
 ```{r, R.options = list(width = 100)}
 sses <- read_csv('going-further/sses.csv')
@@ -170,9 +174,9 @@ sses_pre_raw  <- select(sses, 1, 5:25) %>%
 
 **Explanation of pipeline commands:**
 
-1. `sses_pre_raw  <- select(sses, 1, 5:25)` - We save the output of the pipeline in `sses_pre_raw`. First, we pipe the `sses` data frame into a `select` which keeps column 1, and columns 5:25. Column 1 is the participant id, columns 5:24 are the SSES scores, and column 25 is the participant's condition.
+1. `sses_pre_raw  <- select(sses, 1, 5:25)` - We save the output of the pipeline in `sses_pre_raw`. First, we `select()` column 1, and columns 5:25 from `sses`. Column 1 is the participant id, columns 5:24 are the SSES scores, and column 25 is the participant's condition.
 
-1. `set_names(~ str_to_lower(.) %>% str_replace_all("pre_sse_", "q"))` - Next, we use the function `set_names()` to rename our columns. The `~` is a way of telling `set_names()` to apply a function each column name. The remainder of the command is a "sub-pipeline" which tidies up the column name. The command `str_to_lower(.)` converts a string (the `.` means the current column name) to lower case. This lower case name is piped to `str_replace_all("pre_sse_", "q"))` which replaces any string with the prefix `pre_sse_` with `q`. All our columns are now lowercase, and the SSES questions are named `q1:q20`.
+1. `set_names(~ str_to_lower(.) %>% str_replace_all("pre_sse_", "q"))` - Next, we use the function `set_names()` to rename our columns. The `~` is a way of telling `set_names()` to apply a function to each column name. The remainder of the command is a "sub-pipeline" which tidies up the column name. The command `str_to_lower(.)` converts a string (the `.` means the current column name) to lower case. This lower case name is piped to `str_replace_all("pre_sse_", "q"))` which replaces any string with the prefix `pre_sse_` with `q`. All our columns are now lowercase, and the SSES questions are named `q1:q20`.
 
 1. `mutate(subj = factor(partid), condition = factor(condition), time = factor('pre'))` - Next, we use `mutate` to add and modify some columns. The argument `subj = factor(partid)` creates a new column named `subj` (which is a bit clearer than `partid`) by copying the `partid` column and making it a factor. The argument `condition = factor(condition)` makes the `condition` column a factor. The argument `time = factor('pre')` creates a new factor called `time` and sets all values to `pre`.
 
@@ -192,6 +196,12 @@ sses_post_raw <- select(sses, 1, 25:45) %>%
   mutate(subj = factor(partid), condition = factor(condition), time = factor('post')) %>%
   select(subj, condition, time, q1:q20)
 ```
+
+
+```{r echo=FALSE, eval=FALSE}
+# creating sses_post_raw is a good candidate for an exercise.
+```
+
 
 **Explanation of command:**
 
@@ -223,7 +233,7 @@ sses_rev[,reverse_questions] <- 4 - sses_raw[,reverse_questions]
 
 1. `4 - sses_raw[,reverse_questions]` reverses the scores for the reversed items. There's a lot going on here, so we'll explain each part of the command:
 
-    1. The values inside the square brackets of `sses_raw[,reverse_questions]` select a subset of rows and columns from `sses_raw`. The first argument after `[` specifies which rows to select. Leaving this empty, means 'all rows'. The argument after the `,` specifies which columns to select. Here we specify the reversed item columns that we defined in `reverse_questions`.
+    1. The values inside the square brackets of `sses_raw[,reverse_questions]` select a subset of rows and columns from `sses_raw`. The first argument after `[` specifies which rows to select. Leaving this empty, means 'all rows'. The argument after the `,` specifies which columns to select. We specified colums to be the reversed item column names that we defined in `reverse_questions`.
     1. Having selected just the rows and columns containing values we neeed to reverse score,  `4 - ` applies a vectorised subtraction to subtract each value on the right-hand side of the `-` from `4`, thereby reversing the score. This is similar to the vectorised addition we used above. So if a reversed score was `4` (the maximum on the Likert scale), this command would convert it to `0` (`4 - 4`). The same applies to any other value on the scale.
     1. We assign the results of the subtractions back to the same subset of rows and columns with `sses_rev[,reverse_questions] <-` 
 
@@ -231,6 +241,9 @@ Now that our items are all scored in the same direction, we can calculate the SS
 
 ```{r pre-score, R.options = list(width = 100)}
 sses_raw <- mutate(sses_raw, total = rowSums(sses_raw[4:23]))
+```
+
+```{r echo=FALSE}
 sses_raw %>% head(3) %>% pander(split.table = Inf)
 ```
 
