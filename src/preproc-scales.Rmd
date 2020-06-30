@@ -1,5 +1,5 @@
 ---
-title: "Preprocessing scales"
+title: "Data preprocessing for scales"
 author: "Paul Sharpe, Andy Wills, Sophie Homer"
 output: html_document
 ---
@@ -23,7 +23,7 @@ library(kableExtra)
 library(pander)
 ```
 
-# Contents
+## Contents
 
 - [Introduction](#intro)
 
@@ -35,13 +35,17 @@ library(pander)
 
 - [Calculating subscale scores](#subscales)
 
+- [Exercise 1](#ex1)
+
 - [Tidying survey data](#tidy)
+
+- [Exercise 2](#ex2)
 
 - [Reverse scoring survey items](#reverse)
 
 <a name="intro"></a>
 
-# Introduction
+## Introduction
 
 Intelligence, personality, and many other psychological constructs are often measured using scales. This type of data is normally collected using questionnaires (also called surveys). Answers to the questions are given numerical values, most commonly using a Likert scale. Likert scales associate numbers with a set of answers which express some degree of agreement each question e.g. `0=Not at all, 1=A little, 2=Somewhat, 3=A lot, 4=Extremely`. A formula is applied to the scores for some or all of the questions to calculate an overall score for the scale. The formula often just consists of adding up the individual scores (more on this below).
 
@@ -53,9 +57,9 @@ In this worksheet, we'll cover some common techniques which you are likely to us
 
 <a name="start"></a>
 
-# Getting started
+## Getting started
 
-To prepare for this worksheet
+To prepare for this worksheet:
 
 1. Open the `rminr-data` project we used [previously](preproc.html#load).
 
@@ -74,7 +78,7 @@ library(tidyverse)
 
 <a name="select"></a>
 
-# Selecting data
+## Selecting data
 
 Our first step will be to remove columns from the raw survey data which aren't needed for data analysis.  We'll demonstrate this using some real data from the Depression Anxiety Stress Scales—21 (DASS-21, Henry & Crawford, 2005), a 21-item scale for measuring depression, anxiety and stress.
 
@@ -97,7 +101,7 @@ head(dass21_raw) %>% pander(split.table = Inf)
 
 <a name="missing"></a>
 
-# Handling missing data
+## Handling missing data
 
 If participants don't complete (or partially complete) a survey, you may want to exclude their data from your analyses. If we look at a section of the DASS-21 data, we can see that data is missing for some participants.
 
@@ -123,35 +127,35 @@ slice(dass21, 68:72) %>% pander(split.table = Inf)
 
 <a name="subscales"></a>
 
-# Calculating subscale scores
+## Calculating subscale scores
 
 Our next step is to calculate the scores for the constructs measured by our scale. Many scales consist of groups of questions which measure multiple, distinct constructs. The DASS-21 is an example of a scale with subscale scores for depression, anxiety and stress. These are calculated by adding together responses for specific items, which we can do using the `rowSums()` function:
 
 ```{r dass21-subscales}
 dass21 <- mutate(dass21, depression = rowSums(dass21[4 + c(3,5,10,13,16,17,21)]))
+dass21_total <- select(dass21, partID, Age, Gender, depression)
+```
+
+**Explanation of command:**
+
+* We use `mutate()` to create a `depression` column which is the sum of items 3, 5, 10, 13, 16, 17 and 21. Item 1 of the DASS-21 data is in column 5 of `dass21`, so we add 4 to each item number to select the correct columns to add together. The command `dass21[4 + c(3,5,10,13,16,17,21)]` is an example of "vectorised addition". It adds `4` to each of the columns defined in the vector to the right of the `+`. For each row, the values in the resulting columns are added together using `rowSums()`. We assign the result back to `dass21`, thereby creating a `depression` column for each row.
+
+<a name="ex1"></a>
+
+## Exercise 1
+
+Use similar commands to add scores for anxiety and stress to `dass21`. The anxiety subscale is the sum of questions 2,4,7,9,15,19 and 20. The stress subscale is the sum of questions 1,6,8,11,12,14 and 18. The first few rows of `dass21_total` should look like this:
+
+```{r ex1, echo=FALSE}
 dass21 <- mutate(dass21, anxiety = rowSums(dass21[4 + c(2,4,7,9,15,19,20)]))
 dass21 <- mutate(dass21, stress = rowSums(dass21[4 + c(1,6,8,11,12,14,18)]))
-```
-
-```{r, echo=FALSE, eval=FALSE}
-# calculating anxiety and stress are good candidates for an exercise.
-```
-
-**Explanation of commands:**
-
-1. We use `mutate()` to create a `depression` column which is the sum of items 3, 5, 10, 13, 16, 17 and 21. Item 1 of the DASS-21 data is in column 5 of `dass21`, so we add 4 to each item number to select the correct columns to add together. The command `dass21[4 + c(3,5,10,13,16,17,21)]` is an example of "vectorised addition". It adds `4` to each of the columns defined in the vector to the right of the `+`. For each row, the values in the resulting columns are added together using `rowSums()`. We assign the result back to `dass21`, thereby creating a `depression` column for each row.
-
-1. We use similar commands to create `anxiety` and `stress` columns based on the items which make up these subscales.
-
-Our `dass21` data frame now has a depression, anxiety and stress score for each participant:
-
-```{r, echo=FALSE}
-dass21 %>% head(3) %>% pander(split.table = Inf)
+dass21_total <- select(dass21, partID, Age, Gender, depression, anxiety, stress)
+dass21_total %>% head(10) %>% pander()
 ```
 
 <a name="tidy"></a>
 
-# Tidying survey data
+## Tidying survey data
 
 Some data benefits from a little more tidying than simply removing columns which aren't required. We'll demonstrate this more advanced preprocessing using a different dataset. This data came from from an experiment in which self-esteem was measured before and after participants completed one of two mental imagery conditions, or a control condition. The experiment used the State Self-Esteem Scale (SSES, Heatherton & Polivy, 1991), a 20-item scale used to measure short-lived (state) changes in self-esteem.
 
@@ -188,32 +192,23 @@ We now have our pre-intervention SSES data in a data frame with clearer column h
 sses_pre_raw %>% head(3) %>% pander(split.table = Inf)
 ```
 
-We use a similar pipeline to create a tidy data frame containing the post-intervention SSES data.
+<a name="ex2"></a>
 
-```{r preprocess-sses-post}
+## Exercise 2
+
+Write a similar pipeline to create a data frame named `sses_post_raw` containing the post-intervention SSES data. The post-intervention SSES data are in columns `26:45`, these columns have the prefix `post_sse_` rather than `pre_sse_`. Set the value in the `time` factor to `post`. The first few rows of `sses_post_raw` should look like this:
+
+```{r ex2, echo=FALSE}
 sses_post_raw <- select(sses, 1, 25:45) %>%
   set_names(~ str_to_lower(.) %>% str_replace_all("post_sse_", "q")) %>%
   mutate(subj = factor(partid), condition = factor(condition), time = factor('post')) %>%
   select(subj, condition, time, q1:q20)
-```
-
-
-```{r echo=FALSE, eval=FALSE}
-# creating sses_post_raw is a good candidate for an exercise.
-```
-
-
-**Explanation of command:**
-
-1. This is identical to the previous pipeline, except that the post-intervention SSES data are in columns `26:45`, these columns have the prefix `post_sse_` rather than `pre_sse_`, and we use the value `post` in our `time` factor.
-
-```{r, echo=FALSE}
 sses_post_raw %>% head(3) %>% pander(split.table = Inf)
 ```
 
 <a name="reverse"></a>
 
-# Reverse scoring survey items
+## Reverse scoring survey items
 
 The SSES questions are scored from `0 (Not at all)` to `4 (Extremely)`. Question 1 reads `I feel confident about my abilities`, so a higher score indicates higher self-esteem. However, a number of questions on the SSES are 'reverse scored'. For example, question 2 reads `I am worried about whether I am regarded as a success or failure`, so in this case a higher score indicates lower self-esteem. Surveys often use reverse scored questions to encourage participants to pay attention to the wording of each question. Before calculating a total SSES score, we need to reverse the reverse scored items, so that a higher number means higher self-esteem for all items.  
 
@@ -247,7 +242,7 @@ sses_raw <- mutate(sses_raw, total = rowSums(sses_raw[4:23]))
 sses_raw %>% head(3) %>% pander(split.table = Inf)
 ```
 
-# References
+## References
 
 Heatherton, T. F., & Polivy, J. (1991). [Development and validation of a scale for measuring state self-esteem](http://www.academia.edu/download/37381608/91_Heatherton_Polivy_JPSP.pdf) _Journal of Personality and Social Psychology, 60(6)_, 895.
 
