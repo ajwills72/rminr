@@ -1,6 +1,6 @@
 ---
 title: "Analysing scales"
-author: "Paul Sharpe, Sophie Homer"
+author: "Paul Sharpe, Andy Wills, Sophie Homer"
 output: html_document
 ---
 
@@ -24,6 +24,8 @@ options(tibble.width = Inf) # show all columns in output
 
 - [Introduction](#intro)
 
+- [Getting started](#start)
+
 - [Calculating Cronbach’s alpha](#cronbach)
 
 <a name="intro"></a>
@@ -32,17 +34,28 @@ options(tibble.width = Inf) # show all columns in output
 
 This worksheet describes analyses you are likely to need when working with pscyhometric scales.
 
+<a name="start"></a>
+
+# Getting started
+
+To prepare for this worksheet:
+
+1. Open the project you used to complete the [Preprocessing scales worksheet](preproc-scales.html).
+1. Add the code below to the end of `scales.R`.
+
 <a name="cronbach"></a>
 
 # Calculating Cronbach’s alpha
 
-See also: [Preprocessing scales](preproc-scales.html).
-
 Cronbach's alpha measures the internal consistency of a scale, using correlations between different groupings of individual scale items. Values of alpha range from 0-1, with higher numbers indicating a more reliable scale. When a new scale is developed, its reliability is normally reported using Cronbach's alpha. It's wise to ensure that the alpha for your sample data is similar to this value.
 
-We'll demonstrate the calculation of Cronbach's alpha for the State Self-Esteem Scale (SSES). This scale and the preprocessing steps required to prepare our example data for analysis are described in the [Preprocessing scales](preproc-scales.html) worksheet. When you have completed that worksheet, you will have a script named `scales.R`. Add the code below to `scales.R`, _after_ the SSES preprocessing code.
+We'll demonstrate the calculation of Cronbach's alpha for the State Self-Esteem Scale (SSES), which was introduced in the [Preprocessing scales worksheet](preproc-scales.html). As you will recall, this experiment used the SSES to measure self-esteem before and after a mental imagery intervention. This was a 2 (time) x 3 (condition) mixed design, with the following experimental conditions:
 
-We'll write a function to calculate alpha for the SSES using the `cronbach()` function from the `psy` package:
+ * Condition 1: participants visualised a negative mental image of themself
+ * Condition 2: participants visualised a negative mental image of someone else
+ * Condition 0 (control): participants did a card sorting task and did not think of any images.
+
+We'll write a function to calculate alpha for the SSES using the `cronbach()` function from the `psy` package. You may need to install this package before you can use it for the first time -- if so, use `install.packages('psy')`.
 
 ```{r cronbach}
 library(psy)
