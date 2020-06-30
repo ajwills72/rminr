@@ -55,65 +55,70 @@ We'll demonstrate the calculation of Cronbach's alpha for the State Self-Esteem 
  * Condition 2: participants visualised a negative mental image of someone else
  * Condition 0 (control): participants did a card sorting task and did not think of any images.
 
-We'll write a function to calculate alpha for the SSES using the `cronbach()` function from the `psy` package. You may need to install this package before you can use it for the first time -- if so, use `install.packages('psy')`.
+```{r echo=FALSE}
+# from tables.R
+rm(list = ls()) # clear the environment
+library(tidyverse)
 
-```{r cronbach}
+# DASS-21
+dass21_raw <- read_csv("going-further/dass21.csv")
+dass21_raw <- select(dass21_raw, partID, Age:DASS21)
+dass21 <- dass21_raw %>% drop_na()
+dass21 <- mutate(dass21, depression = rowSums(dass21[4 + c(3,5,10,13,16,17,21)]))
+dass21 <- mutate(dass21, anxiety = rowSums(dass21[4 + c(2,4,7,9,15,19,20)]))
+dass21 <- mutate(dass21, stress = rowSums(dass21[4 + c(1,6,8,11,12,14,18)]))
+
+# SSES
+sses <- read_csv('going-further/sses.csv')
+sses_pre_raw  <- select(sses, 1, 5:25) %>%
+  set_names(~ str_to_lower(.) %>% str_replace_all("pre_sse_", "q")) %>%
+  mutate(subj = factor(partid), condition = factor(condition), time = factor('pre')) %>%
+  select(subj, condition, time, q1:q20)
+sses_post_raw <- select(sses, 1, 25:45) %>%
+  set_names(~ str_to_lower(.) %>% str_replace_all("post_sse_", "q")) %>%
+  mutate(subj = factor(partid), condition = factor(condition), time = factor('post')) %>%
+  select(subj, condition, time, q1:q20)
+sses_raw <- bind_rows(sses_pre_raw, sses_post_raw)
+reverse_questions <- c('q2', 'q4', 'q5', 'q7', 'q8', 'q10', 'q13', 'q15', 'q16', 'q17', 'q18', 'q19', 'q20')
+
+sses_rev <- sses_raw
+sses_rev[,reverse_questions] <- 4 - sses_raw[,reverse_questions]
+sses_raw <- mutate(sses_raw, total = rowSums(sses_raw[4:23]))
+```
+
+We'll use the `cronbach()` function from the `psy` package to calculate Cronbach's alpha for the SSES. You may need to install this package before you can use it for the first time -- if so, use `install.packages('psy')`.
+
+```{r cronbach-all}
 library(psy)
-
-sses_cronbach <- function(scores) {
-  cronbach <- cronbach(select(scores, q1:q20))
-  data.frame(cronbach$alpha)
-}
+sses_cronbach_total <- select(sses_raw, q1:q20) %>%
+  cronbach()
+sses_cronbach_total$alpha
 ```
 
 **Explanation of commands:**
 
-1. Our function `sses_cronbach` expects its `scores` argument to be a data frame containing SSES scores.
+1. The `cronbach()` function expects a wide data frame (one row per subject), with columns containing the scale scores. We supply this using the function `select(sses_raw, q1:q20)`. Notice how we can use the column names to specify the range of columns to `select()`.
 
-1. The `cronbach()` function expects a wide data frame (one row per subject), with columns containing the scale scores. We supply this using the function `select(scores, q1:q20)`. Notice how we can use the column names in `scores` to specify the range of columns to `select()`.
+1. In addition to the value of alpha, `cronbach()` returns the number of subjects and the number of items. Here were only interested in alpha, which we print with `sses_cronbach_total$alpha`.
 
-1. In addition to the value of alpha, `cronbach()` returns the number of subjects and the number of items. Here were only interested in alpha, which we return in a data frame. Returning alpha in a data frame will help us to use the function for calculating alpha for each condition in our data.
+This gives us a value of `0.94`, which is very similar to the `0.92` reported by the authors who developed the SSES (Heatherton & Polivy, 1991).
 
-We can now calculate an overall alpha for SSES by calling `sses_cronbach` with all of our SSES data, using `bind_rows(sses_pre, sses_post)`:
-
-```{r cronbach-all}
-sses_cronbach_total <- sses_cronbach(bind_rows(sses_pre, sses_post))
-sses_cronbach_total
-```
-
-This gives us a value of `0.67`, which is quite a bit lower than the `0.92` reported by the authors who developed the SSES (Heatherton & Polivy, 1991).
-
-We can use the same function to calculate alpha for the pre-intervention SSES scores for each condition in our experiment:
-
-```{r cronbach-pre}
-sses_pre_cronbach <- sses_pre %>%
+```{r cronbach-pre-condition, echo=FALSE, eval=FALSE}
+# in case alpha by group comes back into scope
+sses_raw$condition <- recode_factor(sses_raw$condition, `0` = 'control',
+                                        `1` = 'self', `2` = 'other')
+sses_cronbach_pre <- sses_raw %>%
+  filter(time == 'pre') %>%
   group_by(condition) %>%
-  group_modify(~ sses_cronbach(.x))
-sses_pre_cronbach
+  select(q1:q20) %>%
+  group_map(~ cronbach(.x))
+sses_cronbach_pre
 ```
 
-**Explanation of pipeline commands:**
+# References
 
-1. We start by piping `sses_pre` into `group_by(condition)`.
+Heatherton, T. F., & Polivy, J. (1991). [Development and validation of a scale for measuring state self-esteem](http://www.academia.edu/download/37381608/91_Heatherton_Polivy_JPSP.pdf) _Journal of Personality and Social Psychology, 60(6)_, 895.
 
-1. We pipe this grouped data frame into `group_modify(~ sses_cronbach(.x))`. The `group_modify()` function allows you to run a function for each group in a grouped data frame. The `~` tells `group_modify()` to treat the next argument as a function, in this case `sses_cronbach(.x)`. The `.x` means the subset of rows created by our `group_by()`. i.e. the SSES scores for each experimental condition. The function used within `group_modify()` must return its result as a data frame, which explains why we returned alpha as a data frame in `sses_cronbach()`. So this code runs `sses_cronbach()` once for each set of rows that makes up our three conditions, with the three values of alpha combined into a single data frame.
-
-1. The output of the pipeline is stored in `sses_pre_cronbach`. 
-
-You can see that `sses_pre_cronbach` has a `condition` column, and a column containing Cronbach's alpha for each condition.
-
-We can use a similar pipeline to calculate post-intervention alphas:
-
-```{r cronbach-post}
-sses_post_cronbach <- sses_post %>%
-  group_by(condition) %>%
-  group_modify(~ sses_cronbach(.x))
-sses_post_cronbach
-```
-
-The pre and post SSES data show that alpha is especially low in the `self` and `other` conditions.
-
-<a name="baseline"></a>
 ___
 
 This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0. 
