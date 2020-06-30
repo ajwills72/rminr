@@ -20,23 +20,25 @@ knitr::opts_chunk$set(echo = TRUE, comment=NA, cache = TRUE)
 options(tibble.width = Inf) # show all columns in output
 ```
 
-# Contents
+## Contents
 
 - [Introduction](#intro)
 
 - [Getting started](#start)
 
-- [Calculating Cronbach’s alpha](#cronbach)
+- [Testing scale reliability using Cronbach’s alpha](#cronbach)
+
+- [Exercise](#ex1)
 
 <a name="intro"></a>
 
-# Introduction
+## Introduction
 
 This worksheet describes analyses you are likely to need when working with pscyhometric scales.
 
 <a name="start"></a>
 
-# Getting started
+## Getting started
 
 To prepare for this worksheet:
 
@@ -45,7 +47,7 @@ To prepare for this worksheet:
 
 <a name="cronbach"></a>
 
-# Calculating Cronbach’s alpha
+## Testing scale reliability using Cronbach’s alpha
 
 Cronbach's alpha measures the internal consistency of a scale, using correlations between different groupings of individual scale items. Values of alpha range from 0-1, with higher numbers indicating a more reliable scale. When a new scale is developed, its reliability is normally reported using Cronbach's alpha. It's wise to ensure that the alpha for your sample data is similar to this value.
 
@@ -114,6 +116,22 @@ sses_cronbach_pre <- sses_raw %>%
   group_map(~ cronbach(.x))
 sses_cronbach_pre
 ```
+<a name="ex1"></a>
+
+## Exercise
+
+```{r ex1, echo=FALSE}
+depression_cronbach <- select(dass21, c('DASS3', 'DASS5', 'DASS10', 'DASS13', 'DASS16', 'DASS17', 'DASS21')) %>%
+  cronbach()
+anxiety_cronbach <- select(dass21, c('DASS2', 'DASS4', 'DASS7', 'DASS9', 'DASS15', 'DASS19', 'DASS20')) %>%
+  cronbach()
+stress_cronbach <- select(dass21, c('DASS1', 'DASS6', 'DASS8', 'DASS11', 'DASS12', 'DASS14', 'DASS18')) %>%
+  cronbach()
+```
+
+Calcluate Cronbach's alpha for the depression, anxiety and stress subscales in the DASS-21 data introduced in the [Preprocessing scales worksheet](preproc-scales.html). In each case, round alpha to 2 decimal places. The command `select(dass21, c('DASS3', 'DASS5', 'DASS10', 'DASS13', 'DASS16', 'DASS17', 'DASS21'))` selects the columns for the depression subscale. Use similar commands to select the correct columns for the anxiety and stress subscales. Cronbach's alpha should be `r  round(depression_cronbach$alpha, 2)` for depression, `r  round(anxiety_cronbach$alpha, 2)` for anxiety, and `r  round(stress_cronbach$alpha, 2)` for stress.
+
+**Copy the R code you used for this exercise into PsycEL.**
 
 # References
 
