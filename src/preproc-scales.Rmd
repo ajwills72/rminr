@@ -144,14 +144,19 @@ dass21_total <- select(dass21, partID, Age, Gender, depression)
 
 ## Exercise 1
 
-Use similar commands to add scores for anxiety and stress to `dass21`. The anxiety subscale is the sum of questions 2,4,7,9,15,19 and 20. The stress subscale is the sum of questions 1,6,8,11,12,14 and 18. The first few rows of `dass21_total` should look like this:
+Use similar commands to add scores for anxiety and stress to `dass21`. The anxiety subscale is the sum of questions 2,4,7,9,15,19 and 20. The stress subscale is the sum of questions 1,6,8,11,12,14 and 18. After running your commands, the first few rows of `dass21_total` should look like this:
 
 ```{r ex1, echo=FALSE}
 dass21 <- mutate(dass21, anxiety = rowSums(dass21[4 + c(2,4,7,9,15,19,20)]))
 dass21 <- mutate(dass21, stress = rowSums(dass21[4 + c(1,6,8,11,12,14,18)]))
 dass21_total <- select(dass21, partID, Age, Gender, depression, anxiety, stress)
+```
+
+```{r ex1-correct, echo=FALSE}
 dass21_total %>% head(10) %>% pander()
 ```
+
+**Copy the R code you used for this exercise into PsycEL.**
 
 <a name="tidy"></a>
 
@@ -196,15 +201,20 @@ sses_pre_raw %>% head(3) %>% pander(split.table = Inf)
 
 ## Exercise 2
 
-Write a similar pipeline to create a data frame named `sses_post_raw` containing the post-intervention SSES data. The post-intervention SSES data are in columns `26:45`, these columns have the prefix `post_sse_` rather than `pre_sse_`. Set the value in the `time` factor to `post`. The first few rows of `sses_post_raw` should look like this:
+Write a similar pipeline to create a data frame named `sses_post_raw` containing the post-intervention SSES data. The post-intervention SSES data are in columns `26:45`, these columns have the prefix `post_sse_` rather than `pre_sse_`. Set the value in the `time` factor to `post`. After running your commands, the first few rows of `sses_post_raw` should look like this:
 
 ```{r ex2, echo=FALSE}
 sses_post_raw <- select(sses, 1, 25:45) %>%
   set_names(~ str_to_lower(.) %>% str_replace_all("post_sse_", "q")) %>%
   mutate(subj = factor(partid), condition = factor(condition), time = factor('post')) %>%
   select(subj, condition, time, q1:q20)
+```
+
+```{r ex2-correct, echo=FALSE}
 sses_post_raw %>% head(3) %>% pander(split.table = Inf)
 ```
+
+**Copy the R code you used for this exercise into PsycEL.**
 
 <a name="reverse"></a>
 
