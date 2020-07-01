@@ -23,7 +23,7 @@ knitr::opts_chunk$set(echo = TRUE, comment=NA, cache = TRUE)
 
 This is an advanced worksheet, which assumes you have completed the [Absolute Beginners' Guide to R](https://ajwills72.github.io/rminr/#beginners) course, the [Research Methods in Practice (Quantitative section)](https://benwhalley.github.io/rmip/overview-quantitative.html) course, and the [Intermediate Guide to R](https://ajwills72.github.io/rminr/#rmip) course. 
 
-# Contents
+## Contents
 
 - [Introduction](#intro)
 - [Reading data from Excel](#excel)
@@ -39,13 +39,13 @@ This is an advanced worksheet, which assumes you have completed the [Absolute Be
 
 <a name="intro"></a>
 
-# Introduction
+## Introduction
 
 This worksheet describes a full analysis pipeline for an undergraduate student dissertation on children’s language development. This study was an experiment which evaluated Words in Game (WinG) test. WinG consists of a set of picture cards which are used in four tests: noun comprehension, noun production, predicate comprehension, and predicate production. The Italian and English versions of the WinG cards use different pictures to depict the associated words. The experiment tested whether English-speaking children aged approximately 30 months, produce similar responses for the two sets of cards. This was a 4 (test) x 2 (cards) mixed design.
 
 <a name="excel"></a>
 
-# Reading data from Excel
+## Reading data from Excel
 
 The data you need for this worksheet was introduced in the [Better scales](better-scales.html) worksheet, so open the project you used to complete that worksheet.
 
