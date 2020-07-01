@@ -103,7 +103,7 @@ The _Absolute Beginners' Guide to R_ and _Putting R to Work_ provide, between th
 These are intermediate-level materials, designed to follow on from _An Absolute Beginners' Guide to R_ and _Putting R to work_ (or from _A Very Brief Guide to R_, if you're in a hurry). They are maintained by Ben Whalley on a separate site,
 but have been designed to fit in here in this sequence of materials. Only the _quantitative_ section of Ben's site contains information concerning the usage of R.
 
-- [Research Methods in Practice](https://benwhalley.github.io/rmip/overview-quantitative.html): Data handling, [fitting lines](https://benwhalley.github.io/rmip/regression.html) - _scatterplot with best fit line_ , multiple regression.
+- [Research Methods in Practice](https://benwhalley.github.io/rmip/overview-quantitative.html): Data handling, [fitting lines](https://benwhalley.github.io/rmip/regression.html) - _scatterplot with best fit line_ , **converting Likert scales from text to numbers**, **reverse scoring scale items**, multiple regression.
 
 ## 5. Intermediate Guide to R
 
@@ -148,7 +148,7 @@ links, you may find just notes, or incomplete worksheets.
 
 - [Better tables](better-tables.html): Producing publication-quality tables in R.
 
-- [Data preprocessing for scales](preproc-scales.html): _Handling missing data_, **calculating scale scores**, **tidying survey data**, **reverse scoring items**.
+- [Data preprocessing for scales](preproc-scales.html): _Handling missing data_, **calculating scale scores**, **tidying survey data**, _reverse scoring items_.
 
 - [Analysing scales](analyse-scales.html): **Cronbach's alpha**.
 
