@@ -16,7 +16,7 @@ dummya <- rnorm(samsize,100,15)
 dummyb <- rnorm(samsize,115,15)
 group <- rep(c("Group A", "Group B"), each = samsize)
 val <- c(dummya, dummyb)
-efl<- as_data_frame(cbind(group, val))
+efl<- as_tibble(cbind(group, val))
 efl$val <- as.numeric(efl$val)
 large1 <- efl %>%  ggplot(aes(val, colour=factor(group))) +
   ggtitle("Large (d = 1)") + 
@@ -29,7 +29,7 @@ dummya <- rnorm(samsize,100,15)
 dummyb <- rnorm(samsize,115,15)
 group <- rep(c("Group A", "Group B"), each = samsize)
 val <- c(dummya, dummyb)
-efl<- as_data_frame(cbind(group, val))
+efl<- as_tibble(cbind(group, val))
 efl$val <- as.numeric(efl$val)
 large2 <- efl %>%  ggplot(aes(val, colour=factor(group))) +
   ggtitle("Large (d = 1)") + 
@@ -42,7 +42,7 @@ dummya <- rnorm(samsize,100,15)
 dummyb <- rnorm(samsize,115,15)
 group <- rep(c("Group A", "Group B"), each = samsize)
 val <- c(dummya, dummyb)
-efl<- as_data_frame(cbind(group, val))
+efl<- as_tibble(cbind(group, val))
 efl$val <- as.numeric(efl$val)
 large3 <- efl %>%  ggplot(aes(val, colour=factor(group))) +
   ggtitle("Large (d = 1)") + 
@@ -55,7 +55,7 @@ dummya <- rnorm(samsize,100,15)
 dummyb <- rnorm(samsize,107.5,15)
 group <- rep(c("Group A", "Group B"), each = samsize)
 val <- c(dummya, dummyb)
-efm <- as_data_frame(cbind(group, val))
+efm <- as_tibble(cbind(group, val))
 efm$val <- as.numeric(efm$val)
   
 med1 <- efm %>%  ggplot(aes(val, colour=factor(group))) +
@@ -69,7 +69,7 @@ dummya <- rnorm(samsize,100,15)
 dummyb <- rnorm(samsize,107.5,15)
 group <- rep(c("Group A", "Group B"), each = samsize)
 val <- c(dummya, dummyb)
-efm <- as_data_frame(cbind(group, val))
+efm <- as_tibble(cbind(group, val))
 efm$val <- as.numeric(efm$val)
 
 med2 <- efm %>%  ggplot(aes(val, colour=factor(group))) +
@@ -83,7 +83,7 @@ dummya <- rnorm(samsize,100,15)
 dummyb <- rnorm(samsize,107.5,15)
 group <- rep(c("Group A", "Group B"), each = samsize)
 val <- c(dummya, dummyb)
-efm <- as_data_frame(cbind(group, val))
+efm <- as_tibble(cbind(group, val))
 efm$val <- as.numeric(efm$val)
 
 med3 <- efm %>%  ggplot(aes(val, colour=factor(group))) +
@@ -97,7 +97,7 @@ dummya <- rnorm(samsize,100,15)
 dummyb <- rnorm(samsize,103,15)
 group <- rep(c("Group A", "Group B"), each = samsize)
 val <- c(dummya, dummyb)
-efs <- as_data_frame(cbind(group, val))
+efs <- as_tibble(cbind(group, val))
 efs$val <- as.numeric(efs$val)
   
 small1 <- efs %>%  ggplot(aes(val, colour=factor(group))) +
@@ -111,7 +111,7 @@ dummya <- rnorm(samsize,100,15)
 dummyb <- rnorm(samsize,103,15)
 group <- rep(c("Group A", "Group B"), each = samsize)
 val <- c(dummya, dummyb)
-efs <- as_data_frame(cbind(group, val))
+efs <- as_tibble(cbind(group, val))
 efs$val <- as.numeric(efs$val)
 
 small2 <- efs %>%  ggplot(aes(val, colour=factor(group))) +
@@ -125,7 +125,7 @@ dummya <- rnorm(samsize,100,15)
 dummyb <- rnorm(samsize,103,15)
 group <- rep(c("Group A", "Group B"), each = samsize)
 val <- c(dummya, dummyb)
-efs <- as_data_frame(cbind(group, val))
+efs <- as_tibble(cbind(group, val))
 efs$val <- as.numeric(efs$val)
 
 small3 <- efs %>%  ggplot(aes(val, colour=factor(group))) +
