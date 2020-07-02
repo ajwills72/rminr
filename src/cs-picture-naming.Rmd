@@ -1,6 +1,6 @@
 ---
 title: "Reliability of Targets in a Picture Naming Task"
-author: "Allegra Cattani, Adele Conn, Paul Sharpe"
+author: "Allegra Cattani, Adele Conn, Paul Sharpe and Andy Wills"
 output: html_document
 ---
 
@@ -19,43 +19,39 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE, comment=NA, cache = TRUE)
 ```
 
-# Contents
+## Before you start
+
+This is an advanced worksheet, which assumes you have completed the [Absolute Beginners' Guide to R](https://ajwills72.github.io/rminr/#beginners) course, the [Research Methods in Practice (Quantitative section)](https://benwhalley.github.io/rmip/overview-quantitative.html) course, and the [Intermediate Guide to R](https://ajwills72.github.io/rminr/#rmip) course. 
+
+## Contents
 
 - [Introduction](#intro)
-
-- [Getting started](#start)
-
-- [Preprocessing](#preprocessing)
-
-- [Results](#results)
+- [Reading data from Excel](#excel)
+- [Preprocessing demographics data](#preproc-demographics)
+- [Preprocessing WinG data](#preproc-wing)
+- [Comparing parents' ratings of their child's language ability](#cdi-diffs)
+- [Generating a table of statistics](#table-descriptives)
+- [Exploring correlations between CDI and WinG](#correlate-cdi-wing)
+- [Plotting WinG task scores (raincloud plot)](#plot-task)
+- [Comparing cards using Mann-Whitney U tests](#mann-whitney)
+- [Comparing semantically related production errors](#compare-production)
+- [Comparing individual cards](#table-cards)
 
 <a name="intro"></a>
 
-# Introduction
+## Introduction
 
-This study was an experiment which evaluated Words in Game (WinG) test, a tool for assessing children’s language development. WinG consists of a set of picture cards which are used in four tests: noun comprehension, noun production, predicate comprehension, and predicate production. The Italian and English versions of the WinG cards use different pictures to depict the associated words. The experiment tested whether English-speaking children aged approximately 30 months, produce similar responses for the two sets of cards. This was a 4 (test) x 2 (cards) mixed design.
+This worksheet describes a full analysis pipeline for an undergraduate student dissertation on children’s language development. This study was an experiment which evaluated Words in Game (WinG) test. WinG consists of a set of picture cards which are used in four tests: noun comprehension, noun production, predicate comprehension, and predicate production. The Italian and English versions of the WinG cards use different pictures to depict the associated words. The experiment tested whether English-speaking children aged approximately 30 months, produce similar responses for the two sets of cards. This was a 4 (test) x 2 (cards) mixed design.
 
-The data for each test was recorded on a sub-sheet of an Excel spreadsheet. There was also a sub-sheet containing demographic data.
+<a name="excel"></a>
 
-<a name="start"></a>
+## Reading data from Excel
 
-# Getting started
+The data you need for this worksheet was introduced in the [Better scales](better-scales.html) worksheet, so open the project you used to complete that worksheet.
 
-To prepare for this worksheet, follow these steps:
+The data for each WinG test was recorded on a sub-sheet of an Excel spreadsheet. There was also a sub-sheet containing demographic data. We start by reading this data from `picture-naming.xlsx`.
 
-1. Open the project you used to complete the [Better scales](better-scales.html) worksheet.
-
-<a name="preprocessing"></a>
-
-# Preprocessing
-
-Relevant worksheets: [Better tables](#better-tables.html).
-
-We summarise the preprocessing steps here. They explained in full in the [Better tables](#better-tables.html) worksheet.
-
-We start by reading the data from `picture-naming.xlsx` and preprocessing the demographics sub-sheet. This includes scores for the Communicative Development Inventory (CDI). The CDI is a list of 100 words with columns 'understands' and 'says'. For each word, parents place a tick in these columns if they think their child can understand and/or say the word. The scores for 'understands' (`cdi_u`) and 'says' (`cdi_s`) is a total of the ticked boxes in the two columns.
-
-```{r demographics, message=FALSE}
+```{r excel, message=FALSE}
 rm(list = ls()) # clear the environment
 library(tidyverse)
 library(pander)
@@ -68,7 +64,15 @@ data <- path %>%
   .[-1] %>%
   set_names() %>%
   map_df(~ read_excel(path = path, sheet = .x, range = "A1:V20"), .id = "sheet")
+```
 
+<a name="preproc-demographics"></a>
+
+## Preprocessing demographics data
+
+First we preprocess the demographics sub-sheet. This includes scores for the Communicative Development Inventory (CDI). The CDI is a list of 100 words with columns 'understands' and 'says'. For each word, parents place a tick in these columns if they think their child can understand and/or say the word. The scores for 'understands' (`cdi_u`) and 'says' (`cdi_s`) is a total of the ticked boxes in the two columns.
+
+```{r demographics, message=FALSE}
 # demographics data
 demographics <- data %>%
   filter(sheet == 'Demographic') %>%
@@ -79,9 +83,13 @@ demographics$gender <- recode_factor(demographics$gender, Male = 'male', Female 
 demographics %>% head(3) %>% pander()
 ```
 
-Next we preprocess the WinG data. When the experimenters administer WinG, they use a textual coding scheme to record each child's responses. The codes we'll use for the analyses in this worksheet are:
+<a name="preproc-wing"></a>
 
-* `N/A` (not to be confused with the `R` data type `NA`) - researchers use this code to indicate that there was some kind of interruption to the task (e.g. the child began crying).
+## Preprocessing WinG data
+
+Next we preprocess the WinG data. When the experimenters administer WinG, they use a textual coding scheme to record each child's responses. The first codes we're interested in are:
+
+* `N/A` (not to be confused with the `R` data type `NA`) - researchers used this code to indicate that there was some kind of interruption to the task (e.g. the child began crying).
 * `C` or `C*` - `C` indicates that the child responded correctly for the picture on the card, `C*` indicates that the response was a correct synonym. In this experiment, both of these values are considered correct responses.
 
 The `exclude()` function applies the following exclusion criteria to our data:
@@ -91,7 +99,7 @@ The `exclude()` function applies the following exclusion criteria to our data:
 
 `exclude()` also calculates the total score for each WinG task (noun and predicate comprehension and production).
 
-```{r WinG}
+```{r preproc-WinG}
 # task data
 nc <- data %>%
   filter(sheet == 'Noun Comprehension') %>%
@@ -121,14 +129,15 @@ exclude <- function(df) {
   q17 <- q17 %>% filter(min > 17) %>% select(-min)
   
   # calculate total correct
-  q17 <- q17 %>% mutate(correct = rowSums(. == 'C' | . == 'C*'))
+  q17 <- q17 %>% mutate(correct = rowSums(. == 'C' | . == 'C*'),
+                        related = rowSums(. == 'NTS'))
   
   # exclude participants with scores < 2 sd below the mean
   q17 %>% filter(correct < mean(correct) + 2 * sd(correct))
 }
 
 nc <- exclude(nc)
-nc_by_subj <- select(nc, subj, correct)
+nc_by_subj <- select(nc, subj, correct, related)
 nc_by_subj %>% pander()
 
 np <- data %>%
@@ -138,7 +147,7 @@ np <- data %>%
   mutate(subj = factor(seq.int(nrow(.))))
 
 np <- exclude(np)
-np_by_subj <- np %>% select(subj, correct)
+np_by_subj <- np %>% select(subj, correct, related)
 
 pc <- data %>%
   filter(sheet == 'Predicate Comprehension') %>%
@@ -147,7 +156,7 @@ pc <- data %>%
   mutate(subj = factor(seq.int(nrow(.))))
 pc <- exclude(pc)
 
-pc_by_subj <- pc %>% select(subj, correct)
+pc_by_subj <- pc %>% select(subj, correct, related)
 
 pp <- data %>%
   filter(sheet == 'Predicate Production') %>%
@@ -156,17 +165,18 @@ pp <- data %>%
   mutate(subj = factor(seq.int(nrow(.))))
 pp <- exclude(pp)
 
-pp_by_subj <- pp %>% select(subj, correct)
+pp_by_subj <- pp %>% select(subj, correct, related)
 
 # join data
-task_by_subj <- left_join(demographics, nc_by_subj, by='subj') %>%
+data_by_subj <- left_join(demographics, nc_by_subj, by='subj') %>%
   left_join(., np_by_subj, by='subj', suffix = c('_nc','_np')) %>%
   left_join(., pc_by_subj, by='subj') %>%
   left_join(., pp_by_subj, by='subj', suffix = c('_pc', '_pp')) %>%
   left_join(., cards, by='subj') %>%
   mutate(nc = correct_nc, np = correct_np, pc = correct_pc, pp = correct_pp) %>%
-  select(subj, gender, nc, np, pc, pp, cards, cdi_u, cdi_s)
-task_by_subj <- as.data.frame(task_by_subj)
+  as.data.frame()
+
+task_by_subj <- select(data_by_subj, subj, gender, cards, nc:pp, cdi_u, cdi_s)
 ```
 
 Our preprocessed data, `task_by_subj`, includes a subject number (`subj`), the child's `gender`, their WinG scores (or `NA` if they were excluded from one of the tests, `nc`, `np`, `pc`, `pp`), the `cards` they were tested with, and their parents' CDI 'understands' (`cdi_u`) and 'says' (`cdi_s`) ratings.
@@ -175,15 +185,11 @@ Our preprocessed data, `task_by_subj`, includes a subject number (`subj`), the c
 task_by_subj %>% pander()
 ```
 
-<a name="results"></a>
+<a name="cdi-diffs"></a>
 
-# Results
+## Comparing parents' ratings of their child's language ability
 
-## Compare language ability between groups
-
-Relevant worksheets: [Evidence](evidence.html)
-
-For our first analysis, we want to check that there were no differences between the children assigned to the Italian and English card groups. We do this using t-tests of their parents' CDI ratings.
+For our first analysis, we want to check that there were no differences between the children assigned to the Italian and English card groups. We do this using t-tests of their parents' CDI ratings. Bayesian t-tests were introduced in the [Evidence worksheet](evidence.html).
 
 ```{r cdi}
 library(BayesFactor, quietly=TRUE)
@@ -193,17 +199,13 @@ cdi_s_bf <- ttestBF(formula=cdi_s ~ cards, data = task_by_subj)
 cdi_s_bf
 ```
 
-```{r eval=FALSE}
-# NOTE: Their t(22) is becuause 6 @ 24m + 16 @ 30m = 22
-```
-
 Our Bayes factors (CDI understands = `0.40`; CDI says = `0.45`) do not provide evidence of differences between the children tested using the Italian and English cards, giving us some confidence that the two groups are matched on language ability.
 
-## Descriptive statistics
+<a name="table-descriptives"></a>
 
-Relevant worksheets: [Better tables](#better-tables.html)
+## Generating a table of statistics
 
-Next we produce a table of descriptive statistics. We start by calculating means and standard deviations for each WinG task by gender.
+Next we produce a table of descriptive statistics. This is described in more detail in the [Better tables worksheet](#better-tables.html). We start by calculating means and standard deviations for each WinG task by gender.
 
 ```{r descriptives}
 task_by_subj_l <- task_by_subj %>%
@@ -271,11 +273,11 @@ descriptives %>% kable(
 
 The Bayes factors provide no evidence of differences in accuracy between male and female children, suggesting that test scores are not influenced by gender differences.
 
-## Correlations between CDI and WinG
+<a name="correlate-cdi-wing"></a>
 
-Relevant worksheets: [Relationships, part 2](corr.html)
+## Exploring correlations between CDI and WinG
 
-Next we look at correlations between parents' ratings of their child's comprehension (CDI understands) and the child's comprehension scores on the noun and predicate tests. We use the `spearman` method of calculating the correlation between `task_by_subj$cdi_u` and `task_by_subj$nc`. The option `use="complete.obs"` deletes any cases with a value of `NA`. We set cells to `NA` above to indicate that a subject was excluded from a test. 
+Next we look at correlations between parents' ratings of their child's comprehension (CDI understands) and the child's comprehension scores on the noun and predicate tests. Correlation was introduced in the [Relationships, part 2 worksheets](corr.html). We use the `spearman` method of calculating the correlation between `task_by_subj$cdi_u` and `task_by_subj$nc`. The option `use="complete.obs"` deletes any cases with a value of `NA`. In the code above, we assigned the value `NA` to cells for subjects who were excluded from a test. 
 
 ```{r cdi_u_correlations}
 cor(method = 'spearman', task_by_subj$cdi_u, task_by_subj$nc, use="complete.obs")
@@ -299,9 +301,13 @@ correlationBF(task_by_subj$cdi_s, task_by_subj$pp)
 
 Here there was a strong positive correlation (_r_ = 0.57, _BF_ = 5.09) between the parents' ratings of the words their children could say and the children's scores on the noun production test. There was no evidence for a correlation between CDI says and predicate production scores (_BF_ = 0.59).
 
-## Comparison of Italian and English cards
+<a name="plot-task"></a>
 
-Relevant worksheets:  [Better graphs](better-graphs.html), [Traditional non-parametric tests](non-parametric.html).
+## Plotting WinG task scores (raincloud plot)
+
+We'll create a raincloud plot to visualise the scores for the noun tasks. Raincloud plots were introduced in the [Better graphs worksheet](better-graphs.html).
+
+First we define the function `gemo_flat_violin()` to produce the "cloud".
 
 ```{r flat-violin, echo=FALSE}
 "%||%" <- function(a, b) {
@@ -375,7 +381,7 @@ GeomFlatViolin <-
   )
 ```
 
-We create a raincloud plot for the noun tasks:
+Now we generate a plot for the noun tasks.
 
 ```{r noun-cloud}
 noun_tasks <- task_by_subj_l %>%
@@ -398,6 +404,8 @@ raincloud
 
 ggsave(filename = "noun_cloud.pdf", plot = raincloud, units = "cm", width = 15, height = 10)
 ```
+
+We generate a separate plot for the predicate tasks.
 
 ```{r predicate-cloud}
 predicate_tasks <- task_by_subj_l %>%
@@ -423,7 +431,11 @@ ggsave(filename = "predicate_cloud.pdf", plot = raincloud, units = "cm", width =
 
 The raincloud plot for the noun tasks indicates that the data was not normally distributed. Given the small sample sizes, a non-parametric test is most suited for analysing this data. Although the predicate data looks normally distributed, in this study, a Mann-Whitney U test was used to compare the scores for the Italian and English cards for both the noun and predicate tasks.
 
-We start by creating some the summary statistics which are used to interpret the Mann-Whitney U test.
+<a name="mann-whitney"></a>
+
+## Comparing cards using Mann-Whitney U tests
+
+The Mann-Whitney U is explained in the [Traditional non-parametric tests worksheets](non-parametric.html). We start by creating some the summary statistics which are used to interpret this test.
 
 ```{r cards-rank}
 task_by_subj_l %>%
@@ -435,7 +447,7 @@ task_by_subj_l %>%
             sum_rank = sum(rank(correct)))
 ```
 
-Next we run the Mann-Whitney U for each group.
+Now we run a test to compare the Italian and English cards for each WinG task.
 
 ```{r mann-whitney}
 # independent 2-group Mann-Whitney U Test
@@ -458,14 +470,42 @@ pander(wing_mann_whitney)
 
 All _p_ values were > 0.05, suggesting there were no differences between the Italian and English cards on any of the tests.
 
-# Non-target but semantically related errors
+<a name="compare-production"></a>
 
-NTS means non-target but semantically related e.g. the card was "house" but they said "hut".
+## Comparing semantically related production errors
 
-NTS ~ Production(NP/PP) * Card Language(E/I)
+In the noun and predicate production tests, the code `NTS` means "non-target but semantically related". For example the card was a house but the child said "hut". We would like to know if there were any differences on these semantically related errors between the two sets of cards. A raincloud plot suggests there wasn't.
 
-* Plot mean semantically related responses (NTS) ~ NNTS/PNTS * E/I with CI bars
+```{r nts-production-plot}
+semantically_related <-
+  select(data_by_subj, subj, cards, related_np, related_pp) %>%
+  rename(np = 'related_np', pp = 'related_pp') %>%
+  pivot_longer(cols = c(np, pp),
+               names_to = 'task',
+               values_to = 'correct') %>%
+  mutate(task = recode_factor(.$task, np = 'Noun Production', pp = 'Predicate Production'))
 
+related_cloud <- ggplot(semantically_related, aes(x = task, y = correct, fill = cards)) +
+  geom_flat_violin(aes(fill = cards), position = position_nudge(x = x_dodge, y = 0), adjust = 1.5, trim = FALSE, alpha = .5, colour = NA) +
+  geom_point(aes(x = as.numeric(task)-.15, y = correct, colour = cards), position = position_jitter(width = .05), size = .25, shape = 20) +
+  stat_summary(geom="errorbar", position = position_nudge(x = x_dodge, y = 0), mapping = aes(colour = cards), width = .1, fun.data=mean_cl_boot) +
+  stat_summary(geom="point", position = position_nudge(x = x_dodge, y = 0), mapping = aes(colour = cards), fun.data=mean_cl_boot) +
+  stat_summary(geom="line", position = position_nudge(x = x_dodge, y = 0), mapping = aes(group = cards, colour = cards), fun.data=mean_cl_boot, linetype = 3) +
+  scale_colour_brewer(palette = palette) +
+  scale_fill_brewer(palette = palette)
+
+related_cloud
+```
+
+Mann-Whitney U tests confirm this, with both _p_ values > 0.05.
+
+```{r nts-production-mw}
+production_mann_whitney <- semantically_related %>%
+  group_by(task) %>%
+  group_modify(mann_whitney)
+
+pander(production_mann_whitney)
+```
 
 * "A Mann-Whitney-U test was run to determine if there were any statistically
 significant differences in the number of non-target but semantically related errors
@@ -480,9 +520,9 @@ by visual inspection. The number of correct responses for the English cards (mea
 rank = 8.60) and the Italian cards (mean rank = 10.62) were not statistically
 significantly different, U = 31, z = -.821, p = .460"
 
-# Differences for individual cards
+<a name="table-cards"></a>
 
-Relevant worksheets: [Better tables](#better-tables.html).
+## Comparing individual cards
 
 We would like to know if there were any accuracy differences between the individual Italian and English cards in each task. We can summarise this data as a table of t-tests. Running a t-test where both groups have identical scores produces an error, so we remove these cards from our tests. For noun comprehension, this was the case for the words 'apple', 'cow', 'penguin','hat', and 'motorbike'.
 
@@ -599,7 +639,7 @@ pp_bf %>% kable(
   kable_styling()
 ```
 
-The only Bayes factor which provide evidence of a difference between the cards was `bag` on the noun production task.
+The only Bayes factor which provided evidence of a difference between the cards was `bag` on the noun production task.
 
 ___
 

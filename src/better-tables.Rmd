@@ -17,6 +17,7 @@ output: html_document
 
 ## Show commands and output.
 knitr::opts_chunk$set(echo = TRUE, comment=NA, cache = TRUE)
+library(pander)
 ```
 
 # Contents
@@ -56,7 +57,6 @@ We start with some lines to clear the workspace and load `tidyverse` and `pander
 ```{r init-load, message=FALSE}
 rm(list = ls()) # clear the environment
 library(tidyverse)
-library(pander)
 ```
 
 <a name="descriptives"></a>
@@ -92,7 +92,7 @@ data <- path %>%
 
 Here's a slice of the data showing what was read from each sub-sheet:
 
-```{r}
+```{r echo=FALSE}
 data %>% slice(1:2, 20:21, 39:40, 58:59, 77:78) %>% pander(split.table = Inf)
 ```
 
@@ -108,6 +108,9 @@ demographics <- data %>%
   select(gender, cdi_u, cdi_s) %>%
   mutate(gender = factor(gender), subj = factor(seq.int(nrow(.))))
 demographics$gender <- recode_factor(demographics$gender, Male = 'male', Female = 'female')
+```
+
+```{r echo=FALSE}
 demographics %>% head(3) %>% pander()
 ```
 
@@ -122,6 +125,9 @@ nc <- data %>%
   set_names(~ str_to_lower(.)) %>%
   select(mountain:wellyboots, cards) %>%
   mutate(subj = factor(seq.int(nrow(.))))
+```
+
+```{r echo=FALSE}
 nc %>% head(3) %>% pander(split.table = Inf)
 ```
 
@@ -131,6 +137,9 @@ We create a `cards` data frame and recode the numbers in the `cards` factor to w
 cards <- nc %>%
   select(subj, cards) %>%
   mutate(cards = recode_factor(.$cards, `1` = 'italian', `2` = 'english'))
+```
+
+```{r echo=FALSE}
 cards %>% pander()
 ```
 
@@ -185,6 +194,9 @@ Calling `exclude(nc)` applies our exclusion criteria, and also calculates a tota
 ```{r score-nc}
 nc <- exclude(nc)
 nc_by_subj <- select(nc, subj, correct)
+```
+
+```{r echo=FALSE}
 nc_by_subj %>% pander()
 ```
 
@@ -228,6 +240,9 @@ task_by_subj <- left_join(demographics, nc_by_subj, by='subj') %>%
   left_join(., cards, by='subj') %>%
   mutate(nc = correct_nc, np = correct_np, pc = correct_pc, pp = correct_pp) %>%
   select(subj, gender, nc, np, pc, pp, cards, cdi_u, cdi_s)
+```
+
+```{r echo=FALSE}
 task_by_subj %>% pander()
 ```
 
@@ -244,6 +259,9 @@ task_by_subj <- task_by_subj %>%
   pivot_longer(cols = c(nc, np, pc, pp),
                names_to = 'task',
                values_to = 'correct')
+```
+
+```{r echo=FALSE}
 task_by_subj %>% head(5) %>% pander()
 ```
 
@@ -266,6 +284,9 @@ descriptives <- task_by_subj %>%
   group_by(task, gender) %>%
   group_modify(task_descriptives) %>%
   ungroup()
+```
+
+```{r echo=FALSE}
 descriptives %>% pander()
 ```
 
@@ -281,6 +302,9 @@ descriptives <- descriptives %>%
   select(-n) %>%
   pivot_wider(names_from = gender, values_from = c(mean, sd)) %>%
   select(task, mean_male, sd_male, mean_female, sd_female)
+```
+
+```{r echo=FALSE}
 descriptives %>% pander()
 ```
 
@@ -392,7 +416,10 @@ nc_bf <- nc_long_correct %>%
 
 Finally, we turn out results into an HTML table:
 
+FIXME: You need to Ctrl-Enter for this to appear in the **Viewer** pane so you can copy-paste.
+
 ```{r kable-t}
+# run the next line with Ctrl-Enter for it to appear in the Viewer pane
 nc_bf %>% kable(
   col.names = c('Word', 'Bayes Factor')) %>%
   kable_styling()

@@ -103,7 +103,7 @@ The _Absolute Beginners' Guide to R_ and _Putting R to Work_ provide, between th
 These are intermediate-level materials, designed to follow on from _An Absolute Beginners' Guide to R_ and _Putting R to work_ (or from _A Very Brief Guide to R_, if you're in a hurry). They are maintained by Ben Whalley on a separate site,
 but have been designed to fit in here in this sequence of materials. Only the _quantitative_ section of Ben's site contains information concerning the usage of R.
 
-- [Research Methods in Practice](https://benwhalley.github.io/rmip/overview-quantitative.html): Data handling, [fitting lines](https://benwhalley.github.io/rmip/regression.html) - _scatterplot with best fit line_ , multiple regression.
+- [Research Methods in Practice](https://benwhalley.github.io/rmip/overview-quantitative.html): Data handling, [fitting lines](https://benwhalley.github.io/rmip/regression.html) - _scatterplot with best fit line_ , **converting Likert scales from text to numbers**, **reverse scoring scale items**, multiple regression.
 
 ## 5. Intermediate Guide to R
 
@@ -148,7 +148,7 @@ links, you may find just notes, or incomplete worksheets.
 
 - [Better tables](better-tables.html): Producing publication-quality tables in R.
 
-- [Preprocessing scales](preproc-scales.html): _Handling missing data_, **calculating subscale scores**, **tidying survey data**, **reverse scoring items**, **user-defined functions**.
+- [Data preprocessing for scales](preproc-scales.html): _Handling missing data_, **calculating scale scores**, **tidying survey data**, _reverse scoring items_.
 
 - [Analysing scales](analyse-scales.html): **Cronbach's alpha**.
 
@@ -162,6 +162,9 @@ These are full preprocessing and analysis pipelines, based on final-year undergr
 - [The effects of negative mental imagery on self-esteem](cs-self-esteem.html): _Preprocessing scales_, _analysing scales_, **recoding factor levels**, _1-way ANOVA_, _2-way mixed ANOVA_.
 
 - [The Perruchet Effect](awdiss.html): **Downloading from OSF**, **De-duplicating data**, **Excluding participants**, _line graphs_, **baseline correction of neuroscience data**, **functions**, _loops_, _merging data frames_, **list of participant numbers**, **log transforms**, _recoding data_, **decent graphs for within-subject designs**, **Bayesian linear regression for within-subjects designs**.
+
+- [Reliability of Targets in a Picture Naming Task](cs-picture-naming.html): **Reading data from Excel**, _Bayesian t-tests_, _functions_, **generating a table of statistics**, _correlations_, **raincloud plots**, **Mann-Whitney U test**
+
 ____
 
 #### Source code
