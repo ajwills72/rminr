@@ -364,6 +364,8 @@ raincloud_box
 
 If you're determined to present your data as a barchart, Allen et al. (2019) contains the `R` code you will need, and a more detailed argument against barcharts.
 
+FIXME: Use a different mixed model dataset, as the interactions weren't of interest in this study. Useful for between subjects plots though.
+
 More traditional point and line plot with `ggplot()`.
 
 ```{r pointline}
@@ -379,15 +381,14 @@ noun_tasks %>%
 
 Simpler syntax using [ggpubr](https://rpkgs.datanovia.com/ggpubr/reference/index.html)
 
-* Requires installation in RStudio online
 * Simplifies CI syntax
 * Has interfaces to add statistics, asterisks etc. to plots which is something I've noticed that some project supervisors ask of their students
 
 ```{r ggpubr}
 library("ggpubr")
 ggline(noun_tasks, x = "task", y = "correct", color = "cards",
-       add = c("mean_ci", "jitter"),
-       palette = c('grey') ) +  # see ggpar for other palettes
+       add = c("mean_ci"), position = position_dodge(.1),
+       palette = c('npg')) +  # see ggpar for other palettes
       ylab("Mean score") + xlab("WinG task")
 ```
 
