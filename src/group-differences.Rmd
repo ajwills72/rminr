@@ -78,7 +78,7 @@ What we need, though, are two median incomes -- one for males and one for female
 cpsdata %>% group_by(sex) %>% summarise(median(income))
 ```
 
-Looking at your output, you'll be able to see that median income for males is around $62,000, while for females it's around $53,000. (If you're curious what the rest of the output means, including the word "tibble", see [more on tibbles](more-on-tibbles.html)). 
+Looking at your output, you'll be able to see that median income for males is around $62,000, while for females it's around $53,000. (If you're curious what the rest of the output means, including the word "tibble", see [more on tibbles](more-on-tibbles.html)). The message concerning "ungrouping output" just means that after R gives you the means, it forgets that you grouped the data (so if you want to use these groups again, you'll have to ask for them again, see later).
 
 R also works as a calculator, so we can work out female median income as a percentage of male median income -- this is a standard way of expressing the gender pay gap:
 
@@ -120,6 +120,7 @@ cpsdata %>% ggplot(aes(income)) + geom_density(aes(y=..scaled..))
 ```
 
 The part of the command `aes(y=..scaled..))` says that the aesthetic ('aes') we want for the y-axis of the graph is "scaled" ... in other words we want a scaled density plot.
+
 
 <a name="group-density"></a>
 

@@ -1,9 +1,14 @@
 # Research Methods in R
-_2019 Edition._
+_2020 Edition._
 
 _Research Methods in R_ is a set of guides on how to use R as your central research methods tool. The target audience is psychology undergraduate students. _Research Methods in R_ is [Creative Commons](https://creativecommons.org/), so you are free to reuse these materials and adapt them as you wish, as long as you attribute them to their authors, and as long as your modifications have a Creative Commons licence.
 
-The advantages of R over other software packages are discussed [here](why-r-student.html). Many psychology degree programmes have switched to R over the last few years, here is a partial [list](rminrinpsy.html).
+## General resources
+
+1. [Why R?](why-r-student.html). Discussion of the advantages of R over other software packages.
+
+2. [Who is using R?](rminrinpsy.html). Partial list of psychology degree
+   programmes around the world than use R.
 
 ## List of guides
 
@@ -13,7 +18,7 @@ The advantages of R over other software packages are discussed [here](why-r-stud
 
 3. [A Very Brief Guide to R](#vbgtr)
 
-4. [Research Methods in Practice (Quantitative section)](#rmip)
+4. [Research Methods in Practice](#rmip)
 
 5. [Intermediate Guide to R](#rmip) 
 

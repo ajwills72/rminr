@@ -8,7 +8,7 @@ Before you can use RStudio, you have to get it running on your computer. Here's 
 
 _NOTE_: RStudio works on most web browsers (e.g. Firefox, Safari, Chrome) but does not work that well on the default web browser in Windows 10 ("Edge"). If you're using Windows, I recommend [downloading Firefox](https://www.mozilla.org/en-US/firefox/new/) and using that. Firefox is free and open source.
 
-**Install on your own machine** - Alternatively, you can install RStudio on your own laptop or desktop. It's completely free, and will probably take around 30 minutes to install. Follow these [step-by-step instructions](install-rstudio.md).
+**Install on your own machine** (not recommended) - Alternatively, you can install RStudio on your own laptop or desktop. It's completely free, and will probably take around 30 minutes to install. You can get it [here](https://rstudio.com/products/rstudio/download/#download). However, for teaching purposes, we recommend you use the web browser version. This is because: (a) these materials assume you are using the version of R currently on our RStudio server (currently 3.6.3), and (b) you will have to install the _packages_ you need as you go along. So, for example, if you type `library(tidyverse)` and get an error, you will need to install the tidyverse package using `install.packages(tidyverse)`. 
 
 ## Using RStudio
 You'll be greeted with a screen that looks something like this:
