@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
@@ -270,7 +269,6 @@ code {
 }
 img {
   max-width:100%;
-  height: auto;
 }
 .tabbed-pane {
   padding-top: 12px;
@@ -332,6 +330,7 @@ summary {
   border: none;
   display: inline-block;
   border-radius: 4px;
+  background-color: transparent;
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li {
@@ -387,7 +386,7 @@ mean in group female   mean in group male
 <h2>What you did</h2>
 <p><code>Welch</code> - There’s more than one way to do a t-test. R uses the <a href="https://en.wikipedia.org/wiki/Welch%27s_t-test">method recommended by Welch</a>. The Welch method is <a href="https://daniellakens.blogspot.com/2015/01/always-use-welchs-t-test-instead-of.html">always a better choice</a> than doing the standard (a.k.a. “Student”) t-test.</p>
 <p><code>Two Sample t-test</code> - It’s <em>two sample</em> because you have two different groups (“samples”) of people being compared in the test – females and males.</p>
-<p><code>data:  cpsdata$income by cpsdata$sex</code> - This just reminds you what data you’re analyzing, it’s basically a copy of what you told it to do, i.e. <code>cpsdata$income ~ cpsdata$sex</code></p>
+<p><code>data:  cpsdata$income by cpsdata$sex</code> - This just reminds you what data you’re analyzing, it’s basically a copy of what you told it to do, i.e. <code>cpsdata$income ~ cpsdata$sex</code></p>
 <p><code>alternative hypothesis: true difference in means is not equal to 0</code> - This is a way of saying that, before looking at the data, you made no assumptions about whether men would earn more than women, or vice versa. This is sometimes called a <em>two-tailed</em> test - see <a href="#one-tail">below</a> if you can safely assume a direction before looking at your data (also called a <em>one-tailed</em> test).</p>
 </div>
 <div id="what-you-found" class="section level2">
@@ -427,8 +426,6 @@ mean in group female   mean in group male
 <div id="licence" class="section level4">
 <h4>Licence</h4>
 <p>This material is distributed under a <a href="https://creativecommons.org/">Creative Commons</a> licence. CC-BY-SA 4.0.</p>
-<hr />
-<p><em>version: 0.2</em></p>
 </div>
 </div>
 
