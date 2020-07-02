@@ -55,6 +55,4 @@ This material is distributed under a [Creative Commons](https://creativecommons.
 
 Kitten picture by 0x010C - Own work, CC BY-SA 4.0, https://commons.wikimedia.org/w/index.php?curid=42929793
 
-___
 
-_version 0.2_
