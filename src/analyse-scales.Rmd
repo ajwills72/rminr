@@ -139,7 +139,7 @@ Calcluate Cronbach's alpha for the depression, anxiety and stress subscales in t
 
 # References
 
-Heatherton, T. F., & Polivy, J. (1991). [Development and validation of a scale for measuring state self-esteem](http://www.academia.edu/download/37381608/91_Heatherton_Polivy_JPSP.pdf) _Journal of Personality and Social Psychology, 60(6)_, 895.
+Heatherton, T. F., & Polivy, J. (1991). [Development and validation of a scale for measuring state self-esteem](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.476.4746&rep=rep1&type=pdf) _Journal of Personality and Social Psychology, 60(6)_, 895.
 
 ___
 
