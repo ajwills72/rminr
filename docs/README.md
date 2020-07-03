@@ -146,22 +146,21 @@ These are intermediate-level materials, designed to follow on from _An Absolute 
 
 - [Statistical power](power.html): How to calculate the statistical power of experiments. 
 
+    - [More on statistical power](effsize_from_papers.html): A deeper discussion on statistical power, including: (1) relation between statistical power and the replication crisis, (2) better standards for statistical power, (3) how to improve effect size, (4) estimating effect size from previous work.
+
 - [Data preprocessing](preproc.html): Getting data from lab-based (OpenSesame)
   experiments into a format closer to something you can actually analyse, in
-  five steps: loading, selecting, filtering, summarising, and combining.
+  five steps: loading, selecting, filtering, summarising, and combining. Also covers combining data frames, renaming columns, and using **loops**. 
+    - [More on preprocessing](more-on-preproc.html): A slightly more advanced worksheet, covering adding columns to a data frame, and subsetting strings.
 
 - [Within-subject differences](anova1.html): Data preprocessing (pivoting and
-  mutating). One-factor within-subject Bayesian ANOVA.
+  mutating). One-factor within-subject Bayesian ANOVA. Pairwise comparisons, multiple comparisons.
 
 - [Understanding interactions](anova2.html): Learn what an interaction is, and
   learn how to do line plots at the same time.
 
 - [Factorial differences](anova3.html): Two-factor Bayesian ANOVA (one within,
-  one between)
-
-### Extension resources
-
-* [More on Bayes Factors](more-on-bf.html). A more detailed discussion of Bayes Factors.
+  one between), plus dvice on: pairwise comparisons, better graphs, reporting Bayesian ANOVA, and ordinal (i.e. ordered) independent variables.
 
 
 ## 6. Going further with R
