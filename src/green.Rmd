@@ -76,6 +76,8 @@ We use the `group_by`,  `summarise`, and `mean` commands we used in the _Group D
 creative <- data %>% group_by(Cond, Solution) %>% summarise(score = mean(score))
 ```
 
+As [before](group-differences.html#group), you can safely ignore the "ungrouping" message that you receive.
+
 If we look at this summarised data, by clicking on the _Environment_ tab of RStudio, we can see that we now have one creativity score per solution.
 
 ## Creativity and the environment

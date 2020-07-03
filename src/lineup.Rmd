@@ -104,6 +104,8 @@ We start by looking to see how the mean scores on Question 3 differ for those wh
 lup %>% group_by(Cond) %>% summarise(mean(Q3))
 ```
 
+As [before](group-differences.html#group), you can safely ignore the "ungrouping" message that you receive.
+
 It looks like there's a small difference, with the ratings of their view slightly higher in the feedback condition -- but how does this between-group difference compare to the within-group variability? As we covered in the _Group Differences_ worksheet, this most easily looked at with a scaled density plot:
 
 ```{r density}

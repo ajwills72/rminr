@@ -1,6 +1,6 @@
 ---
 title: "More on relationships, part 2."
-author: "Sylvia Terbeck, Andy Wills"
+author: "Andy Wills, Sylvia Terbeck"
 output: html_document
 ---
 
@@ -91,7 +91,7 @@ Here's a more detailed explanation of the output of that test -- we'll go throug
 
 ### What you did
 
-`Pearons' product-moment correlation` - There's more than one way to calculate a correlation (see above). This test uses Pearson's method.
+`Pearsons' product-moment correlation` - There's more than one way to calculate a correlation (see above). This test uses Pearson's method.
 
 `data:  gdata$ingroup and gdata$outgroup` - This just reminds you what data you're analyzing, it's basically a copy of what you told it to do, i.e. `gdata$ingroup, gdata$outgroup`
 
