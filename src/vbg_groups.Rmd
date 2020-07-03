@@ -20,7 +20,7 @@ Before starting this worksheet, you should have had a brief introduction to usin
 
 If you have completed those worksheets, then you'll have set up an R project, and you'll have a script in it that looks like this:
 
-```{r init, message=FALSE, cache=TRUE, echo=TRUE, results='hide'}
+```{r init, message=FALSE, cache=FALSE, echo=TRUE, results='hide'}
 library(tidyverse)
 cpsdata <- read_csv("cps2.csv")
 cpsdata %>% summarise(mean(income))
@@ -46,7 +46,9 @@ In order to do this, we need to split our data into two groups -- males and fema
 ```{r group-mean}
 cpsdata %>% group_by(sex) %>% summarise(mean(income))
 ```
-Copy it into your script and run it (CTRL+ENTER). Women in our made-up sample get paid, on average, around 9,000 (9k) less than men. Of course, not every male gets 92k a year in the US, and not every female gets 83k. It seems very likely that the range of incomes earned by men and women overlap -- meaning that if you picked one man and one woman at random, there's a reasonable chance that the woman earns more than the man. We can look at this _variation_ in pay using a graph. 
+Copy it into your script and run it (CTRL+ENTER). The message concerning "ungrouping output" just means that after R gives you the means, it forgets that you grouped the data (so if you want to use these groups again, you'll have to ask for them again).
+
+Women in our made-up sample get paid, on average, around 9,000 (9k) less than men. Of course, not every male gets 92k a year in the US, and not every female gets 83k. It seems very likely that the range of incomes earned by men and women overlap -- meaning that if you picked one man and one woman at random, there's a reasonable chance that the woman earns more than the man. We can look at this _variation_ in pay using a graph. 
 
 <a name="group-density"></a>
 
