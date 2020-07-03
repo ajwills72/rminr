@@ -132,7 +132,8 @@ slice(dass21, 68:72) %>% pander(split.table = Inf)
 Our next step is to calculate the scores for the constructs measured by our scale. Many scales consist of groups of questions which measure multiple, distinct constructs. The DASS-21 is an example of a scale with subscale scores for depression, anxiety and stress. These are calculated by adding together responses for specific items, which we can do using the `rowSums()` function:
 
 ```{r dass21-subscales}
-dass21 <- dass21 %>% mutate(depression = rowSums(dass21[4 + c(3,5,10,13,16,17,21)]))
+dass21 <- dass21 %>%
+  mutate(depression = rowSums(dass21[4 + c(3,5,10,13,16,17,21)]))
 dass21_total <- dass21 %>% select(partID, Age, Gender, depression)
 ```
 
@@ -162,7 +163,13 @@ dass21_total %>% head(10) %>% pander()
 
 ## Tidying survey data
 
-Some data benefits from a little more tidying than simply removing columns which aren't required. We'll demonstrate this more advanced preprocessing using a different dataset. This data came from from an experiment in which self-esteem was measured before and after participants completed one of two mental imagery conditions, or a control condition. The experiment used the State Self-Esteem Scale (SSES, Heatherton & Polivy, 1991), a 20-item scale used to measure short-lived (state) changes in self-esteem.
+Some data benefits from a little more tidying than simply removing columns which aren't required. We'll demonstrate this more advanced preprocessing using a different dataset. This data came from from an experiment in which self-esteem was measured before and after participants completed one of two mental imagery conditions, or a control condition.
+
+ * Condition 1: participants visualised a negative mental image of themself
+ * Condition 2: participants visualised a negative mental image of someone else
+ * Condition 0 (control): participants did a card sorting task and did not think of any images.
+
+The experiment used the State Self-Esteem Scale (SSES, Heatherton & Polivy, 1991), a 20-item scale used to measure short-lived (state) changes in self-esteem.
 
 ```{r, R.options = list(width = 100)}
 sses <- read_csv('going-further/sses.csv')
@@ -207,7 +214,8 @@ Now we'll convert some columns to [factors](anova1.html#anovaWS).
 
 ```{r preprocess-sses-pre-3}
 sses_pre_raw <- sses_pre_raw %>%
-  mutate(subj = factor(partid), condition = factor(condition), time = factor('pre')) %>%
+  mutate(subj = factor(partid), condition = factor(condition),
+         time = factor('pre')) %>%
   select(subj, condition, time, q1:q20)
 ```
 
@@ -225,7 +233,8 @@ Note that we could do all of these steps in a single pipeline:
 ```{r preprocess-sses-pre}
 sses_pre_raw  <- select(sses, 1, 5:25) %>%
   set_names(~ str_to_lower(.) %>% str_replace_all("pre_sse_", "q")) %>%
-  mutate(subj = factor(partid), condition = factor(condition), time = factor('pre')) %>%
+  mutate(subj = factor(partid), condition = factor(condition),
+         time = factor('pre')) %>%
   select(subj, condition, time, q1:q20)
 ```
 
@@ -238,7 +247,8 @@ Write a similar pipeline to create a data frame named `sses_post_raw` containing
 ```{r ex2, echo=FALSE}
 sses_post_raw <- select(sses, 1, 25:45) %>%
   set_names(~ str_to_lower(.) %>% str_replace_all("post_sse_", "q")) %>%
-  mutate(subj = factor(partid), condition = factor(condition), time = factor('post')) %>%
+  mutate(subj = factor(partid), condition = factor(condition),
+         time = factor('post')) %>%
   select(subj, condition, time, q1:q20)
 ```
 

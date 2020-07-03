@@ -1025,7 +1025,8 @@ cols(
 <div id="calculating-subscale-scores" class="section level2">
 <h2>Calculating subscale scores</h2>
 <p>Our next step is to calculate the scores for the constructs measured by our scale. Many scales consist of groups of questions which measure multiple, distinct constructs. The DASS-21 is an example of a scale with subscale scores for depression, anxiety and stress. These are calculated by adding together responses for specific items, which we can do using the <code>rowSums()</code> function:</p>
-<pre class="r"><code>dass21 &lt;- dass21 %&gt;% mutate(depression = rowSums(dass21[4 + c(3,5,10,13,16,17,21)]))
+<pre class="r"><code>dass21 &lt;- dass21 %&gt;%
+  mutate(depression = rowSums(dass21[4 + c(3,5,10,13,16,17,21)]))
 dass21_total &lt;- dass21 %&gt;% select(partID, Age, Gender, depression)</code></pre>
 <p><strong>Explanation of command:</strong></p>
 <ul>
@@ -1143,7 +1144,13 @@ dass21_total &lt;- dass21 %&gt;% select(partID, Age, Gender, depression)</code><
 </div>
 <div id="tidying-survey-data" class="section level2">
 <h2>Tidying survey data</h2>
-<p>Some data benefits from a little more tidying than simply removing columns which aren’t required. We’ll demonstrate this more advanced preprocessing using a different dataset. This data came from from an experiment in which self-esteem was measured before and after participants completed one of two mental imagery conditions, or a control condition. The experiment used the State Self-Esteem Scale (SSES, Heatherton &amp; Polivy, 1991), a 20-item scale used to measure short-lived (state) changes in self-esteem.</p>
+<p>Some data benefits from a little more tidying than simply removing columns which aren’t required. We’ll demonstrate this more advanced preprocessing using a different dataset. This data came from from an experiment in which self-esteem was measured before and after participants completed one of two mental imagery conditions, or a control condition.</p>
+<ul>
+<li>Condition 1: participants visualised a negative mental image of themself</li>
+<li>Condition 2: participants visualised a negative mental image of someone else</li>
+<li>Condition 0 (control): participants did a card sorting task and did not think of any images.</li>
+</ul>
+<p>The experiment used the State Self-Esteem Scale (SSES, Heatherton &amp; Polivy, 1991), a 20-item scale used to measure short-lived (state) changes in self-esteem.</p>
 <pre class="r"><code>sses &lt;- read_csv(&#39;going-further/sses.csv&#39;)</code></pre>
 <pre><code>Parsed with column specification:
 cols(
@@ -1661,7 +1668,8 @@ cols(
 </table>
 <p>Now we’ll convert some columns to <a href="anova1.html#anovaWS">factors</a>.</p>
 <pre class="r"><code>sses_pre_raw &lt;- sses_pre_raw %&gt;%
-  mutate(subj = factor(partid), condition = factor(condition), time = factor(&#39;pre&#39;)) %&gt;%
+  mutate(subj = factor(partid), condition = factor(condition),
+         time = factor(&#39;pre&#39;)) %&gt;%
   select(subj, condition, time, q1:q20)</code></pre>
 <ol style="list-style-type: decimal">
 <li><code>mutate(subj = factor(partid), condition = factor(condition), time = factor(&#39;pre&#39;))</code> - We use <code>mutate</code> to add and modify some columns. The argument <code>subj = factor(partid)</code> creates a new column named <code>subj</code> (which is a bit clearer than <code>partid</code>) by copying the <code>partid</code> column and making it a factor. The argument <code>condition = factor(condition)</code> makes the <code>condition</code> column a factor. The argument <code>time = factor(&#39;pre&#39;)</code> creates a new factor called <code>time</code> and sets all values to <code>pre</code>.</li>
@@ -1802,7 +1810,8 @@ cols(
 <p>Note that we could do all of these steps in a single pipeline:</p>
 <pre class="r"><code>sses_pre_raw  &lt;- select(sses, 1, 5:25) %&gt;%
   set_names(~ str_to_lower(.) %&gt;% str_replace_all(&quot;pre_sse_&quot;, &quot;q&quot;)) %&gt;%
-  mutate(subj = factor(partid), condition = factor(condition), time = factor(&#39;pre&#39;)) %&gt;%
+  mutate(subj = factor(partid), condition = factor(condition),
+         time = factor(&#39;pre&#39;)) %&gt;%
   select(subj, condition, time, q1:q20)</code></pre>
 <p><a name="ex2"></a></p>
 </div>
