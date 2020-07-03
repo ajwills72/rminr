@@ -153,7 +153,7 @@ links, you may find just notes, or incomplete worksheets.
 
 - [Better tables](better-tables.html): Producing publication-quality tables in R.
 
-- [Data preprocessing for scales](preproc-scales.html): _Handling missing data_, **calculating scale scores**, **tidying survey data**, _reverse scoring items_.
+- [Data preprocessing for scales](preproc-scales.html): _Handling missing data_, **calculating scale scores**, **tidying survey data**.
 
 - [Analysing scales](analyse-scales.html): **Cronbach's alpha**.
 
