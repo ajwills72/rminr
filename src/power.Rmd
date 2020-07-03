@@ -17,6 +17,8 @@ knitr::opts_chunk$set(echo = TRUE, comment=NA)
 
 # Contents
 
+- [Set up a new project](#setup)
+
 - [Introduction](#intro)
 
 - [Determining your sample size](#size)
@@ -34,6 +36,12 @@ knitr::opts_chunk$set(echo = TRUE, comment=NA)
 - [Improving power without increasing sample size](#good-design)
 
 - [Exercise 5](#ex5) : Extension work
+
+<a name="setup"></a>
+
+# Set up a new project
+
+Create a new project in RStudio, and call it **int-power**. Now create a new script and call it **power.R**. Put all the commands you use in this worksheet in `power.R` and save regularly. This way it is easier to see what you have done, and refer back to it later for revision.
 
 <a name="intro"></a>
 
