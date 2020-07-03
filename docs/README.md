@@ -1,14 +1,9 @@
 # Research Methods in R
 _2020 Edition._
 
-_Research Methods in R_ is a set of guides on how to use R as your central research methods tool. The target audience is psychology undergraduate students. _Research Methods in R_ is [Creative Commons](https://creativecommons.org/), so you are free to reuse these materials and adapt them as you wish, as long as you attribute them to their authors, and as long as your modifications have a Creative Commons licence.
+_Research Methods in R_ is a set of guides on how to use R as your central research methods tool. The target audience is psychology undergraduate students. _Research Methods in R_ is [Creative Commons](https://creativecommons.org/), so you are free to reuse these materials and adapt them as you wish, as long as you attribute them to their authors, and as long as your modifications have a Creative Commons licence. They come with absolutely no warranty of any kind.
 
-## General resources
-
-1. [Why R?](why-r-student.html). Discussion of the advantages of R over other software packages.
-
-2. [Who is using R?](rminrinpsy.html). Partial list of psychology degree
-   programmes around the world than use R.
+_Note to teachers_: These materials have been tested against R version 3.6.3 (released 29th Feb 2020), and the most recent version of packages that were available on [MRAN](https://mran.microsoft.com/) on the 29th June 2020. 
 
 ## List of guides
 
@@ -26,6 +21,24 @@ _Research Methods in R_ is a set of guides on how to use R as your central resea
 
 7. [Case studies](#studies) (work in progress)
 
+8. **[Quick reference guide](cheat-sheet.html)**. List of commonly-used commands in R.
+
+<a name="gen"></a>
+
+## General resources
+
+1. [Why R?](why-r-student.html) Discussion of the advantages of R over other software packages.
+
+2. [Who is using R?](rminrinpsy.html) Partial list of psychology degree
+   programmes around the world than use R.
+   
+3. [Other resources](resources.html). A list of other Creative Commons resources about using R. 
+
+4. [Calculating your module mark](modmark.html). How to calculate a final module mark from your component marks, using R.
+
+5. [Dealing with common errors](common-errors.html). List of commonly-encountered errors and how to solve them.
+
+
 ## 1. Absolute Beginners' Guide to R
 <a name="beginners"></a>
 
@@ -35,25 +48,38 @@ A series of worksheets on using R for data analysis in psychology. No previous k
 
 * [Exploring data](exploring-incomes.html). Means, medians, and histograms. 
 
+    * [More on tibbles](more-on-tibbles.html). Deeper explanation of 'tibbles' in R.
+
+    * [Means and medians](mean-median.html). Some slides on the difference between a mean and a median.
+
 * [Group differences](group-differences.html). Means and standard deviations, by group. Filtering data. Effect size.
 
 * [Evidence](evidence.html). Introduction to p values. Traditional between-subjects t-test. Bayesian between-subjects t-test.
+
+    * [More on t-tests](more-on-t.html). Further information on traditional t-tests, and confidence intervals.
+
+    * [More on Bayes Factors](more-on-bf.html). A more detailed discussion of Bayes Factors.
 
 * [Using RStudio projects](using-projects.html). Creating a new project. Using an R script. Analysing your own data. 
 
 * [Entering data by hand](entering-data-by-hand.html). Entering data into a spreadsheet. Saving data into your RStudio project.
 
-* [Calculating your module mark](modmark.html). How to calculate a final module mark from your component marks, using R.
-
 * [Inter-rater reliability](irr.html). Percentage agreement. Cohen's kappa. 
+
+    * [More on Cohen's kappa](more-on-kappa.html). A discussion of some potentially surprising outputs from a Cohen's kaapa calculation.
 
 * [Relationships](chi.html). Frequency and contingency tables. Mosaic plots. Traditional chi-square test. Bayesian test. 
 
+    * [More on relationships](chi-extended.html). Extension material on chi-square calculations, including issues surrounding ordered variables (e.g. age), the interpretation of large contingency tables, and a further explanation of the output of the Bayesian chi-square test.
+
 * [Relationships, part 2](corr.html). Density plots. Scatter plots. Correlation co-efficient. Bayesian and traditional tests. 
 
-* [Cheat sheet](cheat-sheet.html). Everything we've covered so far, condensed. 
+    * [More on relationships, part 2](corr-extended.html). Spearman's correlation, Kendall's tau, one-tailed tests, confidence intervals, plus a deeper look at the output of the Bayesian correlation test.
+    
+* [Sample characteristics](sample.html). How to calculate summary information about your sample, such as number of participants or gender balance, from your data file.
 
-* [Other resources](resources.html). A list of other Creative Commons resources about using R. 
+* [Making reports with R](insert-image.html). How to insert an RStudio graph into your wordprocessor document (e.g. Word). Links to _RMarkdown_ as an alternative.
+
 
 ## 2. Putting R to work
 <a name="rtowork"></a>
@@ -132,6 +158,11 @@ These are intermediate-level materials, designed to follow on from _An Absolute 
 
 - [Factorial differences](anova3.html): Two-factor Bayesian ANOVA (one within,
   one between)
+
+### Extension resources
+
+* [More on Bayes Factors](more-on-bf.html). A more detailed discussion of Bayes Factors.
+
 
 ## 6. Going further with R
 <a name="gfwr"></a>
