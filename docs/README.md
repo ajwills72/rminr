@@ -160,10 +160,10 @@ These are intermediate-level materials, designed to follow on from _An Absolute 
   learn how to do line plots at the same time.
 
 - [Factorial differences](anova3.html): Two-factor Bayesian ANOVA (one within,
-  one between), plus dvice on: pairwise comparisons, better graphs, reporting Bayesian ANOVA, and ordinal (i.e. ordered) independent variables.
+  one between), plus advice on: pairwise comparisons, better graphs, reporting Bayesian ANOVA, and ordinal (i.e. ordered) independent variables.
 
 
-## 6. Going further with R
+## 6. Going further with R (work in progress)
 <a name="gfwr"></a>
 
 These are slightly more advanced materials, aimed at a final-year undergraduate psychology audience.
@@ -191,7 +191,7 @@ links, you may find just notes, or incomplete worksheets.
 
 <a name="studies"></a>
 
-## 7. Case studies
+## 7. Case studies (work in progress)
 These are full preprocessing and analysis pipelines, based on final-year undergraduate psychology projects.
 
 - [The effects of negative mental imagery on self-esteem](cs-self-esteem.html): **Checking scale reliability**, **Comparing baseline measures (1-way between-subjects ANOVA)**, _2-way mixed ANOVA_.
