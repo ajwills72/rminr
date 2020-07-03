@@ -379,6 +379,8 @@ summary {
 <li><a href="#preproc">Preprocessing</a></li>
 <li><a href="#descriptives">Calculating descriptive statistics</a></li>
 <li><a href="#cronbach">Checking SSES reliability</a></li>
+<li><a href="#baseline">Comparing baseline SSES scores</a></li>
+<li><a href="#prepost">Comparing interventions</a></li>
 </ul>
 <p><a name="intro"></a></p>
 </div>
@@ -432,8 +434,8 @@ sses_raw &lt;- sses_raw %&gt;%
 <p>To check the reliability of our SSES measurements, we’ll calculate Cronbach’s alpha for all of the SSES data. Cronbach’s alpha was introduced in the <a href="analyse-scales.html">Analysing scales worksheet</a>.</p>
 <pre class="r"><code>library(psy)
 sses_cronbach_total &lt;- sses_raw %&gt;% select(q1:q20) %&gt;% cronbach()</code></pre>
-<p>This could be a cause for conern, as the value of 0.67 is quite a bit lower than the alpha of 0.92 reported by the authors of the SSES (Heatherton &amp; Polivy, 1991).</p>
-<p>We’ll do an additional analysis to see how the scale was performing in each group.</p>
+<p>This could be a cause for concern, as the value of 0.67 is below <a href="#analyse-scales.html#cronbach">the 0.7-0.8 convention of acceptable reliability</a>, and well below the alpha of 0.92 reported by the authors of the SSES (Heatherton &amp; Polivy, 1991).</p>
+<p>We’ll do an additional analysis to see how the scale performed in each group.</p>
 <pre class="r"><code>sses_raw %&gt;%
   group_by(time, condition) %&gt;%
   select(q1:q20) %&gt;%
@@ -455,14 +457,13 @@ sses_cronbach_total &lt;- sses_raw %&gt;% select(q1:q20) %&gt;% cronbach()</code
 </div>
 <div id="explanation-of-output" class="section level3">
 <h3>Explanation of output</h3>
-<p>Alpha looks acceptable in all conditions.</p>
+<p>We can now see from these results that alpha was especially low in the <code>self</code> and <code>other</code> conditions.</p>
 <p><a name="baseline"></a></p>
 </div>
 </div>
-<div id="compare-baseline-sses-scores-between-conditions" class="section level2">
-<h2>Compare baseline SSES scores between conditions</h2>
-<p>See also: <a href="anova1.html">Within-subject differences</a>.</p>
-<p>We would like to check that there were no major self-esteem differences between conditions before our intervention. This should be the case if we successfully randomised participants to conditions. If there are baseline differences we would need to account for these when comparing them to post-intervention scores. We can use a between-subjects ANOVA to compare the baseline SSES scores in our three conditions.</p>
+<div id="comparing-baseline-sses-scores" class="section level2">
+<h2>Comparing baseline SSES scores</h2>
+<p>Putting aside the reliability of the measurements for now, we would like to check that there were no major self-esteem differences between conditions before our intervention. This should be the case if we successfully randomised participants to conditions. If there are baseline differences we would need to account for these when comparing them to post-intervention scores. We can use a between-subjects ANOVA to compare the baseline SSES scores in our three conditions. This is the similar to the ANOVA described in the <a href="anova1.html">Within-subject differences worksheet</a>, but for a between-subjects factor.</p>
 <pre class="r"><code>library(BayesFactor, quietly = TRUE)</code></pre>
 <pre><code>
 Attaching package: &#39;Matrix&#39;</code></pre>
@@ -474,9 +475,10 @@ Welcome to BayesFactor 0.9.12-4.2. If you have questions, please contact Richard
 
 Type BFManual() to open the manual.
 ************</code></pre>
-<pre class="r"><code>bf &lt;- anovaBF(formula = total ~ condition,
-              data = as.data.frame(sses_raw %&gt;% filter(time == &#39;pre&#39;)))
-bf</code></pre>
+<pre class="r"><code>sses_pre &lt;- sses_raw %&gt;% filter(time == &#39;pre&#39;)
+bf &lt;- anovaBF(formula = total ~ condition, data = sses_pre)</code></pre>
+<pre><code>Warning: data coerced from tibble to data frame</code></pre>
+<pre class="r"><code>bf</code></pre>
 <pre><code>Bayes factor analysis
 --------------
 [1] condition : 0.6820205 ±0.03%
@@ -485,7 +487,13 @@ Against denominator:
   Intercept only 
 ---
 Bayes factor type: BFlinearModel, JZS</code></pre>
-<p>The Bayes factor of <code>0.68</code> is greater than the conventional <code>0.33</code> which would satisfy us that there were no differences between the conditions. Our descriptive statistics show that the pre-intervention mean and standard deviation are slightly lower in the <code>other</code> condition. We’ll address this issue in the next section.</p>
+<div id="explanation-of-commands-2" class="section level3">
+<h3>Explanation of commands</h3>
+<p>In line 1, we load the BayesFactor package. Line 2 assigns just the pre-intervention data to <code>sses_pre</code>. Line 3 runs the between-subjects ANOVA. In contrast with the within-subjects ANOVA you’ve seen before, we don’t use <code>+ subj</code> in the formula, and <code>whichRandom = &#39;subj&#39;</code>. For a within-subjects factor, subject is a random factor, because the within-subject factor <em>levels</em> would change if we re-ran the experiment with different people. However, for a fully between-subjects factor like <code>condition</code>, the same subject is only ever in a single condition, so it’s not possible them to affect more than one level of the factor. This is why we don’t include <code>subj</code> as a random factor in this analysis.</p>
+</div>
+<div id="explanation-of-output-1" class="section level3">
+<h3>Explanation of output</h3>
+<p>The Bayes factor of 0.68 is greater than the conventional <code>0.33</code> which would satisfy us that there were no differences between the conditions. This could be due to the slightly lower mean in the <code>other</code> condition. We’ll address this issue at the end of the worksheet.</p>
 <pre class="r"><code>sses_raw %&gt;% filter(time == &#39;pre&#39;) %&gt;% group_by(condition) %&gt;% summarise(mean = mean(total), sd = sd(total))</code></pre>
 <pre><code>`summarise()` ungrouping output (override with `.groups` argument)</code></pre>
 <pre><code># A tibble: 3 x 3
@@ -496,49 +504,31 @@ Bayes factor type: BFlinearModel, JZS</code></pre>
 3 self       33.8  9.27</code></pre>
 <p><a name="prepost"></a></p>
 </div>
-<div id="compare-pre-and-post-intervention-sses-scores-between-conditions" class="section level1">
-<h1>Compare pre and post intervention SSES scores between conditions</h1>
-<p>See also: <a href="anova3.html">Factorial differences</a>.</p>
-<p>The main question we’d like to answer is whether our two imagery interventions (visualising a negative mental image of oneself, or someone else) had effects on self esteem which differed from our control condition. We can test this using a <a href="anova3.html#bfact">factorial ANOVA</a> to compare SSES scores before and after the three interventions. In this design, <code>condition</code> is a between-subjects variable, and <code>time</code> (pre and post intervention) is a repeated measure.</p>
+</div>
+<div id="comparing-interventions" class="section level2">
+<h2>Comparing interventions</h2>
+<p>The main question we’d like to answer is whether our two imagery interventions (visualising a negative mental image of oneself, or someone else) had effects on self esteem which differed from our control condition. We can test this using a <a href="anova3.html#bfact">factorial ANOVA</a> to compare SSES scores before and after the three interventions. In this design, <code>condition</code> is a between-subjects variable, and <code>time</code> (pre and post intervention) is a repeated measure. We include <code>subj</code> as a random factor, as it is random in relation to the repeated measure <code>time</code>.</p>
 <pre class="r"><code>bf &lt;- anovaBF(formula = total ~ time*condition + subj,
               data = sses_raw, whichRandom = &#39;subj&#39;)</code></pre>
 <pre><code>Warning: data coerced from tibble to data frame</code></pre>
-<p>Our Bayes factors indicate that there is a main effect of <code>condition</code>,</p>
-<pre class="r"><code>bf[1]</code></pre>
+<pre class="r"><code>bf</code></pre>
 <pre><code>Bayes factor analysis
 --------------
-[1] condition + subj : 4.038891 ±4.24%
+[1] condition + subj                         : 3.967034  ±2.33%
+[2] time + subj                              : 0.1912675 ±1.33%
+[3] condition + time + subj                  : 0.7370747 ±5.41%
+[4] condition + time + condition:time + subj : 7.041457  ±3.2%
 
 Against denominator:
   total ~ subj 
 ---
 Bayes factor type: BFlinearModel, JZS</code></pre>
-<p>no main effect of <code>time</code>,</p>
-<pre class="r"><code>bf[2]</code></pre>
-<pre><code>Bayes factor analysis
---------------
-[1] time + subj : 0.1951523 ±1.7%
-
-Against denominator:
-  total ~ subj 
----
-Bayes factor type: BFlinearModel, JZS</code></pre>
-<p>and a <code>condition*time</code> interaction</p>
-<pre class="r"><code>bf[4] / bf[3]</code></pre>
-<pre><code>Bayes factor analysis
---------------
-[1] condition + time + condition:time + subj : 8.868518 ±6.25%
-
-Against denominator:
-  total ~ condition + time + subj 
----
-Bayes factor type: BFlinearModel, JZS</code></pre>
-<p>Given the interaction, we would might want to make <a href="anova1.html#pairs">pairwise comparisons</a>, to compare the imagery conditions against the control condition, and against each other.</p>
-<p>Finally, to address the difference in baseline scores, we could run the same ANOVA on the <em>difference</em> between the pre and post scores, or we could include the baseline score as a covariate in an ANCOVA. These techniques are outside the scope of this worksheet.</p>
+<p>The Bayes factor for <code>time</code> (<em>BF</em> = 0.19) tells us that there was no overall change in self-esteem after the intervention relative to baseline. The Bayes factor for <code>condition</code> (<em>BF</em> = 3.97) tells us that there were overall differences in self-esteem between the three conditions. The Bayes factor of 9.55, tells us that it’s almost 10 times more like that there’s an interaction between <code>condition</code> and <code>time</code>, than that there isn’t.</p>
 </div>
 <div id="references" class="section level1">
 <h1>References</h1>
-<p>Heatherton, T. F., &amp; Polivy, J. (1991). Development and validation of a scale for measuring state self-esteem. <em>Journal of Personality and Social Psychology, 60(6)</em>, 895. ___</p>
+<p>Heatherton, T. F., &amp; Polivy, J. (1991). <a href="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.476.4746&amp;rep=rep1&amp;type=pdf">Development and validation of a scale for measuring state self-esteem</a> <em>Journal of Personality and Social Psychology, 60(6)</em>, 895.</p>
+<hr />
 <p>This material is distributed under a <a href="https://creativecommons.org/">Creative Commons</a> licence. CC-BY-SA 4.0.</p>
 </div>
 
