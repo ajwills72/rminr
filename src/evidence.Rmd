@@ -155,11 +155,10 @@ A Bayesian t-test is used for the same sorts of things as a traditional t-test (
 The easiest way to do a Bayesian t-test in R is to use the _BayesFactor_ package. Recall, that you load a package using the `library` command. 
 
 ```{r bayesfactor, message=FALSE}
-library(BayesFactor, quietly = TRUE)
+library(BayesFactor)
 ```
-The `quietly = TRUE` bit is there because this package is very chatty when it loads, which gets a bit annoying after a while. Telling it to load quietly helps a bit, although you'll still get a welcome message (not shown here). 
 
-If you get an error here, please see [common errors](common-errors.html).
+R will return a welcome message and various other text in response to this command (we do not show this text here, as it is quite long). You can safely ignore that text. However, if you get an error here, please see [common errors](common-errors.html).
 
 The command for a Bayesian t-test is similar, but not identical, to the commands for effect size and for a traditional t-test. For our gender pay gap example, we type:
 

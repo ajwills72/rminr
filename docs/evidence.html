@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
@@ -270,7 +269,6 @@ code {
 }
 img {
   max-width:100%;
-  height: auto;
 }
 .tabbed-pane {
   padding-top: 12px;
@@ -332,6 +330,7 @@ summary {
   border: none;
   display: inline-block;
   border-radius: 4px;
+  background-color: transparent;
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li {
@@ -480,9 +479,8 @@ mean in group female   mean in group male
 <h2>Between-subjects Bayesian t-test</h2>
 <p>A Bayesian t-test is used for the same sorts of things as a traditional t-test (see above), but returns a Bayes Factor rather than a p value.</p>
 <p>The easiest way to do a Bayesian t-test in R is to use the <em>BayesFactor</em> package. Recall, that you load a package using the <code>library</code> command.</p>
-<pre class="r"><code>library(BayesFactor, quietly = TRUE)</code></pre>
-<p>The <code>quietly = TRUE</code> bit is there because this package is very chatty when it loads, which gets a bit annoying after a while. Telling it to load quietly helps a bit, although you’ll still get a welcome message (not shown here).</p>
-<p>If you get an error here, please see <a href="common-errors.html">common errors</a>.</p>
+<pre class="r"><code>library(BayesFactor)</code></pre>
+<p>R will return a welcome message and various other text in response to this command (we do not show this text here, as it is quite long). You can safely ignore that text. However, if you get an error here, please see <a href="common-errors.html">common errors</a>.</p>
 <p>The command for a Bayesian t-test is similar, but not identical, to the commands for effect size and for a traditional t-test. For our gender pay gap example, we type:</p>
 <pre class="r"><code>ttestBF(formula = income ~ sex, data = data.frame(cpsdata))</code></pre>
 <pre><code>Bayes factor analysis
