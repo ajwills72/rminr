@@ -368,7 +368,7 @@ The goal in this exercise is to look at the reaction time difference between con
 
 **Specifically, the task is to write a new R script that contains _all_ the necessary commands, and _only_ the necessary commands, to do all of the following, in this order:**
 
-1. Start with the command `rm(list=ls())`. This command clears your _Environment_ and so ensures your script is not relying on commands you have previously run. 
+1. Start a new script and call it **anova1ex.R**. Start your script with the command `rm(list=ls())`. This command clears your _Environment_ and so ensures your script is not relying on commands you have previously run. 
 
 2. Load the packages you need (`tidyverse` and `BayesFactor`).
 
