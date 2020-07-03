@@ -83,6 +83,8 @@ grpmeans <- recog.old %>% group_by(Condition) %>% summarise(Correct = mean(Corre
 
 We've put our answers into a new data frame, `grpmeans`, so go to the _Enviornment_ window of RStudio and click on `grpmeans' to see your answers.
 
+As [before](group-differences.html#group), you can safely ignore the "ungrouping" message that you receive.
+
 **Enter your answers  in to your lab book. **
 
 Notice that we used `summarise(Correct = mean(Correct))`, rather than just `summarise(mean(Correct))`. This causes that column of our data frame to be called `Correct`, which is less of a mouthful than `mean(Correct)`. The graphing command we'll use next only works if the columns have very simple names (a single word, no special characters like brackets, etc.)
@@ -158,5 +160,3 @@ meanplot
 ___
 
 This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0. 
-
-_version 0.2_
