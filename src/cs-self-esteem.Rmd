@@ -31,6 +31,8 @@ This is an advanced worksheet, which assumes you have completed the [Absolute Be
 - [Preprocessing](#preproc)
 - [Calculating descriptive statistics](#descriptives)
 - [Checking SSES reliability](#cronbach)
+- [Comparing baseline SSES scores](#baseline)
+- [Comparing interventions](#prepost)
 
 <a name="intro"></a>
 
@@ -125,9 +127,9 @@ library(psy)
 sses_cronbach_total <- sses_raw %>% select(q1:q20) %>% cronbach()
 ```
 
-This could be a cause for conern, as the value of `r round(sses_cronbach_total$alpha,2)` is quite a bit lower than the alpha of 0.92 reported by the authors of the SSES (Heatherton & Polivy, 1991).
+This could be a cause for concern, as the value of `r round(sses_cronbach_total$alpha,2)` is below [the 0.7-0.8 convention of acceptable reliability](#analyse-scales.html#cronbach), and well below the alpha of 0.92 reported by the authors of the SSES (Heatherton & Polivy, 1991).
 
-We'll do an additional analysis to see how the scale was performing in each group.
+We'll do an additional analysis to see how the scale performed in each group.
 
 ```{r cronbach-pre-post}
 sses_raw %>%
@@ -142,24 +144,33 @@ The first two steps in this pipeline should be familiar by now. We group the dat
 
 ### Explanation of output
 
-We can now see that alpha looks acceptable in all conditions.
+We can now see from these results that alpha was especially low in the `self` and `other` conditions.
 
 <a name="baseline"></a>
 
-## Compare baseline SSES scores between conditions
+## Comparing baseline SSES scores
 
-See also: [Within-subject differences](anova1.html).
-
-We would like to check that there were no major self-esteem differences between conditions before our intervention. This should be the case if we successfully randomised participants to conditions. If there are baseline differences we would need to account for these when comparing them to post-intervention scores. We can use a between-subjects ANOVA to compare the baseline SSES scores in our three conditions.
+Putting aside the reliability of the measurements for now, we would like to check that there were no major self-esteem differences between conditions before our intervention. This should be the case if we successfully randomised participants to conditions. If there are baseline differences we would need to account for these when comparing them to post-intervention scores. We can use a between-subjects ANOVA to compare the baseline SSES scores in our three conditions. This is the similar to the ANOVA described in the [Within-subject differences worksheet](anova1.html), but for a between-subjects factor.
 
 ```{r baseline}
 library(BayesFactor, quietly = TRUE)
-bf <- anovaBF(formula = total ~ condition,
-              data = as.data.frame(sses_raw %>% filter(time == 'pre')))
+sses_pre <- sses_raw %>% filter(time == 'pre')
+bf <- anovaBF(formula = total ~ condition, data = sses_pre)
 bf
 ```
 
-The Bayes factor of `0.68` is greater than the conventional `0.33` which would satisfy us that there were no differences between the conditions. Our descriptive statistics show that the pre-intervention mean and standard deviation are slightly lower in the `other` condition. We'll address this issue in the next section.
+### Explanation of commands
+
+In line 1, we load the BayesFactor package. Line 2 assigns just the pre-intervention data to `sses_pre`. Line 3 runs the between-subjects ANOVA. In contrast with the within-subjects ANOVA you've seen before, we don't use `+ subj` in the formula, and `whichRandom = 'subj'`. For a within-subjects factor, subject is a random factor, because the within-subject factor _levels_ would change if we re-ran the experiment with different people. However, for a fully between-subjects factor like `condition`, the same subject is only ever in a single condition, so it's not possible them to affect more than one level of the factor. This is why we don't include `subj` as a random factor in this analysis.
+
+### Explanation of output
+
+```{r baseline_bf, echo=FALSE}
+# calculate here to work around inline knitting issue
+baseline_bf <- round(extractBF(bf)$bf,2)
+```
+
+The Bayes factor of `r baseline_bf` is greater than the conventional `0.33` which would satisfy us that there were no differences between the conditions. This could be due to the slightly lower mean in the `other` condition. We'll address this issue at the end of the worksheet.
 
 ```{r baseline-descriptives}
 sses_raw %>% filter(time == 'pre') %>% group_by(condition) %>% summarise(mean = mean(total), sd = sd(total))
@@ -167,43 +178,30 @@ sses_raw %>% filter(time == 'pre') %>% group_by(condition) %>% summarise(mean = 
 
 <a name="prepost"></a>
 
-# Compare pre and post intervention SSES scores between conditions
-
-See also: [Factorial differences](anova3.html).
+## Comparing interventions
 
 The main question we'd like to answer is whether our two imagery interventions 
-(visualising a negative mental image of oneself, or someone else) had effects on self esteem which differed from our control condition. We can test this using a [factorial ANOVA](anova3.html#bfact) to compare SSES scores before and after the three interventions. In this design, `condition` is a between-subjects variable, and `time` (pre and post intervention) is a repeated measure.
+(visualising a negative mental image of oneself, or someone else) had effects on self esteem which differed from our control condition. We can test this using a [factorial ANOVA](anova3.html#bfact) to compare SSES scores before and after the three interventions. In this design, `condition` is a between-subjects variable, and `time` (pre and post intervention) is a repeated measure. We include `subj` as a random factor, as it is random in relation to the repeated measure `time`.
 
 ```{r prepost}
 bf <- anovaBF(formula = total ~ time*condition + subj,
               data = sses_raw, whichRandom = 'subj')
+bf
 ```
 
-Our Bayes factors indicate that there is a main effect of `condition`,
-
-```{r condition}
-bf[1]
+```{r prepost_bf, echo=FALSE}
+# calculate here to work around inline knitting issue
+condition_bf <- round(extractBF(bf[1])$bf, 2)
+time_bf <- round(extractBF(bf[2])$bf, 2)
+interaction_bf <- round(extractBF(bf[4] / bf[3])$bf, 2)
 ```
 
-no main effect of `time`,
-
-```{r time}
-bf[2]
-```
-
-and a `condition*time` interaction
-
-```{r condition*time}
-bf[4] / bf[3]
-```
-
-Given the interaction, we would might want to make [pairwise comparisons](anova1.html#pairs), to compare the imagery conditions against the control condition, and against each other.
-
-Finally, to address the difference in baseline scores, we could run the same ANOVA on the _difference_ between the pre and post scores, or we could include the baseline score as a covariate in an ANCOVA. These techniques are outside the scope of this worksheet.
+The Bayes factor for `time` (_BF_ = `r time_bf`) tells us that there was no overall change in self-esteem after the intervention relative to baseline. The Bayes factor for `condition` (_BF_ = `r condition_bf`) tells us that there were overall differences in self-esteem between the three conditions. The Bayes factor of `r interaction_bf`, tells us that it's almost 10 times more like that there's an interaction between `condition` and `time`, than that there isn't.
 
 # References
 
-Heatherton, T. F., & Polivy, J. (1991). Development and validation of a scale for measuring state self-esteem. _Journal of Personality and Social Psychology, 60(6)_, 895.
+Heatherton, T. F., & Polivy, J. (1991). [Development and validation of a scale for measuring state self-esteem](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.476.4746&rep=rep1&type=pdf) _Journal of Personality and Social Psychology, 60(6)_, 895.
+
 ___
 
 This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0.
