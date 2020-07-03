@@ -18,23 +18,25 @@ output: html_document
 ## Show commands and output.
 knitr::opts_chunk$set(echo = TRUE, comment=NA, cache = TRUE)
 options(tibble.width = Inf) # show all columns in output
+library(pander)
 ```
 
-# Contents
+## Before you start
+
+This is an advanced worksheet, which assumes you have completed the [Absolute Beginners' Guide to R](https://ajwills72.github.io/rminr/#beginners) course, the [Research Methods in Practice (Quantitative section)](https://benwhalley.github.io/rmip/overview-quantitative.html) course, and the [Intermediate Guide to R](https://ajwills72.github.io/rminr/#rmip) course.
+
+## Contents
 
 - [Introduction](#intro)
-
-- [Getting started](#start)
-
-- [Preprocessing](#preprocessing)
-
-- [Results](#results)
+- [Preprocessing](#preproc)
+- [Calculating descriptive statistics](#descriptives)
+- [Checking SSES reliability](#cronbach)
 
 <a name="intro"></a>
 
-# Introduction
+## Introduction
 
-This study was an experiment in which self-esteem was measured before and after a mental imagery intervention. Self-esteem was measured using the State Self-Esteem Scale (SSES, Osman et al., 2012), a 20-item survey used to measure short-lived (state) changes in self-esteem. Participants completed one of two mental imagery conditions, or a control condition:
+This worksheet describes a partial analysis pipeline for an experiment taken from a PhD thesis. The experiment explored self-esteem before and after a mental imagery intervention. Self-esteem was measured using the State Self-Esteem Scale (SSES, Osman et al., 2012), a 20-item survey used to measure short-lived (state) changes in self-esteem. Participants completed one of two mental imagery conditions, or a control condition:
 
  * Condition 1: participants visualised a negative mental image of themself
  * Condition 2: participants visualised a negative mental image of someone else
@@ -42,132 +44,105 @@ This study was an experiment in which self-esteem was measured before and after 
 
 This was a 2 (time) x 3 (condition) mixed design.
 
-<a name="start"></a>
+<a name="preproc"></a>
 
-# Getting started
+## Preprocessing
 
-1. Open the project you used to complete the [Preprocessing scales](preproc-scales.html) worksheet.
+The initial preprocessing steps for this data are described in the [Data preprocessing for scales worksheet](preproc-scales.html). Complete that worksheet first, then add the code in this worksheet to the end of `scales.R`.
 
-1. You should have a script names `scales.R`. Add the code in this worksheet to the end of that script.
-
-<a name="preprocessing"></a>
-
-# Preprocessing
-
-Run `scales.R` to preprocess the SSES data.
-
-```{r preprocessing}
+```{r preproc, message=FALSE, echo=FALSE}
+# from tables.R
 rm(list = ls()) # clear the environment
 library(tidyverse)
 
+# DASS-21
+dass21_raw <- read_csv("going-further/dass21.csv")
+dass21_raw <- dass21_raw %>% select(partID, Age:DASS21)
+dass21 <- dass21_raw %>% drop_na()
+dass21 <- dass21 %>%
+  mutate(depression = rowSums(dass21[4 + c(3,5,10,13,16,17,21)]))
+dass21_total <- dass21 %>% select(partID, Age, Gender, depression)
+dass21 <- mutate(dass21, anxiety = rowSums(dass21[4 + c(2,4,7,9,15,19,20)]))
+dass21 <- mutate(dass21, stress = rowSums(dass21[4 + c(1,6,8,11,12,14,18)]))
+
+# SSES
 sses <- read_csv('going-further/sses.csv')
-sses_pre_raw  <- sses %>% select(1, 5:25) %>%
-  set_names(~ str_to_lower(.) %>% str_replace_all("pre_sse_", "q")) %>%
-  mutate(subj = factor(partid), condition = factor(condition), time = factor('pre')) %>%
+sses_pre_raw  <- sses %>% select(1, 5:25)
+sses_pre_raw  <- sses_pre_raw %>%
+  set_names(~ str_to_lower(.) %>% str_replace_all("pre_sse_", "q"))
+sses_pre_raw <- sses_pre_raw %>%
+  mutate(subj = factor(partid), condition = factor(condition),
+         time = factor('pre')) %>%
   select(subj, condition, time, q1:q20)
-sses_post_raw <- sses %>% select(1, 25:45) %>%
+
+sses_pre_raw  <- select(sses, 1, 5:25) %>%
+  set_names(~ str_to_lower(.) %>% str_replace_all("pre_sse_", "q")) %>%
+  mutate(subj = factor(partid), condition = factor(condition),
+         time = factor('pre')) %>%
+  select(subj, condition, time, q1:q20)
+sses_post_raw <- select(sses, 1, 25:45) %>%
   set_names(~ str_to_lower(.) %>% str_replace_all("post_sse_", "q")) %>%
   mutate(subj = factor(partid), condition = factor(condition), time = factor('post')) %>%
   select(subj, condition, time, q1:q20)
-# Reverse score survey items
-# @param scores raw scores data frame
-# @param reverse character vector of columns to be reverse scored
-# @param max integer value of maximum score
-reverse_score_survey <- function(scores, reverse, max) {
-  reverse_score <- function(score) { max - score } # for scores starting at 1, max + 1 - score
-  scores %>% mutate_at(reverse, reverse_score)
-}
-reverse_questions <- c('q2', 'q4', 'q5', 'q7', 'q8', 'q10', 'q13', 'q15', 'q16', 'q17', 'q18',
-                       'q19', 'q20')
-sses_pre  <- reverse_score_survey(sses_pre_raw, reverse_questions, 4)
-sses_post <- reverse_score_survey(sses_post_raw, reverse_questions, 4)
-sses_pre  <- mutate(sses_pre, total = rowSums(sses_pre[4:23]))
-sses_post <- mutate(sses_post, total = rowSums(sses_post[4:23]))
 ```
 
-If you've done this correctly, `sses_pre` will look like this:
+We start with some final bits of preprocessing.
 
 ```{r}
-library(pander)
-sses_pre %>% head(3) %>% pander(split.table = Inf)
+sses_raw <- bind_rows(sses_pre_raw, sses_post_raw)
+sses_raw <- sses_raw %>%
+  mutate(total = sses_raw %>% select(q1:q20) %>% rowSums())
 ```
 
-## Recode factor levels
+### Explanation of commands
 
-Looking at the `condition` column above, we can see that the experimental software that generated our data used numbers to represent different levels of this factor. It's often clearer if the numbers are converted to strings which describe the factor levels.
+`bind_rows()` simply joins data frames together, in the order the arguments are specificed, making a new data frame. We do this because we want to do at least one analysis on all of the data.
 
-```{r}
-sses_pre$condition <- recode_factor(sses_pre$condition, `0` = 'control',
-                                        `1` = 'self', `2` = 'other')
-sses_post$condition <- recode_factor(sses_post$condition, `0` = 'control',
-                                        `1` = 'self', `2` = 'other')
-```
+The `mutate()` in the second line uses `rowSums()` to add up the values in the columns `q1:q20` for each row. Because our data has one participant per row, this calculates the SSES score for each participant. You've seen something similar when we calculated subscale scores in the [Data preprocessing for scales](preproc-scales.html#subscales). The SSES contains some reverse-coded items, but these were already reversed in this particular dataset, so we didn't need to do that step.
 
-**Explanation of command:**
+<a name="descriptives"></a>
 
-1. We use `recode_factor()` to rename the levels of the experimental condition (`sses_pre_raw$condition`). The current factor level name goes on the left hand side of the `=`, the new name goes on the right hand side. Notice that the numbers need to be in backticks. The renamed factor levels are reassigned to the same column `sses_pre_raw$condition`.
+## Calculating descriptive statistics
 
-Our `condition` factor now has intuitive level names:
-
-```{r}
-sses_pre %>% head(3) %>% pander(split.table = Inf)
-```
-
-<a name="results"></a>
-
-# Results
-
-## Descriptive statistics
-
-<a name="descriptive"></a>
-
-Next we calculate means and standard deviations by condition for the pre and post SSES.
+We can get a feel for our data by using the familiar `group_by()` and `summarise()` commands to calculate means and standard deviations by group within time.
 
 ```{r descriptive}
-sses_pre %>%
-  group_by(condition) %>%
-  summarise(mean = mean(total), sd = sd(total))
-sses_post %>%
-  group_by(condition) %>%
+sses_raw %>%
+  group_by(time, condition) %>%
   summarise(mean = mean(total), sd = sd(total))
 ```
+
+From these results, we can see that, compared to the pre-intervention scores, self-esteem rose slightly in `other` condition, rose even more in the `self` condition and dropped slightly in the `control` condition.
 
 <a name="cronbach"></a>
 
-## Calculate Cronbach’s alpha
+## Checking SSES reliability
 
-See also: [Analysing scales](analyse-scales.html).
-
-We calculate an overall Cronbach's alpha for the pre and post SSES.
+To check the reliability of our SSES measurements, we'll calculate Cronbach's alpha for all of the SSES data. Cronbach's alpha was introduced in the [Analysing scales worksheet](analyse-scales.html).
 
 ```{r cronbach-all}
 library(psy)
-
-sses_cronbach <- function(scores) {
-  cronbach <- cronbach(select(scores, q1:q20))
-  data.frame(cronbach$alpha)
-}
-sses_cronbach_total <- sses_cronbach(bind_rows(sses_pre, sses_post))
-sses_cronbach_total
+sses_cronbach_total <- sses_raw %>% select(q1:q20) %>% cronbach()
 ```
 
-This gives us a value of `0.67`, which is quite a bit lower than the `0.92` reported by the authors who developed the SSES (Heatherton & Polivy, 1991).
+This could be a cause for conern, as the value of `r round(sses_cronbach_total$alpha,2)` is quite a bit lower than the alpha of 0.92 reported by the authors of the SSES (Heatherton & Polivy, 1991).
 
-We also look at Cronbach's alpha pre and post intervention:
+We'll do an additional analysis to see how the scale was performing in each group.
 
 ```{r cronbach-pre-post}
-sses_pre_cronbach <- sses_pre %>%
-  group_by(condition) %>%
-  group_modify(~ sses_cronbach(.x))
-sses_pre_cronbach
-
-sses_post_cronbach <- sses_post %>%
-  group_by(condition) %>%
-  group_modify(~ sses_cronbach(.x))
-sses_post_cronbach
+sses_raw %>%
+  group_by(time, condition) %>%
+  select(q1:q20) %>%
+  group_modify(~ as.data.frame(cronbach(.x)$alpha))
 ```
 
-Alpha looks especially low in the `self` and `other` conditions.
+### Explanation of commands
+
+The first two steps in this pipeline should be familiar by now. We group the data by `condition` within `time` and select the columns required for calculating alpha. The final step needs some unpacking. The `group_modify()` command does some processing on each group of rows defined by the earlier `group_by()` and returns the result as a data frame, with columns to indicate which group the results relate to. The `~` means turn the following commands into a function which is run for each group. You don't really need to know what a function is to understand the processing that happens for each group. That's defined by `as.data.frame(cronbach(.x)$alpha)`. This runs the `cronbach()` function on the grouped data (`.x`) and extracts the value of `alpha` (recall that `cronbach()` also returns the sample size and the number of items). The alpha value is turned into a data frame so that `group_modify()` can join the results from each group into a single data frame.
+
+### Explanation of output
+
+We can now see that alpha looks acceptable in all conditions.
 
 <a name="baseline"></a>
 
@@ -179,14 +154,15 @@ We would like to check that there were no major self-esteem differences between 
 
 ```{r baseline}
 library(BayesFactor, quietly = TRUE)
-bf <- anovaBF(formula = total ~ condition, data = as.data.frame(sses_pre))
+bf <- anovaBF(formula = total ~ condition,
+              data = as.data.frame(sses_raw %>% filter(time == 'pre')))
 bf
 ```
 
 The Bayes factor of `0.68` is greater than the conventional `0.33` which would satisfy us that there were no differences between the conditions. Our descriptive statistics show that the pre-intervention mean and standard deviation are slightly lower in the `other` condition. We'll address this issue in the next section.
 
 ```{r baseline-descriptives}
-sses_pre %>% group_by(condition) %>% summarise(mean = mean(total), sd = sd(total))
+sses_raw %>% filter(time == 'pre') %>% group_by(condition) %>% summarise(mean = mean(total), sd = sd(total))
 ```
 
 <a name="prepost"></a>
@@ -199,12 +175,8 @@ The main question we'd like to answer is whether our two imagery interventions
 (visualising a negative mental image of oneself, or someone else) had effects on self esteem which differed from our control condition. We can test this using a [factorial ANOVA](anova3.html#bfact) to compare SSES scores before and after the three interventions. In this design, `condition` is a between-subjects variable, and `time` (pre and post intervention) is a repeated measure.
 
 ```{r prepost}
-sses_pre_post <- bind_rows(sses_pre, sses_post) %>%
-  mutate(time = factor(time))
-
 bf <- anovaBF(formula = total ~ time*condition + subj,
-              data = sses_pre_post, whichRandom = 'subj')
-
+              data = sses_raw, whichRandom = 'subj')
 ```
 
 Our Bayes factors indicate that there is a main effect of `condition`,
