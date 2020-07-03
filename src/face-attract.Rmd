@@ -56,6 +56,8 @@ To look at differences in facial attractiveness, we can look at the average (mea
 av.att <- att %>% group_by(Stimulus) %>% summarise(mean = mean(Rating))
 ```
 
+As [before](group-differences.html#group), you can safely ignore the "ungrouping" message that you receive.
+
 You can look at these averages by clicking on `av.att` in the _Environment_ tab in RStudio. You should be able to notice that some faces score higher than others, on average. However, it's pretty hard to get your head around a long list of numbers like this, so next we're going to draw a graph. This _visualisation_ will help us more easily comprehend our data.
 
 A _density plot_ is a good choice for this kind of data. We covered density plots in the _Group Differences_ worksheet, and we can use the same commands here. 
@@ -128,4 +130,3 @@ ___
 
 This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0. 
 
-_version 0.2.1_
