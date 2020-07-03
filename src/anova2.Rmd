@@ -56,13 +56,15 @@ Specifically, our goal in these two worksheets is to work out the level of evide
 
 # Getting started
 
-This worksheet uses the same _git_ repository as the [preprocessing](preproc.html) and [within-subject differences](anova1.html) worksheets. Go back to your R project that contains this git repository now.
+This worksheet uses the same _git_ repository as the [preprocessing](preproc.html) and [within-subject differences](anova1.html) worksheets. Go back to your R project that contains this git repository now - you named it **rminr-data**. 
 
-Next, make sure you have loaded the data, and have loaded the R packages you need:
+Open a new blank script, and save it as **anova2.R**. Enter all your commands into this script and run them from there. Save the script regularly.
+
+The first step is to make sure you have loaded the data, and have loaded the R packages you need:
 
 ```{r started, message=FALSE}
 library(tidyverse)
-library(BayesFactor, quietly = TRUE)
+library(BayesFactor)
 words <- read_csv("wordnaming2.csv")
 ```
 
@@ -106,8 +108,8 @@ The data frame `MCwordsCI` is still very long, because it contains every trial f
 
 **WRITE A COMMAND** to _group_ the data by participant ID (`subj`), trial type (`congru`) and between-subjects condition (i.e. meditation versus control, `medit`). Get the mean reaction times using the `summarise` command, and put this summarised data into a new data frame called `MCwordsCIsum`. If you need a reminder of how to group and summarise data, take a look at the [preprocessing](preproc.html#summary) worksheet. The column containing the RT data in this new data frame will need to have the name `rt`, because we assume this later on. You can set the column name within the `summarise` command. For example, `summarise(acc = mean(acc))` takes the mean of the column `acc` and puts the answer into a column called `acc` in your new data frame.
 
-```{r sum1, echo=FALSE}
-
+```{r sum1, echo=FALSE, message=FALSE}
+MCwordsCIsum <- MCwordsCI %>% group_by(subj, congru, medit) %>% summarise(rt=mean(rt))
 ```
 
 _EXPECTED OUTPUT_: A new data frame called `MCwordsCIsum` will be in your _Environment_. It will have 560 rows and 4 columns. There will be two rows for each participant, one for incongruent trials, one for congruent trials. Each participant will be identified as being in either the `meditate` or `control` condition. 
