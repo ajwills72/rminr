@@ -79,6 +79,8 @@ cordata %>% group_by(cond) %>% summarise(mean(RT))
 ```
 The output will look something like the above (the actual numbers won't be the same). In the above example, the participant responded on average about 40 milliseconds more quickly in compatible compared to incompatible trials.
 
+As [before](group-differences.html#group), you can safely ignore the "ungrouping" message that you receive.
+
 **Enter the exact values that you found for the mean RTs in each condition into the PsycEL answer section**.
 
 ### Standard deviations of RT
