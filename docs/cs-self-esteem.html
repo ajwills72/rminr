@@ -519,21 +519,24 @@ Bayes factor type: BFlinearModel, JZS</code></pre>
 <h2>Comparing interventions</h2>
 <p>The main question we’d like to answer is whether our two imagery interventions (visualising a negative mental image of oneself, or someone else) had effects on self esteem which differed from our control condition. We can test this using a <a href="anova3.html#bfact">factorial ANOVA</a> to compare SSES scores before and after the three interventions. In this design, <code>condition</code> is a between-subjects variable, and <code>time</code> (pre and post intervention) is a repeated measure. We include <code>subj</code> as a random factor, as it is random in relation to the repeated measure <code>time</code>.</p>
 <pre class="r"><code>bf &lt;- anovaBF(formula = total ~ time*condition + subj,
-              data = sses_raw, whichRandom = &#39;subj&#39;)</code></pre>
-<pre><code>Warning: data coerced from tibble to data frame</code></pre>
-<pre class="r"><code>bf</code></pre>
-<pre><code>Bayes factor analysis
---------------
-[1] condition + subj                         : 3.967034  ±2.33%
-[2] time + subj                              : 0.1912675 ±1.33%
-[3] condition + time + subj                  : 0.7370747 ±5.41%
-[4] condition + time + condition:time + subj : 7.041457  ±3.2%
-
-Against denominator:
-  total ~ subj 
----
-Bayes factor type: BFlinearModel, JZS</code></pre>
-<p>The Bayes factor for <code>time</code> (<em>BF</em> = 0.19) tells us that there was no overall change in self-esteem after the intervention relative to baseline. The Bayes factor for <code>condition</code> (<em>BF</em> = 3.97) tells us that there were overall differences in self-esteem between the three conditions. The Bayes factor of 9.55, tells us that it’s almost 10 times more like that there’s an interaction between <code>condition</code> and <code>time</code>, than that there isn’t.</p>
+              data = data.frame(sses_raw), whichRandom = &#39;subj&#39;)
+condition_bf &lt;- round(extractBF(bf[1])$bf, 2)
+time_bf &lt;- round(extractBF(bf[2])$bf, 2)
+interaction_bf &lt;- round(extractBF(bf[4] / bf[3])$bf, 2)
+condition_bf</code></pre>
+<pre><code>[1] 3.97</code></pre>
+<pre class="r"><code>time_bf</code></pre>
+<pre><code>[1] 0.19</code></pre>
+<pre class="r"><code>interaction_bf</code></pre>
+<pre><code>[1] 9.55</code></pre>
+<div id="explanation-of-commands-4" class="section level3">
+<h3>Explanation of commands</h3>
+<p>We use <code>extractBF()</code> to extract Bayes factors from the results of <code>anovaBF</code>. The two main effects come from <code>bf[1]</code> and <code>bf[2]</code>. The interaction is the results of <code>bf[4] / bf[3]</code>, which can also be passed to <code>extractBF()</code>. We <code>round()</code> each of the Bayes factors to 2 decimal places.</p>
+</div>
+<div id="explanation-of-output-3" class="section level3">
+<h3>Explanation of output</h3>
+<p>The Bayes factor for <code>time</code> (<em>BF</em> = 0.19) tells us that there was no overall change in self-esteem after the intervention relative to baseline. The Bayes factor for <code>condition</code> (<em>BF</em> = 3.97) tells us that there were overall differences in self-esteem between the three conditions. The <code>interaction_bf</code> of 9.55 tells us that it’s almost 10 times more like that there’s an interaction between <code>condition</code> and <code>time</code> than that there isn’t.</p>
+</div>
 </div>
 <div id="references" class="section level1">
 <h1>References</h1>

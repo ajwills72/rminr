@@ -195,18 +195,22 @@ The main question we'd like to answer is whether our two imagery interventions
 
 ```{r prepost}
 bf <- anovaBF(formula = total ~ time*condition + subj,
-              data = sses_raw, whichRandom = 'subj')
-bf
-```
-
-```{r prepost_bf, echo=FALSE}
-# calculate here to work around inline knitting issue
+              data = data.frame(sses_raw), whichRandom = 'subj')
 condition_bf <- round(extractBF(bf[1])$bf, 2)
 time_bf <- round(extractBF(bf[2])$bf, 2)
 interaction_bf <- round(extractBF(bf[4] / bf[3])$bf, 2)
+condition_bf
+time_bf
+interaction_bf
 ```
 
-The Bayes factor for `time` (_BF_ = `r time_bf`) tells us that there was no overall change in self-esteem after the intervention relative to baseline. The Bayes factor for `condition` (_BF_ = `r condition_bf`) tells us that there were overall differences in self-esteem between the three conditions. The Bayes factor of `r interaction_bf`, tells us that it's almost 10 times more like that there's an interaction between `condition` and `time`, than that there isn't.
+### Explanation of commands
+
+We use `extractBF()` to extract Bayes factors from the results of `anovaBF`. The two main effects come from `bf[1]` and `bf[2]`. The interaction is the results of `bf[4] / bf[3]`, which can also be passed to `extractBF()`. We `round()` each of the Bayes factors to 2 decimal places.
+
+### Explanation of output
+
+The Bayes factor for `time` (_BF_ = `r time_bf`) tells us that there was no overall change in self-esteem after the intervention relative to baseline. The Bayes factor for `condition` (_BF_ = `r condition_bf`) tells us that there were overall differences in self-esteem between the three conditions. The `interaction_bf` of `r interaction_bf` tells us that it's almost 10 times more like that there's an interaction between `condition` and `time` than that there isn't.
 
 # References
 
