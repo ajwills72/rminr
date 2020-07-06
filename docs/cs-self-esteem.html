@@ -431,31 +431,41 @@ sses_raw &lt;- sses_raw %&gt;%
 </div>
 <div id="checking-sses-reliability" class="section level2">
 <h2>Checking SSES reliability</h2>
-<p>To check the reliability of our SSES measurements, we’ll calculate Cronbach’s alpha for all of the SSES data. Cronbach’s alpha was introduced in the <a href="analyse-scales.html">Analysing scales worksheet</a>.</p>
+<p>To check the reliability of our SSES measurements, we’ll calculate Cronbach’s alpha for the pre-intervention SSES data. Cronbach’s alpha was introduced in the <a href="analyse-scales.html">Analysing scales worksheet</a>.</p>
 <pre class="r"><code>library(psy)
-sses_cronbach_total &lt;- sses_raw %&gt;% select(q1:q20) %&gt;% cronbach()</code></pre>
-<p>This could be a cause for concern, as the value of 0.67 is below <a href="#analyse-scales.html#cronbach">the 0.7-0.8 convention of acceptable reliability</a>, and well below the alpha of 0.92 reported by the authors of the SSES (Heatherton &amp; Polivy, 1991).</p>
+sses_cronbach_total &lt;- sses_raw %&gt;%
+  filter(time == &#39;pre&#39;) %&gt;%
+  select(q1:q20) %&gt;%
+  cronbach()</code></pre>
+<div id="explanation-of-commands-1" class="section level3">
+<h3>Explanation of commands</h3>
+<ol style="list-style-type: decimal">
+<li>We select only the pre-intervention scores with <code>filter(time == &#39;pre&#39;)</code> because, assuming the interventions were successful, the post-intervention scores would reduce alpha.</li>
+</ol>
+</div>
+<div id="explanation-of-output" class="section level3">
+<h3>Explanation of output</h3>
+<p>The value of alpha (0.69) could be a cause for concern, as it is below <a href="#analyse-scales.html#cronbach">the 0.7-0.8 convention of acceptable reliability</a>, and well below the alpha of 0.92 reported by the authors of the SSES (Heatherton &amp; Polivy, 1991).</p>
 <p>We’ll do an additional analysis to see how the scale performed in each group.</p>
 <pre class="r"><code>sses_raw %&gt;%
+  filter(time == &#39;pre&#39;) %&gt;%
   group_by(time, condition) %&gt;%
   select(q1:q20) %&gt;%
   group_modify(~ as.data.frame(cronbach(.x)$alpha))</code></pre>
 <pre><code>Adding missing grouping variables: `time`, `condition`</code></pre>
-<pre><code># A tibble: 6 x 3
-# Groups:   time, condition [6]
+<pre><code># A tibble: 3 x 3
+# Groups:   time, condition [3]
   time  condition `cronbach(.x)$alpha`
   &lt;fct&gt; &lt;fct&gt;                    &lt;dbl&gt;
 1 pre   control                  0.742
 2 pre   other                    0.478
-3 pre   self                     0.682
-4 post  control                  0.742
-5 post  other                    0.498
-6 post  self                     0.490</code></pre>
-<div id="explanation-of-commands-1" class="section level3">
+3 pre   self                     0.682</code></pre>
+</div>
+<div id="explanation-of-commands-2" class="section level3">
 <h3>Explanation of commands</h3>
 <p>The first two steps in this pipeline should be familiar by now. We group the data by <code>condition</code> within <code>time</code> and select the columns required for calculating alpha. The final step needs some unpacking. The <code>group_modify()</code> command does some processing on each group of rows defined by the earlier <code>group_by()</code> and returns the result as a data frame, with columns to indicate which group the results relate to. The <code>~</code> means turn the following commands into a function which is run for each group. You don’t really need to know what a function is to understand the processing that happens for each group. That’s defined by <code>as.data.frame(cronbach(.x)$alpha)</code>. This runs the <code>cronbach()</code> function on the grouped data (<code>.x</code>) and extracts the value of <code>alpha</code> (recall that <code>cronbach()</code> also returns the sample size and the number of items). The alpha value is turned into a data frame so that <code>group_modify()</code> can join the results from each group into a single data frame.</p>
 </div>
-<div id="explanation-of-output" class="section level3">
+<div id="explanation-of-output-1" class="section level3">
 <h3>Explanation of output</h3>
 <p>We can now see from these results that alpha was especially low in the <code>self</code> and <code>other</code> conditions.</p>
 <p><a name="baseline"></a></p>
@@ -487,11 +497,11 @@ Against denominator:
   Intercept only 
 ---
 Bayes factor type: BFlinearModel, JZS</code></pre>
-<div id="explanation-of-commands-2" class="section level3">
+<div id="explanation-of-commands-3" class="section level3">
 <h3>Explanation of commands</h3>
 <p>In line 1, we load the BayesFactor package. Line 2 assigns just the pre-intervention data to <code>sses_pre</code>. Line 3 runs the between-subjects ANOVA. In contrast with the within-subjects ANOVA you’ve seen before, we don’t use <code>+ subj</code> in the formula, and <code>whichRandom = &#39;subj&#39;</code>. For a within-subjects factor, subject is a random factor, because the within-subject factor <em>levels</em> would change if we re-ran the experiment with different people. However, for a fully between-subjects factor like <code>condition</code>, the same subject is only ever in a single condition, so it’s not possible them to affect more than one level of the factor. This is why we don’t include <code>subj</code> as a random factor in this analysis.</p>
 </div>
-<div id="explanation-of-output-1" class="section level3">
+<div id="explanation-of-output-2" class="section level3">
 <h3>Explanation of output</h3>
 <p>The Bayes factor of 0.68 is greater than the conventional <code>0.33</code> which would satisfy us that there were no differences between the conditions. This could be due to the slightly lower mean in the <code>other</code> condition. We’ll address this issue at the end of the worksheet.</p>
 <pre class="r"><code>sses_raw %&gt;% filter(time == &#39;pre&#39;) %&gt;% group_by(condition) %&gt;% summarise(mean = mean(total), sd = sd(total))</code></pre>

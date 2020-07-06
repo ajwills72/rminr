@@ -96,14 +96,13 @@ We'll use the `cronbach()` function from the `psy` package to calculate Cronbach
 
 ```{r cronbach-all}
 library(psy)
-sses_raw <- bind_rows(sses_pre_raw, sses_post_raw)
-sses_cronbach_total <- sses_raw %>% select(q1:q20) %>% cronbach()
+sses_cronbach_total <- sses_pre_raw %>%
+  select(q1:q20) %>%
+  cronbach()
 sses_cronbach_total$alpha
 ```
 
 **Explanation of commands:**
-
-1. `sses_raw <- bind_rows(sses_pre_raw, sses_post_raw)` - We combine the pre- and post- rows as we are going to calculate Cronbach's alpha for both.
 
 1. The `cronbach()` function expects a wide data frame (one row per subject), with columns containing the scale scores. We supply this using the function `select(sses_raw, q1:q20)`. Notice how we can use the column names to specify the range of columns to `select()`.
 

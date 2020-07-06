@@ -120,19 +120,29 @@ From these results, we can see that, compared to the pre-intervention scores, se
 
 ## Checking SSES reliability
 
-To check the reliability of our SSES measurements, we'll calculate Cronbach's alpha for all of the SSES data. Cronbach's alpha was introduced in the [Analysing scales worksheet](analyse-scales.html).
+To check the reliability of our SSES measurements, we'll calculate Cronbach's alpha for the pre-intervention SSES data. Cronbach's alpha was introduced in the [Analysing scales worksheet](analyse-scales.html).
 
 ```{r cronbach-all}
 library(psy)
-sses_cronbach_total <- sses_raw %>% select(q1:q20) %>% cronbach()
+sses_cronbach_total <- sses_raw %>%
+  filter(time == 'pre') %>%
+  select(q1:q20) %>%
+  cronbach()
 ```
 
-This could be a cause for concern, as the value of `r round(sses_cronbach_total$alpha,2)` is below [the 0.7-0.8 convention of acceptable reliability](#analyse-scales.html#cronbach), and well below the alpha of 0.92 reported by the authors of the SSES (Heatherton & Polivy, 1991).
+### Explanation of commands
+
+1. We select only the pre-intervention scores with `filter(time == 'pre')` because, assuming the interventions were successful, the post-intervention scores would reduce alpha.
+
+### Explanation of output
+
+The value of alpha (`r round(sses_cronbach_total$alpha,2)`) could be a cause for concern, as it is below [the 0.7-0.8 convention of acceptable reliability](#analyse-scales.html#cronbach), and well below the alpha of 0.92 reported by the authors of the SSES (Heatherton & Polivy, 1991).
 
 We'll do an additional analysis to see how the scale performed in each group.
 
 ```{r cronbach-pre-post}
 sses_raw %>%
+  filter(time == 'pre') %>%
   group_by(time, condition) %>%
   select(q1:q20) %>%
   group_modify(~ as.data.frame(cronbach(.x)$alpha))
