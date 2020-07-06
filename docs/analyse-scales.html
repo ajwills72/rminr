@@ -400,17 +400,17 @@ summary {
 <p>It’s advisable to ensure that Cronbach’s alpha in your sample data is similar to the value reported in research paper which describes the scale you are using. We’ll demonstrate this for the State Self-Esteem Scale (SSES), which was introduced in the <a href="preproc-scales.html">Preprocessing scales worksheet</a>. The SSES contains some reverse-coded items, but these have already been ajusted in the raw data, so we don’t need to do that step in this worksheet.</p>
 <p>We’ll use the <code>cronbach()</code> function from the <code>psy</code> package to calculate Cronbach’s alpha for the SSES.</p>
 <pre class="r"><code>library(psy)
-sses_raw &lt;- bind_rows(sses_pre_raw, sses_post_raw)
-sses_cronbach_total &lt;- sses_raw %&gt;% select(q1:q20) %&gt;% cronbach()
+sses_cronbach_total &lt;- sses_pre_raw %&gt;%
+  select(q1:q20) %&gt;%
+  cronbach()
 sses_cronbach_total$alpha</code></pre>
-<pre><code>[1] 0.6693976</code></pre>
+<pre><code>[1] 0.6862132</code></pre>
 <p><strong>Explanation of commands:</strong></p>
 <ol style="list-style-type: decimal">
-<li><p><code>sses_raw &lt;- bind_rows(sses_pre_raw, sses_post_raw)</code> - We combine the pre- and post- rows as we are going to calculate Cronbach’s alpha for both.</p></li>
 <li><p>The <code>cronbach()</code> function expects a wide data frame (one row per subject), with columns containing the scale scores. We supply this using the function <code>select(sses_raw, q1:q20)</code>. Notice how we can use the column names to specify the range of columns to <code>select()</code>.</p></li>
 <li><p>In addition to the value of alpha, <code>cronbach()</code> returns the number of subjects and the number of items. Here were only interested in alpha, which we print with <code>sses_cronbach$alpha</code>.</p></li>
 </ol>
-<p>This gives us a value of 0.67, which is much lower than the alpha of 0.92 reported by the authors who developed the SSES (Heatherton &amp; Polivy, 1991).</p>
+<p>This gives us a value of 0.69, which is much lower than the alpha of 0.92 reported by the authors who developed the SSES (Heatherton &amp; Polivy, 1991).</p>
 <p><a name="ex1"></a></p>
 </div>
 <div id="exercise" class="section level2">
