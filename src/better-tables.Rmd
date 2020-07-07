@@ -32,19 +32,21 @@ library(pander)
 
 - [Preprocess data for noun tasks](#noun-tasks)
 
-- [Exercise](#ex-1)
+- [Exercise 1](#ex1)
 
 - [Joining data frames](#join)
 
 - [Creating a table of descriptive statistics](#descriptives)
 
-- [Table of t-tests](#t-tests)
+- [Creating a table of t-tests](#t-tests)
+
+- [Exercise 2](#ex2)
 
 <a name="intro"></a>
 
 ## Introduction
 
-Data is often easier to read in tabular format. This worksheet explains how to use `R` to produce the types of table which are useful in papers describing psychological research. Although tables can be produced using a Word processor, generating them using `R` reduces copy-paste errors when writing reports.
+Data is often easier to read in tabular format. This worksheet explains how to use `R` to produce the types of table which are useful when writing about psychological research. Although tables can be produced using a Word processor, generating them using `R` reduces copy-paste errors when writing reports.
 
 The data we'll use comes from an experiment which evaluated children’s language development using the Words in Game (WinG) test. WinG consists of a set of picture cards which are used in four tests: noun comprehension, noun production, predicate comprehension, and predicate production. The Italian and English versions of the WinG cards use different pictures to depict the associated words. The experiment tested whether English-speaking children aged approximately 30 months, produce similar responses for the two sets of cards.
 
@@ -66,7 +68,7 @@ To prepare for this worksheet:
 
 ## Loading data from Excel
 
-As usual, we start by loading and preprocessing our data. In this experiment, the data for each test was recorded on a subsheet of an Excel spreadsheet. There was also a sub-sheet containing demographic data.
+As usual, we start by loading and preprocessing our data. In this experiment, the data for each test was recorded on a subsheet of an Excel spreadsheet. There was also a subsheet containing demographic data.
 
 We start by reading all subsheets into a single data frame.
 
@@ -74,7 +76,7 @@ We start by reading all subsheets into a single data frame.
 rm(list = ls()) # clear the environment
 library(tidyverse)
 
-# read data
+# read data from Excel
 library(readxl)
 path <- 'going-further/picture-naming.xlsx'
 data <- path %>%
@@ -91,8 +93,8 @@ data <- path %>%
 1. `path <- 'going-further/picture-naming.xlsx'` defines the location of our spreadsheet.
 1. `path %>% excel_sheets()` creates a vector (a list) containing the names of the subsheets.
 1. Items in a vector can be given names. Without an argument, `set_names()` sets the name the same as the value in the vector, thereby naming each item after its subsheet. It will become clear why we do this in the next step.
-1. `map_df()` processes each item in the vector, assigning it to `.x` and then running the function `read_excel(path = path, sheet = .x, range = "A1:V20")`. For each subsheet of the spreadsheet file (`path`), this reads data from the range `A1:V20` on the sheet (the cells containing the data we need). The argument `.id = "sheet"` creates a column named `sheet` with the name associated with `.x`. This is the name of the sub-sheet that we set in the previous step. The whole thing is returned as a data frame.
-1. Because `map_df()` adds the results of each of function call to the end of the previously created data frame, `data` is assigned a single data frame containing the data from all sub-sheets.
+1. `map_df()` processes each item in the vector, by assigning it to `.x` and then running the function `read_excel(path = path, sheet = .x, range = "A1:V20")`. For each subsheet of the spreadsheet file (`path`), this reads data from the range `A1:V20` on the subsheet (the cells containing the data we need). The argument `.id = "sheet"` creates a column named `sheet` with the name associated with the current vector item `.x`. This is the name that we set in the previous step. The results are returned as a data frame.
+1. Because `map_df()` adds the results of each of function call to the end of the previously created data frame, `data` is assigned a single data frame containing the data from all subsheets.
 
 Here's a selection of rows from `data`:
 
@@ -107,7 +109,7 @@ data %>% slice(1:2, 20:21, 39:40, 58:59, 77:78) %>% pander(split.table = Inf)
 We extract the demographics data into its own data frame.
 
 ```{r demographics}
-# demographics data
+# extract demographics data
 demographics <- data %>%
   filter(sheet == 'Demographic') %>%
   set_names(~ str_to_lower(.)) %>%
@@ -140,7 +142,7 @@ demographics %>% head(3) %>% pander()
 Next we'll extract the data from the experimental tasks into their own data frames. We start with the noun comprehension data.
 
 ```{r nc}
-# noun-task data
+# preprocess noun task data
 nc <- data %>%
   filter(sheet == 'Noun Comprehension') %>%
   set_names(~ str_to_lower(.)) %>%
@@ -155,9 +157,13 @@ nc <- data %>%
 1. We make `cards` a factor, and create a sequential subject number factor. We'll use the subject number later to join our data frames together.
 1. We select `subj` and `cards` (which indicates whether the child was tested with the Italian or English cards). We also select the columns containing rating data for the words used in the the noun comprehension task. These start at the column named `mountain` and end at the column named `wellyboots`.
 
+Here are the first few rows of `nc`:
+
 ```{r echo=FALSE}
 nc %>% head(3) %>% pander(split.table = Inf)
 ```
+
+If this was a full preprocessing pipeline, we would remove any data which did not meet our inclusion criteria before going further. However, to simplify this worksheet, we skip this step, and calculate an accuracy score for all participants.
 
 <a name="noun-tasks"></a>
 
@@ -168,7 +174,7 @@ nc_by_subj <- nc %>%  select(subj, cards, correct)
 
 **Explanation of commands:**
 
-1. We calculate an accuracy score for each subject across all words. `nc %>% mutate(correct = rowSums(. == 'C' | . == 'C*'))` creates a new column `correct` with a value for each row which is the sum of the number of columns containing `C` or `C*` (`|` means 'or'). Cells containing `C` indicate that the child responded correctly for the picture on the card for the the word in this column. Cells containing `C*` indicates that the response was a correct synonym. In this experiment, both of these values are considered correct responses.
+1. We calculate an accuracy score for each subject across all words. `nc %>% mutate(correct = rowSums(. == 'C' | . == 'C*'))` creates a new column `correct` with a value for each row which is the sum of the number of columns containing `C` or `C*` (`|` means 'or'). Cells containing `C` indicate that the child responded correctly for the picture on the card for the the word in this column. Cells containing `C*` indicate that the response was a correct synonym. In this experiment, both of these values are considered correct responses.
 1. We create a data frame `nc_by_subj`, containing the subject number, the cards they were tested with and their accuracy score.
 1. We make `cards` a factor, and create a sequential subject number factor. We'll use the subject number later to join our data frames together.
 1. We select `subj` and `cards` (which indicates whether the child was tested with the Italian or English cards). We also select the columns containing rating data for the words used in the the noun comprehension task. These start at the column named `mountain` and end at the column named `wellyboots`.
@@ -184,7 +190,7 @@ np <- data %>%
   filter(sheet == 'Noun Production') %>%
   set_names(~ str_to_lower(.)) %>%
   mutate(subj = factor(seq.int(nrow(.)))) %>%
-  select(subj, beach:gloves)
+  select(subj, cards, beach:gloves)
 np <- np %>% mutate(correct = rowSums(. == 'C' | . == 'C*'))
 np_by_subj <- np %>% select(subj, correct)
 ```
@@ -194,8 +200,8 @@ np_by_subj <- np %>% select(subj, correct)
 1. `data %>% filter(sheet == 'Noun Production')` selects just the noun production rows.
 1. We convert the column names to lower case.
 1. We create a sequential subject number factor.
-1. We select `subj` and the columns containing rating data for the words used in the the noun production task. These start at the column named `beach` and end at the column named `gloves`. Note that we don't need the `cards` column in this data frame.
-1. We calculate the accuracy score for the noun production using the same method as for the noun comprehension test.
+1. We select `subj` and the columns containing rating data for the words used in the the noun production task. These start at the column named `beach` and end at the column named `gloves`.
+1. We calculate the accuracy score for the noun production test using the same method as for the noun comprehension test.
 1. We create a data frame `np_by_subj`, containing the subject number and their accuracy score.
 
 ```{r echo=FALSE}
@@ -204,15 +210,16 @@ np_by_subj %>% pander()
 
 <a name="ex1"></a>
 
-## Exercise
+## Exercise 1
 
 Create data frames `pc_by_subj` containing accuracy scores for the predicate comprehension task, and `pp_by_subj` containing accuracy scores for predicate production task. Your code will be similar to that used to create `np`. Predicate comprehension words start in column `big` and end in column `pulling`. Predication production words start in column `small` and end in column `pushing`.
 
 ```{r ex1, echo=FALSE}
+# preprocess predicate task data
 pc <- data %>%
   filter(sheet == 'Predicate Comprehension') %>%
   set_names(~ str_to_lower(.)) %>%
-  select(big:pulling) %>%
+  select(cards, big:pulling) %>%
   mutate(subj = factor(seq.int(nrow(.))))
 pc <- pc %>% mutate(correct = rowSums(. == 'C' | . == 'C*'))
 pc_by_subj <- pc %>% select(subj, correct)
@@ -220,7 +227,7 @@ pc_by_subj <- pc %>% select(subj, correct)
 pp <- data %>%
   filter(sheet == 'Predicate Production') %>%
   set_names(~ str_to_lower(.)) %>%
-  select(small:pushing) %>%
+  select(cards, small:pushing) %>%
   mutate(subj = factor(seq.int(nrow(.))))
 pp <- pp %>% mutate(correct = rowSums(. == 'C' | . == 'C*'))
 pp_by_subj <- pp %>% select(subj, correct)
@@ -278,12 +285,12 @@ task_by_subj <- task_by_subj %>%
 **Explanation of commands:**
 
 1. Lines 1 and 2 are analagous to the joining of the noun data. We use the suffixes `_pc` for predicate comprehension and `_pp` for predicate production.
-1. Now we have the accuracy scores in distinct columns, we rename them by dropping the `correct_` prefix.
-1. We use `select()` to reorder the resulting columns and assign the resulting data frame to `task_by_subj`.
+1. Now we have the accuracy scores in distinct columns.
+1. We rename them by using `mutate()` to make copies without the `correct_` prefix, then using `select()` to reorder the resulting columns. The final data frame is assigned to  the resulting data frame to `task_by_subj`.
 
 **Explanation of output:**
 
-Our fully preprocessed data now looks like this:
+Our fully preprocessed data in `task_by_subj` now looks like this:
 
 ```{r echo=FALSE}
 task_by_subj %>% pander()
@@ -296,6 +303,7 @@ task_by_subj %>% pander()
 Our test scores are currently in wide format, but we need them in long format so we can calcluate our summary statistics.
 
 ```{r pivot}
+# create a table of descriptive statistics
 task_by_subj <- task_by_subj %>%
   pivot_longer(cols = c(nc, np, pc, pp),
                names_to = 'task',
@@ -305,7 +313,7 @@ task_by_subj <- task_by_subj %>%
 
 **Explanation of command:**
 
-In the [Within-subject differences worksheet](#anova1.html), you learnt how to make long data frames wider using `pivot_wider()`. The `pivot_longer()` command does the reverse. `cols = c(nc, np, pc, pp)` selects the columns we want to pivot. Each value in these columns is added as a row in a new column called `correct` (`values_to = 'correct'`). In the same row, a new column `task` is set to the name of the column which the value came from (`names_to = 'task'`). Because `task` is a factor, this turns the pivoted column names into factor levels associated with the corresponding value in `correct`. All of the values in the other columns are duplicated for each row. We `select()` just the columns we want for our table of descriptive statistics.
+In the [Within-subject differences worksheet](#anova1.html), you learnt how to use `pivot_wider()` to widen long data frames. The `pivot_longer()` command does the reverse. `cols = c(nc, np, pc, pp)` selects the columns we want to pivot. Each value in these columns is added to a row in a new column called `correct` (`values_to = 'correct'`). In the same row, a new column `task` is set to the name of the column which the value came from (`names_to = 'task'`). Because `task` is a factor, this turns the pivoted column names into factor levels associated with the corresponding value in `correct`. All of the values in the other columns are duplicated for each row. We `select()` just the columns we want for our table of descriptive statistics.
 
 The first few rows of `task_by_subj` look like this:
 
@@ -326,7 +334,7 @@ descriptives <- task_by_subj %>%
 **Explanation of commands:**
 
 1. We group `task_by_subject` by gender within task and use `summarise` to calculate a mean and standard deviation for each group.
-1. After removing the grouping, we use `mutate_if()` to round all of the numeric columns to 2 decimal places. The first argument to `mutate_if()` uses `is.numeric` to only select numeric columns. The second argument is a function to apply to these columns, in this case `round()`. The final argument `2` is passed to `round()`, specifying the number of decimal places to use.
+1. After removing the grouping, we use `mutate_if()` to round all of the numeric columns to 2 decimal places. The first argument to `mutate_if()` uses `is.numeric` to only select numeric columns. The second argument is a function to apply to these columns, in this case `round()`. The final argument `2` is passed to `round()`, specifying the number of decimal places.
 
 ```{r echo=FALSE}
 descriptives %>% pander()
@@ -363,11 +371,11 @@ descriptives_table <- descriptives_table %>%
 1. `mutate(male = paste0(male, ')'), female = paste0(female, ')'), task = factor(task))` adds the trailing `)` to the `male` and `female` columns and converts `task` to a factor.
 1. We recode `task` factor levels to more meaningful strings.
 
-We're now ready to print our table. There are numerous `R` packages for presenting data as tables. We've chosen to the `kableExtra` package, as it's capable of producing almost any table you might need in your reports. The tables produced by kableExtra are in [HTML format](https://haozhu233.github.io/kableExtra/awesome_table_in_html.html), which means you can simply copy-paste these into Microsoft Word or LibreOffice Writer. If you are using the online version of RStudio, select `Export > Save as Web Page`, then select the table copy-paste into your word processor.
+We're now ready to print our table. There are numerous `R` packages for presenting data as tables. We've chosen to the `kableExtra` package, as it's capable of producing almost any table you might need in your reports. The tables produced by kableExtra are in [HTML format](https://haozhu233.github.io/kableExtra/awesome_table_in_html.html), which means you can simply copy-paste these into Microsoft Word or LibreOffice Writer.
 
 ```{r kable-descriptives}
 library(kableExtra)
-descriptives %>% kable(
+descriptives_table %>% kable(
   col.names = c('Task', 'Male', 'Female')) %>%
   kable_styling()
 ```
@@ -377,59 +385,65 @@ descriptives %>% kable(
 1. `library(kableExtra)` loads the package containing the `kable()` function.
 1. We pipe our data into `kable()` using `col.names` to create neater column headings, and `kable_styling()` to produce a tidy HTML table.
 
+Note that you need to run the command to generate the table using `Ctrl+Enter` (`Cmd+Enter` on a Mac) for the output to appear in the **Viewer** pane. Try copying the table into your word processor now. Select the table in the **Viewer** pane, then right-click and select `Copy`. Open your word processor and select paste in the table.
+
 <a name="t-tests"></a>
 
-## Table of t-tests
+## Creating a table of t-tests
 
-Where a number of related t-tests need to be reported, these are often easiest to read as a table. The children in this experiment were tested using one of two different sets of picture cards. One set is used in the Italian version of these tasks, the other in the English version. We'll produce a table of t-tests comparing accuracy for each word in the noun comprehension task between the cards used in the Italian and English tasks.
+Where a number of related t-tests need to be reported, these are often easiest to read as a table. The picture cards used to test each child in this experiment were either from the Italian or the English version of WinG. We'll produce a table of t-tests comparing accuracy for each word in the noun comprehension task between the cards used in the Italian and English tasks.
 
 ```{r t-table}
+# create a table of t-tests for noun comprehension
 nc_long <- nc %>%
   select(-correct) %>%
-  mutate(cards = factor(cards)) %>%
   pivot_longer(cols=(mountain:wellyboots),
                names_to = 'word',
                values_to = 'answer')
-nc_long %>% filter(subj == 1) %>% pander(split.table = Inf)
 ```
 
 **Explanation of commands:**
 
 1. Starting with our noun comprehension data `nc`, we remove the column containing the numer of `correct` answers for each subject that we generated previously.
-1. We create our `cards` factor.
 1. We `pivot_longer()`, moving the noun column names into the column `word`, and the vaules to the column `answer`.
+
+**Explanation of output:**
+
+The resulting data for subject 1 looks like this:
+
+```{r echo=FALSE}
+nc_long %>% filter(subj == 1) %>% pander()
+```
 
 Next we calculate the number of correct responses for each card type (Italian or English), for each subject, for each word:
 
 ```{r long-correct}
-correct_word <- function(df, group) {
-  df %>% select(answer) %>% summarise(correct = colSums(. == 'C' | . == 'C*'))
-}
 nc_long_correct <- nc_long %>%
   group_by(word, subj, cards) %>%
-  group_modify(correct_word)
+  summarise(correct = answer %in% c('C', 'C*')) %>%
+  mutate(correct = as.integer(correct))
 ```
 
 **Explanation of commands:**
 
-1. Our function `correct_word()` accepts a an argument `df`, which is a data frame containing a column named `answer`.
-1. It returns a data frame with a single column `correct`, which contains `1` if the subject could comprehend the word (or a synonym), and `0` if not.
 1. `nc_long %>% group_by(word, subj, cards)` groups `nc_long` by `cards` within `subj` within `word`.
-1. `group_modify(correct_word)` replaces the raw data for each group with our value of `1` or `0` for `correct`.
+1. `summarise(correct = answer %in% c('C', 'C*'))` creates a column `correct` with the value `TRUE` if the value in `answer` is either `C` or `C*` or `FALSE` for anything else.
+1.`mutate(correct = as.integer(correct))` converts `TRUE` to `1` and `FALSE` to `0`. We convert the logical values to numbers so that we can use them in a t-test.
 
-We can see that all children knew the word `apple`, regardless of which set of cards was used:
+We can see that all children knew the word `apple`, regardless of which set of cards was used. This causes us a small problem which we'll address in the next section.
 
-```{r}
-nc_long_correct %>% filter(word == 'apple') %>% pander(split.table = Inf)
+```{r echo=FALSE}
+nc_long_correct %>% filter(word == 'apple') %>% pander()
 ```
 
 Now we can run our t-tests to compare accuracy for the Italian and English cards:
 
 ```{r bf}
 library(BayesFactor, quietly = TRUE)
+
 t_words <- function(df, group) {
   bf <- ttestBF(formula=correct ~ cards, data = data.frame(df))
-  extractBF(bf)
+  return(extractBF(bf))
 }
 
 nc_bf <- nc_long_correct %>%
@@ -443,23 +457,69 @@ nc_bf <- nc_long_correct %>%
 **Explanation of commands:**
 
 1. `library(BayesFactor, quietly = TRUE)` loads the package containing `ttestBF()`.
-1. Our function `t_words()` accepts a data frame in `df`.
-1. `bf <- ttestBF(formula=correct ~ cards, data = data.frame(df))` computes a between-subjects Bayesian t-test which compares the number of `correct` responses between the Italian and English `cards`.
-1. `extractBF(bf)` returns the result as a data frame.
-1. All children had a correct score for `apple` which would produce an error on our t-test, so we remove this and similar words with `nc_long_correct %>% filter(! word %in% c('apple', 'cow', 'penguin','hat','motorbike'))`.
-1. We group the remaining rows by `word` and run `t_words()` to return a Bayes factor for each word.
-1. We round `bf` to two decimal places, and select it along with `word`.
+1. The function `t_words()` accepts a data frame in `df`. `bf <- ttestBF(formula=correct ~ cards, data = data.frame(df))` runs a between-subjects Bayesian t-test which compares the number of `correct` responses between the Italian and English `cards`. `extractBF(bf)` returns the results (including the Bayes
+factor) as a data frame.
+1. Because all children had a correct score for `apple`, a t-test for this data would produce an error. `nc_long_correct %>% filter(! word %in% c('apple', 'cow', 'penguin','hat','motorbike'))` removes this and other words where all scores for the two sets of cards were the same.
+1. We group the remaining rows by `word` and use `group_modify()` to call `t_words()` on the grouped data frame. For each word, this replaces the data with the Bayes factor for the t-test.
+1. We round `bf` to two decimal places.
+1. Finally, we select `word` and the Bayes factor `bf`.
 
-Finally, we turn out results into an HTML table:
-
-FIXME: You need to Ctrl-Enter for this to appear in the **Viewer** pane so you can copy-paste.
+We output the results as an HTML table:
 
 ```{r kable-t}
-# run the next line with Ctrl-Enter for it to appear in the Viewer pane
+# Run the next line with Ctrl+Enter (Cmd+Enter on Mac)
+# for it to appear in the Viewer pane
 nc_bf %>% kable(
   col.names = c('Word', 'Bayes Factor')) %>%
   kable_styling()
 ```
+
+
+<a name="ex2"></a>
+
+## Exercise 2
+
+Generate a table similar to the noun comprehension table, for the noun production data. Start by pivoting `np` on the columns `beach:gloves`, and assigning the result to `np_long`. The first few rows should look like this:
+
+```{r ex2-1, echo=FALSE}
+np_long <- np %>%
+  pivot_longer(cols=(beach:gloves),
+               names_to = 'word',
+               values_to = 'answer')
+```
+
+```{r echo=FALSE}
+np_long %>% head(19) %>% pander()
+```
+
+Calculate the noun production accuracy for `np_long` using the same approach that was used for `nc_long`. Assign the results to `np_long_correct`. The first few rows should look like this:
+
+```{r ex2-2, message=FALSE, echo=FALSE}
+np_long_correct <- np_long %>%
+  group_by(word, subj, cards) %>%
+  summarise(correct = answer %in% c('C', 'C*')) %>%
+  mutate(correct = as.integer(correct))
+```
+
+```{r echo=FALSE}
+np_long_correct %>% head(19) %>% pander()
+```
+
+Create `np_bf`, using `group_modify(t_words)` to run the t-test for each word. Unlike `nc_long_correct`, you don't need to filter any words from `nc_long_correct` before running the t-tests. Print the results using `kable()`. They should look like this:
+
+```{r ex2-3, message=FALSE, echo=FALSE}
+np_bf <- np_long_correct %>%
+  group_by(word) %>%
+  group_modify(t_words) %>%
+  mutate(bf = round(bf,2)) %>%
+  select(word, bf)
+
+np_bf %>% kable(
+  col.names = c('Word', 'Bayes Factor')) %>%
+  kable_styling()
+```
+
+**Copy the R code you used for this exercise into PsycEL.**
 
 ___
 
