@@ -8,7 +8,7 @@ output: html_document
 ## DEVELOPERS: Uncomment one option, as appropriate
 
 ## Data required to knit
-## https://github.com/ajwills72/rminr-data/tree/master/going-further/picture-naming.csv
+## https://github.com/ajwills72/rminr-data/tree/master/going-further/picture-naming.xlsx
 ##
 ## I check out rminr-data and make a symbolic link to going-further
 
@@ -17,6 +17,7 @@ output: html_document
 
 ## Show commands and output.
 knitr::opts_chunk$set(echo = TRUE, comment=NA, cache = TRUE)
+library(pander)
 ```
 
 ## Before you start
@@ -28,7 +29,9 @@ This is an advanced worksheet, which assumes you have completed the [Absolute Be
 - [Introduction](#intro)
 - [Reading data from Excel](#excel)
 - [Preprocessing demographics data](#preproc-demographics)
-- [Preprocessing WinG data](#preproc-wing)
+- [Preprocessing WinG noun comprehension data](#preproc-nc)
+- [Applying exclusion criteria](#exclude)
+
 - [Comparing parents' ratings of their child's language ability](#cdi-diffs)
 - [Generating a table of statistics](#table-descriptives)
 - [Exploring correlations between CDI and WinG](#correlate-cdi-wing)
@@ -41,79 +44,117 @@ This is an advanced worksheet, which assumes you have completed the [Absolute Be
 
 ## Introduction
 
-This worksheet describes a full analysis pipeline for an undergraduate student dissertation on children’s language development. This study was an experiment which evaluated Words in Game (WinG) test. WinG consists of a set of picture cards which are used in four tests: noun comprehension, noun production, predicate comprehension, and predicate production. The Italian and English versions of the WinG cards use different pictures to depict the associated words. The experiment tested whether English-speaking children aged approximately 30 months, produce similar responses for the two sets of cards. This was a 4 (test) x 2 (cards) mixed design.
+This worksheet describes a full analysis pipeline for an undergraduate student dissertation on children’s language development. This study was an experiment which evaluated the _Words in Game_ (WinG) test. WinG consists of a set of picture cards which are used in four tests: noun comprehension, noun production, predicate comprehension, and predicate production. The Italian and English versions of the WinG cards use different pictures to depict the associated words. The experiment tested whether English-speaking children aged approximately 30 months, produce similar responses for the two sets of cards. This was a 4 (test) x 2 (cards) mixed design.
+
+TODO: Explain rationale and hypotheses.
 
 <a name="excel"></a>
 
 ## Reading data from Excel
 
-The data you need for this worksheet was introduced in the [Better scales](better-scales.html) worksheet, so open the project you used to complete that worksheet.
+Much of the pipeline for this experiment is described in more detail in the [Better tables worksheet](#better-tables.html). To avoid repetition, we'll summarise those steps here and only go into detail when discussing code which isn't described in that worksheet.
 
-The data for each WinG test was recorded on a sub-sheet of an Excel spreadsheet. There was also a sub-sheet containing demographic data. We start by reading this data from `picture-naming.xlsx`.
+Open the `rminr-data` project we used [previously](preproc.html#load).
+
+Ensure you have the latest files by asking git to "`pull`" the repository. Select the `Git` tab, which is located in the row of tabs which includes the `Environment` tab. Click the `Pull` button with a downward pointing arrow. A window will open showing the files which have been pulled from the repository. Close the `Git pull` window. The `going-further` folder should contain the file `picture-naming.xlsx`.
+
+Next, create a new, empty R script and save it in the `rminr-data` folder as `wing.R`. Put all the commands from this worksheet into `wing.R`, and run them from there. Save your script regularly.
+
+The data for each WinG test was recorded on a subsheet of an Excel spreadsheet. There was also a subsheet containing demographic data. We start by reading all subsheets into a single data frame.
 
 ```{r excel, message=FALSE}
 rm(list = ls()) # clear the environment
 library(tidyverse)
-library(pander)
 
 # read data
 library(readxl)
 path <- 'going-further/picture-naming.xlsx'
 data <- path %>%
   excel_sheets() %>%
-  .[-1] %>%
   set_names() %>%
   map_df(~ read_excel(path = path, sheet = .x, range = "A1:V20"), .id = "sheet")
+```
+
+**Explanation of commands:**
+
+We clear the workspace, and load the `tidyverse` and `readxl` packages. `excel_sheets()` extracts the names of the subsheets from the main Excel spreadsheet. The `map_df()` command reads the cells in the range `A1:V20` from each subsheet and combines them into a single data frame (`data`), with a column `sheet` containing the name of the subsheet.
+
+Here's a selection of rows from `data`:
+
+```{r echo=FALSE}
+data %>% slice(1:2, 20:21, 39:40, 58:59, 77:78) %>% pander(split.table = Inf)
 ```
 
 <a name="preproc-demographics"></a>
 
 ## Preprocessing demographics data
 
-First we preprocess the demographics sub-sheet. This includes scores for the Communicative Development Inventory (CDI). The CDI is a list of 100 words with columns 'understands' and 'says'. For each word, parents place a tick in these columns if they think their child can understand and/or say the word. The scores for 'understands' (`cdi_u`) and 'says' (`cdi_s`) is a total of the ticked boxes in the two columns.
+First we extract the demographics data into its own data frame.
 
 ```{r demographics, message=FALSE}
 # demographics data
 demographics <- data %>%
   filter(sheet == 'Demographic') %>%
   set_names(~ str_to_lower(.)) %>%
-  select(gender, cdi_u, cdi_s) %>%
-  mutate(gender = factor(gender), subj = factor(seq.int(nrow(.))))
-demographics$gender <- recode_factor(demographics$gender, Male = 'male', Female = 'female')
+  mutate(gender = factor(gender), subj = factor(seq.int(nrow(.)))) %>%
+  mutate(gender = recode_factor(.$gender, Male = 'male',
+                                Female = 'female')) %>%
+  select(subj, gender, cdi_u, cdi_s)
+```
+
+**Explanation of commands:**
+
+We `filter()` the data to select just the demographics rows, and convert the column names to lower case using `set_names(~ str_to_lower(.))`. We select the `gender`, `cdi_u` and `cdi_s` columns. These latter two columns contain scores for the Communicative Development Inventory (CDI). The CDI is a list of 100 words with columns 'understands' and 'says'. For each word, the child's parent placed a tick in these columns if they thought their child could understand and/or say the word. The scores for 'understands' (`cdi_u`) and 'says' (`cdi_s`) are a total of the ticked boxes in the two columns. We add a subject number `subj`, convert `gender` to a factor and recode it's levels to lower case. Finaly we `select()` the columns we want to keep.
+
+Our `demographics` data frame now contains the child's subject number, their gender and their parents' CDI scores:
+
+```{r echo=FALSE}
 demographics %>% head(3) %>% pander()
 ```
 
-<a name="preproc-wing"></a>
+<a name="preproc-nc"></a>
 
-## Preprocessing WinG data
+## Preprocessing WinG noun comprehension data
 
-Next we preprocess the WinG data. When the experimenters administer WinG, they use a textual coding scheme to record each child's responses. The first codes we're interested in are:
+Next we preprocess the WinG data.
 
-* `N/A` (not to be confused with the `R` data type `NA`) - researchers used this code to indicate that there was some kind of interruption to the task (e.g. the child began crying).
-* `C` or `C*` - `C` indicates that the child responded correctly for the picture on the card, `C*` indicates that the response was a correct synonym. In this experiment, both of these values are considered correct responses.
-
-The `exclude()` function applies the following exclusion criteria to our data:
-
-1. Any subject 'N/A' for one of the first 17 words in a task. This criterion excludes children with insufficient data for analysis for a task.
-1. Any subject in the remaining data whose accuracy was less than two standard deviations below the mean. This is a more general criterion to exlude subjects who had especially low scores for various reasons.
-
-`exclude()` also calculates the total score for each WinG task (noun and predicate comprehension and production).
-
-```{r preproc-WinG}
-# task data
+```{r nc}
+# preprocess noun task data
 nc <- data %>%
   filter(sheet == 'Noun Comprehension') %>%
   set_names(~ str_to_lower(.)) %>%
-  select(mountain:wellyboots, cards) %>%
-  mutate(subj = factor(seq.int(nrow(.))))
+  mutate(cards = factor(cards), subj = factor(seq.int(nrow(.)))) %>%
+  select(subj, cards, mountain:wellyboots)
+```
+
+**Explanation of commands:**
+
+We `filter()` the data to select just the noun comprehension rows and convert column names to lower case. The `cards` column indicates whether the child was tested with the Italian or English cards, so we convert it to a factor. We also generate a sequential subject number `subj`. We select these columns and the columns containing rating data for the words used in the the noun comprehension task. These are in the column range `mountain:wellyboots`.
+
+Here are the first few rows of `nc`:
+
+```{r echo=FALSE}
 nc %>% head(3) %>% pander(split.table = Inf)
+```
+<a name="exclude"></a>
 
-cards <- nc %>%
-  select(subj, cards) %>%
-  mutate(cards = recode_factor(.$cards, `1` = 'italian', `2` = 'english'))
-cards %>% pander()
+## Applying exclusion criteria
 
-# apply exclusion criteria to sub-test data
+Before we go any further, we need to apply some exclusion criteria to our data. When the experimenters administer WinG, they use a textual coding scheme to record each child's responses. The codes we're interested in here are:
+
+* `N/A` (not to be confused with the `R` data type `NA`) - researchers used this code to indicate that there was some kind of interruption to the task (e.g. the child began crying).
+* `C` or `C*` - `C` indicates that the child responded correctly for the picture on the card, `C*` indicates that the response was a correct synonym. In this experiment, both of these values are considered correct responses.
+* `NTS` - This stands for "non-target but semantically related". This code is used in the noun and predicate production tests, for example if the card was a house but the child said "hut".
+
+In this experiment, the exclusion criteria were as follows:
+
+1. Any subject with 'N/A' for one of the first 17 words in a task. This criterion excludes children with insufficient data for analysis.
+1. Any subject in the remaining data whose accuracy was less than two standard deviations below the mean. This is a more general criterion to exlude subjects who had especially low scores for various reasons.
+
+We'll write a function `exclude()`, which will allow us to apply these criteria for each of the four WinG tests.
+
+```{r exclude}
+# apply exclusion criteria to subtest data
 exclude <- function(df) {
   # exclude if N/A in item 17 or lower
   logical_matrix <- df == 'N/A'
@@ -128,68 +169,119 @@ exclude <- function(df) {
     replace_na(list(min = 20))
   q17 <- q17 %>% filter(min > 17) %>% select(-min)
   
-  # calculate total correct
+  # calculate total correct and semantically related
   q17 <- q17 %>% mutate(correct = rowSums(. == 'C' | . == 'C*'),
                         related = rowSums(. == 'NTS'))
   
   # exclude participants with scores < 2 sd below the mean
-  q17 %>% filter(correct < mean(correct) + 2 * sd(correct))
+  q17 <- q17 %>% filter(correct < mean(correct) + 2 * sd(correct))
+
+  return(q17)
 }
+```
 
-nc <- exclude(nc)
-nc_by_subj <- select(nc, subj, correct, related)
+**Explanation of commands:**
+
+1. Our `exclude()` function accepts a data frame argument `df`, containing the data recorded for a sub-test.
+1. `logical_matrix <- df == 'N/A'` converts `df` to a matrix containgin the value `TRUE` where a cell in `df` contained the string `N/A`, or `FALSE` otherwise.
+1. `which(arr.ind = TRUE)` creates a matrix with columns `row` (this will be the same as our subject number) and `col` containing the row and column number of any cells with the value `TRUE` (i.e. those cells that contained `N/A`).
+1. Whe convert this to a data frame which we group by `row`.
+1. `summarise(min = min(col))` summarises the grouped data by creating a single row containing the lowest column number that contained `N/A`.
+1. `mutate(subj = factor(row)) %>% select(subj, min)` creates a factor `subj` from `row`, and selects this along with the column number of the first column that contained `N/A`. We have now converted our original data into a data from with rows for any subjects who had at least one `N/A` and the number of the first word where the task was interrupted.
+1. `q17 <- left_join(df, q17, by='subj')` joins this data frame to the data frame we passed to `exclude()`. For rows where there is no matching `subj`, `min` gets the value `NA`. `replace_na(list(min = 20))` converts these `NA`s to the value `20`, indicating the child provided an answer for all words.
+1. To complete this exclusion criterion, `q17 <- q17 %>% filter(min > 17) %>% select(-min)` selects only children who provided answers beyond word 17, and then removes the `min` column.
+1. Next we calculate accuracy scores for each subject across all words. `q17 <- q17 %>% mutate(correct = rowSums(. == 'C' | . == 'C*'))` creates a new column `correct` with a value for each row which is the sum of the number of columns containing `C` or `C*` (`|` means 'or'). Cells containing `C` indicate that the child responded correctly for the picture on the card for the the word in this column. Cells containing `C*` indicates that the response was a correct synonym. In this experiment, both of these values are considered correct responses. Similarly, we calculate the total number columns containing `NTS` and store this in the column `related`, as it will be useful later.
+1. Now we apply the second exclusion criterion. `q17 %>% filter(correct < mean(correct) + 2 * sd(correct))` calculates the mean and standard deviation for `correct`, and then filters any subjects whose value for `correct` was less than two standard deviations below the mean.
+1. Finally, we return the data frame without rows meeting our two exclusion critera.
+
+Now we can use `exclude()` to apply the exclusion criteria to our data.
+
+```{r exclude-nc}
+nc_by_subj <- nc %>% exclude() %>% select(subj, correct, related)
+```
+
+**Explanation of commands:**
+
+We pipe `nc` into `exclude()`, which applies our exclusion criteria. As a side-effect, it also calculates the accuracy scores for each subject. Looking at `nc_by_subj`, we can see that subject `18` was excluded from the noun comprehension task:
+
+```{r, echo=FALSE}
 nc_by_subj %>% pander()
+```
 
+We repeat these steps to apply exclusion critera for the noun production, predicate comprehension and predicate production tasks.
+
+```{r np-pc-pp}
 np <- data %>%
   filter(sheet == 'Noun Production') %>%
   set_names(~ str_to_lower(.)) %>%
   select(cards, beach:gloves) %>%
   mutate(subj = factor(seq.int(nrow(.))))
-
-np <- exclude(np)
-np_by_subj <- np %>% select(subj, correct, related)
+np_by_subj <- np %>% exclude() %>% select(subj, correct, related)
 
 pc <- data %>%
   filter(sheet == 'Predicate Comprehension') %>%
   set_names(~ str_to_lower(.)) %>%
   select(cards, big:pulling) %>%
   mutate(subj = factor(seq.int(nrow(.))))
-pc <- exclude(pc)
-
-pc_by_subj <- pc %>% select(subj, correct, related)
+pc_by_subj <- pc %>% exclude() %>% select(subj, correct, related)
 
 pp <- data %>%
   filter(sheet == 'Predicate Production') %>%
   set_names(~ str_to_lower(.)) %>%
   select(cards, small:pushing) %>%
   mutate(subj = factor(seq.int(nrow(.))))
-pp <- exclude(pp)
+pp_by_subj <- pp %>% exclude() %>% select(subj, correct, related)
+```
+**Explanation of commands:**
 
-pp_by_subj <- pp %>% select(subj, correct, related)
+This code is the same as for the noun comprehension task, apart from the data we select in each of the `filter()` commands, and the range of columns we `select()` for each task. For noun production, the scores are in `beach:gloves`, for predication comprehension they're in `big:pulling`, and for predication production they're in `small:pushing`.
 
+Having preprocessed the demographics data and applied our exclusions to the WinG data, we now join these data frames together in preparation for calculating our descriptive statistics.
+
+```{r join}
 # join data
-data_by_subj <- left_join(demographics, nc_by_subj, by='subj') %>%
-  left_join(., np_by_subj, by='subj', suffix = c('_nc','_np')) %>%
-  left_join(., pc_by_subj, by='subj') %>%
-  left_join(., pp_by_subj, by='subj', suffix = c('_pc', '_pp')) %>%
-  left_join(., cards, by='subj') %>%
-  mutate(nc = correct_nc, np = correct_np, pc = correct_pc, pp = correct_pp) %>%
-  as.data.frame()
-
-task_by_subj <- select(data_by_subj, subj, gender, cards, nc:pp, cdi_u, cdi_s)
+task_by_subj <- nc %>% select(subj, cards) %>%
+  full_join(., demographics, by='subj')
 ```
 
-Our preprocessed data, `task_by_subj`, includes a subject number (`subj`), the child's `gender`, their WinG scores (or `NA` if they were excluded from one of the tests, `nc`, `np`, `pc`, `pp`), the `cards` they were tested with, and their parents' CDI 'understands' (`cdi_u`) and 'says' (`cdi_s`) ratings.
+**Explanation of commands:**
+
+We start by creating a data frame containing `subj` and `cards` for all participants, and joining it with the `demographics` data frame. We use `nc` to create the cards data, as this was a data frame _before_ we applied any exclusion critera. If we didn't do this, in the next stage we would end up with `NA` values in `cards` for excluded participants.
+
+Here's `task_by_subj`:
 
 ```{r echo=FALSE}
 task_by_subj %>% pander()
+```
+
+We join `task_by_subj` to the other WinG task data frames:
+
+```{r join-more}
+task_by_subj <- task_by_subj %>%
+  full_join(., nc_by_subj, by='subj') %>%
+  full_join(., np_by_subj, by='subj', suffix = c('_nc','_np')) %>%
+  full_join(., pc_by_subj, by='subj') %>%
+  full_join(., pp_by_subj, by='subj', suffix = c('_pc', '_pp')) %>%
+  mutate(nc = correct_nc, np = correct_np, pc = correct_pc, pp = correct_pp) %>%
+  select(subj, gender, cards, nc, np, pc, pp, cdi_u, cdi_s,
+         related_nc, related_np, related_pc, related_pp)
+```
+
+**Explanation of commands:**
+
+Each `full_join()`, joins an additional data frame by matching values in `subj`. The `suffix = c('_nc','_np')` argument adds suffixes to disambiguate columns with the same name, in this case `correct` and `related`. We use `mutate()` with `select()` to remove the `correct_` prefix from the 'correct' columns. We leave the `related_` prefix on the 'syntactically related' columns.
+
+Our data is now fully preprocessed. Notice how the join sets cells to the value `NA` for subjects who were excluded for that particular test.
+
+```{r echo=FALSE}
+task_by_subj %>% pander(split.table = Inf)
 ```
 
 <a name="cdi-diffs"></a>
 
 ## Comparing parents' ratings of their child's language ability
 
-For our first analysis, we want to check that there were no differences between the children assigned to the Italian and English card groups. We do this using t-tests of their parents' CDI ratings. Bayesian t-tests were introduced in the [Evidence worksheet](evidence.html).
+For our first analysis, we want to check that there were no differences between the children assigned to the Italian and English card groups. We do this using between-subjects t-tests of their parents' CDI ratings. Bayesian t-tests were introduced in the [Evidence worksheet](evidence.html).
 
 ```{r cdi}
 library(BayesFactor, quietly=TRUE)
@@ -199,7 +291,13 @@ cdi_s_bf <- ttestBF(formula=cdi_s ~ cards, data = task_by_subj)
 cdi_s_bf
 ```
 
-Our Bayes factors (CDI understands = `0.40`; CDI says = `0.45`) do not provide evidence of differences between the children tested using the Italian and English cards, giving us some confidence that the two groups are matched on language ability.
+**Explanation of commands:**
+
+First we load the `BayesFactor` package. Next, we run a t-test which compares CDI 'understands' (`cdi_u`) for the two card sets. We another t-test which compares CDI 'says' (`cdi_s`) for the two card sets.
+
+**Explanation of output:**
+
+Our Bayes factors (CDI understands = `r round(BayesFactor::extractBF(cdi_u_bf)$bf, 2)`; CDI says = `r round(BayesFactor::extractBF(cdi_s_bf)$bf, 2)`) do not provide conclusive evidence of differences between the children tested using the Italian and English cards, but they're low enough to give us some confidence that the two groups were matched on language ability.
 
 <a name="table-descriptives"></a>
 
@@ -213,28 +311,29 @@ task_by_subj_l <- task_by_subj %>%
                names_to = 'task',
                values_to = 'correct')
 
-task_descriptives <- function(df, y) {
-  df %>%
-    summarise(mean = mean(correct, na.rm = TRUE),
-              sd = sd(correct, na.rm = TRUE),
-              n = sum(! is.na(correct))) %>%
-    mutate_if(is.numeric, round, 2)
-}
-
 descriptives <- task_by_subj_l %>%
   group_by(task, gender) %>%
-  group_modify(task_descriptives) %>%
-  ungroup()
+  summarise(mean = mean(correct, na.rm = TRUE),
+            sd = sd(correct, na.rm = TRUE)) %>%
+  ungroup() %>%
+  mutate_if(is.numeric, round, 2)
 
 descriptives <- descriptives %>%
-  select(-n) %>%
   pivot_wider(names_from = gender, values_from = c(mean, sd)) %>%
   select(task, mean_male, sd_male, mean_female, sd_female)
+```
 
+**Explanation of commands:**
+
+We convert `task_by_subj` to long format by using `pivot_longer()` on the correct score columns `nc`, `np`, `pc` and `pp`. We use this to calculate a mean and standard deviation by gender within task. When calculating these summary statistics, we need the argument `na.rm = TRUE` to ignore missing data for participants who were excluded from any of the tests. We round the results to 2 decimal places. We use `pivot_wider()` so that `descriptives` has a row for each task, and columns containing the mean and standard deviation by gender.
+
+Our table of descriptive statistics now looks like this:
+
+```{r echo=FALSE}
 descriptives %>% pander()
 ```
 
-We'll add to this data frame some t-tests comparing accuracy by gender for each WinG test.
+We'd also like to test for gender differences on each of the tasks. We'll do this by running some t-tests and adding the results to our table.
 
 ```{r WinG-t-by-gender}
 # t-test for accuracy by gender
@@ -250,15 +349,23 @@ gender_bf <- task_by_subj_l %>%
   mutate(bf = round(bf,2)) %>%
   select(task, bf)
 
-descriptives <- left_join(descriptives, gender_bf, by = 'task')
+descriptives_t <- full_join(descriptives, gender_bf, by = 'task')
+```
 
-descriptives %>% pander()
+**Explanation of commands:**
+
+We define the function `t_gender()` to run a between-subjects t-test comparing task accuracy (`correct`) by `gender`. Before running the test, we use `drop_na()` to exclude any rows for participants who were excluded for the task data passed in `df`. The function returns the Bayes factor. We group our long format task data by task, and use `group_modify(t_gender)` to calculate the Bayes factor for the grouped data. We round the Bayes factors to 2 decimal places and then select the `task` and `bf` columns. We join this to our `descriptives` data frame.
+
+Our data frame now looks like this:
+
+```{r echo=FALSE}
+descriptives_t %>% pander()
 ```
 
 We tidy up the data and then present the data frame as a table.
 
 ```{r descriptives-presentation}
-descriptives <- descriptives %>%
+descriptives_t <- descriptives_t %>%
   unite("male", mean_male:sd_male, sep=' (') %>%
   unite("female", mean_female:sd_female, sep=' (') %>%
   mutate(male = paste0(male, ')'), female = paste0(female, ')'), task = factor(task),
@@ -266,12 +373,18 @@ descriptives <- descriptives %>%
                               pc = 'Predicate Comprehension', pp = 'Predicate Production'))
 
 library(kableExtra)
-descriptives %>% kable(
+descriptives_t %>% kable(
   col.names = c('Task', 'Male', 'Female', 'Bayes Factor')) %>%
   kable_styling()
 ```
 
-The Bayes factors provide no evidence of differences in accuracy between male and female children, suggesting that test scores are not influenced by gender differences.
+**Explanation of commands:**
+
+We use `unite()` to combine the male and female summary statistics into a single column with the standard deviation in parentheses. We rename `task` factor levels so that the reader will understand what they mean. Finally, we print the table as HTML, a format we could copy-paste into a word processor
+
+**Explanation of output:**
+
+The Bayes factors aren't conclusive, but all values are less than 1, suggesting it's most likely that task accuracy wasn't different for male and female children.
 
 <a name="correlate-cdi-wing"></a>
 
@@ -474,11 +587,11 @@ All _p_ values were > 0.05, suggesting there were no differences between the Ita
 
 ## Comparing semantically related production errors
 
-In the noun and predicate production tests, the code `NTS` means "non-target but semantically related". For example the card was a house but the child said "hut". We would like to know if there were any differences on these semantically related errors between the two sets of cards. A raincloud plot suggests there wasn't.
+We would like to know if there were any differences on these semantically related errors between the two sets of cards. A raincloud plot suggests there wasn't.
 
 ```{r nts-production-plot}
 semantically_related <-
-  select(data_by_subj, subj, cards, related_np, related_pp) %>%
+  select(task_by_subj, subj, cards, related_np, related_pp) %>%
   rename(np = 'related_np', pp = 'related_pp') %>%
   pivot_longer(cols = c(np, pp),
                names_to = 'task',
@@ -528,9 +641,8 @@ We would like to know if there were any accuracy differences between the individ
 
 ```{r t-nc}
 nc_long <- nc %>%
+  exclude %>%
   select(-correct) %>%
-  mutate(cards = factor(cards)) %>%
-  mutate(cards = recode_factor(.$cards, `1` = 'italian', `2` = 'english')) %>%
   pivot_longer(cols=(mountain:wellyboots),
                names_to = 'word',
                values_to = 'answer')
@@ -563,9 +675,8 @@ We generate similar tables for noun production ...
 
 ```{r t-np}
 np_long <- np %>%
+  exclude() %>%
   select(-correct) %>%
-  mutate(cards = factor(cards)) %>%
-  mutate(cards = recode_factor(.$cards, `1` = 'italian', `2` = 'english')) %>%
   pivot_longer(cols=(beach:gloves),
                names_to = 'word',
                values_to = 'answer')
@@ -589,9 +700,8 @@ np_bf %>% kable(
 
 ```{r t-pc}
 pc_long <- pc %>%
+  exclude() %>%
   select(-correct) %>%
-  mutate(cards = factor(cards)) %>%
-  mutate(cards = recode_factor(.$cards, `1` = 'italian', `2` = 'english')) %>%
   pivot_longer(cols=(big:pulling),
                names_to = 'word',
                values_to = 'answer')
@@ -616,9 +726,8 @@ pc_bf %>% kable(
 
 ```{r t-pp}
 pp_long <- pp %>%
+  exclude() %>%
   select(-correct) %>%
-  mutate(cards = factor(cards)) %>%
-  mutate(cards = recode_factor(.$cards, `1` = 'italian', `2` = 'english')) %>%
   pivot_longer(cols=(small:pushing),
                names_to = 'word',
                values_to = 'answer')
