@@ -63,7 +63,7 @@ A basic principle of open science is that you publicly share your raw data (in a
 
 So, first, [create a new project](using-projects.html) in R. 
 
-Next, create a new, empty R script and save it as `perruchet.R`. Put all the commands into this worksheet, and run them from there. Save your script regularly. 
+Next, create a new, empty R script and save it as `perruchet.R`. Put all the commands from this worksheet into `perruchet.R`, and run them from there. Save your script regularly.
 
 Now, download data from OSF into your R project using the following commands:
 
