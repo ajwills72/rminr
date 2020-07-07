@@ -1773,7 +1773,7 @@ demographics &lt;- data %&gt;%
 </tr>
 </tbody>
 </table>
-<p><a name="tasks"></a></p>
+<p><a name="noun-tasks"></a></p>
 </div>
 <div id="preprocess-data-for-noun-tasks" class="section level2">
 <h2>Preprocess data for noun tasks</h2>
@@ -1786,7 +1786,7 @@ nc &lt;- data %&gt;%
   select(subj, cards, mountain:wellyboots)</code></pre>
 <p><strong>Explanation of commands:</strong></p>
 <ol style="list-style-type: decimal">
-<li><code>data %&gt; %filter(sheet == &#39;Noun Comprehension&#39;)</code> selects just the noun comprehension rows.</li>
+<li><code>data %&gt;% filter(sheet == &#39;Noun Comprehension&#39;)</code> selects just the noun comprehension rows.</li>
 <li>Again, we use <code>set_names(~ str_to_lower(.))</code> to convert the column names to lower case.</li>
 <li>We make <code>cards</code> a factor, and create a sequential subject number factor. We’ll use the subject number later to join our data frames together.</li>
 <li>We select <code>subj</code> and <code>cards</code> (which indicates whether the child was tested with the Italian or English cards). We also select the columns containing rating data for the words used in the the noun comprehension task. These start at the column named <code>mountain</code> and end at the column named <code>wellyboots</code>.</li>
@@ -1919,7 +1919,6 @@ nc &lt;- data %&gt;%
 </tbody>
 </table>
 <p>If this was a full preprocessing pipeline, we would remove any data which did not meet our inclusion criteria before going further. However, to simplify this worksheet, we skip this step, and calculate an accuracy score for all participants.</p>
-<p><a name="noun-tasks"></a></p>
 <pre class="r"><code>nc &lt;- nc %&gt;% mutate(correct = rowSums(. == &#39;C&#39; | . == &#39;C*&#39;))
 nc_by_subj &lt;- nc %&gt;%  select(subj, cards, correct)</code></pre>
 <p><strong>Explanation of commands:</strong></p>

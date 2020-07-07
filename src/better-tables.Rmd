@@ -135,7 +135,7 @@ Our `demographics` data frame now contains the child's subject number and their 
 demographics %>% head(3) %>% pander()
 ```
 
-<a name="tasks"></a>
+<a name="noun-tasks"></a>
 
 ## Preprocess data for noun tasks
 
@@ -152,7 +152,7 @@ nc <- data %>%
 
 **Explanation of commands:**
 
-1. `data %> %filter(sheet == 'Noun Comprehension')` selects just the noun comprehension rows.
+1. `data %>% filter(sheet == 'Noun Comprehension')` selects just the noun comprehension rows.
 1. Again, we use  `set_names(~ str_to_lower(.))` to convert the column names to lower case.
 1. We make `cards` a factor, and create a sequential subject number factor. We'll use the subject number later to join our data frames together.
 1. We select `subj` and `cards` (which indicates whether the child was tested with the Italian or English cards). We also select the columns containing rating data for the words used in the the noun comprehension task. These start at the column named `mountain` and end at the column named `wellyboots`.
@@ -164,8 +164,6 @@ nc %>% head(3) %>% pander(split.table = Inf)
 ```
 
 If this was a full preprocessing pipeline, we would remove any data which did not meet our inclusion criteria before going further. However, to simplify this worksheet, we skip this step, and calculate an accuracy score for all participants.
-
-<a name="noun-tasks"></a>
 
 ```{r score-nc}
 nc <- nc %>% mutate(correct = rowSums(. == 'C' | . == 'C*'))
