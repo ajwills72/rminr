@@ -31,11 +31,11 @@ This is an advanced worksheet, which assumes you have completed the [Absolute Be
 - [Preprocessing demographics data](#preproc-demographics)
 - [Preprocessing WinG noun comprehension data](#preproc-nc)
 - [Applying exclusion criteria](#exclude)
-
 - [Comparing parents' ratings of their child's language ability](#cdi-diffs)
 - [Generating a table of statistics](#table-descriptives)
 - [Exploring correlations between CDI and WinG](#correlate-cdi-wing)
-- [Plotting WinG task scores (raincloud plot)](#plot-task)
+- [Plotting WinG task scores](#plot-task)
+
 - [Comparing cards using Mann-Whitney U tests](#mann-whitney)
 - [Comparing semantically related production errors](#compare-production)
 - [Comparing individual cards](#table-cards)
@@ -437,117 +437,28 @@ There is evidence of a strong, positive correlation between parents' CDI 'says' 
  
 <a name="plot-task"></a>
 
-## Plotting WinG task scores (raincloud plot)
+## Plotting WinG task scores
 
-We'll create a raincloud plot to visualise the scores for the noun tasks. Raincloud plots were introduced in the [Better graphs worksheet](better-graphs.html).
-
-First we define the function `gemo_flat_violin()` to produce the "cloud".
-
-```{r flat-violin, echo=FALSE}
-"%||%" <- function(a, b) {
-  if (!is.null(a)) a else b
-}
-
-geom_flat_violin <- function(mapping = NULL, data = NULL, stat = "ydensity",
-                             position = "dodge", trim = TRUE, scale = "area",
-                             show.legend = NA, inherit.aes = TRUE, ...) {
-  layer(
-    data = data,
-    mapping = mapping,
-    stat = stat,
-    geom = GeomFlatViolin,
-    position = position,
-    show.legend = show.legend,
-    inherit.aes = inherit.aes,
-    params = list(
-      trim = trim,
-      scale = scale,
-      ...
-    )
-  )
-}
-
-GeomFlatViolin <-
-  ggproto("GeomFlatViolin", Geom,
-    setup_data = function(data, params) {
-      data$width <- data$width %||%
-        params$width %||% (resolution(data$x, FALSE) * 0.9)
-
-      # ymin, ymax, xmin, and xmax define the bounding rectangle for each group
-      data %>%
-        group_by(group) %>%
-        mutate(
-          ymin = min(y),
-          ymax = max(y),
-          xmin = x,
-          xmax = x + width / 2
-        )
-    },
-
-    draw_group = function(data, panel_scales, coord) {
-      # Find the points for the line to go all the way around
-      data <- transform(data,
-        xminv = x,
-        xmaxv = x + violinwidth * (xmax - x)
-      )
-
-      # Make sure it's sorted properly to draw the outline
-      newdata <- rbind(
-        plyr::arrange(transform(data, x = xminv), y),
-        plyr::arrange(transform(data, x = xmaxv), -y)
-      )
-
-      # Close the polygon: set first and last point the same
-      # Needed for coord_polar and such
-      newdata <- rbind(newdata, newdata[1, ])
-
-      ggplot2:::ggname("geom_flat_violin", GeomPolygon$draw_panel(newdata, panel_scales, coord))
-    },
-
-    draw_key = draw_key_polygon,
-
-    default_aes = aes(
-      weight = 1, colour = "grey20", fill = "white", size = 0.5,
-      alpha = NA, linetype = "solid"
-    ),
-
-    required_aes = c("x", "y")
-  )
-```
-
-Now we generate a plot for the noun tasks.
-
-
-
+We'll create a plot to show the distribution of scores for the two card sets on the WinG tasks.
 
 ```{r noun-cloud}
-noun_tasks <- task_by_subj_l %>%
-    filter(task %in% (c('np','nc')))
-noun_tasks$task <- recode_factor(noun_tasks$task, nc = 'Noun Comprehension', np = 'Noun Production')
+task_by_subj_l$task <- recode_factor(task_by_subj_l$task, nc = 'Noun Comprehension',
+                                     np = 'Noun Production', pc = 'Predicate Comprehension',
+                                     pp = 'Predicate Production')
 
-x_dodge <- .1
-palette <- 'Set1'
-
-raincloud <- ggplot(noun_tasks, aes(x = task, y = correct, fill = cards)) +
-  geom_flat_violin(aes(fill = cards), position = position_nudge(x = x_dodge, y = 0), adjust = 1.5, trim = FALSE, alpha = .5, colour = NA) +
-  geom_point(aes(x = as.numeric(task)-.15, y = correct, colour = cards), position = position_jitter(width = .05), size = .25, shape = 20) +
-  stat_summary(geom="errorbar", position = position_nudge(x = x_dodge, y = 0), mapping = aes(colour = cards), width = .1, fun.data=mean_cl_boot) +
-  stat_summary(geom="point", position = position_nudge(x = x_dodge, y = 0), mapping = aes(colour = cards), fun.data=mean_cl_boot) +
-  stat_summary(geom="line", position = position_nudge(x = x_dodge, y = 0), mapping = aes(group = cards, colour = cards), fun.data=mean_cl_boot, linetype = 3) +
-  scale_colour_brewer(palette = palette) +
-  scale_fill_brewer(palette = palette)
-
-raincloud
-
-ggsave(filename = "noun_cloud.pdf", plot = raincloud, units = "cm", width = 15, height = 10)
+library(see)
+ggplot(task_by_subj_l, aes(x = task, y = correct, fill = cards)) +
+  geom_violinhalf(position = position_identity(), alpha=0.3, size=0) +
+  scale_fill_material_d() + xlab('WinG Task') + ylab('Score (max = 20)')
 ```
 
-```{r, fig.height=10, fig.width=12}
-library(see)
-
+```{r, eval=FALSE, echo=FALSE}
 noun_tasks <- task_by_subj_l %>%
     filter(task %in% (c('nc')))
 noun_tasks$task <- recode_factor(noun_tasks$task, nc = 'Noun Comprehension')
+
+ggplot(noun_tasks, aes(x = task, y = correct, fill = cards)) +
+  geom_violinhalf(position = position_identity(), alpha=0.3, size=0)
 
 half_violin <- ggplot(task_by_subj_l, aes(x = task, y = correct, fill = cards)) +
   geom_violinhalf(position = position_identity(), alpha=0.3, size=0) +
@@ -556,37 +467,19 @@ half_violin <- ggplot(task_by_subj_l, aes(x = task, y = correct, fill = cards)) 
 half_violin + facet_wrap(~ task, ncol=2)
 ```
 
-We generate a separate plot for the predicate tasks.
+**Explanation of commands:**
 
-```{r predicate-cloud}
-predicate_tasks <- task_by_subj_l %>%
-    filter(task %in% (c('pc','pp')))
-predicate_tasks$task <- recode_factor(predicate_tasks$task, nc = 'Noun Comprehension', np = 'Noun Production')
+**Explanation of output:**
 
-x_dodge <- .1
-palette <- 'Set1'
-
-raincloud <- ggplot(predicate_tasks, aes(x = task, y = correct, fill = cards)) +
-  geom_flat_violin(aes(fill = cards), position = position_nudge(x = x_dodge, y = 0), adjust = 1.5, trim = FALSE, alpha = .5, colour = NA) +
-  geom_point(aes(x = as.numeric(task)-.15, y = correct, colour = cards), position = position_jitter(width = .05), size = .25, shape = 20) +
-  stat_summary(geom="errorbar", position = position_nudge(x = x_dodge, y = 0), mapping = aes(colour = cards), width = .1, fun.data=mean_cl_boot) +
-  stat_summary(geom="point", position = position_nudge(x = x_dodge, y = 0), mapping = aes(colour = cards), fun.data=mean_cl_boot) +
-  stat_summary(geom="line", position = position_nudge(x = x_dodge, y = 0), mapping = aes(group = cards, colour = cards), fun.data=mean_cl_boot, linetype = 3) +
-  scale_colour_brewer(palette = palette) +
-  scale_fill_brewer(palette = palette)
-
-raincloud
-
-ggsave(filename = "predicate_cloud.pdf", plot = raincloud, units = "cm", width = 15, height = 10)
-```
-
-The raincloud plot for the noun tasks indicates that the data was not normally distributed. Given the small sample sizes, a non-parametric test is most suited for analysing this data. Although the predicate data looks normally distributed, in this study, a Mann-Whitney U test was used to compare the scores for the Italian and English cards for both the noun and predicate tasks.
+We plotted the data in this format to get an indication of whether there were differences between the Italian and English cards on any of the tests. This looks unliely, given the extensive overlap in scores between the card sets. The plot also shows that the data were slightly skewed on the noun tasks due to some low scores.
 
 <a name="mann-whitney"></a>
 
 ## Comparing cards using Mann-Whitney U tests
 
-The Mann-Whitney U is explained in the [Traditional non-parametric tests worksheets](non-parametric.html). We start by creating some the summary statistics which are used to interpret this test.
+Although the plot suggests that the predicate data was normally distributed, given the small sample sizes, a non-parametric was considered most suited for analysing this data. We'll use Mann-Whitney U tests to compare each task score for the Italian and English cards. The Mann-Whitney U test is explained in more detail in the [Traditional non-parametric tests worksheet](non-parametric.html).
+
+We start by creating some summary statistics which are used to interpret this test.
 
 ```{r cards-rank}
 task_by_subj_l %>%
@@ -598,7 +491,17 @@ task_by_subj_l %>%
             sum_rank = sum(rank(correct)))
 ```
 
-Now we run a test to compare the Italian and English cards for each WinG task.
+**Explanation of commands:**
+
+1. We group our data by the two card sets, within the four tests.
+1. `drop_na()` removes any subjects where were excluded from a test.
+1. We use `summarise`, to calculate the number of cases in each group `n()`, and the `median()` score. The `rank()` function orders the scores (lowest to highest), and assigns each a score a number according to its ordered position. We use `mean(rank(correct)` to calculate the "mean rank" score and `sum(rank(correct)` to calculate the "sum rank" score.
+
+**Explanation of output:**
+
+As the plots suggested, the median, mean rank, and sum rank scores are very similar for the Italian and English cards in each task.
+
+We run Mann-Whitney tests to make a direct comparison between the Italian and English cards for each WinG task.
 
 ```{r mann-whitney}
 # independent 2-group Mann-Whitney U Test
@@ -615,17 +518,24 @@ mann_whitney <- function(df, group) {
 wing_mann_whitney <- task_by_subj_l %>%
   group_by(task) %>%
   group_modify(mann_whitney)
-
-pander(wing_mann_whitney)
+wing_mann_whitney
 ```
 
-All _p_ values were > 0.05, suggesting there were no differences between the Italian and English cards on any of the tests.
+**Explanation of commands:**
+
+The `mann_whitney()` function is explained in detail in the [Traditional non-parametric tests worksheet](non-parametric.html). In summary, it uses `wilcox.test()`, with the argument `paired = FALSE` (the default) which the equivalent to a Mann-Whitney U test. The results are adjusted so that the function reports the same values as `SPSS`. The `W` statistic generated by `R` is the same as `U` in SPSS. The `p` value in `R` is the same as `SPSS`. The `W` and `Z` statistics reported by `SPSS` are not calculated by `wilcox.test()`, so we calculate these manually. The warning `cannot compute exact p-value with ties` lets you know that the method used to calculate _p_ will not be exact, because some items in the Italian and English scores had identical rankings.
+
+**Explanation of output:**
+
+As this is a traditional statistical test, the p-value indicates whether there was a significant difference between the cards on any of the tasks. All _p_ values were > 0.05, suggesting there were no differences.
 
 <a name="compare-production"></a>
 
 ## Comparing semantically related production errors
 
-We would like to know if there were any differences on these semantically related errors between the two sets of cards. A raincloud plot suggests there wasn't.
+Finally, we would like to know if there were any differences for the semantically related errors between the two sets of cards.
+
+Again, we start with a plot.
 
 ```{r nts-production-plot}
 semantically_related <-
@@ -636,16 +546,8 @@ semantically_related <-
                values_to = 'correct') %>%
   mutate(task = recode_factor(.$task, np = 'Noun Production', pp = 'Predicate Production'))
 
-related_cloud <- ggplot(semantically_related, aes(x = task, y = correct, fill = cards)) +
-  geom_flat_violin(aes(fill = cards), position = position_nudge(x = x_dodge, y = 0), adjust = 1.5, trim = FALSE, alpha = .5, colour = NA) +
-  geom_point(aes(x = as.numeric(task)-.15, y = correct, colour = cards), position = position_jitter(width = .05), size = .25, shape = 20) +
-  stat_summary(geom="errorbar", position = position_nudge(x = x_dodge, y = 0), mapping = aes(colour = cards), width = .1, fun.data=mean_cl_boot) +
-  stat_summary(geom="point", position = position_nudge(x = x_dodge, y = 0), mapping = aes(colour = cards), fun.data=mean_cl_boot) +
-  stat_summary(geom="line", position = position_nudge(x = x_dodge, y = 0), mapping = aes(group = cards, colour = cards), fun.data=mean_cl_boot, linetype = 3) +
-  scale_colour_brewer(palette = palette) +
-  scale_fill_brewer(palette = palette)
-
-related_cloud
+ggplot(semantically_related, aes(x = task, y = correct, fill = cards)) +
+  geom_violinhalf(position = position_identity(), alpha=0.3, size=0)
 ```
 
 Mann-Whitney U tests confirm this, with both _p_ values > 0.05.
