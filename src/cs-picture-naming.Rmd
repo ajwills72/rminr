@@ -354,7 +354,7 @@ descriptives_t <- full_join(descriptives, gender_bf, by = 'task')
 
 **Explanation of commands:**
 
-We define the function `t_gender()` to run a between-subjects t-test comparing task accuracy (`correct`) by `gender`. Before running the test, we use `drop_na()` to exclude any rows for participants who were excluded for the task data passed in `df`. The function returns the Bayes factor. We group our long format task data by task, and use `group_modify(t_gender)` to calculate the Bayes factor for the grouped data. We round the Bayes factors to 2 decimal places and then select the `task` and `bf` columns. We join this to our `descriptives` data frame.
+We define the function `t_gender()` to run a between-subjects t-test comparing task accuracy (`correct`) by `gender`. Before running the test, we use `drop_na(df)` to remove rows for participants who were excluded for the task. The function returns the Bayes factor. We group our long format task data by task, and use `group_modify(t_gender)` to calculate the Bayes factor for the grouped data. We round the Bayes factors to 2 decimal places and then select the `task` and `bf` columns. We join this to our `descriptives` data frame.
 
 Our data frame now looks like this:
 
@@ -390,30 +390,51 @@ The Bayes factors aren't conclusive, but all values are less than 1, suggesting 
 
 ## Exploring correlations between CDI and WinG
 
-Next we look at correlations between parents' ratings of their child's comprehension (CDI understands) and the child's comprehension scores on the noun and predicate tests. Correlation was introduced in the [Relationships, part 2 worksheets](corr.html). We use the `spearman` method of calculating the correlation between `task_by_subj$cdi_u` and `task_by_subj$nc`. The option `use="complete.obs"` deletes any cases with a value of `NA`. In the code above, we assigned the value `NA` to cells for subjects who were excluded from a test. 
+We would also like to know if parents' ratings of their child's ability using the CDI was related to their child's performance on the WinG tasks. We start by looking at correlations between CDI 'understands' comprehension scores on the noun and predicate tests.
 
 ```{r cdi_u_correlations}
-cor(method = 'spearman', task_by_subj$cdi_u, task_by_subj$nc, use="complete.obs")
-correlationBF(task_by_subj$cdi_u, task_by_subj$nc)
+cdi_u_nc_cor <- cor(method = 'spearman', task_by_subj$cdi_u, task_by_subj$nc, use="complete.obs")
+cdi_u_nc_cor
+cdi_u_nc_bf <- correlationBF(task_by_subj$cdi_u, task_by_subj$nc)
+cdi_u_nc_bf
 
-cor(method = 'spearman', task_by_subj$cdi_u, task_by_subj$pc, use="complete.obs")
-correlationBF(task_by_subj$cdi_u, task_by_subj$pc)
+cdi_u_pc_cor <- cor(method = 'spearman', task_by_subj$cdi_u, task_by_subj$pc, use="complete.obs")
+cdi_u_pc_cor
+cdi_u_pc_bf <- correlationBF(task_by_subj$cdi_u, task_by_subj$pc)
+cdi_u_pc_bf
 ```
 
-The Bayes factors for correlations of 0.70 for noun comprehension, and 0.55 for predicate comprehension do not provide evidence for a correlation between the childrens' comprehension scores and their parents' ratings of their comprehension. 
+**Explanation of commands:**
 
-We look at similar correlations between parents' ratings of their child's ability to say words (CDI says), and the childrens' noun and predicate production scores.
+We use a Spearman correlation to test the relationship between `task_by_subj$cdi_u` and `task_by_subj$nc` (noun comprehension). This was introduced in the [More on relationships, part 2 worksheet](corr-extended.html). The option `use="complete.obs"` deletes any cases with a value of `NA`. Remember that we assigned the value `NA` to cells for subjects who were excluded from a test.
+We also calculate a Bayes Factor to test the reliability of the relationship. We use similar commands to test the relationship between `cdi_u` and predicate comprehension (`pc`).
+
+**Explanation of output:**
+
+There doesn't appear to be a relationship between parents' CDI 'understands' scores and children's noun comprehension (_rs_ = `r round(cdi_u_nc_cor,2)`), although there is weak evidence against this conclusion (_BF_ = `r round(BayesFactor::extractBF(cdi_u_nc_bf)$bf,2)`). There seems to be a weak negative correlation between parents' CDI 'understands' scores and children's predicate comprehension (_rs_ = `r round(cdi_u_pc_cor,2)`), however, the Bayes factor of `r round(BayesFactor::extractBF(cdi_u_pc_bf)$bf,2)` means it's almost twice as likely that there isn't a relationship between these two variables as there is.
+
+Now we look at correlations between parents' ratings of their child's ability to say words (CDI says), and the childrens' noun and predicate production scores.
 
 ```{r cdi_s_correlations}
-cor(method = 'spearman', task_by_subj$cdi_s, task_by_subj$np, use="complete.obs")
-correlationBF(task_by_subj$cdi_s, task_by_subj$np)
+cdi_s_np_cor <- cor(method = 'spearman', task_by_subj$cdi_s, task_by_subj$np, use="complete.obs")
+cdi_s_np_cor
+cdi_s_np_bf <- correlationBF(task_by_subj$cdi_s, task_by_subj$np)
+cdi_s_np_bf
 
-cor(method = 'spearman', task_by_subj$cdi_s, task_by_subj$pp, use="complete.obs")
-correlationBF(task_by_subj$cdi_s, task_by_subj$pp)
+cdi_s_pp_cor <- cor(method = 'spearman', task_by_subj$cdi_s, task_by_subj$pp, use="complete.obs")
+cdi_s_pp_cor
+cdi_s_pp_bf <- correlationBF(task_by_subj$cdi_s, task_by_subj$pp)
+cdi_s_pp_bf
 ```
 
-Here there was a strong positive correlation (_r_ = 0.57, _BF_ = 5.09) between the parents' ratings of the words their children could say and the children's scores on the noun production test. There was no evidence for a correlation between CDI says and predicate production scores (_BF_ = 0.59).
+**Explanation of commands:**
 
+These calculations are identical to those above, except we are looking at the evidence for relationships between `cdi_u` and `task_by_subj$np` (noun production), and `task_by_subj$pp` (predicate production).
+
+**Explanation of output:**
+
+There is evidence of a strong, positive correlation between parents' CDI 'says' scores and children's noun production (_rs_ = `r round(cdi_s_np_cor,2)`, _BF_ = `r round(BayesFactor::extractBF(cdi_s_np_bf)$bf,2)`). There doesn't appear to be a relationship between CDI 'says' and children's predicate production (_rs_ = `r round(cdi_s_pp_cor,2)`, _BF_ = `r round(BayesFactor::extractBF(cdi_s_pp_bf)$bf,2)`).
+ 
 <a name="plot-task"></a>
 
 ## Plotting WinG task scores (raincloud plot)
