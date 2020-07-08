@@ -517,6 +517,9 @@ GeomFlatViolin <-
 
 Now we generate a plot for the noun tasks.
 
+
+
+
 ```{r noun-cloud}
 noun_tasks <- task_by_subj_l %>%
     filter(task %in% (c('np','nc')))
@@ -537,6 +540,20 @@ raincloud <- ggplot(noun_tasks, aes(x = task, y = correct, fill = cards)) +
 raincloud
 
 ggsave(filename = "noun_cloud.pdf", plot = raincloud, units = "cm", width = 15, height = 10)
+```
+
+```{r, fig.height=10, fig.width=12}
+library(see)
+
+noun_tasks <- task_by_subj_l %>%
+    filter(task %in% (c('nc')))
+noun_tasks$task <- recode_factor(noun_tasks$task, nc = 'Noun Comprehension')
+
+half_violin <- ggplot(task_by_subj_l, aes(x = task, y = correct, fill = cards)) +
+  geom_violinhalf(position = position_identity(), alpha=0.3, size=0) +
+#  stat_summary(geom="point", mapping = aes(colour = cards), fun.data=mean_cl_boot) +
+  scale_fill_material_d()
+half_violin + facet_wrap(~ task, ncol=2)
 ```
 
 We generate a separate plot for the predicate tasks.
