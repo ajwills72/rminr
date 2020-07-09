@@ -34,10 +34,9 @@ This is an advanced worksheet, which assumes you have completed the [Absolute Be
 - [Comparing parents' ratings of their child's language ability](#cdi-diffs)
 - [Generating a table of statistics](#table-descriptives)
 - [Exploring correlations between CDI and WinG](#correlate-cdi-wing)
-- [Plotting WinG task scores](#plot-task)
-
-- [Comparing cards using Mann-Whitney U tests](#mann-whitney)
-- [Comparing semantically related production errors](#compare-production)
+- [Plotting WinG accuracy by card set](#plot-task)
+- [Comparing WinG accuracy by card set using Mann-Whitney U tests](#mann-whitney)
+- [Comparing semantically related production errors by card set](#compare-production)
 - [Comparing individual cards](#table-cards)
 
 <a name="intro"></a>
@@ -437,7 +436,7 @@ There is evidence of a strong, positive correlation between parents' CDI 'says' 
  
 <a name="plot-task"></a>
 
-## Plotting WinG task scores
+## Plotting WinG accuracy by card set
 
 We'll create a plot to show the distribution of scores for the two card sets on the WinG tasks.
 
@@ -449,7 +448,7 @@ task_by_subj_l$task <- recode_factor(task_by_subj_l$task, nc = 'Noun Comprehensi
 library(see)
 ggplot(task_by_subj_l, aes(x = task, y = correct, fill = cards)) +
   geom_violinhalf(position = position_identity(), alpha=0.3, size=0) +
-  scale_fill_material_d() + xlab('WinG Task') + ylab('Score (max = 20)')
+  scale_fill_material_d() + xlab('WinG Task') + ylab('Accuracy (max = 20)')
 ```
 
 ```{r, eval=FALSE, echo=FALSE}
@@ -471,11 +470,11 @@ half_violin + facet_wrap(~ task, ncol=2)
 
 **Explanation of output:**
 
-We plotted the data in this format to get an indication of whether there were differences between the Italian and English cards on any of the tests. This looks unliely, given the extensive overlap in scores between the card sets. The plot also shows that the data were slightly skewed on the noun tasks due to some low scores.
+We plotted the data in this format to get an indication of whether there were differences between the Italian and English cards on any of the tests. This looks unlikely, given the extensive overlap in scores between the card sets. The plot also shows that the data were slightly skewed on the noun tasks due to some low scores.
 
 <a name="mann-whitney"></a>
 
-## Comparing cards using Mann-Whitney U tests
+## Comparing WinG accuracy by card set using Mann-Whitney U tests
 
 Although the plot suggests that the predicate data was normally distributed, given the small sample sizes, a non-parametric was considered most suited for analysing this data. We'll use Mann-Whitney U tests to compare each task score for the Italian and English cards. The Mann-Whitney U test is explained in more detail in the [Traditional non-parametric tests worksheet](non-parametric.html).
 
@@ -531,54 +530,79 @@ As this is a traditional statistical test, the p-value indicates whether there w
 
 <a name="compare-production"></a>
 
-## Comparing semantically related production errors
+## Comparing semantically related production errors by card set
 
-Finally, we would like to know if there were any differences for the semantically related errors between the two sets of cards.
+We would also like to know if there were any differences for the semantically related errors between the two sets of cards.
 
 Again, we start with a plot.
 
 ```{r nts-production-plot}
-semantically_related <-
-  select(task_by_subj, subj, cards, related_np, related_pp) %>%
-  rename(np = 'related_np', pp = 'related_pp') %>%
-  pivot_longer(cols = c(np, pp),
+semantically_related <- task_by_subj %>%
+  select(subj, cards, related_np, related_pp) %>%
+  pivot_longer(cols = c(related_np, related_pp),
                names_to = 'task',
                values_to = 'correct') %>%
-  mutate(task = recode_factor(.$task, np = 'Noun Production', pp = 'Predicate Production'))
+  mutate(task = recode_factor(.$task, related_np = 'Noun Production',
+                              related_pp = 'Predicate Production'))
 
 ggplot(semantically_related, aes(x = task, y = correct, fill = cards)) +
-  geom_violinhalf(position = position_identity(), alpha=0.3, size=0)
+  geom_violinhalf(position = position_identity(), alpha=0.3, size=0) +
+  scale_fill_material_d() + xlab('WinG Task') +
+  ylab('Semantically related errors (max = 20)')
 ```
 
-Mann-Whitney U tests confirm this, with both _p_ values > 0.05.
+**Explanation of commands:**
+
+**Explanation of output:**
+
+The extensive overlap in the distribution of scores suggests there were no differences between the Italian and English cards for semantically related errors on the production tasks.
+
+We run some Mann-Whitney U tests to test this.
 
 ```{r nts-production-mw}
 production_mann_whitney <- semantically_related %>%
   group_by(task) %>%
   group_modify(mann_whitney)
-
-pander(production_mann_whitney)
+production_mann_whitney
 ```
 
-* "A Mann-Whitney-U test was run to determine if there were any statistically
-significant differences in the number of non-target but semantically related errors
-elicited by the English WinG cards and the Italian WinG cards in the noun production
-sub-test. ... The number of non-target but semantically related errors was not statistically significantly different between the English cards (Mdn = 3) and the Italian cards (Mdn = 3), U = 65, z = .415, p = .713"
+**Explanation of commands:**
 
-* "A Mann-Whitney-U test was run to determine if there were differences in the
-number of non-target but semantically related errors elicited by the English WinG
-cards and the Italian WinG cards in the predicate production sub-test. Distributions of
-the scores for the English cards and the Italian cards were not similar, as assessed
-by visual inspection. The number of correct responses for the English cards (mean
-rank = 8.60) and the Italian cards (mean rank = 10.62) were not statistically
-significantly different, U = 31, z = -.821, p = .460"
+We group `semantically_related` by task, and reuse our `mann_whitney()` function to run a Mann-Whitney test for the noun and predicate production tasks.
+
+**Explanation of output:**
+
+The _p_ values for both tests are > 0.05, indicating that there was no difference between the card sets for semantically related errors on the production tasks.
 
 <a name="table-cards"></a>
 
 ## Comparing individual cards
 
-We would like to know if there were any accuracy differences between the individual Italian and English cards in each task. We can summarise this data as a table of t-tests. Running a t-test where both groups have identical scores produces an error, so we remove these cards from our tests. For noun comprehension, this was the case for the words 'apple', 'cow', 'penguin','hat', and 'motorbike'.
+Finally, we would like to know if there were any accuracy differences between individual Italian and English cards in each task. We can summarise this data as a table of t-tests.
 
+```{r words-functions}
+correct_word <- function(df, group) {
+  df %>% select(answer) %>% summarise(correct = colSums(. == 'C' | . == 'C*'))
+}
+
+t_words <- function(df, group) {
+  result <- df %>% group_by(cards) %>% summarise(mean = mean(correct), sd = sd(correct))
+  result <- pivot_wider(result, names_from = cards, values_from = c(mean,sd))
+  bf <- ttestBF(formula=correct ~ cards, data = data.frame(df))
+  t <- t.test(correct ~ cards, data = df)
+  p <- t$p.value
+  result <- result %>% mutate(bf = extractBF(bf)$bf, t = t$statistic, p = p)
+  return(result)
+}
+```
+
+**Explanation of commands:**
+
+The `correct_word` function returns a data frame with a column `correct` which is the number of correct responses in the column named `answer`. This is like the `rowSums()` command we used to calculate a correct score for each participant. We use `colSums()` because the ratings are in the `answer` column.
+
+The `t_words` function is like the `t_gender` function we created earlier. We'll use this function to return a Bayes factor comparing the accuracy for each card between the Italian and English pictures. 
+
+We start by 
 ```{r t-nc}
 nc_long <- nc %>%
   exclude %>%
@@ -587,29 +611,28 @@ nc_long <- nc %>%
                names_to = 'word',
                values_to = 'answer')
 
-correct_word <- function(df, group) {
-  df %>% select(answer) %>% summarise(correct = colSums(. == 'C' | . == 'C*'))
-}
 nc_long_correct <- nc_long %>%
   group_by(word, subj, cards) %>%
   group_modify(correct_word)
-
-t_words <- function(df, group) {
-  bf <- ttestBF(formula=correct ~ cards, data = data.frame(df))
-  extractBF(bf)
-}
 
 nc_bf <- nc_long_correct %>%
   filter(! word %in% c('apple', 'cow', 'penguin','hat','motorbike')) %>%
   group_by(word) %>%
   group_modify(t_words) %>%
-  mutate(bf = round(bf,2)) %>%
-  select(word, bf)
+  mutate_if(is.numeric, round, 2) %>%
+  select(word, mean_english, sd_english, mean_italian, sd_italian, t, p, bf) %>%
+  arrange(bf)
 
 nc_bf %>% kable(
-  col.names = c('Word', 'Bayes Factor')) %>%
+  col.names = c('Word', 'Mean (English)', 'SD (English)', 'Mean (Italian)', 'SD (Italian)', 't', 'p', 'BF')) %>%
   kable_styling()
 ```
+
+**Explanation of commands:**
+
+Running a t-test where both groups have identical scores produces an error, so we remove these cards from our tests. For noun comprehension, this was the case for the words 'apple', 'cow', 'penguin','hat', and 'motorbike'.
+
+**Explanation of output:**
 
 We generate similar tables for noun production ...
 
