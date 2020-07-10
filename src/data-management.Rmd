@@ -1,6 +1,6 @@
 ---
 title: "Data Management"
-author: "Paul Sharpe"
+author: "Andy Wills, Paul Sharpe"
 output: html_document
 ---
 
