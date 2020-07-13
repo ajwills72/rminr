@@ -11,6 +11,7 @@ sure how to do that, just email me: andy@willslab.co.uk
 
 | University             | Country | UG    | PG   | Link      |
 | ---------------------- | ------- | ----- | ---- | --------- |
+| Ben-Gurion University of the Negev | Israel | | 2019 | [PG (intro)](https://github.com/mattansb/Advanced-Research-Methods-foR-Psychologists), [PG (SEM)](https://github.com/mattansb/Structural-Equation-Modeling-foR-Psychologists), [PG (ANOVA)](https://github.com/mattansb/Analysis-of-Factorial-Designs-foR-Psychologists) |
 | Duke University.       | U.S.A.  | 2019  |      | [UG](https://osf.io/8a9ch/wiki/home/) |
 | Harrisburg University of Science and Technology | U.S.A. |     | 2018 | [PG](https://statisticsofdoom.com/page/basic-statistics/) |
 | Missouri State         | U.S.A.  |      | 2017  | [PG](https://statisticsofdoom.com/page/basic-statistics/) | 
