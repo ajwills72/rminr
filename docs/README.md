@@ -189,6 +189,8 @@ links, you may find just notes, or incomplete worksheets.
 
 - [Traditional non-parametric tests](non-parametric.html): **Mann-Whitney U**.
 
+- [Data management](data-management.html)
+
 <a name="studies"></a>
 
 ## 7. Case studies (work in progress)
