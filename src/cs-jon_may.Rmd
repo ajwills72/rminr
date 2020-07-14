@@ -1,0 +1,165 @@
+---
+title: "The link between Openness to experience, Imagery and Creative Problem Solving"
+author: "Jon May, Jessica Hart, Paul Sharpe and Andy Wills"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+## DEVELOPERS: Uncomment one option, as appropriate
+
+## Data required to knit
+## https://github.com/ajwills72/rminr-data/tree/master/case-studies/jon-may/*.csv
+##
+## I check out rminr-data and make a symbolic link to going-further
+
+## Show only commands.
+## knitr::opts_chunk$set(echo = TRUE, message = FALSE, results='hide', fig.keep = 'none', comment=NA)
+
+## Show commands and output.
+knitr::opts_chunk$set(echo = TRUE, comment=NA, cache = TRUE)
+library(pander)
+```
+
+## Before you start
+
+This is an advanced worksheet, which assumes you have completed the [Absolute Beginners' Guide to R](https://ajwills72.github.io/rminr/#beginners) course, the [Research Methods in Practice (Quantitative section)](https://benwhalley.github.io/rmip/overview-quantitative.html) course, and the [Intermediate Guide to R](https://ajwills72.github.io/rminr/#rmip) course. 
+
+## Contents
+
+- [Introduction](#intro)
+- [Loading data](#load)
+- [Correlation between openness and problems solved](#cor-o-problems)
+- [Correlation matrix: other personality factors and problems solved](#cor-matrix)
+
+<a name="intro"></a>
+
+## Introduction
+
+This worksheet describes a full analysis pipeline for an undergraduate student dissertation which explored relationships between personality, imagery and creative problem solving. Forty-eight students were tested to address three hypotheses. First, the researchers predicted that participants with more open personality types would be better at solving a selection of problems requiring creative solutions. Second, they predicated that participants with more vivid mental imagery would be better at solving the problems. Third, they predicted a relationship between divergent thinking and an ability to solve the problems.
+
+Personality was measured using a simplified version of Costa and McCrae’s (1992) "big five" personality questionnaire. Mental imagery was measured using the PsiQ Plymouth Sensory Imagery Questionnaire (Andrade et al., 2013). Divergent thinking was measured using a 'flexible thinking task', which measured fluency, flexibility and originality. The problems requiring creative solutions were taken from May (1987).
+
+<a name="load"></a>
+
+## Loading data
+
+Open the `rminr-data` project we used [previously](preproc.html#load).
+
+Ensure you have the latest files by asking git to "`pull`" the repository. Select the `Git` tab, which is located in the row of tabs which includes the `Environment` tab. Click the `Pull` button with a downward pointing arrow. A window will open showing the files which have been pulled from the repository. Close the `Git pull` window. The `case-studies` folder should contain the folder `jon-may`.
+
+Next, create a new, empty R script and save it in the `rminr-data` folder as `cs-jon-may.R`. Put all the commands from this worksheet into this file, and run them from there. Save your script regularly.
+
+We start by loading the data.
+
+```{r excel, message=FALSE}
+rm(list = ls()) # clear the environment
+library(tidyverse)
+
+# read data
+big5    <- read_csv('case-studies/jon-may/big5_total.csv', col_types = 'fiiiii')
+ftt     <- read_csv('case-studies/jon-may/ftt.csv')
+psiq    <- read_csv('case-studies/jon-may/psiq.csv')
+problems <- read_csv('case-studies/jon-may/problems.csv', col_types = 'fiiiiiii')
+```
+
+**Explanation of commands:**
+
+We clear the workspace, and load `tidyverse` package, then read the four data files.
+
+<a name="preproc"></a>
+
+## Preprocessing
+
+They entered the ‘raw data’ from
+
+
+* the 35 PsiQ vividness of imagery items - 5 of each of 7 modalities (0 not at all to 10 as vivid as real life) (score = mean of all items)
+* Big5 OCEAN questionnaire 50 items answered 1 to 5 (includes a data entry error, we don't have the scoring key)
+* We don't have raw data for the ‘Flexible Thinking Test’ (overall scores mean of ftt1-3)
+* They somehow produced some means and scale totals for analysis in spss
+
+* a problem booklet with 7 problems (solved=1, not=0, total=n solved)
+
+NOTE: At least one of the problem totals was incorrect in the SPSS file
+
+```{r}
+solved <- problems %>%
+  rowwise() %>%
+  mutate(problems = sum(c_across(bridges:dots))) %>%
+  select(subj, problems)
+
+data <- full_join(big5, solved, by = 'subj')
+```
+
+## Mean, Standard deviation and variance for all independent variables (n=48)
+
+## Histogram and curve showing distribution of problem scores (n=48)
+
+NOTE: This looks like it's addressing H1
+
+## Scatterplot and best fit line, openness vs. problems solved
+
+You learnt how to create a scatterplot and a best fit line in the [regression worksheet](https://benwhalley.github.io/rmip/regression.html).
+
+<a name="cor-o-problems"></a>
+
+## Correlation between openness and problems solved
+
+```{r}
+cor_o_problems <- cor(data$problems, data$openness)
+library(BayesFactor)
+cor_o_problems_bf <- correlationBF(data$problems, data$openness)
+```
+
+**Explanation of commands:**
+
+Correlations were introduced in the [Relationships, part 2 worksheet](corr.html).
+We use a Pearson correlation to look at the relationship between openness and the number of problems solved. We also calculate a Bayes factor to test the evidence for the correlation.
+
+**Explanation of output:**
+
+Contrary to the first hypothesis, there is no evidence for a relationship between openness and creative problem solving  (_r_ = `r round(cor_o_problems,2)`, _BF_ = `r round(BayesFactor::extractBF(cor_o_problems_bf)$bf,2)`).
+
+<a name="cor-matrix"></a>
+
+## Correlation matrix: other personality factors and problems solved
+
+```{r cor-matrix, R.options = list(width = 10000)}
+library(apaTables)
+apa.cor.table(data %>% select(conscientiousness:problems), filename='table1.doc', table.number = 1)
+```
+
+**Explanation of output:**
+
+QUESTION: Just comment on (lack of) correlations between personality factors and problems?
+
+NOTE: H3
+
+## Correlation between problems solved and flexible thinking
+
+* cor(foo$problems, foo$ftt), correlationBF(foo$problems, foo$ftt)
+
+NOTE: H2
+
+## Correlation between problems solved and vividness
+
+* cor(foo$problems, foo$psiq), correlationBF(foo$problems, foo$psiq)
+
+## Correlation plot (Fig. 3)
+
+* PsiQ total, Openness, problem scores, FTT
+
+## References
+
+Andrade, J., May, J., Deeprose, C., Baugh, S.-J., & Ganis, G. (2014). [Assessing vividness of mental imagery: The Plymouth Sensory Imagery Questionnaire](https://onlinelibrary.wiley.com/doi/pdf/10.1111/bjop.12050?casa_token=-IMvMthFsKQAAAAA:_b6s7nwZ8JS-5fWM4Xxgey5sBBPpbIRPUupgZ2XFQ-jNYGNOK0ARomtRNgCIWUfZqUD7w9PBoLbeng) British Journal of Psychology, 105(4), 547–563. 
+
+Costa, P. T., & McCrae, R. R. (1992). Neo personality inventory-revised (NEO PI-R). 
+Psychological Assessment Resources Odessa, FL.
+
+May, J. (1987). The cognitive analysis of flexible thinking. Unpublished PhD
+thesis, University of Exeter.
+
+___
+
+This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0. 
+
