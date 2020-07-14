@@ -181,7 +181,7 @@ links, you may find just notes, or incomplete worksheets.
 
 - [Other resources](gfwr-other.html): Links to external resources.
 
-- [Better tables](better-tables.html): _Reading data from Excel_, **joining data frames**, **creating a table of descriptive statistics**, **creating a table of t-tests**.
+- [Better tables](better-tables.html): **Creating a correlation matrix**, **creating a custom table of descriptive statistics**.
 
 - [Data preprocessing for scales](preproc-scales.html): _Handling missing data_, **calculating scale scores**, **tidying survey data**.
 
