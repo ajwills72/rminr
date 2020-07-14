@@ -382,21 +382,17 @@ summary {
 <ul>
 <li><p><a href="#intro">Introduction</a></p></li>
 <li><p><a href="#start">Getting started</a></p></li>
-<li><p><a href="#excel">Loading data from Excel</a></p></li>
-<li><p><a href="#demographics">Preprocess demographics data</a></p></li>
-<li><p><a href="#noun-tasks">Preprocess data for noun tasks</a></p></li>
-<li><p><a href="#ex1">Exercise 1</a></p></li>
-<li><p><a href="#join">Joining data frames</a></p></li>
-<li><p><a href="#descriptives">Creating a table of descriptive statistics</a></p></li>
-<li><p><a href="#t-tests">Creating a table of t-tests</a></p></li>
-<li><p><a href="#ex2">Exercise 2</a></p></li>
+<li><p><a href="#cor-matrix">Creating a correlation matrix</a></p></li>
+<li><p><a href="#ex1">Exercise 2</a></p></li>
+<li><p><a href="#descriptives">Creating a custom table of descriptive statistics</a></p></li>
+<li><p><a href="#ex2">Exercise 1</a></p></li>
+<li><p><a href="#rmd">R Markdown</a></p></li>
 </ul>
 <p><a name="intro"></a></p>
 </div>
 <div id="introduction" class="section level2">
 <h2>Introduction</h2>
-<p>Data is often easier to read in tabular format. This worksheet explains how to use <code>R</code> to produce the types of table which are useful when writing about psychological research. Although tables can be produced using a Word processor, generating them using <code>R</code> reduces copy-paste errors when writing reports.</p>
-<p>The data we’ll use comes from an experiment which evaluated children’s language development using the Words in Game (WinG) test. WinG consists of a set of picture cards which are used in four tests: noun comprehension, noun production, predicate comprehension, and predicate production. The Italian and English versions of the WinG cards use different pictures to depict the associated words. The experiment tested whether English-speaking children aged approximately 30 months, produce similar responses for the two sets of cards.</p>
+<p>It can be helpful to presented data in tables, rather than text, especially when you need to refer to the same data in different parts of a report. Although tables can be produced manually using a Word processor, generating them directly from your data ensures they are up-to-date, and reduces copy-paste errors. This worksheet explains how to use <code>R</code> to produce the types of table used to report psychological research.</p>
 <p><a name="start"></a></p>
 </div>
 <div id="getting-started" class="section level2">
@@ -405,2168 +401,268 @@ summary {
 <ol style="list-style-type: decimal">
 <li><p>Open the <code>rminr-data</code> project we used <a href="preproc.html#load">previously</a>.</p></li>
 <li><p>If you don’t see a folder named <code>going-further</code>, it means you created your project <em>before</em> the data required for this worksheet was added to the <code>rminr-data</code> git repository. You can get the latest files by asking git to “<code>pull</code>” the repository. Select the <code>Git</code> tab, which is located in the row of tabs which includes the <code>Environment</code> tab. Click the <code>Pull</code> button with a downward pointing arrow. A window will open showing the files which have been pulled from the repository. Close the <code>Git pull</code> window.</p></li>
-<li><p>Open the <code>Files</code> tab. The <code>going-further</code> folder should contain the file <code>picture-naming.xlsx</code>.</p></li>
+<li><p>Open the <code>Files</code> tab. The <code>going-further</code> folder should contain the file <code>picture-naming-preproc.csv</code>.</p></li>
 <li><p>Create a script named <code>tables.R</code> in the <code>rminr-data</code> folder (the folder above <code>going-further</code>). Add the code to this script as you work through each section of the worksheet.</p></li>
 </ol>
-<p><a name="excel"></a></p>
+<p><a name="cor-matrix"></a></p>
 </div>
-<div id="loading-data-from-excel" class="section level2">
-<h2>Loading data from Excel</h2>
-<p>As usual, we start by loading and preprocessing our data. In this experiment, the data for each test was recorded on a subsheet of an Excel spreadsheet. There was also a subsheet containing demographic data.</p>
-<p>We start by reading all subsheets into a single data frame.</p>
-<pre class="r"><code>rm(list = ls()) # clear the environment
-library(tidyverse)
-
-# read data from Excel
-library(readxl)
-path &lt;- &#39;going-further/picture-naming.xlsx&#39;
-data &lt;- path %&gt;%
-  excel_sheets() %&gt;%
-  set_names() %&gt;%
-  map_df(~ read_excel(path = path, sheet = .x, range = &quot;A1:V20&quot;),
-         .id = &quot;sheet&quot;)</code></pre>
-<p><strong>Explanation of commands:</strong></p>
-<ol style="list-style-type: decimal">
-<li>We clear the workspace and load <code>tidyverse</code>.</li>
-<li><code>library(readxl)</code> loads a package containing functions for reading Excel spreadsheets.</li>
-<li><code>path &lt;- &#39;going-further/picture-naming.xlsx&#39;</code> defines the location of our spreadsheet.</li>
-<li><code>path %&gt;% excel_sheets()</code> creates a vector (a list) containing the names of the subsheets.</li>
-<li>Items in a vector can be given names. Without an argument, <code>set_names()</code> sets the name the same as the value in the vector, thereby naming each item after its subsheet. It will become clear why we do this in the next step.</li>
-<li><code>map_df()</code> processes each item in the vector, by assigning it to <code>.x</code> and then running the function <code>read_excel(path = path, sheet = .x, range = &quot;A1:V20&quot;)</code>. For each subsheet of the spreadsheet file (<code>path</code>), this reads data from the range <code>A1:V20</code> on the subsheet (the cells containing the data we need). The argument <code>.id = &quot;sheet&quot;</code> creates a column named <code>sheet</code> with the name associated with the current vector item <code>.x</code>. This is the name that we set in the previous step. The results are returned as a data frame.</li>
-<li>Because <code>map_df()</code> adds the results of each of function call to the end of the previously created data frame, <code>data</code> is assigned a single data frame containing the data from all subsheets.</li>
-</ol>
-<p>Here’s a selection of rows from <code>data</code>:</p>
-<table style="width:100%;">
+<div id="creating-a-correlation-matrix" class="section level2">
+<h2>Creating a correlation matrix</h2>
+<p>We’ll start by producing a correlation matrix. A correlation matrix shows correlations between all combinations of a set of variables, which is often required in research reports. We’ll demonstrate an easy way to produce correlation matrices, with APA styling, in a format that can be read by Microsoft Word or LibreOffice Writer. A similar approach can be used to produce other common table types.</p>
+<p>We’ll generate a correlation matrix using the <code>attitude</code> dataset, which is included with <code>R</code>. These data are the percent proportion of favourable attitudes given by employees, in relation to seven questions regarding their department. Here are the first few rows of the data frame:</p>
+<table>
 <colgroup>
-<col width="2%"></col>
-<col width="1%"></col>
-<col width="2%"></col>
-<col width="2%"></col>
-<col width="2%"></col>
-<col width="0%"></col>
-<col width="1%"></col>
-<col width="1%"></col>
-<col width="1%"></col>
-<col width="0%"></col>
-<col width="0%"></col>
-<col width="0%"></col>
-<col width="0%"></col>
-<col width="0%"></col>
-<col width="0%"></col>
-<col width="0%"></col>
-<col width="0%"></col>
-<col width="0%"></col>
-<col width="0%"></col>
-<col width="0%"></col>
-<col width="0%"></col>
-<col width="0%"></col>
-<col width="0%"></col>
-<col width="1%"></col>
-<col width="0%"></col>
-<col width="0%"></col>
-<col width="0%"></col>
-<col width="0%"></col>
-<col width="0%"></col>
-<col width="1%"></col>
-<col width="0%"></col>
-<col width="0%"></col>
-<col width="0%"></col>
-<col width="0%"></col>
-<col width="0%"></col>
-<col width="0%"></col>
-<col width="1%"></col>
-<col width="0%"></col>
-<col width="0%"></col>
-<col width="0%"></col>
-<col width="0%"></col>
-<col width="0%"></col>
-<col width="1%"></col>
-<col width="0%"></col>
-<col width="1%"></col>
-<col width="1%"></col>
-<col width="1%"></col>
-<col width="0%"></col>
-<col width="0%"></col>
-<col width="0%"></col>
-<col width="0%"></col>
-<col width="0%"></col>
-<col width="0%"></col>
-<col width="0%"></col>
-<col width="0%"></col>
-<col width="0%"></col>
-<col width="0%"></col>
-<col width="1%"></col>
-<col width="1%"></col>
-<col width="1%"></col>
-<col width="0%"></col>
-<col width="0%"></col>
-<col width="0%"></col>
-<col width="1%"></col>
-<col width="0%"></col>
-<col width="1%"></col>
-<col width="1%"></col>
-<col width="0%"></col>
-<col width="0%"></col>
-<col width="0%"></col>
-<col width="1%"></col>
-<col width="0%"></col>
-<col width="1%"></col>
-<col width="0%"></col>
-<col width="1%"></col>
-<col width="1%"></col>
-<col width="1%"></col>
-<col width="1%"></col>
-<col width="1%"></col>
-<col width="1%"></col>
-<col width="1%"></col>
-<col width="1%"></col>
-<col width="0%"></col>
-<col width="1%"></col>
-<col width="0%"></col>
-<col width="1%"></col>
-<col width="1%"></col>
-<col width="0%"></col>
-<col width="0%"></col>
-<col width="1%"></col>
-<col width="0%"></col>
-<col width="0%"></col>
-<col width="1%"></col>
-<col width="1%"></col>
-<col width="1%"></col>
-<col width="0%"></col>
-<col width="0%"></col>
-<col width="1%"></col>
-<col width="1%"></col>
-<col width="0%"></col>
-<col width="1%"></col>
-<col width="1%"></col>
-<col width="0%"></col>
-<col width="1%"></col>
+<col width="11%"></col>
+<col width="16%"></col>
+<col width="16%"></col>
+<col width="14%"></col>
+<col width="11%"></col>
+<col width="14%"></col>
+<col width="14%"></col>
 </colgroup>
 <thead>
 <tr class="header">
-<th align="center">sheet</th>
-<th align="center">Code</th>
-<th align="center">Parental_Education(M)</th>
-<th align="center">Parental_Education(F)</th>
-<th align="center">Highest_Education</th>
-<th align="center">Gender</th>
-<th align="center">DOB</th>
-<th align="center">Test_Date</th>
-<th align="center">Age (M)</th>
-<th align="center">CDI_U</th>
-<th align="center">CDI_S</th>
-<th align="center">…11</th>
-<th align="center">…12</th>
-<th align="center">…13</th>
-<th align="center">…14</th>
-<th align="center">…15</th>
-<th align="center">…16</th>
-<th align="center">…17</th>
-<th align="center">…18</th>
-<th align="center">…19</th>
-<th align="center">…20</th>
-<th align="center">…21</th>
-<th align="center">…22</th>
-<th align="center">Cards</th>
-<th align="center">Beach</th>
-<th align="center">Lorry</th>
-<th align="center">Seal</th>
-<th align="center">Bag</th>
-<th align="center">Banana</th>
-<th align="center">Picture</th>
-<th align="center">Hen</th>
-<th align="center">Book</th>
-<th align="center">Socks</th>
-<th align="center">Comb</th>
-<th align="center">Table</th>
-<th align="center">Roof</th>
-<th align="center">Umberella</th>
-<th align="center">Fork</th>
-<th align="center">Lion</th>
-<th align="center">Flags</th>
-<th align="center">Glass</th>
-<th align="center">Nappy</th>
-<th align="center">Radiator</th>
-<th align="center">Gloves</th>
-<th align="center">Mountain</th>
-<th align="center">Motorbike</th>
-<th align="center">Penguin</th>
-<th align="center">Box</th>
-<th align="center">Apple</th>
-<th align="center">Iron</th>
-<th align="center">Cow</th>
-<th align="center">Doll</th>
-<th align="center">Hat</th>
-<th align="center">Watch</th>
-<th align="center">Sofa</th>
-<th align="center">Clouds</th>
-<th align="center">Hammer</th>
-<th align="center">Glasses</th>
-<th align="center">Elephant</th>
-<th align="center">Backyard</th>
-<th align="center">Spoon</th>
-<th align="center">Bib</th>
-<th align="center">Sink</th>
-<th align="center">Wellyboots</th>
-<th align="center">Small</th>
-<th align="center">Spinning</th>
-<th align="center">Swimming</th>
-<th align="center">Empty</th>
-<th align="center">Heavy</th>
-<th align="center">Inside</th>
-<th align="center">Kissing</th>
-<th align="center">Clean</th>
-<th align="center">Falling</th>
-<th align="center">Eating</th>
-<th align="center">Washing</th>
-<th align="center">Smiling</th>
-<th align="center">In-front</th>
-<th align="center">Playing</th>
-<th align="center">Phoning</th>
-<th align="center">Far-apart</th>
-<th align="center">Driving</th>
-<th align="center">Opening</th>
-<th align="center">Long</th>
-<th align="center">Pushing</th>
-<th align="center">Big</th>
-<th align="center">Swinging</th>
-<th align="center">Climbing</th>
-<th align="center">Full</th>
-<th align="center">Tall</th>
-<th align="center">Outside</th>
-<th align="center">Waving</th>
-<th align="center">Dirty</th>
-<th align="center">Running</th>
-<th align="center">Drinking</th>
-<th align="center">Hugging</th>
-<th align="center">Biting</th>
-<th align="center">Behind</th>
-<th align="center">Walking</th>
-<th align="center">Building</th>
-<th align="center">Near</th>
-<th align="center">Sweeping</th>
-<th align="center">Combing</th>
-<th align="center">Short</th>
-<th align="center">Pulling</th>
+<th align="center">rating</th>
+<th align="center">complaints</th>
+<th align="center">privileges</th>
+<th align="center">learning</th>
+<th align="center">raises</th>
+<th align="center">critical</th>
+<th align="center">advance</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="center">Demographic</td>
-<td align="center">WinG30-01</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">Female</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">62</td>
-<td align="center">38</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-</tr>
-<tr class="even">
-<td align="center">Demographic</td>
-<td align="center">WinG30-02</td>
-<td align="center">2</td>
-<td align="center">2</td>
-<td align="center">2</td>
-<td align="center">Male</td>
-<td align="center">2017-06-25</td>
-<td align="center">2020-01-09</td>
+<td align="center">43</td>
+<td align="center">51</td>
 <td align="center">30</td>
-<td align="center">60</td>
-<td align="center">59</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-</tr>
-<tr class="odd">
-<td align="center">Noun Production</td>
-<td align="center">WinG30-01</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">english</td>
-<td align="center">NR</td>
-<td align="center">NTS</td>
-<td align="center">NT</td>
-<td align="center">NR</td>
-<td align="center">C*</td>
-<td align="center">NR</td>
-<td align="center">C</td>
-<td align="center">NT</td>
-<td align="center">C</td>
-<td align="center">NTS</td>
-<td align="center">NT</td>
-<td align="center">NT</td>
-<td align="center">NT</td>
-<td align="center">NTS</td>
-<td align="center">NTS</td>
-<td align="center">NT</td>
-<td align="center">NTS</td>
-<td align="center">NT</td>
-<td align="center">NR</td>
-<td align="center">C</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
+<td align="center">39</td>
+<td align="center">61</td>
+<td align="center">92</td>
+<td align="center">45</td>
 </tr>
 <tr class="even">
-<td align="center">Noun Production</td>
-<td align="center">WinG30-02</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">italian</td>
-<td align="center">NT-S</td>
-<td align="center">C</td>
-<td align="center">NR</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">NT</td>
-<td align="center">C</td>
-<td align="center">NT</td>
-<td align="center">C</td>
-<td align="center">NTS</td>
-<td align="center">C</td>
-<td align="center">NTS</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">NT</td>
-<td align="center">NT</td>
-<td align="center">C</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
+<td align="center">63</td>
+<td align="center">64</td>
+<td align="center">51</td>
+<td align="center">54</td>
+<td align="center">63</td>
+<td align="center">73</td>
+<td align="center">47</td>
 </tr>
 <tr class="odd">
-<td align="center">Noun Comprehension</td>
-<td align="center">WinG30-01</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">english</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">D</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">P</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">P</td>
-<td align="center">D</td>
-<td align="center">C</td>
-<td align="center">D</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">P</td>
-<td align="center">C</td>
-<td align="center">P</td>
-<td align="center">P</td>
-<td align="center">C</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
+<td align="center">71</td>
+<td align="center">70</td>
+<td align="center">68</td>
+<td align="center">69</td>
+<td align="center">76</td>
+<td align="center">86</td>
+<td align="center">48</td>
 </tr>
 <tr class="even">
-<td align="center">Noun Comprehension</td>
-<td align="center">WinG30-02</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">italian</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">NR</td>
-<td align="center">C</td>
-<td align="center">D</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
+<td align="center">61</td>
+<td align="center">63</td>
+<td align="center">45</td>
+<td align="center">47</td>
+<td align="center">54</td>
+<td align="center">84</td>
+<td align="center">35</td>
 </tr>
 <tr class="odd">
-<td align="center">Predicate Production</td>
-<td align="center">WinG30-01</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">english</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NT</td>
-<td align="center">NT</td>
-<td align="center">N/A</td>
-<td align="center">N/A</td>
-<td align="center">N/A</td>
-<td align="center">N/A</td>
-<td align="center">N/A</td>
-<td align="center">N/A</td>
-<td align="center">N/A</td>
-<td align="center">N/A</td>
-<td align="center">N/A</td>
-<td align="center">N/A</td>
-<td align="center">N/A</td>
-<td align="center">N/A</td>
-<td align="center">N/A</td>
-<td align="center">N/A</td>
-<td align="center">N/A</td>
-<td align="center">N/A</td>
-<td align="center">N/A</td>
-<td align="center">N/A</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-</tr>
-<tr class="even">
-<td align="center">Predicate Production</td>
-<td align="center">WinG30-02</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">italian</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NTS</td>
-<td align="center">NTS</td>
-<td align="center">C</td>
-<td align="center">NT</td>
-<td align="center">NT</td>
-<td align="center">NT</td>
-<td align="center">C</td>
-<td align="center">NT</td>
-<td align="center">NTS</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">NT</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">NT</td>
-<td align="center">C</td>
-<td align="center">NT</td>
-<td align="center">NT</td>
-<td align="center">C</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-</tr>
-<tr class="odd">
-<td align="center">Predicate Comprehension</td>
-<td align="center">WinG30-01</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">english</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">P</td>
-<td align="center">C</td>
-<td align="center">N/A</td>
-<td align="center">N/A</td>
-<td align="center">N/A</td>
-<td align="center">N/A</td>
-<td align="center">N/A</td>
-<td align="center">N/A</td>
-<td align="center">N/A</td>
-<td align="center">N/A</td>
-<td align="center">N/A</td>
-<td align="center">N/A</td>
-<td align="center">N/A</td>
-<td align="center">N/A</td>
-<td align="center">N/A</td>
-<td align="center">N/A</td>
-<td align="center">N/A</td>
-<td align="center">N/A</td>
-<td align="center">N/A</td>
-<td align="center">N/A</td>
-</tr>
-<tr class="even">
-<td align="center">Predicate Comprehension</td>
-<td align="center">WinG30-02</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">italian</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">D</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">D</td>
-<td align="center">C</td>
-<td align="center">P</td>
+<td align="center">81</td>
+<td align="center">78</td>
+<td align="center">56</td>
+<td align="center">66</td>
+<td align="center">71</td>
+<td align="center">83</td>
+<td align="center">47</td>
 </tr>
 </tbody>
 </table>
-<p><a name="demographics"></a></p>
-</div>
-<div id="preprocess-demographics-data" class="section level2">
-<h2>Preprocess demographics data</h2>
-<p>We extract the demographics data into its own data frame.</p>
-<pre class="r"><code># extract demographics data
-demographics &lt;- data %&gt;%
-  filter(sheet == &#39;Demographic&#39;) %&gt;%
-  set_names(~ str_to_lower(.)) %&gt;%
-  mutate(gender = factor(gender), subj = factor(seq.int(nrow(.)))) %&gt;%
-  mutate(gender = recode_factor(.$gender, Male = &#39;male&#39;,
-                                Female = &#39;female&#39;)) %&gt;%
-  select(subj, gender, cdi_u, cdi_s)</code></pre>
+<p>We’ll use the <code>apaTables</code> package to generate the correlation matrix.</p>
+<pre class="r"><code>rm(list = ls()) # clear the environment
+library(apaTables)
+apa.cor.table(attitude, filename=&quot;table1.doc&quot;, table.number = 1)</code></pre>
+<pre><code>
+
+Table 1 
+
+Means, standard deviations, and correlations with confidence intervals
+ 
+
+  Variable      M     SD    1           2           3           4           5          6          
+  1. rating     64.63 12.17                                                                       
+                                                                                                  
+  2. complaints 66.60 13.31 .83**                                                                 
+                            [.66, .91]                                                            
+                                                                                                  
+  3. privileges 53.13 12.24 .43*        .56**                                                     
+                            [.08, .68]  [.25, .76]                                                
+                                                                                                  
+  4. learning   56.37 11.74 .62**       .60**       .49**                                         
+                            [.34, .80]  [.30, .79]  [.16, .72]                                    
+                                                                                                  
+  5. raises     64.63 10.40 .59**       .67**       .45*        .64**                             
+                            [.29, .78]  [.41, .83]  [.10, .69]  [.36, .81]                        
+                                                                                                  
+  6. critical   74.77 9.89  .16         .19         .15         .12         .38*                  
+                            [-.22, .49] [-.19, .51] [-.22, .48] [-.25, .46] [.02, .65]            
+                                                                                                  
+  7. advance    42.93 10.29 .16         .22         .34         .53**       .57**      .28        
+                            [-.22, .49] [-.15, .54] [-.02, .63] [.21, .75]  [.27, .77] [-.09, .58]
+                                                                                                  
+
+Note. M and SD are used to represent mean and standard deviation, respectively.
+Values in square brackets indicate the 95% confidence interval.
+The confidence interval is a plausible range of population correlations 
+that could have caused the sample correlation (Cumming, 2014).
+* indicates p &lt; .05. ** indicates p &lt; .01.
+ </code></pre>
 <p><strong>Explanation of commands:</strong></p>
-<ol style="list-style-type: decimal">
-<li><code>data %&gt;% filter(sheet == &#39;Demographic&#39;)</code> selects just the demographics rows.</li>
-<li><code>set_names(~ str_to_lower(.))</code> converts all column names to lower case, making it easier to refer to column names later.</li>
-<li><code>mutate(gender = factor(gender), subj = factor(seq.int(nrow(.))))</code> converts <code>gender</code> to be a factor, and creates a sequential subject number factor.</li>
-<li>We use <code>recode_factor()</code> to set the factor levels in <code>gender</code> to lower case.</li>
-<li>Finaly we <code>select()</code> the columns we want to keep. (You can ignore the <code>cdi_u</code> and <code>cdi_s</code> columns as they aren’t used in this worksheet.)</li>
-</ol>
+<p>We load the <code>apaTables</code> package.The function to generate a correlation matrix is <code>apa.cor.table()</code>. We pass the <code>attitude</code> data frame as the first argument, and use <code>filename</code> to specify that the output should be saved in the file <code>table1.doc</code>. The <code>table.number</code> argument sets the number in the table heading output, in this case “Table 1”. If you omit this argument, the text will be “Table XX”.</p>
 <p><strong>Explanation of output:</strong></p>
-<p>Our <code>demographics</code> data frame now contains the child’s subject number and their gender.</p>
-<table style="width:44%;">
-<colgroup>
-<col width="9%"></col>
-<col width="12%"></col>
-<col width="11%"></col>
-<col width="11%"></col>
-</colgroup>
-<thead>
-<tr class="header">
-<th align="center">subj</th>
-<th align="center">gender</th>
-<th align="center">cdi_u</th>
-<th align="center">cdi_s</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="center">1</td>
-<td align="center">female</td>
-<td align="center">62</td>
-<td align="center">38</td>
-</tr>
-<tr class="even">
-<td align="center">2</td>
-<td align="center">male</td>
-<td align="center">60</td>
-<td align="center">59</td>
-</tr>
-<tr class="odd">
-<td align="center">3</td>
-<td align="center">female</td>
-<td align="center">97</td>
-<td align="center">85</td>
-</tr>
-</tbody>
-</table>
-<p><a name="noun-tasks"></a></p>
-</div>
-<div id="preprocess-data-for-noun-tasks" class="section level2">
-<h2>Preprocess data for noun tasks</h2>
-<p>Next we’ll extract the data from the experimental tasks into their own data frames. We start with the noun comprehension data.</p>
-<pre class="r"><code># preprocess noun task data
-nc &lt;- data %&gt;%
-  filter(sheet == &#39;Noun Comprehension&#39;) %&gt;%
-  set_names(~ str_to_lower(.)) %&gt;%
-  mutate(cards = factor(cards), subj = factor(seq.int(nrow(.)))) %&gt;%
-  select(subj, cards, mountain:wellyboots)</code></pre>
-<p><strong>Explanation of commands:</strong></p>
-<ol style="list-style-type: decimal">
-<li><code>data %&gt;% filter(sheet == &#39;Noun Comprehension&#39;)</code> selects just the noun comprehension rows.</li>
-<li>Again, we use <code>set_names(~ str_to_lower(.))</code> to convert the column names to lower case.</li>
-<li>We make <code>cards</code> a factor, and create a sequential subject number factor. We’ll use the subject number later to join our data frames together.</li>
-<li>We select <code>subj</code> and <code>cards</code> (which indicates whether the child was tested with the Italian or English cards). We also select the columns containing rating data for the words used in the the noun comprehension task. These start at the column named <code>mountain</code> and end at the column named <code>wellyboots</code>.</li>
-</ol>
-<p>Here are the first few rows of <code>nc</code>:</p>
-<table style="width:100%;">
-<colgroup>
-<col width="3%"></col>
-<col width="5%"></col>
-<col width="5%"></col>
-<col width="6%"></col>
-<col width="5%"></col>
-<col width="3%"></col>
-<col width="4%"></col>
-<col width="3%"></col>
-<col width="3%"></col>
-<col width="3%"></col>
-<col width="3%"></col>
-<col width="4%"></col>
-<col width="3%"></col>
-<col width="4%"></col>
-<col width="4%"></col>
-<col width="5%"></col>
-<col width="5%"></col>
-<col width="5%"></col>
-<col width="4%"></col>
-<col width="3%"></col>
-<col width="3%"></col>
-<col width="6%"></col>
-</colgroup>
-<thead>
-<tr class="header">
-<th align="center">subj</th>
-<th align="center">cards</th>
-<th align="center">mountain</th>
-<th align="center">motorbike</th>
-<th align="center">penguin</th>
-<th align="center">box</th>
-<th align="center">apple</th>
-<th align="center">iron</th>
-<th align="center">cow</th>
-<th align="center">doll</th>
-<th align="center">hat</th>
-<th align="center">watch</th>
-<th align="center">sofa</th>
-<th align="center">clouds</th>
-<th align="center">hammer</th>
-<th align="center">glasses</th>
-<th align="center">elephant</th>
-<th align="center">backyard</th>
-<th align="center">spoon</th>
-<th align="center">bib</th>
-<th align="center">sink</th>
-<th align="center">wellyboots</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="center">1</td>
-<td align="center">english</td>
-<td align="center">D</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">P</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">P</td>
-<td align="center">D</td>
-<td align="center">C</td>
-<td align="center">D</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">P</td>
-<td align="center">C</td>
-<td align="center">P</td>
-<td align="center">P</td>
-<td align="center">C</td>
-</tr>
-<tr class="even">
-<td align="center">2</td>
-<td align="center">italian</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">NR</td>
-<td align="center">C</td>
-<td align="center">D</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-</tr>
-<tr class="odd">
-<td align="center">3</td>
-<td align="center">english</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">NR</td>
-<td align="center">NR</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-<td align="center">C</td>
-</tr>
-</tbody>
-</table>
-<p>If this was a full preprocessing pipeline, we would remove any data which did not meet our inclusion criteria before going further. However, to simplify this worksheet, we skip this step, and calculate an accuracy score for all participants.</p>
-<pre class="r"><code>nc &lt;- nc %&gt;% mutate(correct = rowSums(. == &#39;C&#39; | . == &#39;C*&#39;))
-nc_by_subj &lt;- nc %&gt;%  select(subj, cards, correct)</code></pre>
-<p><strong>Explanation of commands:</strong></p>
-<ol style="list-style-type: decimal">
-<li>We calculate an accuracy score for each subject across all words. <code>nc %&gt;% mutate(correct = rowSums(. == &#39;C&#39; | . == &#39;C*&#39;))</code> creates a new column <code>correct</code> with a value for each row which is the sum of the number of columns containing <code>C</code> or <code>C*</code> (<code>|</code> means ‘or’). Cells containing <code>C</code> indicate that the child responded correctly for the picture on the card for the the word in this column. Cells containing <code>C*</code> indicate that the response was a correct synonym. In this experiment, both of these values are considered correct responses.</li>
-<li>We create a data frame <code>nc_by_subj</code>, containing the subject number, the cards they were tested with and their accuracy score.</li>
-<li>We make <code>cards</code> a factor, and create a sequential subject number factor. We’ll use the subject number later to join our data frames together.</li>
-<li>We select <code>subj</code> and <code>cards</code> (which indicates whether the child was tested with the Italian or English cards). We also select the columns containing rating data for the words used in the the noun comprehension task. These start at the column named <code>mountain</code> and end at the column named <code>wellyboots</code>.</li>
-</ol>
-<table style="width:38%;">
-<colgroup>
-<col width="9%"></col>
-<col width="13%"></col>
-<col width="13%"></col>
-</colgroup>
-<thead>
-<tr class="header">
-<th align="center">subj</th>
-<th align="center">cards</th>
-<th align="center">correct</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="center">1</td>
-<td align="center">english</td>
-<td align="center">12</td>
-</tr>
-<tr class="even">
-<td align="center">2</td>
-<td align="center">italian</td>
-<td align="center">18</td>
-</tr>
-<tr class="odd">
-<td align="center">3</td>
-<td align="center">english</td>
-<td align="center">18</td>
-</tr>
-<tr class="even">
-<td align="center">4</td>
-<td align="center">italian</td>
-<td align="center">17</td>
-</tr>
-<tr class="odd">
-<td align="center">5</td>
-<td align="center">english</td>
-<td align="center">17</td>
-</tr>
-<tr class="even">
-<td align="center">6</td>
-<td align="center">italian</td>
-<td align="center">18</td>
-</tr>
-<tr class="odd">
-<td align="center">7</td>
-<td align="center">english</td>
-<td align="center">17</td>
-</tr>
-<tr class="even">
-<td align="center">8</td>
-<td align="center">italian</td>
-<td align="center">18</td>
-</tr>
-<tr class="odd">
-<td align="center">9</td>
-<td align="center">english</td>
-<td align="center">20</td>
-</tr>
-<tr class="even">
-<td align="center">10</td>
-<td align="center">italian</td>
-<td align="center">7</td>
-</tr>
-<tr class="odd">
-<td align="center">11</td>
-<td align="center">english</td>
-<td align="center">19</td>
-</tr>
-<tr class="even">
-<td align="center">12</td>
-<td align="center">italian</td>
-<td align="center">19</td>
-</tr>
-<tr class="odd">
-<td align="center">13</td>
-<td align="center">english</td>
-<td align="center">19</td>
-</tr>
-<tr class="even">
-<td align="center">14</td>
-<td align="center">italian</td>
-<td align="center">17</td>
-</tr>
-<tr class="odd">
-<td align="center">15</td>
-<td align="center">english</td>
-<td align="center">20</td>
-</tr>
-<tr class="even">
-<td align="center">16</td>
-<td align="center">italian</td>
-<td align="center">17</td>
-</tr>
-<tr class="odd">
-<td align="center">17</td>
-<td align="center">english</td>
-<td align="center">19</td>
-</tr>
-<tr class="even">
-<td align="center">18</td>
-<td align="center">italian</td>
-<td align="center">4</td>
-</tr>
-<tr class="odd">
-<td align="center">19</td>
-<td align="center">italian</td>
-<td align="center">16</td>
-</tr>
-</tbody>
-</table>
-<p>We use similar code to preprocess the noun production data.</p>
-<pre class="r"><code>np &lt;- data %&gt;%
-  filter(sheet == &#39;Noun Production&#39;) %&gt;%
-  set_names(~ str_to_lower(.)) %&gt;%
-  mutate(subj = factor(seq.int(nrow(.)))) %&gt;%
-  select(subj, cards, beach:gloves)
-np &lt;- np %&gt;% mutate(correct = rowSums(. == &#39;C&#39; | . == &#39;C*&#39;))
-np_by_subj &lt;- np %&gt;% select(subj, correct)</code></pre>
-<p><strong>Explanation of commands:</strong></p>
-<ol style="list-style-type: decimal">
-<li><code>data %&gt;% filter(sheet == &#39;Noun Production&#39;)</code> selects just the noun production rows.</li>
-<li>We convert the column names to lower case.</li>
-<li>We create a sequential subject number factor.</li>
-<li>We select <code>subj</code> and the columns containing rating data for the words used in the the noun production task. These start at the column named <code>beach</code> and end at the column named <code>gloves</code>.</li>
-<li>We calculate the accuracy score for the noun production test using the same method as for the noun comprehension test.</li>
-<li>We create a data frame <code>np_by_subj</code>, containing the subject number and their accuracy score.</li>
-</ol>
-<table style="width:24%;">
-<colgroup>
-<col width="9%"></col>
-<col width="13%"></col>
-</colgroup>
-<thead>
-<tr class="header">
-<th align="center">subj</th>
-<th align="center">correct</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="center">1</td>
-<td align="center">4</td>
-</tr>
-<tr class="even">
-<td align="center">2</td>
-<td align="center">12</td>
-</tr>
-<tr class="odd">
-<td align="center">3</td>
-<td align="center">13</td>
-</tr>
-<tr class="even">
-<td align="center">4</td>
-<td align="center">11</td>
-</tr>
-<tr class="odd">
-<td align="center">5</td>
-<td align="center">15</td>
-</tr>
-<tr class="even">
-<td align="center">6</td>
-<td align="center">11</td>
-</tr>
-<tr class="odd">
-<td align="center">7</td>
-<td align="center">10</td>
-</tr>
-<tr class="even">
-<td align="center">8</td>
-<td align="center">14</td>
-</tr>
-<tr class="odd">
-<td align="center">9</td>
-<td align="center">14</td>
-</tr>
-<tr class="even">
-<td align="center">10</td>
-<td align="center">2</td>
-</tr>
-<tr class="odd">
-<td align="center">11</td>
-<td align="center">12</td>
-</tr>
-<tr class="even">
-<td align="center">12</td>
-<td align="center">14</td>
-</tr>
-<tr class="odd">
-<td align="center">13</td>
-<td align="center">10</td>
-</tr>
-<tr class="even">
-<td align="center">14</td>
-<td align="center">11</td>
-</tr>
-<tr class="odd">
-<td align="center">15</td>
-<td align="center">16</td>
-</tr>
-<tr class="even">
-<td align="center">16</td>
-<td align="center">13</td>
-</tr>
-<tr class="odd">
-<td align="center">17</td>
-<td align="center">13</td>
-</tr>
-<tr class="even">
-<td align="center">18</td>
-<td align="center">2</td>
-</tr>
-<tr class="odd">
-<td align="center">19</td>
-<td align="center">11</td>
-</tr>
-</tbody>
-</table>
+<p>Export <code>table1.doc</code> from RStudio and open it using a word processor.</p>
+<p>The first thing to notice is that the styling (spacing, use of italics, horizontal lines, positioning of captions and footnotes etc.) complies with APA guidelines for tables. You can see how the table will look when printed, using the ‘print preview’ feature of your word processor.</p>
+<p>The table number and caption is above the table itself. The <code>Variable</code> column contains a number and the column name for the seven attitude variables. The next two columns show the mean and standard deviation for each variable. The remaining columns use the numbers from items in the <code>Variable</code> column as headings, indicating that they refer to the same variable. The cells show the correlation between the column variables and each of the variables in the rows. Cells are left empty where a variable would otherwise be correlated with itself. The 95% confidence interval for the correlation is shown in square brackets.</p>
+<p>For example, the correlation between <code>rating</code> and <code>complaints</code> in this sample is .83. The confidence interval indicates that the population value could be between .66 and .91. Evidence for the correlation is calculated using traditional statistics, rather than the Bayes factors described in the <a href="corr.html">Relationships, part 2 worksheet</a>. One asterisk (<code>*</code>) indicates that there is less than a 1 in 20 chance that we would have found this correlation coefficient, if the correlation was actually zero (the null hypothesis). Two asterisks (<code>**</code>) signify that the probability of the null being true is less than 1 in 100.</p>
+<p>If you type <code>vignette(&#39;apaTables&#39;)</code> in the console, you can read about the other types of table that <code>apaTables</code> can produce.</p>
 <p><a name="ex1"></a></p>
 </div>
 <div id="exercise-1" class="section level2">
 <h2>Exercise 1</h2>
-<p>Create data frames <code>pc_by_subj</code> containing accuracy scores for the predicate comprehension task, and <code>pp_by_subj</code> containing accuracy scores for predicate production task. Your code will be similar to that used to create <code>np</code>. Predicate comprehension words start in column <code>big</code> and end in column <code>pulling</code>. Predication production words start in column <code>small</code> and end in column <code>pushing</code>.</p>
-<p>When your code is correct, <code>pc</code> should look like this,</p>
-<table style="width:24%;">
+<p>For this exercise, we’ll load some data from a study which measured aspects of participants’ personality.</p>
+<pre class="r"><code># Exercise 1
+library(tidyverse)
+big5 &lt;- read_csv(&#39;case-studies/jon-may/big5_total.csv&#39;)</code></pre>
+<pre><code>Parsed with column specification:
+cols(
+  subj = col_double(),
+  openness = col_double(),
+  conscientiousness = col_double(),
+  extraversion = col_double(),
+  agreeableness = col_double(),
+  neuroticism = col_double()
+)</code></pre>
+<p>The first few rows show that the scale used measured the ‘big 5’ personality factors; openness to experience, conscientiousness, extraversion, agreeableness and neuroticism (OCEAN).</p>
+<table>
 <colgroup>
-<col width="9%"></col>
-<col width="13%"></col>
-</colgroup>
-<thead>
-<tr class="header">
-<th align="center">subj</th>
-<th align="center">correct</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="center">1</td>
-<td align="center">1</td>
-</tr>
-<tr class="even">
-<td align="center">2</td>
-<td align="center">17</td>
-</tr>
-<tr class="odd">
-<td align="center">3</td>
-<td align="center">17</td>
-</tr>
-<tr class="even">
-<td align="center">4</td>
-<td align="center">15</td>
-</tr>
-<tr class="odd">
-<td align="center">5</td>
-<td align="center">15</td>
-</tr>
-<tr class="even">
-<td align="center">6</td>
-<td align="center">15</td>
-</tr>
-<tr class="odd">
-<td align="center">7</td>
-<td align="center">13</td>
-</tr>
-<tr class="even">
-<td align="center">8</td>
-<td align="center">19</td>
-</tr>
-<tr class="odd">
-<td align="center">9</td>
-<td align="center">16</td>
-</tr>
-<tr class="even">
-<td align="center">10</td>
-<td align="center">0</td>
-</tr>
-<tr class="odd">
-<td align="center">11</td>
-<td align="center">14</td>
-</tr>
-<tr class="even">
-<td align="center">12</td>
-<td align="center">16</td>
-</tr>
-<tr class="odd">
-<td align="center">13</td>
-<td align="center">16</td>
-</tr>
-<tr class="even">
-<td align="center">14</td>
-<td align="center">17</td>
-</tr>
-<tr class="odd">
-<td align="center">15</td>
-<td align="center">17</td>
-</tr>
-<tr class="even">
-<td align="center">16</td>
-<td align="center">13</td>
-</tr>
-<tr class="odd">
-<td align="center">17</td>
-<td align="center">13</td>
-</tr>
-<tr class="even">
-<td align="center">18</td>
-<td align="center">0</td>
-</tr>
-<tr class="odd">
-<td align="center">19</td>
-<td align="center">18</td>
-</tr>
-</tbody>
-</table>
-<p>and <code>pp</code> should look like this.</p>
-<table style="width:24%;">
-<colgroup>
-<col width="9%"></col>
-<col width="13%"></col>
-</colgroup>
-<thead>
-<tr class="header">
-<th align="center">subj</th>
-<th align="center">correct</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="center">1</td>
-<td align="center">0</td>
-</tr>
-<tr class="even">
-<td align="center">2</td>
-<td align="center">9</td>
-</tr>
-<tr class="odd">
-<td align="center">3</td>
-<td align="center">9</td>
-</tr>
-<tr class="even">
-<td align="center">4</td>
-<td align="center">12</td>
-</tr>
-<tr class="odd">
-<td align="center">5</td>
-<td align="center">10</td>
-</tr>
-<tr class="even">
-<td align="center">6</td>
-<td align="center">7</td>
-</tr>
-<tr class="odd">
-<td align="center">7</td>
-<td align="center">9</td>
-</tr>
-<tr class="even">
-<td align="center">8</td>
-<td align="center">11</td>
-</tr>
-<tr class="odd">
-<td align="center">9</td>
-<td align="center">9</td>
-</tr>
-<tr class="even">
-<td align="center">10</td>
-<td align="center">0</td>
-</tr>
-<tr class="odd">
-<td align="center">11</td>
-<td align="center">8</td>
-</tr>
-<tr class="even">
-<td align="center">12</td>
-<td align="center">6</td>
-</tr>
-<tr class="odd">
-<td align="center">13</td>
-<td align="center">7</td>
-</tr>
-<tr class="even">
-<td align="center">14</td>
-<td align="center">5</td>
-</tr>
-<tr class="odd">
-<td align="center">15</td>
-<td align="center">10</td>
-</tr>
-<tr class="even">
-<td align="center">16</td>
-<td align="center">5</td>
-</tr>
-<tr class="odd">
-<td align="center">17</td>
-<td align="center">8</td>
-</tr>
-<tr class="even">
-<td align="center">18</td>
-<td align="center">0</td>
-</tr>
-<tr class="odd">
-<td align="center">19</td>
-<td align="center">10</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Copy the R code you used for this exercise into PsycEL.</strong></p>
-<p><a name="join"></a></p>
-</div>
-<div id="joining-data-frames" class="section level2">
-<h2>Joining data frames</h2>
-<p>Having preprocessed the demographics and test data, we now join these data frames together in preparation for calculating our descriptive statistics.</p>
-<pre class="r"><code># join data
-task_by_subj &lt;- full_join(demographics, nc_by_subj, by=&#39;subj&#39;) %&gt;%
-  full_join(., np_by_subj, by=&#39;subj&#39;, suffix = c(&#39;_nc&#39;,&#39;_np&#39;))</code></pre>
-<p><strong>Explanation of commands:</strong></p>
-<ol style="list-style-type: decimal">
-<li><code>full_join(demographics, nc_by_subj, by=&#39;subj&#39;)</code> combines columns from the <code>demographics</code> and <code>nc_by_subj</code> data frames where the value of the <code>subj</code> column matches.</li>
-<li>We join this data frame with <code>np_by_subj</code> where the value in <code>subj</code> matches. Because the both of these data frames have a column named <code>correct</code>, we use <code>suffix = c(&#39;_nc&#39;,&#39;_np&#39;)</code> to create distinct names for these columns. This adds the suffix <code>_nc</code> to duplicated columns in the first argument, and <code>_np</code> to duplicated columns in the second argument.</li>
-</ol>
-<p><strong>Explanation of output:</strong></p>
-<p>The result is that the accuracy scores for noun comprehension are in <code>correct_nc</code>, and the accuracy scores for noun production are in <code>correct_np</code>.</p>
-<table style="width:94%;">
-<colgroup>
-<col width="9%"></col>
+<col width="8%"></col>
 <col width="12%"></col>
-<col width="11%"></col>
-<col width="11%"></col>
-<col width="13%"></col>
+<col width="23%"></col>
+<col width="17%"></col>
 <col width="18%"></col>
 <col width="18%"></col>
 </colgroup>
 <thead>
 <tr class="header">
 <th align="center">subj</th>
-<th align="center">gender</th>
-<th align="center">cdi_u</th>
-<th align="center">cdi_s</th>
-<th align="center">cards</th>
-<th align="center">correct_nc</th>
-<th align="center">correct_np</th>
+<th align="center">openness</th>
+<th align="center">conscientiousness</th>
+<th align="center">extraversion</th>
+<th align="center">agreeableness</th>
+<th align="center">neuroticism</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td align="center">1</td>
-<td align="center">female</td>
-<td align="center">62</td>
-<td align="center">38</td>
-<td align="center">english</td>
-<td align="center">12</td>
-<td align="center">4</td>
-</tr>
-<tr class="even">
-<td align="center">2</td>
-<td align="center">male</td>
-<td align="center">60</td>
-<td align="center">59</td>
-<td align="center">italian</td>
-<td align="center">18</td>
-<td align="center">12</td>
-</tr>
-<tr class="odd">
-<td align="center">3</td>
-<td align="center">female</td>
-<td align="center">97</td>
-<td align="center">85</td>
-<td align="center">english</td>
-<td align="center">18</td>
-<td align="center">13</td>
-</tr>
-<tr class="even">
-<td align="center">4</td>
-<td align="center">male</td>
-<td align="center">82</td>
-<td align="center">45</td>
-<td align="center">italian</td>
-<td align="center">17</td>
-<td align="center">11</td>
-</tr>
-<tr class="odd">
-<td align="center">5</td>
-<td align="center">female</td>
-<td align="center">66</td>
-<td align="center">66</td>
-<td align="center">english</td>
-<td align="center">17</td>
-<td align="center">15</td>
-</tr>
-<tr class="even">
-<td align="center">6</td>
-<td align="center">male</td>
-<td align="center">47</td>
-<td align="center">32</td>
-<td align="center">italian</td>
-<td align="center">18</td>
-<td align="center">11</td>
-</tr>
-<tr class="odd">
-<td align="center">7</td>
-<td align="center">male</td>
-<td align="center">39</td>
-<td align="center">27</td>
-<td align="center">english</td>
-<td align="center">17</td>
-<td align="center">10</td>
-</tr>
-<tr class="even">
-<td align="center">8</td>
-<td align="center">female</td>
-<td align="center">35</td>
-<td align="center">31</td>
-<td align="center">italian</td>
-<td align="center">18</td>
-<td align="center">14</td>
-</tr>
-<tr class="odd">
-<td align="center">9</td>
-<td align="center">male</td>
-<td align="center">22</td>
-<td align="center">39</td>
-<td align="center">english</td>
-<td align="center">20</td>
-<td align="center">14</td>
-</tr>
-<tr class="even">
-<td align="center">10</td>
-<td align="center">male</td>
-<td align="center">34</td>
-<td align="center">10</td>
-<td align="center">italian</td>
-<td align="center">7</td>
-<td align="center">2</td>
-</tr>
-<tr class="odd">
-<td align="center">11</td>
-<td align="center">female</td>
-<td align="center">49</td>
+<td align="center">29</td>
 <td align="center">28</td>
-<td align="center">english</td>
-<td align="center">19</td>
-<td align="center">12</td>
-</tr>
-<tr class="even">
-<td align="center">12</td>
-<td align="center">female</td>
-<td align="center">98</td>
-<td align="center">85</td>
-<td align="center">italian</td>
-<td align="center">19</td>
 <td align="center">14</td>
-</tr>
-<tr class="odd">
-<td align="center">13</td>
-<td align="center">female</td>
-<td align="center">50</td>
 <td align="center">36</td>
-<td align="center">english</td>
-<td align="center">19</td>
-<td align="center">10</td>
-</tr>
-<tr class="even">
-<td align="center">14</td>
-<td align="center">female</td>
-<td align="center">62</td>
-<td align="center">56</td>
-<td align="center">italian</td>
-<td align="center">17</td>
-<td align="center">11</td>
-</tr>
-<tr class="odd">
-<td align="center">15</td>
-<td align="center">female</td>
-<td align="center">81</td>
-<td align="center">60</td>
-<td align="center">english</td>
 <td align="center">20</td>
-<td align="center">16</td>
 </tr>
 <tr class="even">
-<td align="center">16</td>
-<td align="center">male</td>
-<td align="center">83</td>
-<td align="center">59</td>
-<td align="center">italian</td>
-<td align="center">17</td>
-<td align="center">13</td>
-</tr>
-<tr class="odd">
-<td align="center">17</td>
-<td align="center">female</td>
-<td align="center">87</td>
-<td align="center">88</td>
-<td align="center">english</td>
-<td align="center">19</td>
-<td align="center">13</td>
-</tr>
-<tr class="even">
-<td align="center">18</td>
-<td align="center">female</td>
-<td align="center">49</td>
-<td align="center">19</td>
-<td align="center">italian</td>
-<td align="center">4</td>
 <td align="center">2</td>
+<td align="center">22</td>
+<td align="center">22</td>
+<td align="center">28</td>
+<td align="center">28</td>
+<td align="center">26</td>
 </tr>
 <tr class="odd">
-<td align="center">19</td>
-<td align="center">female</td>
-<td align="center">63</td>
-<td align="center">63</td>
-<td align="center">italian</td>
-<td align="center">16</td>
-<td align="center">11</td>
+<td align="center">3</td>
+<td align="center">33</td>
+<td align="center">33</td>
+<td align="center">21</td>
+<td align="center">37</td>
+<td align="center">25</td>
+</tr>
+<tr class="even">
+<td align="center">4</td>
+<td align="center">17</td>
+<td align="center">34</td>
+<td align="center">14</td>
+<td align="center">39</td>
+<td align="center">13</td>
+</tr>
+<tr class="odd">
+<td align="center">5</td>
+<td align="center">27</td>
+<td align="center">27</td>
+<td align="center">30</td>
+<td align="center">40</td>
+<td align="center">25</td>
 </tr>
 </tbody>
 </table>
-<p>Now we join the predicate data frames.</p>
-<pre class="r"><code>task_by_subj &lt;- task_by_subj %&gt;%
-  full_join(., pc_by_subj, by=&#39;subj&#39;) %&gt;%
-  full_join(., pp_by_subj, by=&#39;subj&#39;, suffix = c(&#39;_pc&#39;, &#39;_pp&#39;)) %&gt;%
-  mutate(nc = correct_nc, np = correct_np, pc = correct_pc, pp = correct_pp) %&gt;%
-  select(subj, gender, cards, nc, np, pc, pp, cdi_u, cdi_s)</code></pre>
+<p>Create a correlation matrix for the five personality factors. Number the table as “Table 2”, and save the results in <code>table2.doc</code>. Your table should look like this:</p>
+<pre><code>
+
+Table 2 
+
+Means, standard deviations, and correlations with confidence intervals
+ 
+
+  Variable             M     SD   1           2           3           4          
+  1. openness          23.15 6.78                                                
+                                                                                 
+  2. conscientiousness 25.10 7.23 .15                                            
+                                  [-.14, .42]                                    
+                                                                                 
+  3. extraversion      21.50 7.86 .27         -.01                               
+                                  [-.02, .51] [-.29, .28]                        
+                                                                                 
+  4. agreeableness     33.54 4.55 .27         .20         .43**                  
+                                  [-.01, .52] [-.09, .46] [.17, .64]             
+                                                                                 
+  5. neuroticism       16.00 7.41 .34*        .28         .13         .07        
+                                  [.06, .57]  [-.00, .52] [-.16, .40] [-.22, .34]
+                                                                                 
+
+Note. M and SD are used to represent mean and standard deviation, respectively.
+Values in square brackets indicate the 95% confidence interval.
+The confidence interval is a plausible range of population correlations 
+that could have caused the sample correlation (Cumming, 2014).
+* indicates p &lt; .05. ** indicates p &lt; .01.
+ </code></pre>
+<p><strong>Copy the R code you used for this exercise into PsycEL</strong></p>
+<p><a name="descriptives"></a></p>
+</div>
+<div id="creating-a-custom-table-of-descriptive-statistics" class="section level2">
+<h2>Creating a custom table of descriptive statistics</h2>
+<p>As with graphs, there is often an element of design involved in presenting tabular data in a format most useful for your reader. Packages like <code>apaTables</code> are useful for producing APA tables where there is a standard way to present data. However, you often need a table which is customised to present your data in the most useful format. The cost of custom tables is that the content requires a little more preprocessing, and styling the table according to APA standards will require some hand-formatting in your wordprocessor.</p>
+<p>We’ll demonstrate this process by producing a table of descriptive statistics. The data we’ll use comes from an experiment which evaluated children’s language development using the Words in Game (WinG) test. WinG consists of a set of picture cards which are used in four tests: noun comprehension, noun production, predicate comprehension, and predicate production. The Italian and English versions of the WinG cards use different pictures to depict the associated words. The experiment tested whether English-speaking children aged approximately 30 months, produce similar responses for the two sets of cards. We would like to produce a single table, containing descriptive statistics for all four tests.</p>
+<p>We start by loading the data:</p>
+<pre class="r"><code># Table of descriptive statistics
+wing_preproc &lt;- read_csv(&#39;going-further/picture-naming-preproc.csv&#39;,
+                         col_types = &#39;fffiiiiiiiiii&#39;)</code></pre>
 <p><strong>Explanation of commands:</strong></p>
-<ol style="list-style-type: decimal">
-<li>Lines 1 and 2 are analagous to the joining of the noun data. We use the suffixes <code>_pc</code> for predicate comprehension and <code>_pp</code> for predicate production.</li>
-<li>Now we have the accuracy scores in distinct columns.</li>
-<li>We rename them by using <code>mutate()</code> to make copies without the <code>correct_</code> prefix, then using <code>select()</code> to reorder the resulting columns. The final data frame is assigned to the resulting data frame to <code>task_by_subj</code>.</li>
-</ol>
-<p><strong>Explanation of output:</strong></p>
-<p>Our fully preprocessed data in <code>task_by_subj</code> now looks like this:</p>
-<table style="width:86%;">
+<p>This dataset has already undergone some preprocessing. We read the data, using <code>col_types</code> to explicitly define the types of data in each column. We set the first three columns as factors (the <code>fff</code>), and the remaining columns as integers (the <code>i</code>s).</p>
+<p>The first few rows of <code>wing_preproc</code> look like this:</p>
+<table>
 <colgroup>
-<col width="9%"></col>
-<col width="12%"></col>
-<col width="13%"></col>
 <col width="6%"></col>
-<col width="6%"></col>
-<col width="6%"></col>
-<col width="6%"></col>
+<col width="7%"></col>
+<col width="8%"></col>
+<col width="4%"></col>
+<col width="4%"></col>
+<col width="4%"></col>
+<col width="4%"></col>
+<col width="7%"></col>
+<col width="7%"></col>
+<col width="11%"></col>
+<col width="11%"></col>
 <col width="11%"></col>
 <col width="11%"></col>
 </colgroup>
@@ -2581,6 +677,10 @@ task_by_subj &lt;- full_join(demographics, nc_by_subj, by=&#39;subj&#39;) %&gt;%
 <th align="center">pp</th>
 <th align="center">cdi_u</th>
 <th align="center">cdi_s</th>
+<th align="center">related_nc</th>
+<th align="center">related_np</th>
+<th align="center">related_pc</th>
+<th align="center">related_pp</th>
 </tr>
 </thead>
 <tbody>
@@ -2590,10 +690,14 @@ task_by_subj &lt;- full_join(demographics, nc_by_subj, by=&#39;subj&#39;) %&gt;%
 <td align="center">english</td>
 <td align="center">12</td>
 <td align="center">4</td>
-<td align="center">1</td>
-<td align="center">0</td>
+<td align="center">NA</td>
+<td align="center">NA</td>
 <td align="center">62</td>
 <td align="center">38</td>
+<td align="center">0</td>
+<td align="center">5</td>
+<td align="center">NA</td>
+<td align="center">NA</td>
 </tr>
 <tr class="even">
 <td align="center">2</td>
@@ -2605,6 +709,10 @@ task_by_subj &lt;- full_join(demographics, nc_by_subj, by=&#39;subj&#39;) %&gt;%
 <td align="center">9</td>
 <td align="center">60</td>
 <td align="center">59</td>
+<td align="center">0</td>
+<td align="center">2</td>
+<td align="center">0</td>
+<td align="center">3</td>
 </tr>
 <tr class="odd">
 <td align="center">3</td>
@@ -2616,6 +724,10 @@ task_by_subj &lt;- full_join(demographics, nc_by_subj, by=&#39;subj&#39;) %&gt;%
 <td align="center">9</td>
 <td align="center">97</td>
 <td align="center">85</td>
+<td align="center">0</td>
+<td align="center">3</td>
+<td align="center">0</td>
+<td align="center">0</td>
 </tr>
 <tr class="even">
 <td align="center">4</td>
@@ -2627,6 +739,10 @@ task_by_subj &lt;- full_join(demographics, nc_by_subj, by=&#39;subj&#39;) %&gt;%
 <td align="center">12</td>
 <td align="center">82</td>
 <td align="center">45</td>
+<td align="center">0</td>
+<td align="center">4</td>
+<td align="center">0</td>
+<td align="center">2</td>
 </tr>
 <tr class="odd">
 <td align="center">5</td>
@@ -2638,6 +754,10 @@ task_by_subj &lt;- full_join(demographics, nc_by_subj, by=&#39;subj&#39;) %&gt;%
 <td align="center">10</td>
 <td align="center">66</td>
 <td align="center">66</td>
+<td align="center">0</td>
+<td align="center">2</td>
+<td align="center">0</td>
+<td align="center">0</td>
 </tr>
 <tr class="even">
 <td align="center">6</td>
@@ -2649,159 +769,16 @@ task_by_subj &lt;- full_join(demographics, nc_by_subj, by=&#39;subj&#39;) %&gt;%
 <td align="center">7</td>
 <td align="center">47</td>
 <td align="center">32</td>
-</tr>
-<tr class="odd">
-<td align="center">7</td>
-<td align="center">male</td>
-<td align="center">english</td>
-<td align="center">17</td>
-<td align="center">10</td>
-<td align="center">13</td>
-<td align="center">9</td>
-<td align="center">39</td>
-<td align="center">27</td>
-</tr>
-<tr class="even">
-<td align="center">8</td>
-<td align="center">female</td>
-<td align="center">italian</td>
-<td align="center">18</td>
-<td align="center">14</td>
-<td align="center">19</td>
-<td align="center">11</td>
-<td align="center">35</td>
-<td align="center">31</td>
-</tr>
-<tr class="odd">
-<td align="center">9</td>
-<td align="center">male</td>
-<td align="center">english</td>
-<td align="center">20</td>
-<td align="center">14</td>
-<td align="center">16</td>
-<td align="center">9</td>
-<td align="center">22</td>
-<td align="center">39</td>
-</tr>
-<tr class="even">
-<td align="center">10</td>
-<td align="center">male</td>
-<td align="center">italian</td>
-<td align="center">7</td>
+<td align="center">0</td>
 <td align="center">2</td>
 <td align="center">0</td>
-<td align="center">0</td>
-<td align="center">34</td>
-<td align="center">10</td>
-</tr>
-<tr class="odd">
-<td align="center">11</td>
-<td align="center">female</td>
-<td align="center">english</td>
-<td align="center">19</td>
-<td align="center">12</td>
-<td align="center">14</td>
-<td align="center">8</td>
-<td align="center">49</td>
-<td align="center">28</td>
-</tr>
-<tr class="even">
-<td align="center">12</td>
-<td align="center">female</td>
-<td align="center">italian</td>
-<td align="center">19</td>
-<td align="center">14</td>
-<td align="center">16</td>
-<td align="center">6</td>
-<td align="center">98</td>
-<td align="center">85</td>
-</tr>
-<tr class="odd">
-<td align="center">13</td>
-<td align="center">female</td>
-<td align="center">english</td>
-<td align="center">19</td>
-<td align="center">10</td>
-<td align="center">16</td>
-<td align="center">7</td>
-<td align="center">50</td>
-<td align="center">36</td>
-</tr>
-<tr class="even">
-<td align="center">14</td>
-<td align="center">female</td>
-<td align="center">italian</td>
-<td align="center">17</td>
-<td align="center">11</td>
-<td align="center">17</td>
-<td align="center">5</td>
-<td align="center">62</td>
-<td align="center">56</td>
-</tr>
-<tr class="odd">
-<td align="center">15</td>
-<td align="center">female</td>
-<td align="center">english</td>
-<td align="center">20</td>
-<td align="center">16</td>
-<td align="center">17</td>
-<td align="center">10</td>
-<td align="center">81</td>
-<td align="center">60</td>
-</tr>
-<tr class="even">
-<td align="center">16</td>
-<td align="center">male</td>
-<td align="center">italian</td>
-<td align="center">17</td>
-<td align="center">13</td>
-<td align="center">13</td>
-<td align="center">5</td>
-<td align="center">83</td>
-<td align="center">59</td>
-</tr>
-<tr class="odd">
-<td align="center">17</td>
-<td align="center">female</td>
-<td align="center">english</td>
-<td align="center">19</td>
-<td align="center">13</td>
-<td align="center">13</td>
-<td align="center">8</td>
-<td align="center">87</td>
-<td align="center">88</td>
-</tr>
-<tr class="even">
-<td align="center">18</td>
-<td align="center">female</td>
-<td align="center">italian</td>
-<td align="center">4</td>
-<td align="center">2</td>
-<td align="center">0</td>
-<td align="center">0</td>
-<td align="center">49</td>
-<td align="center">19</td>
-</tr>
-<tr class="odd">
-<td align="center">19</td>
-<td align="center">female</td>
-<td align="center">italian</td>
-<td align="center">16</td>
-<td align="center">11</td>
-<td align="center">18</td>
-<td align="center">10</td>
-<td align="center">63</td>
-<td align="center">63</td>
+<td align="center">1</td>
 </tr>
 </tbody>
 </table>
-<p><a name="descriptives"></a></p>
-</div>
-<div id="creating-a-table-of-descriptive-statistics" class="section level2">
-<h2>Creating a table of descriptive statistics</h2>
-<p>Our test scores are currently in wide format, but we need them in long format so we can calcluate our summary statistics.</p>
-<pre class="r"><code># create a table of descriptive statistics
-task_by_subj &lt;- task_by_subj %&gt;%
+<p>Our test scores are currently in wide format, but we need them in long format so we can calcluate summary statistics.</p>
+<pre class="r"><code># wide to long
+task_by_subj &lt;- wing_preproc %&gt;%
   pivot_longer(cols = c(nc, np, pc, pp),
                names_to = &#39;task&#39;,
                values_to = &#39;correct&#39;) %&gt;%
@@ -2846,14 +823,14 @@ task_by_subj &lt;- task_by_subj %&gt;%
 <td align="center">female</td>
 <td align="center">english</td>
 <td align="center">pc</td>
-<td align="center">1</td>
+<td align="center">NA</td>
 </tr>
 <tr class="even">
 <td align="center">1</td>
 <td align="center">female</td>
 <td align="center">english</td>
 <td align="center">pp</td>
-<td align="center">0</td>
+<td align="center">NA</td>
 </tr>
 <tr class="odd">
 <td align="center">2</td>
@@ -2864,18 +841,19 @@ task_by_subj &lt;- task_by_subj %&gt;%
 </tr>
 </tbody>
 </table>
-<p>Next we calculate some summary statistics:</p>
+<p>Now we can calculate some summary statistics:</p>
 <pre class="r"><code>descriptives &lt;- task_by_subj %&gt;%
   group_by(task, gender) %&gt;%
-  summarise(mean = mean(correct), sd = sd(correct)) %&gt;%
-  ungroup() %&gt;%
-  mutate_if(is.numeric, round, 2)</code></pre>
+  summarise(mean = mean(correct, na.rm = TRUE), sd = sd(correct, na.rm = TRUE)) %&gt;%
+  mutate(across(where(is.numeric), ~ sprintf(&quot;%.2f&quot;, round(.x, 2))))</code></pre>
 <pre><code>`summarise()` regrouping output by &#39;task&#39; (override with `.groups` argument)</code></pre>
 <p><strong>Explanation of commands:</strong></p>
 <ol style="list-style-type: decimal">
-<li>We group <code>task_by_subject</code> by gender within task and use <code>summarise</code> to calculate a mean and standard deviation for each group.</li>
-<li>After removing the grouping, we use <code>mutate_if()</code> to round all of the numeric columns to 2 decimal places. The first argument to <code>mutate_if()</code> uses <code>is.numeric</code> to only select numeric columns. The second argument is a function to apply to these columns, in this case <code>round()</code>. The final argument <code>2</code> is passed to <code>round()</code>, specifying the number of decimal places.</li>
+<li>We group <code>task_by_subject</code> by gender within task and use <code>summarise</code> to calculate a mean and standard deviation for each group. We need to include <code>na.rm = TRUE</code> as we have some cells containing <code>NA</code> for children who didn’t complete a particular test.</li>
+<li>The final line formats the numbers in the data frame. We’ll explain the command in steps. You already know that <code>mutate()</code> changes data in a data frame. Here we use <code>across()</code>, to apply a function to a subset of columns. We specify that we want to apply the function to just the numeric columns with <code>where(is.numeric)</code>. The second argument to <code>across()</code> is the function used to modify the column values. In this case, <code>round(.x, 2)</code>, means round the column values (<code>.x</code>) to 2 decimal places. Finally we ensure that all numbers have 2 digits after the decimal point. The <code>&quot;%.2f&quot;</code> argument tells <code>sprintf()</code> to ensure all numbers have 2 digits after the decimal point, adding 0s where necessary. The second argument is the result of <code>round()</code>.</li>
 </ol>
+<p>Formatting the numbers in this way makes it easy to put the digits in the correct position relative to the decimal point when laying out your table, by selecting the numeric columns and using “align right” in your word processor.</p>
+<p>Our data now looks like this:</p>
 <table style="width:44%;">
 <colgroup>
 <col width="9%"></col>
@@ -2894,123 +872,128 @@ task_by_subj &lt;- task_by_subj %&gt;%
 <tbody>
 <tr class="odd">
 <td align="center">nc</td>
+<td align="center">female</td>
+<td align="center">17.64</td>
+<td align="center">2.20</td>
+</tr>
+<tr class="even">
+<td align="center">nc</td>
 <td align="center">male</td>
 <td align="center">16.29</td>
 <td align="center">4.23</td>
 </tr>
-<tr class="even">
-<td align="center">nc</td>
-<td align="center">female</td>
-<td align="center">16.5</td>
-<td align="center">4.46</td>
-</tr>
 <tr class="odd">
+<td align="center">np</td>
+<td align="center">female</td>
+<td align="center">12.09</td>
+<td align="center">3.24</td>
+</tr>
+<tr class="even">
 <td align="center">np</td>
 <td align="center">male</td>
 <td align="center">10.43</td>
 <td align="center">3.95</td>
 </tr>
-<tr class="even">
-<td align="center">np</td>
-<td align="center">female</td>
-<td align="center">11.25</td>
-<td align="center">4.25</td>
-</tr>
 <tr class="odd">
 <td align="center">pc</td>
-<td align="center">male</td>
-<td align="center">12.71</td>
-<td align="center">5.79</td>
+<td align="center">female</td>
+<td align="center">16.20</td>
+<td align="center">1.81</td>
 </tr>
 <tr class="even">
 <td align="center">pc</td>
-<td align="center">female</td>
-<td align="center">13.58</td>
-<td align="center">6.33</td>
+<td align="center">male</td>
+<td align="center">14.83</td>
+<td align="center">1.60</td>
 </tr>
 <tr class="odd">
 <td align="center">pp</td>
-<td align="center">male</td>
-<td align="center">7.29</td>
-<td align="center">3.86</td>
+<td align="center">female</td>
+<td align="center">8.40</td>
+<td align="center">1.96</td>
 </tr>
 <tr class="even">
 <td align="center">pp</td>
-<td align="center">female</td>
-<td align="center">7</td>
-<td align="center">3.72</td>
+<td align="center">male</td>
+<td align="center">8.50</td>
+<td align="center">2.35</td>
 </tr>
 </tbody>
 </table>
-<p>We do some final reformatting in prepration for producing our table:</p>
+<p>We’ll do a little more formatting in prepration for producing the table:</p>
 <pre class="r"><code>descriptives_table &lt;- descriptives %&gt;%
-  pivot_wider(names_from = gender, values_from = c(mean, sd))</code></pre>
+  pivot_wider(names_from = gender, values_from = c(mean, sd)) %&gt;%
+  mutate(task = factor(task))</code></pre>
 <p><strong>Explanation of commands:</strong></p>
 <ol style="list-style-type: decimal">
 <li>We <code>pivot_wider()</code> so that rows contain the test codes, and columns contain the mean and standard deviation by gender.</li>
+<li>We make <code>task</code> a factor.</li>
 </ol>
-<table style="width:76%;">
+<table style="width:79%;">
 <colgroup>
 <col width="9%"></col>
-<col width="16%"></col>
 <col width="19%"></col>
-<col width="13%"></col>
+<col width="16%"></col>
+<col width="16%"></col>
 <col width="16%"></col>
 </colgroup>
 <thead>
 <tr class="header">
 <th align="center">task</th>
-<th align="center">mean_male</th>
 <th align="center">mean_female</th>
-<th align="center">sd_male</th>
+<th align="center">mean_male</th>
 <th align="center">sd_female</th>
+<th align="center">sd_male</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td align="center">nc</td>
+<td align="center">17.64</td>
 <td align="center">16.29</td>
-<td align="center">16.5</td>
+<td align="center">2.20</td>
 <td align="center">4.23</td>
-<td align="center">4.46</td>
 </tr>
 <tr class="even">
 <td align="center">np</td>
+<td align="center">12.09</td>
 <td align="center">10.43</td>
-<td align="center">11.25</td>
+<td align="center">3.24</td>
 <td align="center">3.95</td>
-<td align="center">4.25</td>
 </tr>
 <tr class="odd">
 <td align="center">pc</td>
-<td align="center">12.71</td>
-<td align="center">13.58</td>
-<td align="center">5.79</td>
-<td align="center">6.33</td>
+<td align="center">16.20</td>
+<td align="center">14.83</td>
+<td align="center">1.81</td>
+<td align="center">1.60</td>
 </tr>
 <tr class="even">
 <td align="center">pp</td>
-<td align="center">7.29</td>
-<td align="center">7</td>
-<td align="center">3.86</td>
-<td align="center">3.72</td>
+<td align="center">8.40</td>
+<td align="center">8.50</td>
+<td align="center">1.96</td>
+<td align="center">2.35</td>
 </tr>
 </tbody>
 </table>
-<p>Finally we give make column names and values more meaningful for our readers.</p>
+<p>Finally we make the column names and values more meaningful for our readers:</p>
 <pre class="r"><code>descriptives_table &lt;- descriptives_table %&gt;%
   unite(&quot;male&quot;, c(&#39;mean_male&#39;,&#39;sd_male&#39;), sep=&#39; (&#39;) %&gt;%
   unite(&quot;female&quot;, c(&#39;mean_female&#39;,&#39;sd_female&#39;), sep=&#39; (&#39;) %&gt;%
-  mutate(male = paste0(male, &#39;)&#39;), female = paste0(female, &#39;)&#39;), task = factor(task),
-         task = recode_factor(.$task, nc = &#39;Noun Comprehension&#39;, np = &#39;Noun Production&#39;,
-                                  pc = &#39;Predicate Comprehension&#39;, pp = &#39;Predicate Production&#39;))</code></pre>
+  mutate(male = paste0(male, &#39;)&#39;), female = paste0(female, &#39;)&#39;))
+descriptives_table$task = recode_factor(descriptives_table$task,
+                                        nc = &#39;Noun Comprehension&#39;,
+                                        np = &#39;Noun Production&#39;,
+                                        pc = &#39;Predicate Comprehension&#39;,
+                                        pp = &#39;Predicate Production&#39;)</code></pre>
 <ol style="list-style-type: decimal">
 <li><code>unite(&quot;male&quot;, c(&#39;mean_male&#39;,&#39;sd_male&#39;), sep=&#39; (&#39;)</code> converts the <code>mean_male</code> and <code>sd_male</code> column values to a column <code>male</code> separated by <code>(</code>.</li>
 <li>We do the same for the <code>mean_female</code> and <code>sd_female</code> columns.</li>
 <li><code>mutate(male = paste0(male, &#39;)&#39;), female = paste0(female, &#39;)&#39;), task = factor(task))</code> adds the trailing <code>)</code> to the <code>male</code> and <code>female</code> columns and converts <code>task</code> to a factor.</li>
 <li>We recode <code>task</code> factor levels to more meaningful strings.</li>
 </ol>
-<p>We’re now ready to print our table. There are numerous <code>R</code> packages for presenting data as tables. We’ve chosen to the <code>kableExtra</code> package, as it’s capable of producing almost any table you might need in your reports. The tables produced by kableExtra are in <a href="https://haozhu233.github.io/kableExtra/awesome_table_in_html.html">HTML format</a>, which means you can simply copy-paste these into Microsoft Word or LibreOffice Writer.</p>
+<p>We’re now ready to print our table. There are numerous <code>R</code> packages for presenting data as tables. We’ve chosen to the <code>kableExtra</code> package, as it’s capable of producing almost any table you might need in your reports. The tables produced by kableExtra are in <a href="https://haozhu233.github.io/kableExtra/awesome_table_in_html.html">HTML format</a>, which means you can simply copy-paste them into Microsoft Word or LibreOffice Writer.</p>
 <pre class="r"><code>library(kableExtra)</code></pre>
 <pre><code>
 Attaching package: &#39;kableExtra&#39;</code></pre>
@@ -3018,7 +1001,7 @@ Attaching package: &#39;kableExtra&#39;</code></pre>
 
     group_rows</code></pre>
 <pre class="r"><code>descriptives_table %&gt;% kable(
-  col.names = c(&#39;Task&#39;, &#39;Male&#39;, &#39;Female&#39;)) %&gt;%
+  col.names = c(&#39;Task&#39;, &#39;Male&#39;, &#39;Female&#39;), booktabs = TRUE) %&gt;%
   kable_styling()</code></pre>
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <thead>
@@ -3040,10 +1023,10 @@ Female
 Noun Comprehension
 </td>
 <td style="text-align:left;">
-16.29 (4.23)
+17.64 (2.20)
 </td>
 <td style="text-align:left;">
-16.5 (4.46)
+16.29 (4.23)
 </td>
 </tr>
 <tr>
@@ -3051,10 +1034,10 @@ Noun Comprehension
 Noun Production
 </td>
 <td style="text-align:left;">
-10.43 (3.95)
+12.09 (3.24)
 </td>
 <td style="text-align:left;">
-11.25 (4.25)
+10.43 (3.95)
 </td>
 </tr>
 <tr>
@@ -3062,10 +1045,10 @@ Noun Production
 Predicate Comprehension
 </td>
 <td style="text-align:left;">
-12.71 (5.79)
+16.20 (1.81)
 </td>
 <td style="text-align:left;">
-13.58 (6.33)
+14.83 (1.60)
 </td>
 </tr>
 <tr>
@@ -3073,10 +1056,10 @@ Predicate Comprehension
 Predicate Production
 </td>
 <td style="text-align:left;">
-7.29 (3.86)
+8.40 (1.96)
 </td>
 <td style="text-align:left;">
-7 (3.72)
+8.50 (2.35)
 </td>
 </tr>
 </tbody>
@@ -3086,946 +1069,80 @@ Predicate Production
 <li><code>library(kableExtra)</code> loads the package containing the <code>kable()</code> function.</li>
 <li>We pipe our data into <code>kable()</code> using <code>col.names</code> to create neater column headings, and <code>kable_styling()</code> to produce a tidy HTML table.</li>
 </ol>
-<p>Note that you need to run the command to generate the table using <code>Ctrl+Enter</code> (<code>Cmd+Enter</code> on a Mac) for the output to appear in the <strong>Viewer</strong> pane. Try copying the table into your word processor now. Select the table in the <strong>Viewer</strong> pane, then right-click and select <code>Copy</code>. Open your word processor and select paste in the table.</p>
-<p><a name="t-tests"></a></p>
-</div>
-<div id="creating-a-table-of-t-tests" class="section level2">
-<h2>Creating a table of t-tests</h2>
-<p>Where a number of related t-tests need to be reported, these are often easiest to read as a table. The picture cards used to test each child in this experiment were either from the Italian or the English version of WinG. We’ll produce a table of t-tests comparing accuracy for each word in the noun comprehension task between the cards used in the Italian and English tasks.</p>
-<pre class="r"><code># create a table of t-tests for noun comprehension
-nc_long &lt;- nc %&gt;%
-  select(-correct) %&gt;%
-  pivot_longer(cols=(mountain:wellyboots),
-               names_to = &#39;word&#39;,
-               values_to = &#39;answer&#39;)</code></pre>
-<p><strong>Explanation of commands:</strong></p>
-<ol style="list-style-type: decimal">
-<li>Starting with our noun comprehension data <code>nc</code>, we remove the column containing the numer of <code>correct</code> answers for each subject that we generated previously.</li>
-<li>We <code>pivot_longer()</code>, moving the noun column names into the column <code>word</code>, and the vaules to the column <code>answer</code>.</li>
-</ol>
-<p><strong>Explanation of output:</strong></p>
-<p>The resulting data for subject 1 looks like this:</p>
-<table style="width:54%;">
-<colgroup>
-<col width="9%"></col>
-<col width="13%"></col>
-<col width="18%"></col>
-<col width="12%"></col>
-</colgroup>
-<thead>
-<tr class="header">
-<th align="center">subj</th>
-<th align="center">cards</th>
-<th align="center">word</th>
-<th align="center">answer</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="center">1</td>
-<td align="center">english</td>
-<td align="center">mountain</td>
-<td align="center">D</td>
-</tr>
-<tr class="even">
-<td align="center">1</td>
-<td align="center">english</td>
-<td align="center">motorbike</td>
-<td align="center">C</td>
-</tr>
-<tr class="odd">
-<td align="center">1</td>
-<td align="center">english</td>
-<td align="center">penguin</td>
-<td align="center">C</td>
-</tr>
-<tr class="even">
-<td align="center">1</td>
-<td align="center">english</td>
-<td align="center">box</td>
-<td align="center">C</td>
-</tr>
-<tr class="odd">
-<td align="center">1</td>
-<td align="center">english</td>
-<td align="center">apple</td>
-<td align="center">C</td>
-</tr>
-<tr class="even">
-<td align="center">1</td>
-<td align="center">english</td>
-<td align="center">iron</td>
-<td align="center">P</td>
-</tr>
-<tr class="odd">
-<td align="center">1</td>
-<td align="center">english</td>
-<td align="center">cow</td>
-<td align="center">C</td>
-</tr>
-<tr class="even">
-<td align="center">1</td>
-<td align="center">english</td>
-<td align="center">doll</td>
-<td align="center">C</td>
-</tr>
-<tr class="odd">
-<td align="center">1</td>
-<td align="center">english</td>
-<td align="center">hat</td>
-<td align="center">C</td>
-</tr>
-<tr class="even">
-<td align="center">1</td>
-<td align="center">english</td>
-<td align="center">watch</td>
-<td align="center">P</td>
-</tr>
-<tr class="odd">
-<td align="center">1</td>
-<td align="center">english</td>
-<td align="center">sofa</td>
-<td align="center">D</td>
-</tr>
-<tr class="even">
-<td align="center">1</td>
-<td align="center">english</td>
-<td align="center">clouds</td>
-<td align="center">C</td>
-</tr>
-<tr class="odd">
-<td align="center">1</td>
-<td align="center">english</td>
-<td align="center">hammer</td>
-<td align="center">D</td>
-</tr>
-<tr class="even">
-<td align="center">1</td>
-<td align="center">english</td>
-<td align="center">glasses</td>
-<td align="center">C</td>
-</tr>
-<tr class="odd">
-<td align="center">1</td>
-<td align="center">english</td>
-<td align="center">elephant</td>
-<td align="center">C</td>
-</tr>
-<tr class="even">
-<td align="center">1</td>
-<td align="center">english</td>
-<td align="center">backyard</td>
-<td align="center">P</td>
-</tr>
-<tr class="odd">
-<td align="center">1</td>
-<td align="center">english</td>
-<td align="center">spoon</td>
-<td align="center">C</td>
-</tr>
-<tr class="even">
-<td align="center">1</td>
-<td align="center">english</td>
-<td align="center">bib</td>
-<td align="center">P</td>
-</tr>
-<tr class="odd">
-<td align="center">1</td>
-<td align="center">english</td>
-<td align="center">sink</td>
-<td align="center">P</td>
-</tr>
-<tr class="even">
-<td align="center">1</td>
-<td align="center">english</td>
-<td align="center">wellyboots</td>
-<td align="center">C</td>
-</tr>
-</tbody>
-</table>
-<p>Next we calculate the number of correct responses for each card type (Italian or English), for each subject, for each word:</p>
-<pre class="r"><code>nc_long_correct &lt;- nc_long %&gt;%
-  group_by(word, subj, cards) %&gt;%
-  summarise(correct = answer %in% c(&#39;C&#39;, &#39;C*&#39;)) %&gt;%
-  mutate(correct = as.integer(correct))</code></pre>
-<pre><code>`summarise()` regrouping output by &#39;word&#39;, &#39;subj&#39; (override with `.groups` argument)</code></pre>
-<p><strong>Explanation of commands:</strong></p>
-<ol style="list-style-type: decimal">
-<li><code>nc_long %&gt;% group_by(word, subj, cards)</code> groups <code>nc_long</code> by <code>cards</code> within <code>subj</code> within <code>word</code>.</li>
-<li><code>summarise(correct = answer %in% c(&#39;C&#39;, &#39;C*&#39;))</code> creates a column <code>correct</code> with the value <code>TRUE</code> if the value in <code>answer</code> is either <code>C</code> or <code>C*</code> or <code>FALSE</code> for anything else. 1.<code>mutate(correct = as.integer(correct))</code> converts <code>TRUE</code> to <code>1</code> and <code>FALSE</code> to <code>0</code>. We convert the logical values to numbers so that we can use them in a t-test.</li>
-</ol>
-<p>We can see that all children knew the word <code>apple</code>, regardless of which set of cards was used. This causes us a small problem which we’ll address in the next section.</p>
-<table style="width:49%;">
-<colgroup>
-<col width="11%"></col>
-<col width="9%"></col>
-<col width="13%"></col>
-<col width="13%"></col>
-</colgroup>
-<thead>
-<tr class="header">
-<th align="center">word</th>
-<th align="center">subj</th>
-<th align="center">cards</th>
-<th align="center">correct</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="center">apple</td>
-<td align="center">1</td>
-<td align="center">english</td>
-<td align="center">1</td>
-</tr>
-<tr class="even">
-<td align="center">apple</td>
-<td align="center">2</td>
-<td align="center">italian</td>
-<td align="center">1</td>
-</tr>
-<tr class="odd">
-<td align="center">apple</td>
-<td align="center">3</td>
-<td align="center">english</td>
-<td align="center">1</td>
-</tr>
-<tr class="even">
-<td align="center">apple</td>
-<td align="center">4</td>
-<td align="center">italian</td>
-<td align="center">1</td>
-</tr>
-<tr class="odd">
-<td align="center">apple</td>
-<td align="center">5</td>
-<td align="center">english</td>
-<td align="center">1</td>
-</tr>
-<tr class="even">
-<td align="center">apple</td>
-<td align="center">6</td>
-<td align="center">italian</td>
-<td align="center">1</td>
-</tr>
-<tr class="odd">
-<td align="center">apple</td>
-<td align="center">7</td>
-<td align="center">english</td>
-<td align="center">1</td>
-</tr>
-<tr class="even">
-<td align="center">apple</td>
-<td align="center">8</td>
-<td align="center">italian</td>
-<td align="center">1</td>
-</tr>
-<tr class="odd">
-<td align="center">apple</td>
-<td align="center">9</td>
-<td align="center">english</td>
-<td align="center">1</td>
-</tr>
-<tr class="even">
-<td align="center">apple</td>
-<td align="center">10</td>
-<td align="center">italian</td>
-<td align="center">1</td>
-</tr>
-<tr class="odd">
-<td align="center">apple</td>
-<td align="center">11</td>
-<td align="center">english</td>
-<td align="center">1</td>
-</tr>
-<tr class="even">
-<td align="center">apple</td>
-<td align="center">12</td>
-<td align="center">italian</td>
-<td align="center">1</td>
-</tr>
-<tr class="odd">
-<td align="center">apple</td>
-<td align="center">13</td>
-<td align="center">english</td>
-<td align="center">1</td>
-</tr>
-<tr class="even">
-<td align="center">apple</td>
-<td align="center">14</td>
-<td align="center">italian</td>
-<td align="center">1</td>
-</tr>
-<tr class="odd">
-<td align="center">apple</td>
-<td align="center">15</td>
-<td align="center">english</td>
-<td align="center">1</td>
-</tr>
-<tr class="even">
-<td align="center">apple</td>
-<td align="center">16</td>
-<td align="center">italian</td>
-<td align="center">1</td>
-</tr>
-<tr class="odd">
-<td align="center">apple</td>
-<td align="center">17</td>
-<td align="center">english</td>
-<td align="center">1</td>
-</tr>
-<tr class="even">
-<td align="center">apple</td>
-<td align="center">18</td>
-<td align="center">italian</td>
-<td align="center">1</td>
-</tr>
-<tr class="odd">
-<td align="center">apple</td>
-<td align="center">19</td>
-<td align="center">italian</td>
-<td align="center">1</td>
-</tr>
-</tbody>
-</table>
-<p>Now we can run our t-tests to compare accuracy for the Italian and English cards:</p>
-<pre class="r"><code>library(BayesFactor, quietly = TRUE)</code></pre>
-<pre><code>
-Attaching package: &#39;Matrix&#39;</code></pre>
-<pre><code>The following objects are masked from &#39;package:tidyr&#39;:
-
-    expand, pack, unpack</code></pre>
-<pre><code>************
-Welcome to BayesFactor 0.9.12-4.2. If you have questions, please contact Richard Morey (richarddmorey@gmail.com).
-
-Type BFManual() to open the manual.
-************</code></pre>
-<pre class="r"><code>t_words &lt;- function(df, group) {
-  bf &lt;- ttestBF(formula=correct ~ cards, data = data.frame(df))
-  return(extractBF(bf))
-}
-
-nc_bf &lt;- nc_long_correct %&gt;%
-  filter(! word %in% c(&#39;apple&#39;, &#39;cow&#39;, &#39;penguin&#39;,&#39;hat&#39;,&#39;motorbike&#39;)) %&gt;%
-  group_by(word) %&gt;%
-  group_modify(t_words) %&gt;%
-  mutate(bf = round(bf,2)) %&gt;%
-  select(word, bf)</code></pre>
-<p><strong>Explanation of commands:</strong></p>
-<ol style="list-style-type: decimal">
-<li><code>library(BayesFactor, quietly = TRUE)</code> loads the package containing <code>ttestBF()</code>.</li>
-<li>The function <code>t_words()</code> accepts a data frame in <code>df</code>. <code>bf &lt;- ttestBF(formula=correct ~ cards, data = data.frame(df))</code> runs a between-subjects Bayesian t-test which compares the number of <code>correct</code> responses between the Italian and English <code>cards</code>. <code>extractBF(bf)</code> returns the results (including the Bayes factor) as a data frame.</li>
-<li>Because all children had a correct score for <code>apple</code>, a t-test for this data would produce an error. <code>nc_long_correct %&gt;% filter(! word %in% c(&#39;apple&#39;, &#39;cow&#39;, &#39;penguin&#39;,&#39;hat&#39;,&#39;motorbike&#39;))</code> removes this and other words where all scores for the two sets of cards were the same.</li>
-<li>We group the remaining rows by <code>word</code> and use <code>group_modify()</code> to call <code>t_words()</code> on the grouped data frame. For each word, this replaces the data with the Bayes factor for the t-test.</li>
-<li>We round <code>bf</code> to two decimal places.</li>
-<li>Finally, we select <code>word</code> and the Bayes factor <code>bf</code>.</li>
-</ol>
-<p>We output the results as an HTML table:</p>
-<pre class="r"><code># Run the next line with Ctrl+Enter (Cmd+Enter on Mac)
-# for it to appear in the Viewer pane
-nc_bf %&gt;% kable(
-  col.names = c(&#39;Word&#39;, &#39;Bayes Factor&#39;)) %&gt;%
-  kable_styling()</code></pre>
-<table class="table" style="margin-left: auto; margin-right: auto;">
-<thead>
-<tr>
-<th style="text-align:left;">
-Word
-</th>
-<th style="text-align:right;">
-Bayes Factor
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-backyard
-</td>
-<td style="text-align:right;">
-0.41
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-bib
-</td>
-<td style="text-align:right;">
-1.07
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-box
-</td>
-<td style="text-align:right;">
-0.81
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-clouds
-</td>
-<td style="text-align:right;">
-0.80
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-doll
-</td>
-<td style="text-align:right;">
-0.44
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-elephant
-</td>
-<td style="text-align:right;">
-0.44
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-glasses
-</td>
-<td style="text-align:right;">
-1.26
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-hammer
-</td>
-<td style="text-align:right;">
-0.41
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-iron
-</td>
-<td style="text-align:right;">
-0.68
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-mountain
-</td>
-<td style="text-align:right;">
-1.32
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-sink
-</td>
-<td style="text-align:right;">
-0.56
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-sofa
-</td>
-<td style="text-align:right;">
-0.44
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-spoon
-</td>
-<td style="text-align:right;">
-0.80
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-watch
-</td>
-<td style="text-align:right;">
-0.47
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-wellyboots
-</td>
-<td style="text-align:right;">
-0.80
-</td>
-</tr>
-</tbody>
-</table>
+<p>Try copying the table into your word processor now. In the <strong>Viewer</strong> pane, select all of the rows and columns in the table, then right-click and select <code>Copy</code>. Open your word processor and select <code>Paste</code>.</p>
 <p><a name="ex2"></a></p>
 </div>
 <div id="exercise-2" class="section level2">
 <h2>Exercise 2</h2>
-<p>Generate a table similar to the noun comprehension table, for the noun production data. Start by pivoting <code>np</code> on the columns <code>beach:gloves</code>, and assigning the result to <code>np_long</code>. The first few rows should look like this:</p>
-<table style="width:67%;">
-<colgroup>
-<col width="9%"></col>
-<col width="13%"></col>
-<col width="13%"></col>
-<col width="16%"></col>
-<col width="12%"></col>
-</colgroup>
-<thead>
-<tr class="header">
-<th align="center">subj</th>
-<th align="center">cards</th>
-<th align="center">correct</th>
-<th align="center">word</th>
-<th align="center">answer</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="center">1</td>
-<td align="center">english</td>
-<td align="center">4</td>
-<td align="center">beach</td>
-<td align="center">NR</td>
-</tr>
-<tr class="even">
-<td align="center">1</td>
-<td align="center">english</td>
-<td align="center">4</td>
-<td align="center">lorry</td>
-<td align="center">NTS</td>
-</tr>
-<tr class="odd">
-<td align="center">1</td>
-<td align="center">english</td>
-<td align="center">4</td>
-<td align="center">seal</td>
-<td align="center">NT</td>
-</tr>
-<tr class="even">
-<td align="center">1</td>
-<td align="center">english</td>
-<td align="center">4</td>
-<td align="center">bag</td>
-<td align="center">NR</td>
-</tr>
-<tr class="odd">
-<td align="center">1</td>
-<td align="center">english</td>
-<td align="center">4</td>
-<td align="center">banana</td>
-<td align="center">C*</td>
-</tr>
-<tr class="even">
-<td align="center">1</td>
-<td align="center">english</td>
-<td align="center">4</td>
-<td align="center">picture</td>
-<td align="center">NR</td>
-</tr>
-<tr class="odd">
-<td align="center">1</td>
-<td align="center">english</td>
-<td align="center">4</td>
-<td align="center">hen</td>
-<td align="center">C</td>
-</tr>
-<tr class="even">
-<td align="center">1</td>
-<td align="center">english</td>
-<td align="center">4</td>
-<td align="center">book</td>
-<td align="center">NT</td>
-</tr>
-<tr class="odd">
-<td align="center">1</td>
-<td align="center">english</td>
-<td align="center">4</td>
-<td align="center">socks</td>
-<td align="center">C</td>
-</tr>
-<tr class="even">
-<td align="center">1</td>
-<td align="center">english</td>
-<td align="center">4</td>
-<td align="center">comb</td>
-<td align="center">NTS</td>
-</tr>
-<tr class="odd">
-<td align="center">1</td>
-<td align="center">english</td>
-<td align="center">4</td>
-<td align="center">table</td>
-<td align="center">NT</td>
-</tr>
-<tr class="even">
-<td align="center">1</td>
-<td align="center">english</td>
-<td align="center">4</td>
-<td align="center">roof</td>
-<td align="center">NT</td>
-</tr>
-<tr class="odd">
-<td align="center">1</td>
-<td align="center">english</td>
-<td align="center">4</td>
-<td align="center">umberella</td>
-<td align="center">NT</td>
-</tr>
-<tr class="even">
-<td align="center">1</td>
-<td align="center">english</td>
-<td align="center">4</td>
-<td align="center">fork</td>
-<td align="center">NTS</td>
-</tr>
-<tr class="odd">
-<td align="center">1</td>
-<td align="center">english</td>
-<td align="center">4</td>
-<td align="center">lion</td>
-<td align="center">NTS</td>
-</tr>
-<tr class="even">
-<td align="center">1</td>
-<td align="center">english</td>
-<td align="center">4</td>
-<td align="center">flags</td>
-<td align="center">NT</td>
-</tr>
-<tr class="odd">
-<td align="center">1</td>
-<td align="center">english</td>
-<td align="center">4</td>
-<td align="center">glass</td>
-<td align="center">NTS</td>
-</tr>
-<tr class="even">
-<td align="center">1</td>
-<td align="center">english</td>
-<td align="center">4</td>
-<td align="center">nappy</td>
-<td align="center">NT</td>
-</tr>
-<tr class="odd">
-<td align="center">1</td>
-<td align="center">english</td>
-<td align="center">4</td>
-<td align="center">radiator</td>
-<td align="center">NR</td>
-</tr>
-</tbody>
-</table>
-<p>Calculate the noun production accuracy for <code>np_long</code> using the same approach that was used for <code>nc_long</code>. Assign the results to <code>np_long_correct</code>. The first few rows should look like this:</p>
-<table style="width:47%;">
-<colgroup>
-<col width="9%"></col>
-<col width="9%"></col>
-<col width="13%"></col>
-<col width="13%"></col>
-</colgroup>
-<thead>
-<tr class="header">
-<th align="center">word</th>
-<th align="center">subj</th>
-<th align="center">cards</th>
-<th align="center">correct</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="center">bag</td>
-<td align="center">1</td>
-<td align="center">english</td>
-<td align="center">0</td>
-</tr>
-<tr class="even">
-<td align="center">bag</td>
-<td align="center">2</td>
-<td align="center">italian</td>
-<td align="center">1</td>
-</tr>
-<tr class="odd">
-<td align="center">bag</td>
-<td align="center">3</td>
-<td align="center">english</td>
-<td align="center">0</td>
-</tr>
-<tr class="even">
-<td align="center">bag</td>
-<td align="center">4</td>
-<td align="center">italian</td>
-<td align="center">1</td>
-</tr>
-<tr class="odd">
-<td align="center">bag</td>
-<td align="center">5</td>
-<td align="center">english</td>
-<td align="center">0</td>
-</tr>
-<tr class="even">
-<td align="center">bag</td>
-<td align="center">6</td>
-<td align="center">italian</td>
-<td align="center">0</td>
-</tr>
-<tr class="odd">
-<td align="center">bag</td>
-<td align="center">7</td>
-<td align="center">english</td>
-<td align="center">1</td>
-</tr>
-<tr class="even">
-<td align="center">bag</td>
-<td align="center">8</td>
-<td align="center">italian</td>
-<td align="center">0</td>
-</tr>
-<tr class="odd">
-<td align="center">bag</td>
-<td align="center">9</td>
-<td align="center">english</td>
-<td align="center">0</td>
-</tr>
-<tr class="even">
-<td align="center">bag</td>
-<td align="center">10</td>
-<td align="center">italian</td>
-<td align="center">1</td>
-</tr>
-<tr class="odd">
-<td align="center">bag</td>
-<td align="center">11</td>
-<td align="center">english</td>
-<td align="center">0</td>
-</tr>
-<tr class="even">
-<td align="center">bag</td>
-<td align="center">12</td>
-<td align="center">italian</td>
-<td align="center">1</td>
-</tr>
-<tr class="odd">
-<td align="center">bag</td>
-<td align="center">13</td>
-<td align="center">english</td>
-<td align="center">0</td>
-</tr>
-<tr class="even">
-<td align="center">bag</td>
-<td align="center">14</td>
-<td align="center">italian</td>
-<td align="center">1</td>
-</tr>
-<tr class="odd">
-<td align="center">bag</td>
-<td align="center">15</td>
-<td align="center">english</td>
-<td align="center">1</td>
-</tr>
-<tr class="even">
-<td align="center">bag</td>
-<td align="center">16</td>
-<td align="center">italian</td>
-<td align="center">1</td>
-</tr>
-<tr class="odd">
-<td align="center">bag</td>
-<td align="center">17</td>
-<td align="center">english</td>
-<td align="center">0</td>
-</tr>
-<tr class="even">
-<td align="center">bag</td>
-<td align="center">18</td>
-<td align="center">italian</td>
-<td align="center">0</td>
-</tr>
-<tr class="odd">
-<td align="center">bag</td>
-<td align="center">19</td>
-<td align="center">italian</td>
-<td align="center">1</td>
-</tr>
-</tbody>
-</table>
-<p>Create <code>np_bf</code>, using <code>group_modify(t_words)</code> to run the t-test for each word. Unlike <code>nc_long_correct</code>, you don’t need to filter any words from <code>nc_long_correct</code> before running the t-tests. Print the results using <code>kable()</code>. They should look like this:</p>
+<p>Starting with the data in <code>task_by_subj</code>, generate a table of descriptive statistics showing task accuracy for the Italian and English cards. Print the results using <code>kable()</code>. They should look like this:</p>
+<pre><code>`summarise()` regrouping output by &#39;task&#39; (override with `.groups` argument)</code></pre>
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
 <th style="text-align:left;">
-Word
+Task
 </th>
-<th style="text-align:right;">
-Bayes Factor
+<th style="text-align:left;">
+English
+</th>
+<th style="text-align:left;">
+Italian
 </th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td style="text-align:left;">
-bag
+Noun Comprehension
 </td>
-<td style="text-align:right;">
-2.03
+<td style="text-align:left;">
+17.89 (2.47)
+</td>
+<td style="text-align:left;">
+16.33 (3.61)
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-banana
+Noun Production
 </td>
-<td style="text-align:right;">
-0.55
+<td style="text-align:left;">
+11.89 (3.59)
+</td>
+<td style="text-align:left;">
+11.00 (3.61)
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-beach
+Predicate Comprehension
 </td>
-<td style="text-align:right;">
-0.48
+<td style="text-align:left;">
+15.12 (1.64)
+</td>
+<td style="text-align:left;">
+16.25 (1.91)
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-book
+Predicate Production
 </td>
-<td style="text-align:right;">
-2.03
-</td>
-</tr>
-<tr>
 <td style="text-align:left;">
-comb
+8.75 (1.04)
 </td>
-<td style="text-align:right;">
-0.48
-</td>
-</tr>
-<tr>
 <td style="text-align:left;">
-flags
-</td>
-<td style="text-align:right;">
-0.62
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-fork
-</td>
-<td style="text-align:right;">
-0.44
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-glass
-</td>
-<td style="text-align:right;">
-0.68
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-gloves
-</td>
-<td style="text-align:right;">
-0.51
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-hen
-</td>
-<td style="text-align:right;">
-0.80
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-lion
-</td>
-<td style="text-align:right;">
-0.48
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-lorry
-</td>
-<td style="text-align:right;">
-0.41
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-nappy
-</td>
-<td style="text-align:right;">
-1.12
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-picture
-</td>
-<td style="text-align:right;">
-0.42
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-radiator
-</td>
-<td style="text-align:right;">
-0.46
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-roof
-</td>
-<td style="text-align:right;">
-0.60
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-seal
-</td>
-<td style="text-align:right;">
-0.41
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-socks
-</td>
-<td style="text-align:right;">
-1.26
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-table
-</td>
-<td style="text-align:right;">
-0.41
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-umberella
-</td>
-<td style="text-align:right;">
-0.81
+8.12 (2.75)
 </td>
 </tr>
 </tbody>
 </table>
 <p><strong>Copy the R code you used for this exercise into PsycEL.</strong></p>
+<p><a name="rmd"></a></p>
+</div>
+<div id="r-markdown" class="section level2">
+<h2>R Markdown</h2>
+<p>You can avoid copy-pasting tables (and all other analyses) by writing your reports using <code>R Markdown</code> instead of a word processor. <code>R Markdown</code> is a language for writing documents which include <code>R</code> code. The code is run, and the output is included in the document. <code>R Markdown</code> can be used to produce different types of document (e.g. reports, presentations, web pages), in various formats (e.g. Microsoft Word, PDF, HTML). The <code>Research Methods in R</code> worksheets are written using <code>R Markdown</code>, and although we don’t teach it in these materials, there are other <a href="https://rmarkdown.rstudio.com/lesson-1.html">courses</a> which make it easy to learn.</p>
 <hr />
 <p>This material is distributed under a <a href="https://creativecommons.org/">Creative Commons</a> licence. CC-BY-SA 4.0.</p>
 </div>
