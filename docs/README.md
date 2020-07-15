@@ -152,7 +152,8 @@ These are intermediate-level materials, designed to follow on from _An Absolute 
   experiments into a format closer to something you can actually analyse, in
   five steps: loading, selecting, filtering, summarising, and combining. Also covers combining data frames, renaming columns, and using **loops**. 
     - [More on preprocessing](more-on-preproc.html): A slightly more advanced worksheet, covering adding columns to a data frame, and subsetting strings.
-
+    - [More on data](more-on-data.html): Reading data directly from Excel.
+    
 - [Within-subject differences](anova1.html): Data preprocessing (pivoting and
   mutating). One-factor within-subject Bayesian ANOVA. Pairwise comparisons, multiple comparisons.
 
