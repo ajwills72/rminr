@@ -40,7 +40,7 @@ This is an advanced worksheet, which assumes you have completed the [Absolute Be
 - [Comparing gender on WinG accuracy](#wing-gender)
 - [Exploring correlations between CDI and WinG](#correlate-cdi-wing)
 - [Plotting WinG accuracy by card set](#plot-task)
-- [Comparing WinG accuracy by card set using Mann-Whitney U tests](#mann-whitney)
+- [Comparing WinG accuracy by card set](#mann-whitney)
 - [Comparing semantically related production errors by card set](#compare-production)
 
 <a name="intro"></a>
@@ -356,7 +356,7 @@ descriptives_t <- full_join(descriptives, gender_bf, by = 'task')
 
 **Explanation of commands:**
 
-We define the function `t_gender()` to run a between-subjects t-test comparing task accuracy (`correct`) by `gender`. Before running the test, we use `drop_na(df)` to remove rows for participants who were excluded for the task. The function returns the Bayes factor. We group our long format task data by task, and use `group_modify(t_gender)` to calculate the Bayes factor for the grouped data. We round the Bayes factors to 2 decimal places and then select the `task` and `bf` columns. We join this to our `descriptives` data frame.
+We define the function `t_gender()` to run a between-subjects t-test comparing task accuracy (`correct`) by `gender`. Before running the test, we use `drop_na(df)` to remove rows for participants who were excluded for the task. The function returns the Bayes factor. We group our long format task data by task, and use `group_modify(t_gender)` to calculate the Bayes factor for the grouped data. `group_modify()` passes grouped data to a function, and replaces it with the data frame returned by the function. We round the Bayes factors to 2 decimal places and then select the `task` and `bf` columns. We join this to our `descriptives` data frame.
 
 Our data frame now looks like this:
 
@@ -398,12 +398,14 @@ We would also like to know if parents' ratings of their child's ability using th
 
 ```{r cdi_u_correlations}
 # correlations between CDI and WinG
-cdi_u_nc_cor <- cor(method = 'spearman', task_by_subj$cdi_u, task_by_subj$nc, use="complete.obs")
+cdi_u_nc_cor <- cor(method = 'spearman', task_by_subj$cdi_u,
+                    task_by_subj$nc, use="complete.obs")
 cdi_u_nc_cor
 cdi_u_nc_bf <- correlationBF(task_by_subj$cdi_u, task_by_subj$nc)
 cdi_u_nc_bf
 
-cdi_u_pc_cor <- cor(method = 'spearman', task_by_subj$cdi_u, task_by_subj$pc, use="complete.obs")
+cdi_u_pc_cor <- cor(method = 'spearman', task_by_subj$cdi_u,
+                    task_by_subj$pc, use="complete.obs")
 cdi_u_pc_cor
 cdi_u_pc_bf <- correlationBF(task_by_subj$cdi_u, task_by_subj$pc)
 cdi_u_pc_bf
@@ -420,12 +422,14 @@ There doesn't appear to be a relationship between parents' CDI 'understands' sco
 Now we look at correlations between parents' ratings of their child's ability to say words (CDI says), and the childrens' noun and predicate production scores.
 
 ```{r cdi_s_correlations}
-cdi_s_np_cor <- cor(method = 'spearman', task_by_subj$cdi_s, task_by_subj$np, use="complete.obs")
+cdi_s_np_cor <- cor(method = 'spearman', task_by_subj$cdi_s,
+                    task_by_subj$np, use="complete.obs")
 cdi_s_np_cor
 cdi_s_np_bf <- correlationBF(task_by_subj$cdi_s, task_by_subj$np)
 cdi_s_np_bf
 
-cdi_s_pp_cor <- cor(method = 'spearman', task_by_subj$cdi_s, task_by_subj$pp, use="complete.obs")
+cdi_s_pp_cor <- cor(method = 'spearman', task_by_subj$cdi_s,
+                    task_by_subj$pp, use="complete.obs")
 cdi_s_pp_cor
 cdi_s_pp_bf <- correlationBF(task_by_subj$cdi_s, task_by_subj$pp)
 cdi_s_pp_bf
@@ -448,14 +452,16 @@ In summary, noun production was the only task in which parents' ratings of their
 We're now ready to test our main hypothesis, which predicts that there will be a difference WinG task scores, depending on which set of cards the children were tested with. We'll start by creating plots to show the distribution of scores for the two card sets on the WinG tasks.
 
 ```{r noun-cloud, class.source = 'numberLines lineAnchors'}
-task_by_subj_l$task <- recode_factor(task_by_subj_l$task, nc = 'Noun Comprehension',
-                                     np = 'Noun Production', pc = 'Predicate Comprehension',
+# plot WinG accuracy by card set
+task_by_subj_l$task <- recode_factor(task_by_subj_l$task,
+                                     nc = 'Noun Comprehension',
+                                     np = 'Noun Production',
+                                     pc = 'Predicate Comprehension',
                                      pp = 'Predicate Production')
-
 library(see)
-ggplot(task_by_subj_l, aes(x = task, y = correct, fill = cards)) +
+task_by_subj_l %>% ggplot(aes(x = task, y = correct, fill = cards)) +
   geom_violinhalf(position = position_identity(), alpha=0.3, size=0) +
-  scale_fill_material_d() + xlab('WinG Task') + ylab('Accuracy (max = 20)')
+  xlab('WinG Task') + ylab('Accuracy (max = 20)')
 ```
 
 ```{r, eval=FALSE, echo=FALSE}
@@ -475,50 +481,48 @@ half_violin + facet_wrap(~ task, ncol=2)
 
 **Explanation of commands:**
 
+Lines 1-6 recode `task` factor levels, to make them more meaningful on the plot's x axis. Line 7 loads the `see` package which provides the `half_violin()` function. Line 8 defines the x axis of our plot to be the WinG tasks, the y axis to be task accuracy (1-20), and to use the `cards` factor for the fill colour. Line 9 creates a "half violin" plot. As the name suggests, this shows one half of a [violin plot](https://en.wikipedia.org/wiki/Violin_plot). `position = position_identity()` plots the two distributions on top of each other, making it easy to see how much they overlap. `alpha=0.3` changes to transparency, again to help us see the overlapping area. `size=0` removes the outline around the distributions. Line 10 gives our axes meaningful labels.
+
 **Explanation of output:**
 
-We plotted the data in this format to get an indication of whether there were differences between the Italian and English cards on any of the tests. This looks unlikely, given the extensive overlap in scores between the card sets. The plot also shows that the data were slightly skewed on the noun tasks due to some low scores.
+This plot gives a visual indication of whether there were differences between the Italian and English cards on each of the tests. Given the extensive overlap in scores between the card sets, this seems unlikely. The plot also shows that the data were slightly skewed on the noun tasks due to some low scores.
 
 <a name="mann-whitney"></a>
 
-## Comparing WinG accuracy by card set using Mann-Whitney U tests
+## Comparing WinG accuracy by card set
 
-Although the plot suggests that the predicate data was normally distributed, given the small sample sizes, a non-parametric was considered most suited for analysing this data. We'll use Mann-Whitney U tests to compare each task score for the Italian and English cards. The Mann-Whitney U test is explained in more detail in the [Traditional non-parametric tests worksheet](non-parametric.html).
+Although the plot suggests that the predicate data was normally distributed, given the small sample sizes, a non-parametric tests was considered most appropriate for analysing this data. We'll use Mann-Whitney U tests to compare each task score for the Italian and English cards. The Mann-Whitney U test is explained in more detail in the [Traditional non-parametric tests worksheet](non-parametric.html).
 
-We start by creating some summary statistics which are used to interpret this test.
+We start by creating some summary statistics.
 
-```{r cards-rank}
-task_by_subj_l %>%
+```{r cards-rank, class.source = 'numberLines lineAnchors'}
+# compare WinG accuracy by card set
+task_by_subj_rank <- task_by_subj_l %>%
+  group_by(task) %>%
+  mutate(rank = rank(correct))
+
+task_summary <- task_by_subj_rank %>%
   group_by(task, cards) %>%
-  drop_na() %>%
+  drop_na('correct') %>%
   summarise(n = n(),
             median = median(correct),
-            mean_rank = mean(rank(correct)),
-            sum_rank = sum(rank(correct)))
+            mean_rank = mean(rank),
+            sum_rank = sum(rank))
+task_summary
 ```
 
 **Explanation of commands:**
 
-1. We group our data by the two card sets, within the four tests.
-1. `drop_na()` removes any subjects where were excluded from a test.
-1. We use `summarise`, to calculate the number of cases in each group `n()`, and the `median()` score. The `rank()` function orders the scores (lowest to highest), and assigns each a score a number according to its ordered position. We use `mean(rank(correct)` to calculate the "mean rank" score and `sum(rank(correct)` to calculate the "sum rank" score.
+Lines 1-3 rank the accuracy scores for each of the four tests. Line 6 groups the data by `cards` within `task`. Line 7 removes any rows where `correct` contains the value `NA`. These were the children we excluded earlier. Lines 8-11 calculate, for each group, the number of children, the median, and the mean and sum of the ranked items.
 
-**Explanation of output:**
+Now we run Mann-Whitney tests to make a direct comparison between the Italian and English cards for each WinG task.
 
-As the plots suggested, the median, mean rank, and sum rank scores are very similar for the Italian and English cards in each task.
-
-We run Mann-Whitney tests to make a direct comparison between the Italian and English cards for each WinG task.
-
-```{r mann-whitney}
+```{r mann-whitney, class.source = 'numberLines lineAnchors', warning=FALSE}
 # independent 2-group Mann-Whitney U Test
 mann_whitney <- function(df, group) {
-  df <- drop_na(df) # remove excluded subjects
-  n1 <- sum(as.integer(df$cards) == 1) # n in first group
+  df <- df %>% drop_na('correct') # remove excluded subjects
   wilcox.test(correct ~ cards, df) %>%
-    with(tibble(U = statistic,
-              W = statistic + n1 * (n1 + 1) / 2,
-              Z = qnorm(p.value / 2),
-              p = p.value))
+    with(data.frame(U = statistic, p = round(p.value, 2)))
 }
 
 wing_mann_whitney <- task_by_subj_l %>%
@@ -529,11 +533,13 @@ wing_mann_whitney
 
 **Explanation of commands:**
 
-The `mann_whitney()` function is explained in detail in the [Traditional non-parametric tests worksheet](non-parametric.html). In summary, it uses `wilcox.test()`, with the argument `paired = FALSE` (the default) which the equivalent to a Mann-Whitney U test. The results are adjusted so that the function reports the same values as `SPSS`. The `W` statistic generated by `R` is the same as `U` in SPSS. The `p` value in `R` is the same as `SPSS`. The `W` and `Z` statistics reported by `SPSS` are not calculated by `wilcox.test()`, so we calculate these manually. The warning `cannot compute exact p-value with ties` lets you know that the method used to calculate _p_ will not be exact, because some items in the Italian and English scores had identical rankings.
+The Mann-Whitney U test is a non-parametric equivalent of a t-test. It's explained in detail in the [Traditional non-parametric tests worksheet](non-parametric.html). Lines 2-6 define a function called `mann_whitney` to run a Mann-Whitney test comparing the `correct` column against the factor `cards`. The function returns the values for `U` and `p` as a data frame. 
+
+Lines 8-10 group our data by `task`, then use `group_modify(mann_whitney)` to replace the data for each group with the Mann-Whitney test results. Line 11 displays the results.
 
 **Explanation of output:**
 
-As this is a traditional statistical test, the p-value indicates whether there was a significant difference between the cards on any of the tasks. All _p_ values were > 0.05, suggesting there were no differences.
+As this is a traditional statistical test, the p-value indicates whether there was a significant difference between the cards on any of the tasks. All _p_ values were > 0.05, suggesting there were no differences, contrary to our hypothesis. (Note that we've removed the `cannot compute exact p-value with ties` warnings to make the output easier to read.)
 
 <a name="compare-production"></a>
 
@@ -543,7 +549,8 @@ We would also like to know if there were any differences for the semantically re
 
 Again, we start with a plot.
 
-```{r nts-production-plot}
+```{r nts-production-plot, class.source = 'numberLines lineAnchors'}
+# compare semantically related production errors by card set
 semantically_related <- task_by_subj %>%
   select(subj, cards, related_np, related_pp) %>%
   pivot_longer(cols = c(related_np, related_pp),
@@ -554,19 +561,34 @@ semantically_related <- task_by_subj %>%
 
 ggplot(semantically_related, aes(x = task, y = correct, fill = cards)) +
   geom_violinhalf(position = position_identity(), alpha=0.3, size=0) +
-  scale_fill_material_d() + xlab('WinG Task') +
+  xlab('WinG Task') +
   ylab('Semantically related errors (max = 20)')
 ```
 
 **Explanation of commands:**
 
+The 'non-taget but semantically related' code only relates to the production tasks, so we select just the data for these tests in line 2. Lines 3-5 convert the semantically related error scores from wide to long format. Notice that we use `values_to` to more these scores to a column named `correct`. This will allow us to reuse the `mann_whitney` function again. Lines 6-7 give the factor levels meaningful names. Lines 9-12 generate half violin plots for the production tasks.
+
 **Explanation of output:**
 
-The extensive overlap in the distribution of scores suggests there were no differences between the Italian and English cards for semantically related errors on the production tasks.
+The extensive overlap in the distribution of semantically scores suggests there were no differences between the Italian and English cards for semantically related errors on the production tasks.
 
-We run some Mann-Whitney U tests to test this.
+We generate some summary statistics, and run some Mann-Whitney U tests to test this.
 
-```{r nts-production-mw}
+```{r nts-production-mw, message=FALSE, warning=FALSE}
+nts_rank <- semantically_related %>%
+  group_by(task) %>%
+  mutate(rank = rank(correct))
+
+nts_summary <- nts_rank %>%
+  group_by(task, cards) %>%
+  drop_na('correct') %>%
+  summarise(n = n(),
+            median = median(correct),
+            mean_rank = mean(rank),
+            sum_rank = sum(rank))
+nts_summary
+
 production_mann_whitney <- semantically_related %>%
   group_by(task) %>%
   group_modify(mann_whitney)
@@ -575,18 +597,16 @@ production_mann_whitney
 
 **Explanation of commands:**
 
-We group `semantically_related` by task, and reuse our `mann_whitney()` function to run a Mann-Whitney test for the noun and predicate production tasks.
+These commands are virtually identical to those we used to for the accuracy scores.
 
 **Explanation of output:**
 
-The _p_ values for both tests are > 0.05, indicating that there was no difference between the card sets for semantically related errors on the production tasks.
+The group difference for noun production was larger than for predicate production. However, the _p_ values for both tests are > 0.05, which is evidence against a difference between the card sets for semantically related errors on the production tasks. Again, this is contrary to our hypothesis.
 
+## Conclusion
 
+In summary, these data suggest that WinG scores should be comparable, regardless of whether the English or Italian picture cards are used. It also shows that adult's ratings of how the pictures map to the underlying concepts are quite different to children's.
 
-If we do not find differences between the two sets of cards in either study it will
-demonstrate the reliability of the targets used in the English WinG cards because it
-will show that despite the changes in the images on the cards they still elicit the same
-responses as the Italian WinG cards.
 ___
 
 This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0. 
