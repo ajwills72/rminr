@@ -202,7 +202,7 @@ These are full preprocessing and analysis pipelines, based on final-year undergr
 
 - [The Perruchet Effect](awdiss.html): **Downloading from OSF**, **De-duplicating data**, **Excluding participants**, _line graphs_, **baseline correction of neuroscience data**, **functions**, _loops_, _merging data frames_, **list of participant numbers**, **log transforms**, _recoding data_, **decent graphs for within-subject designs**, **Bayesian linear regression for within-subjects designs**.
 
-- [Reliability of Targets in a Picture Naming Task](cs-picture-naming.html): **Reading data from Excel**, _Bayesian t-tests_, _functions_, **generating a table of statistics**, _correlations_, **raincloud plots**, **Mann-Whitney U test**
+- [Reliability of Targets in a Picture Naming Task](cs-picture-naming.html): _Preprocessing_, **Applying exclusion criteria**, **functions**, **tables of descriptive statistics and t-tests**, _correlation_, _better plots_, _non-parametric summary statistics_, _Mann-Whitney U test_.
 
 ____
 
