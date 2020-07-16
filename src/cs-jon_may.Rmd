@@ -56,6 +56,7 @@ rm(list = ls()) # clear the environment
 library(tidyverse)
 
 # read data
+ocean   <- read_csv('case-studies/jon-may/big5.csv')
 big5    <- read_csv('case-studies/jon-may/big5_total.csv', col_types = 'fiiiii')
 ftt     <- read_csv('case-studies/jon-may/ftt.csv')
 psiq    <- read_csv('case-studies/jon-may/psiq.csv')
@@ -75,6 +76,30 @@ They entered the ‘raw data’ from
 
 * the 35 PsiQ vividness of imagery items - 5 of each of 7 modalities (0 not at all to 10 as vivid as real life) (score = mean of all items)
 * Big5 OCEAN questionnaire 50 items answered 1 to 5 (includes a data entry error, we don't have the scoring key)
+
+```{r}
+oceankey<-read.csv("case-studies/jon-may/oceankey.csv")
+
+scaleIDs <- oceankey$ScaleID                 # make a vector of the new variable names
+names(scaleIDs) <- oceankey$ItemID           # name each new name with the old name so it can be looked-up
+
+ocean.scales <- ocean %>%
+   pivot_longer(S1:S50,names_to='Item', values_to='Value') %>%     # put the 50 items into a column
+   mutate(ScaleID=scaleIDs[Item]) %>%                               # lookup the new names from the vector
+   select(-Item) %>%                                           # drop the columns we don't need
+   mutate(Value=ifelse(grepl("r",ScaleID), 6-Value, Value)) %>%    # if an item name has r in it, reverse the score
+   mutate(ScaleID=sub("r","",ScaleID)) %>%                         # and remove the r from the item name
+   pivot_wider(names_from="ScaleID", values_from="Value") %>%      # make the data wide again
+   select(subj, sort(names(.))) %>%                          # and sort the columns by the new names
+   rowwise() %>%                                                   # now for each participant
+   mutate(Openness=mean(c_across(o01:o10)),                        # compute the means of the ten items in each scale
+          Conscientiousness=mean(c_across(o01:o10)),
+          Extraversion=mean(c_across(o01:o10)),
+          Agreeableness=mean(c_across(o01:o10)),
+          Neuroticism=mean(c_across(o01:o10))) %>%                 # and then just keep the ID and five means
+   select(subj, Openness,Conscientiousness,Extraversion,Agreeableness,Neuroticism)
+```
+
 * We don't have raw data for the ‘Flexible Thinking Test’ (overall scores mean of ftt1-3)
 * They somehow produced some means and scale totals for analysis in spss
 
