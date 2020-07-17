@@ -33,7 +33,7 @@ knitr::opts_chunk$set(echo = TRUE, comment=NA, cache = TRUE)
 ## Factor levels
 
 * For columns which are factors, use strings rather than numbers for the factor levels, because this makes it clear what the factor levels mean.
-* Where possible, use lower case column names and factor levels.
+* Where possible, use lower case column names and factor levels, without spaces.
 
 ## Exercise
 
