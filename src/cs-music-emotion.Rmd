@@ -7,12 +7,6 @@ output:
 
 ```{r setup, include=FALSE}
 ## DEVELOPERS: Uncomment one option, as appropriate
-
-## Data required to knit
-## https://github.com/ajwills72/rminr-data/tree/master/going-further/music-emotion.csv
-##
-## I check out rminr-data and make a symbolic link to going-further
-
 ## Show only commands.
 ## knitr::opts_chunk$set(echo = TRUE, message = FALSE, results='hide', fig.keep = 'none', comment=NA)
 
@@ -27,6 +21,7 @@ library(pander)
 - [Loading data](#load)
 - [Excluding data by subject number](#exclude)
 - [Preprocessing](#preprocess)
+- [Compare avoidance, approach and self-development strategies by subculture](#ers-subscales)
 
 ## Before you start
 
@@ -39,6 +34,12 @@ This is an advanced worksheet, which assumes you have completed the [Absolute Be
 This worksheet describes a full analysis pipeline for an undergraduate student dissertation which compared emotional responses before an after listening to different types of music. Participants self-identified as fans of emo (81), goth (77), metal (77) or mainstream (59) music. Their emotions were tested using the short-form Positive and Negative Affect Scale (PANAS-SF, Watson et al., 1988), before and after listening to 4-5 minutes of music associated with their subculture. The 'mainstream' group acted as a control condition. After the second PANAS-SF, they completed the Emotion Regulation Strategies for Artistic Creative Activities Scale (ERS-ACA, Fancourt et al., 2019). This was an online study, with data collected using [JISC](https://www.jisc.ac.uk/).
 
 So there were two dependent variables in this study. The PANAS-SF was a dependent variable in a mixed design, with subculture group as the between subjects factor, and time (before and after the music) as the repeated measure. The other dependent variable, ERS-ACA, was analysed in relation to the subculture group.
+
+"Hypothesis 1: whether subculture-selected music
+elicited emotional response in each group to the same extent, and in comparison to
+the Mainstream group before and after music"
+
+"Hypothesis 2: ERS ACA to investigate whether respondents use music to regulate emotion in different ways between groups."
 
 <a name="load"></a>
 
@@ -86,7 +87,8 @@ Excluding participants by subject number is covered in the [Data preprocessing f
 include <- include %>%
   set_names(~ str_to_lower(.)) %>%
   mutate(subj = factor(subj), subculture = factor(subculture)) %>%
-  select(subj, interestedpre:afraidpost, subculture)
+  mutate(subculture = recode(.$subculture, Main = 'Mainstream')) %>%
+  select(subj, subculture, interestedpre:ersq18)
 include %>% head(3) %>% pander(split.table = Inf)
 ```
 
@@ -121,17 +123,25 @@ panas %>% head(3) %>% pander(split.table = Inf)
 
 ## Score ERS-ACA
 
-"The Emotion Regulation Strategies for Artistic Creative Activities Scale (ERS ACA)
-(Fancourt, Garnett, Spiro, West, Mullensiefen 2019) is an 18 item inventory with a 5
-point scale from ‘strongly disagree’ to ‘strongly agree’. This was designed to
-measure the extent to which a person uses regulation strategies while engaging with
-an art activity. An overall general strategy use is calculated, as well as 3 subscales
-of strategies: Avoidance, Approach, and Self Development Strategies."
+The Emotion Regulation Strategies for Artistic Creative Activities Scale (ERS ACA)
+(Fancourt, Garnett, Spiro, West, Mullensiefen 2019) is an 18 item inventory, with each item scored from 1 ('strongly disagree') to 5 ('strongly agree'). The ERS-ACA calculates a 'general strategy' socre used to regulate emotions when people engage in artistic creative activities, and three strategy sub-scales; avoidance, approach and self-development.
 
-TODO: Score the ERS as per Elizabeth's document and compare against Appendix 4
 
 ```{r ers}
+avoidance_q   <- c('ersq1', 'ersq3', 'ersq4', 'ersq8', 'ersq11', 'ersq14', 'ersq18')
+approach_q    <- c('ersq2', 'ersq9', 'ersq10', 'ersq12', 'ersq13', 'ersq16')
+development_q <- c('ersq5', 'ersq6', 'ersq7', 'ersq15', 'ersq17')
+ers <- include %>%
+  mutate(avoidance = rowSums(across(all_of(avoidance_q))) / length(avoidance_q),
+         approach = rowSums(across(all_of(approach_q))) / length(approach_q),
+         development = rowSums(across(all_of(development_q))) / length(development_q),
+         total = rowSums(across(all_of(c(avoidance_q, approach_q, development_q))) / 18)) %>%
+  select(subj, subculture, avoidance, approach, development, total)
 ```
+
+### Explanation of commands
+
+
 
 ## TODO: Tables: for each emotion,PA,NA: mean(sd), time*subculture (Appendix 2)
 
@@ -141,9 +151,87 @@ QUESTION: How are "estimated marginal means" calculated?
 
 ## TODO: 3 mixed ANOVAs: PANAS ~ subculture(4)*time(2)
 
-## TODO: 1-way ANOVAs: overal ERS ~ subculture
+### Inverse transform NA
 
-## TODO: 3 Kruskal-Wallis H tests: ERS_subscale ~ subculture (4)
+## ERS summary statistics
+
+```{r ers-summary}
+ers_l <- ers %>%
+  pivot_longer(avoidance:total, names_to = 'ers', values_to = 'score') %>%
+  mutate(ers = factor(ers))
+ers_l %>%
+  group_by(ers, subculture) %>%
+  summarise(mean = mean(score, na.rm = TRUE), sd = sd(score, na.rm = TRUE))
+```
+
+## Compare overall emotional regulation strategy by subculture
+
+```{r ers-anova}
+library(BayesFactor)
+ers_total <- ers_l %>% filter(ers == 'total') %>% drop_na()
+anovaBF(formula = score ~ subculture, data = ers_total)
+```
+### Explanation of commands
+
+### Explanation of output
+
+<a name="ers-subscales"></a>
+
+## Compare avoidance, approach and self-development strategies by subculture
+
+### Avoidance
+
+```{r avoidance}
+library("ggpubr")
+avoidance <- ers_l %>% filter(ers == 'avoidance')
+ggboxplot(avoidance, x = 'subculture', y = 'score', 
+          color = 'subculture', order = c('Mainstream', 'Goth', 'Emo', 'Metal'),
+          ylab = "ERS avoidance", xlab = "Subculture")
+avoidance <- avoidance %>% mutate(rank = rank(score))
+avoidance %>%
+  group_by(subculture) %>%
+  summarise(n = n(),
+            median = median(score, na.rm = TRUE),
+            mean_rank = mean(rank),
+            sum_rank = sum(rank))
+kruskal.test(score ~ subculture, data = avoidance)
+```
+
+### Approach
+
+```{r approach}
+approach <- ers_l %>% filter(ers == 'approach')
+# TODO: save this for non-parametric worksheet
+
+approach <- approach %>% mutate(rank = rank(score))
+approach %>%
+  group_by(subculture) %>%
+  summarise(n = n(),
+            median = median(score, na.rm = TRUE),
+            mean_rank = mean(rank),
+            sum_rank = sum(rank))
+ggboxplot(approach, x = 'subculture', y = 'score', 
+          color = 'subculture', order = c('Mainstream', 'Goth', 'Emo', 'Metal'),
+          ylab = "ERS approach", xlab = "Subculture")
+kruskal.test(score ~ subculture, data = approach)
+```
+
+## Self-development
+
+```{r development}
+development <- ers_l %>% filter(ers == 'development')
+development <- development %>% mutate(rank = rank(score))
+development %>%
+  group_by(subculture) %>%
+  summarise(n = n(),
+            median = median(score, na.rm = TRUE),
+            mean_rank = mean(rank),
+            sum_rank = sum(rank))
+ggboxplot(development, x = 'subculture', y = 'score', 
+          color = 'subculture', order = c('Mainstream', 'Goth', 'Emo', 'Metal'),
+          ylab = "ERS self-development", xlab = "Subculture")
+kruskal.test(score ~ subculture, data = development)
+```
 
 ## References
 
@@ -151,7 +239,7 @@ Watson, D., Clark, L. A., & Tellegen, A. (1988). [Development and validation of 
 
 Fancourt, D., Garnett, C., Spiro, N., West, R., & Müllensiefen, D. (2019). [How do artistic creative activities regulate our emotions? Validation of the Emotion Regulation Strategies for Artistic Creative Activities Scale (ERS-ACA)](https://doi.org/10.1371/journal.pone.0211362). PLOS ONE, 14(2), e0211362. 
 
-  ___
+___
   
   This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0. 
 
