@@ -47,7 +47,7 @@ To prepare for this worksheet:
 
 1. Open the `Files` tab. The `case-studies` folder should contain a folder called `helen-lloyd`.
 
-1. Create a script named `preproc-experiments.R` in the `rminr-data` folder (the folder above `going-further`). Put all the commands from this worksheet into this file, and run them from there. Save your script regularly.
+1. Create a script named `preproc-experiments.R` in the `rminr-data` folder (the folder above `case-studies`). Put all the commands from this worksheet into this file, and run them from there. Save your script regularly.
 
 <a name="select"></a>
 
