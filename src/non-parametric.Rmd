@@ -1,17 +1,17 @@
 ---
 title: "Traditional non-parametric tests"
 author: "Paul Sharpe"
-output: html_document
+output:
+  html_document:
+    highlight: pygment
 ---
 
 ```{r setup, include=FALSE}
 ## DEVELOPERS: Uncomment one option, as appropriate
-
 ## Show only commands.
 ## knitr::opts_chunk$set(echo = TRUE, message = FALSE, results='hide', fig.keep = 'none', comment=NA)
-
 ## Mann-Whitney based on https://stackoverflow.com/questions/43033884/r-mann-whitney-u-test-output-like-in-spss
-##
+## For Kruskal-Wallis see http://www.sthda.com/english/wiki/kruskal-wallis-test-in-r
 ## Show commands and output.
 knitr::opts_chunk$set(echo = TRUE, comment=NA, cache = TRUE)
 library(pander)
@@ -23,21 +23,19 @@ library(pander)
 
 - [Getting started](#start)
 
-- [Loading and preprocessing data](#load)
-
-- [Calculating summary statistics](#summary)
-
 - [Mann-Whitney U test](#wilcox)
 
 - [Exercise 1](#ex1)
 
-- [Kruskal-Wallis test](#kruskal-wallis)
+- [Kruskal-Wallis H test](#kruskal-wallis)
+
+- [Exercise 2](#ex2)
 
 <a name="intro"></a>
 
 ## Introduction
 
-This worksheet describes common, traditional (frequentist) non-parametric statistical tests. The statistical tests used to analyse differences and relationships in other worksheets are collectively known as **parametric tests**. For their results to be valid, parametric tests require that the data being analysed comes from a population with a particular probability distribution, having known parameters. In most cases, the probability distribution is the normal (Gaussian) distribution, and the parameters are the mean and standard deviation. **Non-parametric tests** do not rely on meeting these assumptions, and can therefore be used to analyse data which is not normally distributed. Parametric tests make some additional assumptions which aren't discussed in this worksheet. Our aim is to give an overview of these two categories of statistical tests to help you decide which test is most appropriate for analysing your data.
+This worksheet describes common, traditional (frequentist) non-parametric statistical tests. The statistical tests used to analyse differences and relationships in other worksheets are collectively known as **parametric tests**. For their results to be valid, parametric tests require that the data being analysed comes from a population with a particular probability distribution, having known parameters. In most cases, the probability distribution is the normal (Gaussian) distribution, and the parameters are the mean and standard deviation. Parametric tests make some additional assumptions which aren't discussed in this worksheet. **Non-parametric tests** do not rely on meeting these assumptions, and can therefore be used to analyse data which is not normally distributed.
 
 If your data meet the criteria for a parametric test, this is the best choice as parametric tests normally provide greater [statistical power](power.html) than the equivalent non-parametric test. When you learnt about the central limit theorem, you saw that a large enough sample will have a normal distribution, regardless of the distribution of the underlying data from which it was sampled. Given the size of most effects in psychology, to reliably detect differences between conditions would require sample sizes which ensure that the data is normally distributed (about 30 and above). Therefore, the most likely scenario in which you would use a _non-parametric test_ is when you have a small sample, and the data is not normally distributed.
 
@@ -53,26 +51,32 @@ To prepare for this worksheet:
 
 1. If you don't see a folder named `going-further`, it means you created your project _before_ the data required for this worksheet was added to the `rminr-data` git repository. You can get the latest files by asking git to "`pull`" the repository. Select the `Git` tab, which is located in the row of tabs which includes the `Environment` tab. Click the `Pull` button with a downward pointing arrow. A window will open showing the files which have been pulled from the repository. Close the `Git pull` window.
 
-1. Open the `Files` tab. The `going-further` folder should contain the file `picture-naming-preproc.csv`.
+1. Open the `Files` tab. The `going-further` folder should contain the file `picture-naming-preproc.csv` and `music-emotion-preproc.csv`.
 
 1. Create a script named `non-parametric.R` in the `rminr-data` folder (the folder above `going-further`). Add the code to this script as you work through each section of the worksheet.
 
-<a name="load"></a>
+<a name="wilcox"></a>
 
-## Loading and preprocessing data
+## Mann-Whitney U test
 
-We'll demonstrate the Mann-Whitney U test using data from an experiment which evaluated children’s language development using the Words in Game (WinG) test. WinG consists of a set of picture cards which are used in four tests: noun comprehension, noun production, predicate comprehension, and predicate production. The Italian and English versions of the WinG cards use different pictures to depict the associated words. The experiment tested whether English-speaking children aged approximately 30 months, produce similar responses for the two sets of cards.
+### Loading and preprocessing data
+
+We'll demonstrate the Mann-Whitney U test using data from an experiment which evaluated children’s language development using the Words in Game (WinG) test. WinG consists of a set of picture cards which are used in four tests: noun comprehension, noun production, predicate comprehension, and predicate production. The Italian and English versions of the WinG cards use different pictures to depict the associated concepts. The experiment tested whether English-speaking children aged approximately 30 months, produce similar responses for the two sets of cards.
 
 We start by loading the data:
 
-```{r load, message=FALSE}
+```{r load, message=FALSE, class.source = 'numberLines lineAnchors'}
 rm(list = ls()) # clear the environment
 library(tidyverse)
-
-# Table of descriptive statistics
 wing_preproc <- read_csv('going-further/picture-naming-preproc.csv',
                          col_types = 'fffiiiiiiiiii')
 ```
+
+**Explanation of commands:**
+
+Line 1 clear the environment. Line 2 loads `tidyverse`. The data we read in on line 3 has already undergone some preprocessing and is in wide format. We use `col_types` to set the first three columns as factors, and remainder as whole numbers.
+
+The first few lines of `wing_preproc` look like this:
 
 ```{r, echo=FALSE}
 wing_preproc %>% head(12) %>% pander(split.table = Inf)
@@ -93,13 +97,20 @@ task_by_subj <- wing_preproc %>%
 
 In the [Within-subject differences worksheet](#anova1.html), you learnt how to use `pivot_wider()` to widen long data frames. The `pivot_longer()` command does the reverse. `cols = c(nc, np, pc, pp)` selects the columns we want to pivot. Each value in these columns is added to a row in a new column called `correct` (`values_to = 'correct'`). In the same row, a new column `task` is set to the name of the column which the value came from (`names_to = 'task'`). Because `task` is a factor, this turns the pivoted column names into factor levels associated with the corresponding value in `correct`. All of the values in the other columns are duplicated for each row. We `select()` just the columns we want for our table of descriptive statistics.
 
+The first few rows of `task_by_subj` look like this:
+
+```{r, echo=FALSE}
+task_by_subj %>% head() %>% pander()
+```
+
 <a name="summary"></a>
 
-## Calculating summary statistics
+### Calculating summary statistics
 
 The Mann-Whitney test compares _ranked_ data, so we should report the median (rather than the mean) as our summary statistic. We'll also calculate the sum and mean of the ranks, as these are sometimes reported.
 
 ```{r}
+# summary statistics
 nc_include <- task_by_subj %>% filter(task == 'nc') %>% drop_na()
 nc_include <- nc_include %>% mutate(rank = rank(correct))
 nc_summary <- nc_include %>%
@@ -120,11 +131,7 @@ nc_summary
 
 **Explanation of output:**
 
-<a name="wilcox"></a>
-
-## Mann-Whitney U test
-
-The Mann-Whitney U test (also known as the Wilcoxon rank sum test) is a non-parametric equivalent of a between-subjects t-test.  It works by ranking all of the scores in the two groups, adding the ranks in each group, and comparing these "summed ranks" to determine if they differ.
+The Mann-Whitney U test (also known as the Wilcoxon rank sum test) is a non-parametric equivalent of a between-subjects t-test. It works by ranking all of the scores in the two groups, adding the ranks in each group, and comparing these "summed ranks" to determine if they differ.
 
 We'll run a Mann-Whitney U test to see if there were any differences between scores for the Italian and English cards on the noun comprehension (`nc`) task.
 
@@ -179,11 +186,87 @@ wilcox.test(correct ~ cards, np_include)
 
 <a name="kruskal-wallis"></a>
 
-## Kruskal-Wallis test
+## Kruskal-Wallis H test
 
-http://www.sthda.com/english/wiki/kruskal-wallis-test-in-r
+The Kruskal-Wallis H test is a non-parametric equivalent of a one-way between subjects ANOVA. It extends the Mann-Whitney test to situations where there are more than two groups.
 
-"Kruskal-Wallis test by rank is a non-parametric alternative to one-way ANOVA test, which extends the two-samples Wilcoxon test in the situation where there are more than two groups. It’s recommended when the assumptions of one-way ANOVA test are not met. This tutorial describes how to compute Kruskal-Wallis test in R software."
+We'll demonstrate this test using data from a study which compared emotion regulation strategies between fans of mainstream (control group), goth, metal and emo music. Participants were measured using the Emotion Regulation Strategies for Artistic Creative Activities Scale (ERS-ACA), an 18 item inventory, with each item scored from 1 ('strongly disagree') to 5 ('strongly agree'). The ERS-ACA gives an overall measure of the strategy people use to regulate their emotions when they engage in artistic, creative activities, and scores on three strategy sub-scales; avoidance, approach and self-development.
+
+We start by loading the data:
+
+```{r load-ers}
+# Kruskal-Wallis H test
+ers_l <- read_csv('going-further/music-emotion-preproc.csv', col_types = 'fffd')
+```
+
+**Explanation of command:**
+
+This data has already undergone some preprocessing and is in long format. We use `col_types = 'fffd'` to set the first three columns as factors, and the fourth column as a number with decimal places.
+
+The first few lines of `ers_l` look like this:
+
+```{r, echo=FALSE}
+ers_l %>% head(8) %>% pander()
+```
+
+Like the Mann-Whitney test, the Kruskal-Wallis test works on ranked data. We'll start by generating some summary statistics for the 'approach' subscale.
+
+```{r k-w-summary, class.source = 'numberLines lineAnchors'}
+approach <- ers_l %>% filter(ers == 'approach')
+approach <- approach %>% mutate(rank = rank(score))
+approach_summary <- approach %>%
+  group_by(subculture) %>%
+  summarise(n = n(),
+            median = median(score, na.rm = TRUE),
+            mean_rank = mean(rank),
+            sum_rank = sum(rank))
+approach_summary
+```
+
+**Explanation of commands:**
+
+Line 1 filters the data to only include measurements for the 'approach' subscale. The second line ranks the scores for all participants. Lines 3-8 are very similar to the summary statistics we generated for the Mann-Whitney test. In this case we group by music `subculture`.
+
+**Explanation of output:**
+
+The differences between groups look quite small, the largest being between `Mainstream` and `Emo`.
+
+We can now run the Kruskal-Wallis test:
+
+```{r k-w}
+kw <- kruskal.test(score ~ subculture, data = approach)
+kw
+```
+
+**Explanation of commands:**
+
+The command `kruskal.test(score ~ subculture, data = approach)` runs the test to compare the ERS-ACA `score` scores for the four groups in `subculture`.
+
+**Explanation of output:**
+
+The string `score by subculture` reminds you that you compared the values in `score` between the levels in the `subculture` factor. The Kruskal-Wallis _H_ statistic is `r kw$statistic` and is derived from a chi-square distribution, using a calculation similar to the chi-squared test introduced in [the Relationships worksheet](chi.html). The degrees of freedom is one less than the number of groups, in this case `r kw$parameter`. The `p` value tells us whether there was  a significant difference between the medians in any of the four groups.
+
+There was no significant difference in approach style between the mainstream (_Mdn_ = `r round(approach_summary[approach_summary$subculture == 'Mainstream', 'median'], 2)`), goth (_Mdn_ = `r round(approach_summary[approach_summary$subculture == 'Goth', 'median'], 2)`), metal (_Mdn_ = `r round(approach_summary[approach_summary$subculture == 'Metal', 'median'], 2)`) and emo (_Mdn_ = `r round(approach_summary[approach_summary$subculture == 'Emo', 'median'], 2)`) groups (_H_ = `r round(kw$statistic, 2)`, _p_ = `r round(kw$p.value, 2)`).
+
+<a name="ex2"></a>
+
+## Exercise 2
+
+Calculate summary statistics and Kruskal-Wallis H for the self-development emotional response subscale of the ERS-ACA. Your results should look like this:
+
+```{r ex2, echo=FALSE}
+development <- ers_l %>% filter(ers == 'development')
+development <- development %>% mutate(rank = rank(score))
+development %>%
+  group_by(subculture) %>%
+  summarise(n = n(),
+            median = median(score, na.rm = TRUE),
+            mean_rank = mean(rank),
+            sum_rank = sum(rank))
+kruskal.test(score ~ subculture, data = development)
+```
+
+**Copy the R code you used for this exercise into PsycEL.**
 
 ___
 
