@@ -189,6 +189,8 @@ links, you may find just notes, or incomplete worksheets.
 
 - [Traditional non-parametric tests](non-parametric.html): **Mann-Whitney U**.
 
+- [Data preprocessing for experiments](preproc-experiments.html): **Excluding data by subject number**
+
 - [Data management](data-management.html)
 
 - [More on data](more-on-data.html): Reading data directly from Excel.

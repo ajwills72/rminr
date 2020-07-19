@@ -1,0 +1,108 @@
+---
+title: "Data preprocessing for experiments"
+author: "Paul Sharpe, Andy Wills"
+output:
+  html_document:
+    highlight: pygment
+---
+
+```{r setup, include=FALSE}
+## DEVELOPERS: Uncomment one option, as appropriate
+## Show only commands.
+## knitr::opts_chunk$set(echo = TRUE, message = FALSE, results='hide', fig.keep = 'none', comment=NA)
+
+## Show commands and output.
+knitr::opts_chunk$set(echo = TRUE, comment=NA, cache = TRUE)
+options(tibble.width = Inf) # show all columns in output
+library(pander)
+```
+
+## Contents
+
+- [Introduction](#intro)
+
+- [Getting started](#start)
+
+- [Loading data](#select)
+
+- [Excluding data by subject number](#exclude)
+
+- [Exercise 1](#ex1)
+
+<a name="intro"></a>
+
+## Introduction
+
+In this worksheet, we'll cover some additional techniques for preprocessing experimental data.
+
+<a name="start"></a>
+
+## Getting started
+
+To prepare for this worksheet:
+
+1. Open the `rminr-data` project we used [previously](preproc.html#load).
+
+1. If you don't see a folder named `case-studies`, it means you created your project _before_ the data required for this worksheet was added to the `rminr-data` git repository. You can get the latest files by asking git to "`pull`" the repository. Select the `Git` tab, which is located in the row of tabs which includes the `Environment` tab. Click the `Pull` button with a downward pointing arrow. A window will open showing the files which have been pulled from the repository. Close the `Git pull` window.
+
+1. Open the `Files` tab. The `case-studies` folder should contain a folder called `helen-lloyd`.
+
+1. Create a script named `preproc-experiments.R` in the `rminr-data` folder (the folder above `going-further`). Put all the commands from this worksheet into this file, and run them from there. Save your script regularly.
+
+<a name="select"></a>
+
+## Loading data
+
+We'll start with some data from a study which compared emotional responses before an after listening to different types of music. Our first step is to load the data.
+
+```{r load, message=FALSE, class.source = 'numberLines lineAnchors'}
+rm(list = ls()) # clear the environment
+library(tidyverse)
+raw <- read_csv('case-studies/helen-lloyd/music-emotion.csv')
+raw %>% select(1:3) %>% head()
+```
+
+**Explanation of commands:**
+
+Line 1 clears the environment. Line 2 loads `tidyverse`. Line 3 loads the data into the `raw` data frame. Line 4 prints a few rows from columns 1-3 of `raw`.
+
+**Explanation of output:**
+
+Our data is in wide format i.e. one participant per row.
+
+<a name="exclude"></a>
+
+## Excluding data by subject number
+
+If you look at the **Value** column for `raw` in the **Environment** pane, you'll see that we started with `r nrow(raw)` participants. In this study, the researcher excluded participants they considered to be extreme outliers, and those with incomplete data.
+
+We'll exclude participants who didn't meet the inclusion criteria.
+
+```{r exclude, class.source = 'numberLines lineAnchors'}
+## Exclude participants
+exclude <- c(24, 158, 234, 405, 497, 630, 663, 673, 685)
+include <- raw %>% filter(!(subj %in% exclude))
+```
+
+### Explanation of commands
+
+Line 1 is a list of the participant numbers that we want to exclude. In the second line, we remove those participants from the `raw` data frame. The `filter` command will be familiar from previous worksheets. The command `subj %in% exclude` means 'any participant whose subject number is in our list `exclude`. The use of `!()` in the filter statement means `not`. So, `filter(!(subj %in% exclude))` means keep the participants whose subject number is not in the `exclude` list.
+
+If you look at the **Value** column for `include` in the **Environment** pane, you'll see that, after exlusions, we have `r nrow(include)` participants.
+
+<a name="ex1"></a>
+
+## Exercise 1
+
+```{r ex1, echo=FALSE}
+```
+
+```{r ex1-correct, echo=FALSE}
+```
+
+**Copy the R code you used for this exercise into PsycEL.**
+
+___
+
+This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0. 
+
