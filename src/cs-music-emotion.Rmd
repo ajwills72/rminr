@@ -1,7 +1,8 @@
 ---
 title: "The Effect of Alternative Music on Emotional Response in Alternative Music Subcultures"
-author: "Helen Lloyd, Elizabeth Dark, Paul Sharpe"
-output: html_document
+output:
+  html_document:
+    highlight: pygment
 ---
 
 ```{r setup, include=FALSE}
@@ -17,78 +18,108 @@ output: html_document
 
 ## Show commands and output.
 knitr::opts_chunk$set(echo = TRUE, comment=NA, cache = TRUE)
-options(tibble.width = Inf) # show all columns in output
 library(pander)
 ```
 
-# Contents
+## Contents
 
 - [Introduction](#intro)
+- [Loading data](#load)
+- [Excluding data by subject number](#exclude)
+- [Preprocessing](#preprocess)
 
-- [Getting started](#start)
+## Before you start
 
-- [Preprocessing](#preprocessing)
+This is an advanced worksheet, which assumes you have completed the [Absolute Beginners' Guide to R](https://ajwills72.github.io/rminr/#beginners) course, the [Research Methods in Practice (Quantitative section)](https://benwhalley.github.io/rmip/overview-quantitative.html) course, and the [Intermediate Guide to R](https://ajwills72.github.io/rminr/#rmip) course. 
 
 <a name="intro"></a>
 
-# Introduction
+## Introduction
 
-* PANAS-SF (20 item) pre and post
-* ERS ACA administered after post-PANAS-SF
+This worksheet describes a full analysis pipeline for an undergraduate student dissertation which compared emotional responses before an after listening to different types of music. Participants self-identified as fans of emo (81), goth (77), metal (77) or mainstream (59) music. Their emotions were tested using the short-form Positive and Negative Affect Scale (PANAS-SF, Watson et al., 1988), before and after listening to 4-5 minutes of music associated with their subculture. The 'mainstream' group acted as a control condition. After the second PANAS-SF, they completed the Emotion Regulation Strategies for Artistic Creative Activities Scale (ERS-ACA, Fancourt et al., 2019). This was an online study, with data collected using [JISC](https://www.jisc.ac.uk/).
 
-## TODO: Exclusion criteria
+So there were two dependent variables in this study. The PANAS-SF was a dependent variable in a mixed design, with subculture group as the between subjects factor, and time (before and after the music) as the repeated measure. The other dependent variable, ERS-ACA, was analysed in relation to the subculture group.
 
-<a name="start"></a>
+<a name="load"></a>
 
-# Getting started
+## Loading data
 
-```{r init-load, message=FALSE}
+Open the `rminr-data` project we used [previously](preproc.html#load).
+
+Ensure you have the latest files by asking git to "`pull`" the repository. Select the `Git` tab, which is located in the row of tabs which includes the `Environment` tab. Click the `Pull` button with a downward pointing arrow. A window will open showing the files which have been pulled from the repository. Close the `Git pull` window. The `case-studies` folder should contain a folder named `helen-lloyd`.
+
+Next, create a new, empty R script and save it in the `rminr-data` folder as `cs-music-emotion.R`. Put all the commands from this worksheet into this file, and run them from there. Save your script regularly.
+
+We start by loading the data.
+
+```{r load, message=FALSE, class.source = 'numberLines lineAnchors'}
 rm(list = ls()) # clear the environment
 library(tidyverse)
+raw <- read_csv('case-studies/helen-lloyd/music-emotion.csv')
 ```
 
-<a name="preprocessing"></a>
+**Explanation of commands:**
 
-# Preprocessing
+Line 1 clears the environment. Line 2 loads `tidyverse`. Line 3 loads the data into the `raw` data frame.
 
-See also: [Preprocessing scales](#preproc-scales.html)
+<a name="exclude"></a>
+
+## Excluding data by subject number
+
+In this study, the researcher excluded participants they considered to be extreme outliers, and those with incomplete data.
+
+```{r exclude, class.source = 'numberLines lineAnchors'}
+## Exclude participants
+exclude <- c(24, 158, 234, 405, 497, 630, 663, 673, 685)
+include <- raw %>% filter(!(subj %in% exclude))
+```
+
+### Explanation of commands
+
+Excluding participants by subject number is covered in the [Data preprocessing for experiments worksheet](#preproc-experiments.html). In summary, line 1 is a list of the participant numbers that we want to exclude. Line 2 excludes these participants by filtering `raw` to include values in `sub` which are _not_ in `exclude`.
+
+## Preprocessing
+
+<a name="preprocess"></a>
 
 ```{r tidy, message=FALSE}
-data1 <- read_csv('going-further/music-emotion-1.csv')
-
-d1 <- data1 %>%
+include <- include %>%
   set_names(~ str_to_lower(.)) %>%
-  mutate(subj = factor(partexpid), subculture = factor(subcultureauto)) %>%
+  mutate(subj = factor(subj), subculture = factor(subculture)) %>%
   select(subj, interestedpre:afraidpost, subculture)
-d1 %>% head(3) %>% pander(split.table = Inf)
+include %>% head(3) %>% pander(split.table = Inf)
 ```
 
-```{r score}
-d1 <- d1 %>% mutate(pre_emotion = rowSums(across(interestedpre:afraidpre)),
-                    pre_pa = rowSums(across(c(interestedpre, excitedpre, strongpre, enthusiasticpre,
-                                            proudpre, alertpre, inspiredpre, determinedpre, attentivepre,
-                                            activepre))),
-                    pre_na = rowSums(across(c(distressedpre, upsetpre, guiltypre, scaredpre,
-                                                  hostilepre, irritablepre, ashamedpre, nervouspre,
-                                                  jitterypre, afraidpre))),
-                    post_emotion = rowSums(across(interestedpost:afraidpost)),
-                    post_pa = rowSums(across(c(interestedpost, excitedpost, strongpost, enthusiasticpost,
-                                            proudpost, alertpost, inspiredpost, determinedpost, attentivepost,
-                                            activepost))),
-                    post_na = rowSums(across(c(distressedpost, upsetpost, guiltypost, scaredpost,
-                                                  hostilepost, irritablepost, ashamedpost, nervouspost,
-                                                  jitterypost, afraidpost))),
-                    ) %>%
+## Score PANAS-SF
+
+These scores matched those in the data, so presumably I scored the PANAS-SF correctly.
+
+```{r score-panas}
+panas <- include %>%
+  mutate(pre_emotion = rowSums(across(interestedpre:afraidpre)),
+         pre_pa = rowSums(across(c(interestedpre, excitedpre, strongpre,
+                                   enthusiasticpre, proudpre, alertpre,
+                                   inspiredpre, determinedpre, attentivepre,
+                                   activepre))),
+         pre_na = rowSums(across(c(distressedpre, upsetpre, guiltypre,
+                                   scaredpre, hostilepre, irritablepre,
+                                   ashamedpre, nervouspre, jitterypre,
+                                   afraidpre))),
+         post_emotion = rowSums(across(interestedpost:afraidpost)),
+         post_pa = rowSums(across(c(interestedpost, excitedpost, strongpost,
+                                    enthusiasticpost, proudpost, alertpost,
+                                    inspiredpost, determinedpost,
+                                    attentivepost, activepost))),
+         post_na = rowSums(across(c(distressedpost, upsetpost, guiltypost,
+                                    scaredpost, hostilepost, irritablepost,
+                                    ashamedpost, nervouspost, jitterypost,
+                                    afraidpost))),
+         ) %>%
   select(subj, subculture, pre_emotion:post_na)
-d1 %>% head(3) %>% pander(split.table = Inf)
+panas %>% head(3) %>% pander(split.table = Inf)
 ```
 
-QUESTION: these scores matched those in the data, so presumably I scored the PANAS-SF correctly?
-
-## ERS scoring
-
-QUESTION: Should we simplify things by using data1.csv for the ERS analyses?
-
+## Score ERS-ACA
 
 "The Emotion Regulation Strategies for Artistic Creative Activities Scale (ERS ACA)
 (Fancourt, Garnett, Spiro, West, Mullensiefen 2019) is an 18 item inventory with a 5
@@ -97,31 +128,30 @@ measure the extent to which a person uses regulation strategies while engaging w
 an art activity. An overall general strategy use is calculated, as well as 3 subscales
 of strategies: Avoidance, Approach, and Self Development Strategies."
 
-QUESTION: Score the ERS as per Fancourt et al. (2019, Table 3)? No reversed items?
+TODO: Score the ERS as per Elizabeth's document and compare against Appendix 4
 
-```{r data2}
-data2 <- read_csv('going-further/music-emotion-2.csv')
+```{r ers}
 ```
-
-# Results
 
 ## TODO: Tables: for each emotion,PA,NA: mean(sd), time*subculture (Appendix 2)
 
 ## TODO: 3 ANOVA plots: : PANAS ~ subculture(4)*time(2) (Appendices 6-8)
 
+QUESTION: How are "estimated marginal means" calculated?
+
 ## TODO: 3 mixed ANOVAs: PANAS ~ subculture(4)*time(2)
 
 ## TODO: 1-way ANOVAs: overal ERS ~ subculture
 
-## TODO: 3 Kruskal-Wallis H tests: ERS_subscale ~ subculture
+## TODO: 3 Kruskal-Wallis H tests: ERS_subscale ~ subculture (4)
 
-# References
+## References
 
-Watson, D., Clark, L. A., & Tellegen, A. (1988). Development and validation of brief measures of positive and negative affect: The PANAS scales. Journal of Personality and Social Psychology, 54(6), 1063.
+Watson, D., Clark, L. A., & Tellegen, A. (1988). [Development and validation of brief measures of positive and negative affect: The PANAS scales.](https://www.researchgate.net/profile/Rachel_Bachner-Melman/post/Is_there_a_way_to_measure_negative_emotions/attachment/59d644a1c49f478072ead59a/AS:273817966972930@1442294698972/download/PANAS.+20+items.pdf) Journal of Personality and Social Psychology, 54(6), 1063.
 
-Fancourt, D., Garnett, C., Spiro, N., West, R., & Müllensiefen, D. (2019). How do artistic creative activities regulate our emotions? Validation of the Emotion Regulation Strategies for Artistic Creative Activities Scale (ERS-ACA). PLOS ONE, 14(2), e0211362. https://doi.org/10.1371/journal.pone.0211362
+Fancourt, D., Garnett, C., Spiro, N., West, R., & Müllensiefen, D. (2019). [How do artistic creative activities regulate our emotions? Validation of the Emotion Regulation Strategies for Artistic Creative Activities Scale (ERS-ACA)](https://doi.org/10.1371/journal.pone.0211362). PLOS ONE, 14(2), e0211362. 
 
-___
-
-This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0. 
+  ___
+  
+  This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0. 
 
