@@ -30,11 +30,11 @@ library(tidyverse)
 
 - [Creating a correlation matrix](#cor-matrix)
 
-- [Exercise 2](#ex1)
+- [Exercise 1](#ex1)
 
 - [Creating a custom table of descriptive statistics](#descriptives)
 
-- [Exercise 1](#ex2)
+- [Exercise 2](#ex2)
 
 - [R Markdown](#rmd)
 
