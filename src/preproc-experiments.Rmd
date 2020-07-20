@@ -55,7 +55,7 @@ To prepare for this worksheet:
 
 ## Loading data
 
-We'll start by loading some data from [an undergraduate student dissertation on the Perruchet Effect](#awdiss.html).
+We'll start by loading some data from [an undergraduate student dissertation on the Perruchet Effect](awdiss.html).
 
 ```{r load, message=FALSE, class.source = 'numberLines lineAnchors'}
 rm(list = ls()) # clear the environment
@@ -161,7 +161,7 @@ sum.data <- sum.data %>% mutate(lcval = log(cval+1))
 ### Explanation of commands
 
 Line 1 loads the data from the same experiment, after it's undergone some preprocessing. 
-The `cval` (for "corrected value") column contains the GSR measurement that we need to log transform. You can follow the preprocessing steps that produced `sum.data` in [the Perruchet Effect worksheet](#awdiss.html).
+The `cval` (for "corrected value") column contains the GSR measurement that we need to log transform. You can follow the preprocessing steps that produced `sum.data` in [the Perruchet Effect worksheet](awdiss.html).
 
 The command `log` takes the natural logarithm. We calculate `log(cval+1)` rather than `log(cval)` because the `log(0)` is an infinitely small number, which is something that cannot be analyzed. By adding 1 we don't hit this problem (unless cval is -1 or smaller, which it seldom is).
 

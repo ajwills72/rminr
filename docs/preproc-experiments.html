@@ -455,7 +455,7 @@ summary {
 </div>
 <div id="loading-data" class="section level2">
 <h2>Loading data</h2>
-<p>We’ll start by loading some data from <a href="#awdiss.html">an undergraduate student dissertation on the Perruchet Effect</a>.</p>
+<p>We’ll start by loading some data from <a href="awdiss.html">an undergraduate student dissertation on the Perruchet Effect</a>.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode numberSource r numberLines lineAnchors"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" href="#cb1-1" title="1"><span class="kw">rm</span>(<span class="dt">list =</span> <span class="kw">ls</span>()) <span class="co"># clear the environment</span></a>
 <a class="sourceLine" id="cb1-2" href="#cb1-2" title="2"><span class="kw">library</span>(tidyverse)</a>
 <a class="sourceLine" id="cb1-3" href="#cb1-3" title="3">raw &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&#39;going-further/perruchet-raw.csv&#39;</span>)</a>
@@ -540,7 +540,7 @@ summary {
 <a class="sourceLine" id="cb8-3" href="#cb8-3" title="3">sum.data &lt;-<span class="st"> </span>sum.data <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">lcval =</span> <span class="kw">log</span>(cval<span class="op">+</span><span class="dv">1</span>))</a></code></pre></div>
 <div id="explanation-of-commands-3" class="section level3">
 <h3>Explanation of commands</h3>
-<p>Line 1 loads the data from the same experiment, after it’s undergone some preprocessing. The <code>cval</code> (for “corrected value”) column contains the GSR measurement that we need to log transform. You can follow the preprocessing steps that produced <code>sum.data</code> in <a href="#awdiss.html">the Perruchet Effect worksheet</a>.</p>
+<p>Line 1 loads the data from the same experiment, after it’s undergone some preprocessing. The <code>cval</code> (for “corrected value”) column contains the GSR measurement that we need to log transform. You can follow the preprocessing steps that produced <code>sum.data</code> in <a href="awdiss.html">the Perruchet Effect worksheet</a>.</p>
 <p>The command <code>log</code> takes the natural logarithm. We calculate <code>log(cval+1)</code> rather than <code>log(cval)</code> because the <code>log(0)</code> is an infinitely small number, which is something that cannot be analyzed. By adding 1 we don’t hit this problem (unless cval is -1 or smaller, which it seldom is).</p>
 <hr />
 <p>This material is distributed under a <a href="https://creativecommons.org/">Creative Commons</a> licence. CC-BY-SA 4.0.</p>
