@@ -42,7 +42,7 @@ library(tidyverse)
 
 ## Introduction
 
-It can be helpful to presented data in tables, rather than text, especially when you need to refer to the same data in different parts of a report. Although tables can be produced manually using a Word processor, generating them directly from your data ensures they are up-to-date, and reduces copy-paste errors. This worksheet explains how to use `R` to produce the types of table used to report psychological research.
+It can be helpful to present data in tables, rather than text, especially when you need to refer to the same data in different parts of a report. Although tables can be produced manually using a word processor, generating them directly from your data ensures they are up-to-date, and reduces copy-paste errors. This worksheet explains how to use `R` to produce some of the types of table used to report psychological research.
 
 <a name="start"></a>
 
@@ -62,9 +62,9 @@ To prepare for this worksheet:
 
 ## Creating a correlation matrix
 
-We'll start by producing a correlation matrix. A correlation matrix shows correlations between all combinations of a set of variables, which is often required in research reports. We'll demonstrate an easy way to produce correlation matrices, with APA styling, in a format that can be read by Microsoft Word or LibreOffice Writer. A similar approach can be used to produce other common table types.
+We'll start by producing a correlation matrix. A correlation matrix shows correlations between all combinations of a set of variables, which is often required in research reports. We'll demonstrate an easy way to produce correlation matrices, with [APA styling](https://apastyle.apa.org/style-grammar-guidelines/tables-figures/tables), in a format that can be read by Microsoft Word or LibreOffice Writer. A similar approach can be used to produce other common table types.
 
-We'll generate a correlation matrix using the `attitude` dataset, which is included with `R`. These data are the percent proportion of favourable attitudes given by employees, in relation to seven questions regarding their department. Here are the first few rows of the data frame:
+We'll generate a correlation matrix using the `attitude` dataset, which is included with `R`. These data are the percentage of favourable attitudes given by employees, in relation to seven questions regarding their department (you can find out a bit more about these data by typing `?attitude`). Here are the first few rows of the data frame:
 
 ```{r, echo=FALSE}
 attitude %>% head(5) %>% pander()
@@ -84,17 +84,17 @@ We load the `apaTables` package.The function to generate a correlation matrix is
 
 **Explanation of output:**
 
-Export `table1.doc` from RStudio and open it using a word processor.
+[Export](https://ajwills72.github.io/rminr/using-projects.html#download) `table1.doc` from RStudio and open it using a word processor
 
-The first thing to notice is that the styling (spacing, use of italics, horizontal lines, positioning of captions and footnotes etc.) complies with APA guidelines for tables. You can see how the table will look when printed, using the 'print preview' feature of your word processor.
+The first thing to notice is that the styling (spacing, use of italics, horizontal lines, positioning of captions and footnotes etc.) complies with the APA guidelines for tables. 
 
-The table number and caption is above the table itself. The `Variable` column contains a number and the column name for the seven attitude variables. The next two columns show the mean and standard deviation for each variable. The remaining columns use the numbers from items in the `Variable` column as headings, indicating that they refer to the same variable. The cells show the correlation between the column variables and each of the variables in the rows. Cells are left empty where a variable would otherwise be correlated with itself. The 95% confidence interval for the correlation is shown in square brackets.
+The table number and caption is above the table itself - you will need to edit the caption by hand to make it more meaningful, for example "Means, standard deviations, and correlations with confidence intervals, for the attitude measures of Study 1".
 
-For example, the correlation between `rating` and `complaints` in this sample is .83. The confidence interval indicates that the population value could be between .66 and .91. Evidence for the correlation is calculated using traditional statistics, rather than the Bayes factors described in the [Relationships, part 2 worksheet](corr.html). One asterisk (`*`) indicates that there is less than a 1 in 20 chance that we would have found this correlation coefficient, if the correlation was actually zero (the null hypothesis). Two asterisks (`**`) signify that the probability of the null being true is less than 1 in 100.
+The `Variable` column contains a number and the column name for the seven attitude variables. The next two columns show the mean and standard deviation for each variable. The remaining columns use the numbers from items in the `Variable` column as headings, indicating that they refer to the same variable. The cells show the correlation between the column variables and each of the variables in the rows. Cells are left empty where a variable would otherwise be correlated with itself. The 95% [confidence interval](https://ajwills72.github.io/rminr/more-on-t.html) for the correlation is shown in square brackets.
 
-One final thing to point out is that the correlations generated by `apa.cor.table()` are 2-tailed. One-tailed correlations are explained in the [More on relationships, part 2. worksheet](#corr-extended.html).
+For example, the correlation between `rating` and `complaints` in this sample is .83. The confidence interval indicates that the population value is likely to be between .66 and .91. 
 
-If you type `vignette('apaTables')` in the console, you can read about the other types of table that `apaTables` can produce.
+Evidence for the correlation is calculated using traditional statistics, rather than the Bayes factors described in the [Relationships, part 2 worksheet](corr.html). One asterisk (`*`) indicates `p < .05`. Two asterisks (`**`) signify `p < .01`. These calculations assumed a two-tailed test; one-tailed tests for correlations are explained in the [More on relationships, part 2](corr-extended.html) worksheet. Also recall that p-values are [widely misinterpreted](evidence.html#p-wrong), so it would be better to edit this part of the table by hand to reflect [Bayes Factors](corr.html#evidence) you have already calculated. We suggest using `*` for BF > 3, `**` for BF > 10, `o` for BF < 0.33, and `oo` for BF < 0.1. Change the text at the bottom of the table accordingly.
 
 <a name="ex1"></a>
 
@@ -114,11 +114,13 @@ The first few rows show that the scale used measured the 'big 5' personality fac
 big5 %>% head(5) %>% pander()
 ```
 
-Create a correlation matrix for the five personality factors. Number the table as "Table 2", and save the results in `table2.doc`. Your table should look like this:
+Create a correlation matrix for the five personality factors. Number the table as "Table 2", and save the results in `table2.doc`. Your table should look like this in Rstudio:
 
 ```{r ex1, echo=FALSE, R.options = list(width = 10000)}
 apa.cor.table(big5 %>% select(-subj), filename='table2.doc', table.number = 2)
 ```
+
+...and it should be APA formatted in the file `table2.doc`. 
 
 **Copy the R code you used for this exercise into PsycEL**
 
@@ -140,7 +142,7 @@ wing_preproc <- read_csv('going-further/picture-naming-preproc.csv',
 
 **Explanation of commands:**
 
-This dataset has already undergone some preprocessing. We read the data, using `col_types` to explicitly define the types of data in each column. We set the first three columns as factors (the `fff`), and the remaining columns as integers (the `i`s).
+This dataset has already undergone some preprocessing. We read the data, using `col_types` to explicitly define the types of data in each column. We set the first three columns as [factors](anova1.html#anovaWS) (the `fff`), and the remaining columns as integers (the `i`s).
 
 The first few rows of `wing_preproc` look like this:
 
