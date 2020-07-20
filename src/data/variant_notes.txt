@@ -1,0 +1,7 @@
+Variant 1: Original variant as described in technical specification.
+
+Visual inspection of data suggests anticipatory GSR to CS is largely absent. Consideration of Neumann paper indicates that extending training would likely be a mistake as the US habituates and the CS anticipation occurs early in training. However, in Neuman the CS is 8 seconds against our 5 seconds, so perhaps allowing more time for anticipation would be helpful?
+
+Variant 2: CS duration extended to 8 second.
+
+Inspection of first 10 participants informally suggests that we're getting better anticipation at 8s CS. Decided to test for remainder of time available up under these conditions. This will be a minimum of 30 additional participants, with a theoretical maximum of 67 additional. The decision to stop will be made on how many can be tested in time available to students. We will do no further analysis until data collection is over.
