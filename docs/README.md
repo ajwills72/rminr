@@ -189,7 +189,7 @@ links, you may find just notes, or incomplete worksheets.
 
 - [Traditional non-parametric tests](non-parametric.html): **Mann-Whitney U**, **Kruskal-Wallis H**.
 
-- [Data preprocessing for experiments](preproc-experiments.html): **Excluding data by subject number**
+- [Data preprocessing for experiments](preproc-experiments.html): **De-duplicating data**, **excluding participants**, **log transform**.
 
 - [Data management](data-management.html)
 

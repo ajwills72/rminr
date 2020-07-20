@@ -1,6 +1,6 @@
 ---
 title: "Data preprocessing for experiments"
-author: "Paul Sharpe, Andy Wills"
+author: "Andy Wills and Paul Sharpe"
 output:
   html_document:
     highlight: pygment
@@ -23,11 +23,13 @@ library(pander)
 
 - [Getting started](#start)
 
-- [Loading data](#select)
+- [Loading data](#load)
 
-- [Excluding data by subject number](#exclude)
+- [De-duplicating data](#dedup)
 
-- [Exercise 1](#ex1)
+- [Excluding participants](#exclude)
+
+- [Log transform](#log)
 
 <a name="intro"></a>
 
@@ -43,64 +45,125 @@ To prepare for this worksheet:
 
 1. Open the `rminr-data` project we used [previously](preproc.html#load).
 
-1. If you don't see a folder named `case-studies`, it means you created your project _before_ the data required for this worksheet was added to the `rminr-data` git repository. You can get the latest files by asking git to "`pull`" the repository. Select the `Git` tab, which is located in the row of tabs which includes the `Environment` tab. Click the `Pull` button with a downward pointing arrow. A window will open showing the files which have been pulled from the repository. Close the `Git pull` window.
+1. Open the `Files` tab. You should see a `going-further` which contains the files `perruchet-raw.csv` and `perruchet-sum.csv`.
 
-1. Open the `Files` tab. The `case-studies` folder should contain a folder called `helen-lloyd`.
+1. If you don't see the folder or files, ask git to "`pull`" the latest version of the repository. Select the `Git` tab, which is located in the row of tabs which includes the `Environment` tab. Click the `Pull` button with a downward pointing arrow. A window will open showing the files which have been pulled from the repository. Close the `Git pull` window.
 
 1. Create a script named `preproc-experiments.R` in the `rminr-data` folder (the folder above `case-studies`). Put all the commands from this worksheet into this file, and run them from there. Save your script regularly.
 
-<a name="select"></a>
+<a name="load"></a>
 
 ## Loading data
 
-We'll start with some data from a study which compared emotional responses before an after listening to different types of music. Our first step is to load the data.
+We'll start by loading some data from [an undergraduate student dissertation on the Perruchet Effect](#awdiss.html).
 
 ```{r load, message=FALSE, class.source = 'numberLines lineAnchors'}
 rm(list = ls()) # clear the environment
 library(tidyverse)
-raw <- read_csv('case-studies/helen-lloyd/music-emotion.csv')
-raw %>% select(1:3) %>% head()
+raw <- read_csv('going-further/perruchet-raw.csv')
+colnames(raw) <- c("subj", "time", "key", "value")
+raw %>% head()
 ```
 
 **Explanation of commands:**
 
-Line 1 clears the environment. Line 2 loads `tidyverse`. Line 3 loads the data into the `raw` data frame. Line 4 prints a few rows from columns 1-3 of `raw`.
+Line 1 clears the environment. Lines 2 and 3 should be familiar from previous worksheets; we nearly always need the `tidyverse` package, and we use the `read_csv` command to load the data. The `going-further/` part of the filename `going-further/perruchet-raw.csv` says that the file `perruchet-raw.csv` is to be found in the directory (folder) called `going-further`. 
+
+Line 4 renames the columns, as covered in the [Preprocessing data from experiments](preproc.html#rename) worksheet. Line 5 prints the first few rows of `raw`.
 
 **Explanation of output:**
 
-Our data is in wide format i.e. one participant per row.
+Our data is in long format i.e. one observation per row.
 
-<a name="exclude"></a>
+<a name="dedup"></a>
 
-## Excluding data by subject number
+## De-duplicating data
 
-If you look at the **Value** column for `raw` in the **Environment** pane, you'll see that we started with `r nrow(raw)` participants. In this study, the researcher excluded participants they considered to be extreme outliers, and those with incomplete data.
+We're now going to get the data into a state where we can meaningfully analyse it:
 
-We'll exclude participants who didn't meet the inclusion criteria.
-
-```{r exclude, class.source = 'numberLines lineAnchors'}
-## Exclude participants
-exclude <- c(24, 158, 234, 405, 497, 630, 663, 673, 685)
-include <- raw %>% filter(!(subj %in% exclude))
+```{r tidy, message=FALSE, class.source = 'numberLines lineAnchors'}
+## De-duplicate data; remove pilot study
+raw <- distinct(raw)
+raw <- raw %>% filter(subj > 161)
 ```
 
 ### Explanation of commands
 
-Line 1 is a list of the participant numbers that we want to exclude. In the second line, we remove those participants from the `raw` data frame. The `filter` command will be familiar from previous worksheets. The command `subj %in% exclude` means 'any participant whose subject number is in our list `exclude`. The use of `!()` in the filter statement means `not`. So, `filter(!(subj %in% exclude))` means keep the participants whose subject number is not in the `exclude` list.
+Line 2, `raw <- distinct(raw)` is a _de-duplication_ command. This experiment was run by three people over many different days. They tried to manually stitch all their data files together, by copying-and-pasting them into one big file in Excel. This type of manual manipulation of data is notoriously error prone, and in the process, they accidentally duplicated some data. In this case, it's easy to detect and fix in R, because no two rows of this data can be identical - the subject number or the time is always going to be different. So, we can remove duplicates by telling R to give us just one copy of each of the different rows in the data set. The command `distinct` does that for us. 
 
-If you look at the **Value** column for `include` in the **Environment** pane, you'll see that, after exlusions, we have `r nrow(include)` participants.
+Line 3, `raw  <- raw %>% filter(subj > 161)` should be familiar from previous worksheets; we are keeping only those participants whose subject number is greater than 161. This is because, in this study, we first ran a short pilot experiment, looked at the data, and made a few changes to the experiment. Here, we only wanted to analyze the main study, so we removed the pilot participants.
 
-<a name="ex1"></a>
+<a name="exclude"></a>
 
-## Exercise 1
+## Excluding participants
 
-```{r ex1, echo=FALSE}
+As part of this experiment, participants were told to rate their expectancy of hearing an  unpleasant noise, _on every trial_. However, they only had 8 seconds to do this, and the experimenters noticed that sometimes people failed to make a rating. The experimental apparatus records this as a rating of zero. 
+
+Participants who miss a lot of ratings aren't really following the instructions, making their data hard to interpret. In such cases, we normally exclude those participants from further analysis. First, we need to find out how widespread this problem is. One way to do this is to calculate the number of zero ratings each participant makes:
+
+```{r zeros, class.source = 'numberLines lineAnchors'}
+## Number of expectancy ratings, by participant
+inspect  <- raw %>% filter(key == "ER") %>% filter(value == 0)
+table(inspect$subj)
 ```
 
-```{r ex1-correct, echo=FALSE}
+### Explanation of commands
+
+Line 2 filters those rows of the raw data that contain expectancy ratings (`key == "ER"`) and then to cases where that rating is zero (`value == 0`). This is then stored in the data frame `inspect`. One could look at this manually, but it's more efficient and less error prone to get R to tell us how many times each participant has a zero rating. This is what line 3, `table(inspect$subj)` does - it counts the number of times each subject number occurs in `inspect`.
+
+### Explanation of output
+
+The output shows the number of trials on which each participant failed to give an expectancy rating. If a participant never made a zero rating, their participant number does not appear on the table. We can see that sixteen participants missed at least one rating, and that six participants missed more than 3 (one participant never made a rating, missing all 46 trials of the experiment!). 
+
+### Removing participants from the dataset
+
+In this case, we decided to exclude all participants who missed more than three ratings:
+
+```{r exclude, class.source = 'numberLines lineAnchors'}
+## Exclude participants
+exclude  <- c(164, 166, 176, 199, 236, 239)
+raw  <- raw %>% filter(!(subj %in% exclude))
 ```
 
-**Copy the R code you used for this exercise into PsycEL.**
+### Explanation of commands
+
+Line 2 creates a list of the participant numbers we wish to exclude. In line 3, we remove those participants from the `raw` data frame. The `filter` command will be familiar from previous worksheets. The command `subj %in% exclude` means 'any participant whose subject number is in our list `exclude`. The use of `!()` in the filter statement means `not`. So, `filter(!(subj %in% exclude))` means keep the participants whose subject number is not in the `exclude` list. 
+
+### Note
+
+There are still a few trials where the participant makes no expectancy rating, and the computer records this as an expectancy of zero. There's a good case to be made for recoding the rating on those trials as either `NA` (meaning 'missing data') or `3`, meaning "participant is unsure whether the noise will occur". For brevity, we don't make these changes here, but once you've gone through the whole worksheet, perhaps try to work out how one might do this.
+
+<a name="log"></a>
+
+## Log transform
+
+The other measurement in this study was Galvanic Skin Response (GSR). Studies of GSR data normally _log transform_ it before analysis. Log transforming data means to take the [logarithm](https://en.wikipedia.org/wiki/Logarithm) of the data, in this case the [natural logarithm](https://en.wikipedia.org/wiki/Natural_logarithm). Two reasonable questions about this preprocessing are: (a) what does that mean, and (b) why would you do it?
+
+To answer the first question, a log transform compresses the range of the data. The following graph should help visualize this:
+
+```{r log plot}
+## Visualizing logarithms
+plot(1:50,log(1:50))
+```
+
+On the x-axis we have the numbers 1 to 50. On the y-axis, we have the natural logarithm of those numbers. As you can see, while the x-axis rises from 1 to 50, the y-axis rises from zero to around 4. You should also be able to notice that for each increase in x, the increase in y gets smaller. So, for example, where x rises from 1 to 2, log(x) rises from 0 to about .8; but where x rises from 2 to 3, log(x) rises by about 0.4. 
+
+As a result, a log transform doesn't change small numbers very much, but reduces large numbers a lot more. This can be useful if, for example, a few participants have unusually large GSRs. These very large GSRs would increase the _variance_ of the data substantially, and this can make it harder to detect real differences between conditions. A log transform can reduce that problem, and hence can make it easier to find real effects in such situations. So, this also answers the second part of the question - we apply a log transform to GSR data because it can make it easier to find real effects.
+
+We log transform our GSR data using the `mutate` command that we used earlier:
+
+```{r log trans, message=FALSE, class.source = 'numberLines lineAnchors'}
+## Log transformation of GSR
+sum.data <- read_csv('going-further/perruchet-sum.csv')
+sum.data <- sum.data %>% mutate(lcval = log(cval+1))
+```
+
+### Explanation of commands
+
+Line 1 loads the data from the same experiment, after it's undergone some preprocessing. 
+The `cval` (for "corrected value") column contains the GSR measurement that we need to log transform. You can follow the preprocessing steps that produced `sum.data` in [the Perruchet Effect worksheet](#awdiss.html).
+
+The command `log` takes the natural logarithm. We calculate `log(cval+1)` rather than `log(cval)` because the `log(0)` is an infinitely small number, which is something that cannot be analyzed. By adding 1 we don't hit this problem (unless cval is -1 or smaller, which it seldom is).
 
 ___
 
