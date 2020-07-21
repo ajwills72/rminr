@@ -174,7 +174,7 @@ Now we can calculate some summary statistics, using commands that we've already 
 ```{r descriptives-1}
 # Table of descriptive statistics
 
-descriptives <- task_by_subj %>%
+descript <- task_by_subj %>%
   group_by(task, gender) %>%
   summarise(mean = mean(correct, na.rm = TRUE), sd = sd(correct, na.rm = TRUE))
 ```
@@ -189,8 +189,32 @@ descriptives <- task_by_subj %>%
 Our data now looks like this:
 
 ```{r echo=FALSE}
-descriptives %>% pander()
+descript %>% pander()
 ```
+
+### Meaningful labels
+
+The `descript` data frame contains just the numbers we want to include in our report - the means and standard deviations for each of the eight groups. However, the row labels (`np`, etc.) are not particularly clear, so we replace them with something more human readable:
+
+
+```{r mean-labels}
+task_names <- c(
+  nc = 'Noun Comprehension',
+  np = 'Noun Production',
+  pc = 'Predicate Comprehension',
+  pp = 'Predicate Production'  
+)
+
+descript$task <- descript$task %>% recode(!!!task_names)
+```
+
+**Explanation of commands**: We're using the `recode` command that we've previously used in the [cleaning up questionnaire data](https://benwhalley.github.io/rmip/worksheet-recoding.html) worksheet:
+
+1. We start by telling R what each of the codes, `nc` etc., mean. So, for example `nc = 'Noun Comprehension'`. We combine the four 'translations' together into `task_names` using `c()` (short for 'concatenate', i.e. put things together).
+
+2. We then take the `task` columns of the `descript` data frame (`descript$task`) and pipe (`%>%`) it to `recode`, where it uses `task_names` to do the recoding. We write (`<-`) that result back into `descript$task`. 
+
+3. It's not critical to understand the `!!!` part of the `recode` command, but an explanation is [here](https://benwhalley.github.io/rmip/explain-exclamationmarks.html#explain-exclamationmarks) if you are curious.
 
 We'll do a little more formatting in prepration for producing the table:
 
