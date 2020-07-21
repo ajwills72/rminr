@@ -169,20 +169,22 @@ The first few rows of `task_by_subj` look like this:
 task_by_subj %>% head(5) %>% pander()
 ```
 
-Now we can calculate some summary statistics:
+Now we can calculate some summary statistics, using commands that we've already used in previous worksheets:
 
 ```{r descriptives-1}
 # Table of descriptive statistics
 
 descriptives <- task_by_subj %>%
   group_by(task, gender) %>%
-  summarise(mean = mean(correct, na.rm = TRUE), sd = sd(correct, na.rm = TRUE)) %>%
-  mutate(across(where(is.numeric), ~ sprintf("%.2f", round(.x, 2))))
+  summarise(mean = mean(correct, na.rm = TRUE), sd = sd(correct, na.rm = TRUE))
 ```
 
 **Explanation of commands:**
 
-1. We group `task_by_subject` by gender within task and use `summarise` to calculate a mean and standard deviation for each group. We need to include `na.rm = TRUE` as we have some cells containing `NA` for children who didn't complete a particular test.
+1. We've come across `group_by` [before](group-differences.html#group), here we use it to group the data by two variables at the same time, `task` and `gender`, giving us eight groups overall. 
+
+2. We've all come across `summarize` [before](exploring-incomes.html#means), including the use of `na.rm = TRUE` to deal with missing data. 
+
 1. The final line formats the numbers in the data frame. We'll explain the command in steps. You already know that `mutate()` changes data in a data frame. Here we use `across()`, to apply a function to a subset of columns. We specify that we want to apply the function to just the numeric columns with `where(is.numeric)`. The second argument to `across()` is the function used to modify the column values. In this case, `round(.x, 2)`, means round the column values (`.x`) to 2 decimal places. Finally we ensure that all numbers have 2 digits after the decimal point. The `"%.2f"` argument tells `sprintf()` to ensure all numbers have 2 digits after the decimal point, adding 0s where necessary. The second argument is the result of `round()`.
 
 Formatting the numbers in this way makes it easy to put the digits in the correct position relative to the decimal point when laying out your table, by selecting the numeric columns and using "align right" in your word processor.
