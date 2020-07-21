@@ -93,13 +93,21 @@ The Short Form Trait Emotional Intelligence Questionnaire (TEIQue-SF, Petrides &
 
 "The data obtained from TEIQue-SF was analysed through courtesy of psychometriclab.com"
 
+QUESTION: How to score scale
+QUESTION: Which items (if any) need to be reversed.
+
 ### Religions orientation
 
 The amended Religious Orientation Scale (ROS; Maltby & Lewis, 1996), is a 20-item scale, with items scored from 1-3.
 
+QUESTION: How to score scale
+QUESTION: Which items (if any) need to be reversed.
+
 ### Spirituality
 
+QUESTION: How to score scale
 QUESTION: These are scored 1-7 in the data.
+QUESTION: Which items (if any) need to be reversed.
 
 The Spiritual Connection Questionnaire (SCQ-48; Wheeler and Hyland, 2008) is a 48-item scale, with items scored from -3 (unlike me) to +3 (like me). It has five factors: connection with nature, connection with places, connection with the universe, connection with other people, and the extent to which spirituality brings one happiness. 
 
@@ -130,6 +138,40 @@ in the British sample, but not in Polish (Intrinsic RO r = .25, p < .01, Spiritu
 
 ## Regression
 
+```{r, eval=FALSE}
+library(BayesFactor)
+data(attitude)
+
+## Classical regression
+summary(fm1 <- lm(rating ~ ., data = attitude))
+
+## Compute Bayes factors for all regression models
+output = regressionBF(rating ~ ., data = attitude, progress=FALSE)
+output
+
+## Best model is 'complaints' only
+
+## Compute all Bayes factors against the full model, and
+## look again at best models
+head(output / output[63])
+
+# I think equivalent BF to p value is the full.model / model.without.predictor
+
+# complaints
+output[63] / output[62]
+# privileges
+output[63] / output[61]
+# learning
+output[63] / output[60]
+
+# m1 <- lmBF(rating ~ complaints, data = attitude)
+# m2 <- lmBF(rating ~ privileges, data = attitude)
+# all <- c(m1, m2)
+# all
+```
+"The anovaBF and regressionBF functions are convenience functions designed to test several hypotheses of a particular type at once. Neither function allows the mixing of continuous and categorical covariates. If it is desired to test a model including both kinds of covariates, lmBF function must be used."
+
+
 * QUESTION: Which research question does this relate to?
 * QUESTION: total EI in model 2?
 
@@ -140,6 +182,10 @@ in the British sample, but not in Polish (Intrinsic RO r = .25, p < .01, Spiritu
 1. EI ~ age + gender + marital_status + education + religious_belief
 1. EI ~ age + gender + marital_status + education + religious_belief + happiness + universe + others + nature + places
 1. EI ~ age + gender + marital_status + education + religious_belief + happiness + universe + others + nature + places + ro_i + ro_e
+
+```{r, eval=FALSE}
+ei1 <- lmBF(ei ~ age + gender + marital_status + education + religious_belief, data = foo)
+ei1
 
 ## RO_i
 
