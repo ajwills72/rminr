@@ -161,7 +161,7 @@ task_by_subj <- wing_preproc %>%
 
 **Explanation of command:**
 
-In the [Within-subject differences worksheet](anova1.html), you learnt how to use `pivot_wider()` to widen long data frames. The `pivot_longer()` command does the reverse. `cols = c(nc, np, pc, pp)` selects the columns we want to pivot. Each value in these columns is added to a row in a new column called `correct` (`values_to = 'correct'`). In the same row, a new column `task` is set to the name of the column which the value came from (`names_to = 'task'`). Because `task` is a factor, this turns the pivoted column names into factor levels associated with the corresponding value in `correct`. All of the values in the other columns are duplicated for each row. We `select()` just the columns we want for our table of descriptive statistics.
+In the [Within-subject differences worksheet](anova1.html#pivot), you learnt how to use `pivot_wider()` to widen long data frames. The `pivot_longer()` command does the reverse. `cols = c(nc, np, pc, pp)` selects the columns we want to pivot. Each value in these columns is added to a row in a new column called `correct` (`values_to = 'correct'`). In the same row, a new column `task` is set to the name of the column which the value came from (`names_to = 'task'`). Because `task` is a factor, this turns the pivoted column names into factor levels associated with the corresponding value in `correct`. All of the values in the other columns are duplicated for each row. We `select()` just the columns we want for our table of descriptive statistics.
 
 The first few rows of `task_by_subj` look like this:
 
