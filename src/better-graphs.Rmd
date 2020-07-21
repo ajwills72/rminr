@@ -1,7 +1,9 @@
 ---
 title: "Better graphs"
-author: "Andy Wills"
-output: html_document
+author: "Andy Wills, Paul Sharpe"
+output:
+  html_document:
+    highlight: pygment
 ---
 
 ```{r setup, include=FALSE}
@@ -24,6 +26,8 @@ knitr::opts_chunk$set(echo = TRUE, comment=NA)
 - [Journal styling](#style)
 
 - [High-quality output](#hq)
+
+- [Plots for between participants designs](#between)
 
 <a name = "intro"></a>
 
@@ -127,248 +131,69 @@ ggsave(filename = "fig1.pdf", plot = dgraph, units = "cm", width = 15, height = 
 
 A file called _fig1.pdf_ will have appeared in your _Files_ window in RStudio. You can export this in the [usual way](using-projects.html#download).
 
-# Raincloud plots: jitter + flat violin + confidence intervals
+<a name="between"></a>
 
-Whether your plot is destined for a paper, a poster, or a presentation, it's important to make it as useful and easy to interpret as possible for your reader. This section makes the case for summarising data using a "raincloud plot". This combines a jitterplot (the "rain"), with one half of a violin plot (the "cloud"). Allen et al. (2019) developed the raincloud plot to address criticisms of the widely used barplot which shows the mean (or median) together with error-bars. Raincloud plots are less likely to distort effect sizes, hide underlying patterns in the raw data, and obscure assumptions which influence whether the data is analysed using parametric or non-parametric statistical tests. There is also evidence that readers misinterpret bar plots, because we percieve values within the bar as more likely than those just above, even though this is not the case (Newman & Scholl, 2012).
+# Plots for between participants designs
+
+Whether your plot is destined for a paper, a poster, or a presentation, it's important to make it as useful and easy to interpret as possible for your reader.
+
+There is evidence that readers misinterpret bar plots, because we percieve values within the bar as more likely than those just above, even though this is not the case (Newman & Scholl, 2012).
 
 We'll create a raincloud plot using the data introduced in the [Better tables](better-tables.html) worksheet. This was a task (4) x cards (2) between-within design. We'll plot performance on just the noun tasks for the Italian and English cards.
 
 ```{r echo=FALSE, message=FALSE}
-library(readxl)
-path <- 'going-further/picture-naming.xlsx'
-data <- path %>%
-  excel_sheets() %>%
-  .[-1] %>%
-  set_names() %>%
-  map_df(~ read_excel(path = path, sheet = .x, range = "A1:V20"), .id = "sheet")
-
-# demographics data
-demographics <- data %>%
-  filter(sheet == 'Demographic') %>%
-  set_names(~ str_to_lower(.)) %>%
-  select(gender, cdi_u, cdi_s) %>%
-  mutate(gender = factor(gender), subj = factor(seq.int(nrow(.))))
-demographics$gender <- recode_factor(demographics$gender, Male = 'male', Female = 'female')
-
-# task data
-nc <- data %>%
-  filter(sheet == 'Noun Comprehension') %>%
-  set_names(~ str_to_lower(.)) %>%
-  select(mountain:wellyboots, cards) %>%
-  mutate(subj = factor(seq.int(nrow(.))))
-
-cards <- nc %>%
-  select(subj, cards) %>%
-  mutate(cards = recode_factor(.$cards, `1` = 'italian', `2` = 'english'))
-
-# apply exclusion criteria to sub-test data
-exclude <- function(df) {
-  # exclude if N/A in item 17 or lower
-  logical_matrix <- df == 'N/A'
-  q17 <- logical_matrix %>%
-    which(arr.ind = TRUE) %>%
-    data.frame() %>%
-    group_by(row) %>%
-    summarise(min = min(col)) %>%
-    mutate(subj = factor(row)) %>%
-    select(subj, min)
-  q17 <- left_join(df, q17, by='subj') %>%
-    replace_na(list(min = 20))
-  q17 <- q17 %>% filter(min > 17) %>% select(-min)
-  
-  # calculate total correct
-  q17 <- q17 %>% mutate(correct = rowSums(. == 'C' | . == 'C*'))
-  
-  # exclude participants with scores < 2 sd below the mean
-  q17 %>% filter(correct < mean(correct) + 2 * sd(correct))
-}
-
-nc <- exclude(nc)
-nc_by_subj <- select(nc, subj, correct)
-
-np <- data %>%
-  filter(sheet == 'Noun Production') %>%
-  set_names(~ str_to_lower(.)) %>%
-  select(beach:gloves) %>%
-  mutate(subj = factor(seq.int(nrow(.))))
-
-np <- exclude(np)
-np_by_subj <- np %>% select(subj, correct)
-
-pc <- data %>%
-  filter(sheet == 'Predicate Comprehension') %>%
-  set_names(~ str_to_lower(.)) %>%
-  select(big:pulling) %>%
-  mutate(subj = factor(seq.int(nrow(.))))
-pc <- exclude(pc)
-
-pc_by_subj <- pc %>% select(subj, correct)
-
-pp <- data %>%
-  filter(sheet == 'Predicate Production') %>%
-  set_names(~ str_to_lower(.)) %>%
-  select(small:pushing) %>%
-  mutate(subj = factor(seq.int(nrow(.))))
-pp <- exclude(pp)
-
-pp_by_subj <- pp %>% select(subj, correct)
-
-# join data
-task_by_subj <- left_join(demographics, nc_by_subj, by='subj') %>%
-  left_join(., np_by_subj, by='subj', suffix = c('_nc','_np')) %>%
-  left_join(., pc_by_subj, by='subj') %>%
-  left_join(., pp_by_subj, by='subj', suffix = c('_pc', '_pp')) %>%
-  left_join(., cards, by='subj') %>%
-  mutate(nc = correct_nc, np = correct_np, pc = correct_pc, pp = correct_pp) %>%
-  select(subj, gender, nc, np, pc, pp, cards, cdi_u, cdi_s)
+wing_preproc <- read_csv('going-further/picture-naming-preproc.csv')
 ```
 
-```{r noun-tasks}
-task_by_subj_l <- task_by_subj %>%
+```{r pivot}
+# wide to long
+wing <- wing_preproc %>%
   pivot_longer(cols = c(nc, np, pc, pp),
                names_to = 'task',
-               values_to = 'correct')
-
-noun_tasks <- task_by_subj_l %>%
-    filter(task %in% (c('np','nc')))
-noun_tasks$task <- recode_factor(noun_tasks$task, nc = 'Noun Comprehension', np = 'Noun Production')
+               values_to = 'correct') %>%
+  select(subj, gender, cards, task, correct)
 ```
 
-## A note about interval lines
+```{r mean-labels}
+task_names <- c(
+  nc = 'Noun Comprehension',
+  np = 'Noun Production',
+  pc = 'Predicate Comprehension',
+  pp = 'Predicate Production'  
+)
+
+wing$task <- wing$task %>% recode(!!!task_names)
+```
+
+```{r noun-cloud, class.source = 'numberLines lineAnchors'}
+# plot WinG accuracy by card set
+library(see)
+wing %>% ggplot(aes(x = task, y = correct, fill = cards)) +
+  geom_violinhalf(position = position_identity(), alpha=0.7, size=0) +
+  scale_fill_grey() +
+  xlab('WinG Task') + ylab('Accuracy (max = 20)')
+```
+**Explanation of commands:**
+
+Lines 1-6 recode `task` factor levels, to make them more meaningful on the plot's x axis. Line 7 loads the `see` package which provides the `half_violin()` function. Line 8 defines the x axis of our plot to be the WinG tasks, the y axis to be task accuracy (1-20), and to use the `cards` factor for the fill colour. Line 9 creates a "half violin" plot. As the name suggests, this shows one half of a [violin plot](https://en.wikipedia.org/wiki/Violin_plot). `position = position_identity()` plots the two distributions on top of each other, making it easy to see how much they overlap. `alpha=0.3` changes to transparency, again to help us see the overlapping area. `size=0` removes the outline around the distributions. Line 10 gives our axes meaningful labels.
+
+**Explanation of output:**
+
+This plot gives a visual indication of whether there were differences between the Italian and English cards on each of the tests. Given the extensive overlap in scores between the card sets, this seems unlikely. The plot also shows that the data were slightly skewed on the noun tasks due to some low scores.
+
+
+## About interval lines
 
 Barcharts or point plots sometimes include a line and crossbar either side of the mean value representing some kind of interval. If you plot interval lines, there are two essential pieces of information you should include in your caption. First, you should say what type of interval the line represents. This could be a standard deviation, a standard error or a confidence interval. We recommend plotting 95% confidence intervals, as these tend to be both useful and easy to interpret. Second, you should state whether the interval represents within or between subject variability.
 
 * Better to do this using `stat_summary()` rather than write your own function
 * Calculate CIs using `mean_cl_boot`, as bootstrapping is a robust method that doesn't assume normally distributed data.
 
-```{r ci}
-noun_tasks %>%
-  group_by(task, cards) %>%
-  group_modify(~ data.frame(rbind(Hmisc::smean.cl.boot(.$correct))))
-```
-
-We define the function `geom_flat_violin()` (Allen et al., 2019) which plots one half of a violin plot.
-
-```{r flat-violin}
-"%||%" <- function(a, b) {
-  if (!is.null(a)) a else b
-}
-
-geom_flat_violin <- function(mapping = NULL, data = NULL, stat = "ydensity",
-                             position = "dodge", trim = TRUE, scale = "area",
-                             show.legend = NA, inherit.aes = TRUE, ...) {
-  layer(
-    data = data,
-    mapping = mapping,
-    stat = stat,
-    geom = GeomFlatViolin,
-    position = position,
-    show.legend = show.legend,
-    inherit.aes = inherit.aes,
-    params = list(
-      trim = trim,
-      scale = scale,
-      ...
-    )
-  )
-}
-
-GeomFlatViolin <-
-  ggproto("GeomFlatViolin", Geom,
-    setup_data = function(data, params) {
-      data$width <- data$width %||%
-        params$width %||% (resolution(data$x, FALSE) * 0.9)
-
-      # ymin, ymax, xmin, and xmax define the bounding rectangle for each group
-      data %>%
-        group_by(group) %>%
-        mutate(
-          ymin = min(y),
-          ymax = max(y),
-          xmin = x,
-          xmax = x + width / 2
-        )
-    },
-
-    draw_group = function(data, panel_scales, coord) {
-      # Find the points for the line to go all the way around
-      data <- transform(data,
-        xminv = x,
-        xmaxv = x + violinwidth * (xmax - x)
-      )
-
-      # Make sure it's sorted properly to draw the outline
-      newdata <- rbind(
-        plyr::arrange(transform(data, x = xminv), y),
-        plyr::arrange(transform(data, x = xmaxv), -y)
-      )
-
-      # Close the polygon: set first and last point the same
-      # Needed for coord_polar and such
-      newdata <- rbind(newdata, newdata[1, ])
-
-      ggplot2:::ggname("geom_flat_violin", GeomPolygon$draw_panel(newdata, panel_scales, coord))
-    },
-
-    draw_key = draw_key_polygon,
-
-    default_aes = aes(
-      weight = 1, colour = "grey20", fill = "white", size = 0.5,
-      alpha = NA, linetype = "solid"
-    ),
-
-    required_aes = c("x", "y")
-  )
-```
-
-Now we can create our raincloud plot. On a single plot, this shows us
-
-* The raw data
-* The distribution
-* A 95% confidence interval
-
-```{r raincloud}
-x_dodge <- .1
-palette <- 'Set1'
-
-raincloud <- ggplot(noun_tasks, aes(x = task, y = correct, fill = cards)) +
-  geom_flat_violin(aes(fill = cards), position = position_nudge(x = x_dodge, y = 0), adjust = 1.5, trim = FALSE, alpha = .5, colour = NA) +
-  geom_point(aes(x = as.numeric(task)-.15, y = correct, colour = cards), position = position_jitter(width = .05), size = .25, shape = 20) +
-  stat_summary(geom="errorbar", position = position_nudge(x = x_dodge, y = 0), mapping = aes(colour = cards), width = .1, fun.data=mean_cl_boot) +
-  stat_summary(geom="point", position = position_nudge(x = x_dodge, y = 0), mapping = aes(colour = cards), fun.data=mean_cl_boot) +
-  scale_colour_brewer(palette = palette) +
-  scale_fill_brewer(palette = palette) +
-  ylab("Mean score") + xlab("WinG task")
-  ggtitle("Raincloud plot for (mixed) within (task) x between (cards) factorial design")
-
-raincloud
-
-ggsave(filename = "raincloud.pdf", plot = raincloud, units = "cm", width = 15, height = 10)
-```
-
-We can add lines to help us to [visualise main effects and interactions](anova2.html).
-
-```{r raincloud-line}
-raincloud_line <- raincloud +
-    stat_summary(geom="line", position = position_nudge(x = x_dodge, y = 0), mapping = aes(group = cards, colour = cards), fun.data=mean_cl_boot)
-raincloud_line
-```
-
-Or we could add a boxplot.
-
-```{r raincloud-box}
-raincloud_box <- raincloud +
-  geom_boxplot(aes(x = task, y = correct, fill = cards), outlier.shape = NA, alpha = .5, width = .1, colour = "black")
-raincloud_box
-```
-
-If you're determined to present your data as a barchart, Allen et al. (2019) contains the `R` code you will need, and a more detailed argument against barcharts.
-
 FIXME: Use a different mixed model dataset, as the interactions weren't of interest in this study. Useful for between subjects plots though.
 
-More traditional point and line plot with `ggplot()`.
+### More traditional point and line plot with `ggplot()`.
 
-```{r pointline}
+```{r pointline, eval=FALSE}
 dodge_width <- .1
 noun_tasks %>%
     ggplot(aes(x=task, y=correct, linetype = cards, group = cards)) +
@@ -379,32 +204,17 @@ noun_tasks %>%
     theme_light()
 ```
 
-Simpler syntax using [ggpubr](https://rpkgs.datanovia.com/ggpubr/reference/index.html)
+### Simpler syntax using [ggpubr](https://rpkgs.datanovia.com/ggpubr/reference/index.html)
 
 * Simplifies CI syntax
 * Has interfaces to add statistics, asterisks etc. to plots which is something I've noticed that some project supervisors ask of their students
 
-```{r ggpubr}
+```{r ggpubr, eval=FALSE}
 library("ggpubr")
 ggline(noun_tasks, x = "task", y = "correct", color = "cards",
        add = c("mean_ci"), position = position_dodge(.1),
        palette = c('npg')) +  # see ggpar for other palettes
       ylab("Mean score") + xlab("WinG task")
-```
-
-
-## Plotting fitted (ANOVA) models
-
-Ben mentioned a distinction between ANOVA plots using raw data, vs. fitted models. I'm not clear on whether/why we want to make that distiction on this worksheet, or how to use a model to create a plot.
-
-```{r plot-lmer, eval=FALSE}
-library(lmerTest)
-m <- lmer(correct ~ task*cards + (1|subj), data = noun_tasks)
-
-install.packages(c('broom.mixed', 'dotwhisker'))
-library(broom.mixed)
-library(dotwhisker)
-dwplot(m)+ geom_vline(xintercept=0, lty=2)
 ```
 
 # References
