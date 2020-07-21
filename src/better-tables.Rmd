@@ -1,6 +1,6 @@
 ---
 title: "Better tables"
-author: "Paul Sharpe"
+author: "Paul Sharpe, Andy Wills"
 output: html_document
 ---
 
@@ -9,6 +9,7 @@ output: html_document
 
 ## Data required to knit
 ## https://github.com/ajwills72/rminr-data/tree/master/going-further/picture-naming.csv
+## https://github.com/ajwills72/rminr-data/tree/master/case-studies/jon-may/big5_total.csv
 ##
 ## I check out rminr-data and make a symbolic link to going-further
 
@@ -18,412 +19,346 @@ output: html_document
 ## Show commands and output.
 knitr::opts_chunk$set(echo = TRUE, comment=NA, cache = TRUE)
 library(pander)
+library(tidyverse)
 ```
 
-# Contents
+## Contents
 
 - [Introduction](#intro)
 
 - [Getting started](#start)
 
-- [Table of descriptive statistics](#descriptives)
+- [Creating a correlation matrix](#cor-matrix)
 
-- [Table of t-tests](#t-tests)
+- [Exercise 1](#ex1)
+
+- [Creating a custom table of descriptive statistics](#descriptives)
+
+- [APA-format tables](#apa)
+
+- [Copying to your wordprocessor](#kable)
+
+- [Exercise 2](#ex2)
+
+- [R Markdown](#rmd)
 
 <a name="intro"></a>
 
-# Introduction
+## Introduction
 
-Data is often easier to read in tabular format. This worksheet explains how to use `R` to produce the types of table which are useful in papers describing psychological research. Although tables can be produced using a Word processor, generating them using `R` reduces copy-paste errors when writing reports.
-
-There are numerous `R` packages for presenting data as tables. We've chosen to use the `kableExtra` package, as it's capable of producing almost any table you might need in your reports. The tables produced by kableExtra are in [HTML format](https://haozhu233.github.io/kableExtra/awesome_table_in_html.html). You can simply copy-paste these into Microsoft Word or LibreOffice Writer. If you are using the online version of RStudio, select `Export > Save as Web Page`, then select the table copy-paste into your word processor.
+It can be helpful to present data in tables, rather than text, especially when you need to refer to the same data in different parts of a report. Although tables can be produced manually using a word processor, generating them directly from your data ensures they are up-to-date, and reduces copy-paste errors. This worksheet explains how to use `R` to produce some of the types of table used to report psychological research.
 
 <a name="start"></a>
 
-# Getting started
+## Getting started
 
-To prepare for this worksheet, follow these steps:
+To prepare for this worksheet:
 
-1. If you haven't already done so, create a new R project named `going-further`.
+1. Open the `rminr-data` project we used [previously](preproc.html#load).
 
-1. In your project, create a folder named `going-further`.
+1. If you don't see a folder named `going-further`, it means you created your project _before_ the data required for this worksheet was added to the `rminr-data` git repository. You can get the latest files by asking git to "`pull`" the repository. Select the `Git` tab, which is located in the row of tabs which includes the `Environment` tab. Click the `Pull` button with a downward pointing arrow. A window will open showing the files which have been pulled from the repository. Close the `Git pull` window.
 
-1. You will find the file `picture-naming.xlsx` in the `going-further` folder in [the git repository we used previously](preproc.html#load). Upload this file into the `going-further` folder you just created.
+1. Open the `Files` tab. The `going-further` folder should contain the file `picture-naming-preproc.csv`.
 
-1. Create a script named `tables.R` and add the code in this worksheet to `tables.R` as you work through each section.
+1. Create a script named `tables.R` in the `rminr-data` folder (the folder above `going-further`). Add the code to this script as you work through each section of the worksheet.
 
-We start with some lines to clear the workspace and load `tidyverse` and `pander`.
+<a name="cor-matrix"></a>
 
-```{r init-load, message=FALSE}
-rm(list = ls()) # clear the environment
-library(tidyverse)
+## Creating a correlation matrix
+
+We'll start by producing a correlation matrix. A correlation matrix shows correlations between all combinations of a set of variables, which is often required in research reports. We'll demonstrate an easy way to produce correlation matrices, with [APA styling](https://apastyle.apa.org/style-grammar-guidelines/tables-figures/tables), in a format that can be read by Microsoft Word or LibreOffice Writer. A similar approach can be used to produce other common table types.
+
+We'll generate a correlation matrix using the `attitude` dataset, which is included with `R`. These data are the percentage of favourable attitudes given by employees, in relation to seven questions regarding their department (you can find out a bit more about these data by typing `?attitude`). Here are the first few rows of the data frame:
+
+```{r, echo=FALSE}
+attitude %>% head(5) %>% pander()
 ```
+
+We'll use the `apaTables` package to generate the correlation matrix.
+
+```{r, R.options = list(width = 10000)}
+rm(list = ls()) # clear the environment
+library(apaTables)
+apa.cor.table(attitude, filename="table1.doc", table.number = 1)
+```
+
+**Explanation of commands:**
+
+We load the `apaTables` package.The function to generate a correlation matrix is `apa.cor.table()`. We pass the `attitude` data frame as the first argument, and use `filename` to specify that the output should be saved in the file `table1.doc`. The `table.number` argument sets the number in the table heading output, in this case "Table 1". If you omit this argument, the text will be "Table XX".
+
+**Explanation of output:**
+
+[Export](https://ajwills72.github.io/rminr/using-projects.html#download) `table1.doc` from RStudio and open it using a word processor
+
+The first thing to notice is that the styling (spacing, use of italics, horizontal lines, positioning of captions and footnotes etc.) complies with the APA guidelines for tables. 
+
+The table number and caption is above the table itself - you will need to edit the caption by hand to make it more meaningful, for example "Means, standard deviations, and correlations with confidence intervals, for the attitude measures of Study 1".
+
+The `Variable` column contains a number and the column name for the seven attitude variables. The next two columns show the mean and standard deviation for each variable. The remaining columns use the numbers from items in the `Variable` column as headings, indicating that they refer to the same variable. The cells show the correlation between the column variables and each of the variables in the rows. Cells are left empty where a variable would otherwise be correlated with itself. The 95% [confidence interval](https://ajwills72.github.io/rminr/more-on-t.html) for the correlation is shown in square brackets.
+
+For example, the correlation between `rating` and `complaints` in this sample is .83. The confidence interval indicates that the population value is likely to be between .66 and .91. 
+
+Evidence for the correlation is calculated using traditional statistics, rather than the Bayes factors described in the [Relationships, part 2 worksheet](corr.html). One asterisk (`*`) indicates `p < .05`. Two asterisks (`**`) signify `p < .01`. These calculations assumed a two-tailed test; one-tailed tests for correlations are explained in the [More on relationships, part 2](corr-extended.html) worksheet. Also recall that p-values are [widely misinterpreted](evidence.html#p-wrong), so it would be better to edit this part of the table by hand to reflect [Bayes Factors](corr.html#evidence) you have already calculated. We suggest using `*` for BF > 3, `**` for BF > 10, `o` for BF < 0.33, and `oo` for BF < 0.1. Change the text at the bottom of the table accordingly.
+
+<a name="ex1"></a>
+
+## Exercise 1
+
+For this exercise, we'll load some data from a study which measured aspects of participants' personality.
+
+```{r}
+# Exercise 1
+library(tidyverse)
+big5 <- read_csv('case-studies/jon-may/big5_total.csv')
+```
+
+The first few rows show that the scale used measured the 'big 5' personality factors; openness to experience, conscientiousness, extraversion, agreeableness and neuroticism (OCEAN).
+
+```{r, echo=FALSE}
+big5 %>% head(5) %>% pander()
+```
+
+Create a correlation matrix for the five personality factors. Number the table as "Table 2", and save the results in `table2.doc`. Your table should look like this in Rstudio:
+
+```{r ex1, echo=FALSE, R.options = list(width = 10000)}
+apa.cor.table(big5 %>% select(-subj), filename='table2.doc', table.number = 2)
+```
+
+...and it should be APA formatted in the file `table2.doc`. 
+
+**Copy the R code you used for this exercise into PsycEL**
 
 <a name="descriptives"></a>
 
-# Table of descriptive statistics
+## Creating a custom table of descriptive statistics
 
-See also: [Data preprocessing](preproc.html), [Preprocessing scales](preproc-scales.html).
+As with graphs, there is often an element of design involved in presenting tabular data in a format most useful for your reader. Packages like `apaTables` are useful for producing APA tables where there is a standard way to present data. However, you often need a table which is customised to present your data in the most useful format. The cost of custom tables is that the content requires a little more preprocessing, and styling the table according to APA standards will require some hand-formatting in your wordprocessor.
 
-We'll start by producing a table of descriptive statistics. The data we'll use comes from an experiment which tested children's language comprehension and production using picture cards. The experiment consisted of four tests: noun comprehension, noun production, predicate comprehension and predicate production. The data for each test was recorded on a sub-sheet of an Excel spreadsheet. There was also a sub-sheet containing demographic data.
+We'll demonstrate this process by producing a table of descriptive statistics. The data we'll use comes from an experiment which evaluated children’s language development using the Words in Game (WinG) test. WinG consists of a set of picture cards which are used in four tests: noun comprehension, noun production, predicate comprehension, and predicate production. The Italian and English versions of the WinG cards use different pictures to depict the associated words. The experiment tested whether English-speaking children aged approximately 30 months, produce similar responses for the two sets of cards. We would like to produce a single table, containing descriptive statistics for all four tests.
 
-We start by reading all sub-sheets into a single data frame.
+We start by loading the data:
 
 ```{r excel, message=FALSE}
-# read data
-library(readxl)
-path <- 'going-further/picture-naming.xlsx'
-data <- path %>%
-  excel_sheets() %>%
-  .[-1] %>%
-  set_names() %>%
-  map_df(~ read_excel(path = path, sheet = .x, range = "A1:V20"), .id = "sheet")
+# Load data
+wing_preproc <- read_csv('going-further/picture-naming-preproc.csv')
 ```
 
-**Explanation of commands:**
+The first few rows of `wing_preproc` look like this:
 
-1. `library(readxl)` loads a package containing functions for reading Excel spreadsheets.
-1. `path <- 'going-further/picture-naming.xlsx'` is the location of our spreadsheet (see above).
-1. `path %>% excel_sheets()` creates a vector containing the names of the sub-sheets.
-1. `.[-1]` removes the first item from this vector, as it's a sub-sheet that doesn't contain any data.
-1. `set_names()` names each item in the vector after its sub-sheet name (see next step).
-1. `map_df()` processes each item in the vector, assigning it to `.x` and then running the function `read_excel(path = path, sheet = .x, range = "A1:V20")`. For each sub-sheet of the spreadsheet file (`path`), this reads data from the range `A1:V20` on the sheet (the cells containing the data we need). The argument `.id = "sheet"` creates a column named `sheet` with the name associated with `.x` (the name of the sub-sheet, see previous step). The whole thing is returned as a data frame.
-1. Because `map_df()` adds the results of each of function call to the end of the previously created data frame, `data` is assigned a single data frame containing the data from all sub-sheets.
-
-Here's a slice of the data showing what was read from each sub-sheet:
-
-```{r echo=FALSE}
-data %>% slice(1:2, 20:21, 39:40, 58:59, 77:78) %>% pander(split.table = Inf)
+```{r, echo=FALSE}
+wing_preproc %>% head() %>% pander(split.table = Inf)
 ```
 
-## Extract demographics data
+### Table of descriptives
 
-We extract the demographics data into its own data frame, convert the column names to lower case, select the columns we want to keep, convert `gender` to be a factor with lower case levels, and create a sequential subject number factor. The `cdi_u` and `cdi_s` columns aren't used in this worksheet.
-
-```{r demographics}
-# demographics data
-demographics <- data %>%
-  filter(sheet == 'Demographic') %>%
-  set_names(~ str_to_lower(.)) %>%
-  select(gender, cdi_u, cdi_s) %>%
-  mutate(gender = factor(gender), subj = factor(seq.int(nrow(.))))
-demographics$gender <- recode_factor(demographics$gender, Male = 'male', Female = 'female')
-```
-
-```{r echo=FALSE}
-demographics %>% head(3) %>% pander()
-```
-
-## Extract task data
-
-We extract the noun comprehension data into its own data frame, convert the column names to lower case, and select the noun comprehension columns (`mountain:wellyboots`). Again, we create a sequential subject number factor. We'll use this later to join our data frames together.
-
-```{r noun-comprehension}
-# task data
-nc <- data %>%
-  filter(sheet == 'Noun Comprehension') %>%
-  set_names(~ str_to_lower(.)) %>%
-  select(mountain:wellyboots, cards) %>%
-  mutate(subj = factor(seq.int(nrow(.))))
-```
-
-```{r echo=FALSE}
-nc %>% head(3) %>% pander(split.table = Inf)
-```
-
-We create a `cards` data frame and recode the numbers in the `cards` factor to words which make it clearer whether the subject was tested using the English or Italian card set. Again, we'll use this data frame when we join our data together (see below).
-
-```{r cards}
-cards <- nc %>%
-  select(subj, cards) %>%
-  mutate(cards = recode_factor(.$cards, `1` = 'italian', `2` = 'english'))
-```
-
-```{r echo=FALSE}
-cards %>% pander()
-```
-
-## Excluding data
-
-Before we go any further, we need to apply some exclusion criteria to our data. In this case, we want to exclude:
-
-1. Any subject with the string 'N/A' (not to be confused with the `R` data type `NA`) for one of the first 17 words in a task. The value 'N/A' was entered by the researchers to indicate that there was some kind of interruption to the task (e.g. the child began crying). This criterion excludes children with insufficient data for analysis for a task.
-1. Any subject in the remaining data whose accuracy was less than two standard deviations below the mean. This is a more general criterion to exlude subjects who had especially low scores for various reasons.
-
-To apply our exclusion criteria, we'll write a function which we can reuse for the data from each of the four sub-tests. User-defined functions were introduced in the [Preprocessing scale](preproc-scales.html) worksheet.
-
-```{r exclude}
-# apply exclusion criteria to sub-test data
-exclude <- function(df) {
-  # exclude if N/A in item 17 or lower
-  logical_matrix <- df == 'N/A'
-  q17 <- logical_matrix %>%
-    which(arr.ind = TRUE) %>%
-    data.frame() %>%
-    group_by(row) %>%
-    summarise(min = min(col)) %>%
-    mutate(subj = factor(row)) %>%
-    select(subj, min)
-  q17 <- left_join(df, q17, by='subj') %>%
-    replace_na(list(min = 20))
-  q17 <- q17 %>% filter(min > 17) %>% select(-min)
-
-  # calculate total correct
-  q17 <- q17 %>% mutate(correct = rowSums(. == 'C' | . == 'C*'))
-
-  # exclude subjects with scores < 2 sd below the mean
-  q17 %>% filter(correct < mean(correct) + 2 * sd(correct))
-}
-```
-
-**Explanation of commands:**
-
-1. Our function `exclude()` accepts a data frame `df` containing the data recorded for a sub-test.
-1. `logical_matrix <- df == 'N/A'` converts `df` to a matrix containgin the value `TRUE` where a cell in `df` contained the string `N/A`, or `FALSE` otherwise.
-1. `which(arr.ind = TRUE)` creates a matrix with columns `row` (this will be the same as our subject number) and `col` containing the row and column number of any cells with the value `TRUE` (i.e. those cells that contained `N/A`).
-1. `data.frame() %>% group_by(row) %>% summarise(min = min(col))` summarises this as a single row containing the lowest column number that contained `N/A`.
-1. `mutate(subj = factor(row)) %>% select(subj, min)` creates a factor `subj` from `row`, and selects this along with the column number of the first column that contained `N/A`. We have now converted our original data into a data from with rows for any subjects who had at least one `N/A` and the number of the first word where the task was interrupted.
-1. `q17 <- left_join(df, q17, by='subj')` joins this data frame to the data frame we passed to `exclude()`. For rows where there is no matching `subj`, `min` gets the value `NA`. `replace_na(list(min = 20))` converts these `NA`s to the value `20`, indicating the child provided an answer for all words.
-1. Finally, `q17 <- q17 %>% filter(min > 17) %>% select(-min)` selects only children who provided answers beyond word 17, and then removes the `min` column.
-1. Next we calculate an accuracy score for each subject across all words. `q17 <- q17 %>% mutate(correct = rowSums(. == 'C' | . == 'C*'))` creates a new column `correct` with a value for each row which is the sum of the number of columns containing `C` or `C*` (`|` means 'or'). Cells containing `C` indicate that the child responded correctly for the picture on the card for the the word in this column. Cells containing `C*` indicates that the response was a correct synonym. In this experiment, both of these values are considered correct responses.
-1. `q17 %>% filter(correct < mean(correct) + 2 * sd(correct))` calculates the mean and standard deviation for `correct`, and then filters any subjects whose value for `correct` was less than two standard deviations below the mean.
-1. We return the data frame without rows meeting our two exclusion critera.
-
-Calling `exclude(nc)` applies our exclusion criteria, and also calculates a total accuracy score for each subject. We can see that subject `18` was excluded from the noun comprehension task:
-
-```{r score-nc}
-nc <- exclude(nc)
-nc_by_subj <- select(nc, subj, correct)
-```
-
-```{r echo=FALSE}
-nc_by_subj %>% pander()
-```
-
-We use similar code to create data frames containing accuracy scores for subjects who met the inclusion critera for the noun production, predicate comprehension and predicate production tests.
-
-```{r np-pc-pp}
-np <- data %>%
-  filter(sheet == 'Noun Production') %>%
-  set_names(~ str_to_lower(.)) %>%
-  select(beach:gloves) %>%
-  mutate(subj = factor(seq.int(nrow(.))))
-
-np <- exclude(np)
-np_by_subj <- np %>% select(subj, correct)
-
-pc <- data %>%
-  filter(sheet == 'Predicate Comprehension') %>%
-  set_names(~ str_to_lower(.)) %>%
-  select(big:pulling) %>%
-  mutate(subj = factor(seq.int(nrow(.))))
-pc <- exclude(pc)
-pc_by_subj <- pc %>% select(subj, correct)
-
-pp <- data %>%
-  filter(sheet == 'Predicate Production') %>%
-  set_names(~ str_to_lower(.)) %>%
-  select(small:pushing) %>%
-  mutate(subj = factor(seq.int(nrow(.))))
-pp <- exclude(pp)
-pp_by_subj <- pp %>% select(subj, correct)
-```
-
-We now join the data for the four word tests into a single data frame, in preparation for calculating our descriptive statistics. Notice how this sets the value `NA` for subjects who were excluded for any of the tests.
-
-```{r join}
-# join data
-task_by_subj <- left_join(demographics, nc_by_subj, by='subj') %>%
-  left_join(., np_by_subj, by='subj', suffix = c('_nc','_np')) %>%
-  left_join(., pc_by_subj, by='subj') %>%
-  left_join(., pp_by_subj, by='subj', suffix = c('_pc', '_pp')) %>%
-  left_join(., cards, by='subj') %>%
-  mutate(nc = correct_nc, np = correct_np, pc = correct_pc, pp = correct_pp) %>%
-  select(subj, gender, nc, np, pc, pp, cards, cdi_u, cdi_s)
-```
-
-```{r echo=FALSE}
-task_by_subj %>% pander()
-```
-
-**Explanation of commands:**
-
-1. `left_join(demographics, nc_by_subj, by='subj')` combines columns from the `demographics` and `nc_by_subj` data frames where the value of the `subj` column matches.
-1. We do the same for the `np_by_subj`, `pc_by_subj`, `pp_by_subj` and `cards` data frames.
-1. We rename and reorder the resulting columns and assign the resulting data frame to `task_by_subj`.
-
-Our test scores are currently in wide format. We'll convert these columns to long format so we can calcluate our summary statistics.
+Our test scores are currently in _wide_ format (lots of columns, few rows), but R generally requires data to be in _long_ format 
+(lots of rows, few columns). This means we first have to make the data frame wider, so we can calculate summary statistics.
 
 ```{r pivot}
-task_by_subj <- task_by_subj %>%
+# wide to long
+task_by_subj <- wing_preproc %>%
   pivot_longer(cols = c(nc, np, pc, pp),
                names_to = 'task',
-               values_to = 'correct')
+               values_to = 'correct') %>%
+  select(subj, gender, cards, task, correct)
 ```
+
+**Explanation of command:**
+
+In the [Within-subject differences worksheet](anova1.html#pivot), you learned how to use `pivot_wider()` to widen long data frames. The `pivot_longer()` command does the reverse -- it lengthens wide data frames. `cols = c(nc, np, pc, pp)` selects the columns we want to pivot. Each value in these columns is added to a row in a new column called `correct` (`values_to = 'correct'`). In the same row, a new column `task` is set to the name of the column which the value came from (`names_to = 'task'`). All of the values in the other columns are duplicated for each row. We [select](preproc.html#select) just the columns we want for our table of descriptive statistics.
+
+The first few rows of `task_by_subj` look like this:
 
 ```{r echo=FALSE}
 task_by_subj %>% head(5) %>% pander()
 ```
 
-**Explanation of commands:**
-
-1. `pivot_longer()` converts columns from wide to long format. The columns to be converted are specified with `cols = c(nc, np, pc, pp)`. These column names will be converted to factors in the column specified by `names_to`, in this case `task`. The values from each of the wide column are moved to the column specified by `values_to`, in this case `correct`.
-
-We can now make a data frame containing summary statistics:
+Now we can calculate some summary statistics, using commands that we've already used in previous worksheets:
 
 ```{r descriptives-1}
-task_descriptives <- function(df, y) {
-  df %>%
-    summarise(mean = mean(correct, na.rm = TRUE),
-              sd = sd(correct, na.rm = TRUE),
-              n = sum(! is.na(correct))) %>%
-    mutate_if(is.numeric, round, 2)
-}
+# Table of descriptive statistics
 
-descriptives <- task_by_subj %>%
+descript <- task_by_subj %>%
   group_by(task, gender) %>%
-  group_modify(task_descriptives) %>%
-  ungroup()
-```
-
-```{r echo=FALSE}
-descriptives %>% pander()
+  summarise(mean = mean(correct, na.rm = TRUE), sd = sd(correct, na.rm = TRUE))
 ```
 
 **Explanation of commands:**
 
-1. The function `task_descriptives()` accepts a data frame in argument `df`, and returns a data frame with `mean`, `sd` and `n` columns containing the mean and standard deviation of `df$correct` rounded to two decimal places, and the number of subjects for each subgroup. We'll use this function in the pipeline below.
-1. We group `task_by_subject` by gender within task and use `group_modify()` to call `task_descriptives()` for each group, returning a data frame with the summary statistics.
+1. We've come across `group_by` [before](group-differences.html#group), here we use it to group the data by two variables at the same time, `task` and `gender`, giving us eight groups overall. 
 
-For presenting our data, we pivot this to a wider format with rows containing tests, and columns containing the mean and sd by gender.
+2. We've also come across `summarize` [before](exploring-incomes.html#means), including the use of `na.rm = TRUE` to deal with missing data. 
+
+
+Our data now looks like this:
+
+```{r echo=FALSE}
+descript %>% pander()
+```
+
+### Meaningful labels
+
+The `descript` data frame contains just the numbers we want to include in our report - the means and standard deviations for each of the eight groups. However, the row labels (`np`, etc.) are not particularly clear, so we replace them with something more human readable:
+
+
+```{r mean-labels}
+task_names <- c(
+  nc = 'Noun Comprehension',
+  np = 'Noun Production',
+  pc = 'Predicate Comprehension',
+  pp = 'Predicate Production'  
+)
+
+descript$task <- descript$task %>% recode(!!!task_names)
+```
+
+**Explanation of commands**: We're using the `recode` command that we've previously used in the [cleaning up questionnaire data](https://benwhalley.github.io/rmip/worksheet-recoding.html) worksheet:
+
+1. We start by telling R what each of the codes, `nc` etc., mean. So, for example `nc = 'Noun Comprehension'`. We combine the four 'translations' together into `task_names` using `c()` (short for 'concatenate', i.e. put things together).
+
+2. We then take the `task` columns of the `descript` data frame (`descript$task`) and pipe (`%>%`) it to `recode`, where it uses `task_names` to do the recoding. We write (`<-`) that result back into `descript$task`. 
+
+3. It's not critical to understand the `!!!` part of the `recode` command, but an explanation is [here](https://benwhalley.github.io/rmip/explain-exclamationmarks.html#explain-exclamationmarks) if you are curious.
+
+Our table now looks like this:
+
+```{r echo=FALSE}
+descript %>% pander()
+```
+
+<a name="apa"></a>
+
+## APA-format tables
+
+Our table is now clear and easy to read. We could include it in a report without much further effort, and the reader would be able to easily see what we wanted to show them. However, it is not quite in the format that psychologists are most familiar with (which is [APA format](https://apastyle.apa.org/style-grammar-guidelines/tables-figures/sample-tables#tests)). In APA format, the table would look more like this: 
+
+```{r echo=FALSE}
+# Format wider
+descript_table <- descript %>%
+  pivot_wider(names_from = gender, values_from = c(mean, sd))
+
+# Order columns
+descript_table <- descript_table %>% select(task, mean_female, sd_female, mean_male, sd_male) 
+
+# Column names
+colnames(descript_table) <- c("Task", "Female (M)", "Female (SD)", "Male (M)", "Male (SD)")
+
+# Rounding
+descript_table[,2:5] <- round(descript_table[,2:5], 2)
+
+#Output
+descript_table %>% pander()
+
+# Clear vars
+rm(descript_table)
+```
+
+In other words, it would be _wider_: more columns and fewer rows. 
+
+We can widen the table, using the `pivot_wider` command we have previously used in the [within-subject differences](anova1.html#pivot) worksheet:
 
 ```{r descriptives-2}
-descriptives <- descriptives %>%
-  select(-n) %>%
-  pivot_wider(names_from = gender, values_from = c(mean, sd)) %>%
-  select(task, mean_male, sd_male, mean_female, sd_female)
+# Widen table
+descript_table <- descript %>%
+  pivot_wider(names_from = gender, values_from = c(mean, sd)) 
+```
+
+Our table now has the same format as an APA table...
+
+```{r echo=FALSE}
+descript_table %>% pander()
+```
+
+...but the columns are in a different order. APA format dictates that means should be placed next to their associated standard deviations in a table (APA format is weirdly specific). Fortunately, we can rearrange columns using the `select` command that we've come across before:
+
+```{r rearrange}
+# Re-order columns
+descript_table <- descript_table %>% select(task, mean_female, sd_female, mean_male, sd_male) 
 ```
 
 ```{r echo=FALSE}
-descriptives %>% pander()
+descript_table %>% pander()
 ```
 
-We do some final formatting in prepration for producing our table:
+Finally, we can replace the column names with something a bit more human readable, using the `colnames` function:
 
-```{r descriptives-3}
-descriptives <- descriptives %>%
-  unite("male", mean_male:sd_male, sep=' (') %>%
-  unite("female", mean_female:sd_female, sep=' (') %>%
-  mutate(male = paste0(male, ')'), female = paste0(female, ')'), task = factor(task),
-         task = recode_factor(.$task, nc = 'Noun Comprehension', np = 'Noun Production',
-                                  pc = 'Predicate Comprehension', pp = 'Predicate Production'))
+```{r rename-cols}
+# Column names
+colnames(descript_table) <- c("Task", "Female (M)", "Female (SD)", "Male (M)", "Male (SD)")
 ```
 
-**Explanation of commands:**
+```{r echo=FALSE}
+descript_table %>% pander()
+```
 
-1. `unite("male", mean_male:sd_male, sep=' (')` converts the `mean_male` and `sd_male` column values to a column `male` separated by ` (`.
-1. We do the same for the `mean_female` and `sd_female` columns.
-1. `mutate(male = paste0(male, ')'), female = paste0(female, ')'), task = factor(task))` adds the trailing `)` to the `male` and `female` columns and converts `task` to a factor.
-1. We recode `task` factor levels to more meaningful strings.
+Note that it would arguably be clearer to write "mean" rather than "M", but it's another quirk of APA style that we write "M" to stand for mean. 
 
-Having prepared our table, it's simple to produce an HTML table which can be copy-pasted into a Word processor. 
+<a name="kable"></a>
 
-```{r kable-descriptives}
+## Copying into your wordprocessor
+
+There are a number of different ways to get a table in R into your wordprocessor. We're going to use the `kableExtra` package, because it's really flexible, so it's capable of producing almost any table you might need. We're only going to use it in the most basic way here; for some other examples of what it can do, see the kableExtra [website](https://haozhu233.github.io/kableExtra/awesome_table_in_html.html).
+
+To get a version of `descript_table` that you can cut-and-paste into your wordprocessor, do this:
+
+```{r kable-descriptives,results='hide'}
 library(kableExtra)
-descriptives %>% kable(
-  col.names = c('Task', 'Male', 'Female')) %>%
-  kable_styling()
+descript_table %>% kable(digits=2) %>%  kable_styling()
 ```
 
 **Explanation of commands:**
 
-1. `library(kableExtra)` loads the package containing the `kable()` function.
-1. We pipe our data into `kable()` using `col.names` to create meaningful column headings, and `kable_styling()` to produce a reasonably tidy HTML table.
+1. `library(kableExtra)` loads the `kableExtra` package.
+1. We pipe our data into `kable()`. The `digits=2` part ensures that every number is reported to two decimal places.
+1. We then pipe `kable()` into `kable_styling()`. This command allows prints the table to the Viewer window in RStudio.
 
-<a name="t-tests"></a>
+**Explanation of output:**
 
-# Table of t-tests
+Try copying the table into your word processor now. In the **Viewer** pane, select all of the rows and columns in the table, then right-click and select `Copy`. Open your word processor and select `Paste`.
 
-Where a number of related t-tests need to be reported, these are often easiest to read as a table. The children in this experiment were tested using one of two different sets of picture cards. One set is used in the Italian version of these tasks, the other in the English version. We'll produce a table of t-tests comparing accuracy for each word in the noun comprehension task between the cards used in the Italian and English tasks.
+<a name="ex2"></a>
 
-```{r t-table}
-nc_long <- nc %>%
-  select(-correct) %>%
-  mutate(cards = factor(cards)) %>%
-  mutate(cards = recode_factor(.$cards, `1` = 'italian', `2` = 'english')) %>%
-  pivot_longer(cols=(mountain:wellyboots),
-               names_to = 'word',
-               values_to = 'answer')
-nc_long %>% filter(subj == 1) %>% pander(split.table = Inf)
+## Exercise 2
+
+Starting with the data in `task_by_subj`, generate a table of descriptive statistics showing task accuracy for the Italian and English cards. It should look like this:
+
+```{r ex2-1, echo=FALSE, message=FALSE}
+# Summarise
+descriptives_by_cards <- task_by_subj %>%
+  group_by(task, cards) %>%
+  summarise(mean = mean(correct, na.rm = TRUE), sd = sd(correct, na.rm = TRUE)) 
+
+# Labels
+task_names <- c(
+  nc = 'Noun Comprehension',
+  np = 'Noun Production',
+  pc = 'Predicate Comprehension',
+  pp = 'Predicate Production'  
+)
+
+descriptives_by_cards$task <- descriptives_by_cards$task %>% recode(!!!task_names)
+
+# Widen
+by_cards_table <- descriptives_by_cards %>%
+  pivot_wider(names_from = cards, values_from = c(mean, sd))
+
+# Order columns
+by_cards_table <- by_cards_table %>% select(task, mean_english, sd_english, mean_italian, sd_italian) 
+
+# Column names
+colnames(by_cards_table) <- c("Task", "English (M)", "English (SD)", "Italian (M)", "Italian (SD)")
+
+#Output
+by_cards_table %>% kable(digits=2) %>% kable_styling()
 ```
 
-**Explanation of commands:**
+**Copy the R code you used for this exercise into PsycEL.**
 
-1. Starting with our noun comprehension data `nc`, we remove the column containing the numer of `correct` answers for each subject that we generated previously.
-1. We create our `cards` factor.
-1. We `pivot_longer()`, moving the noun column names into the column `word`, and the vaules to the column `answer`.
+<a name="rmd"></a>
 
-Next we calculate the number of correct responses for each card type (Italian or English), for each subject, for each word:
+## R Markdown
 
-```{r long-correct}
-correct_word <- function(df, group) {
-  df %>% select(answer) %>% summarise(correct = colSums(. == 'C' | . == 'C*'))
-}
-nc_long_correct <- nc_long %>%
-  group_by(word, subj, cards) %>%
-  group_modify(correct_word)
-```
-
-**Explanation of commands:**
-
-1. Our function `correct_word()` accepts a an argument `df`, which is a data frame containing a column named `answer`.
-1. It returns a data frame with a single column `correct`, which contains `1` if the subject could comprehend the word (or a synonym), and `0` if not.
-1. `nc_long %>% group_by(word, subj, cards)` groups `nc_long` by `cards` within `subj` within `word`.
-1. `group_modify(correct_word)` replaces the raw data for each group with our value of `1` or `0` for `correct`.
-
-We can see that all children knew the word `apple`, regardless of which set of cards was used:
-
-```{r}
-nc_long_correct %>% filter(word == 'apple') %>% pander(split.table = Inf)
-```
-
-Now we can run our t-tests to compare accuracy for the Italian and English cards:
-
-```{r bf}
-library(BayesFactor, quietly = TRUE)
-t_words <- function(df, group) {
-  bf <- ttestBF(formula=correct ~ cards, data = data.frame(df))
-  extractBF(bf)
-}
-
-nc_bf <- nc_long_correct %>%
-  filter(! word %in% c('apple', 'cow', 'penguin','hat','motorbike')) %>%
-  group_by(word) %>%
-  group_modify(t_words) %>%
-  mutate(bf = round(bf,2)) %>%
-  select(word, bf)
-```
-
-**Explanation of commands:**
-
-1. `library(BayesFactor, quietly = TRUE)` loads the package containing `ttestBF()`.
-1. Our function `t_words()` accepts a data frame in `df`.
-1. `bf <- ttestBF(formula=correct ~ cards, data = data.frame(df))` computes a between-subjects Bayesian t-test which compares the number of `correct` responses between the Italian and English `cards`.
-1. `extractBF(bf)` returns the result as a data frame.
-1. All children had a correct score for `apple` which would produce an error on our t-test, so we remove this and similar words with `nc_long_correct %>% filter(! word %in% c('apple', 'cow', 'penguin','hat','motorbike'))`.
-1. We group the remaining rows by `word` and run `t_words()` to return a Bayes factor for each word.
-1. We round `bf` to two decimal places, and select it along with `word`.
-
-Finally, we turn out results into an HTML table:
-
-FIXME: You need to Ctrl-Enter for this to appear in the **Viewer** pane so you can copy-paste.
-
-```{r kable-t}
-# run the next line with Ctrl-Enter for it to appear in the Viewer pane
-nc_bf %>% kable(
-  col.names = c('Word', 'Bayes Factor')) %>%
-  kable_styling()
-```
+You can avoid copy-pasting tables (and all other analyses) by writing your reports using `R Markdown` instead of a word processor. `R Markdown` is a language for writing documents which include `R` code. The code is run, and the output is included in the document. `R Markdown` can be used to produce different types of document (e.g. reports, presentations, web pages), in various formats (e.g. Microsoft Word, PDF, HTML). The `Research Methods in R` worksheets are written using `R Markdown`, and although we don't teach it in these materials, there are other [courses](https://rmarkdown.rstudio.com/lesson-1.html) which make it easy to learn.
 
 ___
 

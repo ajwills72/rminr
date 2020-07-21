@@ -11,7 +11,7 @@ output: html_document
 ## knitr::opts_chunk$set(echo = TRUE, message = FALSE, results='hide', fig.keep = 'none', comment=NA)
 
 ## Show commands and putout.
-knitr::opts_chunk$set(echo = TRUE, comment=NA, cache = TRUE)
+knitr::opts_chunk$set(echo = TRUE, comment=NA, cache = FALSE)
 
 
 ```
@@ -40,11 +40,13 @@ knitr::opts_chunk$set(echo = TRUE, comment=NA, cache = TRUE)
 
 # Getting started
 
-We'll be using the same meditation training data we used in the [understanding interactions](anova2.html) worksheet, so make sure you've completed that worksheet and have the preprocessed `MCwordsCIsum` data frame from that worksheet in your current R project. If for some reason you do not have that data frame, you can re-create it like this, as long as you have `wordnaming2.csv` in your R project (which is available from the _git_ repository we used [previously](preproc.html#load)):
+Return to the project that you used for the [understanding interactions](anova2.html) worksheet, which you named **rminr-data**. Open a new blank script and save it as **anova3.R**. Put all commands in that script, and save the script regularly. 
+
+This worksheet makes use of the preprocessed `MCwordsCIsum` data frame we made in the [understanding interactions](anova2.html) worksheet. Start by running the following commands to make sure you have this data frame in your _environment_:
 
 ```{r init, message=FALSE}
 library(tidyverse)
-library(BayesFactor, quietly = TRUE)
+library(BayesFactor)
 words <- read_csv("wordnaming2.csv")
 MCwords <- words %>% filter(medit != "relax")
 MCwordsCI <- MCwords %>% filter(congru != "neutral")
@@ -92,7 +94,7 @@ Once you have told R which columns are _factors_, you're ready to answer these t
 
 This is a big calculation for R, so run the following commands, and then read the explanation while you're waiting for the results. It could take up to a minute to get the answer.
 
-```{r bf-fact-1}
+```{r bf-fact-1, cache=TRUE}
 bf <- anovaBF(formula = rt ~ medit*congru + subj,
               data = data.frame(MCwordsCIsum), whichRandom = "subj")
 ```
@@ -150,7 +152,7 @@ The Bayes Factor for this hypothesis is around 340, which is really strong evide
 
 We can find this out by using the `group_by` and `summarise` commands we have used several times before:
 
-```{r meditME}
+```{r meditME, message=FALSE}
 MCwordsCIsum %>% group_by(medit) %>% summarise(mean(rt))
 ```
 
@@ -160,9 +162,9 @@ From this, we can see that people in the meditation condition are about 30 ms fa
 
 This is the **main effect** of congruence. More specifically, it is the hypothesis that `congru`  affects `rt`. This is compared against the hypothesis that there is no effect of congruence.
 
-The Bayes Factor is about 790, strong evidence for  a main effect of congruence. As before, we can find out which direction this effect is in:
+The Bayes Factor is about 860, strong evidence for  a main effect of congruence. As before, we can find out which direction this effect is in:
 
-```{r congruME}
+```{r congruME, message=FALSE}
 MCwordsCIsum %>% group_by(congru) %>% summarise(mean(rt))
 ```
 
@@ -204,7 +206,7 @@ As covered in the [within-subject differences](anova1.html#threeplus), one of th
 
 Below are further instructions. In some cases, there are also examples of what your output should look like at each stage if you've got it right (recall that your BF may be slightly different to those shown). Once your script is working correctly, **copy and paste it into PsycEL**.
 
-Start a new R script, and begin it with `rm(list=ls())` to make sure you've cleared everything from your environment. Then, write R commands to do the following (see below).
+Start a new R script in your current project (**rminr-data**), call it **anova3ex.R** and begin it with `rm(list=ls())` to make sure you've cleared everything from your environment. Then, write R commands to do the following (see below).
 Only include the commands that are needed to do this, and use meaningful names for your variables.
 
 1. Load packages and data, 
@@ -232,7 +234,7 @@ wordsum$congru <- factor(wordsum$congru)
 
 3. Calculate a factorial Bayesian ANOVA for this full 3 (meditate, relax, control) x 3 (congruent, incongruent, neutral)  data set, and store it in an object (e.g. `bfall`)
 
-```{r ex-d, echo=FALSE, message=FALSE}
+```{r ex-d, echo=FALSE, message=FALSE, cache=TRUE}
 bfall <- anovaBF(formula = rt ~ medit*congru + subj,
               data = data.frame(wordsum), whichRandom = "subj")
 ```

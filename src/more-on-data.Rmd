@@ -1,0 +1,59 @@
+---
+title: "More on data"
+author: "Paul Sharpe"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+## DEVELOPERS: Uncomment one option, as appropriate
+
+## Show only commands.
+## knitr::opts_chunk$set(echo = TRUE, message = FALSE, results='hide', fig.keep = 'none', comment=NA)
+
+## Show commands and output.
+knitr::opts_chunk$set(echo = TRUE, comment=NA)
+library(pander)
+```
+
+# Loading data from Excel
+
+Sometimes the data at the start of your preprocessing pipeline will be an Excel file, rather than a CSV file. As a proprietary format, this is not ideal. However, people often use Excel to keep related data in a single file, by using "subsheets". Whilst you could save each subsheet to its own CSV file, `R` can also read the data directly from Excel.
+
+To demonstrate this, we'll read the data from an experiment where the results of four different tests were recorded on subsheets of an Excel spreadsheet. There was also a subsheet containing demographic data.
+
+We'll read data from all of the subsheets into a single data frame.
+
+```{r excel, message=FALSE}
+rm(list = ls()) # clear the environment
+library(tidyverse)
+
+# read data from Excel
+library(readxl)
+path <- 'case-studies/allegra-cattani/picture-naming.xlsx'
+data <- path %>%
+  excel_sheets() %>%
+  set_names() %>%
+  map_df(~ read_excel(path = path, sheet = .x, range = "A1:V20"),
+         .id = "sheet")
+```
+
+**Explanation of commands:**
+
+1. We clear the workspace and load `tidyverse`.
+1. `library(readxl)` loads a package containing functions for reading Excel spreadsheets.
+1. `path <- 'going-further/picture-naming.xlsx'` defines the location of our spreadsheet.
+1. `path %>% excel_sheets()` creates a vector (a list) containing the names of the subsheets.
+1. Items in a vector can be given names. Without an argument, `set_names()` sets the name the same as the value in the vector, thereby naming each item after its subsheet. It will become clear why we do this in the next step.
+1. `map_df()` processes each item in the vector, by assigning it to `.x` and then running the function `read_excel(path = path, sheet = .x, range = "A1:V20")`. For each subsheet of the spreadsheet file (`path`), this reads data from the range `A1:V20` on the subsheet (the cells containing the data we need). The argument `.id = "sheet"` creates a column named `sheet` with the name associated with the current vector item `.x`. This is the name that we set in the previous step. The results are returned as a data frame.
+1. Because `map_df()` adds the results of each of function call to the end of the previously created data frame, `data` is assigned a single data frame containing the data from all subsheets.
+
+Here's a selection of rows from `data`:
+
+```{r echo=FALSE}
+data %>% slice(1:2, 20:21, 39:40, 58:59, 77:78) %>% pander(split.table = Inf)
+```
+
+
+___
+
+This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0. 

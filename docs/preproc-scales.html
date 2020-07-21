@@ -373,22 +373,21 @@ summary {
 <ul>
 <li><p><a href="#intro">Introduction</a></p></li>
 <li><p><a href="#start">Getting started</a></p></li>
-<li><p><a href="#select">Selecting data</a></p></li>
+<li><p><a href="#select">Loading and selecting data</a></p></li>
 <li><p><a href="#missing">Handling missing data</a></p></li>
 <li><p><a href="#subscales">Calculating subscale scores</a></p></li>
 <li><p><a href="#ex1">Exercise 1</a></p></li>
 <li><p><a href="#tidy">Tidying survey data</a></p></li>
 <li><p><a href="#ex2">Exercise 2</a></p></li>
-<li><p><a href="#reverse">Reverse scoring survey items</a></p></li>
 </ul>
 <p><a name="intro"></a></p>
 </div>
 <div id="introduction" class="section level2">
 <h2>Introduction</h2>
-<p>Intelligence, personality, and many other psychological constructs are often measured using scales. This type of data is normally collected using questionnaires (also called surveys). Answers to the questions are given numerical values, most commonly using a Likert scale. Likert scales associate numbers with a set of answers which express some degree of agreement each question e.g. <code>0=Not at all, 1=A little, 2=Somewhat, 3=A lot, 4=Extremely</code>. A formula is applied to the scores for some or all of the questions to calculate an overall score for the scale. The formula often just consists of adding up the individual scores (more on this below). This worksheet assumes that your survey software has recorded Likert responses as numbers. Refer back to the earlier module if you need a reminder of <a href="https://benwhalley.github.io/rmip/worksheet-recoding.html">how to convert text responses to numbers</a>.</p>
-<p>A psychometric scale is a scale which has undergone some degree of testing to ensure that it is valid and reliable measure of the underlying construct. For example, a valid intelligence scale would truely measure intelligence, rather than some other constructy (e.g. memory). A reliable scale gives consistent results, i.e. a person who completed the scale at different times would produce similar scores, as would two people who are similar in terms of the construct measured by the scale. Most published scales have been tested to ensure they are valid and reliable, so it’s advisable to use an existing scale if one exists, before creating your own.</p>
+<p>Intelligence, personality, and many other psychological constructs are often measured using scales. This type of data is normally collected using questionnaires (also called surveys). Answers to the questions are given numerical values, most commonly using a Likert scale. Likert scales associate numbers with a set of answers which express some degree of agreement with each question e.g. <code>0=Not at all, 1=A little, 2=Somewhat, 3=A lot, 4=Extremely</code>. A formula is applied to the scores for some or all of the questions to calculate an overall score for the scale. The formula often just consists of adding up the individual scores (more on this below). This worksheet assumes that your survey software has recorded Likert responses as numbers. Refer back to the <a href="https://benwhalley.github.io/rmip/worksheet-recoding.html">Cleaning up questionnaire data worksheet</a> if you need a reminder of how to convert text responses to numbers.</p>
+<p>A psychometric scale is a scale which has undergone some degree of testing to ensure that it is a valid and reliable measure of the underlying construct. For example, a valid intelligence scale would truly measure intelligence, rather than some other construct (e.g. memory). A reliable scale gives consistent results, i.e. a person who completed the scale at different times would produce similar scores, as would two people who are similar in terms of the construct measured by the scale. Most published scales have been tested to ensure they are valid and reliable, so it’s advisable to use an existing scale if one exists, before creating your own.</p>
 <p>Surveys can be created using <a href="https://www.jisc.ac.uk/">JISC</a>, <a href="https://gorilla.sc/">Gorilla Survey</a>, <a href="https://osdoc.cogsci.nl/">OpenSesame</a>, <a href="https://expfactory.github.io/experiments/">The Experiment Factory</a>, <a href="https://www.qualtrics.com/">Qualtrics</a> and many other software packages. Most software will allow you to save your data as a CSV file. The precise structure of the data varies between packages, so you are likely to have to start by <a href="preproc.html">preprocessing</a> your data.</p>
-<p>In this worksheet, we’ll cover some common techniques which you are likely to use to preprocess psychometric scale data. These techniques should be useful regardless of the software you used to administer your survey data, although they will need slight modifications depending on the way your raw data is organised.</p>
+<p>In this worksheet, we’ll cover some common techniques you are likely to use to preprocess psychometric scale data. These techniques should be useful regardless of the software you used to administer your survey data, although they will need slight modifications depending on the way your raw data is organised.</p>
 <p><a name="start"></a></p>
 </div>
 <div id="getting-started" class="section level2">
@@ -405,21 +404,18 @@ summary {
 library(tidyverse)</code></pre>
 <p><a name="select"></a></p>
 </div>
-<div id="selecting-data" class="section level2">
-<h2>Selecting data</h2>
-<p>Our first step will be to remove columns from the raw survey data which aren’t needed for data analysis. We’ll demonstrate this using some real data from the Depression Anxiety Stress Scales—21 (DASS-21, Henry &amp; Crawford, 2005), a 21-item scale for measuring depression, anxiety and stress.</p>
+<div id="loading-and-selecting-data" class="section level2">
+<h2>Loading and selecting data</h2>
+<p>Our first step will be to load the data and remove columns from the raw survey data which aren’t needed for analysis. We’ll demonstrate this using some real data from the Depression Anxiety Stress Scales—21 (DASS-21, Henry &amp; Crawford, 2005), a 21-item scale for measuring depression, anxiety and stress.</p>
 <pre class="r"><code>dass21_raw &lt;- read_csv(&quot;going-further/dass21.csv&quot;)</code></pre>
 <pre><code>Parsed with column specification:
 cols(
   .default = col_double(),
-  IPAddress = col_character(),
-  Browser = col_character(),
-  StartDate = col_character(),
   SonaID = col_character(),
   PageOrder = col_number()
 )</code></pre>
 <pre><code>See spec(...) for full column specifications.</code></pre>
-<pre class="r"><code>dass21_raw &lt;- select(dass21_raw, partID, Age:DASS21)</code></pre>
+<pre class="r"><code>dass21_raw &lt;- dass21_raw %&gt;% select(partID, Age:DASS21)</code></pre>
 <p><strong>Explanation of command:</strong></p>
 <ol style="list-style-type: decimal">
 <li><p>We read the DASS-21 CSV file into the data frame <code>dass21_raw</code>.</p></li>
@@ -828,6 +824,7 @@ cols(
 <ul>
 <li>We pipe the raw data into the <code>drop_na()</code> function (part of the <code>tidyverse</code> package). This drops any rows with a column containing <code>NA</code>, which includes data for participants <code>106</code> and <code>107</code>.</li>
 </ul>
+<p>You can see that data for participants <code>106</code> and <code>107</code> have been dropped from <code>dass21</code>.</p>
 <table style="width:100%;">
 <colgroup>
 <col width="4%"></col>
@@ -1028,8 +1025,9 @@ cols(
 <div id="calculating-subscale-scores" class="section level2">
 <h2>Calculating subscale scores</h2>
 <p>Our next step is to calculate the scores for the constructs measured by our scale. Many scales consist of groups of questions which measure multiple, distinct constructs. The DASS-21 is an example of a scale with subscale scores for depression, anxiety and stress. These are calculated by adding together responses for specific items, which we can do using the <code>rowSums()</code> function:</p>
-<pre class="r"><code>dass21 &lt;- mutate(dass21, depression = rowSums(dass21[4 + c(3,5,10,13,16,17,21)]))
-dass21_total &lt;- select(dass21, partID, Age, Gender, depression)</code></pre>
+<pre class="r"><code>dass21 &lt;- dass21 %&gt;%
+  mutate(depression = rowSums(dass21[4 + c(3,5,10,13,16,17,21)]))
+dass21_total &lt;- dass21 %&gt;% select(partID, Age, Gender, depression)</code></pre>
 <p><strong>Explanation of command:</strong></p>
 <ul>
 <li>We use <code>mutate()</code> to create a <code>depression</code> column which is the sum of items 3, 5, 10, 13, 16, 17 and 21. Item 1 of the DASS-21 data is in column 5 of <code>dass21</code>, so we add 4 to each item number to select the correct columns to add together. The command <code>dass21[4 + c(3,5,10,13,16,17,21)]</code> is an example of “vectorised addition”. It adds <code>4</code> to each of the columns defined in the vector to the right of the <code>+</code>. For each row, the values in the resulting columns are added together using <code>rowSums()</code>. We assign the result back to <code>dass21</code>, thereby creating a <code>depression</code> column for each row.</li>
@@ -1146,11 +1144,19 @@ dass21_total &lt;- select(dass21, partID, Age, Gender, depression)</code></pre>
 </div>
 <div id="tidying-survey-data" class="section level2">
 <h2>Tidying survey data</h2>
-<p>Some data benefits from a little more tidying than simply removing columns which aren’t required. We’ll demonstrate this more advanced preprocessing using a different dataset. This data came from from an experiment in which self-esteem was measured before and after participants completed one of two mental imagery conditions, or a control condition. The experiment used the State Self-Esteem Scale (SSES, Heatherton &amp; Polivy, 1991), a 20-item scale used to measure short-lived (state) changes in self-esteem.</p>
+<p>Some data benefits from a little more tidying than simply removing columns which aren’t required. We’ll demonstrate this more advanced preprocessing using a different dataset. This data came from from an experiment in which self-esteem was measured before and after participants completed one of two mental imagery conditions, or a control condition.</p>
+<ul>
+<li>Condition 1: participants visualised a negative mental image of themself</li>
+<li>Condition 2: participants visualised a negative mental image of someone else</li>
+<li>Condition 0 (control): participants did a card sorting task and did not think of any images.</li>
+</ul>
+<p>The experiment used the State Self-Esteem Scale (SSES, Heatherton &amp; Polivy, 1991), a 20-item scale used to measure short-lived (state) changes in self-esteem.</p>
 <pre class="r"><code>sses &lt;- read_csv(&#39;going-further/sses.csv&#39;)</code></pre>
 <pre><code>Parsed with column specification:
 cols(
-  .default = col_double()
+  .default = col_double(),
+  Gender = col_character(),
+  Condition = col_character()
 )</code></pre>
 <pre><code>See spec(...) for full column specifications.</code></pre>
 <table style="width:100%;">
@@ -1254,159 +1260,422 @@ cols(
 <tr class="odd">
 <td align="center">47</td>
 <td align="center">20</td>
+<td align="center">male</td>
+<td align="center">2</td>
+<td align="center">3</td>
+<td align="center">4</td>
+<td align="center">2</td>
+<td align="center">2</td>
+<td align="center">3</td>
+<td align="center">3</td>
+<td align="center">0</td>
 <td align="center">1</td>
+<td align="center">3</td>
+<td align="center">0</td>
+<td align="center">4</td>
+<td align="center">3</td>
 <td align="center">2</td>
 <td align="center">3</td>
 <td align="center">0</td>
 <td align="center">2</td>
+<td align="center">3</td>
 <td align="center">2</td>
 <td align="center">1</td>
 <td align="center">3</td>
-<td align="center">4</td>
-<td align="center">3</td>
-<td align="center">3</td>
-<td align="center">4</td>
-<td align="center">4</td>
+<td align="center">control</td>
 <td align="center">3</td>
 <td align="center">2</td>
 <td align="center">3</td>
-<td align="center">4</td>
 <td align="center">2</td>
 <td align="center">1</td>
 <td align="center">2</td>
-<td align="center">3</td>
-<td align="center">1</td>
 <td align="center">0</td>
+<td align="center">1</td>
 <td align="center">3</td>
-<td align="center">2</td>
-<td align="center">3</td>
-<td align="center">2</td>
-<td align="center">3</td>
-<td align="center">2</td>
-<td align="center">4</td>
-<td align="center">3</td>
-<td align="center">3</td>
-<td align="center">4</td>
+<td align="center">0</td>
 <td align="center">4</td>
 <td align="center">3</td>
 <td align="center">2</td>
 <td align="center">2</td>
-<td align="center">4</td>
-<td align="center">3</td>
+<td align="center">0</td>
+<td align="center">1</td>
 <td align="center">2</td>
-<td align="center">3</td>
-<td align="center">3</td>
-<td align="center">3</td>
+<td align="center">1</td>
+<td align="center">1</td>
+<td align="center">1</td>
 </tr>
 <tr class="even">
 <td align="center">51</td>
 <td align="center">22</td>
+<td align="center">female</td>
 <td align="center">2</td>
 <td align="center">2</td>
+<td align="center">3</td>
+<td align="center">3</td>
 <td align="center">2</td>
 <td align="center">1</td>
 <td align="center">3</td>
-<td align="center">2</td>
-<td align="center">3</td>
-<td align="center">3</td>
-<td align="center">4</td>
-<td align="center">4</td>
-<td align="center">3</td>
-<td align="center">2</td>
-<td align="center">2</td>
-<td align="center">3</td>
-<td align="center">1</td>
-<td align="center">3</td>
-<td align="center">4</td>
-<td align="center">4</td>
-<td align="center">2</td>
-<td align="center">4</td>
-<td align="center">2</td>
-<td align="center">2</td>
+<td align="center">0</td>
 <td align="center">0</td>
 <td align="center">3</td>
+<td align="center">2</td>
+<td align="center">2</td>
+<td align="center">3</td>
+<td align="center">3</td>
+<td align="center">3</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">2</td>
+<td align="center">0</td>
+<td align="center">2</td>
+<td align="center">2</td>
+<td align="center">control</td>
+<td align="center">3</td>
+<td align="center">3</td>
+<td align="center">3</td>
+<td align="center">3</td>
 <td align="center">1</td>
 <td align="center">3</td>
 <td align="center">1</td>
-<td align="center">3</td>
-<td align="center">3</td>
-<td align="center">3</td>
-<td align="center">3</td>
+<td align="center">1</td>
 <td align="center">4</td>
-<td align="center">3</td>
+<td align="center">1</td>
 <td align="center">2</td>
 <td align="center">2</td>
 <td align="center">2</td>
 <td align="center">3</td>
-<td align="center">4</td>
-<td align="center">4</td>
+<td align="center">0</td>
+<td align="center">0</td>
 <td align="center">2</td>
-<td align="center">4</td>
+<td align="center">0</td>
 <td align="center">2</td>
 <td align="center">2</td>
 </tr>
 <tr class="odd">
 <td align="center">57</td>
 <td align="center">20</td>
-<td align="center">2</td>
-<td align="center">2</td>
-<td align="center">3</td>
-<td align="center">4</td>
-<td align="center">0</td>
-<td align="center">4</td>
-<td align="center">4</td>
-<td align="center">0</td>
-<td align="center">0</td>
-<td align="center">4</td>
-<td align="center">2</td>
-<td align="center">4</td>
+<td align="center">female</td>
 <td align="center">2</td>
 <td align="center">3</td>
-<td align="center">4</td>
-<td align="center">4</td>
-<td align="center">4</td>
-<td align="center">4</td>
-<td align="center">4</td>
-<td align="center">4</td>
-<td align="center">4</td>
-<td align="center">4</td>
 <td align="center">0</td>
-<td align="center">3</td>
-<td align="center">4</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
 <td align="center">0</td>
 <td align="center">4</td>
-<td align="center">4</td>
+<td align="center">0</td>
 <td align="center">2</td>
 <td align="center">0</td>
-<td align="center">4</td>
-<td align="center">2</td>
-<td align="center">4</td>
 <td align="center">2</td>
 <td align="center">3</td>
+<td align="center">0</td>
 <td align="center">4</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">control</td>
+<td align="center">3</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">2</td>
 <td align="center">4</td>
+<td align="center">0</td>
+<td align="center">2</td>
+<td align="center">0</td>
+<td align="center">2</td>
+<td align="center">3</td>
+<td align="center">0</td>
 <td align="center">4</td>
-<td align="center">4</td>
-<td align="center">4</td>
-<td align="center">4</td>
-<td align="center">4</td>
-<td align="center">4</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
 </tr>
 </tbody>
 </table>
-<p>The data will be easier to analyse if we rename the columns. It will also be useful to divide the data into two data frames, one for the pre-intervention SSES, the other for the post-intervention SSES. We can do all of this in a single pipeline:</p>
-<pre class="r"><code>sses_pre_raw  &lt;- select(sses, 1, 5:25) %&gt;%
-  set_names(~ str_to_lower(.) %&gt;% str_replace_all(&quot;pre_sse_&quot;, &quot;q&quot;)) %&gt;%
-  mutate(subj = factor(partid), condition = factor(condition), time = factor(&#39;pre&#39;)) %&gt;%
-  select(subj, condition, time, q1:q20)</code></pre>
-<p><strong>Explanation of pipeline commands:</strong></p>
+<p>The data will be easier to analyse if we rename the columns. It will also be useful to divide the data into two data frames, one for the pre-intervention SSES, the other for the post-intervention SSES. We’ll do this in stages:</p>
+<pre class="r"><code>sses_pre_raw  &lt;- sses %&gt;% select(1, 5:25)</code></pre>
+<p><strong>Explanation of command:</strong></p>
+<ul>
+<li><code>sses_pre_raw  &lt;- sses %&gt;% select(1, 5:25)</code> - We <code>select()</code> column 1, and columns 5:25 from <code>sses</code>, and store the resulting data frame in <code>sses_pre_raw</code>. Column 1 is the participant id, columns 5:24 are the SSES scores, and column 25 contains a number indicating which of the three experimental conditions the subject was assigned to.</li>
+</ul>
+<p>Here are the first three participants of our pre-intervention data:</p>
+<table style="width:100%;">
+<colgroup>
+<col width="3%"></col>
+<col width="4%"></col>
+<col width="4%"></col>
+<col width="4%"></col>
+<col width="4%"></col>
+<col width="4%"></col>
+<col width="4%"></col>
+<col width="4%"></col>
+<col width="4%"></col>
+<col width="4%"></col>
+<col width="4%"></col>
+<col width="4%"></col>
+<col width="4%"></col>
+<col width="4%"></col>
+<col width="4%"></col>
+<col width="4%"></col>
+<col width="4%"></col>
+<col width="4%"></col>
+<col width="4%"></col>
+<col width="4%"></col>
+<col width="4%"></col>
+<col width="4%"></col>
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">partID</th>
+<th align="center">Pre_SSE_1</th>
+<th align="center">Pre_SSE_2</th>
+<th align="center">Pre_SSE_3</th>
+<th align="center">Pre_SSE_4</th>
+<th align="center">Pre_SSE_5</th>
+<th align="center">Pre_SSE_6</th>
+<th align="center">Pre_SSE_7</th>
+<th align="center">Pre_SSE_8</th>
+<th align="center">Pre_SSE_9</th>
+<th align="center">Pre_SSE_10</th>
+<th align="center">Pre_SSE_11</th>
+<th align="center">Pre_SSE_12</th>
+<th align="center">Pre_SSE_13</th>
+<th align="center">Pre_SSE_14</th>
+<th align="center">Pre_SSE_15</th>
+<th align="center">Pre_SSE_16</th>
+<th align="center">Pre_SSE_17</th>
+<th align="center">Pre_SSE_18</th>
+<th align="center">Pre_SSE_19</th>
+<th align="center">Pre_SSE_20</th>
+<th align="center">Condition</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">47</td>
+<td align="center">3</td>
+<td align="center">4</td>
+<td align="center">2</td>
+<td align="center">2</td>
+<td align="center">3</td>
+<td align="center">3</td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">3</td>
+<td align="center">0</td>
+<td align="center">4</td>
+<td align="center">3</td>
+<td align="center">2</td>
+<td align="center">3</td>
+<td align="center">0</td>
+<td align="center">2</td>
+<td align="center">3</td>
+<td align="center">2</td>
+<td align="center">1</td>
+<td align="center">3</td>
+<td align="center">control</td>
+</tr>
+<tr class="even">
+<td align="center">51</td>
+<td align="center">2</td>
+<td align="center">3</td>
+<td align="center">3</td>
+<td align="center">2</td>
+<td align="center">1</td>
+<td align="center">3</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">3</td>
+<td align="center">2</td>
+<td align="center">2</td>
+<td align="center">3</td>
+<td align="center">3</td>
+<td align="center">3</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">2</td>
+<td align="center">0</td>
+<td align="center">2</td>
+<td align="center">2</td>
+<td align="center">control</td>
+</tr>
+<tr class="odd">
+<td align="center">57</td>
+<td align="center">3</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">4</td>
+<td align="center">0</td>
+<td align="center">2</td>
+<td align="center">0</td>
+<td align="center">2</td>
+<td align="center">3</td>
+<td align="center">0</td>
+<td align="center">4</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">control</td>
+</tr>
+</tbody>
+</table>
+<p>Next, we’ll rename the SSES columns based on their question number. This will make them easier to refer to in the rest of our code.</p>
+<pre class="r"><code>sses_pre_raw  &lt;- sses_pre_raw %&gt;%
+  set_names(~ str_to_lower(.) %&gt;% str_replace_all(&quot;pre_sse_&quot;, &quot;q&quot;))</code></pre>
+<p><strong>Explanation of command:</strong></p>
 <ol style="list-style-type: decimal">
-<li><p><code>sses_pre_raw  &lt;- select(sses, 1, 5:25)</code> - We save the output of the pipeline in <code>sses_pre_raw</code>. First, we <code>select()</code> column 1, and columns 5:25 from <code>sses</code>. Column 1 is the participant id, columns 5:24 are the SSES scores, and column 25 is the participant’s condition.</p></li>
-<li><p><code>set_names(~ str_to_lower(.) %&gt;% str_replace_all(&quot;pre_sse_&quot;, &quot;q&quot;))</code> - Next, we use the function <code>set_names()</code> to rename our columns. The <code>~</code> is a way of telling <code>set_names()</code> to apply a function to each column name. The remainder of the command is a “sub-pipeline” which tidies up the column name. The command <code>str_to_lower(.)</code> converts a string (the <code>.</code> means the current column name) to lower case. This lower case name is piped to <code>str_replace_all(&quot;pre_sse_&quot;, &quot;q&quot;))</code> which replaces any string with the prefix <code>pre_sse_</code> with <code>q</code>. All our columns are now lowercase, and the SSES questions are named <code>q1:q20</code>.</p></li>
-<li><p><code>mutate(subj = factor(partid), condition = factor(condition), time = factor(&#39;pre&#39;))</code> - Next, we use <code>mutate</code> to add and modify some columns. The argument <code>subj = factor(partid)</code> creates a new column named <code>subj</code> (which is a bit clearer than <code>partid</code>) by copying the <code>partid</code> column and making it a factor. The argument <code>condition = factor(condition)</code> makes the <code>condition</code> column a factor. The argument <code>time = factor(&#39;pre&#39;)</code> creates a new factor called <code>time</code> and sets all values to <code>pre</code>.</p></li>
-<li><p><code>select(subj, condition, time, q1:q20)</code> - Finally, we use <code>select()</code> to put the columns into a convenient order for viewing.</p></li>
+<li><code>set_names(~ str_to_lower(.) %&gt;% str_replace_all(&quot;pre_sse_&quot;, &quot;q&quot;))</code> - We use the function <code>set_names()</code> to rename our columns. The <code>~</code> is a way of telling <code>set_names()</code> to apply a function to each column name. The remainder of the command is a “sub-pipeline” which tidies up the column name. The command <code>str_to_lower(.)</code> converts a string (the <code>.</code> means the current column name) to lower case. This lower case name is piped to <code>str_replace_all(&quot;pre_sse_&quot;, &quot;q&quot;))</code> which replaces any string with the prefix <code>pre_sse_</code> with <code>q</code>. All our columns are now lowercase, and the SSES questions are named <code>q1:q20</code>.</li>
 </ol>
-<p>We now have our pre-intervention SSES data in a data frame with clearer column headings:</p>
+<table style="width:100%;">
+<colgroup>
+<col width="6%"></col>
+<col width="3%"></col>
+<col width="3%"></col>
+<col width="3%"></col>
+<col width="3%"></col>
+<col width="3%"></col>
+<col width="3%"></col>
+<col width="3%"></col>
+<col width="3%"></col>
+<col width="3%"></col>
+<col width="4%"></col>
+<col width="4%"></col>
+<col width="4%"></col>
+<col width="4%"></col>
+<col width="4%"></col>
+<col width="4%"></col>
+<col width="4%"></col>
+<col width="4%"></col>
+<col width="4%"></col>
+<col width="4%"></col>
+<col width="4%"></col>
+<col width="9%"></col>
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">partid</th>
+<th align="center">q1</th>
+<th align="center">q2</th>
+<th align="center">q3</th>
+<th align="center">q4</th>
+<th align="center">q5</th>
+<th align="center">q6</th>
+<th align="center">q7</th>
+<th align="center">q8</th>
+<th align="center">q9</th>
+<th align="center">q10</th>
+<th align="center">q11</th>
+<th align="center">q12</th>
+<th align="center">q13</th>
+<th align="center">q14</th>
+<th align="center">q15</th>
+<th align="center">q16</th>
+<th align="center">q17</th>
+<th align="center">q18</th>
+<th align="center">q19</th>
+<th align="center">q20</th>
+<th align="center">condition</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">47</td>
+<td align="center">3</td>
+<td align="center">4</td>
+<td align="center">2</td>
+<td align="center">2</td>
+<td align="center">3</td>
+<td align="center">3</td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">3</td>
+<td align="center">0</td>
+<td align="center">4</td>
+<td align="center">3</td>
+<td align="center">2</td>
+<td align="center">3</td>
+<td align="center">0</td>
+<td align="center">2</td>
+<td align="center">3</td>
+<td align="center">2</td>
+<td align="center">1</td>
+<td align="center">3</td>
+<td align="center">control</td>
+</tr>
+<tr class="even">
+<td align="center">51</td>
+<td align="center">2</td>
+<td align="center">3</td>
+<td align="center">3</td>
+<td align="center">2</td>
+<td align="center">1</td>
+<td align="center">3</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">3</td>
+<td align="center">2</td>
+<td align="center">2</td>
+<td align="center">3</td>
+<td align="center">3</td>
+<td align="center">3</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">2</td>
+<td align="center">0</td>
+<td align="center">2</td>
+<td align="center">2</td>
+<td align="center">control</td>
+</tr>
+<tr class="odd">
+<td align="center">57</td>
+<td align="center">3</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">4</td>
+<td align="center">0</td>
+<td align="center">2</td>
+<td align="center">0</td>
+<td align="center">2</td>
+<td align="center">3</td>
+<td align="center">0</td>
+<td align="center">4</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">control</td>
+</tr>
+</tbody>
+</table>
+<p>Now we’ll convert some columns to <a href="anova1.html#anovaWS">factors</a>.</p>
+<pre class="r"><code>sses_pre_raw &lt;- sses_pre_raw %&gt;%
+  mutate(subj = factor(partid), condition = factor(condition),
+         time = factor(&#39;pre&#39;)) %&gt;%
+  select(subj, condition, time, q1:q20)</code></pre>
+<ol style="list-style-type: decimal">
+<li><code>mutate(subj = factor(partid), condition = factor(condition), time = factor(&#39;pre&#39;))</code> - We use <code>mutate</code> to add and modify some columns. The argument <code>subj = factor(partid)</code> creates a new column named <code>subj</code> (which is a bit clearer than <code>partid</code>) by copying the <code>partid</code> column and making it a factor. The argument <code>condition = factor(condition)</code> makes the <code>condition</code> column a factor. The argument <code>time = factor(&#39;pre&#39;)</code> creates a new factor called <code>time</code> and sets all values to <code>pre</code>.</li>
+<li><code>select(subj, condition, time, q1:q20)</code> just puts our columns in a more logical order.</li>
+</ol>
+<p>Our data is now much tidier:</p>
 <table style="width:100%;">
 <colgroup>
 <col width="5%"></col>
@@ -1463,86 +1732,92 @@ cols(
 <tbody>
 <tr class="odd">
 <td align="center">47</td>
-<td align="center">0</td>
+<td align="center">control</td>
 <td align="center">pre</td>
 <td align="center">3</td>
+<td align="center">4</td>
+<td align="center">2</td>
+<td align="center">2</td>
+<td align="center">3</td>
+<td align="center">3</td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">3</td>
+<td align="center">0</td>
+<td align="center">4</td>
+<td align="center">3</td>
+<td align="center">2</td>
+<td align="center">3</td>
 <td align="center">0</td>
 <td align="center">2</td>
+<td align="center">3</td>
 <td align="center">2</td>
 <td align="center">1</td>
 <td align="center">3</td>
-<td align="center">4</td>
-<td align="center">3</td>
-<td align="center">3</td>
-<td align="center">4</td>
-<td align="center">4</td>
-<td align="center">3</td>
-<td align="center">2</td>
-<td align="center">3</td>
-<td align="center">4</td>
-<td align="center">2</td>
-<td align="center">1</td>
-<td align="center">2</td>
-<td align="center">3</td>
-<td align="center">1</td>
 </tr>
 <tr class="even">
 <td align="center">51</td>
-<td align="center">0</td>
+<td align="center">control</td>
 <td align="center">pre</td>
 <td align="center">2</td>
+<td align="center">3</td>
+<td align="center">3</td>
+<td align="center">2</td>
 <td align="center">1</td>
 <td align="center">3</td>
-<td align="center">2</td>
-<td align="center">3</td>
-<td align="center">3</td>
-<td align="center">4</td>
-<td align="center">4</td>
+<td align="center">0</td>
+<td align="center">0</td>
 <td align="center">3</td>
 <td align="center">2</td>
 <td align="center">2</td>
 <td align="center">3</td>
-<td align="center">1</td>
 <td align="center">3</td>
-<td align="center">4</td>
-<td align="center">4</td>
+<td align="center">3</td>
+<td align="center">0</td>
+<td align="center">0</td>
 <td align="center">2</td>
-<td align="center">4</td>
+<td align="center">0</td>
 <td align="center">2</td>
 <td align="center">2</td>
 </tr>
 <tr class="odd">
 <td align="center">57</td>
-<td align="center">0</td>
+<td align="center">control</td>
 <td align="center">pre</td>
 <td align="center">3</td>
-<td align="center">4</td>
-<td align="center">0</td>
-<td align="center">4</td>
-<td align="center">4</td>
 <td align="center">0</td>
 <td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
 <td align="center">4</td>
+<td align="center">0</td>
 <td align="center">2</td>
-<td align="center">4</td>
+<td align="center">0</td>
 <td align="center">2</td>
 <td align="center">3</td>
+<td align="center">0</td>
 <td align="center">4</td>
-<td align="center">4</td>
-<td align="center">4</td>
-<td align="center">4</td>
-<td align="center">4</td>
-<td align="center">4</td>
-<td align="center">4</td>
-<td align="center">4</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
 </tr>
 </tbody>
 </table>
+<p>Note that we could do all of these steps in a single pipeline:</p>
+<pre class="r"><code>sses_pre_raw  &lt;- select(sses, 1, 5:25) %&gt;%
+  set_names(~ str_to_lower(.) %&gt;% str_replace_all(&quot;pre_sse_&quot;, &quot;q&quot;)) %&gt;%
+  mutate(subj = factor(partid), condition = factor(condition),
+         time = factor(&#39;pre&#39;)) %&gt;%
+  select(subj, condition, time, q1:q20)</code></pre>
 <p><a name="ex2"></a></p>
 </div>
 <div id="exercise-2" class="section level2">
 <h2>Exercise 2</h2>
-<p>Write a similar pipeline to create a data frame named <code>sses_post_raw</code> containing the post-intervention SSES data. The post-intervention SSES data are in columns <code>26:45</code>, these columns have the prefix <code>post_sse_</code> rather than <code>pre_sse_</code>. Set the value in the <code>time</code> factor to <code>post</code>. After running your commands, the first few rows of <code>sses_post_raw</code> should look like this:</p>
+<p>Write a similar pipeline to create a data frame named <code>sses_post_raw</code> containing the post-intervention SSES data. The condition and post-intervention SSES data are in columns <code>25:45</code>. The SSES columns have the prefix <code>post_sse_</code> rather than <code>pre_sse_</code>. Set the value in the <code>time</code> factor to <code>post</code>. After running your commands, the first few rows of <code>sses_post_raw</code> should look like this:</p>
 <table style="width:100%;">
 <colgroup>
 <col width="5%"></col>
@@ -1599,245 +1874,86 @@ cols(
 <tbody>
 <tr class="odd">
 <td align="center">47</td>
-<td align="center">0</td>
+<td align="center">control</td>
 <td align="center">post</td>
 <td align="center">3</td>
 <td align="center">2</td>
 <td align="center">3</td>
 <td align="center">2</td>
-<td align="center">3</td>
+<td align="center">1</td>
 <td align="center">2</td>
-<td align="center">4</td>
+<td align="center">0</td>
+<td align="center">1</td>
 <td align="center">3</td>
-<td align="center">3</td>
-<td align="center">4</td>
-<td align="center">4</td>
-<td align="center">3</td>
-<td align="center">2</td>
-<td align="center">2</td>
+<td align="center">0</td>
 <td align="center">4</td>
 <td align="center">3</td>
 <td align="center">2</td>
-<td align="center">3</td>
-<td align="center">3</td>
-<td align="center">3</td>
+<td align="center">2</td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">2</td>
+<td align="center">1</td>
+<td align="center">1</td>
+<td align="center">1</td>
 </tr>
 <tr class="even">
 <td align="center">51</td>
-<td align="center">0</td>
+<td align="center">control</td>
 <td align="center">post</td>
 <td align="center">3</td>
+<td align="center">3</td>
+<td align="center">3</td>
+<td align="center">3</td>
 <td align="center">1</td>
 <td align="center">3</td>
 <td align="center">1</td>
-<td align="center">3</td>
-<td align="center">3</td>
-<td align="center">3</td>
-<td align="center">3</td>
+<td align="center">1</td>
 <td align="center">4</td>
-<td align="center">3</td>
+<td align="center">1</td>
 <td align="center">2</td>
 <td align="center">2</td>
 <td align="center">2</td>
 <td align="center">3</td>
-<td align="center">4</td>
-<td align="center">4</td>
+<td align="center">0</td>
+<td align="center">0</td>
 <td align="center">2</td>
-<td align="center">4</td>
+<td align="center">0</td>
 <td align="center">2</td>
 <td align="center">2</td>
 </tr>
 <tr class="odd">
 <td align="center">57</td>
-<td align="center">0</td>
+<td align="center">control</td>
 <td align="center">post</td>
 <td align="center">3</td>
-<td align="center">4</td>
 <td align="center">0</td>
-<td align="center">4</td>
-<td align="center">4</td>
-<td align="center">2</td>
 <td align="center">0</td>
-<td align="center">4</td>
+<td align="center">0</td>
+<td align="center">0</td>
 <td align="center">2</td>
 <td align="center">4</td>
+<td align="center">0</td>
+<td align="center">2</td>
+<td align="center">0</td>
 <td align="center">2</td>
 <td align="center">3</td>
+<td align="center">0</td>
 <td align="center">4</td>
-<td align="center">4</td>
-<td align="center">4</td>
-<td align="center">4</td>
-<td align="center">4</td>
-<td align="center">4</td>
-<td align="center">4</td>
-<td align="center">4</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
 </tr>
 </tbody>
 </table>
 <p><strong>Copy the R code you used for this exercise into PsycEL.</strong></p>
-<p><a name="reverse"></a></p>
-</div>
-<div id="reverse-scoring-survey-items" class="section level2">
-<h2>Reverse scoring survey items</h2>
-<p>The SSES questions are scored from <code>0 (Not at all)</code> to <code>4 (Extremely)</code>. Question 1 reads <code>I feel confident about my abilities</code>, so a higher score indicates higher self-esteem. However, a number of questions on the SSES are ‘reverse scored’. For example, question 2 reads <code>I am worried about whether I am regarded as a success or failure</code>, so in this case a higher score indicates lower self-esteem. Surveys often use reverse scored questions to encourage participants to pay attention to the wording of each question. Before calculating a total SSES score, we need to reverse the reverse scored items, so that a higher number means higher self-esteem for all items.</p>
-<pre class="r"><code>sses_raw &lt;- bind_rows(sses_pre_raw, sses_post_raw)
-reverse_questions &lt;- c(&#39;q2&#39;, &#39;q4&#39;, &#39;q5&#39;, &#39;q7&#39;, &#39;q8&#39;, &#39;q10&#39;, &#39;q13&#39;, &#39;q15&#39;, &#39;q16&#39;, &#39;q17&#39;, &#39;q18&#39;, &#39;q19&#39;, &#39;q20&#39;)
-
-sses_rev &lt;- sses_raw
-sses_rev[,reverse_questions] &lt;- 4 - sses_raw[,reverse_questions]</code></pre>
-<p><strong>Explanation of commands:</strong></p>
-<ol style="list-style-type: decimal">
-<li><p>Because the remaining preprocessing applies to both pre- and post- data, we join them together using <code>sses_raw &lt;- bind_rows(sses_pre_raw, sses_post_raw)</code>.</p></li>
-<li><p>We set <code>reverse_questions</code> to be a vector of the column names of the SSES items that are reverse scored.</p></li>
-<li><p><code>4 - sses_raw[,reverse_questions]</code> reverses the scores for the reversed items. There’s a lot going on here, so we’ll explain each part of the command:</p>
-<ol style="list-style-type: decimal">
-<li>The values inside the square brackets of <code>sses_raw[,reverse_questions]</code> select a subset of rows and columns from <code>sses_raw</code>. The first argument after <code>[</code> specifies which rows to select. Leaving this empty, means ‘all rows’. The argument after the <code>,</code> specifies which columns to select. We specified colums to be the reversed item column names that we defined in <code>reverse_questions</code>.</li>
-<li>Having selected just the rows and columns containing values we neeed to reverse score, <code>4 -</code> applies a vectorised subtraction to subtract each value on the right-hand side of the <code>-</code> from <code>4</code>, thereby reversing the score. This is similar to the vectorised addition we used above. So if a reversed score was <code>4</code> (the maximum on the Likert scale), this command would convert it to <code>0</code> (<code>4 - 4</code>). The same applies to any other value on the scale.</li>
-<li>We assign the results of the subtractions back to the same subset of rows and columns with <code>sses_rev[,reverse_questions] &lt;-</code></li>
-</ol></li>
-</ol>
-<p>Now that our items are all scored in the same direction, we can calculate the SSES scores using the same technique we used for <a href="#subscales">calculating subscale scores</a>:</p>
-<pre class="r"><code>sses_raw &lt;- mutate(sses_raw, total = rowSums(sses_raw[4:23]))</code></pre>
-<table style="width:100%;">
-<colgroup>
-<col width="4%"></col>
-<col width="8%"></col>
-<col width="4%"></col>
-<col width="3%"></col>
-<col width="3%"></col>
-<col width="3%"></col>
-<col width="3%"></col>
-<col width="3%"></col>
-<col width="3%"></col>
-<col width="3%"></col>
-<col width="3%"></col>
-<col width="3%"></col>
-<col width="4%"></col>
-<col width="4%"></col>
-<col width="4%"></col>
-<col width="4%"></col>
-<col width="4%"></col>
-<col width="4%"></col>
-<col width="4%"></col>
-<col width="4%"></col>
-<col width="4%"></col>
-<col width="4%"></col>
-<col width="4%"></col>
-<col width="5%"></col>
-</colgroup>
-<thead>
-<tr class="header">
-<th align="center">subj</th>
-<th align="center">condition</th>
-<th align="center">time</th>
-<th align="center">q1</th>
-<th align="center">q2</th>
-<th align="center">q3</th>
-<th align="center">q4</th>
-<th align="center">q5</th>
-<th align="center">q6</th>
-<th align="center">q7</th>
-<th align="center">q8</th>
-<th align="center">q9</th>
-<th align="center">q10</th>
-<th align="center">q11</th>
-<th align="center">q12</th>
-<th align="center">q13</th>
-<th align="center">q14</th>
-<th align="center">q15</th>
-<th align="center">q16</th>
-<th align="center">q17</th>
-<th align="center">q18</th>
-<th align="center">q19</th>
-<th align="center">q20</th>
-<th align="center">total</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="center">47</td>
-<td align="center">0</td>
-<td align="center">pre</td>
-<td align="center">3</td>
-<td align="center">0</td>
-<td align="center">2</td>
-<td align="center">2</td>
-<td align="center">1</td>
-<td align="center">3</td>
-<td align="center">4</td>
-<td align="center">3</td>
-<td align="center">3</td>
-<td align="center">4</td>
-<td align="center">4</td>
-<td align="center">3</td>
-<td align="center">2</td>
-<td align="center">3</td>
-<td align="center">4</td>
-<td align="center">2</td>
-<td align="center">1</td>
-<td align="center">2</td>
-<td align="center">3</td>
-<td align="center">1</td>
-<td align="center">50</td>
-</tr>
-<tr class="even">
-<td align="center">51</td>
-<td align="center">0</td>
-<td align="center">pre</td>
-<td align="center">2</td>
-<td align="center">1</td>
-<td align="center">3</td>
-<td align="center">2</td>
-<td align="center">3</td>
-<td align="center">3</td>
-<td align="center">4</td>
-<td align="center">4</td>
-<td align="center">3</td>
-<td align="center">2</td>
-<td align="center">2</td>
-<td align="center">3</td>
-<td align="center">1</td>
-<td align="center">3</td>
-<td align="center">4</td>
-<td align="center">4</td>
-<td align="center">2</td>
-<td align="center">4</td>
-<td align="center">2</td>
-<td align="center">2</td>
-<td align="center">54</td>
-</tr>
-<tr class="odd">
-<td align="center">57</td>
-<td align="center">0</td>
-<td align="center">pre</td>
-<td align="center">3</td>
-<td align="center">4</td>
-<td align="center">0</td>
-<td align="center">4</td>
-<td align="center">4</td>
-<td align="center">0</td>
-<td align="center">0</td>
-<td align="center">4</td>
-<td align="center">2</td>
-<td align="center">4</td>
-<td align="center">2</td>
-<td align="center">3</td>
-<td align="center">4</td>
-<td align="center">4</td>
-<td align="center">4</td>
-<td align="center">4</td>
-<td align="center">4</td>
-<td align="center">4</td>
-<td align="center">4</td>
-<td align="center">4</td>
-<td align="center">62</td>
-</tr>
-</tbody>
-</table>
 </div>
 <div id="references" class="section level2">
 <h2>References</h2>
-<p>Heatherton, T. F., &amp; Polivy, J. (1991). <a href="http://www.academia.edu/download/37381608/91_Heatherton_Polivy_JPSP.pdf">Development and validation of a scale for measuring state self-esteem</a> <em>Journal of Personality and Social Psychology, 60(6)</em>, 895.</p>
+<p>Heatherton, T. F., &amp; Polivy, J. (1991). <a href="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.476.4746&amp;rep=rep1&amp;type=pdf">Development and validation of a scale for measuring state self-esteem</a> <em>Journal of Personality and Social Psychology, 60(6)</em>, 895.</p>
 <p>Henry, J. D., &amp; Crawford, J. R. (2005). <a href="https://onlinelibrary.wiley.com/doi/pdf/10.1348/014466505X29657?casa_token=qL449BGkw4EAAAAA:qrRVqngwUjujoSuG3WwppU0Cma7Kv0YD03eAy6xrmIkLFpyr3mOv7bMv-LiWkpS46Cqr7rgDay5b-A">The short-form version of the Depression Anxiety Stress Scales (DASS-21): Construct validity and normative data in a large non-clinical sample</a> British Journal of Clinical Psychology, 44(2), 227–239.</p>
 <hr />
 <p>This material is distributed under a <a href="https://creativecommons.org/">Creative Commons</a> licence. CC-BY-SA 4.0.</p>

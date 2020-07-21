@@ -1,0 +1,243 @@
+---
+title: "Links between openness to experience, imagery and creative problem solving"
+author: "Jon May, Jessica Hart, Paul Sharpe and Andy Wills"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+## DEVELOPERS: Uncomment one option, as appropriate
+## Show only commands.
+## knitr::opts_chunk$set(echo = TRUE, message = FALSE, results='hide', fig.keep = 'none', comment=NA)
+## See also
+## https://stackoverflow.com/questions/39709745/decreasing-the-line-thickness-and-corr-font-size-in-ggpairs-plot
+## Show commands and output.
+knitr::opts_chunk$set(echo = TRUE, comment=NA, cache = TRUE)
+library(pander)
+```
+
+## Before you start
+
+This is an advanced worksheet, which assumes you have completed the [Absolute Beginners' Guide to R](https://ajwills72.github.io/rminr/#beginners) course, the [Research Methods in Practice (Quantitative section)](https://benwhalley.github.io/rmip/overview-quantitative.html) course, and the [Intermediate Guide to R](https://ajwills72.github.io/rminr/#rmip) course. 
+
+## Contents
+
+- [Introduction](#intro)
+- [Loading data](#load)
+- [Correlation between openness and problems solved](#cor-o-problems)
+- [Correlation matrix: other personality factors and problems solved](#cor-matrix)
+
+<a name="intro"></a>
+
+## Introduction
+
+This worksheet describes a full analysis pipeline for an undergraduate student dissertation which explored relationships between personality, imagery and creative problem solving. Forty-eight students were tested to address three hypotheses. First, the researchers predicted that participants with more open personality types would be better at solving a selection of problems requiring creative solutions. Second, they predicated that participants with more vivid mental imagery would be better at solving the problems. Third, they predicted a relationship between divergent thinking and an ability to solve the problems.
+
+Personality was measured using a simplified version of Costa and McCrae’s (1992) "big five" personality questionnaire. Mental imagery was measured using the PsiQ Plymouth Sensory Imagery Questionnaire (Andrade et al., 2013). Divergent thinking was measured using a 'flexible thinking task', which measured fluency, flexibility and originality. The problems requiring creative solutions were taken from May (1987).
+
+<a name="load"></a>
+
+## Loading data
+
+Open the `rminr-data` project we used [previously](preproc.html#load).
+
+Ensure you have the latest files by asking git to "`pull`" the repository. Select the `Git` tab, which is located in the row of tabs which includes the `Environment` tab. Click the `Pull` button with a downward pointing arrow. A window will open showing the files which have been pulled from the repository. Close the `Git pull` window. The `case-studies` folder should contain the folder `jon-may`.
+
+Next, create a new, empty R script and save it in the `rminr-data` folder as `cs-jon-may.R`. Put all the commands from this worksheet into this file, and run them from there. Save your script regularly.
+
+We start by loading the data.
+
+```{r excel, message=FALSE}
+rm(list = ls()) # clear the environment
+library(tidyverse)
+```
+
+**Explanation of commands:**
+
+We clear the workspace, and load `tidyverse` package, then read the four data files.
+
+<a name="preproc"></a>
+
+## Preprocessing
+
+### Problems
+
+Problem booklet with 7 problems (solved=1, not=0, total=n solved)
+
+```{r}
+problems <- read_csv('case-studies/jon-may/problems.csv')
+solved <- problems %>%
+  rowwise() %>%
+  mutate(problems = sum(c_across(bridges:dots))) %>%
+  select(subj, problems)
+```
+
+### OCEAN
+
+Big5 OCEAN questionnaire 50 items answered 1 to 5 (includes a data entry error)
+
+```{r}
+ocean   <- read_csv('case-studies/jon-may/big5.csv')
+#big5    <- read_csv('case-studies/jon-may/big5_total.csv', col_types = 'fiiiii')
+
+oceankey<-read.csv("case-studies/jon-may/oceankey.csv")
+
+scaleIDs <- oceankey$ScaleID                 # make a vector of the new variable names
+names(scaleIDs) <- oceankey$ItemID           # name each new name with the old name so it can be looked-up
+
+ocean.scales<-ocean %>%
+   pivot_longer(S1:S50,names_to='Item', values_to='Value') %>%     # put the 50 items into a column
+   mutate(ScaleID=scaleIDs[Item])%>%                               # lookup the new names from the vector
+   select(-Item) %>%                                               # drop the columns we don't need
+   mutate(Value=ifelse(Value>5,NA,ifelse(Value<1, NA, Value))) %>% # screen for absurd values
+   mutate(Value=ifelse(grepl("r",ScaleID), 6-Value, Value)) %>%    # reverse score items containg 'r' ...
+   mutate(ScaleID = sub("r", "", ScaleID)) %>%                     # ... and remove the 'r'
+   pivot_wider(names_from="ScaleID", values_from="Value") %>%      # make the data wide again
+   select(subj,sort(names(.))) %>%                                 # sort the columns by the new names
+   rowwise() %>%                                                   # for each participant...
+   mutate(openness=mean(c_across(o01:o10), na.rm = TRUE),          # ... mean of 10 items in each scale
+          conscientiousness=mean(c_across(C01:C10), na.rm = TRUE),
+          extraversion=mean(c_across(E01:E10), na.rm = TRUE),
+          agreeableness=mean(c_across(A01:A10), na.rm = TRUE),
+          neuroticism=mean(c_across(N01:N10), na.rm = TRUE)) %>%
+   select(subj, openness, conscientiousness, extraversion, agreeableness, neuroticism)
+```
+
+### Flexible thinking test
+
+* We don't have raw data for the ‘Flexible Thinking Test’ (overall scores mean of ftt1-3)
+
+```{r}
+ftt <- read_csv('case-studies/jon-may/ftt.csv') %>%
+   rowwise() %>%
+   mutate(ftt = mean(c_across(ftt1:ftt3))) %>%
+   select(subj, ftt)
+```
+
+* the 35 PsiQ vividness of imagery items - 5 of each of 7 modalities (0 not at all to 10 as vivid as real life) (score = mean of all items)
+
+```{r}
+psiq <- read_csv('case-studies/jon-may/psiq.csv') %>%
+   rowwise() %>%
+   mutate(psiq = mean(c_across(2:36))) %>%
+   select(subj, psiq)
+```
+
+```{r}
+data <- full_join(ocean.scales, solved, by = 'subj') %>%
+   full_join(ftt, by = 'subj') %>%
+   full_join(psiq, by = 'subj')
+```
+
+## Mean, Standard deviation, skewness, kurtosis for all independent variables (n=48)
+
+## Histogram and curve showing distribution of problem scores (n=48)
+
+NOTE: This looks like it's addressing H1
+
+https://stackoverflow.com/questions/6967664/ggplot2-histogram-with-normal-curve
+
+```{r}
+n_obs = sum(!is.na(solved$problems))
+bw = 1
+mean <- mean(solved$problems)
+sd <- sd(solved$problems)
+
+solved %>% ggplot(aes(problems))  + 
+  geom_histogram(colour = "black", binwidth = bw) + 
+  stat_function(fun = function(x) 
+    dnorm(x, mean = mean, sd = sd) * bw * n_obs) +
+  xlab('Problems solved') + ylab('Count (participants)')
+```
+
+## Scatterplot and best fit line, openness vs. problems solved
+
+You learnt how to create a scatterplot and a best fit line in the [regression worksheet](https://benwhalley.github.io/rmip/regression.html).
+
+<a name="cor-o-problems"></a>
+
+## Correlation between openness and problems solved
+
+"the researchers predicted that participants with more open personality types would be better at solving a selection of problems requiring creative solutions" positive correlation.
+Correlations with directional hypotheses.
+
+One-tailed correlations were covered in [More on relationships, part 2.](#corr-extended.html)
+
+```{r}
+cor_o_problems <- cor.test(data$problems, data$openness, alternative='greater')
+cor_o_problems
+
+# note that this is a 2-tailed test
+library(BayesFactor)
+cor_o_problems_bf <- correlationBF(data$problems, data$openness)
+```
+
+**Explanation of commands:**
+
+We use a Pearson correlation to look at the relationship between openness and the number of problems solved. We specify `alternative='greater'` to indicate that we are predicting a positive correlation (one-tailed test). We also calculate a Bayes factor to test the evidence for the correlation.
+
+**Explanation of output:**
+
+Contrary to the first hypothesis, there is no evidence for a positive correlation  between openness and creative problem solving  (_r_ = `r round(cor_o_problems$statistic,2)`, one-tailed, _BF_ = `r round(BayesFactor::extractBF(cor_o_problems_bf)$bf,2)`).
+
+<a name="cor-matrix"></a>
+
+## Correlation matrix: other personality factors and problems solved
+
+```{r cor-matrix, R.options = list(width = 10000)}
+library(apaTables)
+apa.cor.table(data %>% select(conscientiousness:problems), filename='table1.doc', table.number = 1)
+```
+
+**Explanation of output:**
+
+Just comment on (lack of) correlations between personality factors and problems?
+
+Note that these are 2-tailed correlations, you can't do 1-tailed with this.
+
+NOTE: H3
+
+## Correlation between problems solved and flexible thinking
+
+one-tailed
+
+* cor.test(foo$problems, foo$ftt), correlationBF(foo$problems, foo$ftt)
+
+NOTE: H2
+
+## Correlation between problems solved and vividness
+
+one-tailed
+
+* cor.test(foo$problems, foo$psiq), correlationBF(foo$problems, foo$psiq)
+
+## Correlation plot (Fig. 3)
+
+* PsiQ total, Openness, problem scores, FTT
+
+```{r}
+library(GGally)
+library(ggplot2)
+lowerFn <- function(data, mapping, ...) {
+   ggplot(data = data, mapping = mapping) +
+      geom_point(size=1) +
+      geom_smooth(color = 'black', method='lm', size=.5)
+}
+data %>%
+   select(psiq, openness, problems, ftt) %>%
+   ggpairs(lower=list(continuous=wrap(lowerFn)))
+```
+
+## References
+
+Andrade, J., May, J., Deeprose, C., Baugh, S.-J., & Ganis, G. (2014). [Assessing vividness of mental imagery: The Plymouth Sensory Imagery Questionnaire](https://onlinelibrary.wiley.com/doi/pdf/10.1111/bjop.12050?casa_token=-IMvMthFsKQAAAAA:_b6s7nwZ8JS-5fWM4Xxgey5sBBPpbIRPUupgZ2XFQ-jNYGNOK0ARomtRNgCIWUfZqUD7w9PBoLbeng) British Journal of Psychology, 105(4), 547–563. 
+
+Costa, P. T., & McCrae, R. R. (1992). Neo personality inventory-revised (NEO PI-R). 
+Psychological Assessment Resources Odessa, FL.
+
+May, J. (1987). The cognitive analysis of flexible thinking. Unpublished PhD
+thesis, University of Exeter.
+
+___
+
+This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0. 
+

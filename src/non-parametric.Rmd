@@ -1,223 +1,273 @@
 ---
 title: "Traditional non-parametric tests"
 author: "Paul Sharpe"
-output: html_document
+output:
+  html_document:
+    highlight: pygment
 ---
 
 ```{r setup, include=FALSE}
 ## DEVELOPERS: Uncomment one option, as appropriate
-
-## Data required to knit
-## https://github.com/ajwills72/rminr-data/tree/master/going-further/picture-naming.csv
-##
-## I check out rminr-data and make a symbolic link to going-further
-
 ## Show only commands.
 ## knitr::opts_chunk$set(echo = TRUE, message = FALSE, results='hide', fig.keep = 'none', comment=NA)
-
 ## Mann-Whitney based on https://stackoverflow.com/questions/43033884/r-mann-whitney-u-test-output-like-in-spss
-##
+## For Kruskal-Wallis see http://www.sthda.com/english/wiki/kruskal-wallis-test-in-r
 ## Show commands and output.
 knitr::opts_chunk$set(echo = TRUE, comment=NA, cache = TRUE)
+library(pander)
 ```
 
-# Contents
+## Contents
 
 - [Introduction](#intro)
 
+- [Getting started](#start)
+
 - [Mann-Whitney U test](#wilcox)
 
-- [Kruskal-Wallis test](#kruskal-wallis)
+- [Exercise 1](#ex1)
+
+- [Kruskal-Wallis H test](#kruskal-wallis)
+
+- [Exercise 2](#ex2)
 
 <a name="intro"></a>
 
-# Introduction
+## Introduction
 
-This worksheet describes common, traditional (frequentist) non-parametric statistical tests. The statistical tests used to analyse differences and relationships in other worksheets are collectively known as **parametric tests**. For their results to be valid, parametric tests require that the data being analysed comes from a population with a particular probability distribution with known parameters. In most cases, the probability distribution is the normal (Gaussian) distribution, and the parameters are the mean and standard deviation. **Non-parametric tests** do not rely on meeting these assumptions, and can therefore be used to analyse data which is not normally distributed. Parametric tests make some additional assumptions which aren't discussed in this worksheet. Our aim is to give an overview of these two categories of statistical tests to help you decide which test is most appropriate for analysing your data.
+This worksheet describes common, traditional (frequentist) non-parametric statistical tests. The statistical tests used to analyse differences and relationships in other worksheets are collectively known as **parametric tests**. For their results to be valid, parametric tests require that the data being analysed comes from a population with a particular probability distribution, having known parameters. In most cases, the probability distribution is the normal (Gaussian) distribution, and the parameters are the mean and standard deviation. Parametric tests make some additional assumptions which aren't discussed in this worksheet. **Non-parametric tests** do not rely on meeting these assumptions, and can therefore be used to analyse data which is not normally distributed.
 
-If your data meet the criteria for a parametric test, this is the best choice as parametric tests normally provide greater [statistical power](power.html) than the equivalent non-parametric test. When you learnt about the central limit theorem, you saw that a large enough sample will have a normal distribution, regardless of the distribution of the underlying data from which it was sampled. Given the size of most effects in psychology, to reliably detect differences between conditions would require sample sizes which ensure that the data is normally distributed (about 30 and above). Therefore, the most likely scenario in which you would use a _non-parametric test_ is when you have a small sample, which is not normally distributed.
+If your data meet the criteria for a parametric test, this is the best choice as parametric tests normally provide greater [statistical power](power.html) than the equivalent non-parametric test. When you learnt about the central limit theorem, you saw that a large enough sample will have a normal distribution, regardless of the distribution of the underlying data from which it was sampled. Given the size of most effects in psychology, to reliably detect differences between conditions would require sample sizes which ensure that the data is normally distributed (about 30 and above). Therefore, the most likely scenario in which you would use a _non-parametric test_ is when you have a small sample, and the data is not normally distributed.
 
 Many non-parametric tests work by ranking data values from lowest to highest, and performing a test on the ranks, rather than the values themselves. This avoids the disproportional effect that outlier values have on the mean, one of the key parameters in parametric tests.
 
+<a name="start"></a>
+
+## Getting started
+
+To prepare for this worksheet:
+
+1. Open the `rminr-data` project we used [previously](preproc.html#load).
+
+1. If you don't see a folder named `going-further`, it means you created your project _before_ the data required for this worksheet was added to the `rminr-data` git repository. You can get the latest files by asking git to "`pull`" the repository. Select the `Git` tab, which is located in the row of tabs which includes the `Environment` tab. Click the `Pull` button with a downward pointing arrow. A window will open showing the files which have been pulled from the repository. Close the `Git pull` window.
+
+1. Open the `Files` tab. The `going-further` folder should contain the file `picture-naming-preproc.csv` and `music-emotion-preproc.csv`.
+
+1. Create a script named `non-parametric.R` in the `rminr-data` folder (the folder above `going-further`). Add the code to this script as you work through each section of the worksheet.
+
 <a name="wilcox"></a>
 
-# Mann-Whitney U test
+## Mann-Whitney U test
 
-Related worksheets: [Better tables](better-tables.html).
+### Loading and preprocessing data
 
-The Mann-Whitney U test (also known as the Wilcoxon rank sum test) is a non-parametric equivalent of a between-subjects t-test. We'll demonstrate this test using data from the WinG study which was introduced in the [Better tables](better-tables.html) worksheet.
+We'll demonstrate the Mann-Whitney U test using data from an experiment which evaluated children’s language development using the Words in Game (WinG) test. WinG consists of a set of picture cards which are used in four tests: noun comprehension, noun production, predicate comprehension, and predicate production. The Italian and English versions of the WinG cards use different pictures to depict the associated concepts. The experiment tested whether English-speaking children aged approximately 30 months, produce similar responses for the two sets of cards.
 
-To run the code:
+We start by loading the data:
 
-1. Open the project you used to complete the [Better tables](better-tables.html) worksheet.
-1. Create a script namned `non-parametric.R` and add the code below.
-
-The preprocessing steps are described in the [Better tables](better-tables.html) worksheet.
-
-```{r preprocessing}
+```{r load, message=FALSE, class.source = 'numberLines lineAnchors'}
 rm(list = ls()) # clear the environment
 library(tidyverse)
-library(pander)
+wing_preproc <- read_csv('going-further/picture-naming-preproc.csv',
+                         col_types = 'fffiiiiiiiiii')
+```
 
-# read data
-library(readxl)
-path <- 'going-further/picture-naming.xlsx'
-data <- path %>%
-  excel_sheets() %>%
-  .[-1] %>%
-  set_names() %>%
-  map_df(~ read_excel(path = path, sheet = .x, range = "A1:V20"), .id = "sheet")
+**Explanation of commands:**
 
-# demographics data
-demographics <- data %>%
-  filter(sheet == 'Demographic') %>%
-  set_names(~ str_to_lower(.)) %>%
-  select(gender, cdi_u, cdi_s) %>%
-  mutate(gender = factor(gender), subj = factor(seq.int(nrow(.))))
-demographics$gender <- recode_factor(demographics$gender, Male = 'male', Female = 'female')
+Line 1 clear the environment. Line 2 loads `tidyverse`. The data we read in on line 3 has already undergone some preprocessing and is in wide format. We use `col_types` to set the first three columns as factors, and remainder as whole numbers.
 
-# task data
-nc <- data %>%
-  filter(sheet == 'Noun Comprehension') %>%
-  set_names(~ str_to_lower(.)) %>%
-  select(mountain:wellyboots, cards) %>%
-  mutate(subj = factor(seq.int(nrow(.))))
+The first few lines of `wing_preproc` look like this:
 
-cards <- nc %>%
-  select(subj, cards) %>%
-  mutate(cards = recode_factor(.$cards, `1` = 'italian', `2` = 'english'))
+```{r, echo=FALSE}
+wing_preproc %>% head(12) %>% pander(split.table = Inf)
+```
 
-# apply exclusion criteria to sub-test data
-exclude <- function(df) {
-  # exclude if N/A in item 17 or lower
-  logical_matrix <- df == 'N/A'
-  q17 <- logical_matrix %>%
-    which(arr.ind = TRUE) %>%
-    data.frame() %>%
-    group_by(row) %>%
-    summarise(min = min(col)) %>%
-    mutate(subj = factor(row)) %>%
-    select(subj, min)
-  q17 <- left_join(df, q17, by='subj') %>%
-    replace_na(list(min = 20))
-  q17 <- q17 %>% filter(min > 17) %>% select(-min)
-  
-  # calculate total correct
-  q17 <- q17 %>% mutate(correct = rowSums(. == 'C' | . == 'C*'))
-  
-  # exclude participants with scores < 2 sd below the mean
-  q17 %>% filter(correct < mean(correct) + 2 * sd(correct))
-}
+Our test scores are currently in wide format, but we need them in long format to perform the tests.
 
-nc <- exclude(nc)
-nc_by_subj <- select(nc, subj, correct)
-
-np <- data %>%
-  filter(sheet == 'Noun Production') %>%
-  set_names(~ str_to_lower(.)) %>%
-  select(beach:gloves) %>%
-  mutate(subj = factor(seq.int(nrow(.))))
-
-np <- exclude(np)
-np_by_subj <- np %>% select(subj, correct)
-
-pc <- data %>%
-  filter(sheet == 'Predicate Comprehension') %>%
-  set_names(~ str_to_lower(.)) %>%
-  select(big:pulling) %>%
-  mutate(subj = factor(seq.int(nrow(.))))
-pc <- exclude(pc)
-
-pc_by_subj <- pc %>% select(subj, correct)
-
-pp <- data %>%
-  filter(sheet == 'Predicate Production') %>%
-  set_names(~ str_to_lower(.)) %>%
-  select(small:pushing) %>%
-  mutate(subj = factor(seq.int(nrow(.))))
-pp <- exclude(pp)
-
-pp_by_subj <- pp %>% select(subj, correct)
-
-# join data
-task_by_subj <- left_join(demographics, nc_by_subj, by='subj') %>%
-  left_join(., np_by_subj, by='subj', suffix = c('_nc','_np')) %>%
-  left_join(., pc_by_subj, by='subj') %>%
-  left_join(., pp_by_subj, by='subj', suffix = c('_pc', '_pp')) %>%
-  left_join(., cards, by='subj') %>%
-  mutate(nc = correct_nc, np = correct_np, pc = correct_pc, pp = correct_pp) %>%
-  select(subj, gender, nc, np, pc, pp, cards, cdi_u, cdi_s)
-
-task_by_subj_l <- task_by_subj %>%
+```{r pivot}
+# wide to long
+task_by_subj <- wing_preproc %>%
   pivot_longer(cols = c(nc, np, pc, pp),
                names_to = 'task',
-               values_to = 'correct')
-
-task_by_subj_l %>% head(12) %>% pander()
+               values_to = 'correct') %>%
+  select(subj, gender, cards, task, correct)
 ```
 
-We'll use Mann-Whitney U tests to see if there were any differences between scores for the Italian and English cards on the noun comprehension (`nc`), noun production (`np`), predicate comprehension (`pc`) and predicate production (`pp`) tests.
+**Explanation of command:**
 
-We define a function to calculate a Mann-Whitney U for each task in our data.
+In the [Within-subject differences worksheet](#anova1.html), you learnt how to use `pivot_wider()` to widen long data frames. The `pivot_longer()` command does the reverse. `cols = c(nc, np, pc, pp)` selects the columns we want to pivot. Each value in these columns is added to a row in a new column called `correct` (`values_to = 'correct'`). In the same row, a new column `task` is set to the name of the column which the value came from (`names_to = 'task'`). Because `task` is a factor, this turns the pivoted column names into factor levels associated with the corresponding value in `correct`. All of the values in the other columns are duplicated for each row. We `select()` just the columns we want for our table of descriptive statistics.
 
-```{r mann-whitney}
-mann_whitney <- function(df, group) {
-  df <- drop_na(df)                    # remove excluded subjects
-  n1 <- sum(as.integer(df$cards) == 1) # n in first group
-  wilcox.test(correct ~ cards, df) %>%
-    with(tibble(U = statistic,
-              W = statistic + n1 * (n1 + 1) / 2,
-              Z = qnorm(p.value / 2),
-              p = p.value))
-}
+The first few rows of `task_by_subj` look like this:
+
+```{r, echo=FALSE}
+task_by_subj %>% head() %>% pander()
 ```
 
-**Explanation of commands:**
+<a name="summary"></a>
 
-1. Our function `mann_whitney()` accepts a `df` argument which is a data frame containing test scores.
-1. `df <- drop_na(df)` excludes subjects with missing data for the test.
-1. `n1 <- sum(as.integer(df$cards) == 1)` calculates the number of subjects in the first of the two groups used when calculating the U statistic. We use this to produce some additional statistics which are generated by `SPSS`.
-1. In `R`, `wilcox.test()`, with the argument `paired = FALSE` (the default) is the same as a Mann-Whitney U test. The command `wilcox.test(correct ~ cards, df)` runs the test to compare the `correct` scores for the Italian and English `cards`.
-1. We pipe the output of this command into some code to report the same values as `SPSS`. The `W` statistic generated by `R` is the same as `U` in SPSS. The `p` value in `R` is the same as `SPSS`. The `W` and `Z` statistics reported by `SPSS` are not calculated by `wilcox.test()`, so we calculate these manually.
+### Calculating summary statistics
 
-We can now call the test for each task in our data:
+The Mann-Whitney test compares _ranked_ data, so we should report the median (rather than the mean) as our summary statistic. We'll also calculate the sum and mean of the ranks, as these are sometimes reported.
 
 ```{r}
-win_g_mann_whitney <- task_by_subj_l %>%
-  group_by(task) %>%
-  group_modify(mann_whitney) %>%
-  ungroup() %>%
-  mutate(task = recode_factor(.$task, nc = 'Noun Comprehension',
-                              np = 'Noun Production',
-                              pc = 'Predicate Comprehension',
-                              pp = 'Predicate Production'))
-pander(win_g_mann_whitney)
-```
-
-All _p_ values were > 0.05, suggesting there were no differences between the Italian and English cards on any of the tests.
-
-The following some summary statistics may be useful when reporting a Mann-Whitney U test.
-
-```{r cards-rank}
-task_by_subj_l %>%
-  group_by(task, cards) %>%
-  drop_na() %>%
+# summary statistics
+nc_include <- task_by_subj %>% filter(task == 'nc') %>% drop_na()
+nc_include <- nc_include %>% mutate(rank = rank(correct))
+nc_summary <- nc_include %>%
+  group_by(cards) %>%
   summarise(n = n(),
             median = median(correct),
-            mean_rank = mean(rank(correct)),
-            sum_rank = sum(rank(correct)))
+            mean_rank = mean(rank),
+            sum_rank = sum(rank))
+nc_summary
 ```
 
 **Explanation of commands:**
 
-1. We group our data by the two card sets, within the four tests.
-1. `drop_na()` removes any subjects where were excluded from a test (we assigned these the value `NA` in our preprocessing).
-1. We use `summarise`, to calculate the number of cases in each group `n()`, and the `median()` score. The `rank()` function orders the scores (lowest to highest), and assigns each a number according to their position. We use `mean(rank(correct)` to calculate the "mean rank" score and `sum(rank(correct)` to calculate the "sum rank" score.
+1. `task_by_subj %>% filter(task == 'nc')` selects rows containing data for the noun comprehension task.
+1. In the preprocessed data, subjects whose data was excluded for a task have the value `NA` in the `correct` column. We exclude these rows using `drop_na()`.
+1. We rank the scores in both groups using `rank(correct)` and put the rankings in `rank` using `mutate()`.
+1. Finally, we group the data by `cards`, and use `summarise`, to calculate the number of children in each group `n()`, the `median()` score, `mean(rank)` and `sum(rank)`.
+
+**Explanation of output:**
+
+The Mann-Whitney U test (also known as the Wilcoxon rank sum test) is a non-parametric equivalent of a between-subjects t-test. It works by ranking all of the scores in the two groups, adding the ranks in each group, and comparing these "summed ranks" to determine if they differ.
+
+We'll run a Mann-Whitney U test to see if there were any differences between scores for the Italian and English cards on the noun comprehension (`nc`) task.
+
+```{r mw-nc}
+# Mann-Whitney U for noun comprehension
+nc_u <- wilcox.test(correct ~ cards, nc_include)
+nc_u
+```
+
+```{r, echo=FALSE, eval=FALSE}
+# calculations for additional stats reported by SPSS
+# Field(2013, p.217ff is good on this)
+# z is useful for calculating r as an effect size
+# See also: https://data.library.virginia.edu/the-wilcoxon-rank-sum-test/
+n1 <- sum(as.integer(nc_include$cards) == 1)
+wilcox.test(correct ~ cards, nc_include) %>%
+    with(tibble(U = statistic,
+                W = statistic + n1 * (n1 + 1) / 2,
+                Z = qnorm(p.value / 2),
+                p = p.value))
+```
+
+**Explanation of commands:**
+
+In `R`, `wilcox.test()`, with the argument `paired = FALSE` (the default) is the same as a Mann-Whitney U test. The command `wilcox.test(correct ~ cards, nc_include)` runs the test to compare the `correct` scores for the Italian and English `cards`.
+
+**Explanation of output:**
+
+The string `correct by cards` reminds you that you compared the values in `correct` between the levels in the `cards` factor. When calling `wilcox.test()` with `paired = FALSE`, the value of `W` is equivalent to `U`. The `p` value tells us whether there was  a significant difference between the medians in the two groups. The string `alternative hypothesis: true location shift is not equal to 0`, is another way of saying that the distribution of one of the groups is shifted to the left or right of the other. If the `p` value is > .05, we'll accept the null hypothesis that there's no difference between the distributions. The warning `cannot compute exact p-value with ties` lets you know that the method used to calculate _p_ will not be exact, because some items in the Italian and English scores had identical rankings.
+
+We now have all of the information we need to report the results. For the noun comprehension task, there was no significant difference in accuracy between the Italian (_Mdn_ = `r nc_summary[nc_summary$cards == 'italian', 'median']`) and English (_Mdn_ = `r nc_summary[nc_summary$cards == 'english', 'median']`) cards (_U_ = `r nc_u$statistic`, _p_ = `r round(nc_u$p.value, 2)`).
+
+<a name="ex1"></a>
+
+## Exercise 1
+
+Calculate summary statistics and Mann-Whitney U for the noun production task. Your results should look like this:
+
+```{r ex1, echo=FALSE}
+np_include <- task_by_subj %>% filter(task == 'np') %>% drop_na()
+np_include <- np_include %>% mutate(rank = rank(correct))
+np_include %>%
+  group_by(cards) %>%
+  summarise(n = n(),
+            median = median(correct),
+            mean_rank = mean(rank),
+            sum_rank = sum(rank))
+wilcox.test(correct ~ cards, np_include)
+```
+
+**Copy the R code you used for this exercise into PsycEL.**
 
 <a name="kruskal-wallis"></a>
 
-# Kruskal-Wallis test
+## Kruskal-Wallis H test
 
-http://www.sthda.com/english/wiki/kruskal-wallis-test-in-r
+The Kruskal-Wallis H test is a non-parametric equivalent of a one-way between subjects ANOVA. It extends the Mann-Whitney test to situations where there are more than two groups.
 
-"Kruskal-Wallis test by rank is a non-parametric alternative to one-way ANOVA test, which extends the two-samples Wilcoxon test in the situation where there are more than two groups. It’s recommended when the assumptions of one-way ANOVA test are not met. This tutorial describes how to compute Kruskal-Wallis test in R software."
+We'll demonstrate this test using data from a study which compared emotion regulation strategies between fans of mainstream (control group), goth, metal and emo music. Participants were measured using the Emotion Regulation Strategies for Artistic Creative Activities Scale (ERS-ACA), an 18 item inventory, with each item scored from 1 ('strongly disagree') to 5 ('strongly agree'). The ERS-ACA gives an overall measure of the strategy people use to regulate their emotions when they engage in artistic, creative activities, and scores on three strategy sub-scales; avoidance, approach and self-development.
+
+We start by loading the data:
+
+```{r load-ers}
+# Kruskal-Wallis H test
+ers_l <- read_csv('going-further/music-emotion-preproc.csv', col_types = 'fffd')
+```
+
+**Explanation of command:**
+
+This data has already undergone some preprocessing and is in long format. We use `col_types = 'fffd'` to set the first three columns as factors, and the fourth column as a number with decimal places.
+
+The first few lines of `ers_l` look like this:
+
+```{r, echo=FALSE}
+ers_l %>% head(8) %>% pander()
+```
+
+Like the Mann-Whitney test, the Kruskal-Wallis test works on ranked data. We'll start by generating some summary statistics for the 'approach' subscale.
+
+```{r k-w-summary, class.source = 'numberLines lineAnchors'}
+approach <- ers_l %>% filter(ers == 'approach')
+approach <- approach %>% mutate(rank = rank(score))
+approach_summary <- approach %>%
+  group_by(subculture) %>%
+  summarise(n = n(),
+            median = median(score, na.rm = TRUE),
+            mean_rank = mean(rank),
+            sum_rank = sum(rank))
+approach_summary
+```
+
+**Explanation of commands:**
+
+Line 1 filters the data to only include measurements for the 'approach' subscale. The second line ranks the scores for all participants. Lines 3-8 are very similar to the summary statistics we generated for the Mann-Whitney test. In this case we group by music `subculture`.
+
+**Explanation of output:**
+
+The differences between groups look quite small, the largest being between `Mainstream` and `Emo`.
+
+We can now run the Kruskal-Wallis test:
+
+```{r k-w}
+kw <- kruskal.test(score ~ subculture, data = approach)
+kw
+```
+
+**Explanation of commands:**
+
+The command `kruskal.test(score ~ subculture, data = approach)` runs the test to compare the ERS-ACA `score` scores for the four groups in `subculture`.
+
+**Explanation of output:**
+
+The string `score by subculture` reminds you that you compared the values in `score` between the levels in the `subculture` factor. The Kruskal-Wallis _H_ statistic is `r kw$statistic` and is derived from a chi-square distribution, using a calculation similar to the chi-squared test introduced in [the Relationships worksheet](chi.html). The degrees of freedom is one less than the number of groups, in this case `r kw$parameter`. The `p` value tells us whether there was  a significant difference between the medians in any of the four groups.
+
+There was no significant difference in approach style between the mainstream (_Mdn_ = `r round(approach_summary[approach_summary$subculture == 'Mainstream', 'median'], 2)`), goth (_Mdn_ = `r round(approach_summary[approach_summary$subculture == 'Goth', 'median'], 2)`), metal (_Mdn_ = `r round(approach_summary[approach_summary$subculture == 'Metal', 'median'], 2)`) and emo (_Mdn_ = `r round(approach_summary[approach_summary$subculture == 'Emo', 'median'], 2)`) groups (_H_ = `r round(kw$statistic, 2)`, _p_ = `r round(kw$p.value, 2)`).
+
+<a name="ex2"></a>
+
+## Exercise 2
+
+Calculate summary statistics and Kruskal-Wallis H for the self-development emotional response subscale of the ERS-ACA. Your results should look like this:
+
+```{r ex2, echo=FALSE}
+development <- ers_l %>% filter(ers == 'development')
+development <- development %>% mutate(rank = rank(score))
+development %>%
+  group_by(subculture) %>%
+  summarise(n = n(),
+            median = median(score, na.rm = TRUE),
+            mean_rank = mean(rank),
+            sum_rank = sum(rank))
+kruskal.test(score ~ subculture, data = development)
+```
+
+**Copy the R code you used for this exercise into PsycEL.**
+
+___
+
+This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0.

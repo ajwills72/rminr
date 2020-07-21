@@ -31,7 +31,9 @@ First, you need to get the data and load it into Rstudio. Here's how:
 
 - Download the data - click [here](production.csv).
 
-- Start a new RStudio [project](using-projects.html#create) and open an [R script](using-projects.html#write) ready to record all your commands.
+- Start a new RStudio [project](using-projects.html#create) and name it **int-revision**
+
+- Open an [R script](using-projects.html#write) ready to record all your commands, and save it as **revision.R**
 
 - Use RStudio to [upload](entering-data-by-hand.html#upload) the production effect data to that project. 
 

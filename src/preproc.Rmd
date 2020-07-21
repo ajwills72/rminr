@@ -64,6 +64,10 @@ Click on the name 'rawdata' in the Files window of RStudio. You'll see there are
 
 Each CSV file (e.g. `subject-11.csv`) contains the data from one participant in a [facial prototypes](http://cabezalab.org/wp-content/uploads/2011/11/Cabeza99_PrototypeEffectFaceRecogExtensionLimits_MemCog.pdf) experiment. The experiment was run using [OpenSesame](https://osdoc.cogsci.nl/). OpenSesame, like R, is a free and open-source program. Install OpenSesame on your machine and run the experiment on yourself. To do this, you will need to download the OpenSesame experiment, which is in the `expt-scripts` folder of your R project. Click on `expt-scripts`, tick the box next to `facialproto_short.osexp`, click 'More...' and click 'Export'. Now open the experiment on your machine using OpenSesame.
 
+## Create a new script
+
+Create a new script file and call in **preproc.R**. Put all your commands for this worksheet into this script, and save regularly. This will make it easier to see what you have done, espcially when you come back to it after a break.
+
 ## Summary of the experiment
 
 In this experiment, people are shown some pictures of male faces. Each is a picture of a real face, but its internal features (eyes, nose, mouth, etc.) have been digitally stretched or compressed either along the x-axis or the y-axis. Each of these manipulations of real faces is shown exactly once. Participants rate each picture for masculinity (1-8 scale, higher numbers = more masculine), just as a way of encouraging them to look at each picture closely.
@@ -78,7 +82,7 @@ In order to work out whether we get the expected result, we need to know the mea
 
 We'll start by loading the data for one of the participants, `subject-11.csv`. Recall that we can do this using the `read_csv` command. In this case, the CSV file we want to load is inside the `rawdata` folder of our project so we have to say `rawdata/subject-11.csv` rather than just `subject-11.csv`, so RStudio knows where to look for the file. 
 
-Start a new R script in your RStudio project, add the following commands to it, and run the script:
+Add the following commands to **preproc.R**, and run the script:
 
 ```{r load, message=FALSE}
 library(tidyverse)
@@ -190,7 +194,7 @@ testdat %>% group_by(type) %>% summarise(mean(response))
 
 **Explanation of command** - Our test-phase data (`testdat`) is piped to `group_by(type)`, which groups it into the three parts given by the `type` column (seen, unseen, prototype). This grouped data is then sent to `summarise` to work out a summary value for each group. We tell `summarise` what summary we want, in this case we want a `mean`. And we tell the `mean` command that the data we want a mean of is in the `response` column. 
 
-Looking at the output, we can see that this participant was more confident they'd seen the prototypes (4.75) than that they'd seen the pictures they'd actually seen before (3.88). This fits our hypothesis. But, somewhat oddly, they were even more confident about other distortions they hadn't seen (5). An alternative hypothesis (and the correct one in this case) is that this particular participant just randomly pressed the buttons, so any difference in the three scores is down to chance. 
+As [before](group-differences.html#group), you can safely ignore the "ungrouping" message that you receive. Looking at the output, we can see that this participant was more confident they'd seen the prototypes (4.75) than that they'd seen the pictures they'd actually seen before (3.88). This fits our hypothesis. But, somewhat oddly, they were even more confident about other distortions they hadn't seen (5). An alternative hypothesis (and the correct one in this case) is that this particular participant just randomly pressed the buttons, so any difference in the three scores is down to chance. 
 
 <a name="combine"></a>
 

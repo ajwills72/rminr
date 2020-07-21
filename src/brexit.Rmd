@@ -1,6 +1,6 @@
 ---
 title: "Political psychology"
-author: "Yaniv Hanoch, Andy Wills"
+author: "Andy Wills, Yaniv Hanoch"
 output: html_document
 ---
 
@@ -59,6 +59,8 @@ To look at this, you have to calculate your average (mean) rating for each quest
 ```{r brex_groups}
 brex %>% group_by(type) %>% summarise(mean(rating))
 ```
+
+As [before](group-differences.html#group), you can safely ignore the "ungrouping" message that you receive.
 
 **NOTE:** Your output should look similar to that shown above, but the numbers will be different.
 

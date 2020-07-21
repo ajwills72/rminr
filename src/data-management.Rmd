@@ -1,0 +1,57 @@
+---
+title: "Data Management"
+author: "Andy Wills, Paul Sharpe"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+## DEVELOPERS: Uncomment one option, as appropriate
+## Show only commands.
+## knitr::opts_chunk$set(echo = TRUE, message = FALSE, results='hide', fig.keep = 'none', comment=NA)
+## Show commands and output.
+knitr::opts_chunk$set(echo = TRUE, comment=NA, cache = TRUE)
+```
+
+## Contents
+
+- [Open data](#best)
+
+- [Factor levels](#next-level)
+
+- [Code books](#codebook)
+
+<a name="best"></a>
+
+## Open data
+
+* Share your data as CSV files, because it's an open data format.
+* The data you make available should be the data you collected _before_ you applied any exclusion criteria. Ideally, the exclusion criteria should be written in `R`. See [The Perruchet Effect worksheet](#awdiss.html) for an example.
+* _Do_ exclude any sensitive data before sharing your data files. Be very careful with this step, as online repositories may keep track of an earlier version that you uploaded before the sensitive information was removed. It may be hard or impossible to delete these.
+
+<a name="next-level"></a>
+
+## Factor levels
+
+* For columns which are factors, use strings rather than numbers for the factor levels, because this makes it clear what the factor levels mean.
+* Where possible, use lower case column names and factor levels, without spaces.
+
+## Exercise
+
+Given a dataset with numeric factor levels and the related journal article, recode them as meaningful strings.
+
+<a name="codebook"></a>
+
+
+## Code books
+
+Include a "code book" which explains what each of the columns in a data files means. See [The Perruchet Effect worksheet](#awdiss.html) for an example.
+
+## Exercise
+
+Write a code book for one of the case-study datasets.
+
+It might be nice to include an example of the process you need to go through to fix data which doesn't comply. This was the most frequent anti-pattern for all of the case-study data. Jon May has a particularly nice example for a personality inventory which required a gnarly pre-preprocessing pipeline.
+
+___
+
+This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0. 

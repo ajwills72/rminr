@@ -29,7 +29,7 @@ library(pander)
 
 - [Getting started](#start)
 
-- [Selecting data](#select)
+- [Loading and selecting data](#select)
 
 - [Handling missing data](#missing)
 
@@ -41,19 +41,17 @@ library(pander)
 
 - [Exercise 2](#ex2)
 
-- [Reverse scoring survey items](#reverse)
-
 <a name="intro"></a>
 
 ## Introduction
 
-Intelligence, personality, and many other psychological constructs are often measured using scales. This type of data is normally collected using questionnaires (also called surveys). Answers to the questions are given numerical values, most commonly using a Likert scale. Likert scales associate numbers with a set of answers which express some degree of agreement each question e.g. `0=Not at all, 1=A little, 2=Somewhat, 3=A lot, 4=Extremely`. A formula is applied to the scores for some or all of the questions to calculate an overall score for the scale. The formula often just consists of adding up the individual scores (more on this below). This worksheet assumes that your survey software has recorded Likert responses as numbers. Refer back to the earlier module if you need a reminder of [how to convert text responses to numbers](https://benwhalley.github.io/rmip/worksheet-recoding.html).
+Intelligence, personality, and many other psychological constructs are often measured using scales. This type of data is normally collected using questionnaires (also called surveys). Answers to the questions are given numerical values, most commonly using a Likert scale. Likert scales associate numbers with a set of answers which express some degree of agreement with each question e.g. `0=Not at all, 1=A little, 2=Somewhat, 3=A lot, 4=Extremely`. A formula is applied to the scores for some or all of the questions to calculate an overall score for the scale. The formula often just consists of adding up the individual scores (more on this below). This worksheet assumes that your survey software has recorded Likert responses as numbers. Refer back to the [Cleaning up questionnaire data worksheet](https://benwhalley.github.io/rmip/worksheet-recoding.html) if you need a reminder of how to convert text responses to numbers.
 
-A psychometric scale is a scale which has undergone some degree of testing to ensure that it is valid and reliable measure of the underlying construct. For example, a valid intelligence scale would truely measure intelligence, rather than some other constructy (e.g. memory). A reliable scale gives consistent results, i.e. a person who completed the scale at different times would produce similar scores, as would two people who are similar in terms of the construct measured by the scale. Most published scales have been tested to ensure they are valid and reliable, so it's advisable to use an existing scale if one exists, before creating your own.
+A psychometric scale is a scale which has undergone some degree of testing to ensure that it is a valid and reliable measure of the underlying construct. For example, a valid intelligence scale would truly measure intelligence, rather than some other construct (e.g. memory). A reliable scale gives consistent results, i.e. a person who completed the scale at different times would produce similar scores, as would two people who are similar in terms of the construct measured by the scale. Most published scales have been tested to ensure they are valid and reliable, so it's advisable to use an existing scale if one exists, before creating your own.
 
 Surveys can be created using [JISC](https://www.jisc.ac.uk/), [Gorilla Survey](https://gorilla.sc/), [OpenSesame](https://osdoc.cogsci.nl/), [The Experiment Factory](https://expfactory.github.io/experiments/), [Qualtrics](https://www.qualtrics.com/) and many other software packages. Most software will allow you to save your data as a CSV file. The precise structure of the data varies between packages, so you are likely to have to start by [preprocessing](preproc.html) your data.
 
-In this worksheet, we'll cover some common techniques which you are likely to use to preprocess psychometric scale data. These techniques should be useful regardless of the software you used to administer your survey data, although they will need slight modifications depending on the way your raw data is organised.
+In this worksheet, we'll cover some common techniques you are likely to use to preprocess psychometric scale data. These techniques should be useful regardless of the software you used to administer your survey data, although they will need slight modifications depending on the way your raw data is organised.
 
 <a name="start"></a>
 
@@ -78,13 +76,13 @@ library(tidyverse)
 
 <a name="select"></a>
 
-## Selecting data
+## Loading and selecting data
 
-Our first step will be to remove columns from the raw survey data which aren't needed for data analysis.  We'll demonstrate this using some real data from the Depression Anxiety Stress Scales—21 (DASS-21, Henry & Crawford, 2005), a 21-item scale for measuring depression, anxiety and stress.
+Our first step will be to load the data and remove columns from the raw survey data which aren't needed for analysis. We'll demonstrate this using some real data from the Depression Anxiety Stress Scales—21 (DASS-21, Henry & Crawford, 2005), a 21-item scale for measuring depression, anxiety and stress.
 
 ```{r pre-process-dass}
 dass21_raw <- read_csv("going-further/dass21.csv")
-dass21_raw <- select(dass21_raw, partID, Age:DASS21)
+dass21_raw <- dass21_raw %>% select(partID, Age:DASS21)
 ```
 
 **Explanation of command:**
@@ -121,6 +119,8 @@ dass21 <- dass21_raw %>% drop_na()
 
 * We pipe the raw data into the `drop_na()` function (part of the `tidyverse` package). This drops any rows with a column containing `NA`, which includes data for participants `106` and `107`.
 
+You can see that data for participants `106` and `107` have been dropped from `dass21`.
+
 ```{r exclude, echo=FALSE}
 slice(dass21, 68:72) %>% pander(split.table = Inf)
 ```
@@ -132,8 +132,9 @@ slice(dass21, 68:72) %>% pander(split.table = Inf)
 Our next step is to calculate the scores for the constructs measured by our scale. Many scales consist of groups of questions which measure multiple, distinct constructs. The DASS-21 is an example of a scale with subscale scores for depression, anxiety and stress. These are calculated by adding together responses for specific items, which we can do using the `rowSums()` function:
 
 ```{r dass21-subscales}
-dass21 <- mutate(dass21, depression = rowSums(dass21[4 + c(3,5,10,13,16,17,21)]))
-dass21_total <- select(dass21, partID, Age, Gender, depression)
+dass21 <- dass21 %>%
+  mutate(depression = rowSums(dass21[4 + c(3,5,10,13,16,17,21)]))
+dass21_total <- dass21 %>% select(partID, Age, Gender, depression)
 ```
 
 **Explanation of command:**
@@ -162,7 +163,13 @@ dass21_total %>% head(10) %>% pander()
 
 ## Tidying survey data
 
-Some data benefits from a little more tidying than simply removing columns which aren't required. We'll demonstrate this more advanced preprocessing using a different dataset. This data came from from an experiment in which self-esteem was measured before and after participants completed one of two mental imagery conditions, or a control condition. The experiment used the State Self-Esteem Scale (SSES, Heatherton & Polivy, 1991), a 20-item scale used to measure short-lived (state) changes in self-esteem.
+Some data benefits from a little more tidying than simply removing columns which aren't required. We'll demonstrate this more advanced preprocessing using a different dataset. This data came from from an experiment in which self-esteem was measured before and after participants completed one of two mental imagery conditions, or a control condition.
+
+ * Condition 1: participants visualised a negative mental image of themself
+ * Condition 2: participants visualised a negative mental image of someone else
+ * Condition 0 (control): participants did a card sorting task and did not think of any images.
+
+The experiment used the State Self-Esteem Scale (SSES, Heatherton & Polivy, 1991), a 20-item scale used to measure short-lived (state) changes in self-esteem.
 
 ```{r, R.options = list(width = 100)}
 sses <- read_csv('going-further/sses.csv')
@@ -172,41 +179,76 @@ sses <- read_csv('going-further/sses.csv')
 sses %>% head(3) %>% pander(split.table = Inf)
 ```
 
-The data will be easier to analyse if we rename the columns. It will also be useful to divide the data into two data frames, one for the pre-intervention SSES, the other for the post-intervention SSES. We can do all of this in a single pipeline:
+The data will be easier to analyse if we rename the columns. It will also be useful to divide the data into two data frames, one for the pre-intervention SSES, the other for the post-intervention SSES. We'll do this in stages:
 
-```{r preprocess-sses-pre}
-sses_pre_raw  <- select(sses, 1, 5:25) %>%
-  set_names(~ str_to_lower(.) %>% str_replace_all("pre_sse_", "q")) %>%
-  mutate(subj = factor(partid), condition = factor(condition), time = factor('pre')) %>%
+```{r preprocess-sses-pre-1}
+sses_pre_raw  <- sses %>% select(1, 5:25)
+```
+
+**Explanation of command:**
+
+* `sses_pre_raw  <- sses %>% select(1, 5:25)` - We `select()` column 1, and columns 5:25 from `sses`, and store the resulting data frame in `sses_pre_raw`. Column 1 is the participant id, columns 5:24 are the SSES scores, and column 25 contains a number indicating which of the three experimental conditions the subject was assigned to.
+
+Here are the first three participants of our pre-intervention data:
+
+```{r echo=FALSE}
+sses_pre_raw %>% head(3) %>% pander(split.table = Inf)
+```
+
+Next, we'll rename the SSES columns based on their question number. This will make them easier to refer to in the rest of our code.
+
+```{r preprocess-sses-pre-2}
+sses_pre_raw  <- sses_pre_raw %>%
+  set_names(~ str_to_lower(.) %>% str_replace_all("pre_sse_", "q"))
+```
+
+**Explanation of command:**
+
+1. `set_names(~ str_to_lower(.) %>% str_replace_all("pre_sse_", "q"))` - We use the function `set_names()` to rename our columns. The `~` is a way of telling `set_names()` to apply a function to each column name. The remainder of the command is a "sub-pipeline" which tidies up the column name. The command `str_to_lower(.)` converts a string (the `.` means the current column name) to lower case. This lower case name is piped to `str_replace_all("pre_sse_", "q"))` which replaces any string with the prefix `pre_sse_` with `q`. All our columns are now lowercase, and the SSES questions are named `q1:q20`.
+
+```{r echo=FALSE}
+sses_pre_raw %>% head(3) %>% pander(split.table = Inf)
+```
+
+Now we'll convert some columns to [factors](anova1.html#anovaWS).
+
+```{r preprocess-sses-pre-3}
+sses_pre_raw <- sses_pre_raw %>%
+  mutate(subj = factor(partid), condition = factor(condition),
+         time = factor('pre')) %>%
   select(subj, condition, time, q1:q20)
 ```
 
-**Explanation of pipeline commands:**
+1. `mutate(subj = factor(partid), condition = factor(condition), time = factor('pre'))` -  We use `mutate` to add and modify some columns. The argument `subj = factor(partid)` creates a new column named `subj` (which is a bit clearer than `partid`) by copying the `partid` column and making it a factor. The argument `condition = factor(condition)` makes the `condition` column a factor. The argument `time = factor('pre')` creates a new factor called `time` and sets all values to `pre`.
+1. `select(subj, condition, time, q1:q20)` just puts our columns in a more logical order.
 
-1. `sses_pre_raw  <- select(sses, 1, 5:25)` - We save the output of the pipeline in `sses_pre_raw`. First, we `select()` column 1, and columns 5:25 from `sses`. Column 1 is the participant id, columns 5:24 are the SSES scores, and column 25 is the participant's condition.
+Our data is now much tidier:
 
-1. `set_names(~ str_to_lower(.) %>% str_replace_all("pre_sse_", "q"))` - Next, we use the function `set_names()` to rename our columns. The `~` is a way of telling `set_names()` to apply a function to each column name. The remainder of the command is a "sub-pipeline" which tidies up the column name. The command `str_to_lower(.)` converts a string (the `.` means the current column name) to lower case. This lower case name is piped to `str_replace_all("pre_sse_", "q"))` which replaces any string with the prefix `pre_sse_` with `q`. All our columns are now lowercase, and the SSES questions are named `q1:q20`.
-
-1. `mutate(subj = factor(partid), condition = factor(condition), time = factor('pre'))` - Next, we use `mutate` to add and modify some columns. The argument `subj = factor(partid)` creates a new column named `subj` (which is a bit clearer than `partid`) by copying the `partid` column and making it a factor. The argument `condition = factor(condition)` makes the `condition` column a factor. The argument `time = factor('pre')` creates a new factor called `time` and sets all values to `pre`.
-
-1. `select(subj, condition, time, q1:q20)` - Finally, we use `select()` to put the columns into a convenient order for viewing.
-
-We now have our pre-intervention SSES data in a data frame with clearer column headings:
-
-```{r, echo=FALSE}
+```{r echo=FALSE}
 sses_pre_raw %>% head(3) %>% pander(split.table = Inf)
+```
+
+Note that we could do all of these steps in a single pipeline:
+ 
+```{r preprocess-sses-pre}
+sses_pre_raw  <- select(sses, 1, 5:25) %>%
+  set_names(~ str_to_lower(.) %>% str_replace_all("pre_sse_", "q")) %>%
+  mutate(subj = factor(partid), condition = factor(condition),
+         time = factor('pre')) %>%
+  select(subj, condition, time, q1:q20)
 ```
 
 <a name="ex2"></a>
 
 ## Exercise 2
 
-Write a similar pipeline to create a data frame named `sses_post_raw` containing the post-intervention SSES data. The post-intervention SSES data are in columns `26:45`, these columns have the prefix `post_sse_` rather than `pre_sse_`. Set the value in the `time` factor to `post`. After running your commands, the first few rows of `sses_post_raw` should look like this:
+Write a similar pipeline to create a data frame named `sses_post_raw` containing the post-intervention SSES data. The condition and post-intervention SSES data are in columns `25:45`. The SSES columns have the prefix `post_sse_` rather than `pre_sse_`. Set the value in the `time` factor to `post`. After running your commands, the first few rows of `sses_post_raw` should look like this:
 
 ```{r ex2, echo=FALSE}
 sses_post_raw <- select(sses, 1, 25:45) %>%
   set_names(~ str_to_lower(.) %>% str_replace_all("post_sse_", "q")) %>%
-  mutate(subj = factor(partid), condition = factor(condition), time = factor('post')) %>%
+  mutate(subj = factor(partid), condition = factor(condition),
+         time = factor('post')) %>%
   select(subj, condition, time, q1:q20)
 ```
 
@@ -216,45 +258,9 @@ sses_post_raw %>% head(3) %>% pander(split.table = Inf)
 
 **Copy the R code you used for this exercise into PsycEL.**
 
-<a name="reverse"></a>
-
-## Reverse scoring survey items
-
-The SSES questions are scored from `0 (Not at all)` to `4 (Extremely)`. Question 1 reads `I feel confident about my abilities`, so a higher score indicates higher self-esteem. However, a number of questions on the SSES are 'reverse scored'. For example, question 2 reads `I am worried about whether I am regarded as a success or failure`, so in this case a higher score indicates lower self-esteem. Surveys often use reverse scored questions to encourage participants to pay attention to the wording of each question. Before calculating a total SSES score, we need to reverse the reverse scored items, so that a higher number means higher self-esteem for all items.  
-
-```{r reverse}
-sses_raw <- bind_rows(sses_pre_raw, sses_post_raw)
-reverse_questions <- c('q2', 'q4', 'q5', 'q7', 'q8', 'q10', 'q13', 'q15', 'q16', 'q17', 'q18', 'q19', 'q20')
-
-sses_rev <- sses_raw
-sses_rev[,reverse_questions] <- 4 - sses_raw[,reverse_questions]
-```
-
-**Explanation of commands:**
-
-1. Because the remaining preprocessing applies to both pre- and post- data, we join them together using `sses_raw <- bind_rows(sses_pre_raw, sses_post_raw)`.
-
-1. We set `reverse_questions` to be a vector of the column names of the SSES items that are reverse scored.
-
-1. `4 - sses_raw[,reverse_questions]` reverses the scores for the reversed items. There's a lot going on here, so we'll explain each part of the command:
-
-    1. The values inside the square brackets of `sses_raw[,reverse_questions]` select a subset of rows and columns from `sses_raw`. The first argument after `[` specifies which rows to select. Leaving this empty, means 'all rows'. The argument after the `,` specifies which columns to select. We specified colums to be the reversed item column names that we defined in `reverse_questions`.
-    1. Having selected just the rows and columns containing values we neeed to reverse score,  `4 - ` applies a vectorised subtraction to subtract each value on the right-hand side of the `-` from `4`, thereby reversing the score. This is similar to the vectorised addition we used above. So if a reversed score was `4` (the maximum on the Likert scale), this command would convert it to `0` (`4 - 4`). The same applies to any other value on the scale.
-    1. We assign the results of the subtractions back to the same subset of rows and columns with `sses_rev[,reverse_questions] <-` 
-
-Now that our items are all scored in the same direction, we can calculate the SSES scores using the same technique we used for [calculating subscale scores](#subscales):
-
-```{r pre-score, R.options = list(width = 100)}
-sses_raw <- mutate(sses_raw, total = rowSums(sses_raw[4:23]))
-```
-
-```{r echo=FALSE}
-sses_raw %>% head(3) %>% pander(split.table = Inf)
-```
-
 ## References
 
-Heatherton, T. F., & Polivy, J. (1991). [Development and validation of a scale for measuring state self-esteem](http://www.academia.edu/download/37381608/91_Heatherton_Polivy_JPSP.pdf) _Journal of Personality and Social Psychology, 60(6)_, 895.
+Heatherton, T. F., & Polivy, J. (1991). [Development and validation of a scale for measuring state self-esteem](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.476.4746&rep=rep1&type=pdf) _Journal of Personality and Social Psychology, 60(6)_, 895.
 
 Henry, J. D., & Crawford, J. R. (2005). [The short-form version of the Depression Anxiety Stress Scales (DASS-21): Construct validity and normative data in a large non-clinical sample](https://onlinelibrary.wiley.com/doi/pdf/10.1348/014466505X29657?casa_token=qL449BGkw4EAAAAA:qrRVqngwUjujoSuG3WwppU0Cma7Kv0YD03eAy6xrmIkLFpyr3mOv7bMv-LiWkpS46Cqr7rgDay5b-A) British Journal of Clinical Psychology, 44(2), 227–239.
 

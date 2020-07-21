@@ -63,7 +63,7 @@ You should notice that the name `Untitled1` on the _Script_ window has now gone 
 Re-save your script each time you change something in it; that way, you won't lose any of your work.
 
 ## Loading data
-Now, we're going to load some data on the income of 10,000 people in the United States of America. I've made up this dataset for teaching purposes, but it's somewhat similar to large open data sets available on the web, such as [US Current Population Survey](https://thedataweb.rm.census.gov/ftp/cps_ftp.html). Here's how you get a copy of this data into RStudio so you can start looking at it:
+Now, we're going to load some data on the income of 10,000 people in the United States of America. I've made up this dataset for teaching purposes, but it's somewhat similar to large open data sets available on the web, such as [US Current Population Survey](https://www.census.gov/programs-surveys/cps/data.html)). Here's how you get a copy of this data into RStudio so you can start looking at it:
 
 1. Download a copy of the data, by clicking [here](http://www.willslab.org.uk/cps2.csv) and saving it to the Downloads folder of your computer.
 

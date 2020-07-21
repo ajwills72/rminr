@@ -8,7 +8,7 @@ output: html_document
 ## DEVELOPERS: Uncomment one option, as appropriate
 
 ## Data required to knit
-## https://github.com/ajwills72/rminr-data/tree/master/going-further/sses.csv
+## https://github.com/ajwills72/rminr-data/tree/master/going-further/dass21.csv
 ##
 ## I check out rminr-data and make a symbolic link to going-further
 
@@ -49,16 +49,13 @@ To prepare for this worksheet:
 
 ## Testing scale reliability using Cronbach’s alpha
 
-Asking people questions is one way of measuring psychological constructs. For example, if we wanted to measure people's stress levels, we could ask them to rate how much they agreee with the statement "I found it hard to wind down". Because language is complex, questionnaires require careful design to give us confidence that the answers to our questions provide a reliable measure of the underlying construct we want to measure. A questionnaire would normally use multiple questions to produce a reliable measure of a construct like stress. These groups of questions are often referred to as a 'scale'. One way to measure the reliablity of a scale is to test the extent to which responses to different questions on the same scale co-vary (or more informally, how they 'correlate'). If the questions measure the same thing, we would expect the answers to co-vary. Cronbach's alpha is a test which uses the covariances between questions to provide a measure of scale reliability.
+Asking people questions is one way of measuring psychological constructs. For example, if we wanted to measure people's stress levels over the past week, we could ask them to rate how much they agreee with the statement "I found it hard to wind down". Because language is complex, questionnaires require careful design to give us confidence that the answers to our questions provide a reliable measure of the underlying construct we want to measure. A questionnaire would normally use multiple questions to produce a reliable measure of a construct like stress. These groups of questions are often referred to as a 'scale'. One way to measure the reliablity of a scale is to test the extent to which responses to different questions on the same scale co-vary (or more informally, how they 'correlate'). If the questions measure the same thing, we would expect the answers to co-vary. Cronbach's alpha is a test which uses the covariances between questions to provide a measure of scale reliability.
 
-Cronbach's alpha is a value from 0-1, with higher numbers indicating a more reliable scale. In general, values of alpha between 0.7-0.8 indicate an acceptable level of reliability, and values substantially below this are suggestive on an unreliable scale. However, these values vary depending on the construct being measured, so it's advisable to check the acceptable alpha range for the specific sale you are using. A few cautionary points relate to the way that Cronbach's alpha is calculated. First, alpha increases as more questions are added to a scale, so it would artificially report higher levels of reliability in a scale with lots of questions.
-Second, if your scale consists of subscales (for example it measures depression and anxiety, as well as stress) you should calculate alpha for the subscales and not the whole scale. Finally, reverse-coded items will _decrease_ the value of alpha, so ensure you have reversed any reverse-coded items before calculating alpha. Reverse coding was covered in the [Preprocessing scales worksheet](preproc-scales.html).
+Cronbach's alpha is a value from 0-1, with higher numbers often considered to indicate a more reliable scale (although this is [debatable](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2792363/)). In general, values of alpha between 0.7-0.8 indicate an acceptable level of reliability, and values substantially below this are suggestive of an unreliable scale. However, these values vary depending on the construct being measured, so it's advisable to check the acceptable alpha range for the specific scale you are using.
 
-You should be able to find a value for Cronbach's alpha in the research paper which describes the scaled you are using. It's advisable to ensure that the alpha for your sample data is similar to this value. We'll demonstrate the calculation of Cronbach's alpha for the State Self-Esteem Scale (SSES), which was introduced in the [Preprocessing scales worksheet](preproc-scales.html). As you will recall, this experiment used the SSES to measure self-esteem before and after a mental imagery intervention. This was a 2 (time) x 3 (condition) mixed design, with the following experimental conditions:
+A few cautionary points relate to the way that Cronbach's alpha is calculated. First, [alpha increases as more questions are added to a scale](https://data.library.virginia.edu/using-and-interpreting-cronbachs-alpha/), so it would artificially report higher levels of reliability in a scale with lots of questions. Second, if your scale consists of subscales (for example it measures depression and anxiety, as well as stress) you should calculate alpha for the subscales and not the whole scale. This is because subscales measure different things, and hence we would not expect them to strongly co-vary. For example, although depression and anxiety co-vary to some extent, we can imagine someone who is depressed but not anxious, or anxious but not depressed. So, we expect that our anxiety and depression subscales are measuring different things, which means even if our questionnaire was a good one, we would not necessarily expect high co-variance between these two scales. Finally, reverse-coded items will artificially _decrease_ the value of alpha, so ensure you have reversed any reverse-coded items before calculating alpha. Reverse coding was covered in the [Cleaning up questionnaire data worksheet](https://benwhalley.github.io/rmip/worksheet-recoding.html).
 
- * Condition 1: participants visualised a negative mental image of themself
- * Condition 2: participants visualised a negative mental image of someone else
- * Condition 0 (control): participants did a card sorting task and did not think of any images.
+It's advisable to ensure that Cronbach's alpha in your sample data is similar to the value reported in research paper which describes the scale you are using. We'll demonstrate this for the State Self-Esteem Scale (SSES), which was introduced in the [Preprocessing scales worksheet](preproc-scales.html). The SSES contains some reverse-coded items, but these have already been ajusted in the raw data, so we don't need to do that step in this worksheet.
 
 ```{r message=FALSE, echo=FALSE}
 # from tables.R
@@ -67,35 +64,41 @@ library(tidyverse)
 
 # DASS-21
 dass21_raw <- read_csv("going-further/dass21.csv")
-dass21_raw <- select(dass21_raw, partID, Age:DASS21)
+dass21_raw <- dass21_raw %>% select(partID, Age:DASS21)
 dass21 <- dass21_raw %>% drop_na()
-dass21 <- mutate(dass21, depression = rowSums(dass21[4 + c(3,5,10,13,16,17,21)]))
+dass21 <- dass21 %>% mutate(depression = rowSums(dass21[4 + c(3,5,10,13,16,17,21)]))
+dass21_total <- dass21 %>% select(partID, Age, Gender, depression)
 dass21 <- mutate(dass21, anxiety = rowSums(dass21[4 + c(2,4,7,9,15,19,20)]))
 dass21 <- mutate(dass21, stress = rowSums(dass21[4 + c(1,6,8,11,12,14,18)]))
 
 # SSES
 sses <- read_csv('going-further/sses.csv')
+sses_pre_raw  <- sses %>% select(1, 5:25)
+sses_pre_raw  <- sses_pre_raw %>%
+  set_names(~ str_to_lower(.) %>% str_replace_all("pre_sse_", "q"))
+sses_pre_raw <- sses_pre_raw %>%
+  mutate(subj = factor(partid), condition = factor(condition),
+         time = factor('pre')) %>%
+  select(subj, condition, time, q1:q20)
+
 sses_pre_raw  <- select(sses, 1, 5:25) %>%
   set_names(~ str_to_lower(.) %>% str_replace_all("pre_sse_", "q")) %>%
-  mutate(subj = factor(partid), condition = factor(condition), time = factor('pre')) %>%
+  mutate(subj = factor(partid), condition = factor(condition),
+         time = factor('pre')) %>%
   select(subj, condition, time, q1:q20)
 sses_post_raw <- select(sses, 1, 25:45) %>%
   set_names(~ str_to_lower(.) %>% str_replace_all("post_sse_", "q")) %>%
   mutate(subj = factor(partid), condition = factor(condition), time = factor('post')) %>%
   select(subj, condition, time, q1:q20)
-sses_raw <- bind_rows(sses_pre_raw, sses_post_raw)
-reverse_questions <- c('q2', 'q4', 'q5', 'q7', 'q8', 'q10', 'q13', 'q15', 'q16', 'q17', 'q18', 'q19', 'q20')
-
-sses_rev <- sses_raw
-sses_rev[,reverse_questions] <- 4 - sses_raw[,reverse_questions]
-sses_raw <- mutate(sses_raw, total = rowSums(sses_raw[4:23]))
 ```
 
-We'll use the `cronbach()` function from the `psy` package to calculate Cronbach's alpha for the SSES. You may need to install this package before you can use it for the first time -- if so, use `install.packages('psy')`.
+We'll use the `cronbach()` function from the `psy` package to calculate Cronbach's alpha for the SSES.
 
 ```{r cronbach-all}
 library(psy)
-sses_cronbach_total <- cronbach(select(sses_raw, q1:q20))
+sses_cronbach_total <- sses_pre_raw %>%
+  select(q1:q20) %>%
+  cronbach()
 sses_cronbach_total$alpha
 ```
 
@@ -105,12 +108,10 @@ sses_cronbach_total$alpha
 
 1. In addition to the value of alpha, `cronbach()` returns the number of subjects and the number of items. Here were only interested in alpha, which we print with `sses_cronbach$alpha`.
 
-This gives us a value of `0.94`, which is very similar to the `0.92` reported by the authors who developed the SSES (Heatherton & Polivy, 1991).
+This gives us a value of `r round(sses_cronbach_total$alpha, 2)`, which is much lower than the alpha of 0.92 reported by the authors who developed the SSES (Heatherton & Polivy, 1991).
 
 ```{r cronbach-pre-condition, echo=FALSE, eval=FALSE}
 # in case alpha by group comes back into scope
-sses_raw$condition <- recode_factor(sses_raw$condition, `0` = 'control',
-                                        `1` = 'self', `2` = 'other')
 sses_cronbach_pre <- sses_raw %>%
   filter(time == 'pre') %>%
   group_by(condition) %>%
@@ -131,13 +132,13 @@ stress_cronbach <- select(dass21, c('DASS1', 'DASS6', 'DASS8', 'DASS11', 'DASS12
   cronbach()
 ```
 
-Calcluate Cronbach's alpha for the depression, anxiety and stress subscales in the DASS-21 data introduced in the [Preprocessing scales worksheet](preproc-scales.html). In each case, round alpha to 2 decimal places. The command `select(dass21, c('DASS3', 'DASS5', 'DASS10', 'DASS13', 'DASS16', 'DASS17', 'DASS21'))` selects the columns for the depression subscale. Use similar commands to select the correct columns for the anxiety and stress subscales. Cronbach's alpha should be `r  round(depression_cronbach$alpha, 2)` for depression, `r  round(anxiety_cronbach$alpha, 2)` for anxiety, and `r  round(stress_cronbach$alpha, 2)` for stress.
+Calcluate Cronbach's alpha for the depression, anxiety and stress subscales in the DASS-21 data introduced in the [Preprocessing scales worksheet](preproc-scales.html). In each case, round alpha to 2 decimal places. The command `select(dass21, c('DASS3', 'DASS5', 'DASS10', 'DASS13', 'DASS16', 'DASS17', 'DASS21'))` selects the columns for the depression subscale. Use similar commands to select the correct columns for the anxiety and stress subscales. You can find the items for these subscales in [this article](https://www.researchgate.net/profile/Jenelle_Slavin-Mulford/publication/51726801_Psychometric_Evaluation_and_Normative_Data_for_the_Depression_Anxiety_and_Stress_Scales-21_DASS-21_in_a_Nonclinical_Sample_of_US_Adults/links/542413680cf26120b7a7171a/Psychometric-Evaluation-and-Normative-Data-for-the-Depression-Anxiety-and-Stress-Scales-21-DASS-21-in-a-Nonclinical-Sample-of-US-Adults.pdf). Cronbach's alpha should be `r  round(depression_cronbach$alpha, 2)` for depression, `r  round(anxiety_cronbach$alpha, 2)` for anxiety, and `r  round(stress_cronbach$alpha, 2)` for stress.
 
 **Copy the R code you used for this exercise into PsycEL.**
 
 # References
 
-Heatherton, T. F., & Polivy, J. (1991). [Development and validation of a scale for measuring state self-esteem](http://www.academia.edu/download/37381608/91_Heatherton_Polivy_JPSP.pdf) _Journal of Personality and Social Psychology, 60(6)_, 895.
+Heatherton, T. F., & Polivy, J. (1991). [Development and validation of a scale for measuring state self-esteem](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.476.4746&rep=rep1&type=pdf) _Journal of Personality and Social Psychology, 60(6)_, 895.
 
 ___
 

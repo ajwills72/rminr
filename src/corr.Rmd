@@ -1,6 +1,6 @@
 ---
 title: "Relationships, part 2."
-author: "Sylvia Terbeck, Andy Wills"
+author: "Andy Wills, Sylvia Terbeck"
 output: html_document
 ---
 
@@ -98,7 +98,7 @@ gdata <- data %>%
             dominance = mean(dominance))
 ```
 
-We've put our answers into a new data frame, `gdata`, so go to the _Environment_ window of RStudio and click on `gdata` to see your summarised data. You'll now see one line for each group in your study.
+We've put our answers into a new data frame, `gdata`, so go to the _Environment_ window of RStudio and click on `gdata` to see your summarised data. You'll now see one line for each group in your study. As [before](group-differences.html#group), you can safely ignore the "ungrouping" message that you receive.
 
 ### Explanation of command
 

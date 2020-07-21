@@ -96,6 +96,4 @@ ____
 #### Licence
 This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0. 
 
-___
 
-_version: 0.2_

@@ -75,7 +75,9 @@ The error of your judgement on each trial is in the `Difference200` column of yo
 mull %>% group_by(Angle) %>% summarise(mean(Difference200))
 ```
 
-In this example, the participant under-esimated line length with the "arrow heads" (Angle > 90), and over-estimated line length with the "arrow tails" ( Angle < 90). Your data may be different.
+As [before](group-differences.html#group), you can safely ignore the "ungrouping" message that you receive.
+
+In this example, the participant under-estimated line length with the "arrow heads" (Angle > 90), and over-estimated line length with the "arrow tails" ( Angle < 90). Your data may be different.
 
 ### Violin plot
 
@@ -161,4 +163,3 @@ ___
 
 This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0. 
 
-_version 0.2.1_

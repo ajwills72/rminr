@@ -45,7 +45,7 @@ This is an advanced worksheet, which assumes you have completed the [Absolute Be
 
 This worksheet describes a full analysis pipeline for an undergraduate student dissertation on the Perruchet Effect. The experiment was basically identical to the experiment described by [McAndrew et al. (2012)](https://www.researchgate.net/profile/IPL_Mclaren/publication/221752843_Dissociating_Expectancy_of_Shock_and_Changes_in_Skin_Conductance_An_Investigation_of_the_Perruchet_Effect_Using_an_Electrodermal_Paradigm/links/0a85e53c10b74f291a000000.pdf), except that the electric shock was replaced by a loud unpleasant noise (a metal garden fork scraping across slate). For details of the procedure, see the McAndrew paper, but here's a very brief summary:
 
-A shape (brown cylinder, known as a 'CS') appears on the screen for 8 seconds. On 50% of occasions, this is then followed by the unpleasant noise (the 'US'). The participant's reaction to each CS is measured in two ways: 
+This was a conditioning experiment. A shape (brown cylinder, known as a _conditioned stimulus_, or 'CS') appears on the screen for 8 seconds. On 50% of occasions, this is then followed by the unpleasant noise (the _unconditioned stimulus_ or 'US'). The participant's reaction to each CS is measured in two ways: 
 
 (1) While the CS is on the screen, they are asked to rate their expectancy of the US on each trial, using a numerical scale. Higher ratings indicate greater conscious expectation of the unpleasant noise.
 
@@ -59,11 +59,16 @@ There are two predictions. The first prediction is that the GSR will increase wi
 
 ## Getting data from a public repository
 
-A basic principle of open science is that you publicly share your raw data (in anonymized form). Many psychologists, including the ones who ran this study, choose the [OSF](https://osf.io/) website to do this. So, the first thing you need to do is download the data from OSF. Of course, there's an R package for that (`osfr`). You may need to install this package before you can use it for the first time -- if so, use `install.packages("osfr")`
+A basic principle of open science is that you publicly share your raw data (in anonymized form). Many psychologists, including the ones who ran this study, choose the [OSF](https://osf.io/) website to do this. So, the first thing you need to do is download the data from OSF. Of course, there's an R package for that (`osfr`). 
 
-So, first, [create a new project](using-projects.html) in R. Then, this is how you download data from OSF into your R project:
+So, first, [create a new project](using-projects.html) in R. 
+
+Next, create a new, empty R script and save it as `perruchet.R`. Put all the commands from this worksheet into `perruchet.R`, and run them from there. Save your script regularly.
+
+Now, download data from OSF into your R project using the following commands:
 
 ```{r osf, message=FALSE, results='hide'}
+## Load data from OSF (commands only need to be run once)
 library(osfr)
 proj  <- osf_retrieve_node("r7axw")
 files  <- osf_ls_files(proj)
@@ -72,11 +77,13 @@ osf_download(files, conflicts = "skip")
 
 ### Explanation of commands
 
-The first line loads the `osfr` package. 
+The first line is a comment. These are ignored by R, but make your script easier for humans to read. In this case, the comment reminds the human reader that you only need to download the data from OSF once. 
 
-The second line asks the OSF website for the information it needs to download the data. To do this, we need the last part of the web address. This repository is at https://osf.io/r7axw/, so we need to use `r7axw`. 
+The second line loads the `osfr` package. 
 
-The third line gets a list of the files in the repository, much as we did for local files in [Preprocessing data from experiments](preproc.html#combine). 
+The third line asks the OSF website for the information it needs to download the data. To do this, we need the last part of the web address. This repository is at https://osf.io/r7axw/, so we need to use `r7axw`. 
+
+The fourth line gets a list of the files in the repository, much as we did for local files in [Preprocessing data from experiments](preproc.html#combine). 
 
 The final file actually downloads those files to your R project. In this case, you'll find that you now have a directory called `data`, which contains those files. The component `conflicts = "skip"` means that, if these files are already in your project, you should not overwrite them, but leave them as they are.
 
@@ -91,6 +98,7 @@ You can ignore the file `MAIN.csv`, which we're not going to use. The first file
 As with any analysis, the first step is to load the data into R:
 
 ```{r load, message=FALSE}
+## Load packages, data. Rename data frame columns
 library(tidyverse)
 raw <- read_csv("data/DATA.csv")
 colnames(raw) <- c("subj", "time", "key", "value")
@@ -98,9 +106,9 @@ colnames(raw) <- c("subj", "time", "key", "value")
 
 ### Explanation of commands
 
-The first two lines should be familiar from previous worksheets; we nearly always need the `tidyverse` package, and we use the `read_csv` command to load the data. The `data/` part of the filename `data/DATA.csv` says that the file `DATA.csv` is to be found in the directory (folder) called `data`. 
+The second and third lines should be familiar from previous worksheets; we nearly always need the `tidyverse` package, and we use the `read_csv` command to load the data. The `data/` part of the filename `data/DATA.csv` says that the file `DATA.csv` is to be found in the directory (folder) called `data`. 
 
-The third line renames the columns, as covered in the [Preprocessing data from experiments](preproc.html#rename) worksheet. I didn't like the names of the columns very much so I changed them to something more comprehensible and quicker to type, using the `colnames` command. 
+The final line renames the columns, as covered in the [Preprocessing data from experiments](preproc.html#rename) worksheet. I didn't like the names of the columns very much so I changed them to something more comprehensible and quicker to type, using the `colnames` command. 
 
 <a name="dedup"></a>
 
@@ -109,15 +117,16 @@ The third line renames the columns, as covered in the [Preprocessing data from e
 We're now going to get the data into a state where we can meaningfully analyse it:
 
 ```{r tidy, message=FALSE}
+## De-duplicate data; remove pilot study
 raw <- distinct(raw)
 raw  <- raw %>% filter(subj > 161)
 ```
 
 ### Explanation of commands
 
-The first line, `raw <- distinct(raw)` is a _de-duplication_ command. It's a very handy command for tidying up data in cases where people have made the [grave error](https://arstechnica.com/tech-policy/2013/04/microsoft-excel-the-ruiner-of-global-economies/) of trying to use Excel for serious research. What happened in this case was that the experiment was run by three people over many different days. They then tried to stitch all the data files together by copying-and-pasting them into one big file in Excel. This would have been easy using R, as covered in  [Preprocessing data from experiments](preproc.html#combine) but, unfortunately, no one had taught them how to use R. Predictably, they could not do this combination of files in Excel without error (few people could), and they ended up copying some of the data twice. In this case, it's easy to detect and fix in R, because no two rows of this data can be identical - the subject number or the time is always going to be different. So, we can remove duplicates by telling R to give us just one copy of each of the different rows in the data set. The command `distinct` does that for us. 
+The second line, `raw <- distinct(raw)` is a _de-duplication_ command. It's a very handy command for tidying up data in cases where people have made the [grave error](https://arstechnica.com/tech-policy/2013/04/microsoft-excel-the-ruiner-of-global-economies/) of trying to use Excel for serious research. What happened in this case was that the experiment was run by three people over many different days. They then tried to stitch all the data files together by copying-and-pasting them into one big file in Excel. This would have been easy using R, as covered in  [Preprocessing data from experiments](preproc.html#combine) but, unfortunately, no one had taught them how to use R. Predictably, they could not do this combination of files in Excel without error (few people could), and they ended up copying some of the data twice. In this case, it's easy to detect and fix in R, because no two rows of this data can be identical - the subject number or the time is always going to be different. So, we can remove duplicates by telling R to give us just one copy of each of the different rows in the data set. The command `distinct` does that for us. 
 
-The second line, `raw  <- raw %>% filter(subj > 161)` should be familiar from previous worksheets; we are keeping only those participants whose subject number is greater than 161. This is because, in this study, we first ran a short pilot experiment, looked at the data, and made a few changes to the experiment. Here, we only wanted to analyze the main study, so we removed the pilot participants.
+The final line, `raw  <- raw %>% filter(subj > 161)` should be familiar from previous worksheets; we are keeping only those participants whose subject number is greater than 161. This is because, in this study, we first ran a short pilot experiment, looked at the data, and made a few changes to the experiment. Here, we only wanted to analyze the main study, so we removed the pilot participants.
 
 <a name="exclude"></a>
 
@@ -128,30 +137,32 @@ Participants in this experiment were told to rate their expectancy of the US dur
 Participants who miss a lot of ratings aren't really following the instructions, making their data hard to interpret. In such cases, we normally exclude those participants from further analysis. First, we need to find out how widespread this problem is. One way to do this is to calculate the number of zero ratings each participant makes:
 
 ```{r zeros}
+## Number of expectancy ratings, by participant
 inspect  <- raw %>% filter(key == "ER") %>% filter(value == 0)
 table(inspect$subj)
 ```
 
 ### Explanation of commands
 
-The first line filters to those rows of the raw data that contain expectancy ratings (`key == "ER"`, see `codebook.md`) and then to cases where that rating is zero (`value == 0`). This is then stored in the data frame `inspect`. One could look at this manually, but it's more efficient and less error prone to get R to tell us how many times each participant has a zero rating. This is that the second line, `table(inspect$subj)` does - it counts the number of times each subject number occurs in `inspect`.
+The second line filters to those rows of the raw data that contain expectancy ratings (`key == "ER"`, see `codebook.md`) and then to cases where that rating is zero (`value == 0`). This is then stored in the data frame `inspect`. One could look at this manually, but it's more efficient and less error prone to get R to tell us how many times each participant has a zero rating. This is what the final line, `table(inspect$subj)` does - it counts the number of times each subject number occurs in `inspect`.
 
 ### Explanation of output
 
-The output shows the number of trials on which each participant failed to give an expectancy rating. If a participant never made a zero rating, their participant number does not appear on the table. We can see that sixteen participants missed at least one rating, at that six participants missed more than 3 (one participant never made a rating, missing all 46 trials of the experiment!). 
+The output shows the number of trials on which each participant failed to give an expectancy rating. If a participant never made a zero rating, their participant number does not appear on the table. We can see that sixteen participants missed at least one rating, and that six participants missed more than 3 (one participant never made a rating, missing all 46 trials of the experiment!). 
 
 ### Removing participants from the dataset
 
 In this case, we decided to exclude all participants who missed more than three ratings:
 
 ```{r exclude}
+## Exclude participants
 exclude  <- c(164, 166, 176, 199, 236, 239)
 raw  <- raw %>% filter(!(subj %in% exclude))
 ```
 
 ### Explanation of commands
 
-The first line creates a list of the participant numbers we wish to exclude. In the second line, we remove those participants from the `raw` data frame. The `filter` command will be familiar from previous worksheets. The command `subj %in% exclude` means 'any participant whose subject number is in our list `exclude`. The use of `!()` in the filter statement means `not`. So, `filter(!(subj %in% exclude))` means keep the participants whose subject number is not in the `exclude` list. 
+The second line creates a list of the participant numbers we wish to exclude. In the second line, we remove those participants from the `raw` data frame. The `filter` command will be familiar from previous worksheets. The command `subj %in% exclude` means 'any participant whose subject number is in our list `exclude`. The use of `!()` in the filter statement means `not`. So, `filter(!(subj %in% exclude))` means keep the participants whose subject number is not in the `exclude` list. 
 
 ### Note
 
@@ -164,6 +175,7 @@ There are still a few trials where the participant makes no expectancy rating, a
 The GSR data from this experiment is very rich, with a skin conductance measure taken from each participant approximately twenty times a second throughout the whole 30-40 minutes of the experiment. To 'get a feel' for these data, and also to check that the equipment was working properly, we need to plot that GSR as a graph, with time on the x-axis and GSR on the y-axis. We'll need to do this one participant at a time, otherwise the graph will be really hard to read:
 
 ```{r gsr}
+## GSR plot
 dat  <- raw %>% filter(subj == 168)
 gsr <- dat %>% filter(key == "GS")
 gplot <- gsr %>% ggplot(aes(x=time, y=value)) + geom_line()
@@ -172,11 +184,11 @@ gplot
 
 ### Explanation of commands
 
-The first line should be familiar, we've filtered the data to include just one participant (168).
+The second line should be familiar, we've filtered the data to include just one participant (168).
 
-The second line is also a simple filter operation - we're keeping just those rows where the `key` column says `GS`. From `codebook.md`, we can see that this means the rows of the data file that contain GSR readings. 
+The third line is also a simple filter operation - we're keeping just those rows where the `key` column says `GS`. From `codebook.md`, we can see that this means the rows of the data file that contain GSR readings. 
 
-The third line should also be pretty familiar, we're just doing a standard line graph, as we previously covered in, for example, the [Understanding Interactions](anova2.html#ex1) worksheet. In this case, we save the line plot in an object called `gplot`, and then show the graph by typing `gplot` as the last command. We do it this way so we can add other things to the graph later.
+The fourth line should also be pretty familiar, we're just doing a standard line graph, as we previously covered in, for example, the [Understanding Interactions](anova2.html#ex1) worksheet. In this case, we save the line plot in an object called `gplot`, and then show the graph by typing `gplot` as the last command. We do it this way so we can add other things to the graph later.
 
 ### Explanation of output
 
@@ -187,6 +199,7 @@ We can see the GSR going up and down over time. Why is it doing that? Our assump
 We can add CS onset times like this: 
 
 ```{r cs}
+## Add CS onset times to graph
 cs <- dat %>% filter(key == "CO")
 gplot <- gplot + geom_vline(data=cs, mapping=aes(xintercept=time),
                             colour="blue")
@@ -195,7 +208,7 @@ gplot
 
 ### Explanation of commands
 
-The first line should be familiar - we are selecting those rows of the data that contain the key `CO`, which `codebook.md` tells us are the timings of the CS onsets. 
+The second line should be familiar - we are selecting those rows of the data that contain the key `CO`, which `codebook.md` tells us are the timings of the CS onsets. 
 
 We've also come across `geom_vline` before, as part of the [Putting R to work](risk-rat.html) worksheet - it just plots a vertical line at a place we ask it to. The new part of this command is `data=cs, mapping=aes(xintercept=time)`. Previously, we've just told R manually where we want the line (e.g. `xintercept = 4.35`). Now, we're telling it that we want a bunch of lines, that the `data` for the position of those lines is to be found in `cs` data frame, and that the `time` column of that data frame should be used to find them.
 
@@ -218,6 +231,7 @@ The combination of noise and drift means that, not only do we need to average ac
 Let's illustrate this with a single trial from participant 168. For no particular reason, let's take trial 10:
 
 ```{r select}
+## Plot a single trial
 onset  <- cs$time[10]
 full <- gsr %>% filter(time >= onset - 500 & time <= onset + 8000)
 full %>% ggplot(aes(x=time, y=value)) + geom_line()
@@ -225,11 +239,11 @@ full %>% ggplot(aes(x=time, y=value)) + geom_line()
 
 ### Explanation of commands
 
-Line 1 - In order to find a single trial, we need to know at what time the CS began on that trial. We already have those CS onset times from doing the last graph, so we just ask R for the `10`th row of the `time` column of that `cs` data frame - `cs$time[10]` - and record it as `onset` (with `onset <- `)
+Line 2 - In order to find a single trial, we need to know at what time the CS began on that trial. We already have those CS onset times from doing the last graph, so we just ask R for the `10`th row of the `time` column of that `cs` data frame - `cs$time[10]` - and record it as `onset` (with `onset <- `)
 
-Line 2 - Now we know where the CS starts, we need to take all the GSR readings from 500 ms before that (our _baseline_), up to 8000 ms after that (when the CS ends). We use the now-familiar `filter` command to do this. 
+Line 3 - Now we know where the CS starts, we need to take all the GSR readings from 500 ms before that (our _baseline_), up to 8000 ms after that (when the CS ends). We use the now-familiar `filter` command to do this. 
 
-Line 3 - Just a plain old line graph.
+Line 4 - Just a plain old line graph.
 
 ### Explanation of output
 
@@ -246,6 +260,7 @@ Second, we're going to need to average all these trials, so we need the x-axis t
 We can do all this in four lines of code, plus one to plot the new graph:
 
 ```{r correct}
+## Basline correct that trial, and replot
 precs  <- gsr %>% filter(time >= onset - 500 & time < onset)
 correct  <- mean(precs$value)
 full <- full %>% mutate(cval = value - correct)
@@ -255,15 +270,15 @@ full %>% ggplot(aes(x=rtime, y=cval)) + geom_line()
 
 ### Explanation of commands
 
-Line 1 - Use `filter` to select the GSR values for the baseline period i.e. 500ms before the CS onset until the CS onset, and put them in a dataframe called `precs`.
+Line 2 - Use `filter` to select the GSR values for the baseline period i.e. 500ms before the CS onset until the CS onset, and put them in a dataframe called `precs`.
 
-Line 2 - Calculate the mean of the GSR values in this pre-CS period (`precs$value`) and store it in `correct`.
+Line 3 - Calculate the mean of the GSR values in this pre-CS period (`precs$value`) and store it in `correct`.
 
-Line 3 - Using the command `mutate`, we create a new column in the `full` data frame called `cval` (for "corrected value"). This column contains the numbers in the `value` column, minus the baseline correction we've just calculated (`correct`). The name `mutate` is perhaps a bit odd, but "mutate" is just another word for "change" (over and above it's other biological, and sci-fi connotations...). So, `mutate` here just means create a new column by changing an existing one.
+Line 4 - Using the command `mutate`, we create a new column in the `full` data frame called `cval` (for "corrected value"). This column contains the numbers in the `value` column, minus the baseline correction we've just calculated (`correct`). The name `mutate` is perhaps a bit odd, but "mutate" is just another word for "change" (over and above it's other biological, and sci-fi connotations...). So, `mutate` here just means create a new column by changing an existing one.
 
-Line 4 - Using `mutate` again, we create another column called `rtime` (for "relative time"). This is just the actual time, minus the time the CS arrived. So, the CS arrival time will always be zero.
+Line 5 - Using `mutate` again, we create another column called `rtime` (for "relative time"). This is just the actual time, minus the time the CS arrived. So, the CS arrival time will always be zero.
 
-Line 5 - Just another line graph
+Line 6 - Just another line graph
 
 ### Explanation of output
 
@@ -283,6 +298,7 @@ When we want R to do the same thing many times, we can use _functions_ and _loop
 Pretty much every command you run in R is a function that someone has written. For example, `mean(precs$value`) uses the function `mean()`, which is built in to R. The command `read_csv` is a function added to R by loading the `tidyverse` library. You can also write your own functions. Here's a function that contains all the commands we used to baseline-correct one trial of participant 168:
 
 ```{r basefunc}
+## Define function for baseline correction
 base.correct  <- function(trial) {
     onset  <- cs$time[trial]
     full <- gsr %>% filter(time >= onset - 500 & time <= onset + 8000)
@@ -295,7 +311,7 @@ base.correct  <- function(trial) {
 }
 ```
 
-Ignoring the first and the last three lines for a moment, notice that these commands are almost identical to the ones we just used. The only difference is that we've changed `cs$time[10]` to `cs$time[trial]`. So, instead of always looking at trial 10, we look at whatever trial is specified by `trial`, and that is set by calling the function. So, for example, we can now look at trial 9 like this:
+Ignoring the first and the last two lines for a moment, notice that these commands are almost identical to the ones we just used. The only difference is that we've changed `cs$time[10]` to `cs$time[trial]`. So, instead of always looking at trial 10, we look at whatever trial is specified by `trial`, and that is set by calling the function. A function doesn't do anything until we ask it to, by 'calling' it. So, for example, we can now look at trial 9 by calling the `base.correct` function like this:
 
 ```{r callfunc}
 eg  <- base.correct(9)
@@ -317,6 +333,7 @@ The key aspect of this command is `add_column` which, perhaps unsurprisingly, ad
 We can now use a loop to run this function for every trial of one participant. We've used loops in a similar way before, to combine data files from multiple participants using `bind_rows`, see the [preprocessing data from experiments](preproc.html#combine) worksheet.
 
 ```{r one-s-loop}
+## Use a loop to baseline correct all 46 trials
 onep  <- NULL
 for(trial in 1:46) {
     onep  <- bind_rows(onep, base.correct(trial))
@@ -350,6 +367,7 @@ The dataframe `onep` contains all the GSR data during the CS presentations(and t
 For the purposes of analysis, we need to summarize this data down to just one number per trial, representing how large the GSR was on that trial. There's a few ways one could do this; here we're just going to take the average GSR for trial:
 
 ```{r gsr-av}
+## Calculate mean GSR for each trial
 gsr.sum  <- onep %>%
     filter(rtime >= 0) %>%
     group_by(trial, run) %>%
@@ -359,9 +377,9 @@ gsr.sum
 
 ### Explanation of command
 
-Line 2 - We remove all GSR recordings from the baseline period (where `rtime` is less than zero)
+Line 3 - We remove all GSR recordings from the baseline period (where `rtime` is less than zero)
 
-Lines 3-4 - We group the data by `trial` and by `run` length, and then `summarise` this group data by taking the mean corrected value, `cval`. 
+Lines 4-5 - We group the data by `trial` and by `run` length, and then `summarise` this group data by taking the mean corrected value, `cval`. 
 
 ### Explanation of output
 
@@ -374,13 +392,14 @@ The output shows the contents of `gsr.sum`. Each row is one trial. For each tria
 The data frame `onep` contains a GSR for each trial, but there is also an expectancy rating for each trial. It will make it easier to look at these data if we also include these expectancy ratings into `onep`. So, using the following commands, we first create a new data frame with the expectancy ratings:
 
 ```{r add-expect}
+## Extract expectancy ratings
 expect <- dat %>% filter(key == "ER") %>% add_column(trial = 1:46) %>% select(subj, trial, value)
 expect
 ```
 
 ### Explanation of command
 
-We take the full data for one participant (`dat`) and then `filter` it to retain only the rows marked `ER` (the _expectancy rating_ rows, see `codebook.md`). When then add a new column (`add_column`) that is called `trial` and contains the numbers 1 to 46 (`1:46`). Finally, we select just the `trial`, and `value` columns of that dataframe, and place it into `expect`. 
+We take the full data for one participant (`dat`) and then `filter` it to retain only the rows marked `ER` (the _expectancy rating_ rows, see `codebook.md`). We then add a new column (`add_column`) that is called `trial` and contains the numbers 1 to 46 (`1:46`). Finally, we select just the `subj`, `trial`, and `value` columns of that dataframe, and place them into `expect`. 
 
 ### Explanation of output
 
@@ -391,6 +410,7 @@ The dataframe `expect` contains one row for each trial, and the column `value` c
 In the final step of preprocessing this participant, we join the expectancy ratings `expect` and the mean GSRs (`gsr.sum`) into a single data frame:
 
 ```{r one frame}
+## Combine GSR and expectancy data
 comb.data  <- full_join(gsr.sum, expect, by = "trial")
 comb.data
 ```
@@ -406,21 +426,23 @@ The command `full_join` joins together two separate data frames, using a column 
 We've now completed the preprocessing of one participant (`168`). In principle, we could go through all the same steps for each of the other approximately 50 participants, but that would be rather tedious. Instead, we can use a _loop_ to automate this for us, as we'll see in a minute, but first we need to get a list of participant numbers
 
 ```{r ppts}
+## Create list of participant numbers
 subjs <- enframe(unique(raw$subj))
 subjs
 ```
 
 ### Explanation
 
-We need a list of the different participant numbers used in this experiment. We can get this using the `subj` column of the `raw` data, so `raw$subj`. The only problem is that each subject number occurs many times (once for each GSR recording, so 20 times a second. We want just one copy of each different subject number. The command `unique` does that for us, so the command `subjs <- enframe(unique(raw$subj))` gives us the participant numbers (`enframe` just means 'put in a data frame').
+We need a list of the different participant numbers used in this experiment. We can get this using the `subj` column of the `raw` data, so `raw$subj`. The only problem is that each subject number occurs many times (once for each GSR recording, so 20 times a second). We want just one copy of each different subject number. The command `unique` does that for us, so the command `subjs <- enframe(unique(raw$subj))` gives us the participant numbers (`enframe` just means 'put in a data frame').
 
 <a name="loop2"></a>
 
 ## More on loops
 
-We now use a loop to go through the same set of steps for each participant:
+We now use a loop to go through the same set of steps for each participant. This takes a little while to run, because it preprocesses 2,300 trials (46 trials for each of 50 participants);
 
 ```{r preproc-loop}
+## Baseline correct all trials for all participants
 sum.data  <- NULL
 for(this.subj in subjs$value) {
     dat  <- raw %>% filter(subj == this.subj)
@@ -463,6 +485,7 @@ There are three further preprocessing steps we have to take before we can analyz
 To answer the first question, a log transform compresses the range of the data. The following graph should help visualize this:
 
 ```{r log plot}
+## Visualizing logarithms
 plot(1:50,log(1:50))
 ```
 
@@ -473,6 +496,7 @@ As a result, a log transform doesn't change small numbers very much, but reduces
 We log transform our GSR data using the `mutate` command that we used earlier:
 
 ```{r log trans}
+## Log transformation of GSR
 sum.data  <- sum.data %>% mutate(lcval = log(cval+1))
 ```
 
@@ -482,11 +506,12 @@ The command `log` takes the natural logarithm. We calculate `log(cval+1)` rather
 
 ## Removing trials
 
-In our Perruchet Effect experiment, we have runs of various lengths. For example, for something to be a `+2` run there must be a sequence of four trials in the following order `NSSN` where N means no sound, and S means sound. The third trial in that sequence is a +2 trial, because there have been two sounds in a row, and the following trial there will not be a sound so the run will end. Importantly, at least the way people normally analyse these data, the second trial in that sequence has no definable run length. One might say it is a `+1` trial because, at that point, there has only been one sound in a row. However, the experimenter knows that the run will continue on the next trial, so calling it a `+1` trial somehow doesn't seem quite right (although, from the perspective of the participant, at the time they are reacting to that trial, clearly it is a `+1` trial). 
+In our Perruchet Effect experiment, we have runs of various lengths. For example, for something to be a `+2` run there must be a sequence of four trials in the following order `NSSN` where N means no sound, and S means sound. The third trial in that sequence is a +2 trial, because there have been two sounds in a row, and on the following trial there will not be a sound so the run will end. Importantly, at least the way people normally analyse these data, the second trial in that sequence has no definable run length. One might say it is a `+1` trial because, at that point, there has only been one sound in a row. However, the experimenter knows that the run will continue on the next trial, so calling it a `+1` trial somehow doesn't seem quite right (although, from the perspective of the participant, at the time they are reacting to that trial, clearly it is a `+1` trial). 
 
-Normally, these experimenter-ambiguous trials are described as having a zero run length, and are excluded from the analysis. We remove them like this:
+Normally, these experimenter-ambiguous trials are described as having a zero run length, and are excluded from the analysis. Run length is recorded directly into the data file itself, so we can remove zero run-length trials like this:
 
 ```{r no-zero}
+## Remove trials where run length is zero
 sum.data  <- sum.data %>% filter(run != 0)
 ```
 
@@ -501,6 +526,7 @@ Another convention of analyzing Perruchet effect experiments is that you convert
 We covered recoding data in the _Cleaning up questionnaire data_ part of [Research Methods in Practice (Quantitative Section)](https://benwhalley.github.io/rmip/overview-quantitative.html). To recode some data, we need to take two steps. First, we define the _mapping_ - so, for each run length, what Level is that? We do this as follows:
 
 ```{r def-levels}
+## Define mapping of run length to Levels
 level.code  <- c(`-3` = 1, `-2` = 2, `-1` = 3, `1` = 1, `2` = 2, `3` = 3)
 ```
 
@@ -509,12 +535,14 @@ So, for example, a run length of `-2` becomes a Level of `2`.
 Once we have our mapping, we can use it, via `mutate` to create a new column called `level`. We use the `recode` command to do this, converting the column `run` using the mapping `level.code` we've just written. The `!!!` part probably isn't worth spending the time to understand deeply, but if you'd like to dig deeper, see the explanation in  [Research Methods in Practice (Quantitative Section)](https://benwhalley.github.io/rmip/overview-quantitative.html).
 
 ```{r recode}
+## Recode run length as Levels
 sum.data <- sum.data %>% mutate(level = recode(run, !!!level.code))
 ```
 
 Finally, we create a new participant-level summary of our data, using `level` (rather than `run`, as `sum.data` did):
 
 ```{r recode2}
+## Summarize GSR and expectancy, by Level, for each participant
 lvl.sum  <- sum.data %>%
     group_by(subj, level) %>%
     summarise(lcval = mean(lcval), expect = mean(value))
@@ -526,6 +554,7 @@ lvl.sum  <- sum.data %>%
 The preprocessing is done! As a first, quick test of our hypotheses, we can just take a peek at the mean GSR and expectancy rating, across all participants, for each Level. We use the familiar `group_by` and `summarise` commands to do this:
 
 ```{r means}
+## Overall mean GSR and expectancy, by Level
 mdata  <- lvl.sum %>% group_by(level) %>% summarise(lcval = mean(lcval), expect = mean(expect))
 mdata
 ```
@@ -543,13 +572,24 @@ Generally, when we graph data from psychology experiments, we try to give an ind
 In this project, we instead plot one line for each participant, and then overlay this with the means to emphasize the overall trend. Here's the final plot:
 
 ```{r final-plot, echo= FALSE}
-source('themeapa.R')
+## Plot of expectancy by Level
+
+### Load APA theme
+source("http://www.willslab.org.uk/rminr/theme-apa.R")
+
+### Create a blank plot
 base  <- ggplot()
+
+### Add a line for each participant
 lns  <- geom_line(aes(x=level, y=expect, group=subj, colour=subj), data = lvl.sum, alpha = .25)
+
+### Add a mean line
 mline  <- geom_line(aes(x=level, y=expect), data = mdata, colour="black")
 mdot  <- geom_point(aes(x=level, y=expect), data = mdata, colour="black")
+
+### Combine plots, tidy up x and y axis labels, and apply APA theme
 eplot  <- base + lns + mline + mdot + xlab("Level") +
-    ylab("Expectancy rating") + ylim(1,5) + scale_x_continuous(breaks = c(1,2,3))  + theme_APA +
+    ylab("Expectancy rating") + ylim(1,5) + scale_x_continuous(breaks = c(1,2,3))  + theme_APA() +
     theme(legend.position="none")
 eplot
 ```
@@ -558,9 +598,10 @@ From this plot, it's clear that: (a) the overall trend is downwards, (b) most bu
 
 ### Building up the graph, piece by piece
 
-This graph is a bit more complex than the ones we've produce before, but R and, in particular, `ggplot`, allows us to build up complex graphs like this piece by piece, from familiar components. The way to do this is to start with a blank page, which we do by just using the `ggplot` command on its own:
+This graph is a bit more complex than the ones we've produced before, but R and, in particular, `ggplot`, allows us to build up complex graphs like this piece by piece, from familiar components. The way to do this is to start with a blank page, which we do by just using the `ggplot` command on its own:
 
 ```{r blank}
+### Create a blank plot
 base  <- ggplot()
 base
 ```
@@ -569,17 +610,19 @@ Next, we add a line for each participant:
 
 
 ```{r lines}
+### Add a line for each participant
 lns  <- geom_line(aes(x=level, y=expect, group=subj, colour=subj), data = lvl.sum, alpha = .25)
 base + lns
 ```
 
-In line 1 above, we use the familiar `geom_line` to draw a line graph, much as we did to plot the individual GSR readings. The difference here is that we set `group=subj`, giving us a different line for each participant (the participant number is in the `subj` column of the `lvl.sum` data frame). These lines are easier to distinguish from each other if they are not all the same colour, so we all set `colour=subj`, so each gets a different colour (in this case, the default is that they all get a slightly different shade of blue). The final part, `alpha = .25`, makes the lines fainter, so that the mean trend line we're going to add next is more noticeable.
+In line 2 above, we use the familiar `geom_line` to draw a line graph, much as we did to plot the individual GSR readings. The difference here is that we set `group=subj`, giving us a different line for each participant (the participant number is in the `subj` column of the `lvl.sum` data frame). These lines are easier to distinguish from each other if they are not all the same colour, so we all set `colour=subj`, so each gets a different colour (in this case, the default is that they all get a slightly different shade of blue). The final part, `alpha = .25`, makes the lines fainter, so that the mean trend line we're going to add next is more noticeable.
 
-In line 2, we display our new line graph on top of the background: `base + lns`. 
+In line 3, we display our new line graph on top of the background: `base + lns`. 
 
 Next, we add an indication of the mean rating at each level. We already calculated those means earlier, so we can just use those calculations, which we stored in `mdata`:
 
 ```{r mean.trend}
+### Add a mean line
 mline  <- geom_line(aes(x=level, y=expect), data = mdata, colour="black")
 base + lns + mline
 ```
@@ -591,21 +634,21 @@ mdots  <- geom_point(aes(x=level, y=expect), data = mdata, colour="black")
 base + lns + mline + mdots
 ```
 
-Now, we can do various things to make the graph look nicer. First, graph a copy of the `themeapa.R` file from 
-[Better graphs](better-graphs.html#style) and put it in your project directory. You can then load this theme and add it to the graph:
+Now, we can do various things to make the graph look nicer. First, load the `themeapa.R` file (written by Tina Seabrooke) from my website. You can then add this theme and add it to the graph:
 
 ```{r apa}
-source("themeapa.R")
-base + lns + mline + mdots + theme_APA + theme(legend.position="none")
+### Load and add APA theme
+source("http://www.willslab.org.uk/rminr/theme-apa.R")
+base + lns + mline + mdots + theme_APA() + theme(legend.position="none")
 ```
 
-This makes the graph more in keeping with the style of graphs one normally sees in psychology journals. We also added the command `theme(legend.position=")`, which removes the legend (i.e. the key relating participant number to shade of blue, which isn't informative). 
+This makes the graph more in keeping with the style of graphs one normally sees in psychology journals. We also added the command `theme(legend.position="")`, which removes the legend (i.e. the key relating participant number to shade of blue, which isn't informative). 
 
 Finally, we tidy up the x and y axis labels:
 
 ```{r apa.final}
-source("themeapa.R")
-base + lns + mline + mdots + theme_APA + theme(legend.position="none") +
+### Tidy up x and y axis labels
+base + lns + mline + mdots + theme_APA() + theme(legend.position="none") +
     xlab("Level") + ylab("Expectancy rating") +
     ylim(1,5) + scale_x_continuous(breaks = c(1,2,3))
 ```
@@ -619,11 +662,12 @@ If we were planning to put this graph in another document (e.g. a dissertation w
 We can now follow exactly the same procedure to produce a second graph, for GSR:
 
 ```{r final-plot-gsr}
+### Plot GSR by Level
 lns  <- geom_line(aes(x=level, y=lcval, group=subj, colour=subj), data = lvl.sum, alpha = .25)
 mline  <- geom_line(aes(x=level, y=lcval), data = mdata, colour="black")
 mdot  <- geom_point(aes(x=level, y=lcval), data = mdata, colour="black")
 base + lns + mline + mdot + xlab("Level") +
-    ylab("Mean log GSR (uS)") + scale_x_continuous(breaks = c(1,2,3))  + theme_APA +
+    ylab("Mean log GSR (uS)") + scale_x_continuous(breaks = c(1,2,3))  + theme_APA() +
     theme(legend.position="none")
 ```
 
@@ -636,15 +680,17 @@ In the [within-subject differences](anova1.html#anovaWS) worksheet you learned h
 First, some preliminaries:
 
 ```{r bf.setup}
+## Load BayesFactor pacakge; define subject as factor
 library(BayesFactor, quietly=TRUE)
 lvl.sum$subj  <- factor(lvl.sum$subj)
 ```
 
-In line 1, we load the `BayesFactor` package, which we use to do Bayesian ANOVAs and regressions. In line 2, we set the participant numbers as factors, for the reasons discussed in the [within-subject differences](anova1.html#anovaWS) worksheet. Note that we don't set the Level column of `lvl.sum` as a factor, because the our three Levels are ordered - 1, 2, 3. 
+In line 2, we load the `BayesFactor` package, which we use to do Bayesian ANOVAs and regressions. In line 3, we set the participant numbers as factors, for the reasons discussed in the [within-subject differences](anova1.html#anovaWS) worksheet. Note that we don't set the Level column of `lvl.sum` as a factor, because the our three Levels are ordered - 1, 2, 3. 
 
 The first step in our analysis is identical to a Bayesian ANOVA, except we use the command `lmBF` instead of `anovaBF`. Note that, just like in `anovaBF`, we need to tell R that these data come from many different participants, hence the `+ subj` and `whichRandom = "subj"` parts of the command:
 
 ```{r bf.lm.1}
+## Bayesian regression model on GSR, by Level
 g.level  <- lmBF(lcval ~ level + subj, data = data.frame(lvl.sum), whichRandom = "subj")
 g.level
 ```
@@ -653,15 +699,17 @@ Looking at this output, it is tempting to see the Bayes Factor of around 35 mill
 
 It's pretty self-evident from the graphs that there are some individual differences. More critically, if we want evidence that it is specifically the Level that affects GSR, over and above individual differences, then we need to compare our experimental hypothesis (`lcval ~ level + subj`) with the alternative hypothesis that there are just individual differences (`lcval ~ subj`). We do this in much the same way that we test for [an interaction in a Bayesian ANOVA](anova3.html#bfact). 
 
-More specifically, we create a model in which only individual difference affect expectancy ratings...
+More specifically, we create a model in which only individual differences affect the GSR...
 
 ```{r bf.lm.2}
+## Individual differences baseline model 
 g.subj  <- lmBF(lcval ~ subj, data = data.frame(lvl.sum), whichRandom = "subj")
 ```
 
 ...and then we compare the two models by dividing one by the other:
 
 ```{r bf.lm.3}
+## Bayes Factor for GSR, by Level
 g.level / g.subj
 ```
 
@@ -672,6 +720,7 @@ From the output, we can see that the relevant Bayes Factor is around 1.9. So, th
 We can now follow the same procedure for the expectancy ratings:
 
 ```{r bf.lm.expect}
+## Bayes Factor for expectancy, by Level
 e.level  <- lmBF(expect ~ level + subj, data = data.frame(lvl.sum), whichRandom = "subj")
 e.subj  <- lmBF(expect ~ subj, data = data.frame(lvl.sum), whichRandom = "subj")
 e.level / e.subj

@@ -22,10 +22,10 @@ Students prefer R. In a recent study, undergraduate psychology students at Glasg
 [7]: https://hbr.org/2012/10/data-scientist-the-sexiest-job-of-the-21st-century
 
 ### Free
-R is free. You don't need to pay anything to download or use it, and never will. In contrast, once you leave university, SPSS would cost you or your employer around [£6000 per person per year](https://www.ibm.com/products/spss-statistics/pricing).
+R is free. You don't need to pay anything to download or use it, and never will. In contrast, once you leave university, SPSS would cost you or your employer around [£3000 per person per year](https://www.ibm.com/products/spss-statistics/pricing).
 
 ### Never out of date
-Every analysis you can think of is already available in R, thanks to over [12,000 free packages](https://cran.rstudio.com/). As new analyses are developed, they become available in R first. In 2013, SPSS realised it couldn't keep up with R, and [admitted defeat](https://www.ibm.com/developerworks/library/ba-call-r-spss/index.html).
+Every analysis you can think of is already available in R, thanks to over [15,000 free packages](https://cran.rstudio.com/). As new analyses are developed, they become available in R first. In 2013, SPSS realised it couldn't keep up with R, and [admitted defeat](https://www.ibm.com/developerworks/library/ba-call-r-spss/index.html).
 
 ### Real
 Real data analysis is mainly preprocessing -- scientists spend around [80% of their analysis time][8] getting the data into a format where they can apply statistical tests. R is fantastically good at preprocessing. 

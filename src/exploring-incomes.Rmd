@@ -37,7 +37,7 @@ Before starting this exercise, you should have had a brief introduction to getti
 
 <a name="how-to"></a>
 
-## How to use these worksheets.
+## How to use these worksheets
 
 Throughout this worksheet, you'll see the commands you should type into RStudio inside a grey box, followed by the output you should expect to see in one or more white boxes. Any differences in the colour of the text can be ignored.
 
@@ -62,7 +62,7 @@ If you get an output that includes the word 'error', please see [common errors](
 <a name="load"></a>
 
 ## Loading data
-Now, we're going to load some data on the income of 10,000 people in the United States of America. I've made up this dataset for teaching purposes, but it's somewhat similar to large open data sets available on the web, such as [US Current Population Survey](https://thedataweb.rm.census.gov/ftp/cps_ftp.html).
+Now, we're going to load some data on the income of 10,000 people in the United States of America. I've made up this dataset for teaching purposes, but it's somewhat similar to large open data sets available on the web, such as [US Current Population Survey](https://www.census.gov/programs-surveys/cps/data.html).
 ```{r load,cache=TRUE}
 cpsdata <- read_csv("http://www.willslab.org.uk/cps2.csv")
 ```
@@ -144,7 +144,7 @@ This time, I haven't given you the command you need to type -- your task is to w
 
 **TIP**: You can get back to commands you've typed previously by pressing the up arrow on your keyboard while you're in the Console. This way, you can get the command for calculating a mean, and edit it to calculate a median.
 
-If you've entered the correct command, you'll find that the  median income is $56,952.
+If you've entered the correct command, you'll get this answer:
 ```{r median, echo=FALSE}
 cpsdata %>% summarise(median(income))
 ```

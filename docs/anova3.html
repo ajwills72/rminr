@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
@@ -270,7 +269,6 @@ code {
 }
 img {
   max-width:100%;
-  height: auto;
 }
 .tabbed-pane {
   padding-top: 12px;
@@ -332,6 +330,7 @@ summary {
   border: none;
   display: inline-block;
   border-radius: 4px;
+  background-color: transparent;
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li {
@@ -386,9 +385,10 @@ summary {
 </div>
 <div id="getting-started" class="section level1">
 <h1>Getting started</h1>
-<p>We’ll be using the same meditation training data we used in the <a href="anova2.html">understanding interactions</a> worksheet, so make sure you’ve completed that worksheet and have the preprocessed <code>MCwordsCIsum</code> data frame from that worksheet in your current R project. If for some reason you do not have that data frame, you can re-create it like this, as long as you have <code>wordnaming2.csv</code> in your R project (which is available from the <em>git</em> repository we used <a href="preproc.html#load">previously</a>):</p>
+<p>Return to the project that you used for the <a href="anova2.html">understanding interactions</a> worksheet, which you named <strong>rminr-data</strong>. Open a new blank script and save it as <strong>anova3.R</strong>. Put all commands in that script, and save the script regularly.</p>
+<p>This worksheet makes use of the preprocessed <code>MCwordsCIsum</code> data frame we made in the <a href="anova2.html">understanding interactions</a> worksheet. Start by running the following commands to make sure you have this data frame in your <em>environment</em>:</p>
 <pre class="r"><code>library(tidyverse)
-library(BayesFactor, quietly = TRUE)
+library(BayesFactor)
 words &lt;- read_csv(&quot;wordnaming2.csv&quot;)
 MCwords &lt;- words %&gt;% filter(medit != &quot;relax&quot;)
 MCwordsCI &lt;- MCwords %&gt;% filter(congru != &quot;neutral&quot;)
@@ -426,19 +426,6 @@ MCwordsCIsum$congru &lt;- factor(MCwordsCIsum$congru)</code></pre>
 <p>This is a big calculation for R, so run the following commands, and then read the explanation while you’re waiting for the results. It could take up to a minute to get the answer.</p>
 <pre class="r"><code>bf &lt;- anovaBF(formula = rt ~ medit*congru + subj,
               data = data.frame(MCwordsCIsum), whichRandom = &quot;subj&quot;)</code></pre>
-<pre><code>
-  |                                                                       
-  |                                                                 |   0%
-  |                                                                       
-  |=============                                                    |  20%
-  |                                                                       
-  |==========================                                       |  40%
-  |                                                                       
-  |=======================================                          |  60%
-  |                                                                       
-  |====================================================             |  80%
-  |                                                                       
-  |=================================================================| 100%</code></pre>
 <div id="explanation-of-command" class="section level2">
 <h2>Explanation of command</h2>
 <p>We’ll look at each part of this command but, rather than looking at each in turn, we’ll look at the crucial part first, which is this:</p>
@@ -469,10 +456,10 @@ MCwordsCIsum$congru &lt;- factor(MCwordsCIsum$congru)</code></pre>
 <pre class="r"><code>bf</code></pre>
 <pre><code>Bayes factor analysis
 --------------
-[1] medit + subj                         : 346.3629   ±0.85%
-[2] congru + subj                        : 794.0142   ±1.78%
-[3] medit + congru + subj                : 299497     ±1.92%
-[4] medit + congru + medit:congru + subj : 1786166274 ±2.66%
+[1] medit + subj                         : 345.3945   ±0.89%
+[2] congru + subj                        : 865.3041   ±5.97%
+[3] medit + congru + subj                : 306142.9   ±2.29%
+[4] medit + congru + medit:congru + subj : 1851438813 ±3.37%
 
 Against denominator:
   rt ~ subj 
@@ -498,7 +485,7 @@ Bayes factor type: BFlinearModel, JZS</code></pre>
 <div id="congru" class="section level3">
 <h3><code>[2] congru</code></h3>
 <p>This is the <strong>main effect</strong> of congruence. More specifically, it is the hypothesis that <code>congru</code> affects <code>rt</code>. This is compared against the hypothesis that there is no effect of congruence.</p>
-<p>The Bayes Factor is about 790, strong evidence for a main effect of congruence. As before, we can find out which direction this effect is in:</p>
+<p>The Bayes Factor is about 860, strong evidence for a main effect of congruence. As before, we can find out which direction this effect is in:</p>
 <pre class="r"><code>MCwordsCIsum %&gt;% group_by(congru) %&gt;% summarise(mean(rt))</code></pre>
 <pre><code># A tibble: 2 x 2
   congru `mean(rt)`
@@ -527,7 +514,7 @@ Bayes factor type: BFlinearModel, JZS</code></pre>
 <pre class="r"><code>bf[4] / bf[3]</code></pre>
 <pre><code>Bayes factor analysis
 --------------
-[1] medit + congru + medit:congru + subj : 5963.887 ±3.28%
+[1] medit + congru + medit:congru + subj : 6047.63 ±4.08%
 
 Against denominator:
   rt ~ medit + congru + subj 
@@ -543,35 +530,23 @@ Bayes factor type: BFlinearModel, JZS</code></pre>
 <h1>Exercise</h1>
 <p>As covered in the <a href="anova1.html#threeplus">within-subject differences</a>, one of the strengths of <code>anovaBF</code> is that it’s not limited to factors with two levels. In our meditation experiment, there were three between-subjects training conditions (meditate, relaxation, none), and three within-subjects trial types (congruent, incongruent, neutral). <strong>The goal of this exercise is to write an R script to analyse the full experiment</strong>.</p>
 <p>Below are further instructions. In some cases, there are also examples of what your output should look like at each stage if you’ve got it right (recall that your BF may be slightly different to those shown). Once your script is working correctly, <strong>copy and paste it into PsycEL</strong>.</p>
-<p>Start a new R script, and begin it with <code>rm(list=ls())</code> to make sure you’ve cleared everything from your environment. Then, write R commands to do the following (see below). Only include the commands that are needed to do this, and use meaningful names for your variables.</p>
+<p>Start a new R script in your current project (<strong>rminr-data</strong>), call it <strong>anova3ex.R</strong> and begin it with <code>rm(list=ls())</code> to make sure you’ve cleared everything from your environment. Then, write R commands to do the following (see below). Only include the commands that are needed to do this, and use meaningful names for your variables.</p>
 <ol style="list-style-type: decimal">
 <li><p>Load packages and data,</p></li>
 <li><p>Preprocess that data and place it in a data frame called <code>wordsum</code></p></li>
+</ol>
+<pre><code>`summarise()` regrouping output by &#39;subj&#39;, &#39;medit&#39; (override with `.groups` argument)</code></pre>
+<ol start="3" style="list-style-type: decimal">
 <li><p>Tell R which columns of your preprocessed data are factors</p></li>
 <li><p>Calculate a factorial Bayesian ANOVA for this full 3 (meditate, relax, control) x 3 (congruent, incongruent, neutral) data set, and store it in an object (e.g. <code>bfall</code>)</p></li>
-</ol>
-<pre><code>
-  |                                                                       
-  |                                                                 |   0%
-  |                                                                       
-  |=============                                                    |  20%
-  |                                                                       
-  |==========================                                       |  40%
-  |                                                                       
-  |=======================================                          |  60%
-  |                                                                       
-  |====================================================             |  80%
-  |                                                                       
-  |=================================================================| 100%</code></pre>
-<ol start="4" style="list-style-type: decimal">
-<li>Show the results of that calculation</li>
+<li><p>Show the results of that calculation</p></li>
 </ol>
 <pre><code>Bayes factor analysis
 --------------
-[1] medit + subj                         : 814.4065     ±0.71%
-[2] congru + subj                        : 2.807075e+16 ±0.79%
-[3] medit + congru + subj                : 2.36298e+19  ±1.08%
-[4] medit + congru + medit:congru + subj : 1.250125e+27 ±1.51%
+[1] medit + subj                         : 830.3331     ±0.96%
+[2] congru + subj                        : 2.769511e+16 ±0.64%
+[3] medit + congru + subj                : 2.347575e+19 ±0.89%
+[4] medit + congru + medit:congru + subj : 1.217232e+27 ±1.09%
 
 Against denominator:
   rt ~ subj 
@@ -582,7 +557,7 @@ Bayes factor type: BFlinearModel, JZS</code></pre>
 </ol>
 <pre><code>Bayes factor analysis
 --------------
-[1] medit + congru + medit:congru + subj : 52904604 ±1.85%
+[1] medit + congru + medit:congru + subj : 51850606 ±1.41%
 
 Against denominator:
   rt ~ medit + congru + subj 
@@ -591,12 +566,14 @@ Bayes factor type: BFlinearModel, JZS</code></pre>
 <ol start="5" style="list-style-type: decimal">
 <li>Report the mean RTs for the main effect of each condition.</li>
 </ol>
+<pre><code>`summarise()` ungrouping output (override with `.groups` argument)</code></pre>
 <pre><code># A tibble: 3 x 2
   medit    `mean(rt)`
   &lt;fct&gt;         &lt;dbl&gt;
 1 control        520.
 2 meditate       488.
 3 relax          517.</code></pre>
+<pre><code>`summarise()` ungrouping output (override with `.groups` argument)</code></pre>
 <pre><code># A tibble: 3 x 2
   congru  `mean(rt)`
   &lt;fct&gt;        &lt;dbl&gt;
@@ -606,6 +583,7 @@ Bayes factor type: BFlinearModel, JZS</code></pre>
 <ol start="6" style="list-style-type: decimal">
 <li>Calculate the mean RT for each of the nine conditions of the experiment, and place these data in a new data frame so you can graph them:</li>
 </ol>
+<pre><code>`summarise()` regrouping output by &#39;medit&#39; (override with `.groups` argument)</code></pre>
 <pre><code># A tibble: 9 x 3
 # Groups:   medit [3]
   medit    congru     rt

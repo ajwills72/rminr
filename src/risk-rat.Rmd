@@ -60,6 +60,8 @@ To look at this, we take the average (mean) rating you made for each type of beh
 risk.me %>% group_by(group) %>% summarise(mean(rating))
 ```
 
+As [before](group-differences.html#group), you can safely ignore the "ungrouping" message that you receive.
+
 **NOTE:** Your output should look similar to that shown above, but the numbers will be different.
 
 _Which types of risk-taking behaviours did you score highest on? And lowest on?_

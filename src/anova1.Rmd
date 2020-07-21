@@ -58,6 +58,8 @@ The technique we're going to use is called _ANOVA_, short for **AN**alysis **O**
 
 In the [preprocessing](preproc.html) worksheet, you loaded data from a _git_ repository into an R project. **Go back to that project now.** This is very important. Do not stay in your current project, change your Rstudio project using the the drop-down list on the top right of Rstudio. Change to the  `rminr-data` project you used for the preprocessing worksheet. If you do not do this, the rest of this worksheet will not work. 
 
+Now that you're in the `rminr-data` project, create a new script called **anova1.R**, put all the commands you use in this worksheet into that file, and save regularly. 
+
 # Clearing the environment
 
 You will notice that your _Environment_ still contains all the data frames from the previous worksheet. You can leave them there if you like, but some people prefer to start with a "clean slate". If that's you, you can remove data frames with the `rm` command (as in **r**e**m**ove). For example, to remove the `dat` data frame, type:
@@ -268,8 +270,8 @@ The second command works in the same way as the first.
 
 Now we've given R this information about factors, we're ready to calculate a Bayes Factor for the difference between congruent and incongruent trials. To do this, first we load the _BayesFactor_ package as before:
 
-```{r bf-init}
-library(BayesFactor, quietly = TRUE)
+```{r bf-init, message=FALSE}
+library(BayesFactor)
 ```
 
 and then we use the command:
@@ -294,7 +296,7 @@ The remaining part, `data = data.frame(wordctrlCIsum)`, just tells R where to fi
 
 The first part of the output is just a way of showing a 'progress bar' on a worksheet. R shows you a progress bar going from 0% to 100% to let you know it's working on the answer. This analysis may take several seconds to run, so you may end up looking at this progress bar for a while.
 
-The second part of the output gives the Bayes Factor. The key figure here is `43834950`, which is the Bayes Factor. **Note that your number might be slightly different**. This is what the `±2.29%` part of the above output indicates. The number `43834950` is the correct answer, to within about plus or minus 2%. It's like saying "this person is 2 metres tall, give or take 5cm". The command `anovaBF` can take a while to run, so we prioritise speed over accuracy to some extent. If it was important to get the Bayes Factor precisely correct, we could let R work on the problem for much longer (e.g. overnight). However, the extra time is usually not worth it, and we don't cover how to increase accuracy of the output in this worksheet.
+The second part of the output gives the Bayes Factor. The key figure here is `44286971`, which is the Bayes Factor. **Note that your number might be slightly different**. This is what the `±1.23%` part of the above output indicates. The number `44286971` is the correct answer, to within about plus or minus 1%. It's like saying "this person is 2 metres tall, give or take 5cm". The command `anovaBF` can take a while to run, so we prioritise speed over accuracy to some extent. If it was important to get the Bayes Factor precisely correct, we could let R work on the problem for much longer (e.g. overnight). However, the extra time is usually not worth it, and we don't cover how to increase accuracy of the output in this worksheet.
 
 The Bayes Factor on this occasion is around 40 **million**, meaning there is really very strong evidence in support of an effect of congruency. Pretty much however unlikely we thought it was beforehand that an incongruent picture would slow down word naming, we should now be pretty confident that it does. 
 
@@ -366,7 +368,7 @@ The goal in this exercise is to look at the reaction time difference between con
 
 **Specifically, the task is to write a new R script that contains _all_ the necessary commands, and _only_ the necessary commands, to do all of the following, in this order:**
 
-1. Start with the command `rm(list=ls())`. This command clears your _Environment_ and so ensures your script is not relying on commands you have previously run. 
+1. Start a new script and call it **anova1ex.R**. Start your script with the command `rm(list=ls())`. This command clears your _Environment_ and so ensures your script is not relying on commands you have previously run. 
 
 2. Load the packages you need (`tidyverse` and `BayesFactor`).
 
