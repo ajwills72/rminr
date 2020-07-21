@@ -1,5 +1,6 @@
 ---
 title: "The Effect of Alternative Music on Emotional Response in Alternative Music Subcultures"
+author: "Helen Lloyd, Elizabeth Dark, Paul Sharpe and Andy Wills"
 output:
   html_document:
     highlight: pygment
@@ -31,7 +32,7 @@ This is an advanced worksheet, which assumes you have completed the [Absolute Be
 
 ## Introduction
 
-This worksheet describes a full analysis pipeline for an undergraduate student dissertation which compared emotional responses before an after listening to different types of music. Participants self-identified as fans of emo (81), goth (77), metal (77) or mainstream (59) music. Their emotions were tested using the short-form Positive and Negative Affect Scale (PANAS-SF, Watson et al., 1988), before and after listening to 4-5 minutes of music associated with their subculture. The 'mainstream' group acted as a control condition. After the second PANAS-SF, they completed the Emotion Regulation Strategies for Artistic Creative Activities Scale (ERS-ACA, Fancourt et al., 2019). This was an online study, with data collected using [JISC](https://www.jisc.ac.uk/).
+This worksheet describes a full analysis pipeline for an undergraduate student dissertation which compared emotional responses before and after listening to different types of music. Participants self-identified as fans of emo (81), goth (77), metal (77) or mainstream (59) music. Their emotions were tested using the short-form Positive and Negative Affect Scale (PANAS-SF, Watson et al., 1988), before and after listening to 4-5 minutes of music associated with their subculture. The 'mainstream' group acted as a control condition. After the second PANAS-SF, they completed the Emotion Regulation Strategies for Artistic Creative Activities Scale (ERS-ACA, Fancourt et al., 2019). This was an online study, with data collected using [JISC](https://www.jisc.ac.uk/).
 
 So there were two dependent variables in this study. The PANAS-SF was a dependent variable in a mixed design, with subculture group as the between subjects factor, and time (before and after the music) as the repeated measure. The other dependent variable, ERS-ACA, was analysed in relation to the subculture group.
 
@@ -123,8 +124,7 @@ panas %>% head(3) %>% pander(split.table = Inf)
 
 ## Score ERS-ACA
 
-The Emotion Regulation Strategies for Artistic Creative Activities Scale (ERS ACA)
-(Fancourt, Garnett, Spiro, West, Mullensiefen 2019) is an 18 item inventory, with each item scored from 1 ('strongly disagree') to 5 ('strongly agree'). The ERS-ACA calculates a 'general strategy' socre used to regulate emotions when people engage in artistic creative activities, and three strategy sub-scales; avoidance, approach and self-development.
+The Emotion Regulation Strategies for Artistic Creative Activities Scale (ERS-ACA; Fancourt, Garnett, Spiro, West, Mullensiefen 2019) is an 18 item inventory, with each item scored from 1 ('strongly disagree') to 5 ('strongly agree'). The ERS-ACA gives an overall measure of the strategy people use to regulate their emotions when they engage in artistic, creative activities, and scores on three strategy sub-scales; avoidance, approach and self-development.
 
 
 ```{r ers}
@@ -181,6 +181,8 @@ anovaBF(formula = score ~ subculture, data = ers_total)
 
 ### Avoidance
 
+The Kruskal-Wallis _H_ test is described in the [Traditional non-parametric tests worksheet](non-parametric.html).
+
 ```{r avoidance}
 library("ggpubr")
 avoidance <- ers_l %>% filter(ers == 'avoidance')
@@ -201,8 +203,6 @@ kruskal.test(score ~ subculture, data = avoidance)
 
 ```{r approach}
 approach <- ers_l %>% filter(ers == 'approach')
-# TODO: save this for non-parametric worksheet
-
 approach <- approach %>% mutate(rank = rank(score))
 approach %>%
   group_by(subculture) %>%
