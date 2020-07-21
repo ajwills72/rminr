@@ -383,16 +383,18 @@ summary {
 <li><p><a href="#intro">Introduction</a></p></li>
 <li><p><a href="#start">Getting started</a></p></li>
 <li><p><a href="#cor-matrix">Creating a correlation matrix</a></p></li>
-<li><p><a href="#ex1">Exercise 2</a></p></li>
+<li><p><a href="#ex1">Exercise 1</a></p></li>
 <li><p><a href="#descriptives">Creating a custom table of descriptive statistics</a></p></li>
-<li><p><a href="#ex2">Exercise 1</a></p></li>
+<li><p><a href="#apa">APA-format tables</a></p></li>
+<li><p><a href="#kable">Copying to your wordprocessor</a></p></li>
+<li><p><a href="#ex2">Exercise 2</a></p></li>
 <li><p><a href="#rmd">R Markdown</a></p></li>
 </ul>
 <p><a name="intro"></a></p>
 </div>
 <div id="introduction" class="section level2">
 <h2>Introduction</h2>
-<p>It can be helpful to presented data in tables, rather than text, especially when you need to refer to the same data in different parts of a report. Although tables can be produced manually using a Word processor, generating them directly from your data ensures they are up-to-date, and reduces copy-paste errors. This worksheet explains how to use <code>R</code> to produce the types of table used to report psychological research.</p>
+<p>It can be helpful to present data in tables, rather than text, especially when you need to refer to the same data in different parts of a report. Although tables can be produced manually using a word processor, generating them directly from your data ensures they are up-to-date, and reduces copy-paste errors. This worksheet explains how to use <code>R</code> to produce some of the types of table used to report psychological research.</p>
 <p><a name="start"></a></p>
 </div>
 <div id="getting-started" class="section level2">
@@ -408,8 +410,8 @@ summary {
 </div>
 <div id="creating-a-correlation-matrix" class="section level2">
 <h2>Creating a correlation matrix</h2>
-<p>We’ll start by producing a correlation matrix. A correlation matrix shows correlations between all combinations of a set of variables, which is often required in research reports. We’ll demonstrate an easy way to produce correlation matrices, with APA styling, in a format that can be read by Microsoft Word or LibreOffice Writer. A similar approach can be used to produce other common table types.</p>
-<p>We’ll generate a correlation matrix using the <code>attitude</code> dataset, which is included with <code>R</code>. These data are the percent proportion of favourable attitudes given by employees, in relation to seven questions regarding their department. Here are the first few rows of the data frame:</p>
+<p>We’ll start by producing a correlation matrix. A correlation matrix shows correlations between all combinations of a set of variables, which is often required in research reports. We’ll demonstrate an easy way to produce correlation matrices, with <a href="https://apastyle.apa.org/style-grammar-guidelines/tables-figures/tables">APA styling</a>, in a format that can be read by Microsoft Word or LibreOffice Writer. A similar approach can be used to produce other common table types.</p>
+<p>We’ll generate a correlation matrix using the <code>attitude</code> dataset, which is included with <code>R</code>. These data are the percentage of favourable attitudes given by employees, in relation to seven questions regarding their department (you can find out a bit more about these data by typing <code>?attitude</code>). Here are the first few rows of the data frame:</p>
 <table>
 <colgroup>
 <col width="11%"></col>
@@ -521,11 +523,12 @@ that could have caused the sample correlation (Cumming, 2014).
 <p><strong>Explanation of commands:</strong></p>
 <p>We load the <code>apaTables</code> package.The function to generate a correlation matrix is <code>apa.cor.table()</code>. We pass the <code>attitude</code> data frame as the first argument, and use <code>filename</code> to specify that the output should be saved in the file <code>table1.doc</code>. The <code>table.number</code> argument sets the number in the table heading output, in this case “Table 1”. If you omit this argument, the text will be “Table XX”.</p>
 <p><strong>Explanation of output:</strong></p>
-<p>Export <code>table1.doc</code> from RStudio and open it using a word processor.</p>
-<p>The first thing to notice is that the styling (spacing, use of italics, horizontal lines, positioning of captions and footnotes etc.) complies with APA guidelines for tables. You can see how the table will look when printed, using the ‘print preview’ feature of your word processor.</p>
-<p>The table number and caption is above the table itself. The <code>Variable</code> column contains a number and the column name for the seven attitude variables. The next two columns show the mean and standard deviation for each variable. The remaining columns use the numbers from items in the <code>Variable</code> column as headings, indicating that they refer to the same variable. The cells show the correlation between the column variables and each of the variables in the rows. Cells are left empty where a variable would otherwise be correlated with itself. The 95% confidence interval for the correlation is shown in square brackets.</p>
-<p>For example, the correlation between <code>rating</code> and <code>complaints</code> in this sample is .83. The confidence interval indicates that the population value could be between .66 and .91. Evidence for the correlation is calculated using traditional statistics, rather than the Bayes factors described in the <a href="corr.html">Relationships, part 2 worksheet</a>. One asterisk (<code>*</code>) indicates that there is less than a 1 in 20 chance that we would have found this correlation coefficient, if the correlation was actually zero (the null hypothesis). Two asterisks (<code>**</code>) signify that the probability of the null being true is less than 1 in 100.</p>
-<p>If you type <code>vignette(&#39;apaTables&#39;)</code> in the console, you can read about the other types of table that <code>apaTables</code> can produce.</p>
+<p><a href="https://ajwills72.github.io/rminr/using-projects.html#download">Export</a> <code>table1.doc</code> from RStudio and open it using a word processor</p>
+<p>The first thing to notice is that the styling (spacing, use of italics, horizontal lines, positioning of captions and footnotes etc.) complies with the APA guidelines for tables.</p>
+<p>The table number and caption is above the table itself - you will need to edit the caption by hand to make it more meaningful, for example “Means, standard deviations, and correlations with confidence intervals, for the attitude measures of Study 1”.</p>
+<p>The <code>Variable</code> column contains a number and the column name for the seven attitude variables. The next two columns show the mean and standard deviation for each variable. The remaining columns use the numbers from items in the <code>Variable</code> column as headings, indicating that they refer to the same variable. The cells show the correlation between the column variables and each of the variables in the rows. Cells are left empty where a variable would otherwise be correlated with itself. The 95% <a href="https://ajwills72.github.io/rminr/more-on-t.html">confidence interval</a> for the correlation is shown in square brackets.</p>
+<p>For example, the correlation between <code>rating</code> and <code>complaints</code> in this sample is .83. The confidence interval indicates that the population value is likely to be between .66 and .91.</p>
+<p>Evidence for the correlation is calculated using traditional statistics, rather than the Bayes factors described in the <a href="corr.html">Relationships, part 2 worksheet</a>. One asterisk (<code>*</code>) indicates <code>p &lt; .05</code>. Two asterisks (<code>**</code>) signify <code>p &lt; .01</code>. These calculations assumed a two-tailed test; one-tailed tests for correlations are explained in the <a href="corr-extended.html">More on relationships, part 2</a> worksheet. Also recall that p-values are <a href="evidence.html#p-wrong">widely misinterpreted</a>, so it would be better to edit this part of the table by hand to reflect <a href="corr.html#evidence">Bayes Factors</a> you have already calculated. We suggest using <code>*</code> for BF &gt; 3, <code>**</code> for BF &gt; 10, <code>o</code> for BF &lt; 0.33, and <code>oo</code> for BF &lt; 0.1. Change the text at the bottom of the table accordingly.</p>
 <p><a name="ex1"></a></p>
 </div>
 <div id="exercise-1" class="section level2">
@@ -606,7 +609,7 @@ cols(
 </tr>
 </tbody>
 </table>
-<p>Create a correlation matrix for the five personality factors. Number the table as “Table 2”, and save the results in <code>table2.doc</code>. Your table should look like this:</p>
+<p>Create a correlation matrix for the five personality factors. Number the table as “Table 2”, and save the results in <code>table2.doc</code>. Your table should look like this in Rstudio:</p>
 <pre><code>
 
 Table 2 
@@ -636,6 +639,7 @@ The confidence interval is a plausible range of population correlations
 that could have caused the sample correlation (Cumming, 2014).
 * indicates p &lt; .05. ** indicates p &lt; .01.
  </code></pre>
+<p>…and it should be APA formatted in the file <code>table2.doc</code>.</p>
 <p><strong>Copy the R code you used for this exercise into PsycEL</strong></p>
 <p><a name="descriptives"></a></p>
 </div>
@@ -644,11 +648,8 @@ that could have caused the sample correlation (Cumming, 2014).
 <p>As with graphs, there is often an element of design involved in presenting tabular data in a format most useful for your reader. Packages like <code>apaTables</code> are useful for producing APA tables where there is a standard way to present data. However, you often need a table which is customised to present your data in the most useful format. The cost of custom tables is that the content requires a little more preprocessing, and styling the table according to APA standards will require some hand-formatting in your wordprocessor.</p>
 <p>We’ll demonstrate this process by producing a table of descriptive statistics. The data we’ll use comes from an experiment which evaluated children’s language development using the Words in Game (WinG) test. WinG consists of a set of picture cards which are used in four tests: noun comprehension, noun production, predicate comprehension, and predicate production. The Italian and English versions of the WinG cards use different pictures to depict the associated words. The experiment tested whether English-speaking children aged approximately 30 months, produce similar responses for the two sets of cards. We would like to produce a single table, containing descriptive statistics for all four tests.</p>
 <p>We start by loading the data:</p>
-<pre class="r"><code># Table of descriptive statistics
-wing_preproc &lt;- read_csv(&#39;going-further/picture-naming-preproc.csv&#39;,
-                         col_types = &#39;fffiiiiiiiiii&#39;)</code></pre>
-<p><strong>Explanation of commands:</strong></p>
-<p>This dataset has already undergone some preprocessing. We read the data, using <code>col_types</code> to explicitly define the types of data in each column. We set the first three columns as factors (the <code>fff</code>), and the remaining columns as integers (the <code>i</code>s).</p>
+<pre class="r"><code># Load data
+wing_preproc &lt;- read_csv(&#39;going-further/picture-naming-preproc.csv&#39;)</code></pre>
 <p>The first few rows of <code>wing_preproc</code> look like this:</p>
 <table>
 <colgroup>
@@ -776,7 +777,9 @@ wing_preproc &lt;- read_csv(&#39;going-further/picture-naming-preproc.csv&#39;,
 </tr>
 </tbody>
 </table>
-<p>Our test scores are currently in wide format, but we need them in long format so we can calcluate summary statistics.</p>
+<div id="table-of-descriptives" class="section level3">
+<h3>Table of descriptives</h3>
+<p>Our test scores are currently in <em>wide</em> format (lots of columns, few rows), but R generally requires data to be in <em>long</em> format (lots of rows, few columns). This means we first have to make the data frame wider, so we can calculate summary statistics.</p>
 <pre class="r"><code># wide to long
 task_by_subj &lt;- wing_preproc %&gt;%
   pivot_longer(cols = c(nc, np, pc, pp),
@@ -784,7 +787,7 @@ task_by_subj &lt;- wing_preproc %&gt;%
                values_to = &#39;correct&#39;) %&gt;%
   select(subj, gender, cards, task, correct)</code></pre>
 <p><strong>Explanation of command:</strong></p>
-<p>In the <a href="#anova1.html">Within-subject differences worksheet</a>, you learnt how to use <code>pivot_wider()</code> to widen long data frames. The <code>pivot_longer()</code> command does the reverse. <code>cols = c(nc, np, pc, pp)</code> selects the columns we want to pivot. Each value in these columns is added to a row in a new column called <code>correct</code> (<code>values_to = &#39;correct&#39;</code>). In the same row, a new column <code>task</code> is set to the name of the column which the value came from (<code>names_to = &#39;task&#39;</code>). Because <code>task</code> is a factor, this turns the pivoted column names into factor levels associated with the corresponding value in <code>correct</code>. All of the values in the other columns are duplicated for each row. We <code>select()</code> just the columns we want for our table of descriptive statistics.</p>
+<p>In the <a href="anova1.html#pivot">Within-subject differences worksheet</a>, you learned how to use <code>pivot_wider()</code> to widen long data frames. The <code>pivot_longer()</code> command does the reverse – it lengthens wide data frames. <code>cols = c(nc, np, pc, pp)</code> selects the columns we want to pivot. Each value in these columns is added to a row in a new column called <code>correct</code> (<code>values_to = &#39;correct&#39;</code>). In the same row, a new column <code>task</code> is set to the name of the column which the value came from (<code>names_to = &#39;task&#39;</code>). All of the values in the other columns are duplicated for each row. We <a href="preproc.html#select">select</a> just the columns we want for our table of descriptive statistics.</p>
 <p>The first few rows of <code>task_by_subj</code> look like this:</p>
 <table style="width:60%;">
 <colgroup>
@@ -841,18 +844,18 @@ task_by_subj &lt;- wing_preproc %&gt;%
 </tr>
 </tbody>
 </table>
-<p>Now we can calculate some summary statistics:</p>
-<pre class="r"><code>descriptives &lt;- task_by_subj %&gt;%
+<p>Now we can calculate some summary statistics, using commands that we’ve already used in previous worksheets:</p>
+<pre class="r"><code># Table of descriptive statistics
+
+descript &lt;- task_by_subj %&gt;%
   group_by(task, gender) %&gt;%
-  summarise(mean = mean(correct, na.rm = TRUE), sd = sd(correct, na.rm = TRUE)) %&gt;%
-  mutate(across(where(is.numeric), ~ sprintf(&quot;%.2f&quot;, round(.x, 2))))</code></pre>
+  summarise(mean = mean(correct, na.rm = TRUE), sd = sd(correct, na.rm = TRUE))</code></pre>
 <pre><code>`summarise()` regrouping output by &#39;task&#39; (override with `.groups` argument)</code></pre>
 <p><strong>Explanation of commands:</strong></p>
 <ol style="list-style-type: decimal">
-<li>We group <code>task_by_subject</code> by gender within task and use <code>summarise</code> to calculate a mean and standard deviation for each group. We need to include <code>na.rm = TRUE</code> as we have some cells containing <code>NA</code> for children who didn’t complete a particular test.</li>
-<li>The final line formats the numbers in the data frame. We’ll explain the command in steps. You already know that <code>mutate()</code> changes data in a data frame. Here we use <code>across()</code>, to apply a function to a subset of columns. We specify that we want to apply the function to just the numeric columns with <code>where(is.numeric)</code>. The second argument to <code>across()</code> is the function used to modify the column values. In this case, <code>round(.x, 2)</code>, means round the column values (<code>.x</code>) to 2 decimal places. Finally we ensure that all numbers have 2 digits after the decimal point. The <code>&quot;%.2f&quot;</code> argument tells <code>sprintf()</code> to ensure all numbers have 2 digits after the decimal point, adding 0s where necessary. The second argument is the result of <code>round()</code>.</li>
+<li><p>We’ve come across <code>group_by</code> <a href="group-differences.html#group">before</a>, here we use it to group the data by two variables at the same time, <code>task</code> and <code>gender</code>, giving us eight groups overall.</p></li>
+<li><p>We’ve also come across <code>summarize</code> <a href="exploring-incomes.html#means">before</a>, including the use of <code>na.rm = TRUE</code> to deal with missing data.</p></li>
 </ol>
-<p>Formatting the numbers in this way makes it easy to put the digits in the correct position relative to the decimal point when laying out your table, by selecting the numeric columns and using “align right” in your word processor.</p>
 <p>Our data now looks like this:</p>
 <table style="width:44%;">
 <colgroup>
@@ -874,68 +877,204 @@ task_by_subj &lt;- wing_preproc %&gt;%
 <td align="center">nc</td>
 <td align="center">female</td>
 <td align="center">17.64</td>
-<td align="center">2.20</td>
+<td align="center">2.203</td>
 </tr>
 <tr class="even">
 <td align="center">nc</td>
 <td align="center">male</td>
 <td align="center">16.29</td>
-<td align="center">4.23</td>
+<td align="center">4.231</td>
 </tr>
 <tr class="odd">
 <td align="center">np</td>
 <td align="center">female</td>
 <td align="center">12.09</td>
-<td align="center">3.24</td>
+<td align="center">3.239</td>
 </tr>
 <tr class="even">
 <td align="center">np</td>
 <td align="center">male</td>
 <td align="center">10.43</td>
-<td align="center">3.95</td>
+<td align="center">3.952</td>
 </tr>
 <tr class="odd">
 <td align="center">pc</td>
 <td align="center">female</td>
-<td align="center">16.20</td>
-<td align="center">1.81</td>
+<td align="center">16.2</td>
+<td align="center">1.814</td>
 </tr>
 <tr class="even">
 <td align="center">pc</td>
 <td align="center">male</td>
 <td align="center">14.83</td>
-<td align="center">1.60</td>
+<td align="center">1.602</td>
 </tr>
 <tr class="odd">
 <td align="center">pp</td>
 <td align="center">female</td>
-<td align="center">8.40</td>
-<td align="center">1.96</td>
+<td align="center">8.4</td>
+<td align="center">1.955</td>
 </tr>
 <tr class="even">
 <td align="center">pp</td>
 <td align="center">male</td>
-<td align="center">8.50</td>
+<td align="center">8.5</td>
+<td align="center">2.345</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="meaningful-labels" class="section level3">
+<h3>Meaningful labels</h3>
+<p>The <code>descript</code> data frame contains just the numbers we want to include in our report - the means and standard deviations for each of the eight groups. However, the row labels (<code>np</code>, etc.) are not particularly clear, so we replace them with something more human readable:</p>
+<pre class="r"><code>task_names &lt;- c(
+  nc = &#39;Noun Comprehension&#39;,
+  np = &#39;Noun Production&#39;,
+  pc = &#39;Predicate Comprehension&#39;,
+  pp = &#39;Predicate Production&#39;  
+)
+
+descript$task &lt;- descript$task %&gt;% recode(!!!task_names)</code></pre>
+<p><strong>Explanation of commands</strong>: We’re using the <code>recode</code> command that we’ve previously used in the <a href="https://benwhalley.github.io/rmip/worksheet-recoding.html">cleaning up questionnaire data</a> worksheet:</p>
+<ol style="list-style-type: decimal">
+<li><p>We start by telling R what each of the codes, <code>nc</code> etc., mean. So, for example <code>nc = &#39;Noun Comprehension&#39;</code>. We combine the four ‘translations’ together into <code>task_names</code> using <code>c()</code> (short for ‘concatenate’, i.e. put things together).</p></li>
+<li><p>We then take the <code>task</code> columns of the <code>descript</code> data frame (<code>descript$task</code>) and pipe (<code>%&gt;%</code>) it to <code>recode</code>, where it uses <code>task_names</code> to do the recoding. We write (<code>&lt;-</code>) that result back into <code>descript$task</code>.</p></li>
+<li><p>It’s not critical to understand the <code>!!!</code> part of the <code>recode</code> command, but an explanation is <a href="https://benwhalley.github.io/rmip/explain-exclamationmarks.html#explain-exclamationmarks">here</a> if you are curious.</p></li>
+</ol>
+<p>Our table now looks like this:</p>
+<table style="width:71%;">
+<colgroup>
+<col width="36%"></col>
+<col width="12%"></col>
+<col width="11%"></col>
+<col width="11%"></col>
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">task</th>
+<th align="center">gender</th>
+<th align="center">mean</th>
+<th align="center">sd</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">Noun Comprehension</td>
+<td align="center">female</td>
+<td align="center">17.64</td>
+<td align="center">2.203</td>
+</tr>
+<tr class="even">
+<td align="center">Noun Comprehension</td>
+<td align="center">male</td>
+<td align="center">16.29</td>
+<td align="center">4.231</td>
+</tr>
+<tr class="odd">
+<td align="center">Noun Production</td>
+<td align="center">female</td>
+<td align="center">12.09</td>
+<td align="center">3.239</td>
+</tr>
+<tr class="even">
+<td align="center">Noun Production</td>
+<td align="center">male</td>
+<td align="center">10.43</td>
+<td align="center">3.952</td>
+</tr>
+<tr class="odd">
+<td align="center">Predicate Comprehension</td>
+<td align="center">female</td>
+<td align="center">16.2</td>
+<td align="center">1.814</td>
+</tr>
+<tr class="even">
+<td align="center">Predicate Comprehension</td>
+<td align="center">male</td>
+<td align="center">14.83</td>
+<td align="center">1.602</td>
+</tr>
+<tr class="odd">
+<td align="center">Predicate Production</td>
+<td align="center">female</td>
+<td align="center">8.4</td>
+<td align="center">1.955</td>
+</tr>
+<tr class="even">
+<td align="center">Predicate Production</td>
+<td align="center">male</td>
+<td align="center">8.5</td>
+<td align="center">2.345</td>
+</tr>
+</tbody>
+</table>
+<p><a name="apa"></a></p>
+</div>
+</div>
+<div id="apa-format-tables" class="section level2">
+<h2>APA-format tables</h2>
+<p>Our table is now clear and easy to read. We could include it in a report without much further effort, and the reader would be able to easily see what we wanted to show them. However, it is not quite in the format that psychologists are most familiar with (which is <a href="https://apastyle.apa.org/style-grammar-guidelines/tables-figures/sample-tables#tests">APA format</a>). In APA format, the table would look more like this:</p>
+<table>
+<colgroup>
+<col width="34%"></col>
+<col width="17%"></col>
+<col width="18%"></col>
+<col width="14%"></col>
+<col width="15%"></col>
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">Task</th>
+<th align="center">Female (M)</th>
+<th align="center">Female (SD)</th>
+<th align="center">Male (M)</th>
+<th align="center">Male (SD)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">Noun Comprehension</td>
+<td align="center">17.64</td>
+<td align="center">2.2</td>
+<td align="center">16.29</td>
+<td align="center">4.23</td>
+</tr>
+<tr class="even">
+<td align="center">Noun Production</td>
+<td align="center">12.09</td>
+<td align="center">3.24</td>
+<td align="center">10.43</td>
+<td align="center">3.95</td>
+</tr>
+<tr class="odd">
+<td align="center">Predicate Comprehension</td>
+<td align="center">16.2</td>
+<td align="center">1.81</td>
+<td align="center">14.83</td>
+<td align="center">1.6</td>
+</tr>
+<tr class="even">
+<td align="center">Predicate Production</td>
+<td align="center">8.4</td>
+<td align="center">1.96</td>
+<td align="center">8.5</td>
 <td align="center">2.35</td>
 </tr>
 </tbody>
 </table>
-<p>We’ll do a little more formatting in prepration for producing the table:</p>
-<pre class="r"><code>descriptives_table &lt;- descriptives %&gt;%
-  pivot_wider(names_from = gender, values_from = c(mean, sd)) %&gt;%
-  mutate(task = factor(task))</code></pre>
-<p><strong>Explanation of commands:</strong></p>
-<ol style="list-style-type: decimal">
-<li>We <code>pivot_wider()</code> so that rows contain the test codes, and columns contain the mean and standard deviation by gender.</li>
-<li>We make <code>task</code> a factor.</li>
-</ol>
-<table style="width:79%;">
+<p>In other words, it would be <em>wider</em>: more columns and fewer rows.</p>
+<p>We can widen the table, using the <code>pivot_wider</code> command we have previously used in the <a href="anova1.html#pivot">within-subject differences</a> worksheet:</p>
+<pre class="r"><code># Widen table
+descript_table &lt;- descript %&gt;%
+  pivot_wider(names_from = gender, values_from = c(mean, sd)) </code></pre>
+<p>Our table now has the same format as an APA table…</p>
+<table>
 <colgroup>
-<col width="9%"></col>
-<col width="19%"></col>
-<col width="16%"></col>
-<col width="16%"></col>
-<col width="16%"></col>
+<col width="34%"></col>
+<col width="18%"></col>
+<col width="15%"></col>
+<col width="15%"></col>
+<col width="15%"></col>
 </colgroup>
 <thead>
 <tr class="header">
@@ -948,145 +1087,176 @@ task_by_subj &lt;- wing_preproc %&gt;%
 </thead>
 <tbody>
 <tr class="odd">
-<td align="center">nc</td>
+<td align="center">Noun Comprehension</td>
 <td align="center">17.64</td>
 <td align="center">16.29</td>
-<td align="center">2.20</td>
-<td align="center">4.23</td>
+<td align="center">2.203</td>
+<td align="center">4.231</td>
 </tr>
 <tr class="even">
-<td align="center">np</td>
+<td align="center">Noun Production</td>
 <td align="center">12.09</td>
 <td align="center">10.43</td>
-<td align="center">3.24</td>
-<td align="center">3.95</td>
+<td align="center">3.239</td>
+<td align="center">3.952</td>
 </tr>
 <tr class="odd">
-<td align="center">pc</td>
-<td align="center">16.20</td>
+<td align="center">Predicate Comprehension</td>
+<td align="center">16.2</td>
 <td align="center">14.83</td>
-<td align="center">1.81</td>
-<td align="center">1.60</td>
+<td align="center">1.814</td>
+<td align="center">1.602</td>
 </tr>
 <tr class="even">
-<td align="center">pp</td>
-<td align="center">8.40</td>
-<td align="center">8.50</td>
-<td align="center">1.96</td>
-<td align="center">2.35</td>
+<td align="center">Predicate Production</td>
+<td align="center">8.4</td>
+<td align="center">8.5</td>
+<td align="center">1.955</td>
+<td align="center">2.345</td>
 </tr>
 </tbody>
 </table>
-<p>Finally we make the column names and values more meaningful for our readers:</p>
-<pre class="r"><code>descriptives_table &lt;- descriptives_table %&gt;%
-  unite(&quot;male&quot;, c(&#39;mean_male&#39;,&#39;sd_male&#39;), sep=&#39; (&#39;) %&gt;%
-  unite(&quot;female&quot;, c(&#39;mean_female&#39;,&#39;sd_female&#39;), sep=&#39; (&#39;) %&gt;%
-  mutate(male = paste0(male, &#39;)&#39;), female = paste0(female, &#39;)&#39;))
-descriptives_table$task = recode_factor(descriptives_table$task,
-                                        nc = &#39;Noun Comprehension&#39;,
-                                        np = &#39;Noun Production&#39;,
-                                        pc = &#39;Predicate Comprehension&#39;,
-                                        pp = &#39;Predicate Production&#39;)</code></pre>
-<ol style="list-style-type: decimal">
-<li><code>unite(&quot;male&quot;, c(&#39;mean_male&#39;,&#39;sd_male&#39;), sep=&#39; (&#39;)</code> converts the <code>mean_male</code> and <code>sd_male</code> column values to a column <code>male</code> separated by <code>(</code>.</li>
-<li>We do the same for the <code>mean_female</code> and <code>sd_female</code> columns.</li>
-<li><code>mutate(male = paste0(male, &#39;)&#39;), female = paste0(female, &#39;)&#39;), task = factor(task))</code> adds the trailing <code>)</code> to the <code>male</code> and <code>female</code> columns and converts <code>task</code> to a factor.</li>
-<li>We recode <code>task</code> factor levels to more meaningful strings.</li>
-</ol>
-<p>We’re now ready to print our table. There are numerous <code>R</code> packages for presenting data as tables. We’ve chosen to the <code>kableExtra</code> package, as it’s capable of producing almost any table you might need in your reports. The tables produced by kableExtra are in <a href="https://haozhu233.github.io/kableExtra/awesome_table_in_html.html">HTML format</a>, which means you can simply copy-paste them into Microsoft Word or LibreOffice Writer.</p>
-<pre class="r"><code>library(kableExtra)</code></pre>
-<pre><code>
-Attaching package: &#39;kableExtra&#39;</code></pre>
-<pre><code>The following object is masked from &#39;package:dplyr&#39;:
-
-    group_rows</code></pre>
-<pre class="r"><code>descriptives_table %&gt;% kable(
-  col.names = c(&#39;Task&#39;, &#39;Male&#39;, &#39;Female&#39;), booktabs = TRUE) %&gt;%
-  kable_styling()</code></pre>
-<table class="table" style="margin-left: auto; margin-right: auto;">
+<p>…but the columns are in a different order. APA format dictates that means should be placed next to their associated standard deviations in a table (APA format is weirdly specific). Fortunately, we can rearrange columns using the <code>select</code> command that we’ve come across before:</p>
+<pre class="r"><code># Re-order columns
+descript_table &lt;- descript_table %&gt;% select(task, mean_female, sd_female, mean_male, sd_male) </code></pre>
+<table>
+<colgroup>
+<col width="34%"></col>
+<col width="18%"></col>
+<col width="15%"></col>
+<col width="15%"></col>
+<col width="15%"></col>
+</colgroup>
 <thead>
-<tr>
-<th style="text-align:left;">
-Task
-</th>
-<th style="text-align:left;">
-Male
-</th>
-<th style="text-align:left;">
-Female
-</th>
+<tr class="header">
+<th align="center">task</th>
+<th align="center">mean_female</th>
+<th align="center">sd_female</th>
+<th align="center">mean_male</th>
+<th align="center">sd_male</th>
 </tr>
 </thead>
 <tbody>
-<tr>
-<td style="text-align:left;">
-Noun Comprehension
-</td>
-<td style="text-align:left;">
-17.64 (2.20)
-</td>
-<td style="text-align:left;">
-16.29 (4.23)
-</td>
+<tr class="odd">
+<td align="center">Noun Comprehension</td>
+<td align="center">17.64</td>
+<td align="center">2.203</td>
+<td align="center">16.29</td>
+<td align="center">4.231</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-Noun Production
-</td>
-<td style="text-align:left;">
-12.09 (3.24)
-</td>
-<td style="text-align:left;">
-10.43 (3.95)
-</td>
+<tr class="even">
+<td align="center">Noun Production</td>
+<td align="center">12.09</td>
+<td align="center">3.239</td>
+<td align="center">10.43</td>
+<td align="center">3.952</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-Predicate Comprehension
-</td>
-<td style="text-align:left;">
-16.20 (1.81)
-</td>
-<td style="text-align:left;">
-14.83 (1.60)
-</td>
+<tr class="odd">
+<td align="center">Predicate Comprehension</td>
+<td align="center">16.2</td>
+<td align="center">1.814</td>
+<td align="center">14.83</td>
+<td align="center">1.602</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-Predicate Production
-</td>
-<td style="text-align:left;">
-8.40 (1.96)
-</td>
-<td style="text-align:left;">
-8.50 (2.35)
-</td>
+<tr class="even">
+<td align="center">Predicate Production</td>
+<td align="center">8.4</td>
+<td align="center">1.955</td>
+<td align="center">8.5</td>
+<td align="center">2.345</td>
 </tr>
 </tbody>
 </table>
+<p>Finally, we can replace the column names with something a bit more human readable, using the <code>colnames</code> function:</p>
+<pre class="r"><code># Column names
+colnames(descript_table) &lt;- c(&quot;Task&quot;, &quot;Female (M)&quot;, &quot;Female (SD)&quot;, &quot;Male (M)&quot;, &quot;Male (SD)&quot;)</code></pre>
+<table>
+<colgroup>
+<col width="34%"></col>
+<col width="17%"></col>
+<col width="18%"></col>
+<col width="14%"></col>
+<col width="15%"></col>
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">Task</th>
+<th align="center">Female (M)</th>
+<th align="center">Female (SD)</th>
+<th align="center">Male (M)</th>
+<th align="center">Male (SD)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">Noun Comprehension</td>
+<td align="center">17.64</td>
+<td align="center">2.203</td>
+<td align="center">16.29</td>
+<td align="center">4.231</td>
+</tr>
+<tr class="even">
+<td align="center">Noun Production</td>
+<td align="center">12.09</td>
+<td align="center">3.239</td>
+<td align="center">10.43</td>
+<td align="center">3.952</td>
+</tr>
+<tr class="odd">
+<td align="center">Predicate Comprehension</td>
+<td align="center">16.2</td>
+<td align="center">1.814</td>
+<td align="center">14.83</td>
+<td align="center">1.602</td>
+</tr>
+<tr class="even">
+<td align="center">Predicate Production</td>
+<td align="center">8.4</td>
+<td align="center">1.955</td>
+<td align="center">8.5</td>
+<td align="center">2.345</td>
+</tr>
+</tbody>
+</table>
+<p>Note that it would arguably be clearer to write “mean” rather than “M”, but it’s another quirk of APA style that we write “M” to stand for mean.</p>
+<p><a name="kable"></a></p>
+</div>
+<div id="copying-into-your-wordprocessor" class="section level2">
+<h2>Copying into your wordprocessor</h2>
+<p>There are a number of different ways to get a table in R into your wordprocessor. We’re going to use the <code>kableExtra</code> package, because it’s really flexible, so it’s capable of producing almost any table you might need. We’re only going to use it in the most basic way here; for some other examples of what it can do, see the kableExtra <a href="https://haozhu233.github.io/kableExtra/awesome_table_in_html.html">website</a>.</p>
+<p>To get a version of <code>descript_table</code> that you can cut-and-paste into your wordprocessor, do this:</p>
+<pre class="r"><code>library(kableExtra)
+descript_table %&gt;% kable(digits=2) %&gt;%  kable_styling()</code></pre>
 <p><strong>Explanation of commands:</strong></p>
 <ol style="list-style-type: decimal">
-<li><code>library(kableExtra)</code> loads the package containing the <code>kable()</code> function.</li>
-<li>We pipe our data into <code>kable()</code> using <code>col.names</code> to create neater column headings, and <code>kable_styling()</code> to produce a tidy HTML table.</li>
+<li><code>library(kableExtra)</code> loads the <code>kableExtra</code> package.</li>
+<li>We pipe our data into <code>kable()</code>. The <code>digits=2</code> part ensures that every number is reported to two decimal places.</li>
+<li>We then pipe <code>kable()</code> into <code>kable_styling()</code>. This command allows prints the table to the Viewer window in RStudio.</li>
 </ol>
+<p><strong>Explanation of output:</strong></p>
 <p>Try copying the table into your word processor now. In the <strong>Viewer</strong> pane, select all of the rows and columns in the table, then right-click and select <code>Copy</code>. Open your word processor and select <code>Paste</code>.</p>
 <p><a name="ex2"></a></p>
 </div>
 <div id="exercise-2" class="section level2">
 <h2>Exercise 2</h2>
-<p>Starting with the data in <code>task_by_subj</code>, generate a table of descriptive statistics showing task accuracy for the Italian and English cards. Print the results using <code>kable()</code>. They should look like this:</p>
-<pre><code>`summarise()` regrouping output by &#39;task&#39; (override with `.groups` argument)</code></pre>
+<p>Starting with the data in <code>task_by_subj</code>, generate a table of descriptive statistics showing task accuracy for the Italian and English cards. It should look like this:</p>
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
 <th style="text-align:left;">
 Task
 </th>
-<th style="text-align:left;">
-English
+<th style="text-align:right;">
+English (M)
 </th>
-<th style="text-align:left;">
-Italian
+<th style="text-align:right;">
+English (SD)
+</th>
+<th style="text-align:right;">
+Italian (M)
+</th>
+<th style="text-align:right;">
+Italian (SD)
 </th>
 </tr>
 </thead>
@@ -1095,44 +1265,68 @@ Italian
 <td style="text-align:left;">
 Noun Comprehension
 </td>
-<td style="text-align:left;">
-17.89 (2.47)
+<td style="text-align:right;">
+17.89
 </td>
-<td style="text-align:left;">
-16.33 (3.61)
+<td style="text-align:right;">
+2.47
+</td>
+<td style="text-align:right;">
+16.33
+</td>
+<td style="text-align:right;">
+3.61
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
 Noun Production
 </td>
-<td style="text-align:left;">
-11.89 (3.59)
+<td style="text-align:right;">
+11.89
 </td>
-<td style="text-align:left;">
-11.00 (3.61)
+<td style="text-align:right;">
+3.59
+</td>
+<td style="text-align:right;">
+11.00
+</td>
+<td style="text-align:right;">
+3.61
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
 Predicate Comprehension
 </td>
-<td style="text-align:left;">
-15.12 (1.64)
+<td style="text-align:right;">
+15.12
 </td>
-<td style="text-align:left;">
-16.25 (1.91)
+<td style="text-align:right;">
+1.64
+</td>
+<td style="text-align:right;">
+16.25
+</td>
+<td style="text-align:right;">
+1.91
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
 Predicate Production
 </td>
-<td style="text-align:left;">
-8.75 (1.04)
+<td style="text-align:right;">
+8.75
 </td>
-<td style="text-align:left;">
-8.12 (2.75)
+<td style="text-align:right;">
+1.04
+</td>
+<td style="text-align:right;">
+8.12
+</td>
+<td style="text-align:right;">
+2.75
 </td>
 </tr>
 </tbody>
