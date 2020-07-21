@@ -459,6 +459,7 @@ task_by_subj_l$task <- recode_factor(task_by_subj_l$task,
                                      pc = 'Predicate Comprehension',
                                      pp = 'Predicate Production')
 library(see)
+# FIXME: can't simple + theme_APA :(
 task_by_subj_l %>% ggplot(aes(x = task, y = correct, fill = cards)) +
   geom_violinhalf(position = position_identity(), alpha=0.3, size=0) +
   xlab('WinG Task') + ylab('Accuracy (max = 20)')
