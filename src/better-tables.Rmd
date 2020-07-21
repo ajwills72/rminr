@@ -34,6 +34,10 @@ library(tidyverse)
 
 - [Creating a custom table of descriptive statistics](#descriptives)
 
+- [APA-format tables](#apa)
+
+- [Copying to your wordprocessor](#kable)
+
 - [Exercise 2](#ex2)
 
 - [R Markdown](#rmd)
@@ -216,55 +220,99 @@ descript$task <- descript$task %>% recode(!!!task_names)
 
 3. It's not critical to understand the `!!!` part of the `recode` command, but an explanation is [here](https://benwhalley.github.io/rmip/explain-exclamationmarks.html#explain-exclamationmarks) if you are curious.
 
-We'll do a little more formatting in prepration for producing the table:
-
-```{r descriptives-2}
-descriptives_table <- descriptives %>%
-  pivot_wider(names_from = gender, values_from = c(mean, sd)) %>%
-  mutate(task = factor(task))
-```
-
-**Explanation of commands:**
-
-1. We `pivot_wider()` so that rows contain the test codes, and columns contain the mean and standard deviation by gender.
-1. We make `task` a factor.
+Our table now looks like this:
 
 ```{r echo=FALSE}
-descriptives_table %>% pander()
+descript %>% pander()
 ```
 
-Finally we make the column names and values more meaningful for our readers:
+<a name="apa"></a>
 
-```{r descriptives-3}
-descriptives_table <- descriptives_table %>%
-  unite("male", c('mean_male','sd_male'), sep=' (') %>%
-  unite("female", c('mean_female','sd_female'), sep=' (') %>%
-  mutate(male = paste0(male, ')'), female = paste0(female, ')'))
-descriptives_table$task = recode_factor(descriptives_table$task,
-                                        nc = 'Noun Comprehension',
-                                        np = 'Noun Production',
-                                        pc = 'Predicate Comprehension',
-                                        pp = 'Predicate Production')
+## APA-format tables
+
+Our table is now clear and easy to read. We could include it in a report without much further effort, and the reader would be able to easily see what we wanted to show them. However, it is not quite in the format that psychologists are most familiar with (which is [APA format](https://apastyle.apa.org/style-grammar-guidelines/tables-figures/sample-tables#tests)). In APA format, the table would look more like this: 
+
+```{r echo=FALSE}
+# Format wider
+descript_table <- descript %>%
+  pivot_wider(names_from = gender, values_from = c(mean, sd))
+
+# Order columns
+descript_table <- descript_table %>% select(task, mean_female, sd_female, mean_male, sd_male) 
+
+# Column names
+colnames(descript_table) <- c("Task", "Female (M)", "Female (SD)", "Male (M)", "Male (SD)")
+
+# Rounding
+descript_table[,2:5] <- round(descript_table[,2:5], 2)
+
+#Output
+descript_table %>% pander()
+
+# Clear vars
+rm(descript_table)
 ```
 
-1. `unite("male", c('mean_male','sd_male'), sep=' (')` converts the `mean_male` and `sd_male` column values to a column `male` separated by ` (`.
-1. We do the same for the `mean_female` and `sd_female` columns.
-1. `mutate(male = paste0(male, ')'), female = paste0(female, ')'), task = factor(task))` adds the trailing `)` to the `male` and `female` columns and converts `task` to a factor.
-1. We recode `task` factor levels to more meaningful strings.
+In other words, it would be _wider_: more columns and fewer rows. 
 
-We're now ready to print our table. There are numerous `R` packages for presenting data as tables. We've chosen to the `kableExtra` package, as it's capable of producing almost any table you might need in your reports. The tables produced by kableExtra are in [HTML format](https://haozhu233.github.io/kableExtra/awesome_table_in_html.html), which means you can simply copy-paste them into Microsoft Word or LibreOffice Writer.
+We can widen the table, using the `pivot_wider` command we have previously used in the [within-subject differences](anova1.html#pivot) worksheet:
 
-```{r kable-descriptives}
+```{r descriptives-2}
+# Widen table
+descript_table <- descript %>%
+  pivot_wider(names_from = gender, values_from = c(mean, sd)) 
+```
+
+Our table now has the same format as an APA table...
+
+```{r echo=FALSE}
+descript_table %>% pander()
+```
+
+...but the columns are in a different order. APA format dictates that means should be placed next to their associated standard deviations in a table (APA format is weirdly specific). Fortunately, we can rearrange columns using the `select` command that we've come across before:
+
+```{r rearrange}
+# Re-order columns
+descript_table <- descript_table %>% select(task, mean_female, sd_female, mean_male, sd_male) 
+```
+
+```{r echo=FALSE}
+descript_table %>% pander()
+```
+
+Finally, we can replace the column names with something a bit more human readable, using the `colnames` function:
+
+```{r rename-cols}
+# Column names
+colnames(descript_table) <- c("Task", "Female (M)", "Female (SD)", "Male (M)", "Male (SD)")
+```
+
+```{r echo=FALSE}
+descript_table %>% pander()
+```
+
+Note that it would arguably be clearer to write "mean" rather than "M", but it's another quirk of APA style that we write "M" to stand for mean. 
+
+<a name="kable"></a>
+
+## Copying into your wordprocessor
+
+There are a number of different ways to get a table in R into your wordprocessor. We're going to use the `kableExtra` package, because it's really flexible, so it's capable of producing almost any table you might need. We're only going to use it in the most basic way here; for some other examples of what it can do, see the kableExtra [website](https://haozhu233.github.io/kableExtra/awesome_table_in_html.html).
+
+To get a version of `descript_table` that you can cut-and-paste into your wordprocessor, do this:
+
+```{r kable-descriptives,results='hide'}
 library(kableExtra)
-descriptives_table %>% kable(
-  col.names = c('Task', 'Male', 'Female'), booktabs = TRUE) %>%
-  kable_styling()
+descript_table %>% kable(digits=2) %>%  kable_styling()
 ```
 
 **Explanation of commands:**
 
-1. `library(kableExtra)` loads the package containing the `kable()` function.
-1. We pipe our data into `kable()` using `col.names` to create neater column headings, and `kable_styling()` to produce a tidy HTML table.
+1. `library(kableExtra)` loads the `kableExtra` package.
+1. We pipe our data into `kable()`. The `digits=2` part ensures that every number is reported to two decimal places.
+1. We then pipe `kable()` into `kable_styling()`. This command allows prints the table to the Viewer window in RStudio.
+
+**Explanation of output:**
 
 Try copying the table into your word processor now. In the **Viewer** pane, select all of the rows and columns in the table, then right-click and select `Copy`. Open your word processor and select `Paste`.
 
@@ -272,28 +320,36 @@ Try copying the table into your word processor now. In the **Viewer** pane, sele
 
 ## Exercise 2
 
-Starting with the data in `task_by_subj`, generate a table of descriptive statistics showing task accuracy for the Italian and English cards. Print the results using `kable()`. They should look like this:
+Starting with the data in `task_by_subj`, generate a table of descriptive statistics showing task accuracy for the Italian and English cards. It should look like this:
 
-```{r ex2-1, echo=FALSE}
+```{r ex2-1, echo=FALSE, message=FALSE}
+# Summarise
 descriptives_by_cards <- task_by_subj %>%
   group_by(task, cards) %>%
-  summarise(mean = mean(correct, na.rm = TRUE), sd = sd(correct, na.rm = TRUE)) %>%
-  ungroup() %>%
-  mutate(across(where(is.numeric), ~ sprintf("%.2f", round(.x,2))))
+  summarise(mean = mean(correct, na.rm = TRUE), sd = sd(correct, na.rm = TRUE)) 
 
+# Labels
+task_names <- c(
+  nc = 'Noun Comprehension',
+  np = 'Noun Production',
+  pc = 'Predicate Comprehension',
+  pp = 'Predicate Production'  
+)
+
+descriptives_by_cards$task <- descriptives_by_cards$task %>% recode(!!!task_names)
+
+# Widen
 by_cards_table <- descriptives_by_cards %>%
   pivot_wider(names_from = cards, values_from = c(mean, sd))
 
-by_cards_table <- by_cards_table %>%
-  unite("english", c('mean_english','sd_english'), sep=' (') %>%
-  unite("italian", c('mean_italian','sd_italian'), sep=' (') %>%
-  mutate(english = paste0(english, ')'), italian = paste0(italian, ')'), task = factor(task),
-         task = recode_factor(.$task, nc = 'Noun Comprehension', np = 'Noun Production',
-                                  pc = 'Predicate Comprehension', pp = 'Predicate Production'))
+# Order columns
+by_cards_table <- by_cards_table %>% select(task, mean_english, sd_english, mean_italian, sd_italian) 
 
-by_cards_table %>%
-  kable(col.names = c('Task', 'English', 'Italian')) %>%
-  kable_styling()
+# Column names
+colnames(by_cards_table) <- c("Task", "English (M)", "English (SD)", "Italian (M)", "Italian (SD)")
+
+#Output
+by_cards_table %>% kable(digits=2) %>% kable_styling()
 ```
 
 **Copy the R code you used for this exercise into PsycEL.**
