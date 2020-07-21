@@ -145,7 +145,10 @@ The first few rows of `wing_preproc` look like this:
 wing_preproc %>% head() %>% pander(split.table = Inf)
 ```
 
-Our test scores are currently in wide format, but we need them in long format so we can calculate summary statistics.
+### Table of descriptives
+
+Our test scores are currently in _wide_ format (lots of columns, few rows), but R generally requires data to be in _long_ format 
+(lots of rows, few columns). This means we first have to make the data frame wider, so we can calculate summary statistics.
 
 ```{r pivot}
 # wide to long
