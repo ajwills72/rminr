@@ -185,9 +185,6 @@ descriptives <- task_by_subj %>%
 
 2. We've all come across `summarize` [before](exploring-incomes.html#means), including the use of `na.rm = TRUE` to deal with missing data. 
 
-1. The final line formats the numbers in the data frame. We'll explain the command in steps. You already know that `mutate()` changes data in a data frame. Here we use `across()`, to apply a function to a subset of columns. We specify that we want to apply the function to just the numeric columns with `where(is.numeric)`. The second argument to `across()` is the function used to modify the column values. In this case, `round(.x, 2)`, means round the column values (`.x`) to 2 decimal places. Finally we ensure that all numbers have 2 digits after the decimal point. The `"%.2f"` argument tells `sprintf()` to ensure all numbers have 2 digits after the decimal point, adding 0s where necessary. The second argument is the result of `round()`.
-
-Formatting the numbers in this way makes it easy to put the digits in the correct position relative to the decimal point when laying out your table, by selecting the numeric columns and using "align right" in your word processor.
 
 Our data now looks like this:
 
