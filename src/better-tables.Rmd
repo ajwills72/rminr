@@ -136,13 +136,8 @@ We start by loading the data:
 
 ```{r excel, message=FALSE}
 # Table of descriptive statistics
-wing_preproc <- read_csv('going-further/picture-naming-preproc.csv',
-                         col_types = 'fffiiiiiiiiii')
+wing_preproc <- read_csv('going-further/picture-naming-preproc.csv')
 ```
-
-**Explanation of commands:**
-
-This dataset has already undergone some preprocessing. We read the data, using `col_types` to explicitly define the types of data in each column. We set the first three columns as [factors](anova1.html#anovaWS) (the `fff`), and the remaining columns as integers (the `i`s).
 
 The first few rows of `wing_preproc` look like this:
 
