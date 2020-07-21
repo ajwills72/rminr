@@ -459,25 +459,10 @@ task_by_subj_l$task <- recode_factor(task_by_subj_l$task,
                                      pc = 'Predicate Comprehension',
                                      pp = 'Predicate Production')
 library(see)
-# FIXME: can't simple + theme_APA :(
 task_by_subj_l %>% ggplot(aes(x = task, y = correct, fill = cards)) +
-  geom_violinhalf(position = position_identity(), alpha=0.3, size=0) +
+  geom_violinhalf(position = position_identity(), alpha=0.7, size=0) +
+  scale_fill_grey() +
   xlab('WinG Task') + ylab('Accuracy (max = 20)')
-```
-
-```{r, eval=FALSE, echo=FALSE}
-noun_tasks <- task_by_subj_l %>%
-    filter(task %in% (c('nc')))
-noun_tasks$task <- recode_factor(noun_tasks$task, nc = 'Noun Comprehension')
-
-ggplot(noun_tasks, aes(x = task, y = correct, fill = cards)) +
-  geom_violinhalf(position = position_identity(), alpha=0.3, size=0)
-
-half_violin <- ggplot(task_by_subj_l, aes(x = task, y = correct, fill = cards)) +
-  geom_violinhalf(position = position_identity(), alpha=0.3, size=0) +
-#  stat_summary(geom="point", mapping = aes(colour = cards), fun.data=mean_cl_boot) +
-  scale_fill_material_d()
-half_violin + facet_wrap(~ task, ncol=2)
 ```
 
 **Explanation of commands:**
@@ -561,7 +546,8 @@ semantically_related <- task_by_subj %>%
                               related_pp = 'Predicate Production'))
 
 ggplot(semantically_related, aes(x = task, y = correct, fill = cards)) +
-  geom_violinhalf(position = position_identity(), alpha=0.3, size=0) +
+  geom_violinhalf(position = position_identity(), alpha=0.7, size=0) +
+  scale_fill_grey() +
   xlab('WinG Task') +
   ylab('Semantically related errors (max = 20)')
 ```
