@@ -14,7 +14,7 @@ output:
 
 ## Show commands and output.
 knitr::opts_chunk$set(echo = TRUE, comment=NA)
-
+library(pander)
 ```
 
 # Contents
@@ -131,48 +131,74 @@ ggsave(filename = "fig1.pdf", plot = dgraph, units = "cm", width = 15, height = 
 
 A file called _fig1.pdf_ will have appeared in your _Files_ window in RStudio. You can export this in the [usual way](using-projects.html#download).
 
+<a name="within"></a>
+
+# Plots for within participants designs
+
 <a name="between"></a>
 
 # Plots for between participants designs
 
-Whether your plot is destined for a paper, a poster, or a presentation, it's important to make it as useful and easy to interpret as possible for your reader.
+We'll plot some data from [a study in which tested children’s language development](cs-picture-naming.html). The Words in Game (WinG) task uses picture cards to test children's comprehension of, and ability to say, nouns and predicates. A predicate completes an idea about the subject of a sentence. For example, if the card showed a girl pushing a bike, the predicate would be "pushing".
 
-There is evidence that readers misinterpret bar plots, because we percieve values within the bar as more likely than those just above, even though this is not the case (Newman & Scholl, 2012).
+In this study children were tested using one of two sets of picture cards; the set used in the Italian version of WinG, or the set used in the English version. The researchers were primarily interested in whether the children's performance differed depending on which cards were used. We can demonstrate this visually by presenting the data for the two card sets, for each of the four tasks.
 
-We'll create a raincloud plot using the data introduced in the [Better tables](better-tables.html) worksheet. This was a task (4) x cards (2) between-within design. We'll plot performance on just the noun tasks for the Italian and English cards.
+We start by preparing the data for plotting. These steps are described in more detail in the [Better tables worksheet](better-tables.html) worksheet.
 
-```{r echo=FALSE, message=FALSE}
+```{r message=FALSE, class.source = 'numberLines lineAnchors'}
 wing_preproc <- read_csv('going-further/picture-naming-preproc.csv')
-```
-
-```{r pivot}
-# wide to long
 wing <- wing_preproc %>%
   pivot_longer(cols = c(nc, np, pc, pp),
                names_to = 'task',
                values_to = 'correct') %>%
-  select(subj, gender, cards, task, correct)
+    select(subj, task, cards, correct)
 ```
 
-```{r mean-labels}
+### Explanation of commands
+
+Line 1 loads the data. The scores are in _wide_ format (lots of columns, few rows), but R generally requires data to be in _long_ format (lots of rows, few columns). Lines 2-5 convert the task data from wide to long. Line 6 select the columns were interested in plotting.
+
+The first few rows of our data look like this:
+
+```{r, echo=FALSE}
+wing %>% head(8) %>% pander()
+```
+
+Next, we give the four task names more meaningful labels, in preparation for displaying them on the x-axis of our plot.
+
+```{r mean-labels, class.source = 'numberLines lineAnchors'}
 task_names <- c(
   nc = 'Noun Comprehension',
   np = 'Noun Production',
   pc = 'Predicate Comprehension',
   pp = 'Predicate Production'  
 )
-
 wing$task <- wing$task %>% recode(!!!task_names)
 ```
 
-```{r noun-cloud, class.source = 'numberLines lineAnchors'}
-# plot WinG accuracy by card set
+### Explanation of commands
+
+The levels of the `task` factor currently have short names. Lines 1-6 defines a mapping between the short names and more meaningful ones. Line 7 recodes the factor to convert the short names to the more descriptive names.
+
+We'll plot the data using 'half violin' plots. As the name suggests, this shows one half of a [violin plot](https://en.wikipedia.org/wiki/Violin_plot). We chose this type of plot as we wanted to show that distributions on some of the tasks was not normally distributed, to give the reader a feel for whether there was a difference in accuracy for any of the tasks. This paved the way for [the Mann-Whitney U tests in the next section of the results](cs-picture-naming.html#mann-whitney).
+
+```{r cloud, class.source = 'numberLines lineAnchors'}
+# between subjects half-violin plot
 library(see)
 wing %>% ggplot(aes(x = task, y = correct, fill = cards)) +
   geom_violinhalf(position = position_identity(), alpha=0.7, size=0) +
   scale_fill_grey() +
   xlab('WinG Task') + ylab('Accuracy (max = 20)')
 ```
+
+### Explanation of commands
+
+Line 1 loads the `see` package which provides the `half_violin()` function. Line 2 defines the x axis of our plot to be the WinG tasks, the y axis to be task accuracy (1-20), and to use the `cards` factor for the fill colour. Line 3 creates the half violin plot. `position = position_identity()` plots the two distributions on top of each other, making it easy to see how much they overlap. `alpha=0.7` changes to transparency, again to help us see the overlapping area. `size=0` removes the outline around the distributions. Line 4 uses a grey palette for filling in the two distributions. Line 5 gives our axes meaningful labels.
+
+## Barplots
+
+There is evidence that readers misinterpret bar plots, because we percieve values within the bar as more likely than those just above, even though this is not the case (Newman & Scholl, 2012).
+
 **Explanation of commands:**
 
 Lines 1-6 recode `task` factor levels, to make them more meaningful on the plot's x axis. Line 7 loads the `see` package which provides the `half_violin()` function. Line 8 defines the x axis of our plot to be the WinG tasks, the y axis to be task accuracy (1-20), and to use the `cards` factor for the fill colour. Line 9 creates a "half violin" plot. As the name suggests, this shows one half of a [violin plot](https://en.wikipedia.org/wiki/Violin_plot). `position = position_identity()` plots the two distributions on top of each other, making it easy to see how much they overlap. `alpha=0.3` changes to transparency, again to help us see the overlapping area. `size=0` removes the outline around the distributions. Line 10 gives our axes meaningful labels.
@@ -189,7 +215,7 @@ Barcharts or point plots sometimes include a line and crossbar either side of th
 * Better to do this using `stat_summary()` rather than write your own function
 * Calculate CIs using `mean_cl_boot`, as bootstrapping is a robust method that doesn't assume normally distributed data.
 
-FIXME: Use a different mixed model dataset, as the interactions weren't of interest in this study. Useful for between subjects plots though.
+FIXME: Use a different mixed model dataset, as the interactions weren't of interest in Allegra's study. Useful for between subjects plots though.
 
 ### More traditional point and line plot with `ggplot()`.
 
@@ -217,9 +243,11 @@ ggline(noun_tasks, x = "task", y = "correct", color = "cards",
       ylab("Mean score") + xlab("WinG task")
 ```
 
-# References
+<a name="mixed"></a>
 
-Allen, M., Poggiali, D., Whitaker, K., Marshall, T. R., & Kievit, R. A. (2019). Raincloud plots: A multi-platform tool for robust data visualization. Wellcome Open Research, 4, 63. https://doi.org/10.12688/wellcomeopenres.15191.1
+# Plots for mixed (within-between) designs
+
+# References
 
 Newman, G. E., & Scholl, B. J. (2012). Bar graphs depicting averages are perceptually misinterpreted: The within-the-bar bias. Psychonomic Bulletin & Review, 19(4), 601–607. https://doi.org/10.3758/s13423-012-0247-5
 
