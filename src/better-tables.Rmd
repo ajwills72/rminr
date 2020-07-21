@@ -135,7 +135,7 @@ We'll demonstrate this process by producing a table of descriptive statistics. T
 We start by loading the data:
 
 ```{r excel, message=FALSE}
-# Table of descriptive statistics
+# Load data
 wing_preproc <- read_csv('going-further/picture-naming-preproc.csv')
 ```
 
@@ -172,6 +172,8 @@ task_by_subj %>% head(5) %>% pander()
 Now we can calculate some summary statistics:
 
 ```{r descriptives-1}
+# Table of descriptive statistics
+
 descriptives <- task_by_subj %>%
   group_by(task, gender) %>%
   summarise(mean = mean(correct, na.rm = TRUE), sd = sd(correct, na.rm = TRUE)) %>%
