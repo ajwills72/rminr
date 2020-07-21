@@ -183,7 +183,7 @@ descriptives <- task_by_subj %>%
 
 1. We've come across `group_by` [before](group-differences.html#group), here we use it to group the data by two variables at the same time, `task` and `gender`, giving us eight groups overall. 
 
-2. We've all come across `summarize` [before](exploring-incomes.html#means), including the use of `na.rm = TRUE` to deal with missing data. 
+2. We've also come across `summarize` [before](exploring-incomes.html#means), including the use of `na.rm = TRUE` to deal with missing data. 
 
 
 Our data now looks like this:
