@@ -310,7 +310,7 @@ descript_table %>% kable(digits=2) %>%  kable_styling()
 
 1. `library(kableExtra)` loads the `kableExtra` package.
 1. We pipe our data into `kable()`. The `digits=2` part ensures that every number is reported to two decimal places.
-1. We then pipe `kable()` into `kable_styling()`. This command allows prints the table to the Viewer window in RStudio.
+1. We then pipe `kable()` into `kable_styling()`. This command prints the table to the Viewer window in RStudio.
 
 **Explanation of output:**
 
