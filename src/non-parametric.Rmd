@@ -143,8 +143,11 @@ We'll run a Mann-Whitney U test to see if there were any significant differences
 
 ```{r mw-nc}
 # Mann-Whitney U for noun comprehension
-nc_u <- wilcox.test(correct ~ cards, nc_include)
-nc_u
+wilcox.test(correct ~ cards, nc_include)
+```
+
+```{r mw-nc-hidden,echo=FALSE,results='hide', message=FALSE, warning=FALSE}
+nc_u  <- wilcox.test(correct ~ cards, nc_include)
 ```
 
 ```{r, echo=FALSE, eval=FALSE}
