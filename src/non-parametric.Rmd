@@ -23,7 +23,7 @@ library(pander)
 
 - [Getting started](#start)
 
-- [Mann-Whitney U test](#wilcox)
+- [Mann-Whitney U test (aka. Wilcoxon rank-sum test)](#wilcox)
 
 - [Exercise 1](#ex1)
 
@@ -35,11 +35,19 @@ library(pander)
 
 ## Introduction
 
-This worksheet describes common, traditional (frequentist) non-parametric statistical tests. The statistical tests used to analyse differences and relationships in other worksheets are collectively known as **parametric tests**. For their results to be valid, parametric tests require that the data being analysed comes from a population with a particular probability distribution, having known parameters. In most cases, the probability distribution is the normal (Gaussian) distribution, and the parameters are the mean and standard deviation. Parametric tests make some additional assumptions which aren't discussed in this worksheet. **Non-parametric tests** do not rely on meeting these assumptions, and can therefore be used to analyse data which is not normally distributed.
+This worksheet covers the Mann-Whitney U test, which is an alternative to the [between-subjects t-test](evidence.html#bs-ttest), and a Kruskal-Wallis H test, which is an alternative to the [between-subjects one-factor ANOVA](anova4.html#oneBS). 
 
-If your data meet the criteria for a parametric test, this is the best choice as parametric tests normally provide greater [statistical power](power.html) than the equivalent non-parametric test. When you learnt about the central limit theorem, you saw that a large enough sample will have a normal distribution, regardless of the distribution of the underlying data from which it was sampled. Given the size of most effects in psychology, to reliably detect differences between conditions would require sample sizes which ensure that the data is normally distributed (about 30 and above). Therefore, the most likely scenario in which you would use a _non-parametric test_ is when you have a small sample, and the data is not normally distributed.
+The Mann-Whitney U and Kruskal-Wallis H tests are both  _non-parametric_ tests. This means they make fewer assumptions about your data than do standard _parametric_ tests (such as t-tests, and ANOVA). Specifically, where your sample size is small, parametric tests assume that your population is approximately [normally distributed](https://ajwills72.github.io/critical-thinking/distributions-samples.pdf). However, it's  important to realise that as your sample size increases, parametric tests make fewer and fewer assumptions about your the population distribution, due to the [central limit theorem](https://ajwills72.github.io/critical-thinking/distributions-samples.pdf). It's also important to realise that parametric tests have greater [statistical power](power.html) than non-parametric tests, so we should use parametric tests when their assumptions are met. 
 
-Many non-parametric tests work by ranking data values from lowest to highest, and performing a test on the ranks, rather than the values themselves. This avoids the disproportional effect that outlier values have on the mean, one of the key parameters in parametric tests.
+Putting this all together, there's **a relatively small set of situations where it makes sense to use a non-parametric test**. These are when:
+
+1. Your sample size is small (N < 30 per group) **and**,
+1. you do not know whether the population distribution is approximately normal **and**
+1. you have reason to expect the effect size will be large (d > 1)
+
+For example, you wouldn't use an non-parametric test on a small sample of IQ scores, because IQ is known to normally distributed. The point about effect size follows from the other two - if your sample size is small, you will only be able to detect large effects - see the [statistical power](power.html) worksheet.
+
+**Where's the Bayes Factor?** The Mann-Whitney and Kruskal-Wallis are traditional tests, in the sense that they give us a p-value rather than a Bayes Factor. As we have previously covered, [p-values are widely misinterpreted by psychologists](evidence.html#p-wrong), and can never provide evidence for the null hypothesis. For this reason, we have generally advised that you instead use the Bayesian equivalents of these tests - such as [Bayesian t-tests](evidence.html#bayes-t), [Bayesian ANOVA](anova1.html#anovaWS), and [Bayesian chi-square](chi.html#evidence). However, it is not straight forward to calculate Bayesian equivalents of the Mann-Whitney and Kruskal-Wallis tests in R at the moment. So, in this case, we'll stick to the traditional tests. 
 
 <a name="start"></a>
 
