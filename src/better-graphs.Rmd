@@ -27,6 +27,8 @@ library(pander)
 
 - [High-quality output](#hq)
 
+- [Plots for within participants designs](#within)
+
 - [Plots for between participants designs](#between)
 
 <a name = "intro"></a>
@@ -133,7 +135,48 @@ A file called _fig1.pdf_ will have appeared in your _Files_ window in RStudio. Y
 
 <a name="within"></a>
 
-# Plots for within participants designs
+# Plots for within participants data
+
+What are you trying to show?
+Often involves trying out a few different graphs. Often not the first one you try. Might be something you do after inferentials.
+
+The approach we've taken in this worksheet is to consider whether you are plotting data for within or between subjects, or a mixture of the two.
+
+We'll demonstrate a graph for a within participants experiment using data from [an undergraduate student dissertation on the Perruchet Effect](awdiss.html).
+
+```{r perruchet-data, message=FALSE, class.source = 'numberLines lineAnchors'}
+lvl.sum <- read_csv('going-further/perruchet-preproc.csv')
+mdata  <- lvl.sum %>% group_by(level) %>%
+  summarise(lcval = mean(lcval), expect = mean(expect))
+```
+
+The simplest graph we could produce here would be to just plot the three means reported above, but this wouldn't really add anything to what we've already done; the trend is clear just from the three numbers. 
+
+Generally, when we graph data from psychology experiments, we try to give an indication of the variability between participants - is everyone exactly like the mean, or do people differ? One common way of doing this it to plot some kind of 'error bar'; for example, as shown in Figure 1 of  [McAndrew et al. (2012)](https://www.researchgate.net/profile/IPL_Mclaren/publication/221752843_Dissociating_Expectancy_of_Shock_and_Changes_in_Skin_Conductance_An_Investigation_of_the_Perruchet_Effect_Using_an_Electrodermal_Paradigm/links/0a85e53c10b74f291a000000.pdf). McAndrew et al., are not clear how they calculated these bars, but it's quite likely that they are the standard errors, considering each Level separately -- because this is the most common plot of this type. Such error bars are not particularly informative because, for example, they represent the variability _between_ participants at each Level, when the experiment is a _repeated measures_ design and so it is the variability of the trends across Level that is most relevant.
+
+In this project, we instead plot one line for each participant, and then overlay this with the means to emphasize the overall trend. Here's the final plot:
+
+```{r perruchet, message=FALSE, class.source = 'numberLines lineAnchors'}
+### Create a blank plot
+base  <- ggplot()
+
+### Add a line for each participant
+lns  <- geom_line(aes(x=level, y=expect, group=subj, colour=subj),
+                  data = lvl.sum, alpha = .25)
+
+### Add a mean line
+mline  <- geom_line(aes(x=level, y=expect), data = mdata, colour="black")
+mdot  <- geom_point(aes(x=level, y=expect), data = mdata, colour="black")
+
+### Combine plots, tidy up x and y axis labels, and apply APA theme
+eplot <- base + lns + mline + mdot + xlab("Level") +
+    ylab("Expectancy rating") + ylim(1,5) +
+    scale_x_continuous(breaks = c(1,2,3)) +
+    theme_APA + theme(legend.position="none")
+eplot
+```
+
+From this plot, it's clear that: (a) the overall trend is downwards, (b) most but not all participants individually show this trend, and (c) there is some variation in the absolute ratings people use.
 
 <a name="between"></a>
 
