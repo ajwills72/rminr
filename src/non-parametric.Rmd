@@ -135,11 +135,11 @@ nc_summary
 
 **Explanation of commands:** These commands should be familiar from several previous worksheets. We group the data by `cards`, and use `summarise`, to calculate the `median()` score for each group.
 
-**Explanation of output:**
+## Calculating the Mann-Whitney U test
 
 The Mann-Whitney U test (also known as the Wilcoxon rank sum test) is a non-parametric equivalent of a between-subjects t-test. It works by ranking all of the scores in the two groups, adding the ranks in each group, and comparing these "summed ranks" to determine if they differ.
 
-We'll run a Mann-Whitney U test to see if there were any differences between scores for the Italian and English cards on the noun comprehension (`nc`) task.
+We'll run a Mann-Whitney U test to see if there were any significant differences between scores for the Italian and English cards on the noun comprehension (`nc`) task.
 
 ```{r mw-nc}
 # Mann-Whitney U for noun comprehension
