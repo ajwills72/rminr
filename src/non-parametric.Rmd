@@ -23,7 +23,9 @@ library(pander)
 
 - [Getting started](#start)
 
-- [Mann-Whitney U test (aka. Wilcoxon rank-sum test)](#wilcox)
+- [Wilcoxon rank-sum test](#wilcox)
+
+- [What about Mann-Whitney?](#mw)
 
 - [Exercise 1](#ex1)
 
@@ -35,11 +37,11 @@ library(pander)
 
 ## Introduction
 
-This worksheet covers the Mann-Whitney U test, which is an alternative to the [between-subjects t-test](evidence.html#bs-ttest), and the Kruskal-Wallis H test, which is an alternative to the [between-subjects one-factor ANOVA](anova4.html#oneBS). 
+This worksheet covers the Wilcoxon rank-sum test, which is an alternative to the [between-subjects t-test](evidence.html#bs-ttest), and the Kruskal-Wallis H test, which is an alternative to the [between-subjects one-factor ANOVA](anova4.html#oneBS). 
 
-The Mann-Whitney U and Kruskal-Wallis H tests are both  _non-parametric_ tests. This means they make fewer assumptions about your data than do standard _parametric_ tests (such as t-tests, and ANOVA). Specifically, where your sample size is small, parametric tests assume that your population is approximately [normally distributed](https://ajwills72.github.io/critical-thinking/distributions-samples.pdf). However, it's  important to realise that as your sample size increases, parametric tests make fewer and fewer assumptions about your population distribution, due to the [central limit theorem](https://ajwills72.github.io/critical-thinking/distributions-samples.pdf). It's also important to realise that parametric tests have greater [statistical power](power.html) than non-parametric tests, so we should use parametric tests when their assumptions are met. 
+The Wilcoxon rank-sum and Kruskal-Wallis H tests are both  _non-parametric_ tests. This means they make fewer assumptions about your data than do standard _parametric_ tests (such as t-tests, and ANOVA). Specifically, where your sample size is small, parametric tests assume that your population is approximately [normally distributed](https://ajwills72.github.io/critical-thinking/distributions-samples.pdf). However, it's  important to realise that as your sample size increases, parametric tests make fewer and fewer assumptions about your population distribution, due to the [central limit theorem](https://ajwills72.github.io/critical-thinking/distributions-samples.pdf). It's also important to realise that parametric tests have greater [statistical power](power.html) than non-parametric tests, so we should use parametric tests when their assumptions are met. 
 
-Putting this all together, there's **a relatively small set of situations where it makes sense to use a non-parametric test**. These are when:
+Putting this all together, there's **a relatively small set of situations where it makes sense to use a non-parametric test** such as the Wilcoxon rank-sum or Kruskal-Wallis H. These are when:
 
 1. Your sample size is small (N < 30 per group) **and**,
 1. you do not know whether the population distribution is approximately normal **and**
@@ -47,7 +49,7 @@ Putting this all together, there's **a relatively small set of situations where 
 
 For example, you wouldn't use an non-parametric test on a small sample of IQ scores, because IQ is known to normally distributed. The point about effect size follows from the other two - if your sample size is small, you will only be able to detect large effects - see the [statistical power](power.html) worksheet. 
 
-**Where's the Bayes Factor?** The Mann-Whitney and Kruskal-Wallis are traditional tests, in the sense that they give us a p-value rather than a Bayes Factor. As we have previously covered, [p-values are widely misinterpreted by psychologists](evidence.html#p-wrong), and can never provide evidence for the null hypothesis. For this reason, we have generally advised that you instead use the Bayesian equivalents of these tests - such as [Bayesian t-tests](evidence.html#bayes-t), [Bayesian ANOVA](anova1.html#anovaWS), and [Bayesian chi-square](chi.html#evidence). However, it is not straight forward to calculate Bayesian equivalents of the Mann-Whitney and Kruskal-Wallis tests in R at the moment. So, in this case, we'll stick to the traditional tests. 
+**Where's the Bayes Factor?** The Wilcoxon rank-sum and Kruskal-Wallis are traditional tests, in the sense that they give us a p-value rather than a Bayes Factor. As we have previously covered, [p-values are widely misinterpreted by psychologists](evidence.html#p-wrong), and can never provide evidence for the null hypothesis. For this reason, we have generally advised that you instead use the Bayesian equivalents of these tests - such as [Bayesian t-tests](evidence.html#bayes-t), [Bayesian ANOVA](anova1.html#anovaWS), and [Bayesian chi-square](chi.html#evidence). However, it is not straight forward to calculate Bayesian equivalents of the Mann-Whitney and Kruskal-Wallis tests in R at the moment. So, in this case, we'll stick to the traditional tests. 
 
 <a name="start"></a>
 
@@ -65,11 +67,11 @@ To prepare for this worksheet:
 
 <a name="wilcox"></a>
 
-## Mann-Whitney U test
+## Wilcoxon rank-sum test
 
 ### Loading and preprocessing data
 
-We'll demonstrate the Mann-Whitney U test using data from an experiment which evaluated children’s language development using the Words in Game (WinG) test. WinG consists of a set of picture cards that are used in four tests: noun comprehension, noun production, predicate comprehension, and predicate production. The Italian and English versions of the WinG cards use different pictures to depict the associated concepts. The experiment tested whether English-speaking children aged approximately 30 months produce different responses for the two sets of cards.
+We'll demonstrate the Wilcoxon rank-sum test using data from an experiment which evaluated children’s language development using the Words in Game (WinG) test. WinG consists of a set of picture cards that are used in four tests: noun comprehension, noun production, predicate comprehension, and predicate production. The Italian and English versions of the WinG cards use different pictures to depict the associated concepts. The experiment tested whether English-speaking children aged approximately 30 months produce different responses for the two sets of cards.
 
 We start by loading the data:
 
@@ -135,11 +137,11 @@ nc_summary
 
 **Explanation of commands:** These commands should be familiar from several previous worksheets. We group the data by `cards`, and use `summarise`, to calculate the `median()` score for each group.
 
-## Calculating the Mann-Whitney U test
+### Calculating the Wilcoxon rank-sum test
 
-The Mann-Whitney U test (also known as the Wilcoxon rank sum test) is a non-parametric equivalent of a between-subjects t-test. It works by ranking all of the scores in the two groups, adding the ranks in each group, and comparing these "summed ranks" to determine if they differ.
+The Wilcoxon rank sum test is a non-parametric equivalent of a between-subjects t-test. It works by ranking all of the scores in the two groups, adding the ranks in each group, and comparing these "summed ranks" to determine if they differ.
 
-We'll run a Mann-Whitney U test to see if there were any significant differences between scores for the Italian and English cards on the noun comprehension (`nc`) task.
+We'll run a Wilcoxon rank-sum test to see if there were any significant differences between scores for the Italian and English cards on the noun comprehension (`nc`) task.
 
 ```{r mw-nc}
 # Mann-Whitney U for noun comprehension
@@ -165,19 +167,26 @@ wilcox.test(correct ~ cards, nc_include) %>%
 
 **Explanation of commands:**
 
-In `R`, `wilcox.test()`, with the argument `paired = FALSE` (the default) is the same as a Mann-Whitney U test. The command `wilcox.test(correct ~ cards, nc_include)` runs the test to compare the `correct` scores for the Italian and English `cards`.
+The command `wilcox.test(correct ~ cards, nc_include)` runs the test to compare the `correct` scores for the Italian and English `cards`.
 
 **Explanation of output:**
 
-The string `correct by cards` reminds you that you compared the values in `correct` between the levels in the `cards` factor. When calling `wilcox.test()` with `paired = FALSE`, the value of `W` is equivalent to `U`. The `p` value tells us whether there was  a significant difference between the medians in the two groups. The string `alternative hypothesis: true location shift is not equal to 0`, is another way of saying that the distribution of one of the groups is shifted to the left or right of the other. If the `p` value is > .05, we'll accept the null hypothesis that there's no difference between the distributions. The warning `cannot compute exact p-value with ties` lets you know that the method used to calculate _p_ will not be exact, because some items in the Italian and English scores had identical rankings.
+The string `correct by cards` reminds you that you compared the values in `correct` between the levels in the `cards` factor.  The `p` value tells us whether there was  a significant difference between the medians in the two groups. The string `alternative hypothesis: true location shift is not equal to 0`, is another way of saying that the distribution of one of the groups is shifted to the left or right of the other. If the `p` value is > .05, we'll accept the null hypothesis that there's no difference between the distributions. The warning `cannot compute exact p-value with ties` lets you know that the method used to calculate _p_ will not be exact, because some items in the Italian and English scores had identical rankings.
 
-We now have all of the information we need to report the results. For the noun comprehension task, there was no significant difference in accuracy between the Italian (_Mdn_ = `r nc_summary[nc_summary$cards == 'italian', 'median']`) and English (_Mdn_ = `r nc_summary[nc_summary$cards == 'english', 'median']`) cards (_U_ = `r nc_u$statistic`, _p_ = `r round(nc_u$p.value, 2)`).
+We now have all of the information we need to report the results. For the noun comprehension task, there was no significant difference in accuracy between the Italian (_Mdn_ = `r nc_summary[nc_summary$cards == 'italian', 'median']`) and English (_Mdn_ = `r nc_summary[nc_summary$cards == 'english', 'median']`) cards (_W_ = `r nc_u$statistic`, _p_ = `r round(nc_u$p.value, 2)`).
+
+<a name="mw"></a>
+
+## What about Mann-Whitney?
+
+In some journal articles, you may see a non-parametric test called a "Mann-Whitney U". This is exactly the same test as computed in the Wilcoxon rank-sum test above, just with a different name (and represented by a U rather than a W). 
+
 
 <a name="ex1"></a>
 
 ## Exercise 1
 
-Calculate summary statistics and Mann-Whitney U for the noun production task. Your results should look like this:
+Calculate summary statistics and the Wilxocon rank-sum for the noun production task. Your results should look like this:
 
 ```{r ex1, echo=FALSE}
 np_include <- task_by_subj %>% filter(task == 'np') %>% drop_na()
