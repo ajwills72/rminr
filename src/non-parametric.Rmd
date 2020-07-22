@@ -129,7 +129,7 @@ When we report non-parametric tests, we normally report the median (rather than 
 # summary statistics
 nc_summary <- nc_include %>%
   group_by(cards) %>%
-  summarise(median = median(correct)),
+  summarise(median = median(correct))
 nc_summary
 ```
 
