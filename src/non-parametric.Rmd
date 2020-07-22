@@ -76,8 +76,7 @@ We start by loading the data:
 ```{r load, message=FALSE, class.source = 'numberLines lineAnchors'}
 rm(list = ls()) # clear the environment
 library(tidyverse)
-wing_preproc <- read_csv('going-further/picture-naming-preproc.csv',
-                         col_types = 'fffiiiiiiiiii')
+wing_preproc <- read_csv('going-further/picture-naming-preproc.csv')
 ```
 
 **Explanation of commands:**
