@@ -111,9 +111,9 @@ task_by_subj %>% head() %>% pander()
 
 <a name="summary"></a>
 
-### Calculating summary statistics
+### Calculating descriptive statistics
 
-The Mann-Whitney test compares _ranked_ data, so we should report the median (rather than the mean) as our summary statistic. We'll also calculate the sum and mean of the ranks, as these are sometimes reported.
+When we report non-parametric tests, we normally report the median (rather than the mean) as our descriptive statistic. This makes practical sense, because the mean can be misleading when the distribution is skewed and, if we have chosen to do a non-parametric test, we are (presumably) uncertain whether the distribution is skewed or not.
 
 ```{r}
 # summary statistics
