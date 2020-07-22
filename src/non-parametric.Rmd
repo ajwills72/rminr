@@ -152,19 +152,6 @@ wilcox.test(correct ~ cards, nc_include)
 nc_u  <- wilcox.test(correct ~ cards, nc_include)
 ```
 
-```{r, echo=FALSE, eval=FALSE}
-# calculations for additional stats reported by SPSS
-# Field(2013, p.217ff is good on this)
-# z is useful for calculating r as an effect size
-# See also: https://data.library.virginia.edu/the-wilcoxon-rank-sum-test/
-n1 <- sum(as.integer(nc_include$cards) == 1)
-wilcox.test(correct ~ cards, nc_include) %>%
-    with(tibble(U = statistic,
-                W = statistic + n1 * (n1 + 1) / 2,
-                Z = qnorm(p.value / 2),
-                p = p.value))
-```
-
 **Explanation of commands:**
 
 The command `wilcox.test(correct ~ cards, nc_include)` runs the test to compare the `correct` scores for the Italian and English `cards`.
