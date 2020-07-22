@@ -13,7 +13,7 @@ output:
 ## Mann-Whitney based on https://stackoverflow.com/questions/43033884/r-mann-whitney-u-test-output-like-in-spss
 ## For Kruskal-Wallis see http://www.sthda.com/english/wiki/kruskal-wallis-test-in-r
 ## Show commands and output.
-knitr::opts_chunk$set(echo = TRUE, comment=NA, cache = TRUE)
+knitr::opts_chunk$set(echo = TRUE, comment=NA, cache = FALSE)
 library(pander)
 ```
 
@@ -88,7 +88,7 @@ The first few lines of `wing_preproc` look like this:
 ```{r, echo=FALSE}
 wing_preproc %>% head(12) %>% pander(split.table = Inf)
 ```
-Our test scores are currently in _wide_ format (lots of columns, few rows), but R generally requires data to be in _long_ format (lots of rows, few columns). This means we first have to make the data frame wider, so we can calculate summary statistics.
+Our test scores are currently in _wide_ format (lots of columns, few rows), but R generally requires data to be in _long_ format (lots of rows, few columns). This means we first have to make the data frame longer, so we can calculate summary statistics.
 
 ```{r pivot}
 # wide to long
@@ -109,6 +109,14 @@ The first few rows of `task_by_subj` look like this:
 task_by_subj %>% head() %>% pander()
 ```
 
+In the next section, we are going to compare English and Italian on the noun comprehension task. So, we filter the data (which contains all four tasks) to include just that task. We also remove any missing data (recorded as `NA`). 
+
+```{r}
+# Filter
+nc_include <- task_by_subj %>% filter(task == 'nc') %>% drop_na()
+```
+
+
 <a name="summary"></a>
 
 ### Calculating descriptive statistics
@@ -117,7 +125,6 @@ When we report non-parametric tests, we normally report the median (rather than 
 
 ```{r}
 # summary statistics
-nc_include <- task_by_subj %>% filter(task == 'nc') %>% drop_na()
 nc_include <- nc_include %>% mutate(rank = rank(correct))
 nc_summary <- nc_include %>%
   group_by(cards) %>%
