@@ -1,6 +1,6 @@
 ---
 title: "Traditional non-parametric tests"
-author: "Paul Sharpe"
+author: "Paul Sharpe and Andy Wills"
 output:
   html_document:
     highlight: pygment
@@ -35,9 +35,9 @@ library(pander)
 
 ## Introduction
 
-This worksheet covers the Mann-Whitney U test, which is an alternative to the [between-subjects t-test](evidence.html#bs-ttest), and a Kruskal-Wallis H test, which is an alternative to the [between-subjects one-factor ANOVA](anova4.html#oneBS). 
+This worksheet covers the Mann-Whitney U test, which is an alternative to the [between-subjects t-test](evidence.html#bs-ttest), and the Kruskal-Wallis H test, which is an alternative to the [between-subjects one-factor ANOVA](anova4.html#oneBS). 
 
-The Mann-Whitney U and Kruskal-Wallis H tests are both  _non-parametric_ tests. This means they make fewer assumptions about your data than do standard _parametric_ tests (such as t-tests, and ANOVA). Specifically, where your sample size is small, parametric tests assume that your population is approximately [normally distributed](https://ajwills72.github.io/critical-thinking/distributions-samples.pdf). However, it's  important to realise that as your sample size increases, parametric tests make fewer and fewer assumptions about your the population distribution, due to the [central limit theorem](https://ajwills72.github.io/critical-thinking/distributions-samples.pdf). It's also important to realise that parametric tests have greater [statistical power](power.html) than non-parametric tests, so we should use parametric tests when their assumptions are met. 
+The Mann-Whitney U and Kruskal-Wallis H tests are both  _non-parametric_ tests. This means they make fewer assumptions about your data than do standard _parametric_ tests (such as t-tests, and ANOVA). Specifically, where your sample size is small, parametric tests assume that your population is approximately [normally distributed](https://ajwills72.github.io/critical-thinking/distributions-samples.pdf). However, it's  important to realise that as your sample size increases, parametric tests make fewer and fewer assumptions about your population distribution, due to the [central limit theorem](https://ajwills72.github.io/critical-thinking/distributions-samples.pdf). It's also important to realise that parametric tests have greater [statistical power](power.html) than non-parametric tests, so we should use parametric tests when their assumptions are met. 
 
 Putting this all together, there's **a relatively small set of situations where it makes sense to use a non-parametric test**. These are when:
 
@@ -45,7 +45,7 @@ Putting this all together, there's **a relatively small set of situations where 
 1. you do not know whether the population distribution is approximately normal **and**
 1. you have reason to expect the effect size will be large (d > 1)
 
-For example, you wouldn't use an non-parametric test on a small sample of IQ scores, because IQ is known to normally distributed. The point about effect size follows from the other two - if your sample size is small, you will only be able to detect large effects - see the [statistical power](power.html) worksheet.
+For example, you wouldn't use an non-parametric test on a small sample of IQ scores, because IQ is known to normally distributed. The point about effect size follows from the other two - if your sample size is small, you will only be able to detect large effects - see the [statistical power](power.html) worksheet. 
 
 **Where's the Bayes Factor?** The Mann-Whitney and Kruskal-Wallis are traditional tests, in the sense that they give us a p-value rather than a Bayes Factor. As we have previously covered, [p-values are widely misinterpreted by psychologists](evidence.html#p-wrong), and can never provide evidence for the null hypothesis. For this reason, we have generally advised that you instead use the Bayesian equivalents of these tests - such as [Bayesian t-tests](evidence.html#bayes-t), [Bayesian ANOVA](anova1.html#anovaWS), and [Bayesian chi-square](chi.html#evidence). However, it is not straight forward to calculate Bayesian equivalents of the Mann-Whitney and Kruskal-Wallis tests in R at the moment. So, in this case, we'll stick to the traditional tests. 
 
@@ -69,7 +69,7 @@ To prepare for this worksheet:
 
 ### Loading and preprocessing data
 
-We'll demonstrate the Mann-Whitney U test using data from an experiment which evaluated children’s language development using the Words in Game (WinG) test. WinG consists of a set of picture cards which are used in four tests: noun comprehension, noun production, predicate comprehension, and predicate production. The Italian and English versions of the WinG cards use different pictures to depict the associated concepts. The experiment tested whether English-speaking children aged approximately 30 months, produce similar responses for the two sets of cards.
+We'll demonstrate the Mann-Whitney U test using data from an experiment which evaluated children’s language development using the Words in Game (WinG) test. WinG consists of a set of picture cards that are used in four tests: noun comprehension, noun production, predicate comprehension, and predicate production. The Italian and English versions of the WinG cards use different pictures to depict the associated concepts. The experiment tested whether English-speaking children aged approximately 30 months produce different responses for the two sets of cards.
 
 We start by loading the data:
 
