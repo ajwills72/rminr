@@ -116,6 +116,8 @@ In the next section, we are going to compare English and Italian on the noun com
 nc_include <- task_by_subj %>% filter(task == 'nc') %>% drop_na()
 ```
 
+**Explanation of command**: The `filter` command should be familiar from many previous worksheets. `drop_na()` is explained in more detail in the [preprocessing scales](preproc-scales.html#missing) worksheet, but basically it just removes any row that contains an `NA` in it.
+
 
 <a name="summary"></a>
 
