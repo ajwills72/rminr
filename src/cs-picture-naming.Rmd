@@ -8,19 +8,11 @@ output:
 
 ```{r setup, include=FALSE}
 ## DEVELOPERS: Uncomment one option, as appropriate
-
-## Data required to knit
-## https://github.com/ajwills72/rminr-data/tree/master/going-further/picture-naming.xlsx
-##
-## I check out rminr-data and make a symbolic link to going-further
-
 ## Show only commands.
 ## knitr::opts_chunk$set(echo = TRUE, message = FALSE, results='hide', fig.keep = 'none', comment=NA)
-
 ## Show commands and output.
 knitr::opts_chunk$set(echo = TRUE, comment=NA, cache = TRUE)
 library(pander)
-
 # Line numbering guide
 # https://blog.atusy.net/submodules/rmd-line-num/index.html
 ```
