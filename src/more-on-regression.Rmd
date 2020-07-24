@@ -17,17 +17,27 @@ library(pander)
 # https://blog.atusy.net/submodules/rmd-line-num/index.html
 ```
 
+## Contents
+
+- [Introduction](#intro)
+
+- [Getting started](#start)
+
+- [Multiple regression with more than two predictors](#multi)
+
+- [Hierarchical regression](#hierarchical)
+
+- [Exercise 1](#ex1)
+
+- [Exercise 2](#ex2)
+
+<a name="intro"></name>
 
 ## Introduction
 
-You already know about linear regression on a single variable. Multiple regression with two variables. Straightforward to add more variables.
+Previous worksheets introduced [linear regression using a single predictor variable](https://benwhalley.github.io/rmip/regression.html), and [multiple regression with two predictors](https://benwhalley.github.io/rmip/multiple-regression.html). This worksheet builds on this foundation, by explaining how to build models with more than two predictors.
 
-In this worksheet we'll use data from an undergraduate student dissertation which explored relationships between Polish (n=93) and British (n=104) people's emotional intelligence, religious orientation and spirituality.
-
-197 participants (93 polish, 104 british) were analysed (exclusions: 10 missing data, 2 no consent) Polish/English.
-
-
-<a name="load"></a>
+<a name="start"></a>
 
 ## Loading data
 
@@ -37,7 +47,7 @@ Ensure you have the latest files by asking git to "`pull`" the repository. Selec
 
 Next, create a new, empty R script and save it in the `rminr-data` folder as `more-regression.R`. Put all the commands from this worksheet into this file, and run them from there. Save your script regularly.
 
-We start by loading the data.
+We'll use some data from an undergraduate student dissertation which explored relationships between Polish (n=93) and British (n=104) people's religious orientation, spiritual beliefs and emotional intelligence. We start by loading the data.
 
 ```{r load, message=FALSE}
 rm(list = ls()) # clear the environment
@@ -76,10 +86,9 @@ Religious orientation (RO) was was measured with the amended Religious Orientati
 | ro_i   | Intrinsic relgious orientation | 1-3    | 
 | ro_e   | Extrinsic relgious orientation | 1-3    |
 
-
 ### Spirituality
 
-Spirituality was measured with the Spiritual Connection Questionnaire (SCQ-48; Wheeler and Hyland, 2008). The SCQ-48 has five factors: connection with nature, connection with places, connection with the universe, connection with other people, and .
+Spirituality was measured with the Spiritual Connection Questionnaire (SCQ-48; Wheeler and Hyland, 2008). The SCQ-48 has five subscales: connection with nature, connection with places, connection with the universe, connection with other people, and .
 
 | Column | Description                                                            | Values |
 | ------ | ---------------------------------------------------------------------- | ------ |
@@ -101,81 +110,180 @@ In this study, emotional intelligence (EI) was treated as a trait; a personality
 | emotionality | Emotionality | 1-7  |
 | sociability | Sociability | 1-7 |
 
-## Predicting EI in Polish
+<a name="multi"></a>
 
-```{r oi1}
-british <- data %>% filter(nationality == 'Polish') %>%
-  drop_na() %>% # ro_e has 4 NAs
-  as.data.frame()
+## Multiple regression with more than two predictors
 
-oi_lm1 <- lm(ro_i ~ age + sex + education + religious, data = data.frame(british))
+In the [multiple regression worksheet](https://benwhalley.github.io/rmip/multiple-regression.html), you learnt that _R^2^_ tells you how much of the variance in your outcome variable is explained by your predictor variables.
+
+The linear model you built in that worksheet used two predictors, but it's straightforward to add more predictors to a model. We'll start with a model which predicts intrinsic religious orientation from the demographics variables in our Polish sample.
+
+```{r oi1, class.source = 'numberLines lineAnchors', warning=FALSE}
+polish <- data %>% filter(nationality == 'Polish')
+polish <- polish %>% drop_na() %>% as.data.frame()
+
+oi_lm1 <- lm(ro_i ~ age + sex + education + religious, data = data.frame(polish))
 library(broom)
 glance(oi_lm1)
+```
 
+**Explanation of commands:**
+
+Line 1 filters the data to only include Polish participants. We can't calculate Bayes Factors for predictors which don't have a value, so we use `drop_na()` to remove any rows containing `NA`. Line 2 also converts `polish` to a data frame, as this is the format required for calculating Bayes Factors.
+
+Line 4 should be familiar from [the multiple regression worksheet](https://benwhalley.github.io/rmip/how-good-was-our-model.html). This builds a regression model that predicts intrinsic religious orientation, defined by `ro_i ~`. The variables on the right of the `~` are the predictors. As you can see, these are the four demographics variables `age + sex + education + religious`. Line 5 loads the `broom` library which provides the `glance()` function. Line 6 uses `glance()` to print some statistics for our model.
+
+**Explanation of output:**
+
+```{r oi_lm1-hidden, echo=FALSE, results='hide', message=FALSE, warning=FALSE}
+r_squared1 <- round(glance(oi_lm1)$adj.r.squared, 2)
+```
+
+The value of `r r_squared1` in `adj.r.squared` tells us how much of the variance in `ro_i` is explained by the demographics variables. A model containing demographics variables explain `r r_squared1 * 100`% of the variance in intrinsic religious orientation.
+
+[The multiple regression worksheet](https://benwhalley.github.io/rmip/how-good-was-our-model.html) showed you how to calculate a Bayes factor which tests whether a regression model is any better than a simpler model with no predictors.
+
+```{r oi1-bf, class.source = 'numberLines lineAnchors', warning=FALSE}
 library(BayesFactor)
-oi_lmbf1 <- lmBF(ro_i ~ age + sex + education + religious, data = data.frame(british),
-            progress = FALSE)
+oi_lmbf1 <- lmBF(ro_i ~ age + sex + education + religious, data = data.frame(polish),
+                 progress = FALSE)
 oi_lmbf1
 ```
 
+**Explanation of commands:**
 
-```{r oi2}
+Line 1 loads the `BayesFactor` package. Lines 2-3 build a Bayesian model using the same outcome and predictors as above. Line 4 displays information about the model.
+
+**Explanation of output:**
+
+The output `[1] age + sex + education + religious` reminds you of the predictors in your model. The number after the `:` is a Bayes Factor for they hypothesis that your model is a better predictor of the outcome than a simpler model with no predictors. That is, a model which just computes the average of all outcome scores (sometimes called the 'Intercept only' model). The Bayes Factor for this hypothesis is around 3,800, which is strong evidence that these demographics variables help predict intrinsic religiosity.
+
+<a name="hierarchical"></a>
+
+## Hierarchical regression
+
+One use of multiple regression is to test a sequence of related hypotheses. Groups of variables (sometimes referred to as 'blocks') are added to a model in steps. At each step, a comparison is made to see if the model with more variables explains more or less variance than the simpler model from the previous step.
+
+The order in which variables are added to the model is not arbitrary. Based on previous research, variables known to predict the outcome are entered first. Variables which test new hypotheses are added in subsequent steps. Each step builds on the previous one, which is why the approach is known as 'hierarchical regression'.
+
+So far, we have a model which shows that demographics help to predict intrinsic religiosity. According to the definition we gave above, intrinsically religious people treat religion as a spiritual end in and of itself. If that's true, we would expect a model that includes sprituality variables would be a better predictor of intrinsic religiosity, than one with just the demographics variables. Again, by 'better', we mean 'explains more variance' in the outcome variable.
+
+We can test this hypothesis by extending the demographics model to include the spirituality variables measured by the SCQ-48.
+
+```{r oi2, class.source = 'numberLines lineAnchors', warning=FALSE}
 oi_lm2 <- lm(ro_i ~ age + sex + education + religious +
                happiness + universe + others + nature + places,
-             data = data.frame(british))
+             data = data.frame(polish))
 glance(oi_lm2)
-
-oi_lmbf2 <- lmBF(ro_i ~ age + sex + education + religious +
-               happiness + universe + others + nature + places,
-               data = data.frame(british), progress = FALSE)
-oi_lmbf2
 ```
 
+**Explanation of commands:**
 
-```{r oi3}
+Lines 1-3 build our new model. This includes the demographics variables, and adds the spirituality variables `happiness + universe + others + nature + places`.
+
+**Explanation of output:**
+
+```{r oi_lm2-hidden, echo=FALSE, results='hide', message=FALSE, warning=FALSE}
+r_squared2 <- round(glance(oi_lm2)$adj.r.squared, 2)
+```
+
+For this model, `adj.r.squared` = `r r_squared2`, which means it explains `r r_squared2 * 100`% of the variance in intrinsic religious orientation, an increase of `r (r_squared2 - r_squared1) * 100`% over the model from step 1.
+
+In the previous step, we found that a model with demographics predictors was better than a model with no predictors. To test the hypothesis that the spirituality variables help to explain the variance in intrinsic religiosity, we can compare our second model against the first. This approach was explained in the [multiple regression worksheet](https://benwhalley.github.io/rmip/how-good-was-our-model.html), and you also encountered it when [testing the interaction in a factorial ANOVA](anova4.html#twoBS).
+
+```{r oi2-bf, class.source = 'numberLines lineAnchors', warning=FALSE}
+oi_lmbf2 <- lmBF(ro_i ~ age + sex + education + religious +
+               happiness + universe + others + nature + places,
+               data = data.frame(polish), progress = FALSE)
+oi_lmbf2 / oi_lmbf1
+```
+
+**Explanation of commands:**
+
+Lines 1-3 build a Bayesian regression model with the demographic and spirituality predictors. Line 4 compares the model with the demographics and spirituality variables, `oi_lmbf2`, against the model with just the demographics variables, `oi_lmbf1`. You can think of this as dividing a more complex model by a simpler one, but remember that this is actually a comparison between the probabilites of the two models.
+
+**Explanation of output:**
+
+The Bayes Factor for this hypothesis is over 28 million, so we can confidently claim that a model containing these spirituality variables explains more variance in intrinsic religiosity, than a simpler model with just demographics variables.
+
+In this study, the researchers also hypothesised that trait emotional intelligence and extrinsic religiosity would further explain the variance in intrinsic religiosity. These variables were entered together as a block.
+
+```{r oi3, class.source = 'numberLines lineAnchors', warning=FALSE}
 oi_lm3 <- lm(ro_i ~ age + sex + education + religious +
                happiness + universe + others + nature + places +
                wellbeing + self_control + emotionality + sociability + ro_e,
-             data = data.frame(british))
+             data = data.frame(polish))
 glance(oi_lm3)
+```
 
+**Explanation of commands:**
+
+Lines 1-4 build our third model. This contains all of the variables in `oi_lmbf2`, and adds the emotional intelligence variables `wellbeing + self_control + emotionality + sociability`, and `ro_e` for external religiosity.
+
+**Explanation of output:**
+
+```{r oi_lm3-hidden, echo=FALSE, results='hide', message=FALSE, warning=FALSE}
+r_squared3 <- round(glance(oi_lm3)$adj.r.squared, 2)
+```
+
+For this model, `adj.r.squared` = `r r_squared3`, which means it explains `r r_squared3 * 100`% of the variance in intrinsic religious orientation, an increase of `r (r_squared3 - r_squared2) * 100`% over the model from step 2.
+
+Finally, we compare the Bayesian model, with the one from step 2.
+
+```{r oi3-bf, class.source = 'numberLines lineAnchors', warning=FALSE}
 oi_lmbf3 <- lmBF(ro_i ~ age + sex + education + religious +
                happiness + universe + others + nature + places +
                wellbeing + self_control + emotionality + sociability + ro_e,
-               data = data.frame(british), progress = FALSE)
-oi_lmbf3
+               data = data.frame(polish), progress = FALSE)
+oi_lmbf3 / oi_lmbf2
 ```
 
+**Explanation of commands:**
 
-## Exercise
+Lines 1-4 build the same Bayesian model. Line 5 compares this new model against the previous one.
 
-Predict RO_i in British sample.
+**Explanation of output:**
 
+The Bayes Factor for this hypothesis is over 10,000, which is strong evidence that a model with the additional variables explains more variance than the simpler model in step 2.
+
+### A note about 'overfitting'
+
+All of the regression models we've been creating and comparing were built based on the data from our sample. However, we're normally looking for a model that will predict outcomes for _any_ sample. Adding variables to a model can explain more variance in a particular sample, at the expense of being able to explain data in other samples. This is known as [overfitting](https://en.wikipedia.org/wiki/Overfitting). When the amount of additional variance explained reduces beyond a certain point, we can avoid overfitting be preferring a simpler model over a more complex one. Cross-validation is a technique to test for overfitting, but is outside the scope of this worksheet.
+
+<a name="ex1"></a>
+
+## Exercise 1
+
+Predict ei in British sample.
 
 ```{r ei1}
-polish <- data %>% filter(nationality == 'British') %>%
+british <- data %>% filter(nationality == 'British') %>%
   drop_na() %>% # ro_e has 4 NAs
   as.data.frame()
 
-
-ei_lm1 <- lm(tei ~ age + sex + education + religious, data = data.frame(polish))
+ei_lm1 <- lm(tei ~ age + sex + education + religious, data = data.frame(british))
 glance(ei_lm1)
 
-
-ei_bf1 <- lmBF(tei ~ age + sex + education + religious, data = data.frame(polish),
+ei_bf1 <- lmBF(tei ~ age + sex + education + religious, data = data.frame(british),
             progress = FALSE)
 ei_bf1
 ```
 
+**Copy the R code you used for this exercise into PsycEL.**
+
+<a name="ex2"></a>
+
+## Exercise 2
+
 ```{r ei2}
 ei_lm2 <- lm(tei ~ age + sex + education + religious +
                happiness + universe + others + nature + places,
-             data = data.frame(polish))
+             data = data.frame(british))
 glance(ei_lm2)
 
 ei_bf2 <- lmBF(tei ~ age + sex + education + religious  +
                happiness + universe + others + nature + places,
-               data = data.frame(polish), progress = FALSE)
+               data = data.frame(british), progress = FALSE)
 ei_bf2
 ```
 
@@ -183,86 +291,17 @@ ei_bf2
 ei_lm3 <- lm(tei ~ age + sex + education + religious +
                happiness + universe + others + nature + places +
                ro_i + ro_e,
-             data = data.frame(polish))
+             data = data.frame(british))
 glance(ei_lm3)
 
 ei_bf3 <- lmBF(tei ~ age + sex + education + religious  +
                 happiness + universe + others + nature + places +
                 ro_i + ro_e,
-               data = data.frame(polish), progress = FALSE)
+               data = data.frame(british), progress = FALSE)
 ei_bf3
 ```
 
+**Copy the R code you used for this exercise into PsycEL.**
+___
 
-
-```{r, eval=FALSE}
-
-# Ben's comments
-
-## Use 1: Does my predictor Z explain variance, once I have controlled for other stuff?
-
-M1 = Y ~ A + B + C….  Compared with  
-M2 = Y ~ A + B + C + Z
-
-P value from t test for Z from summary(M2)
-
-BF = lmBF for M1 and M2 = M2/M1
-
-
-## Use 2: Does this set of predictors {D,E,F} explain extra variance compared with basic predictors?
-M1 = lmBF(Y ~ A + B + C)….  Compared with
-M2 =   lmBF(Y ~ A + B + C + D + E + F)
-
-F test extracted from anova(M1, M2)
-BF = M2 / M1
-
-For prediction/plotting:
-
-M2a =   lm(Y ~ A + B + C + D + E + F)#
-
-## Example used by Ben during this conversation
-
-library(broom)
-library(tidyverse)
-library(BayesFactor)
-m1f <- lm(mpg ~ wt + disp, data=mtcars)
-
-augment(m1f) %>% ggplot(aes(wt, .fitted)) + geom_point() + geom_smooth(method='lm', se=F)
-augment(m1f) %>% ggplot(aes(disp, .fitted)) + geom_point() + geom_smooth(method='lm', se=F)
-
-m1 <- lmBF(mpg ~ wt, data=mtcars)
-m2 <- lmBF(mpg ~ wt + disp , data=mtcars) # you can add factors too
-m2/m1
-
-```{r, eval=FALSE}
-library(BayesFactor)
-data(attitude)
-
-## Classical regression
-summary(fm1 <- lm(rating ~ ., data = attitude))
-
-## Compute Bayes factors for all regression models
-output = regressionBF(rating ~ ., data = attitude, progress=FALSE)
-head(output)
-## Best model is 'complaints' only
-
-## Compute all Bayes factors against the full model, and
-## look again at best models
-head(output / output[63])
-```
-
-
-
-## References
-
-Maltby, J., & Lewis, C. A. (1996). Measuring intrinsic and extrinsic orientation toward
-religion: Amendments for its use among religious and non-religious samples.
-Personality and Individual Differences, 21(6), 937-946.
-
-Petrides, K. V., & Furnham, A. (2006). The Role of Trait Emotional Intelligence in a
-Gender‐Specific Model of Organizational Variables 1. Journal of Applied
-Social Psychology, 36(2), 552-569.
-
-Wheeler, P., & Hyland, M. E. (2008). The development of a scale to measure the
-experience of spiritual connection and the correlation between this experience
-and values. Spirituality and Health International, 9(4), 193-217.
+This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0.
