@@ -103,15 +103,12 @@ Next we preprocess the WinG data.
 
 ```{r nc}
 # preprocess noun comprehension data
-nc <- nc %>%
-  set_names(~ str_to_lower(.)) %>%
-  mutate(subj = factor(subj), cards = factor(cards)) %>%
-  select(subj, cards, mountain:wellyboots)
+nc <- nc %>% mutate(subj = factor(subj), Cards = factor(Cards)) 
 ```
 
 **Explanation of commands:**
 
-We convert the column names to lower case. The `cards` column indicates whether the child was tested with the Italian or English cards, so we convert it to a factor along with `subj`. We select these columns and the columns containing rating data for the words used in the the noun comprehension task. These are in the column range `mountain:wellyboots`.
+The `cards` column indicates whether the child was tested with the Italian or English cards, so we convert it to a factor along with `subj`. We select these columns and the columns containing rating data for the words used in the the noun comprehension task. These are in the column range `mountain:wellyboots`.
 
 Here are the first few rows of `nc`:
 
@@ -201,22 +198,13 @@ nc_by_subj %>% pander()
 We repeat these steps to apply exclusion critera for the noun production, predicate comprehension and predicate production tasks.
 
 ```{r np-pc-pp}
-np <- np %>%
-  set_names(~ str_to_lower(.)) %>%
-  mutate(subj = factor(subj), cards = factor(cards)) %>%
-  select(subj, cards, beach:gloves)
+np <- np %>% mutate(subj = factor(subj), cards = factor(cards))
 np_by_subj <- np %>% exclude() %>% select(subj, correct, related)
 
-pc <- pc %>%
-  set_names(~ str_to_lower(.)) %>%
-  mutate(subj = factor(subj), cards = factor(cards)) %>%
-  select(subj, cards, big:pulling)
+pc <- pc %>% mutate(subj = factor(subj), cards = factor(cards))
 pc_by_subj <- pc %>% exclude() %>% select(subj, correct, related)
 
-pp <- pp %>%
-  set_names(~ str_to_lower(.)) %>%
-  mutate(subj = factor(subj), cards = factor(cards)) %>%
-  select(subj, cards, small:pushing)
+pp <- pp %>% mutate(subj = factor(subj), cards = factor(cards))
 pp_by_subj <- pp %>% exclude() %>% select(subj, correct, related)
 ```
 **Explanation of commands:**
