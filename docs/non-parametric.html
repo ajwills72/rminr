@@ -605,7 +605,7 @@ summary {
 <h3>Calculating the Wilcoxon rank-sum test</h3>
 <p>As we said earlier in this worksheet, the Wilcoxon rank sum test is a non-parametric equivalent of a between-subjects t-test. It works by ranking all of the scores in the two groups, adding the ranks in each group, and comparing these “summed ranks” to determine if they differ.</p>
 <p>We’ll run a Wilcoxon rank-sum test to see if there were any significant differences between scores for the Italian and English cards on the noun comprehension (<code>nc</code>) task.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1"><span class="co"># Mann-Whitney U for noun comprehension</span></a>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1"><span class="co"># Wilcoxon rank-sum test (Mann-Whitney U) for noun comprehension</span></a>
 <a class="sourceLine" id="cb6-2" title="2"><span class="kw">wilcox.test</span>(correct <span class="op">~</span><span class="st"> </span>cards, nc_include)</a></code></pre></div>
 <pre><code>Warning in wilcox.test.default(x = c(12, 18, 17, 17, 20, 19, 19, 20, 19), :
 cannot compute exact p-value with ties</code></pre>
@@ -621,7 +621,7 @@ alternative hypothesis: true location shift is not equal to 0</code></pre>
 <p>The phrase <code>with continuity correction</code> is a technical detail that can be safely ignored. If you’re curious, you can read more in the help file, by typing <code>?wilcoxon.test</code> into the console.</p>
 <p>The phrase <code>correct by cards</code> reminds you that you compared the values in <code>correct</code> between the levels in the <code>cards</code> factor. A <code>p</code> value of less than .05 is generally considered by psychologists to be evidence that the two groups are different.</p>
 <p>The phrase <code>alternative hypothesis: true location shift is not equal to 0</code> can be safely ignored, as it’s just another (rather obscure) way of saying that you are testing whether the two groups are different.</p>
-<p>The warning <code>cannot compute exact p-value with ties</code> lets you know that the method used to calculate <em>p</em> will not be exact, because some items in the Italian and English scores had identical rankings. It is possible to calculate the exact p value using the <code>pwilcox</code> command, but that’ beyond what we’ll cover in this worksheet. If your p-value is sufficiently close to .05 that it would matter if the estimate is a bit off, then a better solution would be to attempt to replicate your finding in a second study with a larger sample.</p>
+<p>The warning <code>cannot compute exact p-value with ties</code> lets you know that the method used to calculate <em>p</em> will not be exact, because some items in the Italian and English scores had identical rankings. It is possible to calculate the exact p value using the <code>pwilcox</code> command, but that’s beyond what we’ll cover in this worksheet. If your p-value is sufficiently close to .05 that it would matter if the estimate is a bit off, then a better solution would be to attempt to replicate your finding in a second study with a larger sample.</p>
 <p>We now have all of the information we need to report the results. For the noun comprehension task, there was no significant difference in accuracy between the Italian (<em>Mdn</em> = 17) and English (<em>Mdn</em> = 19) cards <em>W</em> = 58, <em>p</em> = 0.13.</p>
 <p><a name="mw"></a></p>
 </div>
@@ -657,7 +657,7 @@ alternative hypothesis: true location shift is not equal to 0</code></pre>
 <p>We’ll demonstrate the Kruskal-Wallis test using data from a study which compared emotion regulation strategies between fans of mainstream (control group), goth, metal and emo music. Participants were measured using the Emotion Regulation Strategies for Artistic Creative Activities Scale (ERS-ACA), an 18 item inventory, with each item scored from 1 (‘strongly disagree’) to 5 (‘strongly agree’). The ERS-ACA gives an overall measure of the strategy people use to regulate their emotions when they engage in artistic, creative activities, and scores on three strategy sub-scales; avoidance, approach and self-development.</p>
 <p>We start by loading the data:</p>
 <div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" title="1"><span class="co"># Kruskal-Wallis H test</span></a>
-<a class="sourceLine" id="cb13-2" title="2">ers_l &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&#39;going-further/music-emotion-preproc.csv&#39;</span>) </a></code></pre></div>
+<a class="sourceLine" id="cb13-2" title="2">ers_l &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&#39;going-further/music-emotion-preproc.csv&#39;</span>)</a></code></pre></div>
 <pre><code>Parsed with column specification:
 cols(
   subj = col_double(),
@@ -751,7 +751,7 @@ cols(
 <p><strong>Explanation of commands:</strong></p>
 <p>Line 1 filters the data to only include measurements for the ‘approach’ subscale and removes missing data. Lines 2-5 are very similar to the summary statistics we generated for the Mann-Whitney test. In this case we group by music <code>subculture</code>.</p>
 <p><strong>Explanation of output:</strong></p>
-<p>The differences between groups look quite small, the largest being between <code>Mainstream</code> and <code>Emo</code>.</p>
+<p>The differences in medians between groups look quite small.</p>
 </div>
 <div id="calculating-the-kruskal-wallis" class="section level3">
 <h3>Calculating the Kruskal-Wallis</h3>
