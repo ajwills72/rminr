@@ -119,7 +119,7 @@ nc_summary
 
 ### Calculating the Wilcoxon rank-sum test
 
-The Wilcoxon rank sum test is a non-parametric equivalent of a between-subjects t-test. It works by ranking all of the scores in the two groups, adding the ranks in each group, and comparing these "summed ranks" to determine if they differ.
+As we said earlier in this worksheet, the Wilcoxon rank sum test is a non-parametric equivalent of a between-subjects t-test. It works by ranking all of the scores in the two groups, adding the ranks in each group, and comparing these "summed ranks" to determine if they differ.
 
 We'll run a Wilcoxon rank-sum test to see if there were any significant differences between scores for the Italian and English cards on the noun comprehension (`nc`) task.
 
