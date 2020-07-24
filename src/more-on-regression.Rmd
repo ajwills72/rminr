@@ -51,7 +51,9 @@ data <- read_csv('going-further/religion-preproc.csv')
 ```{r}
 data <- data %>%
   mutate(sex = factor(sex), education = factor(education))
-data$education <- fct_relevel(data$education, 'no formal quals', 'GCSE or equiv', 'A level or equiv', 'Technical, HNC, FD or equiv', 'degree')
+data$education <- fct_relevel(data$education, 'no formal quals',
+                              'GCSE or equiv', 'A level or equiv',
+                              'Technical, HNC, FD or equiv', 'degree')
 ```
 
 | Column | Description                             | Values             |
@@ -61,6 +63,7 @@ data$education <- fct_relevel(data$education, 'no formal quals', 'GCSE or equiv'
 | sex    | Biological sex of participant           | male, female       |
 | education | Highest education level of participant  | no formal quals, GCSE or equiv, A level or equiv, degree, Technical, HNC, FD or equiv |
 | religious  | Did the participant identify with a recognised religion? | yes, no  |
+| nationality | Nationality of participant         | British, Polish |
 
 We now turn to the three scales that the participants completed. In practice, you would need to calculate the scores for each scale from the raw data. This is explained in the [Preprocessing scales worksheet](preproc-scales.html). In the the data we loaded, these scores have already been calculated.
 
@@ -98,24 +101,101 @@ In this study, emotional intelligence (EI) was treated as a trait; a personality
 | emotionality | Emotionality | 1-7  |
 | sociability | Sociability | 1-7 |
 
-## Predicting EI
+## Predicting EI in Polish
 
-The researchers sought to replicate previous research which found that intrinsically religious people were more spiritual than extrinsically religiously people. They also predicted a negative correlation between EI and extrinsic RO. Finally, they predicted that intrinsic RO would correlate with trait EI.
+```{r oi1}
+british <- data %>% filter(nationality == 'Polish') %>%
+  drop_na() %>% # ro_e has 4 NAs
+  as.data.frame()
 
-1. EI ~ age + gender + marital_status + education + religious_belief
-1. EI ~ age + gender + marital_status + education + religious_belief + happiness + universe + others + nature + places
-1. EI ~ age + gender + marital_status + education + religious_belief + happiness + universe + others + nature + places + ro_i + ro_e
+oi_lm1 <- lm(ro_i ~ age + sex + education + religious, data = data.frame(british))
+library(broom)
+glance(oi_lm1)
+
+library(BayesFactor)
+oi_lmbf1 <- lmBF(ro_i ~ age + sex + education + religious, data = data.frame(british),
+            progress = FALSE)
+oi_lmbf1
+```
+
+
+```{r oi2}
+oi_lm2 <- lm(ro_i ~ age + sex + education + religious +
+               happiness + universe + others + nature + places,
+             data = data.frame(british))
+glance(oi_lm2)
+
+oi_lmbf2 <- lmBF(ro_i ~ age + sex + education + religious +
+               happiness + universe + others + nature + places,
+               data = data.frame(british), progress = FALSE)
+oi_lmbf2
+```
+
+
+```{r oi3}
+oi_lm3 <- lm(ro_i ~ age + sex + education + religious +
+               happiness + universe + others + nature + places +
+               wellbeing + self_control + emotionality + sociability + ro_e,
+             data = data.frame(british))
+glance(oi_lm3)
+
+oi_lmbf3 <- lmBF(ro_i ~ age + sex + education + religious +
+               happiness + universe + others + nature + places +
+               wellbeing + self_control + emotionality + sociability + ro_e,
+               data = data.frame(british), progress = FALSE)
+oi_lmbf3
+```
+
+
+## Exercise
+
+Predict RO_i in British sample.
+
+
+```{r ei1}
+polish <- data %>% filter(nationality == 'British') %>%
+  drop_na() %>% # ro_e has 4 NAs
+  as.data.frame()
+
+
+ei_lm1 <- lm(tei ~ age + sex + education + religious, data = data.frame(polish))
+glance(ei_lm1)
+
+
+ei_bf1 <- lmBF(tei ~ age + sex + education + religious, data = data.frame(polish),
+            progress = FALSE)
+ei_bf1
+```
+
+```{r ei2}
+ei_lm2 <- lm(tei ~ age + sex + education + religious +
+               happiness + universe + others + nature + places,
+             data = data.frame(polish))
+glance(ei_lm2)
+
+ei_bf2 <- lmBF(tei ~ age + sex + education + religious  +
+               happiness + universe + others + nature + places,
+               data = data.frame(polish), progress = FALSE)
+ei_bf2
+```
+
+```{r ei3}
+ei_lm3 <- lm(tei ~ age + sex + education + religious +
+               happiness + universe + others + nature + places +
+               ro_i + ro_e,
+             data = data.frame(polish))
+glance(ei_lm3)
+
+ei_bf3 <- lmBF(tei ~ age + sex + education + religious  +
+                happiness + universe + others + nature + places +
+                ro_i + ro_e,
+               data = data.frame(polish), progress = FALSE)
+ei_bf3
+```
+
+
 
 ```{r, eval=FALSE}
-ei1 <- lmBF(ei ~ age + gender + marital_status + education + religious_belief, data = foo)
-ei1
-
-## RO_i
-
-2. ro_i ~ age + gender + marital_status + education + religious_belief
-2. ro_i ~ age + gender + marital_status + education + religious_belief + happiness + universe + others + nature + places
-2. ro_i ~ age + gender + marital_status + education + religious_belief + happiness + universe + others + nature + places + wellbeing + self_control + emotionality + sociability + ro_e
-
 
 # Ben's comments
 
@@ -170,6 +250,8 @@ head(output)
 ## look again at best models
 head(output / output[63])
 ```
+
+
 
 ## References
 
