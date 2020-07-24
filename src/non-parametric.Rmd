@@ -105,7 +105,7 @@ nc_include <- wing_preproc %>% filter(task == 'nc') %>% drop_na()
 
 ### Calculating descriptive statistics
 
-When we report non-parametric tests, we normally report the median (rather than the mean) as our descriptive statistic. This makes practical sense, because the mean can be misleading when the distribution is skewed and, if we have chosen to do a non-parametric test, we are (presumably) uncertain whether the distribution is skewed or not.
+When we report non-parametric tests, we normally report the median (rather than the mean) as our descriptive statistic. This makes practical sense, because [the mean can be misleading when the distribution is skewed](https://ajwills72.github.io/critical-thinking/distributions-samples.pdf) and, if we have chosen to do a non-parametric test, we are (presumably) uncertain whether the distribution is skewed or not.
 
 ```{r}
 # summary statistics
