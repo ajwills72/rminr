@@ -183,7 +183,7 @@ We start by loading the data:
 
 ```{r load-ers}
 # Kruskal-Wallis H test
-ers_l <- read_csv('going-further/music-emotion-preproc.csv', col_types = 'fffd')
+ers_l <- read_csv('going-further/music-emotion-preproc.csv') 
 ```
 
 **Explanation of command:**
@@ -203,10 +203,7 @@ approach <- ers_l %>% filter(ers == 'approach')
 approach <- approach %>% mutate(rank = rank(score))
 approach_summary <- approach %>%
   group_by(subculture) %>%
-  summarise(n = n(),
-            median = median(score, na.rm = TRUE),
-            mean_rank = mean(rank),
-            sum_rank = sum(rank))
+  summarise(median = median(score, na.rm = TRUE))
 approach_summary
 ```
 
