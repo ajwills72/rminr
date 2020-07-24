@@ -818,7 +818,7 @@ cols(
 </tbody>
 </table>
 <p>We can see that participants <code>108</code>, and <code>109</code> (rows 3 and 4) have numbers in all columns, indicating that their data is complete. However, participants <code>106</code> and <code>107</code> have cells containing the value <code>NA</code>, which means these cells in the CSV file were empty. For participant <code>106</code>, all cells are <code>NA</code> (perhaps they dropped out of the study), and for participant <code>107</code>, all of the DASS-21 cells are <code>NA</code> (perhaps they skipped this survey).</p>
-<p>If you select <code>dass21_raw</code> in the <strong>Environment</strong> pane and look through the rest of the data, you’ll see that participants 35, 49, 61, and 77 also have no data for this surve. We exclude these participants from the data frame.</p>
+<p>If you select <code>dass21_raw</code> in the <strong>Environment</strong> pane and look through the rest of the data, you’ll see that participants 35, 49, 61, and 77 also have no data for this survey. We exclude these participants from the data frame.</p>
 <pre class="r"><code>exclude &lt;- c(35,49,61,77,106,107)
 dass21 &lt;- dass21_raw %&gt;% filter(!(partID %in% exclude))</code></pre>
 <p><strong>Explanation of commands:</strong></p>

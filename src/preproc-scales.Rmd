@@ -109,7 +109,7 @@ slice(dass21_raw, 73:76) %>% pander(split.table = Inf)
 
 We can see that participants `108`, and `109` (rows 3 and 4) have numbers in all columns, indicating that their data is complete. However, participants `106` and `107` have cells containing the value `NA`, which means these cells in the CSV file were empty. For participant `106`, all cells are `NA` (perhaps they dropped out of the study), and for participant `107`, all of the DASS-21 cells are `NA` (perhaps they skipped this survey).
 
-If you select `dass21_raw` in the **Environment** pane and look through the rest of the data, you'll see that participants 35, 49, 61, and 77 also have no data for this surve. We exclude these participants from the data frame.
+If you select `dass21_raw` in the **Environment** pane and look through the rest of the data, you'll see that participants 35, 49, 61, and 77 also have no data for this survey. We exclude these participants from the data frame.
 
 ```{r exclude-missing}
 exclude <- c(35,49,61,77,106,107)
