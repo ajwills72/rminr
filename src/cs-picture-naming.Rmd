@@ -198,13 +198,13 @@ nc_by_subj %>% pander()
 We repeat these steps to apply exclusion critera for the noun production, predicate comprehension and predicate production tasks.
 
 ```{r np-pc-pp}
-np <- np %>% mutate(subj = factor(subj), cards = factor(cards))
+np <- np %>% mutate(subj = factor(subj), Cards = factor(Cards))
 np_by_subj <- np %>% exclude() %>% select(subj, correct, related)
 
-pc <- pc %>% mutate(subj = factor(subj), cards = factor(cards))
+pc <- pc %>% mutate(subj = factor(subj), Cards = factor(Cards))
 pc_by_subj <- pc %>% exclude() %>% select(subj, correct, related)
 
-pp <- pp %>% mutate(subj = factor(subj), cards = factor(cards))
+pp <- pp %>% mutate(subj = factor(subj), Cards = factor(Cards))
 pp_by_subj <- pp %>% exclude() %>% select(subj, correct, related)
 ```
 **Explanation of commands:**
