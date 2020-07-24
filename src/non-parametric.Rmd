@@ -61,7 +61,7 @@ To prepare for this worksheet:
 
 1. If you don't see a folder named `going-further`, it means you created your project _before_ the data required for this worksheet was added to the `rminr-data` git repository. You can get the latest files by asking git to "`pull`" the repository. Select the `Git` tab, which is located in the row of tabs which includes the `Environment` tab. Click the `Pull` button with a downward pointing arrow. A window will open showing the files which have been pulled from the repository. Close the `Git pull` window.
 
-1. Open the `Files` tab. The `going-further` folder should contain the file `picture-naming-preproc.csv` and `music-emotion-preproc.csv`.
+1. Open the `Files` tab. The `going-further` folder should contain the file `picture-naming-long.csv` and `music-emotion-preproc.csv`.
 
 1. Create a script named `non-parametric.R` in the `rminr-data` folder (the folder above `going-further`). Add the code to this script as you work through each section of the worksheet.
 
@@ -78,7 +78,7 @@ We start by loading the data:
 ```{r load, message=FALSE, class.source = 'numberLines lineAnchors'}
 rm(list = ls()) # clear the environment
 library(tidyverse)
-wing_preproc <- read_csv('going-further/picture-naming-preproc.csv')
+wing_preproc <- read_csv('going-further/picture-naming-long.csv')
 ```
 
 **Explanation of commands:**
@@ -90,36 +90,16 @@ The first few lines of `wing_preproc` look like this:
 ```{r, echo=FALSE}
 wing_preproc %>% head(12) %>% pander(split.table = Inf)
 ```
-Our test scores are currently in _wide_ format (lots of columns, few rows), but R generally requires data to be in _long_ format (lots of rows, few columns). This means we first have to make the data frame longer, so we can calculate summary statistics.
+The first three columns are the participant ID number, gender of the participant, and the type of card presented. The fourth column is the test (e.g. "nc" = "Noun comprehension"). The final column is the number of correct responses. Some data is missing - indicated as "NA". 
 
-```{r pivot}
-# wide to long
-task_by_subj <- wing_preproc %>%
-  pivot_longer(cols = c(nc, np, pc, pp),
-               names_to = 'task',
-               values_to = 'correct') %>%
-  select(subj, gender, cards, task, correct)
-```
-
-**Explanation of command:**
-
-In the [Within-subject differences worksheet](anova1.html#pivot), you learned how to use `pivot_wider()` to widen long data frames. The `pivot_longer()` command does the reverse -- it lengthens wide data frames. `cols = c(nc, np, pc, pp)` selects the columns we want to pivot. Each value in these columns is added to a row in a new column called `correct` (`values_to = 'correct'`). In the same row, a new column `task` is set to the name of the column which the value came from (`names_to = 'task'`). All of the values in the other columns are duplicated for each row. We [select](preproc.html#select) just the columns we want for our table of descriptive statistics.
-
-The first few rows of `task_by_subj` look like this:
-
-```{r, echo=FALSE}
-task_by_subj %>% head() %>% pander()
-```
-
-In the next section, we are going to compare English and Italian on the noun comprehension task. So, we filter the data (which contains all four tasks) to include just that task. We also remove any missing data (recorded as `NA`). 
+In the next section, we are going to compare English and Italian on the noun comprehension task. So, we filter the data (which contains all four tasks) to include just that task. We also remove any missing data.
 
 ```{r}
 # Filter
 nc_include <- task_by_subj %>% filter(task == 'nc') %>% drop_na()
 ```
 
-**Explanation of command**: The `filter` command should be familiar from many previous worksheets. `drop_na()` is explained in more detail in the [preprocessing scales](preproc-scales.html#missing) worksheet, but basically it just removes any row that contains an `NA` in it.
-
+**Explanation of command**: The `filter` command should be familiar from many previous worksheets. `drop_na()` removes any row that contains an `NA` in it.
 
 <a name="summary"></a>
 
