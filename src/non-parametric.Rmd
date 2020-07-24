@@ -188,9 +188,7 @@ ers_l <- read_csv('going-further/music-emotion-preproc.csv')
 
 **Explanation of command:**
 
-This data has already undergone some preprocessing and is in long format. We use `col_types = 'fffd'` to set the first three columns as factors, and the fourth column as a number with decimal places.
-
-The first few lines of `ers_l` look like this:
+This data has already undergone some preprocessing and is in long format. The first few lines of `ers_l` look like this:
 
 ```{r, echo=FALSE}
 ers_l %>% head(8) %>% pander()
