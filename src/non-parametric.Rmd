@@ -96,7 +96,7 @@ In the next section, we are going to compare English and Italian on the noun com
 
 ```{r}
 # Filter
-nc_include <- task_by_subj %>% filter(task == 'nc') %>% drop_na()
+nc_include <- wing_preproc %>% filter(task == 'nc') %>% drop_na()
 ```
 
 **Explanation of command**: The `filter` command should be familiar from many previous worksheets. `drop_na()` removes any row that contains an `NA` in it.
@@ -162,14 +162,10 @@ In some journal articles, you may see a non-parametric test called a "Mann-Whitn
 Calculate summary statistics and the Wilxocon rank-sum for the noun production task. Your results should look like this:
 
 ```{r ex1, echo=FALSE}
-np_include <- task_by_subj %>% filter(task == 'np') %>% drop_na()
-np_include <- np_include %>% mutate(rank = rank(correct))
+np_include <- wing_preproc %>% filter(task == 'np') %>% drop_na()
 np_include %>%
   group_by(cards) %>%
-  summarise(n = n(),
-            median = median(correct),
-            mean_rank = mean(rank),
-            sum_rank = sum(rank))
+  summarise(median = median(correct))
 wilcox.test(correct ~ cards, np_include)
 ```
 
