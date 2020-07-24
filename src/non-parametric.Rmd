@@ -47,7 +47,7 @@ Putting this all together, there's **a relatively small set of situations where 
 1. you do not know whether the population distribution is approximately normal **and**
 1. you have reason to expect the effect size will be large (d > 1)
 
-For example, you wouldn't use an non-parametric test on a small sample of IQ scores, because IQ is known to normally distributed. The point about effect size follows from the other two - if your sample size is small, you will only be able to detect large effects - see the [statistical power](power.html) worksheet. 
+For example, you wouldn't use an non-parametric test on a small sample of IQ scores, because IQ is known to be normally distributed. The point about effect size follows from the other two - if your sample size is small, you will only be able to detect large effects - see the [statistical power](power.html) worksheet. 
 
 **Where's the Bayes Factor?** The Wilcoxon rank-sum and Kruskal-Wallis are traditional tests, in the sense that they give us a p-value rather than a Bayes Factor. As we have previously covered, [p-values are widely misinterpreted by psychologists](evidence.html#p-wrong), and can never provide evidence for the null hypothesis. For this reason, we have generally advised that you instead use the Bayesian equivalents of these tests - such as [Bayesian t-tests](evidence.html#bayes-t), [Bayesian ANOVA](anova1.html#anovaWS), and [Bayesian chi-square](chi.html#evidence). However, it is not straight forward to calculate Bayesian equivalents of the Mann-Whitney and Kruskal-Wallis tests in R at the moment. So, in this case, we'll stick to the traditional tests. 
 
