@@ -144,7 +144,7 @@ The phrase `correct by cards` reminds you that you compared the values in `corre
 
 The phrase `alternative hypothesis: true location shift is not equal to 0` can be safely ignored, as it's just another (rather obscure) way of saying that you are testing whether the two groups are different.
 
-The warning `cannot compute exact p-value with ties` lets you know that the method used to calculate _p_ will not be exact, because some items in the Italian and English scores had identical rankings.
+The warning `cannot compute exact p-value with ties` lets you know that the method used to calculate _p_ will not be exact, because some items in the Italian and English scores had identical rankings. It is possible to calculate the exact p value using the `pwilcox` command, but that' beyond what we'll cover in this worksheet. If your p-value is sufficiently close to .05 that it would matter if the estimate is a bit off, then a better solution would be to attempt to replicate your finding in a second study with a larger sample. 
 
 We now have all of the information we need to report the results. For the noun comprehension task, there was no significant difference in accuracy between the Italian (_Mdn_ = `r nc_summary[nc_summary$cards == 'italian', 'median']`) and English (_Mdn_ = `r nc_summary[nc_summary$cards == 'english', 'median']`) cards _W_ = `r nc_u$statistic`, _p_ = `r round(nc_u$p.value, 2)`.
 
