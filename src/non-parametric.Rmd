@@ -229,7 +229,7 @@ The command `kruskal.test(score ~ subculture, data = approach)` runs the test to
 
 **Explanation of output:**
 
-The string `score by subculture` reminds you that you compared the values in `score` between the levels in the `subculture` factor. The Kruskal-Wallis _H_ statistic is `r kw$statistic` and is derived from a chi-square distribution, using a calculation similar to the chi-squared test introduced in [the Relationships worksheet](chi.html). The degrees of freedom is one less than the number of groups, in this case `r kw$parameter`. The `p` value tells us whether there was  a significant difference between the medians in any of the four groups.
+The string `score by subculture` reminds you that you compared the values in `score` between the levels in the `subculture` factor. The Kruskal-Wallis _H_ statistic is `r round(kw$statistic,4)` and is derived from a chi-square distribution, using a calculation similar to the chi-squared test introduced in [the Relationships worksheet](chi.html). The degrees of freedom is one less than the number of groups, in this case `r kw$parameter`. The `p` value tells us whether there was  a significant difference between the medians in any of the four groups.
 
 There was no significant difference in approach style between the mainstream (_Mdn_ = `r round(approach_summary[approach_summary$subculture == 'Mainstream', 'median'], 2)`), goth (_Mdn_ = `r round(approach_summary[approach_summary$subculture == 'Goth', 'median'], 2)`), metal (_Mdn_ = `r round(approach_summary[approach_summary$subculture == 'Metal', 'median'], 2)`) and emo (_Mdn_ = `r round(approach_summary[approach_summary$subculture == 'Emo', 'median'], 2)`) groups (_H_ = `r round(kw$statistic, 2)`, _p_ = `r round(kw$p.value, 2)`).
 
