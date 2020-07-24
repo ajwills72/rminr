@@ -1,0 +1,32 @@
+```{r}
+# summary statistics
+nc_include <- nc_include %>% mutate(rank = rank(correct))
+nc_summary <- nc_include %>%
+  group_by(cards) %>%
+  summarise(n = n(),
+            median = median(correct),
+            mean_rank = mean(rank),
+            sum_rank = sum(rank))
+nc_summary
+```
+
+**Explanation of commands:**
+
+1. `task_by_subj %>% filter(task == 'nc')` selects rows containing data for the noun comprehension task.
+1. In the preprocessed data, subjects whose data was excluded for a task have the value `NA` in the `correct` column. We exclude these rows using `drop_na()`.
+1. We rank the scores in both groups using `rank(correct)` and put the rankings in `rank` using `mutate()`.
+1. Finally, we group the data by `cards`, and use `summarise`, to calculate the number of children in each group `n()`, the `median()` score, `mean(rank)` and `sum(rank)`.
+
+
+```{r, echo=FALSE, eval=FALSE}
+# calculations for additional stats reported by SPSS
+# Field(2013, p.217ff is good on this)
+# z is useful for calculating r as an effect size
+# See also: https://data.library.virginia.edu/the-wilcoxon-rank-sum-test/
+n1 <- sum(as.integer(nc_include$cards) == 1)
+wilcox.test(correct ~ cards, nc_include) %>%
+    with(tibble(U = statistic,
+                W = statistic + n1 * (n1 + 1) / 2,
+                Z = qnorm(p.value / 2),
+                p = p.value))
+```
