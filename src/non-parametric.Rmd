@@ -109,10 +109,9 @@ When we report non-parametric tests, we normally report the median (rather than 
 
 ```{r}
 # summary statistics
-nc_summary <- nc_include %>%
+nc_include %>%
   group_by(cards) %>%
   summarise(median = median(correct))
-nc_summary
 ```
 
 **Explanation of commands:** These commands should be familiar from several previous worksheets. We group the data by `cards`, and use `summarise`, to calculate the `median()` score for each group.
@@ -129,6 +128,9 @@ wilcox.test(correct ~ cards, nc_include)
 ```
 
 ```{r mw-nc-hidden,echo=FALSE,results='hide', message=FALSE, warning=FALSE}
+nc_summary <- nc_include %>%
+  group_by(cards) %>%
+  summarise(median = median(correct))
 nc_u  <- wilcox.test(correct ~ cards, nc_include)
 ```
 
@@ -200,10 +202,9 @@ We'll start by calculating the medians for the 'approach' subscale.
 
 ```{r k-w-summary, class.source = 'numberLines lineAnchors'}
 approach <- ers_l %>% filter(ers == 'approach') %>% drop_na()
-approach_summary <- approach %>%
+approach %>%
   group_by(subculture) %>%
   summarise(median = median(score))
-approach_summary
 ```
 
 **Explanation of commands:**
@@ -219,8 +220,14 @@ The differences between groups look quite small, the largest being between `Main
 We can now run the Kruskal-Wallis test:
 
 ```{r k-w}
+kruskal.test(score ~ subculture, data = approach)
+```
+
+```{r k-w-hidden,echo=FALSE,results='hide', message=FALSE, warning=FALSE}
 kw <- kruskal.test(score ~ subculture, data = approach)
-kw
+approach_summary <- approach %>%
+  group_by(subculture) %>%
+  summarise(median = median(score))
 ```
 
 **Explanation of commands:**
