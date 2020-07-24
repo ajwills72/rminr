@@ -200,7 +200,6 @@ Like the Mann-Whitney test, the Kruskal-Wallis test works on ranked data. We'll 
 
 ```{r k-w-summary, class.source = 'numberLines lineAnchors'}
 approach <- ers_l %>% filter(ers == 'approach')
-approach <- approach %>% mutate(rank = rank(score))
 approach_summary <- approach %>%
   group_by(subculture) %>%
   summarise(median = median(score, na.rm = TRUE))
