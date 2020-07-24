@@ -199,20 +199,22 @@ ers_l %>% head(8) %>% pander()
 We'll start by calculating the medians for the 'approach' subscale.
 
 ```{r k-w-summary, class.source = 'numberLines lineAnchors'}
-approach <- ers_l %>% filter(ers == 'approach')
+approach <- ers_l %>% filter(ers == 'approach') %>% drop_na()
 approach_summary <- approach %>%
   group_by(subculture) %>%
-  summarise(median = median(score, na.rm = TRUE))
+  summarise(median = median(score))
 approach_summary
 ```
 
 **Explanation of commands:**
 
-Line 1 filters the data to only include measurements for the 'approach' subscale. The second line ranks the scores for all participants. Lines 3-8 are very similar to the summary statistics we generated for the Mann-Whitney test. In this case we group by music `subculture`.
+Line 1 filters the data to only include measurements for the 'approach' subscale and removes missing data. Lines 2-5 are very similar to the summary statistics we generated for the Mann-Whitney test. In this case we group by music `subculture`.
 
 **Explanation of output:**
 
 The differences between groups look quite small, the largest being between `Mainstream` and `Emo`.
+
+### Calculating the Kruskal-Wallis
 
 We can now run the Kruskal-Wallis test:
 
