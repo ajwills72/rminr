@@ -81,16 +81,13 @@ Next we preprocess the demographics data.
 ```{r demographics, message=FALSE}
 # preprocess demographics data
 demographics <- demographics %>%
-  set_names(~ str_to_lower(.)) %>%
   mutate(subj = factor(subj), gender = factor(gender)) %>%
-  mutate(gender = recode_factor(.$gender, Male = 'male',
-                                Female = 'female')) %>%
-  select(subj, gender, cdi_u, cdi_s)
+  select(subj, gender, CDI_U, CDI_S)
 ```
 
 **Explanation of commands:**
 
-We convert the column names to lower case using `set_names(~ str_to_lower(.))`. We select the `gender`, `cdi_u` and `cdi_s` columns. These latter two columns contain scores for the Communicative Development Inventory (CDI). The CDI is a list of 100 words with columns 'understands' and 'says'. For each word, the child's parent placed a tick in these columns if they thought their child could understand and/or say the word. The scores for 'understands' (`cdi_u`) and 'says' (`cdi_s`) are a total of the ticked boxes in the two columns. We convert `gender` to a factor and recode it's levels to lower case. Finaly we `select()` the columns we want to keep.
+We convert some columns to  [factors](anova1.html#anovaWS), and then we `select` the `Gender`, `CDI_U` and `CDI_S` columns. These latter two columns contain scores for the Communicative Development Inventory (CDI). The CDI is a list of 100 words with columns 'understands' and 'says'. For each word, the child's parent placed a tick in these columns if they thought their child could understand and/or say the word. The scores for 'understands' (`CDI_U`) and 'says' (`CDI_S`) are a total of the ticked boxes in the two columns. 
 
 Our `demographics` data frame now contains the child's subject number, their gender and their parents' CDI scores:
 
