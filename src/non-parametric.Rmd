@@ -175,7 +175,7 @@ wilcox.test(correct ~ cards, np_include)
 
 ## Kruskal-Wallis H test
 
-The Kruskal-Wallis H test is a non-parametric equivalent of a one-way between subjects ANOVA. It extends the Mann-Whitney test to situations where there are more than two groups.
+The Kruskal-Wallis H test is a non-parametric equivalent of a one-way between subjects ANOVA. It extends the Mann-Whitney test to situations where there are more than two groups. Like the Mann-Whitney test, the Kruskal-Wallis test works on ranked data.
 
 We'll demonstrate this test using data from a study which compared emotion regulation strategies between fans of mainstream (control group), goth, metal and emo music. Participants were measured using the Emotion Regulation Strategies for Artistic Creative Activities Scale (ERS-ACA), an 18 item inventory, with each item scored from 1 ('strongly disagree') to 5 ('strongly agree'). The ERS-ACA gives an overall measure of the strategy people use to regulate their emotions when they engage in artistic, creative activities, and scores on three strategy sub-scales; avoidance, approach and self-development.
 
@@ -194,7 +194,7 @@ This data has already undergone some preprocessing and is in long format. The fi
 ers_l %>% head(8) %>% pander()
 ```
 
-Like the Mann-Whitney test, the Kruskal-Wallis test works on ranked data. We'll start by generating some summary statistics for the 'approach' subscale.
+ We'll start by generating some summary statistics for the 'approach' subscale.
 
 ```{r k-w-summary, class.source = 'numberLines lineAnchors'}
 approach <- ers_l %>% filter(ers == 'approach')
