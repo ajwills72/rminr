@@ -168,9 +168,6 @@ The warning `cannot compute exact p-value with ties` lets you know that the meth
 
 We now have all of the information we need to report the results. For the noun comprehension task, there was no significant difference in accuracy between the Italian (_Mdn_ = `r nc_summary[nc_summary$cards == 'italian', 'median']`) and English (_Mdn_ = `r nc_summary[nc_summary$cards == 'english', 'median']`) cards _W_ = `r nc_u$statistic`, _p_ = `r round(nc_u$p.value, 2)`.
 
-
-
-
 <a name="mw"></a>
 
 ## What about Mann-Whitney?
