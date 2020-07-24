@@ -81,8 +81,8 @@ Next we preprocess the demographics data.
 ```{r demographics, message=FALSE}
 # preprocess demographics data
 demographics <- demographics %>%
-  mutate(subj = factor(subj), gender = factor(gender)) %>%
-  select(subj, gender, CDI_U, CDI_S)
+  mutate(subj = factor(subj), Gender = factor(Gender)) %>%
+  select(subj, Gender, CDI_U, CDI_S)
 ```
 
 **Explanation of commands:**
@@ -250,7 +250,7 @@ task_by_subj <- task_by_subj %>%
   full_join(., pc_by_subj, by='subj') %>%
   full_join(., pp_by_subj, by='subj', suffix = c('_pc', '_pp')) %>%
   mutate(nc = correct_nc, np = correct_np, pc = correct_pc, pp = correct_pp) %>%
-  select(subj, gender, cards, nc, np, pc, pp, cdi_u, cdi_s,
+  select(subj, Gender, cards, nc, np, pc, pp, CDI_U, CDI_S,
          related_nc, related_np, related_pc, related_pp)
 ```
 
@@ -273,15 +273,15 @@ For our first analysis, we want to check that there were no differences in langu
 ```{r cdi}
 # compare children's language ability using CDI
 library(BayesFactor, quietly=TRUE)
-cdi_u_bf <- ttestBF(formula=cdi_u ~ cards, data = task_by_subj)
+cdi_u_bf <- ttestBF(formula=CDI_U ~ cards, data = task_by_subj)
 cdi_u_bf
-cdi_s_bf <- ttestBF(formula=cdi_s ~ cards, data = task_by_subj)
+cdi_s_bf <- ttestBF(formula=CDI_S ~ cards, data = task_by_subj)
 cdi_s_bf
 ```
 
 **Explanation of commands:**
 
-First we load the `BayesFactor` package. Next, we run a t-test which compares CDI 'understands' (`cdi_u`) for the two card sets. We another t-test which compares CDI 'says' (`cdi_s`) for the two card sets.
+First we load the `BayesFactor` package. Next, we run a t-test which compares CDI 'understands' (`CDI_U`) for the two card sets. We another t-test which compares CDI 'says' (`CDI_S`) for the two card sets.
 
 **Explanation of output:**
 
@@ -303,7 +303,7 @@ task_by_subj_l <- task_by_subj %>%
                values_to = 'correct')
 
 descript <- task_by_subj_l %>%
-  group_by(task, gender) %>%
+  group_by(task, Gender) %>%
   summarise(mean = mean(correct, na.rm = TRUE), sd = sd(correct, na.rm = TRUE))
 ```
 
@@ -321,8 +321,8 @@ Next we do some preparation for displaying our table in APA format.
 
 ```{r apa}
 descript_table <- descript %>%
-  pivot_wider(names_from = gender, values_from = c(mean, sd))
-descript_table <- descript_table %>% select(task, mean_female, sd_female, mean_male, sd_male) 
+  pivot_wider(names_from = Gender, values_from = c(mean, sd))
+descript_table <- descript_table %>% select(task, mean_Female, sd_Female, mean_Male, sd_Male) 
 descript_table %>% pander()
 ```
 
@@ -336,7 +336,7 @@ Now we run some Bayesian t-tests to test for gender differences on each of the t
 # t-test for accuracy by gender
 t_gender <- function(df, group) {
   df <- drop_na(df) # remove data for excluded subjects
-  bf <- ttestBF(formula=correct ~ gender, data = data.frame(df))
+  bf <- ttestBF(formula=correct ~ Gender, data = data.frame(df))
   extractBF(bf)
 }
 ```
@@ -406,22 +406,22 @@ We would also like to know if parents' ratings of their child's ability using th
 
 ```{r cdi_u_correlations}
 # correlations between CDI and WinG
-cdi_u_nc_cor <- cor(method = 'spearman', task_by_subj$cdi_u,
+cdi_u_nc_cor <- cor(method = 'spearman', task_by_subj$CDI_U,
                     task_by_subj$nc, use="complete.obs")
 cdi_u_nc_cor
-cdi_u_nc_bf <- correlationBF(task_by_subj$cdi_u, task_by_subj$nc)
+cdi_u_nc_bf <- correlationBF(task_by_subj$CDI_U, task_by_subj$nc)
 cdi_u_nc_bf
 
-cdi_u_pc_cor <- cor(method = 'spearman', task_by_subj$cdi_u,
+cdi_u_pc_cor <- cor(method = 'spearman', task_by_subj$CDI_U,
                     task_by_subj$pc, use="complete.obs")
 cdi_u_pc_cor
-cdi_u_pc_bf <- correlationBF(task_by_subj$cdi_u, task_by_subj$pc)
+cdi_u_pc_bf <- correlationBF(task_by_subj$CDI_U, task_by_subj$pc)
 cdi_u_pc_bf
 ```
 
 **Explanation of commands:**
 
-We use a Spearman correlation to test the relationship between `task_by_subj$cdi_u` and `task_by_subj$nc` (noun comprehension). This was introduced in the [More on relationships, part 2 worksheet](corr-extended.html). The option `use="complete.obs"` deletes any cases with a value of `NA`. (Remember that we assigned the value `NA` to cells for subjects who were excluded from a test.) We also calculate a Bayes Factor to test the reliability of the relationship. We use similar commands to test the relationship between `cdi_u` and predicate comprehension (`pc`).
+We use a Spearman correlation to test the relationship between `task_by_subj$CDI_U` and `task_by_subj$nc` (noun comprehension). This was introduced in the [More on relationships, part 2 worksheet](corr-extended.html). The option `use="complete.obs"` deletes any cases with a value of `NA`. (Remember that we assigned the value `NA` to cells for subjects who were excluded from a test.) We also calculate a Bayes Factor to test the reliability of the relationship. We use similar commands to test the relationship between `CDI_U` and predicate comprehension (`pc`).
 
 **Explanation of output:**
 
@@ -430,16 +430,16 @@ There doesn't appear to be a relationship between parents' CDI 'understands' sco
 Now we look at correlations between parents' ratings of their child's ability to say words (CDI says), and the childrens' noun and predicate production scores.
 
 ```{r cdi_s_correlations}
-cdi_s_np_cor <- cor(method = 'spearman', task_by_subj$cdi_s,
+cdi_s_np_cor <- cor(method = 'spearman', task_by_subj$CDI_S,
                     task_by_subj$np, use="complete.obs")
 cdi_s_np_cor
-cdi_s_np_bf <- correlationBF(task_by_subj$cdi_s, task_by_subj$np)
+cdi_s_np_bf <- correlationBF(task_by_subj$CDI_S, task_by_subj$np)
 cdi_s_np_bf
 
-cdi_s_pp_cor <- cor(method = 'spearman', task_by_subj$cdi_s,
+cdi_s_pp_cor <- cor(method = 'spearman', task_by_subj$CDI_S,
                     task_by_subj$pp, use="complete.obs")
 cdi_s_pp_cor
-cdi_s_pp_bf <- correlationBF(task_by_subj$cdi_s, task_by_subj$pp)
+cdi_s_pp_bf <- correlationBF(task_by_subj$CDI_S, task_by_subj$pp)
 cdi_s_pp_bf
 ```
 
