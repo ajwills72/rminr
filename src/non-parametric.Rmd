@@ -59,9 +59,9 @@ To prepare for this worksheet:
 
 1. Open the `rminr-data` project we used [previously](preproc.html#load).
 
-1. If you don't see a folder named `going-further`, it means you created your project _before_ the data required for this worksheet was added to the `rminr-data` git repository. You can get the latest files by asking git to "`pull`" the repository. Select the `Git` tab, which is located in the row of tabs which includes the `Environment` tab. Click the `Pull` button with a downward pointing arrow. A window will open showing the files which have been pulled from the repository. Close the `Git pull` window.
+1. Open the `Files` tab. You should see a folder called `going-further`. This folder should contain the files `picture-naming-long.csv` and `music-emotion-preproc.csv`.
 
-1. Open the `Files` tab. The `going-further` folder should contain the file `picture-naming-long.csv` and `music-emotion-preproc.csv`.
+1. If you don't see the folder or the files, it means you created your project _before_ the data required for this worksheet was added to the `rminr-data` git repository. You fix this by asking git to "`pull`" the repository. Select the `Git` tab, which is located in the row of tabs which includes the `Environment` tab. Click the `Pull` button with a downward pointing arrow. A window will open showing the files which have been pulled from the repository. Close the `Git pull` window.
 
 1. Create a script named `non-parametric.R` in the `rminr-data` folder (the folder above `going-further`). Add the code to this script as you work through each section of the worksheet.
 
