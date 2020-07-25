@@ -162,10 +162,10 @@ We can now see from these results that alpha was especially low in the `self` an
 
 Putting aside the reliability of the measurements for now, we would like to check that there were no major self-esteem differences between conditions before our intervention. This should be the case if we successfully randomised participants to conditions. If there are baseline differences we would need to account for these when comparing them to post-intervention scores. We can use a between-subjects ANOVA to compare the baseline SSES scores in our three conditions. This is the similar to the ANOVA described in the [Within-subject differences worksheet](anova1.html), but for a between-subjects factor.
 
-```{r baseline}
+```{r baseline, warning=FALSE}
 library(BayesFactor, quietly = TRUE)
 sses_pre <- sses_raw %>% filter(time == 'pre')
-bf <- anovaBF(formula = total ~ condition, data = sses_pre)
+bf <- anovaBF(formula = total ~ condition, data = data.frame(sses_pre))
 bf
 ```
 

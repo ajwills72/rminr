@@ -474,21 +474,10 @@ sses_cronbach_total &lt;- sses_raw %&gt;%
 <div id="comparing-baseline-sses-scores" class="section level2">
 <h2>Comparing baseline SSES scores</h2>
 <p>Putting aside the reliability of the measurements for now, we would like to check that there were no major self-esteem differences between conditions before our intervention. This should be the case if we successfully randomised participants to conditions. If there are baseline differences we would need to account for these when comparing them to post-intervention scores. We can use a between-subjects ANOVA to compare the baseline SSES scores in our three conditions. This is the similar to the ANOVA described in the <a href="anova1.html">Within-subject differences worksheet</a>, but for a between-subjects factor.</p>
-<pre class="r"><code>library(BayesFactor, quietly = TRUE)</code></pre>
-<pre><code>
-Attaching package: &#39;Matrix&#39;</code></pre>
-<pre><code>The following objects are masked from &#39;package:tidyr&#39;:
-
-    expand, pack, unpack</code></pre>
-<pre><code>************
-Welcome to BayesFactor 0.9.12-4.2. If you have questions, please contact Richard Morey (richarddmorey@gmail.com).
-
-Type BFManual() to open the manual.
-************</code></pre>
-<pre class="r"><code>sses_pre &lt;- sses_raw %&gt;% filter(time == &#39;pre&#39;)
-bf &lt;- anovaBF(formula = total ~ condition, data = sses_pre)</code></pre>
-<pre><code>Warning: data coerced from tibble to data frame</code></pre>
-<pre class="r"><code>bf</code></pre>
+<pre class="r"><code>library(BayesFactor, quietly = TRUE)
+sses_pre &lt;- sses_raw %&gt;% filter(time == &#39;pre&#39;)
+bf &lt;- anovaBF(formula = total ~ condition, data = data.frame(sses_pre))
+bf</code></pre>
 <pre><code>Bayes factor analysis
 --------------
 [1] condition : 0.6820205 ±0.03%
@@ -524,18 +513,18 @@ condition_bf &lt;- round(extractBF(bf[1])$bf, 2)
 time_bf &lt;- round(extractBF(bf[2])$bf, 2)
 interaction_bf &lt;- round(extractBF(bf[4] / bf[3])$bf, 2)
 condition_bf</code></pre>
-<pre><code>[1] 3.97</code></pre>
+<pre><code>[1] 3.67</code></pre>
 <pre class="r"><code>time_bf</code></pre>
 <pre><code>[1] 0.19</code></pre>
 <pre class="r"><code>interaction_bf</code></pre>
-<pre><code>[1] 9.55</code></pre>
+<pre><code>[1] 18.9</code></pre>
 <div id="explanation-of-commands-4" class="section level3">
 <h3>Explanation of commands</h3>
 <p>We use <code>extractBF()</code> to extract Bayes factors from the results of <code>anovaBF</code>. The two main effects come from <code>bf[1]</code> and <code>bf[2]</code>. The interaction is the results of <code>bf[4] / bf[3]</code>, which can also be passed to <code>extractBF()</code>. We <code>round()</code> each of the Bayes factors to 2 decimal places.</p>
 </div>
 <div id="explanation-of-output-3" class="section level3">
 <h3>Explanation of output</h3>
-<p>The Bayes factor for <code>time</code> (<em>BF</em> = 0.19) tells us that there was no overall change in self-esteem after the intervention relative to baseline. The Bayes factor for <code>condition</code> (<em>BF</em> = 3.97) tells us that there were overall differences in self-esteem between the three conditions. The <code>interaction_bf</code> of 9.55 tells us that it’s almost 10 times more like that there’s an interaction between <code>condition</code> and <code>time</code> than that there isn’t.</p>
+<p>The Bayes factor for <code>time</code> (<em>BF</em> = 0.19) tells us that there was no overall change in self-esteem after the intervention relative to baseline. The Bayes factor for <code>condition</code> (<em>BF</em> = 3.67) tells us that there were overall differences in self-esteem between the three conditions. The <code>interaction_bf</code> of 18.9 tells us that it’s almost 10 times more like that there’s an interaction between <code>condition</code> and <code>time</code> than that there isn’t.</p>
 </div>
 </div>
 <div id="references" class="section level1">
