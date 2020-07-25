@@ -9,7 +9,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
-<meta name="author" content="Paul Sharpe" />
+<meta name="author" content="Paul Sharpe and Andy Wills" />
 
 
 <title>Traditional non-parametric tests</title>
@@ -420,7 +420,7 @@ summary {
 
 
 <h1 class="title toc-ignore">Traditional non-parametric tests</h1>
-<h4 class="author">Paul Sharpe</h4>
+<h4 class="author">Paul Sharpe and Andy Wills</h4>
 
 </div>
 
@@ -430,7 +430,8 @@ summary {
 <ul>
 <li><p><a href="#intro">Introduction</a></p></li>
 <li><p><a href="#start">Getting started</a></p></li>
-<li><p><a href="#wilcox">Mann-Whitney U test</a></p></li>
+<li><p><a href="#wilcox">Wilcoxon rank-sum test</a></p></li>
+<li><p><a href="#mw">What about Mann-Whitney?</a></p></li>
 <li><p><a href="#ex1">Exercise 1</a></p></li>
 <li><p><a href="#kruskal-wallis">Kruskal-Wallis H test</a></p></li>
 <li><p><a href="#ex2">Exercise 2</a></p></li>
@@ -439,9 +440,16 @@ summary {
 </div>
 <div id="introduction" class="section level2">
 <h2>Introduction</h2>
-<p>This worksheet describes common, traditional (frequentist) non-parametric statistical tests. The statistical tests used to analyse differences and relationships in other worksheets are collectively known as <strong>parametric tests</strong>. For their results to be valid, parametric tests require that the data being analysed comes from a population with a particular probability distribution, having known parameters. In most cases, the probability distribution is the normal (Gaussian) distribution, and the parameters are the mean and standard deviation. Parametric tests make some additional assumptions which aren’t discussed in this worksheet. <strong>Non-parametric tests</strong> do not rely on meeting these assumptions, and can therefore be used to analyse data which is not normally distributed.</p>
-<p>If your data meet the criteria for a parametric test, this is the best choice as parametric tests normally provide greater <a href="power.html">statistical power</a> than the equivalent non-parametric test. When you learnt about the central limit theorem, you saw that a large enough sample will have a normal distribution, regardless of the distribution of the underlying data from which it was sampled. Given the size of most effects in psychology, to reliably detect differences between conditions would require sample sizes which ensure that the data is normally distributed (about 30 and above). Therefore, the most likely scenario in which you would use a <em>non-parametric test</em> is when you have a small sample, and the data is not normally distributed.</p>
-<p>Many non-parametric tests work by ranking data values from lowest to highest, and performing a test on the ranks, rather than the values themselves. This avoids the disproportional effect that outlier values have on the mean, one of the key parameters in parametric tests.</p>
+<p>This worksheet covers the Wilcoxon rank-sum test, which is an alternative to the <a href="evidence.html#bs-ttest">between-subjects t-test</a>, and the Kruskal-Wallis H test, which is an alternative to the <a href="anova4.html#oneBS">between-subjects one-factor ANOVA</a>.</p>
+<p>The Wilcoxon rank-sum and Kruskal-Wallis H tests are both <em>non-parametric</em> tests. This means they make fewer assumptions about your data than do standard <em>parametric</em> tests (such as t-tests, and ANOVA). Specifically, where your sample size is small, parametric tests assume that your population is approximately <a href="https://ajwills72.github.io/critical-thinking/distributions-samples.pdf">normally distributed</a>. However, it’s important to realise that as your sample size increases, parametric tests make fewer and fewer assumptions about your population distribution, due to the <a href="https://ajwills72.github.io/critical-thinking/distributions-samples.pdf">central limit theorem</a>. It’s also important to realise that parametric tests have greater <a href="power.html">statistical power</a> than non-parametric tests, so we should use parametric tests when their assumptions are met.</p>
+<p>Putting this all together, there’s <strong>a relatively small set of situations where it makes sense to use a non-parametric test</strong> such as the Wilcoxon rank-sum or Kruskal-Wallis H. These are when:</p>
+<ol style="list-style-type: decimal">
+<li>Your sample size is small (N &lt; 30 per group) <strong>and</strong>,</li>
+<li>you do not know whether the population distribution is approximately normal <strong>and</strong></li>
+<li>you have reason to expect the effect size will be large (d &gt; 1)</li>
+</ol>
+<p>For example, you wouldn’t use an non-parametric test on a small sample of IQ scores, because IQ is known to be normally distributed. The point about effect size follows from the other two - if your sample size is small, you will only be able to detect large effects - see the <a href="power.html">statistical power</a> worksheet.</p>
+<p><strong>Where’s the Bayes Factor?</strong> The Wilcoxon rank-sum and Kruskal-Wallis are traditional tests, in the sense that they give us a p-value rather than a Bayes Factor. As we have previously covered, <a href="evidence.html#p-wrong">p-values are widely misinterpreted by psychologists</a>, and can never provide evidence for the null hypothesis. For this reason, we have generally advised that you instead use the Bayesian equivalents of these tests - such as <a href="evidence.html#bayes-t">Bayesian t-tests</a>, <a href="anova1.html#anovaWS">Bayesian ANOVA</a>, and <a href="chi.html#evidence">Bayesian chi-square</a>. However, it is not straight forward to calculate Bayesian equivalents of the Mann-Whitney and Kruskal-Wallis tests in R at the moment. So, in this case, we’ll stick to the traditional tests.</p>
 <p><a name="start"></a></p>
 </div>
 <div id="getting-started" class="section level2">
@@ -449,251 +457,24 @@ summary {
 <p>To prepare for this worksheet:</p>
 <ol style="list-style-type: decimal">
 <li><p>Open the <code>rminr-data</code> project we used <a href="preproc.html#load">previously</a>.</p></li>
-<li><p>If you don’t see a folder named <code>going-further</code>, it means you created your project <em>before</em> the data required for this worksheet was added to the <code>rminr-data</code> git repository. You can get the latest files by asking git to “<code>pull</code>” the repository. Select the <code>Git</code> tab, which is located in the row of tabs which includes the <code>Environment</code> tab. Click the <code>Pull</code> button with a downward pointing arrow. A window will open showing the files which have been pulled from the repository. Close the <code>Git pull</code> window.</p></li>
-<li><p>Open the <code>Files</code> tab. The <code>going-further</code> folder should contain the file <code>picture-naming-preproc.csv</code> and <code>music-emotion-preproc.csv</code>.</p></li>
+<li><p>Open the <code>Files</code> tab. You should see a folder called <code>going-further</code>. This folder should contain the files <code>picture-naming-long.csv</code> and <code>music-emotion-preproc.csv</code>.</p></li>
+<li><p>If you don’t see the folder or the files, it means you created your project <em>before</em> the data required for this worksheet was added to the <code>rminr-data</code> git repository. You fix this by asking git to “<code>pull</code>” the repository. Select the <code>Git</code> tab, which is located in the row of tabs which includes the <code>Environment</code> tab. Click the <code>Pull</code> button with a downward pointing arrow. A window will open showing the files which have been pulled from the repository. Close the <code>Git pull</code> window.</p></li>
 <li><p>Create a script named <code>non-parametric.R</code> in the <code>rminr-data</code> folder (the folder above <code>going-further</code>). Add the code to this script as you work through each section of the worksheet.</p></li>
 </ol>
 <p><a name="wilcox"></a></p>
 </div>
-<div id="mann-whitney-u-test" class="section level2">
-<h2>Mann-Whitney U test</h2>
+<div id="wilcoxon-rank-sum-test" class="section level2">
+<h2>Wilcoxon rank-sum test</h2>
 <div id="loading-and-preprocessing-data" class="section level3">
 <h3>Loading and preprocessing data</h3>
-<p>We’ll demonstrate the Mann-Whitney U test using data from an experiment which evaluated children’s language development using the Words in Game (WinG) test. WinG consists of a set of picture cards which are used in four tests: noun comprehension, noun production, predicate comprehension, and predicate production. The Italian and English versions of the WinG cards use different pictures to depict the associated concepts. The experiment tested whether English-speaking children aged approximately 30 months, produce similar responses for the two sets of cards.</p>
+<p>We’ll demonstrate the Wilcoxon rank-sum test using data from an experiment which evaluated children’s language development using the Words in Game (WinG) test. WinG consists of a set of picture cards that are used in four tests: noun comprehension, noun production, predicate comprehension, and predicate production. The Italian and English versions of the WinG cards use different pictures to depict the associated concepts. The experiment tested whether English-speaking children aged approximately 30 months produce different responses for the two sets of cards.</p>
 <p>We start by loading the data:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode numberSource r numberLines lineAnchors"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" href="#cb1-1" title="1"><span class="kw">rm</span>(<span class="dt">list =</span> <span class="kw">ls</span>()) <span class="co"># clear the environment</span></a>
 <a class="sourceLine" id="cb1-2" href="#cb1-2" title="2"><span class="kw">library</span>(tidyverse)</a>
-<a class="sourceLine" id="cb1-3" href="#cb1-3" title="3">wing_preproc &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&#39;going-further/picture-naming-preproc.csv&#39;</span>,</a>
-<a class="sourceLine" id="cb1-4" href="#cb1-4" title="4">                         <span class="dt">col_types =</span> <span class="st">&#39;fffiiiiiiiiii&#39;</span>)</a></code></pre></div>
+<a class="sourceLine" id="cb1-3" href="#cb1-3" title="3">wing_preproc &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&#39;going-further/picture-naming-long.csv&#39;</span>)</a></code></pre></div>
 <p><strong>Explanation of commands:</strong></p>
-<p>Line 1 clear the environment. Line 2 loads <code>tidyverse</code>. The data we read in on line 3 has already undergone some preprocessing and is in wide format. We use <code>col_types</code> to set the first three columns as factors, and remainder as whole numbers.</p>
+<p>These commands should be familiar from previous worksheets. Line 1 clears the environment. Line 2 loads the <code>tidyverse</code> package. Line 3 reads the data.</p>
 <p>The first few lines of <code>wing_preproc</code> look like this:</p>
-<table>
-<colgroup>
-<col width="6%"></col>
-<col width="7%"></col>
-<col width="8%"></col>
-<col width="4%"></col>
-<col width="4%"></col>
-<col width="4%"></col>
-<col width="4%"></col>
-<col width="7%"></col>
-<col width="7%"></col>
-<col width="11%"></col>
-<col width="11%"></col>
-<col width="11%"></col>
-<col width="11%"></col>
-</colgroup>
-<thead>
-<tr class="header">
-<th align="center">subj</th>
-<th align="center">gender</th>
-<th align="center">cards</th>
-<th align="center">nc</th>
-<th align="center">np</th>
-<th align="center">pc</th>
-<th align="center">pp</th>
-<th align="center">cdi_u</th>
-<th align="center">cdi_s</th>
-<th align="center">related_nc</th>
-<th align="center">related_np</th>
-<th align="center">related_pc</th>
-<th align="center">related_pp</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="center">1</td>
-<td align="center">female</td>
-<td align="center">english</td>
-<td align="center">12</td>
-<td align="center">4</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">62</td>
-<td align="center">38</td>
-<td align="center">0</td>
-<td align="center">5</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-</tr>
-<tr class="even">
-<td align="center">2</td>
-<td align="center">male</td>
-<td align="center">italian</td>
-<td align="center">18</td>
-<td align="center">12</td>
-<td align="center">17</td>
-<td align="center">9</td>
-<td align="center">60</td>
-<td align="center">59</td>
-<td align="center">0</td>
-<td align="center">2</td>
-<td align="center">0</td>
-<td align="center">3</td>
-</tr>
-<tr class="odd">
-<td align="center">3</td>
-<td align="center">female</td>
-<td align="center">english</td>
-<td align="center">18</td>
-<td align="center">13</td>
-<td align="center">17</td>
-<td align="center">9</td>
-<td align="center">97</td>
-<td align="center">85</td>
-<td align="center">0</td>
-<td align="center">3</td>
-<td align="center">0</td>
-<td align="center">0</td>
-</tr>
-<tr class="even">
-<td align="center">4</td>
-<td align="center">male</td>
-<td align="center">italian</td>
-<td align="center">17</td>
-<td align="center">11</td>
-<td align="center">15</td>
-<td align="center">12</td>
-<td align="center">82</td>
-<td align="center">45</td>
-<td align="center">0</td>
-<td align="center">4</td>
-<td align="center">0</td>
-<td align="center">2</td>
-</tr>
-<tr class="odd">
-<td align="center">5</td>
-<td align="center">female</td>
-<td align="center">english</td>
-<td align="center">17</td>
-<td align="center">15</td>
-<td align="center">15</td>
-<td align="center">10</td>
-<td align="center">66</td>
-<td align="center">66</td>
-<td align="center">0</td>
-<td align="center">2</td>
-<td align="center">0</td>
-<td align="center">0</td>
-</tr>
-<tr class="even">
-<td align="center">6</td>
-<td align="center">male</td>
-<td align="center">italian</td>
-<td align="center">18</td>
-<td align="center">11</td>
-<td align="center">15</td>
-<td align="center">7</td>
-<td align="center">47</td>
-<td align="center">32</td>
-<td align="center">0</td>
-<td align="center">2</td>
-<td align="center">0</td>
-<td align="center">1</td>
-</tr>
-<tr class="odd">
-<td align="center">7</td>
-<td align="center">male</td>
-<td align="center">english</td>
-<td align="center">17</td>
-<td align="center">10</td>
-<td align="center">13</td>
-<td align="center">9</td>
-<td align="center">39</td>
-<td align="center">27</td>
-<td align="center">0</td>
-<td align="center">7</td>
-<td align="center">0</td>
-<td align="center">3</td>
-</tr>
-<tr class="even">
-<td align="center">8</td>
-<td align="center">female</td>
-<td align="center">italian</td>
-<td align="center">18</td>
-<td align="center">14</td>
-<td align="center">19</td>
-<td align="center">11</td>
-<td align="center">35</td>
-<td align="center">31</td>
-<td align="center">0</td>
-<td align="center">2</td>
-<td align="center">0</td>
-<td align="center">3</td>
-</tr>
-<tr class="odd">
-<td align="center">9</td>
-<td align="center">male</td>
-<td align="center">english</td>
-<td align="center">20</td>
-<td align="center">14</td>
-<td align="center">16</td>
-<td align="center">9</td>
-<td align="center">22</td>
-<td align="center">39</td>
-<td align="center">0</td>
-<td align="center">2</td>
-<td align="center">0</td>
-<td align="center">6</td>
-</tr>
-<tr class="even">
-<td align="center">10</td>
-<td align="center">male</td>
-<td align="center">italian</td>
-<td align="center">7</td>
-<td align="center">2</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">34</td>
-<td align="center">10</td>
-<td align="center">0</td>
-<td align="center">1</td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-</tr>
-<tr class="odd">
-<td align="center">11</td>
-<td align="center">female</td>
-<td align="center">english</td>
-<td align="center">19</td>
-<td align="center">12</td>
-<td align="center">14</td>
-<td align="center">8</td>
-<td align="center">49</td>
-<td align="center">28</td>
-<td align="center">0</td>
-<td align="center">4</td>
-<td align="center">0</td>
-<td align="center">4</td>
-</tr>
-<tr class="even">
-<td align="center">12</td>
-<td align="center">female</td>
-<td align="center">italian</td>
-<td align="center">19</td>
-<td align="center">14</td>
-<td align="center">16</td>
-<td align="center">6</td>
-<td align="center">98</td>
-<td align="center">85</td>
-<td align="center">0</td>
-<td align="center">2</td>
-<td align="center">0</td>
-<td align="center">5</td>
-</tr>
-</tbody>
-</table>
-<p>Our test scores are currently in wide format, but we need them in long format to perform the tests.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1"><span class="co"># wide to long</span></a>
-<a class="sourceLine" id="cb2-2" title="2">task_by_subj &lt;-<span class="st"> </span>wing_preproc <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb2-3" title="3"><span class="st">  </span><span class="kw">pivot_longer</span>(<span class="dt">cols =</span> <span class="kw">c</span>(nc, np, pc, pp),</a>
-<a class="sourceLine" id="cb2-4" title="4">               <span class="dt">names_to =</span> <span class="st">&#39;task&#39;</span>,</a>
-<a class="sourceLine" id="cb2-5" title="5">               <span class="dt">values_to =</span> <span class="st">&#39;correct&#39;</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb2-6" title="6"><span class="st">  </span><span class="kw">select</span>(subj, gender, cards, task, correct)</a></code></pre></div>
-<p><strong>Explanation of command:</strong></p>
-<p>In the <a href="#anova1.html">Within-subject differences worksheet</a>, you learnt how to use <code>pivot_wider()</code> to widen long data frames. The <code>pivot_longer()</code> command does the reverse. <code>cols = c(nc, np, pc, pp)</code> selects the columns we want to pivot. Each value in these columns is added to a row in a new column called <code>correct</code> (<code>values_to = &#39;correct&#39;</code>). In the same row, a new column <code>task</code> is set to the name of the column which the value came from (<code>names_to = &#39;task&#39;</code>). Because <code>task</code> is a factor, this turns the pivoted column names into factor levels associated with the corresponding value in <code>correct</code>. All of the values in the other columns are duplicated for each row. We <code>select()</code> just the columns we want for our table of descriptive statistics.</p>
-<p>The first few rows of <code>task_by_subj</code> look like this:</p>
 <table style="width:60%;">
 <colgroup>
 <col width="9%"></col>
@@ -754,44 +535,80 @@ summary {
 <td align="center">np</td>
 <td align="center">12</td>
 </tr>
+<tr class="odd">
+<td align="center">2</td>
+<td align="center">male</td>
+<td align="center">italian</td>
+<td align="center">pc</td>
+<td align="center">17</td>
+</tr>
+<tr class="even">
+<td align="center">2</td>
+<td align="center">male</td>
+<td align="center">italian</td>
+<td align="center">pp</td>
+<td align="center">9</td>
+</tr>
+<tr class="odd">
+<td align="center">3</td>
+<td align="center">female</td>
+<td align="center">english</td>
+<td align="center">nc</td>
+<td align="center">18</td>
+</tr>
+<tr class="even">
+<td align="center">3</td>
+<td align="center">female</td>
+<td align="center">english</td>
+<td align="center">np</td>
+<td align="center">13</td>
+</tr>
+<tr class="odd">
+<td align="center">3</td>
+<td align="center">female</td>
+<td align="center">english</td>
+<td align="center">pc</td>
+<td align="center">17</td>
+</tr>
+<tr class="even">
+<td align="center">3</td>
+<td align="center">female</td>
+<td align="center">english</td>
+<td align="center">pp</td>
+<td align="center">9</td>
+</tr>
 </tbody>
 </table>
+<p>The first three columns are the participant ID number, gender of the participant, and the type of card presented. The fourth column is the test (e.g. “nc” = “Noun comprehension”). The final column is the number of correct responses. Some data is missing - indicated as “NA”.</p>
+<p>In the next section, we are going to compare English and Italian on the noun comprehension task. So, we filter the data (which contains all four tasks) to include just that task. We also remove any missing data.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1"><span class="co"># Filter</span></a>
+<a class="sourceLine" id="cb2-2" title="2">nc_include &lt;-<span class="st"> </span>wing_preproc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(task <span class="op">==</span><span class="st"> &#39;nc&#39;</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">drop_na</span>()</a></code></pre></div>
+<p><strong>Explanation of command</strong>: The <code>filter</code> command should be familiar from many previous worksheets. <code>drop_na()</code> removes any row that contains an <code>NA</code> in it.</p>
 <p><a name="summary"></a></p>
 </div>
-<div id="calculating-summary-statistics" class="section level3">
-<h3>Calculating summary statistics</h3>
-<p>The Mann-Whitney test compares <em>ranked</em> data, so we should report the median (rather than the mean) as our summary statistic. We’ll also calculate the sum and mean of the ranks, as these are sometimes reported.</p>
+<div id="calculating-descriptive-statistics" class="section level3">
+<h3>Calculating descriptive statistics</h3>
+<p>When we report non-parametric tests, we normally report the median (rather than the mean) as our descriptive statistic. This makes practical sense, because <a href="https://ajwills72.github.io/critical-thinking/distributions-samples.pdf">the mean can be misleading when the distribution is skewed</a> and, if we have chosen to do a non-parametric test, we are (presumably) uncertain whether the distribution is skewed or not.</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1"><span class="co"># summary statistics</span></a>
-<a class="sourceLine" id="cb3-2" title="2">nc_include &lt;-<span class="st"> </span>task_by_subj <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(task <span class="op">==</span><span class="st"> &#39;nc&#39;</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">drop_na</span>()</a>
-<a class="sourceLine" id="cb3-3" title="3">nc_include &lt;-<span class="st"> </span>nc_include <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">rank =</span> <span class="kw">rank</span>(correct))</a>
-<a class="sourceLine" id="cb3-4" title="4">nc_summary &lt;-<span class="st"> </span>nc_include <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb3-5" title="5"><span class="st">  </span><span class="kw">group_by</span>(cards) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb3-6" title="6"><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">n =</span> <span class="kw">n</span>(),</a>
-<a class="sourceLine" id="cb3-7" title="7">            <span class="dt">median =</span> <span class="kw">median</span>(correct),</a>
-<a class="sourceLine" id="cb3-8" title="8">            <span class="dt">mean_rank =</span> <span class="kw">mean</span>(rank),</a>
-<a class="sourceLine" id="cb3-9" title="9">            <span class="dt">sum_rank =</span> <span class="kw">sum</span>(rank))</a></code></pre></div>
+<a class="sourceLine" id="cb3-2" title="2">nc_include <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb3-3" title="3"><span class="st">  </span><span class="kw">group_by</span>(cards) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb3-4" title="4"><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">median =</span> <span class="kw">median</span>(correct))</a></code></pre></div>
 <pre><code>`summarise()` ungrouping output (override with `.groups` argument)</code></pre>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1">nc_summary</a></code></pre></div>
-<pre><code># A tibble: 2 x 5
-  cards       n median mean_rank sum_rank
-  &lt;fct&gt;   &lt;int&gt;  &lt;int&gt;     &lt;dbl&gt;    &lt;dbl&gt;
-1 english     9     19     11.4       103
-2 italian     9     17      7.56       68</code></pre>
-<p><strong>Explanation of commands:</strong></p>
-<ol style="list-style-type: decimal">
-<li><code>task_by_subj %&gt;% filter(task == &#39;nc&#39;)</code> selects rows containing data for the noun comprehension task.</li>
-<li>In the preprocessed data, subjects whose data was excluded for a task have the value <code>NA</code> in the <code>correct</code> column. We exclude these rows using <code>drop_na()</code>.</li>
-<li>We rank the scores in both groups using <code>rank(correct)</code> and put the rankings in <code>rank</code> using <code>mutate()</code>.</li>
-<li>Finally, we group the data by <code>cards</code>, and use <code>summarise</code>, to calculate the number of children in each group <code>n()</code>, the <code>median()</code> score, <code>mean(rank)</code> and <code>sum(rank)</code>.</li>
-</ol>
-<p><strong>Explanation of output:</strong></p>
-<p>The Mann-Whitney U test (also known as the Wilcoxon rank sum test) is a non-parametric equivalent of a between-subjects t-test. It works by ranking all of the scores in the two groups, adding the ranks in each group, and comparing these “summed ranks” to determine if they differ.</p>
-<p>We’ll run a Mann-Whitney U test to see if there were any differences between scores for the Italian and English cards on the noun comprehension (<code>nc</code>) task.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1"><span class="co"># Mann-Whitney U for noun comprehension</span></a>
-<a class="sourceLine" id="cb7-2" title="2">nc_u &lt;-<span class="st"> </span><span class="kw">wilcox.test</span>(correct <span class="op">~</span><span class="st"> </span>cards, nc_include)</a></code></pre></div>
-<pre><code>Warning in wilcox.test.default(x = c(12L, 18L, 17L, 17L, 20L, 19L, 19L, : cannot
-compute exact p-value with ties</code></pre>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1">nc_u</a></code></pre></div>
+<pre><code># A tibble: 2 x 2
+  cards   median
+  &lt;chr&gt;    &lt;dbl&gt;
+1 english     19
+2 italian     17</code></pre>
+<p><strong>Explanation of commands:</strong> These commands should be familiar from several previous worksheets. We group the data by <code>cards</code>, and use <code>summarise</code>, to calculate the <code>median()</code> score for each group.</p>
+</div>
+<div id="calculating-the-wilcoxon-rank-sum-test" class="section level3">
+<h3>Calculating the Wilcoxon rank-sum test</h3>
+<p>As we said earlier in this worksheet, the Wilcoxon rank sum test is a non-parametric equivalent of a between-subjects t-test. It works by ranking all of the scores in the two groups, adding the ranks in each group, and comparing these “summed ranks” to determine if they differ.</p>
+<p>We’ll run a Wilcoxon rank-sum test to see if there were any significant differences between scores for the Italian and English cards on the noun comprehension (<code>nc</code>) task.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1"><span class="co"># Wilcoxon rank-sum test (Mann-Whitney U) for noun comprehension</span></a>
+<a class="sourceLine" id="cb6-2" title="2"><span class="kw">wilcox.test</span>(correct <span class="op">~</span><span class="st"> </span>cards, nc_include)</a></code></pre></div>
+<pre><code>Warning in wilcox.test.default(x = c(12, 18, 17, 17, 20, 19, 19, 20, 19), :
+cannot compute exact p-value with ties</code></pre>
 <pre><code>
     Wilcoxon rank sum test with continuity correction
 
@@ -799,23 +616,31 @@ data:  correct by cards
 W = 58, p-value = 0.125
 alternative hypothesis: true location shift is not equal to 0</code></pre>
 <p><strong>Explanation of commands:</strong></p>
-<p>In <code>R</code>, <code>wilcox.test()</code>, with the argument <code>paired = FALSE</code> (the default) is the same as a Mann-Whitney U test. The command <code>wilcox.test(correct ~ cards, nc_include)</code> runs the test to compare the <code>correct</code> scores for the Italian and English <code>cards</code>.</p>
+<p>The command <code>wilcox.test(correct ~ cards, nc_include)</code> runs the test to compare the <code>correct</code> scores for the Italian and English <code>cards</code>.</p>
 <p><strong>Explanation of output:</strong></p>
-<p>The string <code>correct by cards</code> reminds you that you compared the values in <code>correct</code> between the levels in the <code>cards</code> factor. When calling <code>wilcox.test()</code> with <code>paired = FALSE</code>, the value of <code>W</code> is equivalent to <code>U</code>. The <code>p</code> value tells us whether there was a significant difference between the medians in the two groups. The string <code>alternative hypothesis: true location shift is not equal to 0</code>, is another way of saying that the distribution of one of the groups is shifted to the left or right of the other. If the <code>p</code> value is &gt; .05, we’ll accept the null hypothesis that there’s no difference between the distributions. The warning <code>cannot compute exact p-value with ties</code> lets you know that the method used to calculate <em>p</em> will not be exact, because some items in the Italian and English scores had identical rankings.</p>
-<p>We now have all of the information we need to report the results. For the noun comprehension task, there was no significant difference in accuracy between the Italian (<em>Mdn</em> = 17) and English (<em>Mdn</em> = 19) cards (<em>U</em> = 58, <em>p</em> = 0.13).</p>
-<p><a name="ex1"></a></p>
+<p>The phrase <code>with continuity correction</code> is a technical detail that can be safely ignored. If you’re curious, you can read more in the help file, by typing <code>?wilcoxon.test</code> into the console.</p>
+<p>The phrase <code>correct by cards</code> reminds you that you compared the values in <code>correct</code> between the levels in the <code>cards</code> factor. A <code>p</code> value of less than .05 is generally considered by psychologists to be evidence that the two groups are different.</p>
+<p>The phrase <code>alternative hypothesis: true location shift is not equal to 0</code> can be safely ignored, as it’s just another (rather obscure) way of saying that you are testing whether the two groups are different.</p>
+<p>The warning <code>cannot compute exact p-value with ties</code> lets you know that the method used to calculate <em>p</em> will not be exact, because some items in the Italian and English scores had identical rankings. It is possible to calculate the exact p value using the <code>pwilcox</code> command, but that’s beyond what we’ll cover in this worksheet. If your p-value is sufficiently close to .05 that it would matter if the estimate is a bit off, then a better solution would be to attempt to replicate your finding in a second study with a larger sample.</p>
+<p>We now have all of the information we need to report the results. For the noun comprehension task, there was no significant difference in accuracy between the Italian (<em>Mdn</em> = 17) and English (<em>Mdn</em> = 19) cards <em>W</em> = 58, <em>p</em> = 0.13.</p>
+<p><a name="mw"></a></p>
 </div>
+</div>
+<div id="what-about-mann-whitney" class="section level2">
+<h2>What about Mann-Whitney?</h2>
+<p>In some journal articles, you may see a non-parametric test called a “Mann-Whitney U”. This is exactly the same test as computed in the Wilcoxon rank-sum test above, just with a different name (and represented by a U rather than a W).</p>
+<p><a name="ex1"></a></p>
 </div>
 <div id="exercise-1" class="section level2">
 <h2>Exercise 1</h2>
-<p>Calculate summary statistics and Mann-Whitney U for the noun production task. Your results should look like this:</p>
+<p>Calculate summary statistics and the Wilxocon rank-sum for the noun production task. Your results should look like this:</p>
 <pre><code>`summarise()` ungrouping output (override with `.groups` argument)</code></pre>
-<pre><code># A tibble: 2 x 5
-  cards       n median mean_rank sum_rank
-  &lt;fct&gt;   &lt;int&gt;  &lt;int&gt;     &lt;dbl&gt;    &lt;dbl&gt;
-1 english     9     13     10.3      92.5
-2 italian     9     11      8.72     78.5</code></pre>
-<pre><code>Warning in wilcox.test.default(x = c(4L, 13L, 15L, 10L, 14L, 12L, 10L, 16L, :
+<pre><code># A tibble: 2 x 2
+  cards   median
+  &lt;chr&gt;    &lt;dbl&gt;
+1 english     13
+2 italian     11</code></pre>
+<pre><code>Warning in wilcox.test.default(x = c(4, 13, 15, 10, 14, 12, 10, 16, 13), :
 cannot compute exact p-value with ties</code></pre>
 <pre><code>
     Wilcoxon rank sum test with continuity correction
@@ -828,14 +653,20 @@ alternative hypothesis: true location shift is not equal to 0</code></pre>
 </div>
 <div id="kruskal-wallis-h-test" class="section level2">
 <h2>Kruskal-Wallis H test</h2>
-<p>The Kruskal-Wallis H test is a non-parametric equivalent of a one-way between subjects ANOVA. It extends the Mann-Whitney test to situations where there are more than two groups.</p>
-<p>We’ll demonstrate this test using data from a study which compared emotion regulation strategies between fans of mainstream (control group), goth, metal and emo music. Participants were measured using the Emotion Regulation Strategies for Artistic Creative Activities Scale (ERS-ACA), an 18 item inventory, with each item scored from 1 (‘strongly disagree’) to 5 (‘strongly agree’). The ERS-ACA gives an overall measure of the strategy people use to regulate their emotions when they engage in artistic, creative activities, and scores on three strategy sub-scales; avoidance, approach and self-development.</p>
+<p>The Kruskal-Wallis H test is a non-parametric equivalent of a one-way between subjects ANOVA. It extends the Mann-Whitney test to situations where there are more than two groups. Like the Mann-Whitney test, the Kruskal-Wallis test works on ranked data.</p>
+<p>We’ll demonstrate the Kruskal-Wallis test using data from a study which compared emotion regulation strategies between fans of mainstream (control group), goth, metal and emo music. Participants were measured using the Emotion Regulation Strategies for Artistic Creative Activities Scale (ERS-ACA), an 18 item inventory, with each item scored from 1 (‘strongly disagree’) to 5 (‘strongly agree’). The ERS-ACA gives an overall measure of the strategy people use to regulate their emotions when they engage in artistic, creative activities, and scores on three strategy sub-scales; avoidance, approach and self-development.</p>
 <p>We start by loading the data:</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" title="1"><span class="co"># Kruskal-Wallis H test</span></a>
-<a class="sourceLine" id="cb15-2" title="2">ers_l &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&#39;going-further/music-emotion-preproc.csv&#39;</span>, <span class="dt">col_types =</span> <span class="st">&#39;fffd&#39;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" title="1"><span class="co"># Kruskal-Wallis H test</span></a>
+<a class="sourceLine" id="cb13-2" title="2">ers_l &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&#39;going-further/music-emotion-preproc.csv&#39;</span>)</a></code></pre></div>
+<pre><code>Parsed with column specification:
+cols(
+  subj = col_double(),
+  subculture = col_character(),
+  ers = col_character(),
+  score = col_double()
+)</code></pre>
 <p><strong>Explanation of command:</strong></p>
-<p>This data has already undergone some preprocessing and is in long format. We use <code>col_types = &#39;fffd&#39;</code> to set the first three columns as factors, and the fourth column as a number with decimal places.</p>
-<p>The first few lines of <code>ers_l</code> look like this:</p>
+<p>This data has already undergone some preprocessing and is in long format. The first few lines of <code>ers_l</code> look like this:</p>
 <table style="width:58%;">
 <colgroup>
 <col width="9%"></col>
@@ -902,31 +733,30 @@ alternative hypothesis: true location shift is not equal to 0</code></pre>
 </tr>
 </tbody>
 </table>
-<p>Like the Mann-Whitney test, the Kruskal-Wallis test works on ranked data. We’ll start by generating some summary statistics for the ‘approach’ subscale.</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode numberSource r numberLines lineAnchors"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" href="#cb16-1" title="1">approach &lt;-<span class="st"> </span>ers_l <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(ers <span class="op">==</span><span class="st"> &#39;approach&#39;</span>)</a>
-<a class="sourceLine" id="cb16-2" href="#cb16-2" title="2">approach &lt;-<span class="st"> </span>approach <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">rank =</span> <span class="kw">rank</span>(score))</a>
-<a class="sourceLine" id="cb16-3" href="#cb16-3" title="3">approach_summary &lt;-<span class="st"> </span>approach <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb16-4" href="#cb16-4" title="4"><span class="st">  </span><span class="kw">group_by</span>(subculture) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb16-5" href="#cb16-5" title="5"><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">n =</span> <span class="kw">n</span>(),</a>
-<a class="sourceLine" id="cb16-6" href="#cb16-6" title="6">            <span class="dt">median =</span> <span class="kw">median</span>(score, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),</a>
-<a class="sourceLine" id="cb16-7" href="#cb16-7" title="7">            <span class="dt">mean_rank =</span> <span class="kw">mean</span>(rank),</a>
-<a class="sourceLine" id="cb16-8" href="#cb16-8" title="8">            <span class="dt">sum_rank =</span> <span class="kw">sum</span>(rank))</a></code></pre></div>
+<div id="descriptive-statistics" class="section level3">
+<h3>Descriptive statistics</h3>
+<p>We’ll start by calculating the medians for the ‘approach’ subscale.</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode numberSource r numberLines lineAnchors"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" href="#cb15-1" title="1">approach &lt;-<span class="st"> </span>ers_l <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(ers <span class="op">==</span><span class="st"> &#39;approach&#39;</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">drop_na</span>()</a>
+<a class="sourceLine" id="cb15-2" href="#cb15-2" title="2">approach <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb15-3" href="#cb15-3" title="3"><span class="st">  </span><span class="kw">group_by</span>(subculture) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb15-4" href="#cb15-4" title="4"><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">median =</span> <span class="kw">median</span>(score))</a></code></pre></div>
 <pre><code>`summarise()` ungrouping output (override with `.groups` argument)</code></pre>
-<div class="sourceCode" id="cb18"><pre class="sourceCode numberSource r numberLines lineAnchors"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" href="#cb18-1" title="1">approach_summary</a></code></pre></div>
-<pre><code># A tibble: 4 x 5
-  subculture     n median mean_rank sum_rank
-  &lt;fct&gt;      &lt;int&gt;  &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
-1 Goth          77   3.67      141.   10875 
-2 Metal         77   3.83      144.   11104.
-3 Emo           81   3.83      166.   13413 
-4 Mainstream    59   3.67      135.    7972.</code></pre>
+<pre><code># A tibble: 4 x 2
+  subculture median
+  &lt;chr&gt;       &lt;dbl&gt;
+1 Emo          3.83
+2 Goth         3.67
+3 Mainstream   3.67
+4 Metal        3.83</code></pre>
 <p><strong>Explanation of commands:</strong></p>
-<p>Line 1 filters the data to only include measurements for the ‘approach’ subscale. The second line ranks the scores for all participants. Lines 3-8 are very similar to the summary statistics we generated for the Mann-Whitney test. In this case we group by music <code>subculture</code>.</p>
+<p>Line 1 filters the data to only include measurements for the ‘approach’ subscale and removes missing data. Lines 2-5 are very similar to the summary statistics we generated for the Mann-Whitney test. In this case we group by music <code>subculture</code>.</p>
 <p><strong>Explanation of output:</strong></p>
-<p>The differences between groups look quite small, the largest being between <code>Mainstream</code> and <code>Emo</code>.</p>
+<p>The differences in medians between groups look quite small.</p>
+</div>
+<div id="calculating-the-kruskal-wallis" class="section level3">
+<h3>Calculating the Kruskal-Wallis</h3>
 <p>We can now run the Kruskal-Wallis test:</p>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" title="1">kw &lt;-<span class="st"> </span><span class="kw">kruskal.test</span>(score <span class="op">~</span><span class="st"> </span>subculture, <span class="dt">data =</span> approach)</a>
-<a class="sourceLine" id="cb20-2" title="2">kw</a></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" title="1"><span class="kw">kruskal.test</span>(score <span class="op">~</span><span class="st"> </span>subculture, <span class="dt">data =</span> approach)</a></code></pre></div>
 <pre><code>
     Kruskal-Wallis rank sum test
 
@@ -935,21 +765,23 @@ Kruskal-Wallis chi-squared = 5.2313, df = 3, p-value = 0.1556</code></pre>
 <p><strong>Explanation of commands:</strong></p>
 <p>The command <code>kruskal.test(score ~ subculture, data = approach)</code> runs the test to compare the ERS-ACA <code>score</code> scores for the four groups in <code>subculture</code>.</p>
 <p><strong>Explanation of output:</strong></p>
-<p>The string <code>score by subculture</code> reminds you that you compared the values in <code>score</code> between the levels in the <code>subculture</code> factor. The Kruskal-Wallis <em>H</em> statistic is 5.2312882 and is derived from a chi-square distribution, using a calculation similar to the chi-squared test introduced in <a href="chi.html">the Relationships worksheet</a>. The degrees of freedom is one less than the number of groups, in this case 3. The <code>p</code> value tells us whether there was a significant difference between the medians in any of the four groups.</p>
-<p>There was no significant difference in approach style between the mainstream (<em>Mdn</em> = 3.67), goth (<em>Mdn</em> = 3.67), metal (<em>Mdn</em> = 3.83) and emo (<em>Mdn</em> = 3.83) groups (<em>H</em> = 5.23, <em>p</em> = 0.16).</p>
+<p>The string <code>score by subculture</code> reminds you that you compared the values in <code>score</code> between the levels in the <code>subculture</code> factor. The Kruskal-Wallis <em>H</em> statistic is 5.2313. R describes it as <code>chi-squared</code> because it is possible to estimate the relevant p-value using a <a href="https://en.wikipedia.org/wiki/Chi-square_distribution">chi-square distribution</a> with the degrees of freedom (<code>df</code>) for that distribution set to one less than the number of groups, in this case <code>df</code> = 3. The <code>p</code> value tells us whether there was a significant difference between the four medians. It does not tell us which pairs of groups differ significantly from each other (for that, using a Wilcoxon rank-sum).</p>
+<p>The results of this test are as follows:</p>
+<p>There was no significant difference in approach style between the mainstream (<em>Mdn</em> = 3.67), goth (<em>Mdn</em> = 3.67), metal (<em>Mdn</em> = 3.83) and emo (<em>Mdn</em> = 3.83) groups, <em>H</em> = 5.23, <em>p</em> = 0.16.</p>
 <p><a name="ex2"></a></p>
+</div>
 </div>
 <div id="exercise-2" class="section level2">
 <h2>Exercise 2</h2>
 <p>Calculate summary statistics and Kruskal-Wallis H for the self-development emotional response subscale of the ERS-ACA. Your results should look like this:</p>
 <pre><code>`summarise()` ungrouping output (override with `.groups` argument)</code></pre>
-<pre><code># A tibble: 4 x 5
-  subculture     n median mean_rank sum_rank
-  &lt;fct&gt;      &lt;int&gt;  &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
-1 Goth          77    4        163.   12532 
-2 Metal         77    3.8      154.   11835 
-3 Emo           81    3.8      145.   11706.
-4 Mainstream    59    3.6      124.    7292.</code></pre>
+<pre><code># A tibble: 4 x 2
+  subculture median
+  &lt;chr&gt;       &lt;dbl&gt;
+1 Emo           3.8
+2 Goth          4  
+3 Mainstream    3.6
+4 Metal         3.8</code></pre>
 <pre><code>
     Kruskal-Wallis rank sum test
 

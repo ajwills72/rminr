@@ -101,29 +101,26 @@ head(dass21_raw) %>% pander(split.table = Inf)
 
 ## Handling missing data
 
-If participants don't complete (or partially complete) a survey, you may want to exclude their data from your analyses. If we look at a section of the DASS-21 data, we can see that data is missing for some participants.
+If participants don't complete (or partially complete) a survey, you may want to exclude their data from your analyses. Here are some rows from `dass21_raw`.
 
 ```{r missing, echo=FALSE}
 slice(dass21_raw, 73:76) %>% pander(split.table = Inf)
 ```
 
-Participants `108`, and `109` (rows 3 and 4) have numbers in all columns, indicating that their data is complete. However, participants `106` and `107` have cells containing the value `NA`, which means these cells in the CSV file were empty. For participant `106`, all cells are `NA` (perhaps they dropped out of the study), and for participant `107`, all of the DASS-21 cells are `NA` (perhaps they skipped this survey).
+We can see that participants `108`, and `109` (rows 3 and 4) have numbers in all columns, indicating that their data is complete. However, participants `106` and `107` have cells containing the value `NA`, which means these cells in the CSV file were empty. For participant `106`, all cells are `NA` (perhaps they dropped out of the study), and for participant `107`, all of the DASS-21 cells are `NA` (perhaps they skipped this survey).
 
-We can exclude any rows with missing data as follows:
+If you select `dass21_raw` in the **Environment** pane and look through the rest of the data, you'll see that participants 35, 49, 61, and 77 also have no data for this survey. We exclude these participants from the data frame.
 
 ```{r exclude-missing}
-dass21 <- dass21_raw %>% drop_na()
+exclude <- c(35,49,61,77,106,107)
+dass21 <- dass21_raw %>% filter(!(partID %in% exclude))
 ```
 
-**Explanation of command:**
+**Explanation of commands:**
 
-* We pipe the raw data into the `drop_na()` function (part of the `tidyverse` package). This drops any rows with a column containing `NA`, which includes data for participants `106` and `107`.
+Line 1 creates a list of the participant numbers we wish to exclude. In line 2, we remove those participants from `dass21_raw`. The `filter` command will be familiar from previous worksheets. The command `subj %in% exclude` means 'any participant whose subject number is in our list `exclude`'. The use of `!()` in the filter statement means `not`. So, `filter(!(subj %in% exclude))` means keep the participants whose subject number is _not_ in the `exclude` list. 
 
-You can see that data for participants `106` and `107` have been dropped from `dass21`.
-
-```{r exclude, echo=FALSE}
-slice(dass21, 68:72) %>% pander(split.table = Inf)
-```
+If you look at the **Value** column in the **Environment** pane, you'll see that `dass21` now has six fewer rows than `dass21_raw`.
 
 <a name="subscales"></a>
 

@@ -54,7 +54,7 @@ x<-seq(-10,10,by=0.1)
 plot(x, dcauchy(x, scale = .707),type="l", xlab = "Effect size", ylab = "")
 ```
 
-`18.25128` - The Bayes Factor (i.e. the main result of this analysis). See the next section for further discussion
+`18.25138` - The Bayes Factor (i.e. the main result of this analysis). See the next section for further discussion
 
 `±0%` - Basically a confidence interval on the Bayes Factor. It's 0% here because we have so much data, but with smaller samples we might see something like `20 ±5%`, which would means the Bayes Factor is about 20, give or take 5%. So, it's between 19 and 21.
 

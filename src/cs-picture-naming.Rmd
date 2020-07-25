@@ -8,19 +8,11 @@ output:
 
 ```{r setup, include=FALSE}
 ## DEVELOPERS: Uncomment one option, as appropriate
-
-## Data required to knit
-## https://github.com/ajwills72/rminr-data/tree/master/going-further/picture-naming.xlsx
-##
-## I check out rminr-data and make a symbolic link to going-further
-
 ## Show only commands.
 ## knitr::opts_chunk$set(echo = TRUE, message = FALSE, results='hide', fig.keep = 'none', comment=NA)
-
 ## Show commands and output.
 knitr::opts_chunk$set(echo = TRUE, comment=NA, cache = TRUE)
 library(pander)
-
 # Line numbering guide
 # https://blog.atusy.net/submodules/rmd-line-num/index.html
 ```
@@ -302,7 +294,7 @@ Here, we're hoping to find evidence for the null hypothesis i.e. no differences 
 
 ## Comparing gender on WinG accuracy
 
-We would also like to check that there were no gender differences on any of the tests. We'll present this analysis in a table containing descriptive statistics and t-tests. This is described in more detail in the [Better tables worksheet](#better-tables.html).
+We would also like to check that there were no gender differences on any of the tests. We'll create a table of descriptive statistics with four rows corresponding to the WinG task, and columns containing acurracy means and standard deviations, for male and female children. This table is described in detail in the [Better tables worksheet](#better-tables.html). It's convenient to see differences between groups next to the descriptive statistics. We'll do this by adding a column to our table. Each cell will contain the result of a t-test comparing male and female accurcy, for the WinG task in the table row.
 
 We start by calculating means and standard deviations for each WinG task by gender.
 
@@ -313,16 +305,9 @@ task_by_subj_l <- task_by_subj %>%
                names_to = 'task',
                values_to = 'correct')
 
-descriptives <- task_by_subj_l %>%
+descript <- task_by_subj_l %>%
   group_by(task, gender) %>%
-  summarise(mean = mean(correct, na.rm = TRUE),
-            sd = sd(correct, na.rm = TRUE)) %>%
-  ungroup() %>%
-  mutate_if(is.numeric, round, 2)
-
-descriptives <- descriptives %>%
-  pivot_wider(names_from = gender, values_from = c(mean, sd)) %>%
-  select(task, mean_male, sd_male, mean_female, sd_female)
+  summarise(mean = mean(correct, na.rm = TRUE), sd = sd(correct, na.rm = TRUE))
 ```
 
 **Explanation of commands:**
@@ -332,63 +317,89 @@ We convert `task_by_subj` to long format by using `pivot_longer()` on the correc
 Our table of descriptive statistics now looks like this:
 
 ```{r echo=FALSE}
-descriptives %>% pander()
+descript %>% pander()
 ```
 
-Now we run our Bayesian t-tests to test for gender differences on each of the tasks, and add the results to our table.
+Next we do some preparation for displaying our table in APA format.
 
-```{r WinG-t-by-gender}
+```{r apa}
+descript_table <- descript %>%
+  pivot_wider(names_from = gender, values_from = c(mean, sd))
+descript_table <- descript_table %>% select(task, mean_female, sd_female, mean_male, sd_male) 
+descript_table %>% pander()
+```
+
+**Explanation of commands:**
+
+We widen the table, using the `pivot_wider` command we used previously in the [within-subject differences](anova1.html#pivot) worksheet. We use `select` to order the columns so that the means are next to their associated standard deviations.
+
+Now we run some Bayesian t-tests to test for gender differences on each of the tasks. Between subjects t-tests were covered in the [Evidence worksheet](evidence.html).
+
+```{r WinG-t-by-gender, class.source = 'numberLines lineAnchors'}
 # t-test for accuracy by gender
 t_gender <- function(df, group) {
   df <- drop_na(df) # remove data for excluded subjects
   bf <- ttestBF(formula=correct ~ gender, data = data.frame(df))
   extractBF(bf)
 }
+```
 
+**Explanation of commands:**
+
+We'll be doing the same t-test four times, once for the data from each task. Like the code for applying exclusion criteria that you saw earlier, this makes it a good candidate for a function. Line 1 begins the definition of the `t_gender()` function. The function will run the t-test using the data it assigns to the variable `df`. We won't use the `group` argument, but we'll explain why it's there when we call the function. Line 2 uses `drop_na()` to remove rows for participants who were excluded for the task in `df`. Recall that we set these values to `NA`. Line 3 uses `ttestBF()` to run a Bayesian t-test which compares task accuracy (`correct`) for each `gender`. Line 4 returns the Bayes factor.
+
+Now we can use the function to run the four t-tests.
+
+```{r do-t-by-gender, class.source = 'numberLines lineAnchors'}
 gender_bf <- task_by_subj_l %>%
   group_by(task) %>%
   group_modify(t_gender) %>%
-  mutate(bf = round(bf,2)) %>%
   select(task, bf)
+gender_bf %>% pander()
+```
 
-descriptives_t <- full_join(descriptives, gender_bf, by = 'task')
+Line 3 calls `t_gender()` for each of the groups created by `group_by(task)` in line 2. `group_modify()` calls a function for each group of a grouped data frame. It always passes the function two values. The first is a data frame containing the subset of rows for the group. The second is the name of the group. The function must accept two arguments, which explains why we defined `group` in `t_gender()`, even though we didn't use it. The data supplied by `group_modify()` is replaced with the data frame returned by the function it calls. The column which defines the groups is preserved. So here, we've use `t_gender()`, to replace the data for each test, with a data frame containing the Bayes factor for the associated t-test.
+
+Finally, we join this to our `descriptives` data frame, using the `task` values to match up the rows.
+ 
+```{r join-bf}
+descript_table <- full_join(descript_table, gender_bf, by = 'task')
+descript_table %>% pander()
+```
+
+We can now tidy the table up ready for printing.
+
+```{r mean-labels, class.source = 'numberLines lineAnchors'}
+task_names <- c(
+  nc = 'Noun Comprehension',
+  np = 'Noun Production',
+  pc = 'Predicate Comprehension',
+  pp = 'Predicate Production'  
+)
+descript$task <- descript$task %>% recode(!!!task_names)
+
+colnames(descript_table) <-
+  c("Task", "Female (M)", "Female (SD)", "Male (M)", "Male (SD)", "BF")
 ```
 
 **Explanation of commands:**
 
-We define the function `t_gender()` to run a between-subjects t-test comparing task accuracy (`correct`) by `gender`. Before running the test, we use `drop_na(df)` to remove rows for participants who were excluded for the task. The function returns the Bayes factor. We group our long format task data by task, and use `group_modify(t_gender)` to calculate the Bayes factor for the grouped data. `group_modify()` passes grouped data to a function, and replaces it with the data frame returned by the function. We round the Bayes factors to 2 decimal places and then select the `task` and `bf` columns. We join this to our `descriptives` data frame.
+Lines 1-7 use the approach for renaming factor levels that was introduced in the [cleaning up questionnaire data worksheet](https://benwhalley.github.io/rmip/worksheet-recoding.html). The last 2 lines give the columns more meaningful headings.
 
-Our data frame now looks like this:
-
-```{r echo=FALSE}
-descriptives_t %>% pander()
-```
-
-We tidy up the data and then present the data frame as a table.
+Now we can print our finished table.
 
 ```{r descriptives-presentation}
-descriptives_t <- descriptives_t %>%
-  unite("male", mean_male:sd_male, sep=' (') %>%
-  unite("female", mean_female:sd_female, sep=' (') %>%
-  mutate(male = paste0(male, ')'), female = paste0(female, ')'), task = factor(task),
-         task = recode_factor(.$task, nc = 'Noun Comprehension', np = 'Noun Production',
-                              pc = 'Predicate Comprehension', pp = 'Predicate Production'))
-
 library(kableExtra)
-descriptives_t %>% kable(
-  col.names = c('Task', 'Male', 'Female', 'Bayes Factor')) %>%
-  kable_styling()
+descript_table %>% kable(digits=2) %>% kable_styling()
 ```
 
 **Explanation of commands:**
 
-We use `unite()` to combine the male and female summary statistics into a single column with the standard deviation in parentheses. We rename `task` factor levels so that the reader will understand what they mean. Finally, we print the table as HTML, a format we could copy-paste into a word processor
+We load the `kableExtra` package and pipe our data into `kable()`. The `digits=2` part ensures that every number is reported to two decimal places. `kable_styling()` prints the table to the Viewer window in RStudio. This table could be included in a reporty by copy-pasting into a word processor, and then styled according to APA guidelines.
 
 **Explanation of output:**
 
 The Bayes factors mean that it's about twice as likely that there are no gender differences than that there are, for noun comprehension and predicate production. For noun production, it's about 1.5 times as like that there isn't a gender difference, than that there is. For predicate comprehension, the evidence for or against a gender difference is about equal.
-
-This table could be included in a reporty by copy-pasting into a word processor, and then styled according to APA guidelines.
 
 <a name="correlate-cdi-wing"></a>
 
@@ -453,11 +464,7 @@ We're now ready to test our main hypothesis, which predicts that there will be a
 
 ```{r noun-cloud, class.source = 'numberLines lineAnchors'}
 # plot WinG accuracy by card set
-task_by_subj_l$task <- recode_factor(task_by_subj_l$task,
-                                     nc = 'Noun Comprehension',
-                                     np = 'Noun Production',
-                                     pc = 'Predicate Comprehension',
-                                     pp = 'Predicate Production')
+task_by_subj_l$task <- task_by_subj_l$task %>% recode(!!!task_names)
 library(see)
 task_by_subj_l %>% ggplot(aes(x = task, y = correct, fill = cards)) +
   geom_violinhalf(position = position_identity(), alpha=0.7, size=0) +
@@ -467,7 +474,7 @@ task_by_subj_l %>% ggplot(aes(x = task, y = correct, fill = cards)) +
 
 **Explanation of commands:**
 
-Lines 1-6 recode `task` factor levels, to make them more meaningful on the plot's x axis. Line 7 loads the `see` package which provides the `half_violin()` function. Line 8 defines the x axis of our plot to be the WinG tasks, the y axis to be task accuracy (1-20), and to use the `cards` factor for the fill colour. Line 9 creates a "half violin" plot. As the name suggests, this shows one half of a [violin plot](https://en.wikipedia.org/wiki/Violin_plot). `position = position_identity()` plots the two distributions on top of each other, making it easy to see how much they overlap. `alpha=0.7` changes to transparency, again to help us see the overlapping area. `size=0` removes the outline around the distributions. Line 10 uses a grey palette for filling in the two distributions. Line 11 gives our axes meaningful labels.
+Line 2 recodes the `task` factor levels, to make them more meaningful on the plot's x axis. Line 3 loads the `see` package which provides the `half_violin()` function. Line 4 defines the x axis of our plot to be the WinG tasks, the y axis to be task accuracy (1-20), and to use the `cards` factor for the fill colour. Line 5 creates a "half violin" plot. As the name suggests, this shows one half of a [violin plot](https://en.wikipedia.org/wiki/Violin_plot). `position = position_identity()` plots the two distributions on top of each other, making it easy to see how much they overlap. `alpha=0.7` changes to transparency, again to help us see the overlapping area. `size=0` removes the outline around the distributions. Line 6 uses a grey palette for filling in the two distributions. Line 7 gives our axes meaningful labels.
 
 **Explanation of output:**
 
@@ -539,22 +546,21 @@ Again, we start with a plot.
 # compare semantically related production errors by card set
 semantically_related <- task_by_subj %>%
   select(subj, cards, related_np, related_pp) %>%
-  pivot_longer(cols = c(related_np, related_pp),
+  rename(np = related_np, pp = related_pp) %>%
+  pivot_longer(cols = c(np, pp),
                names_to = 'task',
-               values_to = 'correct') %>%
-  mutate(task = recode_factor(.$task, related_np = 'Noun Production',
-                              related_pp = 'Predicate Production'))
+               values_to = 'correct')
+semantically_related$task <- semantically_related$task %>% recode(!!!task_names)
 
 ggplot(semantically_related, aes(x = task, y = correct, fill = cards)) +
   geom_violinhalf(position = position_identity(), alpha=0.7, size=0) +
   scale_fill_grey() +
-  xlab('WinG Task') +
-  ylab('Semantically related errors (max = 20)')
+  xlab('WinG Task') + ylab('Semantically related errors (max = 20)')
 ```
 
 **Explanation of commands:**
 
-The 'non-taget but semantically related' code only relates to the production tasks, so we select just the data for these tests in line 2. Lines 3-5 convert the semantically related error scores from wide to long format. Notice that we use `values_to` to more these scores to a column named `correct`. This will allow us to reuse the `mann_whitney` function again. Lines 6-7 give the factor levels meaningful names. Lines 9-12 generate half violin plots for the production tasks.
+Recall that 'semantically related' only applies to the production tasks, so we select just the data for these tasks in line 2. Line 3 renames the task columns. This will allow us to recode the factors using `task_names` that we defined earlier. Lines 4-6 convert the semantically related error scores from wide to long format. Notice that we use `values_to` to move these scores to a column named `correct`. This will allow us to reuse the `mann_whitney` function later. Line 7 gives the factor levels meaningful names. Lines 9-12 generate half violin plots for the production tasks, using the same approach we took for the task accuracy plot.
 
 **Explanation of output:**
 
@@ -592,7 +598,7 @@ The group difference for noun production was larger than for predicate productio
 
 ## Conclusion
 
-In summary, these data suggest that WinG scores should be comparable, regardless of whether the English or Italian picture cards are used. It also shows that adult's ratings of how the pictures map to the underlying concepts are quite different to children's.
+In summary, these data suggest that WinG scores should be comparable, regardless of whether the English or Italian picture cards are used. It also shows that adults' ratings of how the pictures map to the underlying concepts are quite different to children's.
 
 ___
 

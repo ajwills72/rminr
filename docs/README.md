@@ -29,14 +29,16 @@ _Note to teachers_: These materials have been tested against R version 3.6.3 (re
 
 1. [Why R?](why-r-student.html) Discussion of the advantages of R over other software packages.
 
-2. [Who is using R?](rminrinpsy.html) Partial list of psychology degree
+1. [Pedagogy](course-phil.html) Discussion of philosophy of teaching and learning underlying these materials (mainly aimed at teachers).
+
+1. [Who is using R?](rminrinpsy.html) Partial list of psychology degree
    programmes around the world than use R.
    
-3. [Other resources](resources.html). A list of other Creative Commons resources about using R. 
+1. [Other resources](resources.html). A list of other Creative Commons resources about using R. 
 
-4. [Calculating your module mark](modmark.html). How to calculate a final module mark from your component marks, using R.
+1. [Calculating your module mark](modmark.html). How to calculate a final module mark from your component marks, using R.
 
-5. [Dealing with common errors](common-errors.html). List of commonly-encountered errors and how to solve them.
+1. [Dealing with common errors](common-errors.html). List of commonly-encountered errors and how to solve them.
 
 
 ## 1. Absolute Beginners' Guide to R

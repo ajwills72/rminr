@@ -127,7 +127,7 @@ raw  <- raw %>% filter(!(subj %in% exclude))
 
 ### Explanation of commands
 
-Line 2 creates a list of the participant numbers we wish to exclude. In line 3, we remove those participants from the `raw` data frame. The `filter` command will be familiar from previous worksheets. The command `subj %in% exclude` means 'any participant whose subject number is in our list `exclude`. The use of `!()` in the filter statement means `not`. So, `filter(!(subj %in% exclude))` means keep the participants whose subject number is not in the `exclude` list. 
+Line 2 creates a list of the participant numbers we wish to exclude. In line 3, we remove those participants from the `raw` data frame. The `filter` command will be familiar from previous worksheets. The command `subj %in% exclude` means 'any participant whose subject number is in our list `exclude`'. The use of `!()` in the filter statement means `not`. So, `filter(!(subj %in% exclude))` means keep the participants whose subject number is _not_ in the `exclude` list. 
 
 ### Note
 
