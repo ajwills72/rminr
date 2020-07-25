@@ -290,6 +290,8 @@ ggline(noun_tasks, x = "task", y = "correct", color = "cards",
 
 # Plots for mixed (within-between) designs
 
+# Plots for exploring data
+
 # References
 
 Newman, G. E., & Scholl, B. J. (2012). Bar graphs depicting averages are perceptually misinterpreted: The within-the-bar bias. Psychonomic Bulletin & Review, 19(4), 601–607. https://doi.org/10.3758/s13423-012-0247-5
