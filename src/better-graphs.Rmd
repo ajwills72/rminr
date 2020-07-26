@@ -19,17 +19,21 @@ library(pander)
 
 # Contents
 
-- [Introduction](#intro)
-
-- [Meaningful labels](#labels)
-
-- [Journal styling](#style)
-
-- [High-quality output](#hq)
-
-- [Plots for within participants designs](#within)
-
-- [Plots for between participants designs](#between)
+* [Introduction](#intro)
+* [Meaningful labels](#labels)
+* [Journal styling](#style)
+* [High-quality output](#hq)
+* [Within participants data](#within)
+    + [Point and line plot (1 factor)](#w-pointline-1)
+    + [Point and line plot (2 factors)](#w-pointline-2)
+* [Between participants data](#between)
+    + [Half violin plot](#halfviolin)
+    + [Bar plot](#bar)
+    + [Boxplot](#box)
+* [Mixed (between-within) data](#mixed)
+* [Exploring data](#exploring)
+    + [Histogram](#histogram)
+    + [Pairs plot](#pairs)
 
 <a name = "intro"></a>
 
@@ -135,7 +139,7 @@ A file called _fig1.pdf_ will have appeared in your _Files_ window in RStudio. Y
 
 <a name="within"></a>
 
-# Plots for within participants data
+# Within participants data
 
 What are you trying to show?
 Often involves trying out a few different graphs. Often not the first one you try. Might be something you do after inferentials.
@@ -143,6 +147,10 @@ Often involves trying out a few different graphs. Often not the first one you tr
 The approach we've taken in this worksheet is to consider whether you are plotting data for within or between subjects, or a mixture of the two.
 
 We'll demonstrate a graph for a within participants experiment using data from [an undergraduate student dissertation on the Perruchet Effect](awdiss.html).
+
+<a name="w-pointline-1"></a>
+
+## Point and line plot (1 factor)
 
 ```{r perruchet-data, message=FALSE, class.source = 'numberLines lineAnchors'}
 lvl.sum <- read_csv('going-further/perruchet-preproc.csv')
@@ -178,9 +186,33 @@ eplot
 
 From this plot, it's clear that: (a) the overall trend is downwards, (b) most but not all participants individually show this trend, and (c) there is some variation in the absolute ratings people use.
 
+<a name="w-pointline-2"></a>
+
+## Point and line plot (2 factors)
+
+* Simplifies CI syntax, but be clear what type/how CI is being calculated
+
+```{r w-pointline-2, message=FALSE}
+raw <- read_csv('case-studies/chris-mitchell/priming-faces.csv')
+priming <- raw %>%
+   filter(Running == 'Test') %>%
+   group_by(Congruency, Load)
+
+library("ggpubr")
+priming %>% ggline(x = "Congruency", y = "RT", color = "Load",
+       add = c("mean_ci"), position = position_dodge(.1),
+       palette = 'grey') +
+      ylab("Mean RT") + xlab("Congruency")
+```
+
+
 <a name="between"></a>
 
-# Plots for between participants designs
+# Between participants data
+
+<a name="halfviolin"></a>
+
+## Half violin plot
 
 We'll plot some data from [a study in which tested children’s language development](cs-picture-naming.html). The Words in Game (WinG) task uses picture cards to test children's comprehension of, and ability to say, nouns and predicates. A predicate completes an idea about the subject of a sentence. For example, if the card showed a girl pushing a bike, the predicate would be "pushing".
 
@@ -196,7 +228,6 @@ wing <- wing_preproc %>%
                values_to = 'correct') %>%
     select(subj, task, cards, correct)
 ```
-
 ### Explanation of commands
 
 Line 1 loads the data. The scores are in _wide_ format (lots of columns, few rows), but R generally requires data to be in _long_ format (lots of rows, few columns). Lines 2-5 convert the task data from wide to long. Line 6 select the columns were interested in plotting.
@@ -231,16 +262,47 @@ library(see)
 wing %>% ggplot(aes(x = task, y = correct, fill = cards)) +
   geom_violinhalf(position = position_identity(), alpha=0.7, size=0) +
   scale_fill_grey() +
+  theme_APA +
+  theme(axis.text = element_text(size = 10)) +
   xlab('WinG Task') + ylab('Accuracy (max = 20)')
 ```
+
+<a name="bar"></a>
+
+## Bar plot
+
+There is evidence that readers misinterpret bar plots, because we percieve values within the bar as more likely than those just above, even though this is not the case (Newman & Scholl, 2012).
+
+```{r}
+# Multiple groups with error bars and jitter point
+wing %>% ggbarplot(x = 'task', y = 'correct', color = 'cards', fill = 'cards',
+ add = "mean_ci", palette = 'grey',
+ position = position_dodge(), font.xtickslab = c(10),
+ title = "95% mean confidence interval")
+```
+
+<a name="box"></a>
+
+## Boxplot
+
+```{r avoidance}
+ers_l <- read_csv('going-further/music-emotion-preproc.csv')
+
+avoidance <- ers_l %>% filter(ers == 'avoidance')
+ggboxplot(avoidance, x = 'subculture', y = 'score', 
+          color = 'subculture', order = c('Mainstream', 'Goth', 'Emo', 'Metal'),
+          palette = 'grey',
+          ylab = "ERS avoidance", xlab = "Subculture")
+```
+
+**Explanation of commands:**
+
+**Explanation of output:**
+
 
 ### Explanation of commands
 
 Line 1 loads the `see` package which provides the `half_violin()` function. Line 2 defines the x axis of our plot to be the WinG tasks, the y axis to be task accuracy (1-20), and to use the `cards` factor for the fill colour. Line 3 creates the half violin plot. `position = position_identity()` plots the two distributions on top of each other, making it easy to see how much they overlap. `alpha=0.7` changes to transparency, again to help us see the overlapping area. `size=0` removes the outline around the distributions. Line 4 uses a grey palette for filling in the two distributions. Line 5 gives our axes meaningful labels.
-
-## Barplots
-
-There is evidence that readers misinterpret bar plots, because we percieve values within the bar as more likely than those just above, even though this is not the case (Newman & Scholl, 2012).
 
 **Explanation of commands:**
 
@@ -260,41 +322,89 @@ Barcharts or point plots sometimes include a line and crossbar either side of th
 
 FIXME: Use a different mixed model dataset, as the interactions weren't of interest in Allegra's study. Useful for between subjects plots though.
 
-### More traditional point and line plot with `ggplot()`.
+<a name="mixed"></a>
+
+# Mixed (within-between) data
+
+FIXME: No error bars, or error bars for the factor of interest?
+
+```{r m-pointline-1, message=FALSE}
+panas <- read_csv('going-further/music-panas.csv')
+panas <- panas %>% mutate(subculture = factor(subculture, levels = c('Mainstream', 'Emo', 'Goth', 'Metal')))
+
+na <- panas %>%
+  pivot_longer(cols = c(pre_na, post_na),
+               names_to = 'pre_post',
+               values_to = 'score')
+na %>% ggline(x = "subculture", y = "score", color = "pre_post",
+                 add = "mean_ci", position = position_dodge(.1),
+              linetype = 'solid',
+              order = c('Mainstream', 'Emo', 'Goth', 'Metal'),
+       palette = 'grey') +
+      ylab("Negative affect") + xlab("Subculture")
+```
 
 ```{r pointline, eval=FALSE}
 dodge_width <- .1
-noun_tasks %>%
-    ggplot(aes(x=task, y=correct, linetype = cards, group = cards)) +
+na %>%
+    ggplot(aes(x=subculture, y=score, colour = pre_post, group = pre_post)) +
         stat_summary(geom="point", fun=mean, position = position_dodge(width = dodge_width)) +
         stat_summary(geom="errorbar", width = .1, fun.data=mean_cl_boot, position = position_dodge(width = dodge_width)) +
-    stat_summary(geom="line", position = position_dodge(width = dodge_width), mapping = aes(group = cards), fun.data=mean_cl_boot) +
-    ylab("Mean score") + xlab("WinG task") +
-    theme_light()
+      ylab("Negative affect") + xlab("Subculture") + theme_APA
+```
+<a name="exploring"></a>
+
+# Exploring data
+
+<a name="histogram"></a>
+
+## Histogram
+
+```{r}
+oit <- read_csv('going-further/openness-imagery-thinking.csv')
+
+n_obs = sum(!is.na(oit$problems))
+bw = 1
+mean <- mean(oit$problems)
+sd <- sd(oit$problems)
+
+oit %>% ggplot(aes(problems))  + 
+  geom_histogram(colour = "black", binwidth = bw) + 
+  stat_function(fun = function(x) 
+    dnorm(x, mean = mean, sd = sd) * bw * n_obs) +
+  xlab('Problems solved') + ylab('Count (participants)')
 ```
 
-### Simpler syntax using [ggpubr](https://rpkgs.datanovia.com/ggpubr/reference/index.html)
+**Explanation of commands:**
 
-* Simplifies CI syntax
-* Has interfaces to add statistics, asterisks etc. to plots which is something I've noticed that some project supervisors ask of their students
+**Explanation of output:**
 
-```{r ggpubr, eval=FALSE}
-library("ggpubr")
-ggline(noun_tasks, x = "task", y = "correct", color = "cards",
-       add = c("mean_ci"), position = position_dodge(.1),
-       palette = c('npg')) +  # see ggpar for other palettes
-      ylab("Mean score") + xlab("WinG task")
+<a name="pairs"></a>
+
+## Pairs plot
+
+* PsiQ total, Openness, problem scores, FTT
+
+```{r, message=FALSE}
+library(GGally, quietly = TRUE)
+library(ggplot2)
+lowerFn <- function(data, mapping, ...) {
+   ggplot(data = data, mapping = mapping) +
+      geom_point(size=1) +
+      geom_smooth(color = 'black', method='lm', size=.5)
+}
+oit %>%
+   select(psiq, openness, problems, ftt) %>%
+   ggpairs(lower=list(continuous=wrap(lowerFn)))
 ```
 
-<a name="mixed"></a>
+**Explanation of commands:**
 
-# Plots for mixed (within-between) designs
-
-# Plots for exploring data
+**Explanation of output:**
 
 # References
 
-Newman, G. E., & Scholl, B. J. (2012). Bar graphs depicting averages are perceptually misinterpreted: The within-the-bar bias. Psychonomic Bulletin & Review, 19(4), 601–607. https://doi.org/10.3758/s13423-012-0247-5
+Newman, G. E., & Scholl, B. J. (2012). [Bar graphs depicting averages are perceptually misinterpreted: The within-the-bar bias](https://link.springer.com/article/10.3758%2Fs13423-012-0247-5) Psychonomic Bulletin & Review, 19(4), 601–607.
 
 ___
 
