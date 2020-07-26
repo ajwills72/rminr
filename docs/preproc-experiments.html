@@ -434,6 +434,7 @@ summary {
 <li><p><a href="#dedup">De-duplicating data</a></p></li>
 <li><p><a href="#exclude">Excluding participants</a></p></li>
 <li><p><a href="#log">Log transform</a></p></li>
+<li><p><a href="#ex1">Exercise</a></p></li>
 </ul>
 <p><a name="intro"></a></p>
 </div>
@@ -542,6 +543,44 @@ summary {
 <h3>Explanation of commands</h3>
 <p>Line 1 loads the data from the same experiment, after it’s undergone some preprocessing. The <code>cval</code> (for “corrected value”) column contains the GSR measurement that we need to log transform. You can follow the preprocessing steps that produced <code>sum.data</code> in <a href="awdiss.html">the Perruchet Effect worksheet</a>.</p>
 <p>The command <code>log</code> takes the natural logarithm. We calculate <code>log(cval+1)</code> rather than <code>log(cval)</code> because the <code>log(0)</code> is an infinitely small number, which is something that cannot be analyzed. By adding 1 we don’t hit this problem (unless cval is -1 or smaller, which it seldom is).</p>
+<p><a name="ex1"></a></p>
+</div>
+</div>
+<div id="exercise" class="section level1">
+<h1>Exercise</h1>
+<p>This exercise uses data from a study which compared emotion regulation strategies between fans of mainstream (control group), goth, metal and emo music. Before and after each group listened to a clip of their preferred music, measurements were taken using the 20-item Positive and Negative Affect Schedule (PANAS). The data is in wide format, with one row per participant.</p>
+<p>We start by loading the data and counting the rows.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1">panas &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&#39;going-further/music-panas.csv&#39;</span>)</a>
+<a class="sourceLine" id="cb9-2" title="2"><span class="kw">count</span>(panas)</a></code></pre></div>
+<pre><code># A tibble: 1 x 1
+      n
+  &lt;int&gt;
+1   297</code></pre>
+<div id="step-1" class="section level3">
+<h3>Step 1</h3>
+<p>Like the Perruchet Effect experiment, the 297 rows in this data includes some duplicates. De-duplicate then count the rows. The result should look like this:</p>
+<pre><code># A tibble: 1 x 1
+      n
+  &lt;int&gt;
+1   294</code></pre>
+</div>
+<div id="step-2" class="section level3">
+<h3>Step 2</h3>
+<p>This version of the PANAS used 10 questions to measure positive affect, and 10 to measure negative affect. Answers to questions were scored from 1 to 5, meaning that scores could range from 10-50. For the second negative affect measurement, the researchers calculated and entered the scores by hand. Use <code>filter()</code> to find any participants with a <code>post_na</code> score greater than 50. Use another <code>filter()</code> command to exclude any participants who meet this criterion.</p>
+</div>
+<div id="step-3" class="section level3">
+<h3>Step 3</h3>
+<p>The ‘inverse normal transformation’ is another method of reducing disproprotional effects on the variance, when your data has a small number of extreme values. This method is a bit more complicated than the log transform you saw earlier, but it’s just as easy to apply using the <code>rankNorm()</code> function from the <code>RNOmni</code> library.</p>
+<p>Load the <code>RNOmni</code> library, then use <code>mutate()</code> with <code>rankNorm()</code>, to inverse transform <code>pre_na</code> and <code>post_na</code>. Use <code>summarise()</code> to calculate mean pre and most negative affect by subculture. The results should look like this.</p>
+<pre><code>`summarise()` ungrouping output (override with `.groups` argument)</code></pre>
+<pre><code># A tibble: 4 x 3
+  subculture `mean(pre_na)` `mean(post_na)`
+  &lt;chr&gt;               &lt;dbl&gt;           &lt;dbl&gt;
+1 Emo                0.452           0.466 
+2 Goth              -0.160          -0.0658
+3 Mainstream        -0.259          -0.180 
+4 Metal             -0.0589         -0.142 </code></pre>
+<p><strong>Copy the R code you used for this exercise into PsycEL.</strong></p>
 <hr />
 <p>This material is distributed under a <a href="https://creativecommons.org/">Creative Commons</a> licence. CC-BY-SA 4.0.</p>
 </div>
