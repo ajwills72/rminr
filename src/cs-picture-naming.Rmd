@@ -465,10 +465,13 @@ We're now ready to test our main hypothesis, which predicts that there will be a
 ```{r noun-cloud, class.source = 'numberLines lineAnchors'}
 # plot WinG accuracy by card set
 task_by_subj_l$task <- task_by_subj_l$task %>% recode(!!!task_names)
+source('themeapa.R')
 library(see)
 task_by_subj_l %>% ggplot(aes(x = task, y = correct, fill = cards)) +
   geom_violinhalf(position = position_identity(), alpha=0.7, size=0) +
   scale_fill_grey() +
+  theme_APA +
+  theme(axis.text = element_text(size = 10)) +
   xlab('WinG Task') + ylab('Accuracy (max = 20)')
 ```
 
@@ -555,6 +558,8 @@ semantically_related$task <- semantically_related$task %>% recode(!!!task_names)
 ggplot(semantically_related, aes(x = task, y = correct, fill = cards)) +
   geom_violinhalf(position = position_identity(), alpha=0.7, size=0) +
   scale_fill_grey() +
+  theme_APA +
+  theme(axis.text = element_text(size = 10)) +
   xlab('WinG Task') + ylab('Semantically related errors (max = 20)')
 ```
 
