@@ -202,7 +202,8 @@ library("ggpubr")
 priming %>% ggline(x = "Congruency", y = "RT", color = "Load",
        add = c("mean_ci"), position = position_dodge(.1),
        palette = 'grey') +
-      ylab("Mean RT") + xlab("Congruency")
+      ylab("Mean RT") + xlab("Congruency") +
+  theme_APA
 ```
 
 
@@ -344,13 +345,14 @@ na %>% ggline(x = "subculture", y = "score", color = "pre_post",
       ylab("Negative affect") + xlab("Subculture")
 ```
 
-```{r pointline, eval=FALSE}
+```{r point}
 dodge_width <- .1
 na %>%
     ggplot(aes(x=subculture, y=score, colour = pre_post, group = pre_post)) +
         stat_summary(geom="point", fun=mean, position = position_dodge(width = dodge_width)) +
         stat_summary(geom="errorbar", width = .1, fun.data=mean_cl_boot, position = position_dodge(width = dodge_width)) +
-      ylab("Negative affect") + xlab("Subculture") + theme_APA
+      ylab("Negative affect") + xlab("Subculture") +
+  scale_color_grey() + theme_APA
 ```
 <a name="exploring"></a>
 
@@ -372,6 +374,7 @@ oit %>% ggplot(aes(problems))  +
   geom_histogram(colour = "black", binwidth = bw) + 
   stat_function(fun = function(x) 
     dnorm(x, mean = mean, sd = sd) * bw * n_obs) +
+  theme_APA +
   xlab('Problems solved') + ylab('Count (participants)')
 ```
 
@@ -395,7 +398,8 @@ lowerFn <- function(data, mapping, ...) {
 }
 oit %>%
    select(psiq, openness, problems, ftt) %>%
-   ggpairs(lower=list(continuous=wrap(lowerFn)))
+   ggpairs(lower=list(continuous=wrap(lowerFn))) +
+  theme_APA
 ```
 
 **Explanation of commands:**
