@@ -25,3 +25,11 @@
 1. analyse-scales
 1. better-tables
 1. non-parametric
+
+## Done
+
+
+# Definitions of done
+
+Workshop: Worksheet tested by > 1 person who will teach workshop
+Case study: Worksheet tested by project supervisor
