@@ -142,9 +142,9 @@ A file called _fig1.pdf_ will have appeared in your _Files_ window in RStudio. Y
 
 # Plotting principles
 
-A plot should visually describe patterns in data that would otherwise be difficult to communicate. The most appropriate plot will depend on the type of data you are working with, and the pattern you want to communicate. In practice, this often involves trying out different plots, and adjusting graphical elements before deciding how best to present your data.
+A plot should visually describe patterns in data that would otherwise be difficult to communicate. Choosing and configuring the most appropriate plot will depend on what you want to communicate to your reader. In practice, making this decision often involves trying out different types of plot, and the elements used to build them.
 
-As such, it's difficult to provide rules about how to plot your data. However, there are some principles which will help you to make this decision.
+As such, it's difficult to provide _rules_ for ploting data. However, there are some principles which will help you to decide how to plot your data.
 
 * central tendency
 * variation
@@ -160,11 +160,13 @@ examples The approach we've taken in this worksheet is to consider whether you a
 
 # Within participants data
 
-We'll demonstrate a graph for a within participants experiment using data from [an undergraduate student dissertation on the Perruchet Effect](awdiss.html).
+We'll start by producing some graphs for within participants data.
 
 <a name="w-1x3"></a>
 
-## 1 factor
+## One factor
+
+Our first example uses data from [an undergraduate student dissertation on the Perruchet Effect](awdiss.html). We want to plot a graph for a within participants experiment with a single factor.
 
 ```{r perruchet-data, message=FALSE, class.source = 'numberLines lineAnchors'}
 lvl.sum <- read_csv('going-further/perruchet-preproc.csv')
@@ -172,7 +174,7 @@ mdata  <- lvl.sum %>% group_by(level) %>%
   summarise(lcval = mean(lcval), expect = mean(expect))
 ```
 
-The simplest graph we could produce here would be to just plot the three means reported above, but this wouldn't really add anything to what we've already done; the trend is clear just from the three numbers. 
+The simplest graph we could produce here would be to just plot the three means, but this wouldn't really add anything to the means that were presented earlier in the report. 
 
 Generally, when we graph data from psychology experiments, we try to give an indication of the variability between participants - is everyone exactly like the mean, or do people differ? One common way of doing this it to plot some kind of 'error bar'; for example, as shown in Figure 1 of  [McAndrew et al. (2012)](https://www.researchgate.net/profile/IPL_Mclaren/publication/221752843_Dissociating_Expectancy_of_Shock_and_Changes_in_Skin_Conductance_An_Investigation_of_the_Perruchet_Effect_Using_an_Electrodermal_Paradigm/links/0a85e53c10b74f291a000000.pdf). McAndrew et al., are not clear how they calculated these bars, but it's quite likely that they are the standard errors, considering each Level separately -- because this is the most common plot of this type. Such error bars are not particularly informative because, for example, they represent the variability _between_ participants at each Level, when the experiment is a _repeated measures_ design and so it is the variability of the trends across Level that is most relevant.
 
@@ -198,15 +200,18 @@ eplot <- base + lns + mline + mdot + xlab("Level") +
 eplot
 ```
 
+### Explanation of commands
+
+### Explanation of plot
+
 From this plot, it's clear that: (a) the overall trend is downwards, (b) most but not all participants individually show this trend, and (c) there is some variation in the absolute ratings people use.
 
 <a name="w-2x2"></a>
 
 ## Two factors
 
-* Simplifies CI syntax, but be clear what type/how CI is being calculated
-
-* Better to do this using `stat_summary()` rather than write your own function
+* be clear what type/how CI is being calculated
+* Done using `stat_summary()`
 * Calculate CIs using `mean_cl_boot`, as bootstrapping is a robust method that doesn't assume normally distributed data.
 
 ```{r w-pointline-2, message=FALSE}
@@ -224,6 +229,8 @@ priming %>% ggplot(aes(x=Congruency, y=RT, group=Load, colour=Load)) +
       scale_color_grey()+ theme_APA +
   labs(caption = "Bars are 95% confidence intervals")
 ```
+
+### Explanation of commands
 
 
 <a name="between"></a>
