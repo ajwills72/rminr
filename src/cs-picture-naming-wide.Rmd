@@ -27,11 +27,10 @@ This is an advanced worksheet, which assumes you have completed the [Absolute Be
 - [Loading data](#data)
 - [Preprocessing WinG data](#preproc-nc)
 - [Randomization check](#cdi-diffs)
-- [Comparing gender on WinG accuracy](#wing-gender)
-- [Exploring correlations between CDI and WinG](#correlate-cdi-wing)
-- [Plotting WinG accuracy by card set](#plot-task)
-- [Comparing WinG accuracy by card set](#mann-whitney)
-- [Comparing semantically related production errors by card set](#compare-production)
+- [Gender differences?](#wing-gender)
+- [Correlations between WinG and parents' ratings](#correlate-cdi-wing)
+- [Comparing accuracy on English and Italian cards](#compare-acc)
+- [Comparing semantically-related production errors by card set](#compare-production)
 
 <a name="intro"></a>
 
@@ -74,7 +73,7 @@ pp <- read_csv('case-studies/allegra-cattani/predicate_production.csv')
 
 ## Preprocessing WinG data
 
-Next we preprocess the WinG data.  Preprocessing is generally easier if our data is in long format (many rows, few columns), and is all contained in a single data frame. For now, we'll combine the data frames for the four tasks:
+Next we preprocess the WinG data.  Preprocessing is generally easier if our data is in long format (many rows, few columns), and is all contained in a single data frame. For now, we'll combine the data frames for the four WinG tasks:
 
 ```{r nc}
 # preprocess 
@@ -96,7 +95,7 @@ The key commands here are:
 
 - `bind_rows`: We used this command in the [preprocessing data](preproc.html#combine) worksheet - it takes a series of data frames and combines them together. 
 
-Putting this all together, we make each of the four data frames long, and a column indicating which task they are from, and the combine them into a single data frame called `wing`.
+Putting this all together, we make each of the four data frames longer, add a column indicating which task they are from, and the combine them into a single data frame called `wing`.
 
 Here are the first few rows of `wing`:
 
@@ -104,7 +103,7 @@ Here are the first few rows of `wing`:
 wing %>% head(3) %>% pander(split.table = Inf)
 ```
 
-Later on in our analysis, we will need to be able to refer to card by its number (e.g. "card 18") rather than the word it represents (e.g. "Mountain"). So, we'll add another column, numbering each card from 1 to 20. 
+Later on in our analysis, we will need to be able to refer to card by its number (e.g. "card 18") rather than the word it represents (e.g. "Mountain"). So, we'll add another column, numbering each card from 1 to 20: 
 
 ```{r trials}
 wing <- wing %>% add_column(card = rep(1:20, 76))
@@ -118,7 +117,7 @@ wing %>% head(3) %>% pander(split.table = Inf)
 
 **Explanation of commands**:
 
-The only new command here is `rep`, which means "repeat". So, for example, `rep(1, 3)` gives us three ones: `1 1 1`. We also need to know that e.g. `1:3` gives us the numbers the numbers from 1 to 3, i.e. `1 2 3`. So, `rep(1:20, 1520/20)` gives us the numbers 1 to 20, 76 times. We need the 76 times because each of 19 participants completed four tasks (`19*4 = 76`).
+The only new command here is `rep`, which means "repeat". So, for example, `rep(1, 3)` gives us three ones: `1 1 1`. We also need to know that e.g. `1:3` gives us the numbers the numbers from 1 to 3, i.e. `1 2 3`. So, `rep(1:20, 1520/20)` gives us the numbers 1 to 20, 76 times. We need them 76 times because each of 19 participants completed four tasks (`19*4 = 76`).
 
 ### Tidy up
 
@@ -137,7 +136,7 @@ Now we need to recode the data. The child's response to each card has been repre
 
 * `NTS` - This stands for "non-target but semantically related". This code is used in the noun and predicate production tests, for example if the picture on the card was a house but the child said "hut".
 
-* `N/A` (not to be confused with the `R` data type `NA`) - researchers used this code to indicate that the task was interrupted for some reason (e.g. the child began crying).
+* `N/A` (not to be confused with the `R` data type `NA`) - the researchers used this code to indicate that the task was interrupted for some reason (e.g. the child began crying).
 
 In order to analyze these data more easily, we're going to convert these letter codes into numbers. First, we're going to create a new column which will contain a `1` if the letter code is `C` or `C*`, and a `0` otherwise. This is going to be useful later, because we can then just add up the numbers in this column to work out how many questions each child got right on each task.
 
@@ -153,7 +152,7 @@ wing <- wing %>% mutate(correct = recode(value, !!!cormap, .default = 0))
 
 We've recoded data before, in the [cleaning up questionnaire data](https://benwhalley.github.io/rmip/worksheet-recoding.html) worksheet. First, we tell R how we want each value to be recoded, in this case in `cormap`. Then we use `mutate` to add a column called `correct` that recodes the `value` column using the mapping in `cormap`. 
 
-New to the current worksheet is `.default`, which allows us to give a default value for the recoding. That way, we don't have to explicitly say that all the other codes are errors, we can just write `.default = 0`. 
+New to the current worksheet is `.default`, which allows us to give a default value for the recoding. That way, we don't have to explicitly say that all the other letters should be recoded as `0`, we can just write `.default = 0`. 
 
 ### Further recoding
 
@@ -181,7 +180,7 @@ wing %>% group_by(subj, task) %>%
   filter(inter > 0)
 ```
 
-**Explanation of commands:** We've used all this commands many times before, with the possible exception of `sum` - `sum` is a command like `mean` except that it adds up the numbers rather than taking their average. So, this series of commands groups the data by `subj` and `task`, then filters it to contain just the first 17 questions. It adds up the number of interruptions in each case, and filters to include just those where the number of interruptions was greater than zero. 
+**Explanation of commands:** We've used all these commands many times before, with the possible exception of `sum` - `sum` is a command like `mean` except that it adds up the numbers rather than taking their average. So, this series of commands groups the data by `subj` and `task`, then filters it to contain just the first 17 questions. It adds up the number of interruptions in each case, and filters to include just those where the number of interruptions was greater than zero. 
 
 ### Removing participants from the dataset
 
@@ -193,7 +192,7 @@ wing <- wing %>% filter(!(subj == 1 & task %in% c("pc", "pp")))
 wing <- wing %>% filter(!(subj == 10 & task %in% c("pc", "pp")))
 ```
 
-**Explanation of commands:** We've excluded participants before, in the [preprocessing experiments](preproc-experiments.html#exclude) worksheet. The first line uses `!`, meaning "not" to keep all participants except participant 18. The second line in addition uses `&` (meaning AND), and `%in%`, to keep all the data except the `pc` and `pp` tasks of participant 1. The third line does the same for participant 10. 
+**Explanation of commands:** We've excluded participants before, in the [preprocessing experiments](preproc-experiments.html#exclude) worksheet. The first line uses `!` (meaning "not") in order to keep all participants except participant 18. The second line in addition uses `&` (meaning AND), and `%in%`, to keep all the data except the `pc` and `pp` tasks of participant 1. The third line does the same for participant 10. 
 
 _Note_: In the original report, some participants were also excluded for poor performance. For reasons of brevity, and also because this practice is of somewhat debatable validity in this case, we have not included this step in the current worksheet. 
 
@@ -255,7 +254,7 @@ task_by_subj %>% pander(split.table = Inf)
 
 In our preprocessed data frame, `task_by_subj`, we included two columns, `CDI_U` and `CDI_S`. These are the parent's ratings of their child's level of mastery of a list of words, both in terms of the child _understanding_ the words (`CDI_U`) and _speaking_ the words (`CDI_S`). 
 
-In this first analysis, we're going to use these measures as a check of whether the random allocation of children to the two conditions of the experiment (English cards versus Italian cards) was successful in eliminating pre-experimental differences in language mastery. If it was, we should be able to demonstrate evidence for the null hypothesis that the two groups do not differ in their `CDI_U` or `CDI_S` scores.  =We do this using Bayesian between-subjects t-tests of their parents' CDI ratings. Bayesian t-tests were introduced in the [Evidence worksheet](evidence.html):
+In this first analysis, we're going to use these measures as a check of whether the random allocation of children to the two conditions of the experiment (English cards versus Italian cards) was successful in eliminating pre-experimental differences in language mastery between those two groups. If it was, we should be able to demonstrate evidence for the null hypothesis that the two groups do not differ in their `CDI_U` or `CDI_S` scores.  We do this using Bayesian between-subjects t-tests of their parents' CD_I ratings. Bayesian t-tests were introduced in the [Evidence worksheet](evidence.html):
 
 ```{r cdi, message=FALSE}
 # compare children's language ability using CDI
@@ -266,7 +265,7 @@ ttestBF(formula=CDI_S ~ Cards, data = data.frame(task_by_subj))
 
 **Explanation of commands:**
 
-First we load the `BayesFactor` package. Next, we run a t-test which compares CDI 'understands' (`CDI_U`) for the two card sets. We then run another t-test which compares CDI 'says' (`CDI_S`) for the two card sets.
+First we load the `BayesFactor` package. Next, we run a t-test which compares CDI 'understands' (`CDI_U`) for the two card sets. We then run another t-test which compares CDI 'says' (`CDI_S`) for the two card sets. We then run a Bayesian t-test on these data.
 
 **Explanation of output:**
 
@@ -343,13 +342,15 @@ one.task <- task_by_subj_l %>% filter(task == "correct_pp") %>% drop_na()
 ttestBF(formula=correct ~ Gender, data = data.frame(one.task))
 ```
 
-In summary, there is no substantial evidence for or against gender differences in these tasks. This lack of conclusion is unsurprising given the small sample size. 
+**Summary**: There is no substantial evidence for or against gender differences in these tasks. This lack of conclusion is unsurprising given the small sample size. 
+
+<a name="correlate-cdi-wing"></a>
 
 ## Correlations between WinG and parents' ratings
 
-Are parents able to rate, even approximately, the level of word mastery in their children? If so, we would expect to observe a significant correlation between, for example, `CDI_U` scores and performance on the noun-comprehension task. Do we?
+Are parents able to estimate the level of word mastery in their children? If so, we would expect to observe a significant correlation between, for example, `CDI_U` scores and performance on the noun-comprehension task. Do we?
 
-We can calculate both the correlation co-efficient, and a Bayes Factor for that correlation, using the following two commands. We covered these commands in the [relationships, part 2, worksheet](corr.html), take a look back at that worksheet if you need a reminder. The only new thing here is `use="complete.obs`. We need this extra bit in this case because we have some missing data. The option `use="complete.obs` means only use those cases where we have both a parent's rating (`CDI_U`) and a task performance score (`nc`):
+We can calculate both the correlation co-efficient, and a Bayes Factor for that correlation, using the following two commands. We covered these commands in the [relationships, part 2, worksheet](corr.html), take a look back at that worksheet if you need a reminder. The only new thing here is `use="complete.obs"`. We need this extra bit in this case because we have some missing data. The option `use="complete.obs"` means only use those cases where we have both a parent's rating (`CDI_U`) and a task performance score (`nc`):
 
 **CDI_U and noun comprehension**:
 
@@ -385,7 +386,9 @@ correlationBF(task_by_subj$CDI_S, task_by_subj$correct_pp)
 
 **Summary**: There is evidence of a positive correlation in the case of noun production. In the other three cases, the analysis is inconclusive. This is unsurprising given the small sample size. 
 
-## Comparing performance on English and Italian cards
+<a name="compare-acc"></a>
+
+## Comparing accuracy on English and Italian cards
 
 We're now ready to examine our main hypothesis, which predicts that there will be a difference WinG task scores, depending on which set of cards the children were tested with. 
 
@@ -408,7 +411,9 @@ Line 2 recodes the `task` labels, to make them more meaningful on the plot's x a
 
 **Explanation of output:**
 
-This plot gives a visual indication of whether there were differences between the Italian and English cards on each of the tests. Given the extensive overlap in scores between the card sets, this seems unlikely. The plot also shows that the data were slightly skewed on the noun tasks due to some low scores.
+The warning `Removed 4 rows...` is just a reminder that some data is missing. We already know this, and so we can safely avoid the warning.
+
+The plot gives a visual indication of whether there were differences between the Italian and English cards on each of the tests. Given the extensive overlap in scores between the card sets, this seems unlikely. 
 
 
 ### Non-parametric tests
@@ -468,9 +473,55 @@ wilcox.test(correct ~ Cards, test_include)
 ttestBF(formula=correct ~ Cards, data = data.frame(test_include))
 ```
 
+
+<a name="compare-production"></a>
+
+## Comparing semantically-related production errors by card set
+
+Finally, we compare Italian and English cards on the frequency of semantically-related production errors. We can use the same commands as before, with minor modifications:
+
+
+```{r nts-production-mw, message=FALSE, warning=FALSE}
+task_by_subj_l <- task_by_subj %>% select(subj:Cards, related_np, related_pp) %>%
+  pivot_longer(cols = c(related_np, related_pp),
+               names_to = 'task',
+               values_to = 'correct')
+
+task_names <- c(
+  related_np = 'Noun Production',
+  related_pp = 'Predicate Production'  
+)
+task_by_subj_l$task <- task_by_subj_l$task %>% recode(!!!task_names)
+
+# plot WinG errors by card set
+
+library(see)
+task_by_subj_l %>% ggplot(aes(x = task, y = correct, fill = Cards)) +
+  geom_violinhalf(position = position_identity(), alpha=0.7, size=0) +
+  xlab('WinG Task') + ylab('Accuracy (max = 20)')
+
+
+test_include <- task_by_subj_l %>% filter(task == 'Noun Production') %>% drop_na()
+test_include %>%
+  group_by(Cards) %>%
+  summarise(median = median(correct))
+wilcox.test(correct ~ Cards, test_include)
+ttestBF(formula=correct ~ Cards, data = data.frame(test_include))
+
+test_include <- task_by_subj_l %>% filter(task == 'Predicate Production') %>% drop_na()
+test_include %>%
+  group_by(Cards) %>%
+  summarise(median = median(correct))
+wilcox.test(correct ~ Cards, test_include)
+ttestBF(formula=correct ~ Cards, data = data.frame(test_include))
+
+```
+
+**Explanation of output:** Once again, the small sample size renders the inconclusive results of these analyses unsurprising.
+
 ## Conclusion
 
-There's not a great deal we can conclude from these data, other than that the sample size (N = 10 per condition befor exclusions) was probably too small to support clear conclusions. There does seem to be some evidence that a child's WinG performance on noun production is moderately correlated to their parent's rating of that child's level of mastery in noun production.
+There's not a great deal we can conclude from these data. Unless the authors had reasons to expect a large effect size ($d > 1.3$), these inconclusive results are unsurprising, and probably due to the small sample size. There does seem to be some evidence that a child's WinG performance on noun production is moderately correlated to their parent's rating of that child's level of mastery in noun production.
 
 ___
 
