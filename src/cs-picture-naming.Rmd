@@ -108,7 +108,7 @@ nc <- nc %>% mutate(subj = factor(subj), Cards = factor(Cards))
 
 **Explanation of commands:**
 
-The `cards` column indicates whether the child was tested with the Italian or English cards, so we convert it to a factor along with `subj`. We select these columns and the columns containing rating data for the words used in the the noun comprehension task. These are in the column range `mountain:wellyboots`.
+The `cards` column indicates whether the child was tested with the Italian or English cards, so we convert it to a factor along with `subj`. 
 
 Here are the first few rows of `nc`:
 
