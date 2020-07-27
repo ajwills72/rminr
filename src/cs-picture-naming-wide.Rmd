@@ -1,0 +1,222 @@
+---
+title: "Reliability of Targets in a Picture Naming Task"
+author: "Allegra Cattani, Adele Conn, Paul Sharpe and Andy Wills"
+output:
+  html_document:
+    highlight: pygment
+---
+
+```{r setup, include=FALSE}
+## DEVELOPERS: Uncomment one option, as appropriate
+## Show only commands.
+## knitr::opts_chunk$set(echo = TRUE, message = FALSE, results='hide', fig.keep = 'none', comment=NA)
+## Show commands and output.
+knitr::opts_chunk$set(echo = TRUE, comment=NA, cache = TRUE)
+library(pander)
+# Line numbering guide
+# https://blog.atusy.net/submodules/rmd-line-num/index.html
+```
+
+## Before you start
+
+This is an advanced worksheet, which assumes you have completed the [Absolute Beginners' Guide to R](https://ajwills72.github.io/rminr/#beginners) course, the [Research Methods in Practice (Quantitative section)](https://benwhalley.github.io/rmip/overview-quantitative.html) course, and the [Intermediate Guide to R](https://ajwills72.github.io/rminr/#rmip) course. 
+
+## Contents
+
+- [Introduction](#intro)
+- [Loading data](#data)
+- [Preprocessing demographics data](#preproc-demographics)
+- [Preprocessing WinG noun comprehension data](#preproc-nc)
+- [Applying exclusion criteria](#exclude)
+- [Comparing parents' ratings of their child's language ability](#cdi-diffs)
+- [Comparing gender on WinG accuracy](#wing-gender)
+- [Exploring correlations between CDI and WinG](#correlate-cdi-wing)
+- [Plotting WinG accuracy by card set](#plot-task)
+- [Comparing WinG accuracy by card set](#mann-whitney)
+- [Comparing semantically related production errors by card set](#compare-production)
+
+<a name="intro"></a>
+
+## Introduction
+
+This worksheet describes a full analysis pipeline for an undergraduate student dissertation on children’s language development. This study was an experiment which evaluated the _Words in Game_ (WinG) test. WinG consists of a set of picture cards which are used in four tests: noun comprehension, noun production, predicate comprehension, and predicate production. The Italian and English versions of the WinG cards use different pictures to depict the associated words.
+
+An earlier study found a difference between the English and Italian cards, for adults' ratings of how well each picture represented the underlying construct. In this study, the researchers hypothesised that this difference would influence children's WinG task scores, depending on which set of cards they were tested with. The experiment compared WinG performance of English-speaking children, aged approximately 30 months, tested with either the Italian or English cards. Therefore, this was a 4 (WinG task) x 2 (cards) mixed design.
+
+<a name="data"></a>
+
+## Loading data
+
+Open the `rminr-data` project we used [previously](preproc.html#load).
+
+Ensure you have the latest files by asking git to "`pull`" the repository. Select the `Git` tab, which is located in the row of tabs which includes the `Environment` tab. Click the `Pull` button with a downward pointing arrow. A window will open showing the files which have been pulled from the repository. Close the `Git pull` window. The `case-studies` folder should contain a folder named `allegra-cattani`.
+
+Next, create a new, empty R script and save it in the `rminr-data` folder as `wing.R`. Put all the commands from this worksheet into this file, and run them from there. Save your script regularly.
+
+We start by reading the data.
+
+```{r load, message=FALSE}
+rm(list = ls()) # clear the environment
+library(tidyverse)
+
+# read data
+demographics <- read_csv('case-studies/allegra-cattani/demographics.csv')
+nc <- read_csv('case-studies/allegra-cattani/noun_comprehension.csv')
+np <- read_csv('case-studies/allegra-cattani/noun_production.csv')
+pc <- read_csv('case-studies/allegra-cattani/predicate_comprehension.csv')
+pp <- read_csv('case-studies/allegra-cattani/predicate_production.csv')
+```
+
+**Explanation of commands:**
+
+1. We clear the workspace, and load the `tidyverse`package.
+1. Data for each of the WinG tasks is stored in its own CSV file. There is also file containing 'demographics' data. We read each file into its own data frame.
+
+<a name="preproc-nc"></a>
+
+## Preprocessing WinG data
+
+Next we preprocess the WinG data. 
+
+### Pivot and combine
+
+Preprocessing is generally easier if our data is in long format (many rows, few columns), and is all contained in a single data frame. 
+
+```{r nc}
+# preprocess 
+wing <- bind_rows(
+  pivot_longer(nc,Mountain:Wellyboots) %>% add_column(task = "nc"),
+  pivot_longer(np,Beach:Gloves) %>% add_column(task = "np"), 
+  pivot_longer(pc,Big:Pulling) %>% add_column(task = "pc"),
+  pivot_longer(pp,Small:Pushing) %>% add_column(task = "pp") 
+)
+```
+
+```{r trials}
+wing <- wing %>% add_column(trial = rep(1:20, 1520/20))
+```
+
+Here are the first few rows of `wing`:
+
+```{r echo=FALSE}
+wing %>% head(3) %>% pander(split.table = Inf)
+```
+<a name="exclude"></a>
+
+### Tidy up
+```{r tidy}
+rm(nc, np, pc, pp)
+```
+
+
+### Recode
+
+Now we recode the data:
+
+```{r recode}
+# Recode
+cormap = c("C" = 1, "C*" = 1)
+wing <- wing %>% mutate(correct = recode(value, !!!cormap, .default = 0))
+relmap = c("NTS" = 1)
+wing <- wing %>% mutate(related = recode(value, !!!relmap, .default = 0))
+intermap = c("N/A" = 1)
+wing <- wing %>% mutate(inter = recode(value, !!!intermap, .default = 0))
+```
+
+
+### Applying exclusion criteria
+
+Now we exclude on the basis of not completing the task
+
+```{r ex1}
+## Excluding on N/As
+wing %>% group_by(subj, task) %>% 
+  filter(trial < 18) %>% 
+  summarise(inter = sum(inter)) %>% 
+  filter(inter > 0)
+```
+
+```{r ex2}
+wing <- wing %>% filter(!(subj == 18))
+wing <- wing %>% filter(!(subj == 1 & task %in% c("pc", "pp")))
+wing <- wing %>% filter(!(subj == 10 & task %in% c("pc", "pp")))
+```
+
+### Calculate scores
+
+```{r calc}
+wing_sum <- wing %>% group_by(subj, Cards, task) %>% 
+  summarise(correct = sum(correct), related = sum(related))
+```
+
+### Applying further exclusion criteria
+
+```{r ex3}
+# Exclude on poor performance
+wing_sum %>% group_by(task) %>% 
+  filter(correct < mean(correct) - 2* sd(correct))
+```
+
+```{r ex4}
+wing_sum <- wing_sum %>% filter(!(subj == 1 & task == "np"))
+wing_sum <- wing_sum %>% filter(!(subj == 10))
+```
+
+### Pivot
+
+Our analyses will be easier to perform if the data is in a wider format
+
+```{r widen}
+# Widen
+task_by_subj <- wing_sum %>% 
+  pivot_wider(names_from = task, values_from = c(correct, related))
+```
+
+
+### Combine
+
+Our analyses require us to compare WinG performance with demographic data
+
+```{r comb2}
+# Combine
+demo <- demographics %>% select(subj, Gender, CDI_U, CDI_S)
+task_by_subj <- right_join(demo, task_by_subj, by = "subj")
+```
+
+
+Our data is now fully preprocessed. Notice how the join sets cells to the value `NA` for subjects who were excluded for that particular task.
+
+```{r echo=FALSE}
+task_by_subj %>% pander(split.table = Inf)
+```
+
+
+<a name="cdi-diffs"></a>
+
+## Comparing parents' ratings of their child's language ability
+
+For our first analysis, we want to check that there were no differences in language ability between the children assigned to the Italian and English card groups. We do this using between-subjects t-tests of their parents' CDI ratings. Bayesian t-tests were introduced in the [Evidence worksheet](evidence.html).
+
+```{r cdi}
+# compare children's language ability using CDI
+library(BayesFactor, quietly=TRUE)
+cdi_u_bf <- ttestBF(formula=CDI_U ~ Cards, data = task_by_subj)
+cdi_u_bf
+cdi_s_bf <- ttestBF(formula=CDI_S ~ Cards, data = task_by_subj)
+cdi_s_bf
+```
+
+**Explanation of commands:**
+
+First we load the `BayesFactor` package. Next, we run a t-test which compares CDI 'understands' (`CDI_U`) for the two card sets. We another t-test which compares CDI 'says' (`CDI_S`) for the two card sets.
+
+**Explanation of output:**
+
+Here, we're hoping to find evidence for the null hypothesis i.e. no differences in the means for the two groups. Our Bayes factors (CDI understands = `r round(BayesFactor::extractBF(cdi_u_bf)$bf, 2)`; CDI says = `r round(BayesFactor::extractBF(cdi_s_bf)$bf, 2)`) indicate that it's 2-2.5 times more likely that there's no difference, than there is a difference in language ability between the children tested using the Italian and English cards.
+
+<a name="wing-gender"></a>
+
+___
+
+This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0. 
+
