@@ -23,14 +23,15 @@ library(pander)
 * [Meaningful labels](#labels)
 * [Journal styling](#style)
 * [High-quality output](#hq)
+* [Plotting principles](#principles)
 * [Within participants data](#within)
-    + [Point and line plot (1 factor)](#w-pointline-1)
-    + [Point and line plot (2 factors)](#w-pointline-2)
+    + [One factor](#w-1x3)
+    + [Two factors](#w-2x2)
 * [Between participants data](#between)
-    + [Half violin plot](#halfviolin)
-    + [Bar plot](#bar)
-    + [Boxplot](#box)
-* [Mixed (between-within) data](#mixed)
+    + [One factor, two levels](#b-1x2)
+    + [One factor, four levels](#b-1x4)
+* [Mixed (within-between) data](#mixed)
+    + [Two factors](#m-2x4)
 * [Exploring data](#exploring)
     + [Histogram](#histogram)
     + [Pairs plot](#pairs)
@@ -137,20 +138,33 @@ ggsave(filename = "fig1.pdf", plot = dgraph, units = "cm", width = 15, height = 
 
 A file called _fig1.pdf_ will have appeared in your _Files_ window in RStudio. You can export this in the [usual way](using-projects.html#download).
 
+<a name="principles"></a>
+
+# Plotting principles
+
+A plot should visually describe patterns in data that would otherwise be difficult to communicate. The most appropriate plot will depend on the type of data you are working with, and the pattern you want to communicate. In practice, this often involves trying out different plots, and adjusting graphical elements before deciding how best to present your data.
+
+As such, it's difficult to provide rules about how to plot your data. However, there are some principles which will help you to make this decision.
+
+* central tendency
+* variation
+* Plot in main text (not appendices).
+
+Barcharts or point plots sometimes include a line and crossbar either side of the mean value representing some kind of interval. If you plot interval lines, there are two essential pieces of information you should include in your caption. First, you should say what type of interval the line represents. This could be a standard deviation, a standard error or a confidence interval. We recommend plotting 95% confidence intervals, as these tend to be both useful and easy to interpret. Second, you should state whether the interval represents within or between subject variability.
+
+
+In the following sections ...
+examples The approach we've taken in this worksheet is to consider whether you are plotting data for within or between subjects, or a mixture of the two.
+
 <a name="within"></a>
 
 # Within participants data
 
-What are you trying to show?
-Often involves trying out a few different graphs. Often not the first one you try. Might be something you do after inferentials.
-
-The approach we've taken in this worksheet is to consider whether you are plotting data for within or between subjects, or a mixture of the two.
-
 We'll demonstrate a graph for a within participants experiment using data from [an undergraduate student dissertation on the Perruchet Effect](awdiss.html).
 
-<a name="w-pointline-1"></a>
+<a name="w-1x3"></a>
 
-## Point and line plot (1 factor)
+## 1 factor
 
 ```{r perruchet-data, message=FALSE, class.source = 'numberLines lineAnchors'}
 lvl.sum <- read_csv('going-further/perruchet-preproc.csv')
@@ -162,7 +176,7 @@ The simplest graph we could produce here would be to just plot the three means r
 
 Generally, when we graph data from psychology experiments, we try to give an indication of the variability between participants - is everyone exactly like the mean, or do people differ? One common way of doing this it to plot some kind of 'error bar'; for example, as shown in Figure 1 of  [McAndrew et al. (2012)](https://www.researchgate.net/profile/IPL_Mclaren/publication/221752843_Dissociating_Expectancy_of_Shock_and_Changes_in_Skin_Conductance_An_Investigation_of_the_Perruchet_Effect_Using_an_Electrodermal_Paradigm/links/0a85e53c10b74f291a000000.pdf). McAndrew et al., are not clear how they calculated these bars, but it's quite likely that they are the standard errors, considering each Level separately -- because this is the most common plot of this type. Such error bars are not particularly informative because, for example, they represent the variability _between_ participants at each Level, when the experiment is a _repeated measures_ design and so it is the variability of the trends across Level that is most relevant.
 
-In this project, we instead plot one line for each participant, and then overlay this with the means to emphasize the overall trend. Here's the final plot:
+In this project, we instead plot one line for each participant, and then overlay this with the means to emphasize the overall trend.
 
 ```{r perruchet, message=FALSE, class.source = 'numberLines lineAnchors'}
 ### Create a blank plot
@@ -186,11 +200,14 @@ eplot
 
 From this plot, it's clear that: (a) the overall trend is downwards, (b) most but not all participants individually show this trend, and (c) there is some variation in the absolute ratings people use.
 
-<a name="w-pointline-2"></a>
+<a name="w-2x2"></a>
 
-## Point and line plot (2 factors)
+## Two factors
 
 * Simplifies CI syntax, but be clear what type/how CI is being calculated
+
+* Better to do this using `stat_summary()` rather than write your own function
+* Calculate CIs using `mean_cl_boot`, as bootstrapping is a robust method that doesn't assume normally distributed data.
 
 ```{r w-pointline-2, message=FALSE}
 raw <- read_csv('case-studies/chris-mitchell/priming-faces.csv')
@@ -198,12 +215,14 @@ priming <- raw %>%
    filter(Running == 'Test') %>%
    group_by(Congruency, Load)
 
-library("ggpubr")
-priming %>% ggline(x = "Congruency", y = "RT", color = "Load",
-       add = c("mean_ci"), position = position_dodge(.1),
-       palette = 'grey') +
+dodge_width <- .1
+priming %>% ggplot(aes(x=Congruency, y=RT, group=Load, colour=Load)) +
+  stat_summary(geom="point", fun=mean, position = position_dodge(width = dodge_width)) +
+  stat_summary(geom="line", fun=mean, position = position_dodge(width = dodge_width)) +
+  stat_summary(geom="errorbar", width = .1, fun.data=mean_cl_boot, position = position_dodge(width = dodge_width)) +
       ylab("Mean RT") + xlab("Congruency") +
-  theme_APA
+      scale_color_grey()+ theme_APA +
+  labs(caption = "Bars are 95% confidence intervals")
 ```
 
 
@@ -211,9 +230,9 @@ priming %>% ggline(x = "Congruency", y = "RT", color = "Load",
 
 # Between participants data
 
-<a name="halfviolin"></a>
+<a name="b-1x2"></a>
 
-## Half violin plot
+## One factor, two levels
 
 We'll plot some data from [a study in which tested children’s language development](cs-picture-naming.html). The Words in Game (WinG) task uses picture cards to test children's comprehension of, and ability to say, nouns and predicates. A predicate completes an idea about the subject of a sentence. For example, if the card showed a girl pushing a bike, the predicate would be "pushing".
 
@@ -229,6 +248,7 @@ wing <- wing_preproc %>%
                values_to = 'correct') %>%
     select(subj, task, cards, correct)
 ```
+
 ### Explanation of commands
 
 Line 1 loads the data. The scores are in _wide_ format (lots of columns, few rows), but R generally requires data to be in _long_ format (lots of rows, few columns). Lines 2-5 convert the task data from wide to long. Line 6 select the columns were interested in plotting.
@@ -268,32 +288,32 @@ wing %>% ggplot(aes(x = task, y = correct, fill = cards)) +
   xlab('WinG Task') + ylab('Accuracy (max = 20)')
 ```
 
-<a name="bar"></a>
-
-## Bar plot
 
 There is evidence that readers misinterpret bar plots, because we percieve values within the bar as more likely than those just above, even though this is not the case (Newman & Scholl, 2012).
 
 ```{r}
-# Multiple groups with error bars and jitter point
-wing %>% ggbarplot(x = 'task', y = 'correct', color = 'cards', fill = 'cards',
- add = "mean_ci", palette = 'grey',
- position = position_dodge(), font.xtickslab = c(10),
- title = "95% mean confidence interval")
+wing %>% ggplot(aes(x=task, y=correct, fill=cards)) +
+  stat_summary(geom="bar", fun=mean, position=position_dodge(0.95)) +
+  stat_summary(geom="errorbar", width = .1, fun.data=mean_cl_boot, position=position_dodge(0.95)) +
+      ylab("Mean RT") + xlab("Congruency") +
+      theme_APA + scale_fill_grey() +
+    theme(axis.text = element_text(size = 10)) +
+  labs(caption = "Bars are 95% confidence intervals")
 ```
 
-<a name="box"></a>
+<a name="b-1x4"></a>
 
-## Boxplot
+## One factor, four levels
+
+Boxplot
 
 ```{r avoidance}
 ers_l <- read_csv('going-further/music-emotion-preproc.csv')
+ers_l <- ers_l %>% mutate(subculture = factor(subculture, levels = c('Mainstream', 'Emo', 'Goth', 'Metal')))
 
 avoidance <- ers_l %>% filter(ers == 'avoidance')
-ggboxplot(avoidance, x = 'subculture', y = 'score', 
-          color = 'subculture', order = c('Mainstream', 'Goth', 'Emo', 'Metal'),
-          palette = 'grey',
-          ylab = "ERS avoidance", xlab = "Subculture")
+avoidance %>% ggplot(aes(subculture, score)) + geom_boxplot() +
+  theme_APA
 ```
 
 **Explanation of commands:**
@@ -313,47 +333,52 @@ Lines 1-6 recode `task` factor levels, to make them more meaningful on the plot'
 
 This plot gives a visual indication of whether there were differences between the Italian and English cards on each of the tests. Given the extensive overlap in scores between the card sets, this seems unlikely. The plot also shows that the data were slightly skewed on the noun tasks due to some low scores.
 
-
-## About interval lines
-
-Barcharts or point plots sometimes include a line and crossbar either side of the mean value representing some kind of interval. If you plot interval lines, there are two essential pieces of information you should include in your caption. First, you should say what type of interval the line represents. This could be a standard deviation, a standard error or a confidence interval. We recommend plotting 95% confidence intervals, as these tend to be both useful and easy to interpret. Second, you should state whether the interval represents within or between subject variability.
-
-* Better to do this using `stat_summary()` rather than write your own function
-* Calculate CIs using `mean_cl_boot`, as bootstrapping is a robust method that doesn't assume normally distributed data.
-
-FIXME: Use a different mixed model dataset, as the interactions weren't of interest in Allegra's study. Useful for between subjects plots though.
-
 <a name="mixed"></a>
 
 # Mixed (within-between) data
 
-FIXME: No error bars, or error bars for the factor of interest?
+<a name="m-2x4"></a>
+
+## Two factors
+
+The problem is of course, within and between subject variance.
+
+FIXME: No error bars, or error bars for the factor of interest.
+
+This could be what we want to show.
 
 ```{r m-pointline-1, message=FALSE}
 panas <- read_csv('going-further/music-panas.csv')
 panas <- panas %>% mutate(subculture = factor(subculture, levels = c('Mainstream', 'Emo', 'Goth', 'Metal')))
-
 na <- panas %>%
   pivot_longer(cols = c(pre_na, post_na),
                names_to = 'pre_post',
                values_to = 'score')
-na %>% ggline(x = "subculture", y = "score", color = "pre_post",
-                 add = "mean_ci", position = position_dodge(.1),
-              linetype = 'solid',
-              order = c('Mainstream', 'Emo', 'Goth', 'Metal'),
-       palette = 'grey') +
-      ylab("Negative affect") + xlab("Subculture")
 ```
 
 ```{r point}
-dodge_width <- .1
 na %>%
     ggplot(aes(x=subculture, y=score, colour = pre_post, group = pre_post)) +
         stat_summary(geom="point", fun=mean, position = position_dodge(width = dodge_width)) +
         stat_summary(geom="errorbar", width = .1, fun.data=mean_cl_boot, position = position_dodge(width = dodge_width)) +
       ylab("Negative affect") + xlab("Subculture") +
-  scale_color_grey() + theme_APA
+    scale_color_grey() + theme_APA +
+  labs(caption = "Bars are 95% confidence intervals of subculture means")
 ```
+
+However, it's more likely that we're interested in the difference in NA before and after listening to the music.
+
+```{r}
+na_diff <- panas %>% mutate(diff = pre_na - post_na)
+na_diff %>%
+    ggplot(aes(x=subculture, y=diff)) +
+        stat_summary(geom="point", fun=mean) +
+        stat_summary(geom="errorbar", width = .1, fun.data=mean_cl_boot) +
+      ylab("NA difference (pre-post)") + xlab("Subculture") +
+  theme_APA + theme(plot.caption = element_text(size=8)) +
+  labs(caption = "Bars are 95% confidence intervals of mean differences")
+```
+
 <a name="exploring"></a>
 
 # Exploring data
@@ -361,6 +386,8 @@ na %>%
 <a name="histogram"></a>
 
 ## Histogram
+
+[one of the first graphs](#graphs)
 
 ```{r}
 oit <- read_csv('going-further/openness-imagery-thinking.csv')
