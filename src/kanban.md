@@ -11,16 +11,15 @@
 
 ## Andy review
 
-1. cs-picture-naming
 1. cs-self-esteem
 1. preproc-experiments
 1. more-on-regression
 
 ## Back to Paul
 
-
 ## Completed
 
+1. cs-picture-naming
 1. preproc-scales
 1. analyse-scales
 1. better-tables

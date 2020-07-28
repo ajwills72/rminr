@@ -10,6 +10,8 @@ The materials are intended to be practical 'how to' manuals, but in order to use
 
 In putting together the _patterns_ (code chunks) used in these materials, we followed these principles:
 
+1. _Avoid incorrect or bad practice_ - The published literature contains any number of analysis pipelines that, by today's standards, are either bad practice or outright wrong. We won't teach such things to our students. If the practice is sufficiently common, we'll acknowledge it exists, and explain why we have not provided examples of how to do it.
+
 1. _Three step_ rule - Avoid giving students a code block that involves more than about three steps. Once you get to three steps, break and explain what you've done, then move on to the next three steps. Do this even in preference to the simplicity rule. Longer blocks of code are hard to parse for non-programmers.
 
 1. _Simplicity_ rule - Minimize the number of different commands used across the whole set of materials. Minimize the total number of steps required. Choose commands that operate as similarly as possible to each other (e.g. same syntax).

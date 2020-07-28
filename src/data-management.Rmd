@@ -28,12 +28,21 @@ knitr::opts_chunk$set(echo = TRUE, comment=NA, cache = TRUE)
 * The data you make available should be the data you collected _before_ you applied any exclusion criteria. Ideally, the exclusion criteria should be written in `R`. See [The Perruchet Effect worksheet](#awdiss.html) for an example.
 * _Do_ exclude any sensitive data before sharing your data files. Be very careful with this step, as online repositories may keep track of an earlier version that you uploaded before the sensitive information was removed. It may be hard or impossible to delete these.
 
+* Your raw data files should contain just raw data; they should not also include things you have calculated from that data. For example, if
+your dataset contains the response to each question on a questionnaire do *not* include the sub-scale or scale scores you have calculated
+from those data. To do so can lead to errors and confuses what should be a clear distinction between your raw data, and your analysis of that data.
+
 <a name="next-level"></a>
 
 ## Factor levels
 
 * For columns which are factors, use strings rather than numbers for the factor levels, because this makes it clear what the factor levels mean.
 * Where possible, use lower case column names and factor levels, without spaces.
+
+## Keep data and analysis separate
+
+
+
 
 ## Exercise
 
