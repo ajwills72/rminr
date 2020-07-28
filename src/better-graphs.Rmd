@@ -210,7 +210,7 @@ From this plot, it's clear that: (a) the overall trend is downwards, (b) most bu
 
 ## Two factors
 
-Our next example is from an experiment with two factors. Participants were trained to associate two screen colours with two different food rewards. At test, they saw pairs of screen colours and food pictures. Their reaction time (RT) was measured for identifying whether the pairs matched (congruent), or didn't match (incongruent) the associations they'd learnt previously. This test was carried out with and without a second task, in which the participant had to verbally rate how much they liked pictures of faces. All participants completed all conditions, so we have a fully between subjects design, with factors congruency (congruent, incongruent) and load (load, no load).
+Our next example is from an experiment with two factors. Participants were trained to associate two screen colours with two different food rewards. At test, they saw pairs of screen colours and food pictures. Their reaction time (RT) in milliseconds was measured for identifying whether the pairs matched (congruent), or didn't match (incongruent) the associations they'd learnt previously. This test was carried out with and without a second task, in which the participant had to verbally rate how much they liked pictures of faces. All participants completed all conditions, so we have a fully between subjects design, with factors congruency (congruent, incongruent) and load (load, no load).
 
 We start by loading the data and keeping only the test trials.
 
@@ -230,30 +230,44 @@ dodge <- .1
 within_2x2 <- priming %>%
   ggplot(aes(x=Congruency, y=RT, group=Load, colour=Load))
 within_2x2 <- within_2x2 +
-  stat_summary(geom="point", fun=mean, position = position_dodge(width = dodge))
+  stat_summary(geom="point", fun=mean,
+               position = position_dodge(width = dodge)) +
+  stat_summary(geom="line", fun=mean,
+               position = position_dodge(width = dodge))
+within_2x2
 ```
+
+### Explanation of commands
 
 Line 1 defines a value that we'll use repeatedly to adjust the horizontal position of elements, so that they don't overlap. This will make the plot clearer. Line 2 defines the x axis of our plot to be the Congruency factor, the y axis to be RT, to group Congruency by Load, and to use a different colour for 'load' and 'no load'.
 
-Line 3 adds mean points to the plot using `stat_summary()`. `stat_summary()` is a concise way to summarise and plot graphical elements. It works in a similar way to the `group_by()` and `summarise()` pattern you've used to create summary statistics. The `fun=mean` tells `stat_summary()` to summarise the data by running the `mean` function for the grouped data you defined in the previous stop. In this case, it will calculate a mean RT (`y=RT`) for each of the groups created by `x=Congruency` and `group=Load`. `geom="point"` tells `stat_summary()` to plot the means as points. `position = position_dodge(width = dodge)` specifies an offset to use so that the points won't be plotted on top of each other. 
+Line 3 adds mean points to the plot using `stat_summary()`. `stat_summary()` is a concise way to summarise and plot graphical elements. It works in a similar way to the `group_by()` and `summarise()` pattern you've used to create summary statistics. The `fun=mean` tells `stat_summary()` to summarise the data by running the `mean` function for the grouped data you defined in the previous stop. In this case, it will calculate a mean RT (`y=RT`) for each of the groups created by `x=Congruency` and `group=Load`. `geom="point"` tells `stat_summary()` to plot the means as points. `position = position_dodge(width = dodge)` specifies an offset to use so that the points won't be plotted on top of each other. Line 4 uses a similar approach to add lines to the plot, with endpoints positioned at the four mean points. We'll change the point and line colours below.
 
 ```{r w-pointline-2-2, message=FALSE, class.source = 'numberLines lineAnchors'}
-within_2x2 +
-  stat_summary(geom="line", fun=mean,
-               position = position_dodge(width = dodge)) +
+within_2x2 <- within_2x2 +
   stat_summary(geom="errorbar", width = dodge, fun.data=mean_cl_boot,
-               position = position_dodge(width = dodge)) +
+               position = position_dodge(width = dodge))
+within_2x2
+```
+
+### Explanation of commands
+
+Line 3 adds the confidence intervals to the plot. Confidence intervals are the same length on either side of the mean. To plot the bars, `ggplot()` needs information about the two sides of the interval. One approach is to write some code to calculate the interval, then pass this data to `ggplot()` to plot the lines. However, we can do this more concisely using `stat_summary()`. The option `fun.data=` is used to specify a function that returns a `y` value, and values `ymax` and `ymin` which specify an interval above and below `y`. We can use the function `mean_cl_boot` to calculate a mean of `y`, and the associated confidence interval in `ymax` and `ymin`for our grouped data. `mean_cl_boot` calculates confidence intervals using [bootstrapping](https://en.wikipedia.org/wiki/Bootstrapping_(statistics)), which improves the interval estimate for data which isn't normally distributed.
+
+```{r w-pointline-2-3, message=FALSE, class.source = 'numberLines lineAnchors'}
+within_2x2 +
   ylab("Mean RT") + xlab("Congruency") +
-  labs(caption = "Bars are 95% confidence intervals") +
+  labs(caption = "Bars are 95% mean confidence intervals") +
   scale_color_grey() + theme_APA
 ```
 
 ### Explanation of commands
 
-* be clear about how CI is calculated using `stat_summary()`
-* Calculate CIs using `mean_cl_boot`, as bootstrapping is a robust method that doesn't assume normally distributed data.
+Line 2 adds meaningful labels to the axes. Line 3 adds a caption to let the reader know that the vertical bars represent 95% confidence intervals. Line 4 converts the colours to a grey pallete, and applies our APA theme.
  
 ### Explanation of plot
+
+The black line is well above the grey line, showing that people were slower to respond on trials where they were rating faces. The average of the black and grey points for congruent is about 625ms, and for incongruent about 640ms. This means that RTs were similar, regardless of the congruencey between the colour and food type. The fully overlapping black bars, and partially overlapping grey bars suggest that there was no interaction between load and congruency.
 
 <a name="between"></a>
 
