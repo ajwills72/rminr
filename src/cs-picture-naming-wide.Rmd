@@ -38,7 +38,7 @@ This is an advanced worksheet, which assumes you have completed the [Absolute Be
 
 This worksheet describes a full analysis pipeline for an undergraduate student dissertation on children’s language development. This study was an experiment which evaluated the _Words in Game_ (WinG) test. WinG consists of a set of picture cards which are used in four tests: noun comprehension, noun production, predicate comprehension, and predicate production. The Italian and English versions of the WinG cards use different pictures to depict the associated words.
 
-An earlier study found a difference between the English and Italian cards, for adults' ratings of how well each picture represented the underlying construct. In this study, the researchers hypothesised that this difference would influence children's WinG task scores, depending on which set of cards they were tested with. The experiment compared WinG performance of English-speaking children, aged approximately 30 months, tested with either the Italian or English cards. Therefore, this was a 4 (WinG task) x 2 (cards) mixed design.
+An earlier study found a difference between the English and Italian cards, for adults' ratings of how well each picture represented the underlying construct. In this study, the researchers hypothesised that this difference would influence children's WinG task scores, depending on which set of cards they were tested with. The experiment compared WinG performance of English-speaking children, aged approximately 30 months, tested with either the Italian or English cards.
 
 <a name="data"></a>
 
@@ -67,7 +67,7 @@ pp <- read_csv('case-studies/allegra-cattani/predicate_production.csv')
 **Explanation of commands:**
 
 1. We clear the workspace, and load the `tidyverse`package.
-1. Data for each of the WinG tasks is stored in its own CSV file. There is also a CSV, 'demographics', which contains participant age and gender,. among other things. We read each file into its own data frame:
+1. Data for each of the WinG tasks is stored in its own CSV file. There is also a CSV, 'demographics', which contains participant age and gender, among other things. We read each file into its own data frame.
 
 <a name="preproc-nc"></a>
 
@@ -127,7 +127,6 @@ The data frames we originally loaded the CSV files into are no longer needed, so
 rm(nc, np, pc, pp)
 ```
 
-
 ### Recoding accuracy
 
 Now we need to recode the data. The child's response to each card has been represented by a letter code in `wing`. There are quite a few codes, but the only ones we need to worry about here are:
@@ -173,7 +172,7 @@ The authors of this dissertation decided to exclude a child's answers for a task
 In order to do this, we need to work out which participants were interrupted during the first 17 cards of each task. It would be possible to do this by hand, but it would be tedious and error prone. Instead, we get R to tell us who was interrupted:
 
 ```{r ex1}
-## List interrupted tassks
+# List interrupted tasks
 wing %>% group_by(subj, task) %>% 
   filter(card < 18) %>% 
   summarise(inter = sum(inter)) %>% 
@@ -213,7 +212,7 @@ wing_sum %>% head(3) %>% pander(split.table = Inf)
 
 ### Pivot
 
-Our preprocessing is now nearly over, but some of the analyses we do later will be easier to perform with a wider data frame, so we'll widen it now, using the `pivot_wider` command that we've come across before, in [within-subject differences](anova1.html#pivot) worksheet:
+Our preprocessing is now nearly over, but some of the analyses we do later will be easier to perform with a wider data frame, so we'll widen it now, using the `pivot_wider` command that we've come across before, in the [within-subject differences](anova1.html#pivot) worksheet:
 
 ```{r widen}
 # Widen
@@ -246,7 +245,6 @@ Our data is now fully preprocessed:
 ```{r echo=FALSE}
 task_by_subj %>% pander(split.table = Inf)
 ```
-
 
 <a name="cdi-diffs"></a>
 
@@ -321,7 +319,7 @@ We can examine whether there is evidence for gender differences, or their absenc
 one.task <- task_by_subj_l %>% filter(task == "correct_nc") %>% drop_na()
 ttestBF(formula=correct ~ Gender, data = data.frame(one.task))
 ```
-**Explanation of command**: We're using the long-format version of our data iun `task_by_subj_l`, which we generated as part of making the table of descriptives. We `filter` to include just the noun comprehension task, and remove any missing data using `drop_na()`.
+**Explanation of command**: We're using the long-format version of our data `task_by_subj_l`, which we generated as part of making the table of descriptives. We `filter` to include just the noun comprehension task, and remove any missing data using `drop_na()`.
 
 **Explanation of output**: The Bayes Factor is indeterminate - we have no substantial evidence for or against our hypothesis of a gender difference. This is unsurprising give the small sample size.
 
@@ -423,7 +421,8 @@ The authors of this report chose to perform non-parametric tests of their centra
 **Noun comprehension**:
 
 ```{r wilcox}
-test_include <- task_by_subj_l %>% filter(task == 'Noun Comprehension') %>% drop_na()
+test_include <- task_by_subj_l %>%
+  filter(task == 'Noun Comprehension') %>% drop_na()
 test_include %>%
   group_by(Cards) %>%
   summarise(median = median(correct))
@@ -443,7 +442,8 @@ We can apply the same commands to the other four tests. Once again, we find the 
 **Predicate comprehension**:
 
 ```{r wilcox2}
-test_include <- task_by_subj_l %>% filter(task == 'Predicate Comprehension') %>% drop_na()
+test_include <- task_by_subj_l %>%
+  filter(task == 'Predicate Comprehension') %>% drop_na()
 test_include %>%
   group_by(Cards) %>%
   summarise(median = median(correct))
@@ -454,7 +454,8 @@ ttestBF(formula=correct ~ Cards, data = data.frame(test_include))
 **Noun production**:
 
 ```{r wilcox3}
-test_include <- task_by_subj_l %>% filter(task == 'Noun Production') %>% drop_na()
+test_include <- task_by_subj_l %>%
+  filter(task == 'Noun Production') %>% drop_na()
 test_include %>%
   group_by(Cards) %>%
   summarise(median = median(correct))
@@ -465,7 +466,8 @@ ttestBF(formula=correct ~ Cards, data = data.frame(test_include))
 **Predicate production**:
 
 ```{r wilcox4}
-test_include <- task_by_subj_l %>% filter(task == 'Predicate Production') %>% drop_na()
+test_include <- task_by_subj_l %>%
+  filter(task == 'Predicate Production') %>% drop_na()
 test_include %>%
   group_by(Cards) %>%
   summarise(median = median(correct))
@@ -480,9 +482,10 @@ ttestBF(formula=correct ~ Cards, data = data.frame(test_include))
 
 Finally, we compare Italian and English cards on the frequency of semantically-related production errors. We can use the same commands as before, with minor modifications:
 
-
 ```{r nts-production-mw, message=FALSE, warning=FALSE}
-task_by_subj_l <- task_by_subj %>% select(subj:Cards, related_np, related_pp) %>%
+# Compare semantically-related production errors by card set
+task_by_subj_l <- task_by_subj %>%
+  select(subj:Cards, related_np, related_pp) %>%
   pivot_longer(cols = c(related_np, related_pp),
                names_to = 'task',
                values_to = 'correct')
@@ -501,20 +504,21 @@ task_by_subj_l %>% ggplot(aes(x = task, y = correct, fill = Cards)) +
   xlab('WinG Task') + ylab('Accuracy (max = 20)')
 
 
-test_include <- task_by_subj_l %>% filter(task == 'Noun Production') %>% drop_na()
+test_include <- task_by_subj_l %>%
+  filter(task == 'Noun Production') %>% drop_na()
 test_include %>%
   group_by(Cards) %>%
   summarise(median = median(correct))
 wilcox.test(correct ~ Cards, test_include)
 ttestBF(formula=correct ~ Cards, data = data.frame(test_include))
 
-test_include <- task_by_subj_l %>% filter(task == 'Predicate Production') %>% drop_na()
+test_include <- task_by_subj_l %>%
+  filter(task == 'Predicate Production') %>% drop_na()
 test_include %>%
   group_by(Cards) %>%
   summarise(median = median(correct))
 wilcox.test(correct ~ Cards, test_include)
 ttestBF(formula=correct ~ Cards, data = data.frame(test_include))
-
 ```
 
 **Explanation of output:** Once again, the small sample size renders the inconclusive results of these analyses unsurprising.
