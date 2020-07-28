@@ -347,33 +347,30 @@ wing %>% ggplot(aes(x=task, y=correct, fill=cards)) +
 
 ## One factor, four levels
 
-Boxplot
+Another common plot is the boxplot. This includes a thick line which represents the median, and a box on either side which shows how the middle 50% of the data is distributed around the median. The areas above and below the median are called the the upper and lower quartiles respectively. Together they form the 'inter-quartile range' (IQR). The 'whiskers' above and below the quartiles represent the distribution of the top and bottom 25% of the data. The dots draw attention to data points which lie outside of these ranges.
 
-```{r avoidance}
+We'll create a boxplot to compare the emotional avoidance strategies for fans of mainstream (control group), goth, metal and emo music. This data came from a final year undergrade student dissertation.
+
+```{r avoidance, class.source = 'numberLines lineAnchors', message=FALSE}
 ers_l <- read_csv('going-further/music-emotion-preproc.csv')
-ers_l <- ers_l %>% mutate(subculture = factor(subculture, levels = c('Mainstream', 'Emo', 'Goth', 'Metal')))
-
+ers_l <- ers_l %>%
+  mutate(subculture = factor(subculture,
+                             levels = c('Mainstream', 'Emo', 'Goth', 'Metal')))
 avoidance <- ers_l %>% filter(ers == 'avoidance')
-avoidance %>% ggplot(aes(subculture, score)) + geom_boxplot() +
+
+avoidance %>% ggplot(aes(x=subculture, y=score)) +
+  geom_boxplot() +
+  ylab("Emotional avoidance score") + xlab("Music subculture") +
   theme_APA
 ```
 
-**Explanation of commands:**
-
-**Explanation of output:**
-
-
 ### Explanation of commands
 
-Line 1 loads the `see` package which provides the `half_violin()` function. Line 2 defines the x axis of our plot to be the WinG tasks, the y axis to be task accuracy (1-20), and to use the `cards` factor for the fill colour. Line 3 creates the half violin plot. `position = position_identity()` plots the two distributions on top of each other, making it easy to see how much they overlap. `alpha=0.7` changes to transparency, again to help us see the overlapping area. `size=0` removes the outline around the distributions. Line 4 uses a grey palette for filling in the two distributions. Line 5 gives our axes meaningful labels.
+Line 1 loads the data. Lines 3-4 convert subculture to a factor. We use the `levels=` option to order the factor levels, making `Mainstream` first as this group was a control condition. This will make it appear on the left of our plots, so it's easy to compare against the other three subcultures. Line 5 filters out everything except the measure of emotional avoidance. Line 7 puts the avoidance `score` on the y axis and the `subculture` factor on the x axis. Line 8 creates the boxplot with its default settings. Line 9 gives the axes meaningful labels, and line 10 applies our APA theme. 
 
-**Explanation of commands:**
+### Explanation of plot
 
-Lines 1-6 recode `task` factor levels, to make them more meaningful on the plot's x axis. Line 7 loads the `see` package which provides the `half_violin()` function. Line 8 defines the x axis of our plot to be the WinG tasks, the y axis to be task accuracy (1-20), and to use the `cards` factor for the fill colour. Line 9 creates a "half violin" plot. As the name suggests, this shows one half of a [violin plot](https://en.wikipedia.org/wiki/Violin_plot). `position = position_identity()` plots the two distributions on top of each other, making it easy to see how much they overlap. `alpha=0.3` changes to transparency, again to help us see the overlapping area. `size=0` removes the outline around the distributions. Line 10 gives our axes meaningful labels.
-
-**Explanation of output:**
-
-This plot gives a visual indication of whether there were differences between the Italian and English cards on each of the tests. Given the extensive overlap in scores between the card sets, this seems unlikely. The plot also shows that the data were slightly skewed on the noun tasks due to some low scores.
+The medians in all groups are towards the upper end of the scale. The extensive overlap between the boxes and whiskers suggests there weren't any differences between the groups. In all of the groups, a few scores fell beyond the bottom 25% of the distribution.
 
 <a name="mixed"></a>
 
