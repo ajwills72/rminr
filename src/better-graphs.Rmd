@@ -166,7 +166,7 @@ We'll start by producing some graphs for within participants data.
 
 ## One factor
 
-Our first example uses data from [an undergraduate student dissertation on the Perruchet Effect](awdiss.html). We want to plot a graph for a within participants experiment with a single factor.
+Our first example uses data from [an undergraduate student experiment on the Perruchet Effect](awdiss.html).
 
 ```{r perruchet-data, message=FALSE, class.source = 'numberLines lineAnchors'}
 lvl.sum <- read_csv('going-further/perruchet-preproc.csv')
@@ -174,7 +174,7 @@ mdata  <- lvl.sum %>% group_by(level) %>%
   summarise(lcval = mean(lcval), expect = mean(expect))
 ```
 
-The simplest graph we could produce here would be to just plot the three means, but this wouldn't really add anything to the means that were presented earlier in the report. 
+We want to plot a graph for a single, within participants factor. The simplest graph we could produce here would be to just plot the three means, but this wouldn't really add anything to the means that were presented earlier in the report. 
 
 Generally, when we graph data from psychology experiments, we try to give an indication of the variability between participants - is everyone exactly like the mean, or do people differ? One common way of doing this it to plot some kind of 'error bar'; for example, as shown in Figure 1 of  [McAndrew et al. (2012)](https://www.researchgate.net/profile/IPL_Mclaren/publication/221752843_Dissociating_Expectancy_of_Shock_and_Changes_in_Skin_Conductance_An_Investigation_of_the_Perruchet_Effect_Using_an_Electrodermal_Paradigm/links/0a85e53c10b74f291a000000.pdf). McAndrew et al., are not clear how they calculated these bars, but it's quite likely that they are the standard errors, considering each Level separately -- because this is the most common plot of this type. Such error bars are not particularly informative because, for example, they represent the variability _between_ participants at each Level, when the experiment is a _repeated measures_ design and so it is the variability of the trends across Level that is most relevant.
 
@@ -210,21 +210,27 @@ From this plot, it's clear that: (a) the overall trend is downwards, (b) most bu
 
 ## Two factors
 
-* be clear what type/how CI is being calculated
-* Done using `stat_summary()`
-* Calculate CIs using `mean_cl_boot`, as bootstrapping is a robust method that doesn't assume normally distributed data.
+Our next example is from an experiment with two factors. Participants were trained to associate two screen colours with two different food rewards. At test, they saw pairs of screen colours and food pictures. Their reaction time (RT) was measured for identifying whether the pairs matched (congruent), or didn't match (incongruent) the associations they'd learnt previously. This test was carried out with and without a second task, in which the participant had to verbally rate how much they liked pictures of faces. All participants completed all conditions, so we have a fully between subjects design, with factors congruency (congruent, incongruent) and load (load, no load).
 
-```{r w-pointline-2, message=FALSE}
+We start by loading the data and keeping only the test trials.
+
+```{r w-pointline-2-preproc, message=FALSE}
 raw <- read_csv('case-studies/chris-mitchell/priming-faces.csv')
 priming <- raw %>%
    filter(Running == 'Test') %>%
    group_by(Congruency, Load)
+```
 
-dodge_width <- .1
+This type of design is one of the most common in cognitive psychology, and there is a standard way to plot this type of data. We use points to represent our sample means for the RT in each of the four conditions.
+
+In this case, error bars are useful. In the [More on t-tests](more-on-t.html) worksheet we mentioned that the 95% confidence interval is the only thing that is both useful and easy to interpret. We will plot 95% confidence intervals because, for a 2x2 within subjects design, they are calculated in such a way that they allow us to make visual comparisons between two conditions, much like a t-test. This will allow us to visually compare the main effects (congruency and load), and their [interaction](anova2.html).
+
+```{r w-pointline-2, message=FALSE, class.source = 'numberLines lineAnchors'}
+dodge <- .1
 priming %>% ggplot(aes(x=Congruency, y=RT, group=Load, colour=Load)) +
-  stat_summary(geom="point", fun=mean, position = position_dodge(width = dodge_width)) +
-  stat_summary(geom="line", fun=mean, position = position_dodge(width = dodge_width)) +
-  stat_summary(geom="errorbar", width = .1, fun.data=mean_cl_boot, position = position_dodge(width = dodge_width)) +
+  stat_summary(geom="point", fun=mean, position = position_dodge(width = dodge)) +
+  stat_summary(geom="line", fun=mean, position = position_dodge(width = dodge)) +
+  stat_summary(geom="errorbar", width = dodge, fun.data=mean_cl_boot, position = position_dodge(width = dodge)) +
       ylab("Mean RT") + xlab("Congruency") +
       scale_color_grey()+ theme_APA +
   labs(caption = "Bars are 95% confidence intervals")
@@ -232,6 +238,12 @@ priming %>% ggplot(aes(x=Congruency, y=RT, group=Load, colour=Load)) +
 
 ### Explanation of commands
 
+Line 1 defines a value that we'll use repeatedly to adjust elements horizontal position, so that they don't overlap, making the plot clearer. Line 2 defines the x axis of our plot to be the Congruency factor, the y axis to be RT, to group Congruency by Load, and to use a different colour for 'load' and 'no load'.
+
+* be clear about how CI is calculated using `stat_summary()`
+* Calculate CIs using `mean_cl_boot`, as bootstrapping is a robust method that doesn't assume normally distributed data.
+ 
+### Explanation of plot
 
 <a name="between"></a>
 
@@ -301,7 +313,7 @@ There is evidence that readers misinterpret bar plots, because we percieve value
 ```{r}
 wing %>% ggplot(aes(x=task, y=correct, fill=cards)) +
   stat_summary(geom="bar", fun=mean, position=position_dodge(0.95)) +
-  stat_summary(geom="errorbar", width = .1, fun.data=mean_cl_boot, position=position_dodge(0.95)) +
+  stat_summary(geom="errorbar", width = dodge, fun.data=mean_cl_boot, position=position_dodge(0.95)) +
       ylab("Mean RT") + xlab("Congruency") +
       theme_APA + scale_fill_grey() +
     theme(axis.text = element_text(size = 10)) +
@@ -366,8 +378,8 @@ na <- panas %>%
 ```{r point}
 na %>%
     ggplot(aes(x=subculture, y=score, colour = pre_post, group = pre_post)) +
-        stat_summary(geom="point", fun=mean, position = position_dodge(width = dodge_width)) +
-        stat_summary(geom="errorbar", width = .1, fun.data=mean_cl_boot, position = position_dodge(width = dodge_width)) +
+        stat_summary(geom="point", fun=mean, position = position_dodge(width = dodge)) +
+        stat_summary(geom="errorbar", width = dodge, fun.data=mean_cl_boot, position = position_dodge(width = dodge)) +
       ylab("Negative affect") + xlab("Subculture") +
     scale_color_grey() + theme_APA +
   labs(caption = "Bars are 95% confidence intervals of subculture means")
@@ -380,7 +392,7 @@ na_diff <- panas %>% mutate(diff = pre_na - post_na)
 na_diff %>%
     ggplot(aes(x=subculture, y=diff)) +
         stat_summary(geom="point", fun=mean) +
-        stat_summary(geom="errorbar", width = .1, fun.data=mean_cl_boot) +
+        stat_summary(geom="errorbar", width = dodge, fun.data=mean_cl_boot) +
       ylab("NA difference (pre-post)") + xlab("Subculture") +
   theme_APA + theme(plot.caption = element_text(size=8)) +
   labs(caption = "Bars are 95% confidence intervals of mean differences")
