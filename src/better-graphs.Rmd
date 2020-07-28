@@ -227,21 +227,25 @@ In this case, error bars are useful. In the [More on t-tests](more-on-t.html) wo
 
 ```{r w-pointline-2-1, message=FALSE, class.source = 'numberLines lineAnchors'}
 dodge <- .1
-w2x2 <- priming %>% ggplot(aes(x=Congruency, y=RT, group=Load, colour=Load))
-w2x2 <- w2x2 + stat_summary(geom="point", fun=mean, position = position_dodge(width = dodge))
+within_2x2 <- priming %>%
+  ggplot(aes(x=Congruency, y=RT, group=Load, colour=Load))
+within_2x2 <- within_2x2 +
+  stat_summary(geom="point", fun=mean, position = position_dodge(width = dodge))
 ```
 
-Line 1 defines a value that we'll use repeatedly to adjust elements horizontal position, so that they don't overlap, making the plot clearer. Line 2 defines the x axis of our plot to be the Congruency factor, the y axis to be RT, to group Congruency by Load, and to use a different colour for 'load' and 'no load'. Line 3 adds mean points to the plot using `stat_summary()`. 
+Line 1 defines a value that we'll use repeatedly to adjust the horizontal position of elements, so that they don't overlap. This will make the plot clearer. Line 2 defines the x axis of our plot to be the Congruency factor, the y axis to be RT, to group Congruency by Load, and to use a different colour for 'load' and 'no load'.
 
-`stat_summary()` is a concise way to summarise and plot graphical elements. It works in a similar way to the `group_by()` and `summarise()` pattern you've used to create summary statistics. The `fun=mean` tells `stat_summary()` to summarise the data by running the `mean` function for the grouped data you defined in the previous stop. In this case, it will calculate a mean RT (`y=RT`) for each of the groups created by `x=Congruency` and `group=Load`. `geom="point"` tells `stat_summary()` to plot the means as points. `position = position_dodge(width = dodge)` specifies an offset to use so that the points won't be plotted on top of each other. 
+Line 3 adds mean points to the plot using `stat_summary()`. `stat_summary()` is a concise way to summarise and plot graphical elements. It works in a similar way to the `group_by()` and `summarise()` pattern you've used to create summary statistics. The `fun=mean` tells `stat_summary()` to summarise the data by running the `mean` function for the grouped data you defined in the previous stop. In this case, it will calculate a mean RT (`y=RT`) for each of the groups created by `x=Congruency` and `group=Load`. `geom="point"` tells `stat_summary()` to plot the means as points. `position = position_dodge(width = dodge)` specifies an offset to use so that the points won't be plotted on top of each other. 
 
 ```{r w-pointline-2-2, message=FALSE, class.source = 'numberLines lineAnchors'}
-w2x2 +
-  stat_summary(geom="line", fun=mean, position = position_dodge(width = dodge)) +
-  stat_summary(geom="errorbar", width = dodge, fun.data=mean_cl_boot, position = position_dodge(width = dodge)) +
-      ylab("Mean RT") + xlab("Congruency") +
-      scale_color_grey()+ theme_APA +
-  labs(caption = "Bars are 95% confidence intervals")
+within_2x2 +
+  stat_summary(geom="line", fun=mean,
+               position = position_dodge(width = dodge)) +
+  stat_summary(geom="errorbar", width = dodge, fun.data=mean_cl_boot,
+               position = position_dodge(width = dodge)) +
+  ylab("Mean RT") + xlab("Congruency") +
+  labs(caption = "Bars are 95% confidence intervals") +
+  scale_color_grey() + theme_APA
 ```
 
 ### Explanation of commands
