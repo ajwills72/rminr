@@ -17,10 +17,9 @@
 
 ## Back to Paul
 
-1. cs-picture-naming
-
 ## Completed
 
+1. cs-picture-naming
 1. preproc-scales
 1. analyse-scales
 1. better-tables
