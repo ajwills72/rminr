@@ -243,6 +243,8 @@ Line 1 defines a value that we'll use repeatedly to adjust the horizontal positi
 
 Line 3 adds mean points to the plot using `stat_summary()`. `stat_summary()` is a concise way to summarise and plot graphical elements. It works in a similar way to the `group_by()` and `summarise()` pattern you've used to create summary statistics. The `fun=mean` tells `stat_summary()` to summarise the data by running the `mean` function for the grouped data you defined in the previous stop. In this case, it will calculate a mean RT (`y=RT`) for each of the groups created by `x=Congruency` and `group=Load`. `geom="point"` tells `stat_summary()` to plot the means as points. `position = position_dodge(width = dodge)` specifies an offset to use so that the points won't be plotted on top of each other. Line 4 uses a similar approach to add lines to the plot, with endpoints positioned at the four mean points. We'll change the point and line colours below.
 
+The warning `Removed 140 rows...` informs us that there are some missing values in the RT column. We'll ignore these messages, as our focus is on plotting the data.
+
 ```{r w-pointline-2-2, message=FALSE, class.source = 'numberLines lineAnchors'}
 within_2x2 <- within_2x2 +
   stat_summary(geom="errorbar", width = dodge, fun.data=mean_cl_boot,
@@ -273,6 +275,8 @@ The black line is well above the grey line, showing that people were slower to r
 
 # Between participants data
 
+We now look at some graphs for between participants data.
+
 <a name="b-1x2"></a>
 
 ## One factor, two levels
@@ -281,7 +285,9 @@ We'll plot some data from [a study in which tested children’s language develop
 
 In this study children were tested using one of two sets of picture cards; the set used in the Italian version of WinG, or the set used in the English version. The researchers were primarily interested in whether the children's performance differed depending on which cards were used. We can demonstrate this visually by presenting the data for the two card sets, for each of the four tasks.
 
-We start by preparing the data for plotting. These steps are described in more detail in the [Better tables worksheet](better-tables.html) worksheet.
+We’ll create some plots to show the distribution of scores for the two card sets on the WinG tasks.
+
+We start by preparing the data for plotting. These steps are described in detail in the [Better tables worksheet](better-tables.html) worksheet, so we won’t repeat them here. Instead, we’ll just list the commands and show the final output.
 
 ```{r message=FALSE, class.source = 'numberLines lineAnchors'}
 wing_preproc <- read_csv('going-further/picture-naming-preproc.csv')
@@ -290,21 +296,6 @@ wing <- wing_preproc %>%
                names_to = 'task',
                values_to = 'correct') %>%
     select(subj, task, cards, correct)
-```
-
-### Explanation of commands
-
-Line 1 loads the data. The scores are in _wide_ format (lots of columns, few rows), but R generally requires data to be in _long_ format (lots of rows, few columns). Lines 2-5 convert the task data from wide to long. Line 6 select the columns were interested in plotting.
-
-The first few rows of our data look like this:
-
-```{r, echo=FALSE}
-wing %>% head(8) %>% pander()
-```
-
-Next, we give the four task names more meaningful labels, in preparation for displaying them on the x-axis of our plot.
-
-```{r mean-labels, class.source = 'numberLines lineAnchors'}
 task_names <- c(
   nc = 'Noun Comprehension',
   np = 'Noun Production',
@@ -312,36 +303,44 @@ task_names <- c(
   pp = 'Predicate Production'  
 )
 wing$task <- wing$task %>% recode(!!!task_names)
+wing %>% head(8) %>% pander()
 ```
 
-### Explanation of commands
-
-The levels of the `task` factor currently have short names. Lines 1-6 defines a mapping between the short names and more meaningful ones. Line 7 recodes the factor to convert the short names to the more descriptive names.
-
-We'll plot the data using 'half violin' plots. As the name suggests, this shows one half of a [violin plot](https://en.wikipedia.org/wiki/Violin_plot). We chose this type of plot as we wanted to show that distributions on some of the tasks was not normally distributed, to give the reader a feel for whether there was a difference in accuracy for any of the tasks. This paved the way for [the Mann-Whitney U tests in the next section of the results](cs-picture-naming.html#mann-whitney).
+We'll plot the data using 'half violin' plots. As the name suggests, this shows one half of a [violin plot](https://en.wikipedia.org/wiki/Violin_plot).
 
 ```{r cloud, class.source = 'numberLines lineAnchors'}
 # between subjects half-violin plot
 library(see)
 wing %>% ggplot(aes(x = task, y = correct, fill = cards)) +
   geom_violinhalf(position = position_identity(), alpha=0.7, size=0) +
-  scale_fill_grey() +
-  theme_APA +
-  theme(axis.text = element_text(size = 10)) +
-  xlab('WinG Task') + ylab('Accuracy (max = 20)')
+  xlab('WinG Task') + ylab('Accuracy (max = 20)') +
+  scale_fill_grey() + theme_APA +
+  theme(axis.text = element_text(size = 10))
 ```
 
+### Explanation of commands
 
-There is evidence that readers misinterpret bar plots, because we percieve values within the bar as more likely than those just above, even though this is not the case (Newman & Scholl, 2012).
+Line 1 loads the `see` package which provides the `half_violin()` function. Line 2 defines the x axis of our plot to be the WinG `task`, the y axis to be task accuracy (`correct`), and to use the `cards` factor for the fill colour. Line 3 creates a the half violin plots. `position = position_identity()` plots the two distributions on top of each other, making it easy to see how much they overlap. `alpha=0.7` changes the transparency, again to help us see the overlapping area. `size=0` removes the outline around the distributions. Line 4 gives our axes meaningful labels. Line 5 converts the fill colours to a grey pallete, and applies our APA theme. Line 6 adjusts the size of the text on the x axis, so that the task names don't overlap.
+
+### Explanation of plot
+
+The plot gives a visual indication of whether there were differences between the Italian and English cards on each of the tests. Given the extensive overlap in scores between the card sets, this seems unlikely.
+
+### Why not a bar plot?
+
+We could have used a bar plot to graph this data, but the half violin plot seemed a better choice. For example, there is evidence that readers misinterpret bar plots, because the values within the bar are perceived as more likely than those just above, even though this is not the case (Newman & Scholl, 2012).
+
+For completeness, here's the same data plotted using bars and confidence intervals. As you can see, the code is similar to the point and line plot above.
 
 ```{r}
 wing %>% ggplot(aes(x=task, y=correct, fill=cards)) +
   stat_summary(geom="bar", fun=mean, position=position_dodge(0.95)) +
-  stat_summary(geom="errorbar", width = dodge, fun.data=mean_cl_boot, position=position_dodge(0.95)) +
-      ylab("Mean RT") + xlab("Congruency") +
-      theme_APA + scale_fill_grey() +
-    theme(axis.text = element_text(size = 10)) +
-  labs(caption = "Bars are 95% confidence intervals")
+  stat_summary(geom="errorbar", width = dodge, fun.data=mean_cl_boot,
+               position=position_dodge(0.95)) +
+  ylab("Mean RT") + xlab("Congruency") +
+  labs(caption = "Bars are 95% confidence intervals") +
+  theme_APA + scale_fill_grey() +
+  theme(axis.text = element_text(size = 10))
 ```
 
 <a name="b-1x4"></a>
