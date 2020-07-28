@@ -405,7 +405,7 @@ task_by_subj_l %>% ggplot(aes(x = task, y = correct, fill = Cards)) +
 
 **Explanation of commands:**
 
-Line 2 recodes the `task` labels, to make them more meaningful on the plot's x axis. Line 3 loads the `see` package which provides the `half_violin()` function. Line 4 defines the x axis of our plot to be the WinG `task`, the y axis to be task accuracy (`correct`), and to use the `Cards` factor for the fill colour. Line 5 creates a "half violin" plot. As the name suggests, this shows one half of a [violin plot](https://en.wikipedia.org/wiki/Violin_plot). `position = position_identity()` plots the two distributions on top of each other, making it easy to see how much they overlap. `alpha=0.7` changes to transparency, again to help us see the overlapping area. `size=0` removes the outline around the distributions. Line 6 gives our axes meaningful labels.
+Line 2 recodes the `task` labels, to make them more meaningful on the plot's x axis. Line 3 loads the `see` package which provides the `half_violin()` function. Line 4 defines the x axis of our plot to be the WinG `task`, the y axis to be task accuracy (`correct`), and to use the `Cards` factor for the fill colour. Line 5 creates a "half violin" plot. As the name suggests, this shows one half of a [violin plot](https://en.wikipedia.org/wiki/Violin_plot). `position = position_identity()` plots the two distributions on top of each other, making it easy to see how much they overlap. `alpha=0.7` changes the transparency, again to help us see the overlapping area. `size=0` removes the outline around the distributions. Line 6 gives our axes meaningful labels.
 
 **Explanation of output:**
 
