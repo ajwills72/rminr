@@ -225,10 +225,18 @@ This type of design is one of the most common in cognitive psychology, and there
 
 In this case, error bars are useful. In the [More on t-tests](more-on-t.html) worksheet we mentioned that the 95% confidence interval is the only thing that is both useful and easy to interpret. We will plot 95% confidence intervals because, for a 2x2 within subjects design, they are calculated in such a way that they allow us to make visual comparisons between two conditions, much like a t-test. This will allow us to visually compare the main effects (congruency and load), and their [interaction](anova2.html).
 
-```{r w-pointline-2, message=FALSE, class.source = 'numberLines lineAnchors'}
+```{r w-pointline-2-1, message=FALSE, class.source = 'numberLines lineAnchors'}
 dodge <- .1
-priming %>% ggplot(aes(x=Congruency, y=RT, group=Load, colour=Load)) +
-  stat_summary(geom="point", fun=mean, position = position_dodge(width = dodge)) +
+w2x2 <- priming %>% ggplot(aes(x=Congruency, y=RT, group=Load, colour=Load))
+w2x2 <- w2x2 + stat_summary(geom="point", fun=mean, position = position_dodge(width = dodge))
+```
+
+Line 1 defines a value that we'll use repeatedly to adjust elements horizontal position, so that they don't overlap, making the plot clearer. Line 2 defines the x axis of our plot to be the Congruency factor, the y axis to be RT, to group Congruency by Load, and to use a different colour for 'load' and 'no load'. Line 3 adds mean points to the plot using `stat_summary()`. 
+
+`stat_summary()` is a concise way to summarise and plot graphical elements. It works in a similar way to the `group_by()` and `summarise()` pattern you've used to create summary statistics. The `fun=mean` tells `stat_summary()` to summarise the data by running the `mean` function for the grouped data you defined in the previous stop. In this case, it will calculate a mean RT (`y=RT`) for each of the groups created by `x=Congruency` and `group=Load`. `geom="point"` tells `stat_summary()` to plot the means as points. `position = position_dodge(width = dodge)` specifies an offset to use so that the points won't be plotted on top of each other. 
+
+```{r w-pointline-2-2, message=FALSE, class.source = 'numberLines lineAnchors'}
+w2x2 +
   stat_summary(geom="line", fun=mean, position = position_dodge(width = dodge)) +
   stat_summary(geom="errorbar", width = dodge, fun.data=mean_cl_boot, position = position_dodge(width = dodge)) +
       ylab("Mean RT") + xlab("Congruency") +
@@ -237,8 +245,6 @@ priming %>% ggplot(aes(x=Congruency, y=RT, group=Load, colour=Load)) +
 ```
 
 ### Explanation of commands
-
-Line 1 defines a value that we'll use repeatedly to adjust elements horizontal position, so that they don't overlap, making the plot clearer. Line 2 defines the x axis of our plot to be the Congruency factor, the y axis to be RT, to group Congruency by Load, and to use a different colour for 'load' and 'no load'.
 
 * be clear about how CI is calculated using `stat_summary()`
 * Calculate CIs using `mean_cl_boot`, as bootstrapping is a robust method that doesn't assume normally distributed data.
