@@ -1,5 +1,5 @@
 ---
-title: "Data preprocessing for experiments"
+title: "Further preprocessing for experiments"
 author: "Andy Wills and Paul Sharpe"
 output:
   html_document:
@@ -12,7 +12,7 @@ output:
 ## knitr::opts_chunk$set(echo = TRUE, message = FALSE, results='hide', fig.keep = 'none', comment=NA)
 
 ## Show commands and output.
-knitr::opts_chunk$set(echo = TRUE, comment=NA, cache = TRUE)
+knitr::opts_chunk$set(echo = TRUE, comment=NA, cache = FALSE)
 options(tibble.width = Inf) # show all columns in output
 library(pander)
 ```
@@ -29,7 +29,7 @@ library(pander)
 
 - [Excluding participants](#exclude)
 
-- [Log transform](#log)
+- [Transforming data](#log)
 
 - [Exercise](#ex1)
 
@@ -37,7 +37,7 @@ library(pander)
 
 ## Introduction
 
-In this worksheet, we'll cover some additional techniques for preprocessing experimental data.
+In the [Intermediate Guide to R](https://ajwills72.github.io/rminr/#rmip), we covered some basic techniques for preprocessing data from experiments, see the [preprocessing data from experiments](preproc.html) and the [more processing](more-on-preproc.html) worksheets. In this worksheet, we'll cover some additional techniques for preprocessing experimental data.
 
 <a name="start"></a>
 
@@ -57,7 +57,7 @@ To prepare for this worksheet:
 
 ## Loading data
 
-We'll start by loading some data from [an undergraduate student dissertation on the Perruchet Effect](awdiss.html).
+We'll start by loading some data from [an undergraduate student dissertation on the Perruchet Effect](awdiss.html). Participants were repeatedly shown a picture of a brown cylinder. This picture was sometimes followed by a loud unpleasant noise. Their reaction to the noise was measured using their galvanic skin response. In addition, every time the cylinder was shown, participants rated their expectancy that the noise was about to occur on a 1-5 scale. 
 
 ```{r load, message=FALSE, class.source = 'numberLines lineAnchors'}
 rm(list = ls()) # clear the environment
@@ -75,33 +75,47 @@ Line 4 renames the columns, as covered in the [Preprocessing data from experimen
 
 **Explanation of output:**
 
-Our data is in long format i.e. one observation per row.
+Our data is in long format i.e. one observation per row. It is a large file, containing almost two million observations in total. The four columns are as follows:
+
+- `subj` : A number indicating which participant this data comes from.
+
+- `time` : The time this observation was made, measured in milliseconds from the beginning of the experiment for that participant. Observations are made approximately every 50 ms.
+
+- `key` : The type of observation being made. Mostly, these are `GS` observations, which are _galvanic skin responses_. These are measures of level of arousal in the participant. There were also `ES` observations, which are the participant's ratings of their expectancy of a shock.
+
+- `value` : The actual observation. Where `key` is `GS`, these are galvanic skin response values, which are measures of conductance (the reciprocal of electrical resistance). Higher values indicate higher arousal. Where the `key` is `ES`, the scores are ratings on a scale of 1-5. 
+
+
 
 <a name="dedup"></a>
 
 ## De-duplicating data
 
-We're now going to get the data into a state where we can meaningfully analyse it:
+This experiment was run by three people over many different days. They tried to manually stitch all their data files together, by copying-and-pasting them into one big file in Excel. This type of manual manipulation of data is notoriously error prone, and in the process, they accidentally duplicated some data. In this case, it's easy to detect and fix in R, because no two rows of this data can be identical - the subject number or the time is always going to be different. So, we can remove duplicates by telling R to give us just one copy of each of the different rows in the data set. The command `distinct` does that for us. 
 
 ```{r tidy, message=FALSE, class.source = 'numberLines lineAnchors'}
 ## De-duplicate data; remove pilot study
 raw <- distinct(raw)
-raw <- raw %>% filter(subj > 161)
 ```
-
-### Explanation of commands
-
-Line 2, `raw <- distinct(raw)` is a _de-duplication_ command. This experiment was run by three people over many different days. They tried to manually stitch all their data files together, by copying-and-pasting them into one big file in Excel. This type of manual manipulation of data is notoriously error prone, and in the process, they accidentally duplicated some data. In this case, it's easy to detect and fix in R, because no two rows of this data can be identical - the subject number or the time is always going to be different. So, we can remove duplicates by telling R to give us just one copy of each of the different rows in the data set. The command `distinct` does that for us. 
-
-Line 3, `raw  <- raw %>% filter(subj > 161)` should be familiar from previous worksheets; we are keeping only those participants whose subject number is greater than 161. This is because, in this study, we first ran a short pilot experiment, looked at the data, and made a few changes to the experiment. Here, we only wanted to analyze the main study, so we removed the pilot participants.
 
 <a name="exclude"></a>
 
 ## Excluding participants
 
-As part of this experiment, participants were told to rate their expectancy of hearing an  unpleasant noise, _on every trial_. However, they only had 8 seconds to do this, and the experimenters noticed that sometimes people failed to make a rating. The experimental apparatus records this as a rating of zero. 
+### Exclusions by participant number
 
-Participants who miss a lot of ratings aren't really following the instructions, making their data hard to interpret. In such cases, we normally exclude those participants from further analysis. First, we need to find out how widespread this problem is. One way to do this is to calculate the number of zero ratings each participant makes:
+In this dissertation, the student first ran a _pilot_ study, with just a few participants. On the basis of this pilot, they changed their experiment a bit, and then went on to collect data from many more participants. They only wanted to analyze the main study, so they removed the pilot participants. This was easy, because the participants in the pilot study all had participant numbers of 161 or higher, so they could use a simple `filter` command, such as we have used in many previous worksheets:
+
+```{r ex1, message=FALSE, class.source = 'numberLines lineAnchors'}
+## De-duplicate data; remove pilot study
+raw <- raw %>% filter(subj > 161)
+```
+
+### Exclusions by criterion
+
+As part of this experiment, participants were told to rate their expectancy of hearing an unpleasant noise, _on every trial_. However, they only had 8 seconds to do this, and the experimenters noticed that sometimes people failed to make a rating. The experimental apparatus recorded this as a rating of zero. 
+
+Participants who miss a lot of ratings aren't really following the instructions, making their data hard to interpret. In such cases, we normally exclude those participants from further analysis. In order to do this, we need to find out how widespread the problem is. One way to do this is to calculate the number of zero ratings each participant makes:
 
 ```{r zeros, class.source = 'numberLines lineAnchors'}
 ## Number of expectancy ratings, by participant
@@ -119,7 +133,7 @@ The output shows the number of trials on which each participant failed to give a
 
 ### Removing participants from the dataset
 
-In this case, we decided to exclude all participants who missed more than three ratings:
+In this case, the students decided to exclude all participants who missed more than three ratings. There would have been a number of ways to do this, but the simplest in this case was just to manually put together a list of the subject numbers they wanted to exclude:
 
 ```{r exclude, class.source = 'numberLines lineAnchors'}
 ## Exclude participants
@@ -137,9 +151,24 @@ There are still a few trials where the participant makes no expectancy rating, a
 
 <a name="log"></a>
 
-## Log transform
+## Transforming data
 
-The other measurement in this study was Galvanic Skin Response (GSR). Studies of GSR data normally _log transform_ it before analysis. Log transforming data means to take the [logarithm](https://en.wikipedia.org/wiki/Logarithm) of the data, in this case the [natural logarithm](https://en.wikipedia.org/wiki/Natural_logarithm). Two reasonable questions about this preprocessing are: (a) what does that mean, and (b) why would you do it?
+### Loading preprocessed data
+
+After they had excluded participants, the students then performed a large number of further preprocessing steps. These steps were specific to the type of large neuroscience data set they had collected, so we won't go through them in this more general-purpose worksheet. You can read about the steps they took in the [case study](awdiss.html) if you are curious. 
+
+Instead, we'll just load in the results of their preprocessing:
+
+```{r log load2, message=FALSE, class.source = 'numberLines lineAnchors'}
+## Log transformation of GSR
+sum.data <- read_csv('going-further/perruchet-sum.csv')
+```
+
+The data frame `sum.data` now contains one row for each trial of the experiment, for each participant. For our current purposes the key column is `cval`, which is a measure of the size of the galvanic skin response on that trial. The `value` column contains the expectancy rating for that trial. The `trial` and `subj` columns show the trial number and participant number, respectively. The `run` column refers to a concept specific to this particular study, which you can read about in the [case study](awdiss.html) if you wish.
+
+### Log transform
+
+The central measurement in this study was Galvanic Skin Response (GSR). Studies of GSR data normally _log transform_ it before analysis. Log transforming data means to take the [logarithm](https://en.wikipedia.org/wiki/Logarithm) of the data, in this case the [natural logarithm](https://en.wikipedia.org/wiki/Natural_logarithm). Two reasonable questions about this preprocessing are: (a) what does that mean, and (b) why would you do it?
 
 To answer the first question, a log transform compresses the range of the data. The following graph should help visualize this:
 
@@ -150,22 +179,18 @@ plot(1:50,log(1:50))
 
 On the x-axis we have the numbers 1 to 50. On the y-axis, we have the natural logarithm of those numbers. As you can see, while the x-axis rises from 1 to 50, the y-axis rises from zero to around 4. You should also be able to notice that for each increase in x, the increase in y gets smaller. So, for example, where x rises from 1 to 2, log(x) rises from 0 to about .8; but where x rises from 2 to 3, log(x) rises by about 0.4. 
 
-As a result, a log transform doesn't change small numbers very much, but reduces large numbers a lot more. This can be useful if, for example, a few participants have unusually large GSRs. These very large GSRs would increase the _variance_ of the data substantially, and this can make it harder to detect real differences between conditions. A log transform can reduce that problem, and hence can make it easier to find real effects in such situations. So, this also answers the second part of the question - we apply a log transform to GSR data because it can make it easier to find real effects.
+As a result, a log transform doesn't change small numbers very much, but reduces large numbers a lot more. This can be useful if, for example, a few participants have unusually large GSRs. These very large GSRs would increase the _variance_ of the data substantially, and this can make it harder to detect real differences between conditions. A log transform can reduce that problem, and hence can make it easier to find real effects in such situations. So, this also answers the second part of the question - we apply a log transform to GSR data because it can make it easier to find real effects. Other common transformations of this type include a _square root_ transformation, and a _reciprocal_ (1/x) transformation. 
 
-We log transform our GSR data using the `mutate` command that we used earlier:
+The students log transformed their GSR data using the `mutate` command we have come across in previous worksheets:
 
 ```{r log trans, message=FALSE, class.source = 'numberLines lineAnchors'}
 ## Log transformation of GSR
-sum.data <- read_csv('going-further/perruchet-sum.csv')
 sum.data <- sum.data %>% mutate(lcval = log(cval+1))
 ```
 
 ### Explanation of commands
 
-Line 1 loads the data from the same experiment, after it's undergone some preprocessing. 
-The `cval` (for "corrected value") column contains the GSR measurement that we need to log transform. You can follow the preprocessing steps that produced `sum.data` in [the Perruchet Effect worksheet](awdiss.html).
-
-The command `log` takes the natural logarithm. We calculate `log(cval+1)` rather than `log(cval)` because the `log(0)` is an infinitely small number, which is something that cannot be analyzed. By adding 1 we don't hit this problem (unless cval is -1 or smaller, which it seldom is).
+`mutate` creates a new column called `lcval` by transforming the existing colun `cval`. This transformation uses the command `log` takes the natural logarithm. We calculate `log(cval+1)` rather than `log(cval)` because the `log(0)` is an infinitely small number, which is something that cannot be analyzed. By adding 1 we don't hit this problem (unless cval is -1 or smaller, which it seldom is).
 
 <a name="ex1"></a>
 
@@ -173,7 +198,7 @@ The command `log` takes the natural logarithm. We calculate `log(cval+1)` rather
 
 This exercise uses data from a study which compared emotion regulation strategies between fans of mainstream (control group), goth, metal and emo music. Before and after each group listened to a clip of their preferred music, measurements were taken using the 20-item Positive and Negative Affect Schedule (PANAS). The data is in wide format, with one row per participant.
 
-We start by loading the data and counting the rows.
+We start by loading the data and counting the number of rows in the data frame.
 
 ```{r ex-load, message=FALSE}
 panas <- read_csv('going-further/music-panas.csv')
@@ -182,7 +207,7 @@ count(panas)
 
 ### Step 1
 
-Like the Perruchet Effect experiment, the `r dplyr::count(panas)` rows in this data includes some duplicates. De-duplicate then count the rows. The result should look like this:
+Like the Perruchet Effect experiment, the `r dplyr::count(panas)` rows in this data includes some duplicates. De-duplicate the data, and then  count the rows again. If you've done it right, the output should look like this:
 
 ```{r ex1-1, echo=FALSE}
 panas <- distinct(panas)
@@ -191,7 +216,9 @@ count(panas)
 
 ### Step 2
 
-This version of the PANAS used 10 questions to measure positive affect, and 10 to measure negative affect. Answers to questions were scored from 1 to 5, meaning that scores could range from 10-50. For the second negative affect measurement, the researchers calculated and entered the scores by hand. Use `filter()` to find any participants with a `post_na` score greater than 50. Use another `filter()` command to exclude any participants who meet this criterion.
+This version of the PANAS used 10 questions to measure positive affect (`pa`), and 10 to measure negative affect (`na`). These measures were taken twice (`pre_` and `post_`). Answers to questions were scored from 1 to 5, meaning that scores could range from 10-50. For the second negative affect measurement, the researchers calculated and entered the scores by hand. This is a notoriously error-prone way to do things, and it resulted in some impossible scores - specifically scores greater than 50. 
+
+Use `filter()` to find any participants with a `post_na` score greater than 50. Use another `filter()` command to exclude any participants who meet this criterion.
 
 ```{r ex1-2, echo=FALSE}
 panas_inspect <- panas %>% filter(post_na > 50)
@@ -201,7 +228,7 @@ panas <- panas %>% filter(!(subj %in% panas_exclude))
 
 ### Step 3
 
-The 'reciprocal' of a number is result of dividing 1 by that number. So the reciprocal of 10 is 1 / 10, or 0.1. More generally, if x is our number, 1 / x is the reciprocal. Like the log transformation, taking a reciprocal reduces the disproprotional effect that a small number of extreme values have on the variance.
+The _reciprocal_ of a number is the result of dividing 1 by that number. So the reciprocal of 10 is 1 / 10, or 0.1. More generally, if x is our number, 1 / x is the reciprocal. Like the log transformation, taking a reciprocal reduces the disproprotional effect that a small number of extreme values have on the variance.
 
 Notice that taking a reciprocal reverses the order of your data e.g. 1 / 5 = 0.2, which is larger than 0.1. This is easy to correct for by subtracting each value of x from the maximum value before the division. You don't need to do that for this exercise. However, because 1 / 0 will produce an error, we'll use the formula 1 / (x + 1) to calculate a reciprocal.
 
