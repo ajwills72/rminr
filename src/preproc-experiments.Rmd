@@ -75,15 +75,15 @@ Line 4 renames the columns, as covered in the [Preprocessing data from experimen
 
 **Explanation of output:**
 
-Our data is in long format i.e. one observation per row. The four columns are as follows:
+Our data is in long format i.e. one observation per row. It is a large file, containing almost two million observations in total. The four columns are as follows:
 
 - `subj` : A number indicating which participant this data comes from.
 
 - `time` : The time this observation was made, measured in milliseconds from the beginning of the experiment for that participant. Observations are made approximately every 50 ms.
 
-- `key` : The type of observation being made. Mostly, these are `GS` observations, which are _galvanic skin responses_. These are measures of level of arousal in the participant. There are also `ES` observations, which are the participant's ratings
+- `key` : The type of observation being made. Mostly, these are `GS` observations, which are _galvanic skin responses_. These are measures of level of arousal in the participant. There were also `ES` observations, which are the participant's ratings of their expectancy of a shock.
 
-- `value` : The actual observation. Where `key` is `GS`, these are galvanic skin response values, which are measures of conductance (the reciprocal of electrical resistance). Higher values indicate higher arousal. 
+- `value` : The actual observation. Where `key` is `GS`, these are galvanic skin response values, which are measures of conductance (the reciprocal of electrical resistance). Higher values indicate higher arousal. Where the `key` is `ES`, the scores are ratings on a scale of 1-5. 
 
 
 
