@@ -29,7 +29,7 @@ library(pander)
 
 - [Excluding participants](#exclude)
 
-- [Log transform](#log)
+- [Transforming data](#log)
 
 - [Exercise](#ex1)
 
@@ -151,9 +151,24 @@ There are still a few trials where the participant makes no expectancy rating, a
 
 <a name="log"></a>
 
-## Log transform
+## Transforming data
 
-The other measurement in this study was Galvanic Skin Response (GSR). Studies of GSR data normally _log transform_ it before analysis. Log transforming data means to take the [logarithm](https://en.wikipedia.org/wiki/Logarithm) of the data, in this case the [natural logarithm](https://en.wikipedia.org/wiki/Natural_logarithm). Two reasonable questions about this preprocessing are: (a) what does that mean, and (b) why would you do it?
+### Loading preprocessed data
+
+After they had excluded participants, the students then performed a large number of further preprocessing steps. These steps were specific to the type of large neuroscience data set they had collected, so we won't go through them in this more general-purpose worksheet. You can read about the steps they took in the [case study](awdiss.html) if you are curious. 
+
+Instead, we'll just load in the results of their preprocessing:
+
+```{r log load2, message=FALSE, class.source = 'numberLines lineAnchors'}
+## Log transformation of GSR
+sum.data <- read_csv('going-further/perruchet-sum.csv')
+```
+
+The data frame `sum.data` now contains one row for each trial of the experiment, for each participant. For our current purposes the key column is `cval`, which is a measure of the size of the galvanic skin response on that trial. The `value` column contains the expectancy rating for that trial. The `trial` and `subj` columns show the trial number and participant number, respectively. The `run` column refers to a concept specific to this particular study, which you can read about in the [case study](awdiss.html) if you wish.
+
+### Log transform
+
+The central measurement in this study was Galvanic Skin Response (GSR). Studies of GSR data normally _log transform_ it before analysis. Log transforming data means to take the [logarithm](https://en.wikipedia.org/wiki/Logarithm) of the data, in this case the [natural logarithm](https://en.wikipedia.org/wiki/Natural_logarithm). Two reasonable questions about this preprocessing are: (a) what does that mean, and (b) why would you do it?
 
 To answer the first question, a log transform compresses the range of the data. The following graph should help visualize this:
 
@@ -164,22 +179,18 @@ plot(1:50,log(1:50))
 
 On the x-axis we have the numbers 1 to 50. On the y-axis, we have the natural logarithm of those numbers. As you can see, while the x-axis rises from 1 to 50, the y-axis rises from zero to around 4. You should also be able to notice that for each increase in x, the increase in y gets smaller. So, for example, where x rises from 1 to 2, log(x) rises from 0 to about .8; but where x rises from 2 to 3, log(x) rises by about 0.4. 
 
-As a result, a log transform doesn't change small numbers very much, but reduces large numbers a lot more. This can be useful if, for example, a few participants have unusually large GSRs. These very large GSRs would increase the _variance_ of the data substantially, and this can make it harder to detect real differences between conditions. A log transform can reduce that problem, and hence can make it easier to find real effects in such situations. So, this also answers the second part of the question - we apply a log transform to GSR data because it can make it easier to find real effects.
+As a result, a log transform doesn't change small numbers very much, but reduces large numbers a lot more. This can be useful if, for example, a few participants have unusually large GSRs. These very large GSRs would increase the _variance_ of the data substantially, and this can make it harder to detect real differences between conditions. A log transform can reduce that problem, and hence can make it easier to find real effects in such situations. So, this also answers the second part of the question - we apply a log transform to GSR data because it can make it easier to find real effects. Other common transformations of this type include a _square root_ transformation, and a _reciprocal_ (1/x) transformation. 
 
-We log transform our GSR data using the `mutate` command that we used earlier:
+The students log transformed their GSR data using the `mutate` command we have come across in previous worksheets:
 
 ```{r log trans, message=FALSE, class.source = 'numberLines lineAnchors'}
 ## Log transformation of GSR
-sum.data <- read_csv('going-further/perruchet-sum.csv')
 sum.data <- sum.data %>% mutate(lcval = log(cval+1))
 ```
 
 ### Explanation of commands
 
-Line 1 loads the data from the same experiment, after it's undergone some preprocessing. 
-The `cval` (for "corrected value") column contains the GSR measurement that we need to log transform. You can follow the preprocessing steps that produced `sum.data` in [the Perruchet Effect worksheet](awdiss.html).
-
-The command `log` takes the natural logarithm. We calculate `log(cval+1)` rather than `log(cval)` because the `log(0)` is an infinitely small number, which is something that cannot be analyzed. By adding 1 we don't hit this problem (unless cval is -1 or smaller, which it seldom is).
+`mutate` creates a new column called `lcval` by transforming the existing colun `cval`. This transformation uses the command `log` takes the natural logarithm. We calculate `log(cval+1)` rather than `log(cval)` because the `log(0)` is an infinitely small number, which is something that cannot be analyzed. By adding 1 we don't hit this problem (unless cval is -1 or smaller, which it seldom is).
 
 <a name="ex1"></a>
 
