@@ -27,7 +27,7 @@ library(pander)
 
 - [De-duplicating data](#dedup)
 
-- [Excluding participants on a criterion](#exclude)
+- [Excluding participants](#exclude)
 
 - [Log transform](#log)
 
@@ -91,27 +91,31 @@ Our data is in long format i.e. one observation per row. It is a large file, con
 
 ## De-duplicating data
 
-This experiment was run by three people over many different days. They tried to manually stitch all their data files together, by copying-and-pasting them into one big file in Excel. This type of manual manipulation of data is notoriously error prone, and in the process, they accidentally duplicated some data. In this case, it's easy to detect and fix in R, because no two rows of this data can be identical - the subject number or the time is always going to be different. So, we can remove duplicates by telling R to give us just one copy of each of the different rows in the data set. The command `distinct` does that for us:
+This experiment was run by three people over many different days. They tried to manually stitch all their data files together, by copying-and-pasting them into one big file in Excel. This type of manual manipulation of data is notoriously error prone, and in the process, they accidentally duplicated some data. In this case, it's easy to detect and fix in R, because no two rows of this data can be identical - the subject number or the time is always going to be different. So, we can remove duplicates by telling R to give us just one copy of each of the different rows in the data set. The command `distinct` does that for us. 
 
 ```{r tidy, message=FALSE, class.source = 'numberLines lineAnchors'}
 ## De-duplicate data; remove pilot study
 raw <- distinct(raw)
-raw <- raw %>% filter(subj > 161)
 ```
-
-### Explanation of commands
-
-Line 2, `raw <- distinct(raw)` is the _de-duplication_ command. 
-
-Line 3, `raw  <- raw %>% filter(subj > 161)` should be familiar from previous worksheets; we are keeping only those participants whose subject number is greater than 161. This is because, in this study, we first ran a short pilot experiment, looked at the data, and made a few changes to the experiment. Here, we only wanted to analyze the main study, so we removed the pilot participants.
 
 <a name="exclude"></a>
 
-## Excluding participants on a criterion
+## Excluding participants
 
-As part of this experiment, participants were told to rate their expectancy of hearing an unpleasant noise, _on every trial_. However, they only had 8 seconds to do this, and the experimenters noticed that sometimes people failed to make a rating. The experimental apparatus records this as a rating of zero. 
+### Exclusions by participant number
 
-Participants who miss a lot of ratings aren't really following the instructions, making their data hard to interpret. In such cases, we normally exclude those participants from further analysis. First, we need to find out how widespread this problem is. One way to do this is to calculate the number of zero ratings each participant makes:
+In this dissertation, the student first ran a _pilot_ study, with just a few participants. On the basis of this pilot, they changed their experiment a bit, and then went on to collect data from many more participants. They only wanted to analyze the main study, so they removed the pilot participants. This was easy, because the participants in the pilot study all had participant numbers of 161 or higher, so they could use a simple `filter` command, such as we have used in many previous worksheets:
+
+```{r ex1, message=FALSE, class.source = 'numberLines lineAnchors'}
+## De-duplicate data; remove pilot study
+raw <- raw %>% filter(subj > 161)
+```
+
+### Exclusions by criterion
+
+As part of this experiment, participants were told to rate their expectancy of hearing an unpleasant noise, _on every trial_. However, they only had 8 seconds to do this, and the experimenters noticed that sometimes people failed to make a rating. The experimental apparatus recorded this as a rating of zero. 
+
+Participants who miss a lot of ratings aren't really following the instructions, making their data hard to interpret. In such cases, we normally exclude those participants from further analysis. In order to do this, we need to find out how widespread the problem is. One way to do this is to calculate the number of zero ratings each participant makes:
 
 ```{r zeros, class.source = 'numberLines lineAnchors'}
 ## Number of expectancy ratings, by participant
@@ -129,7 +133,7 @@ The output shows the number of trials on which each participant failed to give a
 
 ### Removing participants from the dataset
 
-In this case, we decided to exclude all participants who missed more than three ratings:
+In this case, the students decided to exclude all participants who missed more than three ratings. There would have been a number of ways to do this, but the simplest in this case was just to manually put together a list of the subject numbers they wanted to exclude:
 
 ```{r exclude, class.source = 'numberLines lineAnchors'}
 ## Exclude participants
