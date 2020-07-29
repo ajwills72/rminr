@@ -32,8 +32,7 @@ library(pander)
     + [One factor, four levels](#b-1x4)
 * [Mixed (within-between) data](#mixed)
     + [Two factors](#m-2x4)
-* [Exploring data](#exploring)
-    + [Histogram](#histogram)
+* [Other plots](#other)
     + [Pairs plot](#pairs)
 
 <a name = "intro"></a>
@@ -426,33 +425,9 @@ See [Masson & Loftus (2003)](http://personal.psu.edu/jxb14/M554/articles/Masson&
 
 In addition to communicating the results of a study, graphs are also useful for visualising data patterns prior to analysis.
 
-<a name="histogram"></a>
-
-## Histogram and distribution curve
-
-On a very early worksheet, we introduced the [histogram](#graphs) as a way of visualising a distribution. We can extend that plot by adding a curve to show the data distribution.
-
-```{r histogram, class.source = 'numberLines lineAnchors', message=FALSE}
-oit <- read_csv('going-further/openness-imagery-thinking.csv')
-
-n_obs <- sum(oit$problems)
-m_problems <- mean(oit$problems)
-sd_problems <- sd(oit$problems)
-
-oit %>% ggplot(aes(problems)) + 
-  geom_histogram(colour = "black", binwidth = 1) +
-  stat_function(fun = function(x)
-      dnorm(x, mean = m_problems, sd = sd_problems) * n_obs) +
-  xlim(0,7) +
-  xlab('Problems solved') + ylab('Count (participants)') +
-  theme_APA 
-```
-
-**Explanation of commands:**
-
-**Explanation of output:**
-
 <a name="pairs"></a>
+
+# Other plots
 
 ## Pairs plot
 
@@ -470,6 +445,8 @@ The study introduced above was interested in correlations between creative probl
 
 ```{r pairs-2, class.source = 'numberLines lineAnchors', message=FALSE}
 library(GGally, quietly = TRUE)
+oit <- read_csv('going-further/openness-imagery-thinking.csv')
+
 oit %>%
   select(psiq, openness, problems, ftt) %>%
   ggpairs(lower=list(continuous='smooth')) +
