@@ -4,7 +4,6 @@
 
 1. better-graphs
 1. anova4
-1. preproc-experiments
 1. cs-"Muscial subcultures case study"
 1. cs-"Emotional intelligence and religion"
 1. cs-"Depression axiety and stress"
@@ -13,6 +12,7 @@
 ## Andy review
 
 1. more-on-regression
+1. preproc-experiments
 1. cs-self-esteem
 
 ## Back to Paul
