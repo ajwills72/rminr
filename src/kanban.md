@@ -13,9 +13,8 @@
 
 ## Andy review (for RMINR)
 
-1. preproc-experiments
 1. more-on-regression
-1. cs-self-esteem (Sophie H) - (reated pre-proc-scales and anal-scales )
+1. cs-self-esteem (Sophie H) - (reated pre-proc-scales and anal-scales ) - AW to take quick look at Bayes stuff
 
 ## Back to Paul (for RMINR)
 
@@ -27,6 +26,7 @@
 1. analyse-scales
 1. better-tables
 1. non-parametric
+1. preproc-experiments
 
 ## Completed (fed back to staff, not on RMINR front page)
 
