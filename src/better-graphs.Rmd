@@ -328,7 +328,7 @@ The plot gives a visual indication of whether there were differences between the
 
 ### Why not a bar plot?
 
-We could have used a bar plot to graph this data, but the half violin plot seemed a better choice. For example, there is evidence that readers misinterpret bar plots, because the values within the bar are perceived as more likely than those just above, even though this is not the case (Newman & Scholl, 2012).
+We could have used a bar plot to graph this data, but the half violin plot seemed a better choice. For example, [Newman & Scholl (2012)](https://link.springer.com/article/10.3758%2Fs13423-012-0247-5) showed that readers misinterpret bar plots, because the values within the bar are perceived as more likely than those just above, even though this is not the case.
 
 For completeness, here's the same data plotted using bars and confidence intervals. As you can see, the code is similar to the point and line plot above.
 
@@ -382,7 +382,7 @@ The medians in all groups are towards the upper end of the scale. The extensive 
 
 The problem is of course, within and between subject variance.
 
-FIXME: No error bars, or error bars for the factor of interest.
+FIXME: error bars for the factor of interest.
 
 This could be what we want to show.
 
@@ -418,6 +418,8 @@ na_diff %>%
   labs(caption = "Bars are 95% confidence intervals of mean differences")
 ```
 
+See [Masson & Loftus (2003)](http://personal.psu.edu/jxb14/M554/articles/Masson&Loftus2003.pdf) for a more in-depth discussion about calculating and plotting confidence intervals for within subjects, betweeen subjects, and mixed designs.
+
 <a name="exploring"></a>
 
 # Exploring data
@@ -436,12 +438,13 @@ bw = 1
 mean <- mean(oit$problems)
 sd <- sd(oit$problems)
 
-oit %>% ggplot(aes(problems))  + 
+oit %>% ggplot(aes(problems)) + 
   geom_histogram(colour = "black", binwidth = bw) + 
   stat_function(fun = function(x) 
     dnorm(x, mean = mean, sd = sd) * bw * n_obs) +
-  theme_APA +
-  xlab('Problems solved') + ylab('Count (participants)')
+  xlim(0,7) +
+  xlab('Problems solved') + ylab('Count (participants)') +
+  theme_APA 
 ```
 
 **Explanation of commands:**
@@ -452,29 +455,37 @@ oit %>% ggplot(aes(problems))  +
 
 ## Pairs plot
 
-* PsiQ total, Openness, problem scores, FTT
+Correlation matrices were introduced in the [Better tables](better-tables.html#cor-matrix) worksheet. We can also use a 'pairs' plot to show relationships between pairs of variables.
 
-```{r, message=FALSE}
+In this plot, a set of variables are listed along the columns, and also down the rows. A pair is the cell defined by a particular row and column. Along the diagonal, variables are paired with themselves, so the correlation doesn't provide any information as it is always 1. Above the diagonal are all of the combinations of the remaining pairs of variables. The same combinations of pairs are repated below the diagonal.
+
+This format provides an opportunity to provide a lot of information in a small area. In this plot, we'll use some different ways of showing associations between variables, all of which will be familiar from other worksheets. In the upper part of the grid, we'll plot a [correlation coefficient](corr.html) for each pair. For the pairs in the lower part of the grid, we'll create a [scatterplot with a line of best fit](https://benwhalley.github.io/rmip/automatic-line-fitting.html). Along the diagonal, we'll create a [density plot](corr.html#sum), to show the variability for each variable.
+
+The study introduced above was interested in correlations between creative problem solving, and three other measures:
+
+  * Openness - a common factor used in personality research
+  * PsiQ - vividness of mental imagery, and
+  * FTT - the score on a flexible thinking task
+
+```{r pairs-2, class.source = 'numberLines lineAnchors', message=FALSE}
 library(GGally, quietly = TRUE)
-library(ggplot2)
-lowerFn <- function(data, mapping, ...) {
-   ggplot(data = data, mapping = mapping) +
-      geom_point(size=1) +
-      geom_smooth(color = 'black', method='lm', size=.5)
-}
 oit %>%
-   select(psiq, openness, problems, ftt) %>%
-   ggpairs(lower=list(continuous=wrap(lowerFn))) +
+  select(psiq, openness, problems, ftt) %>%
+  ggpairs(lower=list(continuous='smooth')) +
   theme_APA
 ```
 
-**Explanation of commands:**
+### Explanation of commands
 
-**Explanation of output:**
+Line 1 loads the `GGally` package, which provides the `ggpairs()` function for creating a pairs plot. Line 3 selects the variables to compare. Line 4 creates the plot. For the upper area and diagaonal, we don't need to tell `ggpairs()` what to display, as the defaults are exactly what we want. This gives us a Pearson correlation coefficient for each pair above the diaganol, and a density plot for each of the four variables along the diaganol. The option `lower=list(continuous='smooth')`, tells `ggplot()` to create a scatterplot with a best-fit line for each pair in the lower area of the grid. The dots are the individual data points, the black line is the line of best fit. The grey area shows [the standard error of the line of best fit](https://benwhalley.github.io/rmip/explanations-regression.html#explanation-shaded-area-geom-smooth).
 
-# References
+### Explanation of plot
 
-Newman, G. E., & Scholl, B. J. (2012). [Bar graphs depicting averages are perceptually misinterpreted: The within-the-bar bias](https://link.springer.com/article/10.3758%2Fs13423-012-0247-5) Psychonomic Bulletin & Review, 19(4), 601–607.
+There are small positive correlations between FTT and all other variables, and between PsiQ and Openness. There is no correlation between problems solved and either PSiQ or Openness.
+
+The density plot shows that nobody scored less than about 3.5 on PsiQ, and above that the data was normally distributed. The pattern was similar for Openness and FTT, with fewer low scores shifting the distribution slightly to the right. The number of problems solved showed the opposite pattern. There was a steady decline from people who solved only one problem, and nobody solved more than four.
+
+Notice that the limits on the x and y scales of the density plots and scatterplots are set by the range of the data rather than the range of the scale. To keep this example simple, we haven't corrected this. For a journal article, you would use ggplot's scale adjustment functions to set the correct x and y limits for each pair.
 
 ___
 
