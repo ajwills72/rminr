@@ -570,16 +570,17 @@ summary {
 </div>
 <div id="step-3" class="section level3">
 <h3>Step 3</h3>
-<p>The ‘inverse normal transformation’ is another method of reducing disproprotional effects on the variance, when your data has a small number of extreme values. This method is a bit more complicated than the log transform you saw earlier, but it’s just as easy to apply using the <code>rankNorm()</code> function from the <code>RNOmni</code> library.</p>
-<p>Load the <code>RNOmni</code> library, then use <code>mutate()</code> with <code>rankNorm()</code>, to inverse transform <code>pre_na</code> and <code>post_na</code>. Use <code>summarise()</code> to calculate mean pre and most negative affect by subculture. The results should look like this.</p>
+<p>The ‘reciprocal’ of a number is result of dividing 1 by that number. So the reciprocal of 10 is 1 / 10, or 0.1. More generally, if x is our number, 1 / x is the reciprocal. Like the log transformation, taking a reciprocal reduces the disproprotional effect that a small number of extreme values have on the variance.</p>
+<p>Notice that taking a reciprocal reverses the order of your data e.g. 1 / 5 = 0.2, which is larger than 0.1. This is easy to correct for by subtracting each value of x from the maximum value before the division. You don’t need to do that for this exercise. However, because 1 / 0 will produce an error, we’ll use the formula 1 / (x + 1) to calculate a reciprocal.</p>
+<p>Use this formula to transform <code>pre_na</code> and <code>post_na</code>. Then use <code>summarise()</code> to calculate mean pre- and post- negative affect by subculture. The results should look like this.</p>
 <pre><code>`summarise()` ungrouping output (override with `.groups` argument)</code></pre>
 <pre><code># A tibble: 4 x 3
   subculture `mean(pre_na)` `mean(post_na)`
   &lt;chr&gt;               &lt;dbl&gt;           &lt;dbl&gt;
-1 Emo                0.452           0.466 
-2 Goth              -0.160          -0.0658
-3 Mainstream        -0.259          -0.180 
-4 Metal             -0.0589         -0.142 </code></pre>
+1 Emo                0.0574          0.0672
+2 Goth               0.0685          0.0768
+3 Mainstream         0.0705          0.0786
+4 Metal              0.0670          0.0784</code></pre>
 <p><strong>Copy the R code you used for this exercise into PsycEL.</strong></p>
 <hr />
 <p>This material is distributed under a <a href="https://creativecommons.org/">Creative Commons</a> licence. CC-BY-SA 4.0.</p>
