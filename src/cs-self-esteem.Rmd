@@ -6,12 +6,6 @@ output: html_document
 
 ```{r setup, include=FALSE}
 ## DEVELOPERS: Uncomment one option, as appropriate
-
-## Data required to knit
-## https://github.com/ajwills72/rminr-data/tree/master/going-further/sses.csv
-##
-## I check out rminr-data and make a symbolic link to going-further
-
 ## Show only commands.
 ## knitr::opts_chunk$set(echo = TRUE, message = FALSE, results='hide', fig.keep = 'none', comment=NA)
 
@@ -124,33 +118,36 @@ To check the reliability of our SSES measurements, we'll calculate Cronbach's al
 
 ```{r cronbach-all}
 library(psy)
-sses_cronbach_total <- sses_raw %>%
-  filter(time == 'pre') %>%
-  select(q1:q20) %>%
-  cronbach()
+sses_pre <- sses_raw %>% filter(time == 'pre')
+sses_pre %>% select(q1:q20) %>% cronbach()
 ```
 
 ### Explanation of commands
 
-1. We select only the pre-intervention scores with `filter(time == 'pre')` because, assuming the interventions were successful, the post-intervention scores would reduce alpha.
+Line 1 loads the `psy` package which provides the `cronbach()` function. Line 2 creates a data frame contain only the rows with pre-intervention scores, along with the condition, and SSES columns. We only use the pre-intervention scores because, assuming the interventions were successful, including the post-intervention scores would reduce alpha. The last line calcluates Cronbach's alpha.
 
 ### Explanation of output
+
+```{r echo=FALSE}
+sses_cronbach_total <- sses_pre %>% select(q1:q20) %>% cronbach()
+```
 
 The value of alpha (`r round(sses_cronbach_total$alpha,2)`) could be a cause for concern, as it is below [the 0.7-0.8 convention of acceptable reliability](#analyse-scales.html#cronbach), and well below the alpha of 0.92 reported by the authors of the SSES (Heatherton & Polivy, 1991).
 
 We'll do an additional analysis to see how the scale performed in each group.
 
 ```{r cronbach-pre-post}
-sses_raw %>%
-  filter(time == 'pre') %>%
-  group_by(time, condition) %>%
-  select(q1:q20) %>%
-  group_modify(~ as.data.frame(cronbach(.x)$alpha))
+sses_pre %>% filter(condition == 'control') %>%
+  select(q1:q20) %>% cronbach()
+sses_pre %>% filter(condition == 'self') %>%
+  select(q1:q20) %>% cronbach()
+sses_pre %>% filter(condition == 'other') %>%
+  select(q1:q20) %>% cronbach()
 ```
 
 ### Explanation of commands
 
-The first two steps in this pipeline should be familiar by now. We group the data by `condition` within `time` and select the columns required for calculating alpha. The final step needs some unpacking. The `group_modify()` command does some processing on each group of rows defined by the earlier `group_by()` and returns the result as a data frame, with columns to indicate which group the results relate to. The `~` means turn the following commands into a function which is run for each group. You don't really need to know what a function is to understand the processing that happens for each group. That's defined by `as.data.frame(cronbach(.x)$alpha)`. This runs the `cronbach()` function on the grouped data (`.x`) and extracts the value of `alpha` (recall that `cronbach()` also returns the sample size and the number of items). The alpha value is turned into a data frame so that `group_modify()` can join the results from each group into a single data frame.
+Lines 1-2 filter the pre-intervention data to only include the control condition, and then calculates Cronbach's alpha. The remaining lines do the same for the other two conditions.
 
 ### Explanation of output
 
@@ -162,28 +159,24 @@ We can now see from these results that alpha was especially low in the `self` an
 
 Putting aside the reliability of the measurements for now, we would like to check that there were no major self-esteem differences between conditions before our intervention. This should be the case if we successfully randomised participants to conditions. If there are baseline differences we would need to account for these when comparing them to post-intervention scores. We can use a between-subjects ANOVA to compare the baseline SSES scores in our three conditions. This is the similar to the ANOVA described in the [Within-subject differences worksheet](anova1.html), but for a between-subjects factor.
 
-```{r baseline, warning=FALSE}
+```{r baseline, warning=FALSE, message=FALSE}
 library(BayesFactor, quietly = TRUE)
 sses_pre <- sses_raw %>% filter(time == 'pre')
-bf <- anovaBF(formula = total ~ condition, data = data.frame(sses_pre))
-bf
+anovaBF(formula = total ~ condition, data = data.frame(sses_pre))
 ```
 
 ### Explanation of commands
 
-In line 1, we load the BayesFactor package. Line 2 assigns just the pre-intervention data to `sses_pre`. Line 3 runs the between-subjects ANOVA. In contrast with the within-subjects ANOVA you've seen before, we don't use `+ subj` in the formula, and `whichRandom = 'subj'`. For a within-subjects factor, subject is a random factor, because the within-subject factor _levels_ would change if we re-ran the experiment with different people. However, for a fully between-subjects factor like `condition`, the same subject is only ever in a single condition, so it's not possible them to affect more than one level of the factor. This is why we don't include `subj` as a random factor in this analysis.
+In line 1, we load the BayesFactor package. Line 2 assigns just the pre-intervention data to `sses_pre`. Line 3 runs the between-subjects ANOVA. To run [a Bayesian ANOVA using a random factor](anova3.html#bfact), we would need more than one observation for each participant for `condition`. As we only have one observation for each participant, we don't use `+ subj` in the formula, and `whichRandom = 'subj'`.
 
 ### Explanation of output
 
-```{r baseline_bf, echo=FALSE}
-# calculate here to work around inline knitting issue
-baseline_bf <- round(extractBF(bf)$bf,2)
-```
-
-The Bayes factor of `r baseline_bf` is greater than the conventional `0.33` which would satisfy us that there were no differences between the conditions. This could be due to the slightly lower mean in the `other` condition. We'll address this issue at the end of the worksheet.
+The Bayes factor of .68 is greater than the conventional `0.33` which would satisfy us that there were no differences between the conditions. This could be due to the slightly lower mean in the `other` condition. We'll address this issue at the end of the worksheet.
 
 ```{r baseline-descriptives}
-sses_raw %>% filter(time == 'pre') %>% group_by(condition) %>% summarise(mean = mean(total), sd = sd(total))
+sses_raw %>% filter(time == 'pre') %>%
+  group_by(condition) %>%
+  summarise(mean = mean(total), sd = sd(total))
 ```
 
 <a name="prepost"></a>
@@ -191,26 +184,22 @@ sses_raw %>% filter(time == 'pre') %>% group_by(condition) %>% summarise(mean = 
 ## Comparing interventions
 
 The main question we'd like to answer is whether our two imagery interventions 
-(visualising a negative mental image of oneself, or someone else) had effects on self esteem which differed from our control condition. We can test this using a [factorial ANOVA](anova3.html#bfact) to compare SSES scores before and after the three interventions. In this design, `condition` is a between-subjects variable, and `time` (pre and post intervention) is a repeated measure. We include `subj` as a random factor, as it is random in relation to the repeated measure `time`.
+(visualising a negative mental image of oneself, or someone else) had effects on self esteem which differed from our control condition. We can test this using a [factorial ANOVA](anova3.html#bfact) to compare SSES scores before and after the three interventions. In this design, `condition` is a between-subjects variable, and `time` (pre and post intervention) is a repeated measure.
 
 ```{r prepost}
 bf <- anovaBF(formula = total ~ time*condition + subj,
               data = data.frame(sses_raw), whichRandom = 'subj')
-condition_bf <- round(extractBF(bf[1])$bf, 2)
-time_bf <- round(extractBF(bf[2])$bf, 2)
-interaction_bf <- round(extractBF(bf[4] / bf[3])$bf, 2)
-condition_bf
-time_bf
-interaction_bf
+bf
+bf[4] / bf[3]
 ```
 
 ### Explanation of commands
 
-We use `extractBF()` to extract Bayes factors from the results of `anovaBF`. The two main effects come from `bf[1]` and `bf[2]`. The interaction is the results of `bf[4] / bf[3]`, which can also be passed to `extractBF()`. We `round()` each of the Bayes factors to 2 decimal places.
+The first two lines run a Bayesian factorial ANOVA, with `subj` as a random factor, and store result is stored in `bf`. Line 3 prints the results, which provides us with the Bayes Factors for the main effects of `condition` (`bf[1]`) and `time` (`bf[2]`). Line 4 calculates the Bayes Factor for the interaction.
 
 ### Explanation of output
 
-The Bayes factor for `time` (_BF_ = `r time_bf`) tells us that there was no overall change in self-esteem after the intervention relative to baseline. The Bayes factor for `condition` (_BF_ = `r condition_bf`) tells us that there were overall differences in self-esteem between the three conditions. The `interaction_bf` of `r interaction_bf` tells us that it's almost 10 times more like that there's an interaction between `condition` and `time` than that there isn't.
+The Bayes Factor for `time` is less than .33, which tells us that there was no overall change in self-esteem after the intervention relative to baseline. The Bayes Factor for `condition` is greater than 3, indicating that there were differences in self-esteem between the three conditions. The final Bayes Factor tells us that it's about 11 times more like that there's an interaction between `condition` and `time` than that there isn't.
 
 # References
 
