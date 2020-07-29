@@ -13,10 +13,9 @@
 ## Andy review
 
 1. more-on-regression
+1. cs-self-esteem
 
 ## Back to Paul
-
-1. cs-self-esteem
 
 ## Completed
 
