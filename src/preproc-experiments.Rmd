@@ -12,7 +12,7 @@ output:
 ## knitr::opts_chunk$set(echo = TRUE, message = FALSE, results='hide', fig.keep = 'none', comment=NA)
 
 ## Show commands and output.
-knitr::opts_chunk$set(echo = TRUE, comment=NA, cache = TRUE)
+knitr::opts_chunk$set(echo = TRUE, comment=NA, cache = FALSE)
 options(tibble.width = Inf) # show all columns in output
 library(pander)
 ```
@@ -198,7 +198,7 @@ sum.data <- sum.data %>% mutate(lcval = log(cval+1))
 
 This exercise uses data from a study which compared emotion regulation strategies between fans of mainstream (control group), goth, metal and emo music. Before and after each group listened to a clip of their preferred music, measurements were taken using the 20-item Positive and Negative Affect Schedule (PANAS). The data is in wide format, with one row per participant.
 
-We start by loading the data and counting the rows.
+We start by loading the data and counting the number of rows in the data frame.
 
 ```{r ex-load, message=FALSE}
 panas <- read_csv('going-further/music-panas.csv')
@@ -207,7 +207,7 @@ count(panas)
 
 ### Step 1
 
-Like the Perruchet Effect experiment, the `r dplyr::count(panas)` rows in this data includes some duplicates. De-duplicate then count the rows. The result should look like this:
+Like the Perruchet Effect experiment, the `r dplyr::count(panas)` rows in this data includes some duplicates. De-duplicate the data, and then  count the rows again. If you've done it right, the output should look like this:
 
 ```{r ex1-1, echo=FALSE}
 panas <- distinct(panas)
@@ -216,7 +216,9 @@ count(panas)
 
 ### Step 2
 
-This version of the PANAS used 10 questions to measure positive affect, and 10 to measure negative affect. Answers to questions were scored from 1 to 5, meaning that scores could range from 10-50. For the second negative affect measurement, the researchers calculated and entered the scores by hand. Use `filter()` to find any participants with a `post_na` score greater than 50. Use another `filter()` command to exclude any participants who meet this criterion.
+This version of the PANAS used 10 questions to measure positive affect (`pa`), and 10 to measure negative affect (`na`). These measures were taken twice (`pre_` and `post_`). Answers to questions were scored from 1 to 5, meaning that scores could range from 10-50. For the second negative affect measurement, the researchers calculated and entered the scores by hand. This is a notoriously error-prone way to do things, and it resulted in some impossible scores - specifically scores greater than 50. 
+
+Use `filter()` to find any participants with a `post_na` score greater than 50. Use another `filter()` command to exclude any participants who meet this criterion.
 
 ```{r ex1-2, echo=FALSE}
 panas_inspect <- panas %>% filter(post_na > 50)
@@ -226,7 +228,7 @@ panas <- panas %>% filter(!(subj %in% panas_exclude))
 
 ### Step 3
 
-The 'reciprocal' of a number is result of dividing 1 by that number. So the reciprocal of 10 is 1 / 10, or 0.1. More generally, if x is our number, 1 / x is the reciprocal. Like the log transformation, taking a reciprocal reduces the disproprotional effect that a small number of extreme values have on the variance.
+The _reciprocal_ of a number is the result of dividing 1 by that number. So the reciprocal of 10 is 1 / 10, or 0.1. More generally, if x is our number, 1 / x is the reciprocal. Like the log transformation, taking a reciprocal reduces the disproprotional effect that a small number of extreme values have on the variance.
 
 Notice that taking a reciprocal reverses the order of your data e.g. 1 / 5 = 0.2, which is larger than 0.1. This is easy to correct for by subtracting each value of x from the maximum value before the division. You don't need to do that for this exercise. However, because 1 / 0 will produce an error, we'll use the formula 1 / (x + 1) to calculate a reciprocal.
 
