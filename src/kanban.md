@@ -11,9 +11,9 @@
 
 ## Andy review
 
-1. cs-self-esteem
-1. preproc-experiments
 1. more-on-regression
+1. preproc-experiments
+1. cs-self-esteem
 
 ## Back to Paul
 

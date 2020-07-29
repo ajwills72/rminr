@@ -201,14 +201,15 @@ panas <- panas %>% filter(!(subj %in% panas_exclude))
 
 ### Step 3
 
-The 'inverse normal transformation' is another method of reducing disproprotional effects on the variance, when your data has a small number of extreme values. This method is a bit more complicated than the log transform you saw earlier, but it's just as easy to apply using the `rankNorm()` function from the `RNOmni` library.
+The 'reciprocal' of a number is result of dividing 1 by that number. So the reciprocal of 10 is 1 / 10, or 0.1. More generally, if x is our number, 1 / x is the reciprocal. Like the log transformation, taking a reciprocal reduces the disproprotional effect that a small number of extreme values have on the variance.
 
-Load the `RNOmni` library, then use `mutate()` with `rankNorm()`, to inverse transform `pre_na` and `post_na`. Use `summarise()` to calculate mean pre and most negative affect by subculture. The results should look like this.
+Notice that taking a reciprocal reverses the order of your data e.g. 1 / 5 = 0.2, which is larger than 0.1. This is easy to correct for by subtracting each value of x from the maximum value before the division. You don't need to do that for this exercise. However, because 1 / 0 will produce an error, we'll use the formula 1 / (x + 1) to calculate a reciprocal.
+
+Use this formula to transform `pre_na` and `post_na`. Then use `summarise()` to calculate mean pre- and post- negative affect by subculture. The results should look like this.
 
 ```{r ex1-3, echo=FALSE}
-library(RNOmni)
 panas_int <- panas %>%
-  mutate(pre_na = rankNorm(pre_na), post_na = rankNorm(post_na))
+  mutate(pre_na = 1 / (pre_na + 1), post_na = 1 / (post_na + 1))
 panas_int %>% group_by(subculture) %>% summarise(mean(pre_na), mean(post_na))
 ```
 

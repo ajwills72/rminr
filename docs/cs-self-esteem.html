@@ -433,37 +433,58 @@ sses_raw &lt;- sses_raw %&gt;%
 <h2>Checking SSES reliability</h2>
 <p>To check the reliability of our SSES measurements, we’ll calculate Cronbach’s alpha for the pre-intervention SSES data. Cronbach’s alpha was introduced in the <a href="analyse-scales.html">Analysing scales worksheet</a>.</p>
 <pre class="r"><code>library(psy)
-sses_cronbach_total &lt;- sses_raw %&gt;%
-  filter(time == &#39;pre&#39;) %&gt;%
-  select(q1:q20) %&gt;%
-  cronbach()</code></pre>
+sses_pre &lt;- sses_raw %&gt;% filter(time == &#39;pre&#39;)
+sses_pre %&gt;% select(q1:q20) %&gt;% cronbach()</code></pre>
+<pre><code>$sample.size
+[1] 73
+
+$number.of.items
+[1] 20
+
+$alpha
+[1] 0.6862132</code></pre>
 <div id="explanation-of-commands-1" class="section level3">
 <h3>Explanation of commands</h3>
-<ol style="list-style-type: decimal">
-<li>We select only the pre-intervention scores with <code>filter(time == &#39;pre&#39;)</code> because, assuming the interventions were successful, the post-intervention scores would reduce alpha.</li>
-</ol>
+<p>Line 1 loads the <code>psy</code> package which provides the <code>cronbach()</code> function. Line 2 creates a data frame contain only the rows with pre-intervention scores, along with the condition, and SSES columns. We only use the pre-intervention scores because, assuming the interventions were successful, including the post-intervention scores would reduce alpha. The last line calcluates Cronbach’s alpha.</p>
 </div>
 <div id="explanation-of-output" class="section level3">
 <h3>Explanation of output</h3>
 <p>The value of alpha (0.69) could be a cause for concern, as it is below <a href="#analyse-scales.html#cronbach">the 0.7-0.8 convention of acceptable reliability</a>, and well below the alpha of 0.92 reported by the authors of the SSES (Heatherton &amp; Polivy, 1991).</p>
 <p>We’ll do an additional analysis to see how the scale performed in each group.</p>
-<pre class="r"><code>sses_raw %&gt;%
-  filter(time == &#39;pre&#39;) %&gt;%
-  group_by(time, condition) %&gt;%
-  select(q1:q20) %&gt;%
-  group_modify(~ as.data.frame(cronbach(.x)$alpha))</code></pre>
-<pre><code>Adding missing grouping variables: `time`, `condition`</code></pre>
-<pre><code># A tibble: 3 x 3
-# Groups:   time, condition [3]
-  time  condition `cronbach(.x)$alpha`
-  &lt;fct&gt; &lt;fct&gt;                    &lt;dbl&gt;
-1 pre   control                  0.742
-2 pre   other                    0.478
-3 pre   self                     0.682</code></pre>
+<pre class="r"><code>sses_pre %&gt;% filter(condition == &#39;control&#39;) %&gt;%
+  select(q1:q20) %&gt;% cronbach()</code></pre>
+<pre><code>$sample.size
+[1] 34
+
+$number.of.items
+[1] 20
+
+$alpha
+[1] 0.7419521</code></pre>
+<pre class="r"><code>sses_pre %&gt;% filter(condition == &#39;self&#39;) %&gt;%
+  select(q1:q20) %&gt;% cronbach()</code></pre>
+<pre><code>$sample.size
+[1] 18
+
+$number.of.items
+[1] 20
+
+$alpha
+[1] 0.6823747</code></pre>
+<pre class="r"><code>sses_pre %&gt;% filter(condition == &#39;other&#39;) %&gt;%
+  select(q1:q20) %&gt;% cronbach()</code></pre>
+<pre><code>$sample.size
+[1] 21
+
+$number.of.items
+[1] 20
+
+$alpha
+[1] 0.4775607</code></pre>
 </div>
 <div id="explanation-of-commands-2" class="section level3">
 <h3>Explanation of commands</h3>
-<p>The first two steps in this pipeline should be familiar by now. We group the data by <code>condition</code> within <code>time</code> and select the columns required for calculating alpha. The final step needs some unpacking. The <code>group_modify()</code> command does some processing on each group of rows defined by the earlier <code>group_by()</code> and returns the result as a data frame, with columns to indicate which group the results relate to. The <code>~</code> means turn the following commands into a function which is run for each group. You don’t really need to know what a function is to understand the processing that happens for each group. That’s defined by <code>as.data.frame(cronbach(.x)$alpha)</code>. This runs the <code>cronbach()</code> function on the grouped data (<code>.x</code>) and extracts the value of <code>alpha</code> (recall that <code>cronbach()</code> also returns the sample size and the number of items). The alpha value is turned into a data frame so that <code>group_modify()</code> can join the results from each group into a single data frame.</p>
+<p>Lines 1-2 filter the pre-intervention data to only include the control condition, and then calculates Cronbach’s alpha. The remaining lines do the same for the other two conditions.</p>
 </div>
 <div id="explanation-of-output-1" class="section level3">
 <h3>Explanation of output</h3>
@@ -476,8 +497,7 @@ sses_cronbach_total &lt;- sses_raw %&gt;%
 <p>Putting aside the reliability of the measurements for now, we would like to check that there were no major self-esteem differences between conditions before our intervention. This should be the case if we successfully randomised participants to conditions. If there are baseline differences we would need to account for these when comparing them to post-intervention scores. We can use a between-subjects ANOVA to compare the baseline SSES scores in our three conditions. This is the similar to the ANOVA described in the <a href="anova1.html">Within-subject differences worksheet</a>, but for a between-subjects factor.</p>
 <pre class="r"><code>library(BayesFactor, quietly = TRUE)
 sses_pre &lt;- sses_raw %&gt;% filter(time == &#39;pre&#39;)
-bf &lt;- anovaBF(formula = total ~ condition, data = data.frame(sses_pre))
-bf</code></pre>
+anovaBF(formula = total ~ condition, data = data.frame(sses_pre))</code></pre>
 <pre><code>Bayes factor analysis
 --------------
 [1] condition : 0.6820205 ±0.03%
@@ -488,12 +508,14 @@ Against denominator:
 Bayes factor type: BFlinearModel, JZS</code></pre>
 <div id="explanation-of-commands-3" class="section level3">
 <h3>Explanation of commands</h3>
-<p>In line 1, we load the BayesFactor package. Line 2 assigns just the pre-intervention data to <code>sses_pre</code>. Line 3 runs the between-subjects ANOVA. In contrast with the within-subjects ANOVA you’ve seen before, we don’t use <code>+ subj</code> in the formula, and <code>whichRandom = &#39;subj&#39;</code>. For a within-subjects factor, subject is a random factor, because the within-subject factor <em>levels</em> would change if we re-ran the experiment with different people. However, for a fully between-subjects factor like <code>condition</code>, the same subject is only ever in a single condition, so it’s not possible them to affect more than one level of the factor. This is why we don’t include <code>subj</code> as a random factor in this analysis.</p>
+<p>In line 1, we load the BayesFactor package. Line 2 assigns just the pre-intervention data to <code>sses_pre</code>. Line 3 runs the between-subjects ANOVA. To run <a href="anova3.html#bfact">a Bayesian ANOVA using a random factor</a>, we would need more than one observation for each participant for <code>condition</code>. As we only have one observation for each participant, we don’t use <code>+ subj</code> in the formula, and <code>whichRandom = &#39;subj&#39;</code>.</p>
 </div>
 <div id="explanation-of-output-2" class="section level3">
 <h3>Explanation of output</h3>
-<p>The Bayes factor of 0.68 is greater than the conventional <code>0.33</code> which would satisfy us that there were no differences between the conditions. This could be due to the slightly lower mean in the <code>other</code> condition. We’ll address this issue at the end of the worksheet.</p>
-<pre class="r"><code>sses_raw %&gt;% filter(time == &#39;pre&#39;) %&gt;% group_by(condition) %&gt;% summarise(mean = mean(total), sd = sd(total))</code></pre>
+<p>The Bayes factor of .68 is greater than the conventional <code>0.33</code> which would satisfy us that there were no differences between the conditions. This could be due to the slightly lower mean in the <code>other</code> condition. We’ll address this issue at the end of the worksheet.</p>
+<pre class="r"><code>sses_raw %&gt;% filter(time == &#39;pre&#39;) %&gt;%
+  group_by(condition) %&gt;%
+  summarise(mean = mean(total), sd = sd(total))</code></pre>
 <pre><code>`summarise()` ungrouping output (override with `.groups` argument)</code></pre>
 <pre><code># A tibble: 3 x 3
   condition  mean    sd
@@ -506,25 +528,37 @@ Bayes factor type: BFlinearModel, JZS</code></pre>
 </div>
 <div id="comparing-interventions" class="section level2">
 <h2>Comparing interventions</h2>
-<p>The main question we’d like to answer is whether our two imagery interventions (visualising a negative mental image of oneself, or someone else) had effects on self esteem which differed from our control condition. We can test this using a <a href="anova3.html#bfact">factorial ANOVA</a> to compare SSES scores before and after the three interventions. In this design, <code>condition</code> is a between-subjects variable, and <code>time</code> (pre and post intervention) is a repeated measure. We include <code>subj</code> as a random factor, as it is random in relation to the repeated measure <code>time</code>.</p>
+<p>The main question we’d like to answer is whether our two imagery interventions (visualising a negative mental image of oneself, or someone else) had effects on self esteem which differed from our control condition. We can test this using a <a href="anova3.html#bfact">factorial ANOVA</a> to compare SSES scores before and after the three interventions. In this design, <code>condition</code> is a between-subjects variable, and <code>time</code> (pre and post intervention) is a repeated measure.</p>
 <pre class="r"><code>bf &lt;- anovaBF(formula = total ~ time*condition + subj,
               data = data.frame(sses_raw), whichRandom = &#39;subj&#39;)
-condition_bf &lt;- round(extractBF(bf[1])$bf, 2)
-time_bf &lt;- round(extractBF(bf[2])$bf, 2)
-interaction_bf &lt;- round(extractBF(bf[4] / bf[3])$bf, 2)
-condition_bf</code></pre>
-<pre><code>[1] 3.67</code></pre>
-<pre class="r"><code>time_bf</code></pre>
-<pre><code>[1] 0.19</code></pre>
-<pre class="r"><code>interaction_bf</code></pre>
-<pre><code>[1] 18.9</code></pre>
+bf</code></pre>
+<pre><code>Bayes factor analysis
+--------------
+[1] condition + subj                         : 4.052594  ±6.26%
+[2] time + subj                              : 0.1904245 ±0.97%
+[3] condition + time + subj                  : 0.712687  ±2.78%
+[4] condition + time + condition:time + subj : 7.96878   ±12.84%
+
+Against denominator:
+  total ~ subj 
+---
+Bayes factor type: BFlinearModel, JZS</code></pre>
+<pre class="r"><code>bf[4] / bf[3]</code></pre>
+<pre><code>Bayes factor analysis
+--------------
+[1] condition + time + condition:time + subj : 11.18132 ±13.14%
+
+Against denominator:
+  total ~ condition + time + subj 
+---
+Bayes factor type: BFlinearModel, JZS</code></pre>
 <div id="explanation-of-commands-4" class="section level3">
 <h3>Explanation of commands</h3>
-<p>We use <code>extractBF()</code> to extract Bayes factors from the results of <code>anovaBF</code>. The two main effects come from <code>bf[1]</code> and <code>bf[2]</code>. The interaction is the results of <code>bf[4] / bf[3]</code>, which can also be passed to <code>extractBF()</code>. We <code>round()</code> each of the Bayes factors to 2 decimal places.</p>
+<p>The first two lines run a Bayesian factorial ANOVA, with <code>subj</code> as a random factor, and store result is stored in <code>bf</code>. Line 3 prints the results, which provides us with the Bayes Factors for the main effects of <code>condition</code> (<code>bf[1]</code>) and <code>time</code> (<code>bf[2]</code>). Line 4 calculates the Bayes Factor for the interaction.</p>
 </div>
 <div id="explanation-of-output-3" class="section level3">
 <h3>Explanation of output</h3>
-<p>The Bayes factor for <code>time</code> (<em>BF</em> = 0.19) tells us that there was no overall change in self-esteem after the intervention relative to baseline. The Bayes factor for <code>condition</code> (<em>BF</em> = 3.67) tells us that there were overall differences in self-esteem between the three conditions. The <code>interaction_bf</code> of 18.9 tells us that it’s almost 10 times more like that there’s an interaction between <code>condition</code> and <code>time</code> than that there isn’t.</p>
+<p>The Bayes Factor for <code>time</code> is less than .33, which tells us that there was no overall change in self-esteem after the intervention relative to baseline. The Bayes Factor for <code>condition</code> is greater than 3, indicating that there were differences in self-esteem between the three conditions. The final Bayes Factor tells us that it’s about 11 times more like that there’s an interaction between <code>condition</code> and <code>time</code> than that there isn’t.</p>
 </div>
 </div>
 <div id="references" class="section level1">
