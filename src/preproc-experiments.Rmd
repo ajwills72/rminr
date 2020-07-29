@@ -77,7 +77,7 @@ Line 4 renames the columns, as covered in the [Preprocessing data from experimen
 
 Our data is in long format i.e. one observation per row. The four columns are as follows:
 
-- `subj` : A number indicating which participant this datas comes from.
+- `subj` : A number indicating which participant this data comes from.
 
 - `time` : The time this observation was made, measured in milliseconds from the beginning of the experiment for that participant. Observations are made approximately every 50 ms.
 
@@ -91,7 +91,7 @@ Our data is in long format i.e. one observation per row. The four columns are as
 
 ## De-duplicating data
 
-We're now going to get the data into a state where we can meaningfully analyse it:
+This experiment was run by three people over many different days. They tried to manually stitch all their data files together, by copying-and-pasting them into one big file in Excel. This type of manual manipulation of data is notoriously error prone, and in the process, they accidentally duplicated some data. In this case, it's easy to detect and fix in R, because no two rows of this data can be identical - the subject number or the time is always going to be different. So, we can remove duplicates by telling R to give us just one copy of each of the different rows in the data set. The command `distinct` does that for us:
 
 ```{r tidy, message=FALSE, class.source = 'numberLines lineAnchors'}
 ## De-duplicate data; remove pilot study
@@ -101,7 +101,7 @@ raw <- raw %>% filter(subj > 161)
 
 ### Explanation of commands
 
-Line 2, `raw <- distinct(raw)` is a _de-duplication_ command. This experiment was run by three people over many different days. They tried to manually stitch all their data files together, by copying-and-pasting them into one big file in Excel. This type of manual manipulation of data is notoriously error prone, and in the process, they accidentally duplicated some data. In this case, it's easy to detect and fix in R, because no two rows of this data can be identical - the subject number or the time is always going to be different. So, we can remove duplicates by telling R to give us just one copy of each of the different rows in the data set. The command `distinct` does that for us. 
+Line 2, `raw <- distinct(raw)` is the _de-duplication_ command. 
 
 Line 3, `raw  <- raw %>% filter(subj > 161)` should be familiar from previous worksheets; we are keeping only those participants whose subject number is greater than 161. This is because, in this study, we first ran a short pilot experiment, looked at the data, and made a few changes to the experiment. Here, we only wanted to analyze the main study, so we removed the pilot participants.
 
