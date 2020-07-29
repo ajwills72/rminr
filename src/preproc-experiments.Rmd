@@ -27,7 +27,7 @@ library(pander)
 
 - [De-duplicating data](#dedup)
 
-- [Excluding participants](#exclude)
+- [Excluding participants on a criterion](#exclude)
 
 - [Log transform](#log)
 
@@ -57,7 +57,7 @@ To prepare for this worksheet:
 
 ## Loading data
 
-We'll start by loading some data from [an undergraduate student dissertation on the Perruchet Effect](awdiss.html).
+We'll start by loading some data from [an undergraduate student dissertation on the Perruchet Effect](awdiss.html). Participants were repeatedly shown a picture of a brown cylinder. This picture was sometimes followed by a loud unpleasant noise. Their reaction to the noise was measured using their galvanic skin response. In addition, every time the cylinder was shown, participants rated their expectancy that the noise was about to occur on a 1-5 scale. 
 
 ```{r load, message=FALSE, class.source = 'numberLines lineAnchors'}
 rm(list = ls()) # clear the environment
@@ -81,7 +81,7 @@ Our data is in long format i.e. one observation per row. The four columns are as
 
 - `time` : The time this observation was made, measured in milliseconds from the beginning of the experiment for that participant. Observations are made approximately every 50 ms.
 
-- `key` : The type of observation being made. Mostly, these are `GS` observations, which are _galvanic skin responses_. These are measures of level of arousal in the participant.
+- `key` : The type of observation being made. Mostly, these are `GS` observations, which are _galvanic skin responses_. These are measures of level of arousal in the participant. There are also `ES` observations, which are the participant's ratings
 
 - `value` : The actual observation. Where `key` is `GS`, these are galvanic skin response values, which are measures of conductance (the reciprocal of electrical resistance). Higher values indicate higher arousal. 
 
@@ -107,9 +107,9 @@ Line 3, `raw  <- raw %>% filter(subj > 161)` should be familiar from previous wo
 
 <a name="exclude"></a>
 
-## Excluding participants
+## Excluding participants on a criterion
 
-As part of this experiment, participants were told to rate their expectancy of hearing an  unpleasant noise, _on every trial_. However, they only had 8 seconds to do this, and the experimenters noticed that sometimes people failed to make a rating. The experimental apparatus records this as a rating of zero. 
+As part of this experiment, participants were told to rate their expectancy of hearing an unpleasant noise, _on every trial_. However, they only had 8 seconds to do this, and the experimenters noticed that sometimes people failed to make a rating. The experimental apparatus records this as a rating of zero. 
 
 Participants who miss a lot of ratings aren't really following the instructions, making their data hard to interpret. In such cases, we normally exclude those participants from further analysis. First, we need to find out how widespread this problem is. One way to do this is to calculate the number of zero ratings each participant makes:
 
