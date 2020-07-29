@@ -1,5 +1,5 @@
 ---
-title: "Data preprocessing for experiments"
+title: "Further preprocessing for experiments"
 author: "Andy Wills and Paul Sharpe"
 output:
   html_document:
@@ -37,7 +37,7 @@ library(pander)
 
 ## Introduction
 
-In this worksheet, we'll cover some additional techniques for preprocessing experimental data.
+In the [Intermediate Guide to R](https://ajwills72.github.io/rminr/#rmip), we covered some basic techniques for preprocessing data from experiments, see the [preprocessing data from experiments](preproc.html) and the [more processing](more-on-preproc.html) worksheets. In this worksheet, we'll cover some additional techniques for preprocessing experimental data.
 
 <a name="start"></a>
 
