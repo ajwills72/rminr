@@ -15,10 +15,9 @@
 
 1. preproc-experiments
 1. more-on-regression
+1. cs-self-esteem (Sophie H) - (reated pre-proc-scales and anal-scales )
 
 ## Back to Paul (for RMINR)
-
-1. cs-self-esteem (Sophie H) - (reated pre-proc-scales and anal-scales )
 
 ## Completed (for RMINR)
 
