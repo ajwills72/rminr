@@ -424,24 +424,24 @@ See [Masson & Loftus (2003)](http://personal.psu.edu/jxb14/M554/articles/Masson&
 
 # Exploring data
 
+In addition to communicating the results of a study, graphs are also useful for visualising data patterns prior to analysis.
+
 <a name="histogram"></a>
 
-## Histogram
+## Histogram and distribution curve.
 
-[one of the first graphs](#graphs)
+On a very early worksheet, we introduced the [histogram](#graphs) as a way of visualising a distribution. We can extend that plot by adding a curve 
 
 ```{r}
 oit <- read_csv('going-further/openness-imagery-thinking.csv')
 
-n_obs = sum(!is.na(oit$problems))
-bw = 1
-mean <- mean(oit$problems)
-sd <- sd(oit$problems)
+n_obs <- sum(!is.na(oit$problems))
+bw <- 1
 
 oit %>% ggplot(aes(problems)) + 
   geom_histogram(colour = "black", binwidth = bw) + 
   stat_function(fun = function(x) 
-    dnorm(x, mean = mean, sd = sd) * bw * n_obs) +
+    dnorm(x, mean = mean(oit$problems), sd = sd(oit$problems)) * bw * n_obs) +
   xlim(0,7) +
   xlab('Problems solved') + ylab('Count (participants)') +
   theme_APA 
