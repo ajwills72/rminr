@@ -428,20 +428,21 @@ In addition to communicating the results of a study, graphs are also useful for 
 
 <a name="histogram"></a>
 
-## Histogram and distribution curve.
+## Histogram and distribution curve
 
-On a very early worksheet, we introduced the [histogram](#graphs) as a way of visualising a distribution. We can extend that plot by adding a curve 
+On a very early worksheet, we introduced the [histogram](#graphs) as a way of visualising a distribution. We can extend that plot by adding a curve to show the data distribution.
 
-```{r}
+```{r histogram, class.source = 'numberLines lineAnchors', message=FALSE}
 oit <- read_csv('going-further/openness-imagery-thinking.csv')
 
-n_obs <- sum(!is.na(oit$problems))
-bw <- 1
+n_obs <- sum(oit$problems)
+m_problems <- mean(oit$problems)
+sd_problems <- sd(oit$problems)
 
 oit %>% ggplot(aes(problems)) + 
-  geom_histogram(colour = "black", binwidth = bw) + 
-  stat_function(fun = function(x) 
-    dnorm(x, mean = mean(oit$problems), sd = sd(oit$problems)) * bw * n_obs) +
+  geom_histogram(colour = "black", binwidth = 1) +
+  stat_function(fun = function(x)
+      dnorm(x, mean = m_problems, sd = sd_problems) * n_obs) +
   xlim(0,7) +
   xlab('Problems solved') + ylab('Count (participants)') +
   theme_APA 
