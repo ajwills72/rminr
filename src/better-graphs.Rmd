@@ -23,7 +23,7 @@ library(pander)
 * [Meaningful labels](#labels)
 * [Journal styling](#style)
 * [High-quality output](#hq)
-* [Plotting principles](#principles)
+* [Choosing a graph for your data](#choosing)
 * [Within participants data](#within)
     + [One factor](#w-1x3)
     + [Two factors](#w-2x2)
@@ -37,9 +37,9 @@ library(pander)
 
 # Introduction
 
-In this worksheet, we'll look at how to produce publication-quality graphs in R, using an example from a previous worksheet.
+In this worksheet, we'll look at how to produce publication-quality graphs in R. We start with an example from a previous worksheet.
 
-Specifically, in the [within-subject differences](anova1.html#densediff) worksheet, we produced a density plot of the within-subject differences in reaction time for congruent versus incongruent trials
+In the [within-subject differences](anova1.html#densediff) worksheet, we produced a density plot of the within-subject differences in reaction time for congruent versus incongruent trials
 
 ```{r init, message=FALSE, echo=FALSE}
 rm(list = ls()) # clear the environment
@@ -135,23 +135,15 @@ ggsave(filename = "fig1.pdf", plot = dgraph, units = "cm", width = 15, height = 
 
 A file called _fig1.pdf_ will have appeared in your _Files_ window in RStudio. You can export this in the [usual way](using-projects.html#download).
 
-<a name="principles"></a>
+<a name="choosing"></a>
 
-# Plotting principles
+# Choosing a graph for your data
 
-A plot should visually describe patterns in data that would otherwise be difficult to communicate. Choosing and configuring the most appropriate plot will depend on what you want to communicate to your reader. In practice, making this decision often involves trying out different types of plot, and the elements used to build them.
+A graph should visually describe patterns in data that would otherwise be difficult to communicate. Choosing and configuring the most appropriate graph for you data, will depend on what you want to communicate to your reader. In practice, making this decision often involves trying out different types of graph, and the elements used to build them. You might generate new ideas for graphs after you have analysed you data and begun to interpret the results.
 
-As such, it's difficult to provide _rules_ for ploting data. However, there are some principles which will help you to decide how to plot your data.
+These subjective aspects make it difficult to provide hard and fast rules for the type of plot you should choose, and the elements that it should contain. A general piece of advice is to carefully consider the best way to represent the centre (often the mean), and distribution of your data. We present some suggestions for plotting different types of data in the following sections.
 
-* central tendency
-* variation
-* Plot in main text (not appendices).
-
-Barcharts or point plots sometimes include a line and crossbar either side of the mean value representing some kind of interval. If you plot interval lines, there are two essential pieces of information you should include in your caption. First, you should say what type of interval the line represents. This could be a standard deviation, a standard error or a confidence interval. We recommend plotting 95% confidence intervals, as these tend to be both useful and easy to interpret. Second, you should state whether the interval represents within or between subject variability.
-
-
-In the following sections ...
-examples The approach we've taken in this worksheet is to consider whether you are plotting data for within or between subjects, or a mixture of the two.
+As a side note, a common criticism of student projects is that results sections don't include a graph, and appendices often contain lots of graphs which don't really contribute to the report. You can overcome this by learning to experiment with different with different ways of plotting your data. When you've found a graph that contributes to the argument you're trying to make, be confident and include it in your results section!
 
 <a name="within"></a>
 
@@ -207,7 +199,7 @@ From this plot, it's clear that: (a) the overall trend is downwards, (b) most bu
 
 ## Two factors
 
-Our next example is from an experiment with two factors. Participants were trained to associate two screen colours with two different food rewards. At test, they saw pairs of screen colours and food pictures. Their reaction time (RT) in milliseconds was measured for identifying whether the pairs matched (congruent), or didn't match (incongruent) the associations they'd learnt previously. This test was carried out with, and without, a secondary task. In the secondary task, the participant had to verbally rate how much they liked pictures of faces. All participants completed all conditions, so we have a fully between subjects design, with factors congruency (congruent, incongruent) and load (load, no load).
+Our next example is from an experiment with two factors. Participants were trained to associate two screen colours with pictures of two different food rewards. At test, they saw pairs of screen colours and food pictures. Their reaction time (RT) in milliseconds was measured for identifying whether the pairs matched (congruent), or didn't match (incongruent) the associations they'd learnt previously. This test was carried out with, and without, a secondary task. In the secondary task, the participant had to verbally rate how much they liked pictures of faces. All participants completed all conditions, so we have a fully between subjects design, with factors congruency (congruent, incongruent) and load (load, no load).
 
 We start by loading the data and keeping only the test trials.
 
@@ -221,7 +213,7 @@ priming <- raw %>%
 
 This type of design is one of the most common in cognitive psychology, and there is a standard way to plot this type of data. We use points to represent our sample means for the RT in each of the four conditions.
 
-```{r w-pointline-2-1, message=FALSE, class.source = 'numberLines lineAnchors'}
+```{r w-pointline-2-1, class.source = 'numberLines lineAnchors'}
 dodge <- .1
 within_2x2 <- priming %>%
   ggplot(aes(x=Congruency, y=RT, group=Load, colour=Load))
@@ -235,11 +227,11 @@ within_2x2
 
 ### Explanation of commands
 
-Line 1 defines a value that we'll use repeatedly to adjust the horizontal position of elements, so that they don't overlap. This will make the plot clearer. Line 2 defines the x axis of our plot to be the Congruency factor, the y axis to be RT, to group Congruency by Load, and to use a different colour for 'load' and 'no load'.
+Line 1 defines a value that we'll use repeatedly in this worksheet. It will be used adjust the horizontal position of elements, so they don't overlap, making the plot clearer. Line 2-3 define the x axis of our plot to be the Congruency factor, the y axis to be RT, to group Congruency by Load, and to use a different colour for the factor levels `Load`, and `NoLoad`.
 
-Line 3 adds mean points to the plot using `stat_summary()`. `stat_summary()` is a concise way to summarise and plot graphical elements. It works in a similar way to the `group_by()` and `summarise()` pattern you've used to create summary statistics. The `fun=mean` tells `stat_summary()` to summarise the data by running the `mean` function for the grouped data you defined in the previous stop. In this case, it will calculate a mean RT (`y=RT`) for each of the groups created by `x=Congruency` and `group=Load`. `geom="point"` tells `stat_summary()` to plot the means as points. `position = position_dodge(width = dodge)` specifies an offset to use so that the points won't be plotted on top of each other. Line 4 uses a similar approach to add lines to the plot, with endpoints positioned at the four mean points. We'll change the point and line colours below.
+Lines 4-6 add mean points to the plot using `stat_summary()`. `stat_summary()` is a concise way to summarise and plot graphical elements. It works in a similar way to the `group_by()` and `summarise()` pattern you've used to create summary statistics. The `fun=mean` tells `stat_summary()` to summarise the data by running the `mean` function for the grouped data you defined in `aes()`. Here, it will calculate a mean RT (`y=RT`) for each of the groups created by `x=Congruency` and `group=Load`. `geom="point"` tells `stat_summary()` to plot the means as points. `position = position_dodge(width = dodge)` specifies an offset to use so that the points won't be plotted on top of each other. Lines 7-8 use a similar approach to add lines to the plot, with endpoints positioned at the four mean points.
 
-The warning `Removed 140 rows...` informs us that there are some missing values in the RT column. We'll ignore these messages, as our focus is on plotting the data.
+Finally, we apply some formatting to the graph.
 
 ```{r w-pointline-2-3, message=FALSE, class.source = 'numberLines lineAnchors'}
 within_2x2 +
@@ -255,7 +247,7 @@ Line 2 adds meaningful labels to the axes. Line 3 converts the colours to a grey
 
 The black line is well above the grey line, showing that people were slower to respond on trials where they were rating faces. The average of the black and grey points for congruent is about 625ms, and for incongruent about 640ms. This means that RTs were similar, regardless of the congruencey between the screen colour and food picture.
 
-The congruency effect is the difference between incongruent and congruent trials in ms. In this experiment, we're most interested in the size of the congruency effect under load. We can calculate this in a similar way to the example in the [Within-subject differences](anova1.html) worksheet.
+The congruency effect is the difference between incongruent and congruent trials in ms. In this experiment, we're most interested in how much smaller the congruency effect is under cognitive load. We can calculate this in a similar way to the example in the [Within-subject differences](anova1.html) worksheet.
 
 ```{r w_diffdiff, class.source = 'numberLines lineAnchors'}
 priming_diff <- priming %>%
@@ -266,7 +258,7 @@ priming_diff <- priming %>%
 
 ### Explanation of commands
 
-Lines 1-2 pivot the data into a wide format so we can calculate the 'difference of difference'. For each participatn, lines 3-4 calculate the congruency effect under load `(Incongruent_Load - Congruent_Load)` and no load `(Incongruent_NoLoad - Congruent_NoLoad)`, then subtract the no load difference from the load difference.
+Lines 1-2 pivot the data into a wide format so we can calculate the 'difference of differences'. For each participant, lines 3-4 calculate the congruency effect under load `(Incongruent_Load - Congruent_Load)` and no load `(Incongruent_NoLoad - Congruent_NoLoad)`, then subtract the no load difference from the load difference.
 
 Again, we can visualise this using a density plot. The only additional command is `scale_x_continuous(n.breaks = 10)` which puts 10 'ticks' on the x axis, in this case, at every 200 ms.
 
@@ -298,11 +290,9 @@ We now look at some graphs for between participants data.
 
 We'll plot some data from [a study in which tested children’s language development](cs-picture-naming.html). The Words in Game (WinG) task uses picture cards to test children's comprehension of, and ability to say, nouns and predicates. A predicate completes an idea about the subject of a sentence. For example, if the card showed a girl pushing a bike, the predicate would be "pushing".
 
-In this study children were tested using one of two sets of picture cards; the set used in the Italian version of WinG, or the set used in the English version. The researchers were primarily interested in whether the children's performance differed depending on which cards were used. We can demonstrate this visually by presenting the data for the two card sets, for each of the four tasks.
+In this study children were tested using one of two sets of picture cards; the set used in the Italian version of WinG, or the set used in the English version. The researchers were primarily interested in whether the children's performance differed depending on which cards were used. We can demonstrate this with plots that show the distribution of scores for the two card sets on the WinG tasks.
 
-We’ll create some plots to show the distribution of scores for the two card sets on the WinG tasks.
-
-We start by preparing the data for plotting. These steps are described in detail in the [Better tables worksheet](better-tables.html) worksheet, so we won’t repeat them here. Instead, we’ll just list the commands and show the final output.
+We start by preparing the data for plotting. These steps are described in detail in the [Better tables worksheet](better-tables.html) worksheet, so we won’t repeat the description here. Instead, we’ll just list the commands and show the final output.
 
 ```{r message=FALSE, class.source = 'numberLines lineAnchors'}
 wing_preproc <- read_csv('going-further/picture-naming-preproc.csv')
@@ -335,7 +325,7 @@ wing %>% ggplot(aes(x = task, y = correct, fill = cards)) +
 
 ### Explanation of commands
 
-Line 1 loads the `see` package which provides the `half_violin()` function. Line 2 defines the x axis of our plot to be the WinG `task`, the y axis to be task accuracy (`correct`), and to use the `cards` factor for the fill colour. Line 3 creates a the half violin plots. `position = position_identity()` plots the two distributions on top of each other, making it easy to see how much they overlap. `alpha=0.7` changes the transparency, again to help us see the overlapping area. `size=0` removes the outline around the distributions. Line 4 gives our axes meaningful labels. Line 5 converts the fill colours to a grey pallete, and applies our APA theme. Line 6 adjusts the size of the text on the x axis, so that the task names don't overlap.
+Line 2 loads the `see` package which provides the `half_violin()` function. Line 3 defines the x axis of our plot to be the WinG `task`, the y axis to be task accuracy (`correct`), and to use the `cards` factor for the fill colour. Line 4 creates a the half violin plots. `position = position_identity()` plots the two distributions on top of each other, making it easy to see how much they overlap. `alpha=0.7` changes the transparency, again to help us see the overlapping area. `size=0` removes the outline around the distributions. Line 5 gives our axes meaningful labels. Line 6 converts the fill colours to a grey pallete, and applies our APA theme. Line 7 adjusts the size of the text on the x axis, so that the task names don't overlap.
 
 ### Explanation of plot
 
@@ -364,7 +354,7 @@ wing %>% ggplot(aes(x=task, y=correct, fill=cards)) +
 
 Another common plot is the boxplot. This includes a thick line which represents the median, and a box on either side which shows how the middle 50% of the data is distributed around the median. The areas above and below the median are called the the upper and lower quartiles respectively. Together they form the 'inter-quartile range' (IQR). The 'whiskers' above and below the quartiles represent the distribution of the top and bottom 25% of the data. The dots draw attention to data points which lie outside of these ranges.
 
-We'll create a boxplot to compare the emotional avoidance strategies for fans of mainstream (control group), goth, metal and emo music. This data came from a final year undergrade student dissertation.
+We'll create a boxplot to compare the emotional avoidance strategies for fans of Mainstream (control group), Goth, Metal and Emo music. This data came from a final year undergraduate student dissertation.
 
 ```{r avoidance, class.source = 'numberLines lineAnchors', message=FALSE}
 ers_l <- read_csv('going-further/music-emotion-preproc.csv')
@@ -430,15 +420,19 @@ na %>%
 
 ### Explanation of commands
 
-Lines 1-2 plot the mean points, follow the same pattern as the [two factor within subjects plot](w-2x2). Line 3-4 add the confidence intervals to the plot. Confidence intervals are the same length on either side of the mean. To plot the bars, `ggplot()` needs information about the two sides of the interval. One approach is to write some code to calculate the interval, then pass this data to `ggplot()` to plot the lines. However, we can do this more concisely using `stat_summary()`. The option `fun.data=` is used to specify a function that returns a `y` value, and values `ymax` and `ymin` which specify an interval above and below `y`. We use the function `mean_cl_boot` to calculate a mean of `y`, and the associated confidence interval in `ymax` and `ymin`for our grouped data. The confidence interval is calculated for the factor specified by `group=` in line 2, in this case `pre_post`. `mean_cl_boot` calculates confidence intervals using [bootstrapping](https://en.wikipedia.org/wiki/Bootstrapping_(statistics)), which improves the interval estimate for data which isn't normally distributed. Line 8 adds a caption, which is essential to let the reader know what the error bars represent. 
+Lines 1-3 plot the mean points, following the same pattern as the [two factor within subjects plot](w-2x2).
+
+Lines 4-5 add the confidence intervals to the plot. Confidence intervals are the same size on either side of the mean. To plot the bars, `ggplot()` needs information about the two sides of the interval. One approach is to write some code to calculate the interval, then pass this data to `ggplot()` to plot the lines. However, we can do this more concisely using `stat_summary()`. The option `fun.data=` is used to specify a function that returns a `y` value, and values `ymax` and `ymin` which specify an interval above and below `y`. We use the function `mean_cl_boot` to calculate a mean of `y`, and the associated confidence interval in `ymax` and `ymin`for our grouped data. The confidence interval is calculated for the factor specified by `group=` in line 2, in this case `pre_post`. `mean_cl_boot` calculates confidence intervals using [bootstrapping](https://en.wikipedia.org/wiki/Bootstrapping_(statistics)), which improves the interval estimate for data which isn't normally distributed.
+
+Line 8 adds a caption, which is essential to let the reader know what the error bars represent. 
 
 ### Explanation of plot
 
-In all groups, NA dropped after listening to music. The non-overlapping confidence intervals for Emo suggest that this is the only group where we'll find evidence that music reduces negative affect.
+In all groups, NA was lower after the participants listening to their preferred type of music. The non-overlapping confidence intervals for Emo suggest that this is the only group where we'll find evidence that music reduces negative affect.
 
 Were there any differences in the effects of music on NA between groups? We can see this by plotting a difference score.
 
-```{r}
+```{r m-diff, class.source = 'numberLines lineAnchors'}
 na_diff <- panas %>% mutate(diff = pre_na - post_na)
 na_diff %>%
   ggplot(aes(x=subculture, y=diff)) +
@@ -451,7 +445,7 @@ na_diff %>%
 
 ### Explanation of commands
 
-Line 1 calculates the difference in NA after listening to music (`post_na`) by subtracting it from the baseline score (`pre_na`). Line 5 calculates a between groups confidence interval for the difference scores. The remaining lines should now be familiar.
+Line 1 calculates the difference in NA after listening to music (`post_na`) by subtracting it from the baseline score (`pre_na`). Line 5 calculates a between groups confidence interval for the difference scores. The remaining lines should be familiar by now.
 
 ### Explanation of plot
 
@@ -463,16 +457,17 @@ See [Masson & Loftus (2003)](http://personal.psu.edu/jxb14/M554/articles/Masson&
 
 ## Pairs plot
 
-Correlation matrices were introduced in the [Better tables](better-tables.html#cor-matrix) worksheet. We can also use a 'pairs' plot to show relationships between pairs of variables.
+Like the correlation matrices introduced in the [Better tables](better-tables.html#cor-matrix) worksheet, we can use a 'pairs' plot to show relationships between pairs of variables.
 
-In this plot, a set of variables are listed along the columns, and also down the rows. A pair is the cell defined by a particular row and column. Along the diagonal, variables are paired with themselves, so the correlation doesn't provide any information as it is always 1. Above the diagonal are all of the combinations of the remaining pairs of variables. The same combinations of pairs are repated below the diagonal.
+In this plot, a set of variables are listed along the columns, and also down the rows. A pair is the cell defined by a particular row and column. Along the diagonal, variables are paired with themselves, so the correlation doesn't provide any information, as it is always 1. Above the diagonal are all of the combinations of the remaining pairs of variables. The same combinations of pairs are repated below the diagonal.
 
 This format provides an opportunity to provide a lot of information in a small area. In this plot, we'll use some different ways of showing associations between variables, all of which will be familiar from other worksheets. In the upper part of the grid, we'll plot a [correlation coefficient](corr.html) for each pair. For the pairs in the lower part of the grid, we'll create a [scatterplot with a line of best fit](https://benwhalley.github.io/rmip/automatic-line-fitting.html). Along the diagonal, we'll create a [density plot](corr.html#sum), to show the variability for each variable.
 
-The study introduced above was interested in correlations between creative problem solving, and three other measures:
+We'll plot some data from another undergraduate dissertation. This study was interested in correlations between creative problem solving, and three other variables:
 
+  * problems - number of problems solved
   * Openness - a common factor used in personality research
-  * PsiQ - vividness of mental imagery, and
+  * PsiQ - vividness of mental imagery
   * FTT - the score on a flexible thinking task
 
 ```{r pairs-2, class.source = 'numberLines lineAnchors', message=FALSE}
@@ -487,13 +482,13 @@ oit %>%
 
 ### Explanation of commands
 
-Line 1 loads the `GGally` package, which provides the `ggpairs()` function for creating a pairs plot. Line 3 selects the variables to compare. Line 4 creates the plot. For the upper area and diagaonal, we don't need to tell `ggpairs()` what to display, as the defaults are exactly what we want. This gives us a Pearson correlation coefficient for each pair above the diaganol, and a density plot for each of the four variables along the diaganol. The option `lower=list(continuous='smooth')`, tells `ggplot()` to create a scatterplot with a best-fit line for each pair in the lower area of the grid. The dots are the individual data points, the black line is the line of best fit. The grey area shows [the standard error of the line of best fit](https://benwhalley.github.io/rmip/explanations-regression.html#explanation-shaded-area-geom-smooth).
+Line 1 loads the `GGally` package, which provides the `ggpairs()` function for creating a pairs plot. Line 2 loads the data. Line 5 selects the variables to compare. Line 6 creates the plot. For the upper area and diagaonal, we don't need to tell `ggpairs()` what to display, as the defaults are exactly what we want. This gives us a Pearson correlation coefficient for each pair above the diaganol, and a density plot for each of the four variables along the diaganol. The option `lower=list(continuous='smooth')`, tells `ggplot()` to create a scatterplot with a best-fit line for each pair in the lower area of the grid. The dots are the individual data points, the black line is the line of best fit. The grey area shows [the standard error of the line of best fit](https://benwhalley.github.io/rmip/explanations-regression.html#explanation-shaded-area-geom-smooth).
 
 ### Explanation of plot
 
 There are small positive correlations between FTT and all other variables, and between PsiQ and Openness. There is no correlation between problems solved and either PSiQ or Openness.
 
-The density plot shows that nobody scored less than about 3.5 on PsiQ, and above that the data was normally distributed. The pattern was similar for Openness and FTT, with fewer low scores shifting the distribution slightly to the right. The number of problems solved showed the opposite pattern. There was a steady decline from people who solved only one problem, and nobody solved more than four.
+The PsiQ density plot shows that nobody scored less than about 3.5, and above that value the data was normally distributed. The pattern was similar for Openness and FTT, with fewer low scores shifting the distribution slightly to the right. The number of problems solved showed the opposite pattern. There was a steady decline from people who solved only one problem, and nobody solved more than four.
 
 Notice that the limits on the x and y scales of the density plots and scatterplots are set by the range of the data rather than the range of the scale. To keep this example simple, we haven't corrected this. For a journal article, you would use ggplot's scale adjustment functions to set the correct x and y limits for each pair.
 
