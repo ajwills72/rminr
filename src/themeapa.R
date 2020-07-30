@@ -14,7 +14,7 @@ theme_APA <- theme_bw()+
               face="plain",
               colour="black"),
           legend.title = element_blank(),
-          legend.position = c(.5, .95),
+          legend.position = 'top',
           legend.direction = "horizontal",
           legend.text = element_text(
               face="plain",
@@ -31,5 +31,6 @@ theme_APA <- theme_bw()+
               colour='white'),
           axis.title.x = element_text(
               margin = margin(t = 10)),
-          plot.margin = grid::unit(c(5, 5, 5, 5), "mm")
+          plot.margin = grid::unit(c(5, 5, 5, 5), "mm"),
+          plot.caption = element_text(size=8)
           )
