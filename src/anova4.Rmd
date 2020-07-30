@@ -124,10 +124,34 @@ bf2bs[4] / bf2bs[3]
 
 This gives us a Bayes Factor for the interaction close to 0.1. So, there's substantial evidence for the _absence_ of an interaction.
 
-<a name="ex1"></a
+<a name="ex1"></a>
 
 # Exercise 1
 
+The data for this exercise comes from a different between subjects experiment with two factors.
+
+```{r ex1-data, message=FALSE}
+cf_raw <- read_csv('going-further/counterfactual.csv')
+```
+
+In this experiment, participants read a scenario describing some events leading up to an accident. The scenario was written from either a first-person or a third-person perspective. Next, they generated some counterfactual thoughts in relation to the scenario. For example, "If only I hadn't been looking at my phone, then ...". These thoughts were coded as either predictive, or not predictive of whether the accident occurred. Participants rated how much the protagonist was to blame for the accident, on a scale of 1 (strongly disagree) to 7 (strongly agree).
+
+Some of the `predictability` rows contain the value `NA`. Filter these out using `is.na()`, then calculate Bayes Factors for the main effects and the interaction. Because this data has only one observation for each participant, we can't use `subj` as a random factor, so don't include `subj` in the formula, or `whichRandom=subj`. 
+
+Your results should look similar to this:
+
+```{r ex1, echo=FALSE, message=FALSE}
+cf <- cf_raw %>%
+    filter(! is.na(predictability)) %>%
+    mutate(subj = factor(subj), perspective = factor(perspective),
+           predictability = factor(predictability))
+
+cf_bf <- anovaBF(blame ~ perspective*predictability, data=cf)
+cf_bf
+cf_bf[4] / cf_bf[3]
+```
+
+**Copy the R code you used for this exercise into PsycEL.**
 
 <a name="twoWS"></a>
 
@@ -192,7 +216,7 @@ This gives us a Bayes Factor for the interaction close to 0.0004. So, there's su
 
 # Exercise 2
 
-The data for this exercise comes from a different experiment with two factors.
+The data for this exercise comes from a different within subjects experiment with two factors.
 
 ```{r ex2-data, message=FALSE}
 raw <- read_csv('case-studies/chris-mitchell/priming-faces.csv')
@@ -212,7 +236,8 @@ priming <- raw %>%
   group_by(Subject, Congruency, Load) %>%
   summarise(RT = mean(RT, na.rm = TRUE))
 
-priming_bf <- anovaBF(RT ~ Congruency*Load + Subject, data=priming, whichRandom = 'Subject')
+priming_bf <- anovaBF(RT ~ Congruency*Load + Subject, data=priming,
+                      whichRandom = 'Subject')
 priming_bf
 priming_bf[4] / priming_bf[3]
 ```
