@@ -31,9 +31,7 @@ library(pander)
     + [One factor, two levels](#b-1x2)
     + [One factor, four levels](#b-1x4)
 * [Mixed (within-between) data](#mixed)
-    + [Two factors](#m-2x4)
-* [Other plots](#other)
-    + [Pairs plot](#pairs)
+* [Pairs plot](#pairs)
 
 <a name = "intro"></a>
 
@@ -393,76 +391,75 @@ The medians in all groups are towards the upper end of the scale. The extensive 
 
 # Mixed (within-between) data
 
-<a name="m-2x4"></a>
+Mixed designs include both within-subject and between-subject variance. The main challenge here is deciding which source of variance is most useful to represent in your graph. We'll demonstrate some options using data from the student project we used earlier. This was an experiment which compared participants' emotions, before and after they listened to their preferred type of music.
 
-## Two factors
-
-The problem is of course, within and between subject variance.
-
-FIXME: error bars for the factor of interest.
-
-In this case, error bars are useful. In the [More on t-tests](more-on-t.html) worksheet we mentioned that the 95% confidence interval is the only thing that is both useful and easy to interpret. We will plot 95% confidence intervals because, for a 2x2 within subjects design, they are calculated in such a way that they allow us to make visual comparisons between two conditions, much like a t-test. This will allow us to visually compare the main effects (congruency and load), and their [interaction](anova2.html).
-
-```{r m-pointline-1, message=FALSE}
+```{r m-load, message=FALSE}
 panas <- read_csv('going-further/music-panas.csv')
-panas <- panas %>% mutate(subculture = factor(subculture, levels = c('Mainstream', 'Emo', 'Goth', 'Metal')))
+panas %>% head() %>% pander()
+```
+
+There were four groups: fans of Mainstream (control), Goth, Metal and Emo music. So the repeated measure was time (before and after listening to music), and the between-participants factor was music subculture. Emotion was measured using the 20-item Positive and Negative Affect Schedule (PANAS).
+
+This data is in wide format, with one row per participant. We'll focus on negative affect (NA), which is in the columns `pre_na`, and `post_na`. We start bar preparing the data for our graph.
+ 
+```{r m-pointline-1, class.source = 'numberLines lineAnchors'}
+panas <- panas %>%
+  mutate(subculture = factor(subculture, levels = c('Mainstream', 'Emo', 'Goth', 'Metal')))
 na <- panas %>%
   pivot_longer(cols = c(pre_na, post_na),
                names_to = 'pre_post',
                values_to = 'score')
 ```
 
-```{r point}
+### Explanation of commands
+
+Lines 1-2 make `subculture` a factor, and order the factor levels as before, so that our control condition, `Mainstream` will be on the left. The remaining lines convert the negative affect columns to long format, with a factor `pre_post` to identify when the measurement was taken. 
+
+Was negative affect lower in any of the groups after they listened to music? We can represent this by plotting the means and the variance for the two NA measurements. As mentioned in the [More on t-tests](more-on-t.html) worksheet, when comparing two means, the 95% confidence interval is the only thing that is both useful and easy to interpret. So we'll represent the variance using error bars which represent the 95% confidence interval of each mean.
+
+```{r point, class.source = 'numberLines lineAnchors'}
 na %>%
-    ggplot(aes(x=subculture, y=score, colour = pre_post, group = pre_post)) +
-        stat_summary(geom="point", fun=mean, position = position_dodge(width = dodge)) +
-        stat_summary(geom="errorbar", width = dodge, fun.data=mean_cl_boot, position = position_dodge(width = dodge)) +
-      ylab("Negative affect") + xlab("Subculture") +
-    scale_color_grey() + theme_APA +
-  labs(caption = "Bars are 95% confidence intervals of subculture means")
-```
-
-Line 3 adds a caption to let the reader know that the vertical bars represent 95% confidence intervals. 
-
-However, it's more likely that we're interested in the difference in NA before and after listening to the music.
-
-```{r}
-na_diff <- panas %>% mutate(diff = pre_na - post_na)
-na_diff %>%
-    ggplot(aes(x=subculture, y=diff)) +
-        stat_summary(geom="point", fun=mean) +
-        stat_summary(geom="errorbar", width = dodge, fun.data=mean_cl_boot) +
-      ylab("NA difference (pre-post)") + xlab("Subculture") +
-  theme_APA + theme(plot.caption = element_text(size=8)) +
-  labs(caption = "Bars are 95% confidence intervals of mean differences")
-```
-
-
-REMOVE: From Chris
-
-```{r w-pointline-2-2, message=FALSE, class.source = 'numberLines lineAnchors', eval=FALSE}
-within_2x2 <- within_2x2 +
+  ggplot(aes(x=subculture, y=score, colour = pre_post, group = pre_post)) +
+  stat_summary(geom="point", fun=mean, position = position_dodge(width = dodge)) +
   stat_summary(geom="errorbar", width = dodge, fun.data=mean_cl_boot,
-               position = position_dodge(width = dodge))
-within_2x2
+               position = position_dodge(width = dodge)) +
+  ylab("NA") + xlab("Subculture") +
+  scale_color_grey() + theme_APA +
+  labs(caption = "Bars are 95% confidence intervals of within-group means")
 ```
 
 ### Explanation of commands
 
-Line 3 adds the confidence intervals to the plot. Confidence intervals are the same length on either side of the mean. To plot the bars, `ggplot()` needs information about the two sides of the interval. One approach is to write some code to calculate the interval, then pass this data to `ggplot()` to plot the lines. However, we can do this more concisely using `stat_summary()`. The option `fun.data=` is used to specify a function that returns a `y` value, and values `ymax` and `ymin` which specify an interval above and below `y`. We can use the function `mean_cl_boot` to calculate a mean of `y`, and the associated confidence interval in `ymax` and `ymin`for our grouped data. `mean_cl_boot` calculates confidence intervals using [bootstrapping](https://en.wikipedia.org/wiki/Bootstrapping_(statistics)), which improves the interval estimate for data which isn't normally distributed.
+Lines 1-2 plot the mean points, follow the same pattern as the [two factor within subjects plot](w-2x2). Line 3-4 add the confidence intervals to the plot. Confidence intervals are the same length on either side of the mean. To plot the bars, `ggplot()` needs information about the two sides of the interval. One approach is to write some code to calculate the interval, then pass this data to `ggplot()` to plot the lines. However, we can do this more concisely using `stat_summary()`. The option `fun.data=` is used to specify a function that returns a `y` value, and values `ymax` and `ymin` which specify an interval above and below `y`. We use the function `mean_cl_boot` to calculate a mean of `y`, and the associated confidence interval in `ymax` and `ymin`for our grouped data. The confidence interval is calculated for the factor specified by `group=` in line 2, in this case `pre_post`. `mean_cl_boot` calculates confidence intervals using [bootstrapping](https://en.wikipedia.org/wiki/Bootstrapping_(statistics)), which improves the interval estimate for data which isn't normally distributed. Line 8 adds a caption, which is essential to let the reader know what the error bars represent. 
 
+### Explanation of plot
+
+In all groups, NA dropped after listening to music. The non-overlapping confidence intervals for Emo suggest that this is the only group where we'll find evidence that music reduces negative affect.
+
+Were there any differences in the effects of music on NA between groups? We can see this by plotting a difference score.
+
+```{r}
+na_diff <- panas %>% mutate(diff = pre_na - post_na)
+na_diff %>%
+  ggplot(aes(x=subculture, y=diff)) +
+  stat_summary(geom="point", fun=mean) +
+  stat_summary(geom="errorbar", width = dodge, fun.data=mean_cl_boot) +
+  ylab("NA difference") + xlab("Subculture") +
+  labs(caption = "Bars are 95% confidence intervals of pre-post mean difference") +
+  theme_APA
+```
+
+### Explanation of commands
+
+Line 1 calculates the difference in NA after listening to music (`post_na`) by subtracting it from the baseline score (`pre_na`). Line 5 calculates a between groups confidence interval for the difference scores. The remaining lines should now be familiar.
+
+### Explanation of plot
+
+The largest change was in the Emo group, the smallest was in the Metal group. The only difference appears to be between the Mainstream and Emo groups.
 
 See [Masson & Loftus (2003)](http://personal.psu.edu/jxb14/M554/articles/Masson&Loftus2003.pdf) for a more in-depth discussion about calculating and plotting confidence intervals for within subjects, betweeen subjects, and mixed designs.
 
-<a name="exploring"></a>
-
-# Exploring data
-
-In addition to communicating the results of a study, graphs are also useful for visualising data patterns prior to analysis.
-
 <a name="pairs"></a>
-
-# Other plots
 
 ## Pairs plot
 
