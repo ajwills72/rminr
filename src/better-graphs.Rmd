@@ -209,20 +209,19 @@ From this plot, it's clear that: (a) the overall trend is downwards, (b) most bu
 
 ## Two factors
 
-Our next example is from an experiment with two factors. Participants were trained to associate two screen colours with two different food rewards. At test, they saw pairs of screen colours and food pictures. Their reaction time (RT) in milliseconds was measured for identifying whether the pairs matched (congruent), or didn't match (incongruent) the associations they'd learnt previously. This test was carried out with and without a second task, in which the participant had to verbally rate how much they liked pictures of faces. All participants completed all conditions, so we have a fully between subjects design, with factors congruency (congruent, incongruent) and load (load, no load).
+Our next example is from an experiment with two factors. Participants were trained to associate two screen colours with two different food rewards. At test, they saw pairs of screen colours and food pictures. Their reaction time (RT) in milliseconds was measured for identifying whether the pairs matched (congruent), or didn't match (incongruent) the associations they'd learnt previously. This test was carried out with, and without, a secondary task. In the secondary task, the participant had to verbally rate how much they liked pictures of faces. All participants completed all conditions, so we have a fully between subjects design, with factors congruency (congruent, incongruent) and load (load, no load).
 
 We start by loading the data and keeping only the test trials.
 
 ```{r w-pointline-2-preproc, message=FALSE}
 raw <- read_csv('case-studies/chris-mitchell/priming-faces.csv')
 priming <- raw %>%
-   filter(Running == 'Test') %>%
-   group_by(Congruency, Load)
+  filter(Running == 'Test') %>%
+  group_by(Subject, Congruency, Load) %>%
+  summarise(RT = mean(RT, na.rm = TRUE))
 ```
 
 This type of design is one of the most common in cognitive psychology, and there is a standard way to plot this type of data. We use points to represent our sample means for the RT in each of the four conditions.
-
-In this case, error bars are useful. In the [More on t-tests](more-on-t.html) worksheet we mentioned that the 95% confidence interval is the only thing that is both useful and easy to interpret. We will plot 95% confidence intervals because, for a 2x2 within subjects design, they are calculated in such a way that they allow us to make visual comparisons between two conditions, much like a t-test. This will allow us to visually compare the main effects (congruency and load), and their [interaction](anova2.html).
 
 ```{r w-pointline-2-1, message=FALSE, class.source = 'numberLines lineAnchors'}
 dodge <- .1
@@ -244,31 +243,50 @@ Line 3 adds mean points to the plot using `stat_summary()`. `stat_summary()` is 
 
 The warning `Removed 140 rows...` informs us that there are some missing values in the RT column. We'll ignore these messages, as our focus is on plotting the data.
 
-```{r w-pointline-2-2, message=FALSE, class.source = 'numberLines lineAnchors'}
-within_2x2 <- within_2x2 +
-  stat_summary(geom="errorbar", width = dodge, fun.data=mean_cl_boot,
-               position = position_dodge(width = dodge))
-within_2x2
-```
-
-### Explanation of commands
-
-Line 3 adds the confidence intervals to the plot. Confidence intervals are the same length on either side of the mean. To plot the bars, `ggplot()` needs information about the two sides of the interval. One approach is to write some code to calculate the interval, then pass this data to `ggplot()` to plot the lines. However, we can do this more concisely using `stat_summary()`. The option `fun.data=` is used to specify a function that returns a `y` value, and values `ymax` and `ymin` which specify an interval above and below `y`. We can use the function `mean_cl_boot` to calculate a mean of `y`, and the associated confidence interval in `ymax` and `ymin`for our grouped data. `mean_cl_boot` calculates confidence intervals using [bootstrapping](https://en.wikipedia.org/wiki/Bootstrapping_(statistics)), which improves the interval estimate for data which isn't normally distributed.
-
 ```{r w-pointline-2-3, message=FALSE, class.source = 'numberLines lineAnchors'}
 within_2x2 +
   ylab("Mean RT") + xlab("Congruency") +
-  labs(caption = "Bars are 95% mean confidence intervals") +
   scale_color_grey() + theme_APA
 ```
 
 ### Explanation of commands
 
-Line 2 adds meaningful labels to the axes. Line 3 adds a caption to let the reader know that the vertical bars represent 95% confidence intervals. Line 4 converts the colours to a grey pallete, and applies our APA theme.
+Line 2 adds meaningful labels to the axes. Line 3 converts the colours to a grey pallete, and applies our APA theme.
  
 ### Explanation of plot
 
-The black line is well above the grey line, showing that people were slower to respond on trials where they were rating faces. The average of the black and grey points for congruent is about 625ms, and for incongruent about 640ms. This means that RTs were similar, regardless of the congruencey between the colour and food type. The fully overlapping black bars, and partially overlapping grey bars suggest that there was no interaction between load and congruency.
+The black line is well above the grey line, showing that people were slower to respond on trials where they were rating faces. The average of the black and grey points for congruent is about 625ms, and for incongruent about 640ms. This means that RTs were similar, regardless of the congruencey between the screen colour and food picture.
+
+The congruency effect is the difference between incongruent and congruent trials in ms. In this experiment, we're most interested in the size of the congruency effect under load. We can calculate this in a similar way to the example in the [Within-subject differences](anova1.html) worksheet.
+
+```{r w_diffdiff, class.source = 'numberLines lineAnchors'}
+priming_diff <- priming %>%
+  pivot_wider(names_from = c(Congruency, Load), values_from = RT) %>%
+  mutate(diff = (Incongruent_NoLoad - Congruent_NoLoad) -
+           (Incongruent_Load - Congruent_Load))
+```
+
+### Explanation of commands
+
+Lines 1-2 pivot the data into a wide format so we can calculate the 'difference of difference'. For each participatn, lines 3-4 calculate the congruency effect under load `(Incongruent_Load - Congruent_Load)` and no load `(Incongruent_NoLoad - Congruent_NoLoad)`, then subtract the no load difference from the load difference.
+
+Again, we can visualise this using a density plot. The only additional command is `scale_x_continuous(n.breaks = 10)` which puts 10 'ticks' on the x axis, in this case, at every 200 ms.
+
+```{r w_diff_plot}
+priming_diff %>% ggplot(aes(diff)) +
+  geom_density(aes(y=..scaled..)) +
+  scale_x_continuous(n.breaks = 10) +
+  geom_vline(xintercept = 0, colour = 'red') +
+  xlab("Congruency effect: No Load - Load RT (ms)") +
+  labs(caption = "Congruency effect = Incongruent - Congruent") +
+  ylab("Scaled density") +
+  theme_APA
+```
+
+### Explanation of plot
+
+The vertical line allows us to quickly see that the density is about the same 
+either side of zero. In other words, there's no difference in the congruency effect under load. On average, there's no difference between incongruent and congruent trials, regardless of load, although the range is anything from around -400 to +1450 milliseconds.
 
 <a name="between"></a>
 
@@ -383,7 +401,7 @@ The problem is of course, within and between subject variance.
 
 FIXME: error bars for the factor of interest.
 
-This could be what we want to show.
+In this case, error bars are useful. In the [More on t-tests](more-on-t.html) worksheet we mentioned that the 95% confidence interval is the only thing that is both useful and easy to interpret. We will plot 95% confidence intervals because, for a 2x2 within subjects design, they are calculated in such a way that they allow us to make visual comparisons between two conditions, much like a t-test. This will allow us to visually compare the main effects (congruency and load), and their [interaction](anova2.html).
 
 ```{r m-pointline-1, message=FALSE}
 panas <- read_csv('going-further/music-panas.csv')
@@ -404,6 +422,8 @@ na %>%
   labs(caption = "Bars are 95% confidence intervals of subculture means")
 ```
 
+Line 3 adds a caption to let the reader know that the vertical bars represent 95% confidence intervals. 
+
 However, it's more likely that we're interested in the difference in NA before and after listening to the music.
 
 ```{r}
@@ -416,6 +436,21 @@ na_diff %>%
   theme_APA + theme(plot.caption = element_text(size=8)) +
   labs(caption = "Bars are 95% confidence intervals of mean differences")
 ```
+
+
+REMOVE: From Chris
+
+```{r w-pointline-2-2, message=FALSE, class.source = 'numberLines lineAnchors', eval=FALSE}
+within_2x2 <- within_2x2 +
+  stat_summary(geom="errorbar", width = dodge, fun.data=mean_cl_boot,
+               position = position_dodge(width = dodge))
+within_2x2
+```
+
+### Explanation of commands
+
+Line 3 adds the confidence intervals to the plot. Confidence intervals are the same length on either side of the mean. To plot the bars, `ggplot()` needs information about the two sides of the interval. One approach is to write some code to calculate the interval, then pass this data to `ggplot()` to plot the lines. However, we can do this more concisely using `stat_summary()`. The option `fun.data=` is used to specify a function that returns a `y` value, and values `ymax` and `ymin` which specify an interval above and below `y`. We can use the function `mean_cl_boot` to calculate a mean of `y`, and the associated confidence interval in `ymax` and `ymin`for our grouped data. `mean_cl_boot` calculates confidence intervals using [bootstrapping](https://en.wikipedia.org/wiki/Bootstrapping_(statistics)), which improves the interval estimate for data which isn't normally distributed.
+
 
 See [Masson & Loftus (2003)](http://personal.psu.edu/jxb14/M554/articles/Masson&Loftus2003.pdf) for a more in-depth discussion about calculating and plotting confidence intervals for within subjects, betweeen subjects, and mixed designs.
 
