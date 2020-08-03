@@ -455,53 +455,82 @@ summary {
 <a class="sourceLine" id="cb1-3" title="3"></a>
 <a class="sourceLine" id="cb1-4" title="4"><span class="co"># read data</span></a>
 <a class="sourceLine" id="cb1-5" title="5">raw_data &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&#39;case-studies/alison-bacon/raw_data.csv&#39;</span>)</a></code></pre></div>
-<p>Demographic variables were controlled for in this study were age, gender, marital status, education and religious affiliation.</p>
-<p>QUESTION: How were marital status, education and relgious belief re-coded?</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1"><span class="co"># marital status: 1 = married, 2 = unmarried; but range = 1-6</span></a>
-<a class="sourceLine" id="cb2-2" title="2"><span class="co"># marital_status = recode(.$marital_status, `1` = &#39;yes&#39;, `2` = &#39;no&#39;))</span></a>
-<a class="sourceLine" id="cb2-3" title="3"><span class="co"># education: (1 for no high school education, 2 for high school education, 3 for undergraduate level, 4 for postgraduate level); but range = 1-10</span></a>
-<a class="sourceLine" id="cb2-4" title="4"><span class="co"># religious belief (1 for religious and 2 for nonreligious); but range = 0-8</span></a>
-<a class="sourceLine" id="cb2-5" title="5">data &lt;-<span class="st"> </span>raw_data <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb2-6" title="6"><span class="st">   </span><span class="kw">mutate</span>(<span class="dt">gender =</span> <span class="kw">recode</span>(.<span class="op">$</span>gender, <span class="st">`</span><span class="dt">1</span><span class="st">`</span> =<span class="st"> &#39;male&#39;</span>, <span class="st">`</span><span class="dt">2</span><span class="st">`</span> =<span class="st"> &#39;female&#39;</span>))</a></code></pre></div>
-<p><strong>Explanation of commands:</strong></p>
-<p>We clear the workspace, load the <code>tidyverse</code> package, then read the data.</p>
-<p><a name="preproc"></a></p>
-</div>
-<div id="preprocessing" class="section level2">
-<h2>Preprocessing</h2>
 <p>197 participants (93 polish, 104 british) were analysed (exclusions: 10 missing data, 2 no consent) Polish/English.</p>
-<div id="demographics" class="section level3">
-<h3>Demographics</h3>
-</div>
-<div id="trait-emotional-intelligence" class="section level3">
-<h3>Trait Emotional Intelligence</h3>
-<p>The Short Form Trait Emotional Intelligence Questionnaire (TEIQue-SF, Petrides &amp; Furnham, 2006), is a 30-item questionnaire, with items scored from 1-7. It consists of four factors: well-being, self-control, emotionality and sociability.</p>
-<p>“The data obtained from TEIQue-SF was analysed through courtesy of psychometriclab.com”</p>
-</div>
 <div id="religions-orientation" class="section level3">
 <h3>Religions orientation</h3>
+<p>See also: <a href="preproc-scales.html">preprocessing scales</a>, <a href="analyse-scales.html">analysing scales</a>.</p>
+<p>Religious orientation (RO) was treated as either intrinsic or extrinsic. People who are intrinsically religious treat religion as a spiritual end in and of itself. Those who are extrinsically religious practise religion for self-serving reasons, such as social status.</p>
 <p>The amended Religious Orientation Scale (ROS; Maltby &amp; Lewis, 1996), is a 20-item scale, with items scored from 1-3.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1"><span class="co"># score Religious Orientation Scale</span></a>
+<a class="sourceLine" id="cb2-2" title="2"></a>
+<a class="sourceLine" id="cb2-3" title="3"><span class="co">## </span><span class="al">FIXME</span><span class="co">: I: 25, 44, 90 = NA, also NA in O</span></a>
+<a class="sourceLine" id="cb2-4" title="4"></a>
+<a class="sourceLine" id="cb2-5" title="5"><span class="co"># &quot;we would have replaced [NA] with the mean, or with a mid-scale score&quot;</span></a>
+<a class="sourceLine" id="cb2-6" title="6"></a>
+<a class="sourceLine" id="cb2-7" title="7">ro_i &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;RO1&#39;</span>,<span class="st">&#39;RO5&#39;</span>,<span class="st">&#39;RO6&#39;</span>,<span class="st">&#39;RO9&#39;</span>,<span class="st">&#39;RO11&#39;</span>,<span class="st">&#39;RO12&#39;</span>,<span class="st">&#39;RO16&#39;</span>,<span class="st">&#39;RO19&#39;</span>)</a>
+<a class="sourceLine" id="cb2-8" title="8">ro_e &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;RO2&#39;</span>,<span class="st">&#39;RO3&#39;</span>,<span class="st">&#39;RO4&#39;</span>,<span class="st">&#39;RO7&#39;</span>,<span class="st">&#39;RO8&#39;</span>,<span class="st">&#39;RO10&#39;</span>,<span class="st">&#39;RO13&#39;</span>,<span class="st">&#39;RO14&#39;</span>,<span class="st">&#39;RO15&#39;</span>,<span class="st">&#39;RO17&#39;</span>,<span class="st">&#39;RO18&#39;</span>,<span class="st">&#39;RO20&#39;</span>)</a>
+<a class="sourceLine" id="cb2-9" title="9">data &lt;-<span class="st"> </span>raw_data <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb2-10" title="10"><span class="st">  </span><span class="kw">rowwise</span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb2-11" title="11"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">ro_i =</span> <span class="kw">mean</span>(<span class="kw">c_across</span>(<span class="kw">all_of</span>(ro_i)), <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),</a>
+<a class="sourceLine" id="cb2-12" title="12">         <span class="dt">ro_e =</span> <span class="kw">mean</span>(<span class="kw">c_across</span>(<span class="kw">all_of</span>(ro_e))), <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
+<p><strong>Explanation of commands:</strong></p>
 </div>
 <div id="spirituality" class="section level3">
 <h3>Spirituality</h3>
-<p>QUESTION: These are scored 1-7 in the data.</p>
-<p>The Spiritual Connection Questionnaire (SCQ-48; Wheeler and Hyland, 2008) is a 48-item scale, with items scored from -3 (unlike me) to +3 (like me). It has five factors: connection with nature, connection with places, connection with the universe, connection with other people, and the extent to which spirituality brings one happiness.</p>
+<p>Spirituality was measured in terms of connectedness and its link to happiness.</p>
+<p>The Spiritual Connection Questionnaire (SCQ-48; Wheeler and Hyland, 2008) is a 48-item scale, with items scored on a seven point Likert scale. It has five factors: connection with nature, connection with places, connection with the universe, connection with other people, and the extent to which spirituality brings one happiness.</p>
 <p>The total score could be obtained by summing up scores for all the items, after reversing score for negative items (used to avoid acquiescence bias), which comprised half of the statements (24 items).&quot;</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1"><span class="co"># score SCQ-48</span></a>
+<a class="sourceLine" id="cb3-2" title="2">nature    &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;scq32&#39;</span>,<span class="st">&#39;scq8&#39;</span>,<span class="st">&#39;scq17&#39;</span>)</a>
+<a class="sourceLine" id="cb3-3" title="3">places    &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;scq10&#39;</span>,<span class="st">&#39;scq5&#39;</span>,<span class="st">&#39;scq3&#39;</span>,<span class="st">&#39;scq36&#39;</span>,<span class="st">&#39;scq28&#39;</span>)</a>
+<a class="sourceLine" id="cb3-4" title="4">universe  &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;scq47&#39;</span>,<span class="st">&#39;scq45&#39;</span>,<span class="st">&#39;scq22&#39;</span>,<span class="st">&#39;scq33&#39;</span>,<span class="st">&#39;scq21&#39;</span>,<span class="st">&#39;scq37&#39;</span>,<span class="st">&#39;scq25&#39;</span>,</a>
+<a class="sourceLine" id="cb3-5" title="5">               <span class="st">&#39;scq42&#39;</span>,<span class="st">&#39;scq29&#39;</span>,<span class="st">&#39;scq4&#39;</span>,<span class="st">&#39;scq16&#39;</span>,<span class="st">&#39;scq46&#39;</span>,<span class="st">&#39;scq38&#39;</span>,<span class="st">&#39;scq18&#39;</span>,</a>
+<a class="sourceLine" id="cb3-6" title="6">               <span class="st">&#39;scq14&#39;</span>,<span class="st">&#39;scq13&#39;</span>,<span class="st">&#39;scq9&#39;</span>,<span class="st">&#39;scq26&#39;</span>,<span class="st">&#39;scq40&#39;</span>)</a>
+<a class="sourceLine" id="cb3-7" title="7">others    &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;scq41&#39;</span>,<span class="st">&#39;scq11&#39;</span>,<span class="st">&#39;scq48&#39;</span>,<span class="st">&#39;scq19&#39;</span>,<span class="st">&#39;scq15&#39;</span>,<span class="st">&#39;scq30&#39;</span>,<span class="st">&#39;scq34&#39;</span>,</a>
+<a class="sourceLine" id="cb3-8" title="8">               <span class="st">&#39;scq27&#39;</span>,<span class="st">&#39;scq1&#39;</span>,<span class="st">&#39;scq6&#39;</span>,<span class="st">&#39;scq44&#39;</span>,<span class="st">&#39;scq23&#39;</span>)</a>
+<a class="sourceLine" id="cb3-9" title="9">happiness &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;scq43&#39;</span>,<span class="st">&#39;scq35&#39;</span>,<span class="st">&#39;scq39&#39;</span>,<span class="st">&#39;scq31&#39;</span>,<span class="st">&#39;scq7&#39;</span>,<span class="st">&#39;scq12&#39;</span>,<span class="st">&#39;scq20&#39;</span>,</a>
+<a class="sourceLine" id="cb3-10" title="10">               <span class="st">&#39;scq24&#39;</span>,<span class="st">&#39;scq2&#39;</span>)</a>
+<a class="sourceLine" id="cb3-11" title="11"></a>
+<a class="sourceLine" id="cb3-12" title="12">data &lt;-<span class="st"> </span>data <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb3-13" title="13"><span class="st">  </span><span class="kw">rowwise</span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb3-14" title="14"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">happiness =</span> <span class="kw">mean</span>(<span class="kw">c_across</span>(<span class="kw">all_of</span>(happiness)), <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),</a>
+<a class="sourceLine" id="cb3-15" title="15">         <span class="dt">places    =</span> <span class="kw">mean</span>(<span class="kw">c_across</span>(<span class="kw">all_of</span>(places)), <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),</a>
+<a class="sourceLine" id="cb3-16" title="16">         <span class="dt">others    =</span> <span class="kw">mean</span>(<span class="kw">c_across</span>(<span class="kw">all_of</span>(others)), <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),</a>
+<a class="sourceLine" id="cb3-17" title="17">         <span class="dt">nature    =</span> <span class="kw">mean</span>(<span class="kw">c_across</span>(<span class="kw">all_of</span>(nature)), <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),</a>
+<a class="sourceLine" id="cb3-18" title="18">         <span class="dt">universe  =</span> <span class="kw">mean</span>(<span class="kw">c_across</span>(<span class="kw">all_of</span>(universe)), <span class="dt">na.rm =</span> <span class="ot">TRUE</span>))</a></code></pre></div>
+</div>
+<div id="trait-emotional-intelligence" class="section level3">
+<h3>Trait Emotional Intelligence</h3>
+<p>In this study, emotional intelligence (EI) was treated as a trait; a personality factor relating to various aspects of emotions.</p>
+<p>The Short Form Trait Emotional Intelligence Questionnaire (TEIQue-SF, Petrides &amp; Furnham, 2006), is a 30-item questionnaire, with items scored from 1-7. It consists of four factors: well-being, self-control, emotionality and sociability.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1"><span class="co"># score TEIQue-SF</span></a>
+<a class="sourceLine" id="cb4-2" title="2">data &lt;-<span class="st"> </span>data <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb4-3" title="3"><span class="st">  </span><span class="kw">select</span>(subj, age, gender, education, religion,</a>
+<a class="sourceLine" id="cb4-4" title="4">         ro_i, ro_e, happiness, places, others, nature, universe,</a>
+<a class="sourceLine" id="cb4-5" title="5">         tei, wellbeing, self_control, emotionality, sociability)</a></code></pre></div>
 </div>
 </div>
-<div id="correlational-analysis" class="section level2">
-<h2>Correlational analysis</h2>
-<ul>
-<li>t-test: intrinsic_ro ~ nationality</li>
-<li>t-test: extrinsic_ro ~ nationality</li>
-<li>t-test: ei ~ nationality</li>
-<li>t-test: spirituality ~ nationality</li>
-</ul>
-<p>QUESTION: Which of the following correlations? Individual, or as a matrix?</p>
-<p>“In both samples married status correlated with intrinsic orientation, but not with extrinsic orientation. Moreover, in both samples level of education positively correlated with trait EI. Age correlated with measures of intrinsic religious orientation and spirituality in the British sample, but not in Polish (Intrinsic RO r = .25, p &lt; .01, Spirituality r = .22, p &lt; .05). Religious belief correlated with intrinsic and extrinsic religious orientations in both Polish (Intrinsic RO r = .52, p &lt; .01, Extrinsic RO r = .57, p &lt; .01) and British (Intrinsic RO r = .52, p &lt; .01, Extrinsic RO r = .63, p &lt; .01) samples. Interestingly religiousness of British participants, but not the Polish, correlated with total score of spirituality (r = .22, p &lt; .05) suggesting that religious belief of Polish participants does not necessarily coincide with higher sense of spirituality. Moreover, several variables correlated with the main variables, contrary to what Liu (2010) found.”</p>
+<div id="create-religious-binary-factor" class="section level2">
+<h2>Create ‘religious’ binary factor</h2>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1">data &lt;-<span class="st"> </span>data <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">religious =</span> <span class="kw">ifelse</span>(religion <span class="op">==</span><span class="st"> &#39;other or none&#39;</span>, <span class="st">&#39;yes&#39;</span>, <span class="st">&#39;no&#39;</span>)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb5-2" title="2"><span class="st">  </span><span class="kw">select</span>(subj, age, gender, education, religious,</a>
+<a class="sourceLine" id="cb5-3" title="3">         ro_i, ro_e, happiness, places, others, nature, universe,</a>
+<a class="sourceLine" id="cb5-4" title="4">         tei, wellbeing, self_control, emotionality, sociability)</a>
+<a class="sourceLine" id="cb5-5" title="5">missing &lt;-<span class="st"> </span>data <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter_all</span>(<span class="kw">any_vars</span>(<span class="kw">is.na</span>(.)))</a></code></pre></div>
+<div id="demographics" class="section level3">
+<h3>Demographics</h3>
+</div>
+</div>
+<div id="descriptives" class="section level2">
+<h2>Descriptives</h2>
+<p>See also <a href="better-tables.html">better tables</a>.</p>
+<p>“Table of descriptives (mean and SD) for the two groups separately (all SCQ subscales) and t tests to compare the two groups on all measures. They will differ significantly only on the two RO measures with Polish group higher scores in both cases.”</p>
 </div>
 <div id="correlation-matrices-tables-1-2" class="section level2">
 <h2>Correlation matrices (Tables 1 &amp; 2)</h2>
+<p>See also: <a href="better-tables.html">better tables</a></p>
+<p>It should possible to define this as a comparison between two models.</p>
+<p>“Correlations for both groups separately and observe differences”</p>
 <ul>
 <li>Polish: Religious Belief, Intrinsic RO, Extrinsic RO, EI, Spirituality</li>
 <li>British: Religious Belief, Intrinsic RO, Extrinsic RO, EI, Spirituality</li>
@@ -509,33 +538,15 @@ summary {
 </div>
 <div id="correlations-between-spirituality-subdomains-and-religious-orientation" class="section level2">
 <h2>Correlations between spirituality subdomains and religious orientation</h2>
+<p>See also: <a href="better-tables.html">better tables</a></p>
 <ul>
 <li>Custom table (Table 3)</li>
 </ul>
 </div>
 <div id="regression" class="section level2">
 <h2>Regression</h2>
-<ul>
-<li><p>QUESTION: Which research question does this relate to?</p></li>
-<li><p>QUESTION: total EI in model 2?</p></li>
-<li><p>Regresion table of predictors (standardised Beta, t, p/BF) + adjusted R-squared, by nationality, by model</p></li>
-</ul>
-</div>
-<div id="ei" class="section level2">
-<h2>EI</h2>
-<ol style="list-style-type: decimal">
-<li>EI ~ age + gender + marital_status + education + religious_belief</li>
-<li>EI ~ age + gender + marital_status + education + religious_belief + happiness + universe + others + nature + places</li>
-<li>EI ~ age + gender + marital_status + education + religious_belief + happiness + universe + others + nature + places + ro_i + ro_e</li>
-</ol>
-</div>
-<div id="ro_i" class="section level2">
-<h2>RO_i</h2>
-<ol start="2" style="list-style-type: decimal">
-<li>ro_i ~ age + gender + marital_status + education + religious_belief</li>
-<li>ro_i ~ age + gender + marital_status + education + religious_belief + happiness + universe + others + nature + places</li>
-<li>ro_i ~ age + gender + marital_status + education + religious_belief + happiness + universe + others + nature + places + wellbeing + self_control + emotionality + sociability + ro_e</li>
-</ol>
+<p>See also: <a href="more-on-regression.html">more on regression</a>.</p>
+<p>“Regression on TEI total score. If we are not covering moderation, they can do the two groups separately as they will see some differences on the SCQ subscales. Polish H and O are significant, UK H and P are significant. There are cultural differences in things like attitudes to extended family and collectivism which could explain this.”</p>
 </div>
 <div id="references" class="section level2">
 <h2>References</h2>

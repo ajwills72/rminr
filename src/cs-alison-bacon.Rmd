@@ -8,15 +8,8 @@ output:
 
 ```{r setup, include=FALSE}
 ## DEVELOPERS: Uncomment one option, as appropriate
-
-## Data required to knit
-## https://github.com/ajwills72/rminr-data/tree/master/case-studies/jon-may/*.csv
-##
-## I check out rminr-data and make a symbolic link to going-further
-
 ## Show only commands.
 ## knitr::opts_chunk$set(echo = TRUE, message = FALSE, results='hide', fig.keep = 'none', comment=NA)
-
 ## Show commands and output.
 knitr::opts_chunk$set(echo = TRUE, comment=NA, cache = TRUE)
 library(pander)
@@ -53,6 +46,11 @@ Next, create a new, empty R script and save it in the `rminr-data` folder as `cs
 
 We start by loading the data.
 
+```{r data-note, echo=FALSE, eval=FALSE}
+# All data _except* TEI came from Alison, as she needed to adjust education and religion levels.
+# TEI data came from Dawid, as Alison's data did not exclude subscale scores.
+```
+
 ```{r excel, message=FALSE}
 rm(list = ls()) # clear the environment
 library(tidyverse)
@@ -61,137 +59,116 @@ library(tidyverse)
 raw_data <- read_csv('case-studies/alison-bacon/raw_data.csv')
 ```
 
-Demographic variables were controlled for in this study were age, gender,
-marital status, education and religious affiliation.
+197 participants (93 polish, 104 british) were analysed (exclusions: 10 missing data, 2 no consent) Polish/English.
 
-QUESTION: How were marital status, education and relgious belief re-coded?
+### Religions orientation
 
-```{r prepreproc}
-# marital status: 1 = married, 2 = unmarried; but range = 1-6
-# marital_status = recode(.$marital_status, `1` = 'yes', `2` = 'no'))
-# education: (1 for no high school education, 2 for high school education, 3 for undergraduate level, 4 for postgraduate level); but range = 1-10
-# religious belief (1 for religious and 2 for nonreligious); but range = 0-8
+See also: [preprocessing scales](preproc-scales.html), [analysing scales](analyse-scales.html).
+
+Religious orientation (RO) was treated as either intrinsic or extrinsic. People who are intrinsically religious treat religion as a spiritual end in and of itself. Those who are extrinsically religious practise religion for self-serving reasons, such as social status. 
+ 
+The amended Religious Orientation Scale (ROS; Maltby & Lewis, 1996), is a 20-item scale, with items scored from 1-3.
+
+```{r ro}
+# score Religious Orientation Scale
+
+## FIXME: I: 25, 44, 90 = NA, also NA in O
+
+# "we would have replaced [NA] with the mean, or with a mid-scale score"
+
+ro_i <- c('RO1','RO5','RO6','RO9','RO11','RO12','RO16','RO19')
+ro_e <- c('RO2','RO3','RO4','RO7','RO8','RO10','RO13','RO14','RO15','RO17','RO18','RO20')
 data <- raw_data %>%
-   mutate(gender = recode(.$gender, `1` = 'male', `2` = 'female'))
+  rowwise() %>%
+  mutate(ro_i = mean(c_across(all_of(ro_i)), na.rm = TRUE),
+         ro_e = mean(c_across(all_of(ro_e))), na.rm = TRUE)
 ```
 
 **Explanation of commands:**
 
-We clear the workspace, load the `tidyverse` package, then read the data.
-
-<a name="preproc"></a>
-
-## Preprocessing
-
-197 participants (93 polish, 104 british) were analysed (exclusions: 10 missing data, 2 no consent) Polish/English.
-
-### Demographics
-
-### Trait Emotional Intelligence
-
-The Short Form Trait Emotional Intelligence Questionnaire (TEIQue-SF, Petrides & Furnham, 2006), is a 30-item questionnaire, with items scored from 1-7. It consists of four factors: well-being, self-control, emotionality and sociability.
-
-"The data obtained from TEIQue-SF was analysed through courtesy of psychometriclab.com"
-
-QUESTION: How to score scale
-QUESTION: Which items (if any) need to be reversed.
-
-### Religions orientation
-
-The amended Religious Orientation Scale (ROS; Maltby & Lewis, 1996), is a 20-item scale, with items scored from 1-3.
-
-QUESTION: How to score scale
-QUESTION: Which items (if any) need to be reversed.
-
 ### Spirituality
 
-QUESTION: How to score scale
-QUESTION: These are scored 1-7 in the data.
-QUESTION: Which items (if any) need to be reversed.
+Spirituality was measured in terms of connectedness and its link to happiness. 
 
-The Spiritual Connection Questionnaire (SCQ-48; Wheeler and Hyland, 2008) is a 48-item scale, with items scored from -3 (unlike me) to +3 (like me). It has five factors: connection with nature, connection with places, connection with the universe, connection with other people, and the extent to which spirituality brings one happiness. 
+The Spiritual Connection Questionnaire (SCQ-48; Wheeler and Hyland, 2008) is a 48-item scale, with items scored on a seven point Likert scale. It has five factors: connection with nature, connection with places, connection with the universe, connection with other people, and the extent to which spirituality brings one happiness. 
 
 The total score could be obtained by summing up scores for all the items, after reversing score for negative items (used to avoid acquiescence bias), which comprised half of the statements (24 items)."
 
-## Correlational analysis
+```{r scq48}
+# score SCQ-48
+nature    <- c('scq32','scq8','scq17')
+places    <- c('scq10','scq5','scq3','scq36','scq28')
+universe  <- c('scq47','scq45','scq22','scq33','scq21','scq37','scq25',
+               'scq42','scq29','scq4','scq16','scq46','scq38','scq18',
+               'scq14','scq13','scq9','scq26','scq40')
+others    <- c('scq41','scq11','scq48','scq19','scq15','scq30','scq34',
+               'scq27','scq1','scq6','scq44','scq23')
+happiness <- c('scq43','scq35','scq39','scq31','scq7','scq12','scq20',
+               'scq24','scq2')
 
-* t-test: intrinsic_ro ~ nationality
-* t-test: extrinsic_ro ~ nationality
-* t-test: ei ~ nationality
-* t-test: spirituality ~ nationality
+data <- data %>%
+  rowwise() %>%
+  mutate(happiness = mean(c_across(all_of(happiness)), na.rm = TRUE),
+         places    = mean(c_across(all_of(places)), na.rm = TRUE),
+         others    = mean(c_across(all_of(others)), na.rm = TRUE),
+         nature    = mean(c_across(all_of(nature)), na.rm = TRUE),
+         universe  = mean(c_across(all_of(universe)), na.rm = TRUE))
+```
 
-QUESTION: Which of the following correlations? Individual, or as a matrix?
+### Trait Emotional Intelligence
 
-"In both samples married status correlated with intrinsic orientation, but not with extrinsic
-orientation. Moreover, in both samples level of education positively correlated with
-trait EI. Age correlated with measures of intrinsic religious orientation and spirituality
-in the British sample, but not in Polish (Intrinsic RO r = .25, p < .01, Spirituality r = .22, p < .05). Religious belief correlated with intrinsic and extrinsic religious orientations in both Polish (Intrinsic RO r = .52, p < .01, Extrinsic RO r = .57, p < .01) and British (Intrinsic RO r = .52, p < .01, Extrinsic RO r = .63, p < .01) samples. Interestingly religiousness of British participants, but not the Polish, correlated with total score of spirituality (r = .22, p < .05) suggesting that religious belief of Polish participants does not necessarily coincide with higher sense of spirituality. Moreover, several variables correlated with the main variables, contrary to what Liu (2010) found."
+In this study, emotional intelligence (EI) was treated as a trait; a personality factor relating to various aspects of emotions.
+
+The Short Form Trait Emotional Intelligence Questionnaire (TEIQue-SF, Petrides & Furnham, 2006), is a 30-item questionnaire, with items scored from 1-7. It consists of four factors: well-being, self-control, emotionality and sociability.
+
+```{r tei}
+# score TEIQue-SF
+data <- data %>%
+  select(subj, age, gender, education, religion,
+         ro_i, ro_e, happiness, places, others, nature, universe,
+         tei, wellbeing, self_control, emotionality, sociability)
+```
+
+## Create 'religious' binary factor
+
+```{r}
+data <- data %>% mutate(religious = ifelse(religion == 'other or none', 'yes', 'no')) %>%
+  select(subj, age, gender, education, religious,
+         ro_i, ro_e, happiness, places, others, nature, universe,
+         tei, wellbeing, self_control, emotionality, sociability)
+missing <- data %>% filter_all(any_vars(is.na(.)))
+```
+
+### Demographics
+
+## Descriptives
+
+See also [better tables](better-tables.html).
+
+"Table of descriptives (mean and SD) for the two groups separately (all SCQ subscales) and t tests to compare the two groups on all measures. They will differ significantly only on the two RO measures with Polish group higher scores in both cases."
 
 ## Correlation matrices (Tables 1 & 2)
 
+See also: [better tables](better-tables.html)
+
+It should possible to define this as a comparison between two models.
+
+"Correlations for both groups separately and observe differences"
+      
 * Polish: Religious Belief, Intrinsic RO, Extrinsic RO, EI, Spirituality
 * British: Religious Belief, Intrinsic RO, Extrinsic RO, EI, Spirituality
 
 ##  Correlations between spirituality subdomains and religious orientation
 
+See also: [better tables](better-tables.html)
+
 * Custom table (Table 3)
 
 ## Regression
 
-```{r, eval=FALSE}
-library(BayesFactor)
-data(attitude)
+See also: [more on regression](more-on-regression.html).
 
-## Classical regression
-summary(fm1 <- lm(rating ~ ., data = attitude))
-
-## Compute Bayes factors for all regression models
-output = regressionBF(rating ~ ., data = attitude, progress=FALSE)
-output
-
-## Best model is 'complaints' only
-
-## Compute all Bayes factors against the full model, and
-## look again at best models
-head(output / output[63])
-
-# I think equivalent BF to p value is the full.model / model.without.predictor
-
-# complaints
-output[63] / output[62]
-# privileges
-output[63] / output[61]
-# learning
-output[63] / output[60]
-
-# m1 <- lmBF(rating ~ complaints, data = attitude)
-# m2 <- lmBF(rating ~ privileges, data = attitude)
-# all <- c(m1, m2)
-# all
-```
-"The anovaBF and regressionBF functions are convenience functions designed to test several hypotheses of a particular type at once. Neither function allows the mixing of continuous and categorical covariates. If it is desired to test a model including both kinds of covariates, lmBF function must be used."
-
-
-* QUESTION: Which research question does this relate to?
-* QUESTION: total EI in model 2?
-
-* Regresion table of predictors (standardised Beta, t, p/BF) + adjusted R-squared, by nationality, by model
-
-## EI
-
-1. EI ~ age + gender + marital_status + education + religious_belief
-1. EI ~ age + gender + marital_status + education + religious_belief + happiness + universe + others + nature + places
-1. EI ~ age + gender + marital_status + education + religious_belief + happiness + universe + others + nature + places + ro_i + ro_e
-
-```{r, eval=FALSE}
-ei1 <- lmBF(ei ~ age + gender + marital_status + education + religious_belief, data = foo)
-ei1
-
-## RO_i
-
-2. ro_i ~ age + gender + marital_status + education + religious_belief
-2. ro_i ~ age + gender + marital_status + education + religious_belief + happiness + universe + others + nature + places
-2. ro_i ~ age + gender + marital_status + education + religious_belief + happiness + universe + others + nature + places + wellbeing + self_control + emotionality + sociability + ro_e
+"Regression on TEI total score. If we are not covering moderation, they can do the two groups separately as they will see some differences on the SCQ subscales. Polish H and O are significant, UK H and P are significant. There are cultural differences in things like attitudes to extended family and collectivism which could explain this."
 
 ## References
 
