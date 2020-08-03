@@ -99,7 +99,7 @@ Religious orientation (RO) was was measured with the amended Religious Orientati
 
 ### Spirituality
 
-Spirituality was measured with the Spiritual Connection Questionnaire (SCQ). The SCQ has five subscales: connection with nature, connection with places, connection with the universe, connection with other people, and .
+Spirituality was measured with the Spiritual Connection Questionnaire (SCQ). The SCQ has five subscales: 
 
 | Column | Description                                                            | Values |
 | ------ | ---------------------------------------------------------------------- | ------ |
