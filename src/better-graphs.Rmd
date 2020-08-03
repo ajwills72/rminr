@@ -1,6 +1,6 @@
 ---
 title: "Better graphs"
-author: "Andy Wills, Paul Sharpe"
+author: "Paul Sharpe, Andy Wills"
 output:
   html_document:
     highlight: pygment
@@ -141,15 +141,15 @@ A file called _fig1.pdf_ will have appeared in your _Files_ window in RStudio. Y
 
 # Choosing a graph for your data
 
-A graph should visually describe patterns in data that would otherwise be difficult to communicate. Choosing and configuring the most appropriate graph for you data, will depend on what you want to communicate to your reader. In practice, making this decision often involves trying out different types of graph, and the elements used to build them. You might generate new ideas for graphs after you have analysed you data and begun to interpret the results.
+A graph should visually describe patterns in data that would otherwise be difficult to communicate. Choosing and configuring the most appropriate graph for you data will depend on what you want to communicate to your reader. In practice, making this decision often involves trying out different types of graph, and the elements used to build them. You might generate new ideas for graphs after you have analysed your data and begun to interpret the results.
 
 These subjective aspects make it difficult to provide hard and fast rules for the type of plot you should choose, and the elements that it should contain. A general piece of advice is to carefully consider the best way to represent the centre (often the mean), and distribution of your data. We present some suggestions for plotting different types of data in the following sections.
 
-As a side note, a common criticism of student projects is that results sections don't include a graph, and appendices often contain lots of graphs which don't really contribute to the report. You can overcome this by learning to experiment with different with different ways of plotting your data. When you've found a graph that contributes to the argument you're trying to make, be confident and include it in your results section!
+As a side note, a common criticism of student projects is that results sections don't include a graph, and appendices often contain lots of graphs which don't really contribute to the report. You can overcome this by learning to experiment with different ways of plotting your data. When you've found a graph that contributes to the argument you're trying to make, be confident and include it in your results section!
 
 <a name="within"></a>
 
-# Within participants data
+# Within-participants data
 
 We'll start by producing some graphs for within participants data.
 
