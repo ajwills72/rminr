@@ -37,9 +37,9 @@ library(pander)
 
 # Introduction
 
-In this worksheet, we'll look at how to produce publication-quality graphs in R. We start with an example from a previous worksheet.
+In this worksheet, we'll look at how to produce publication-quality graphs in R. We start with an example from a previous worksheet. 
 
-In the [within-subject differences](anova1.html#densediff) worksheet, we produced a density plot of the within-subject differences in reaction time for congruent versus incongruent trials
+In the exercise for the [within-subject differences](anova1.html#densediff) worksheet, we produced a density plot of the within-subject differences in reaction time for congruent versus incongruent trials. Let's pick up where we left off. Go back to your `rminr-data` project, and open up the R file you used for this exercise. If you didn't complete that exercise, or can't find the file, you can get a copy [here](densediff.R)
 
 ```{r init, message=FALSE, echo=FALSE}
 rm(list = ls()) # clear the environment
@@ -51,6 +51,8 @@ wordctrlCIsum <- wordctrlCI %>% group_by(subj, congru) %>% summarise(rt = mean(r
 ctrl <- wordctrlCIsum %>% pivot_wider(names_from = congru, values_from = rt)
 ctrldiff <- ctrl %>% mutate(diff = incong - cong)
 ```
+
+After some preprocessing, the graphing command we used in that exercise was:
 
 ```{r graph}
 ctrldiff %>% ggplot(aes(diff)) +
