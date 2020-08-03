@@ -160,7 +160,7 @@ It should possible to define this as a comparison between two models.
 
 ##  Correlations between spirituality subdomains and religious orientation
 
-See also: [better tables](better-tables.html#cor-matrix)
+See also: [better tables](better-tables.html#descriptives)
 
 * Custom table (Table 3)
 
