@@ -6,11 +6,6 @@ output: html_document
 
 ```{r setup, include=FALSE}
 ## DEVELOPERS: Uncomment one option, as appropriate
-
-## Data required to knit
-##
-## I check out rminr-data and make a symbolic link to going-further
-
 ## Show only commands.
 ## knitr::opts_chunk$set(echo = TRUE, message = FALSE, results='hide', fig.keep = 'none', comment=NA)
 
@@ -23,11 +18,9 @@ options(tibble.width = Inf) # show all columns in output
 
 <a name="intro"></a>
 
-# Before you start...
+## Before you start
 
-The techniques used in this processing pipeline are described in more detail in the following worksheets:
-
-- [Preprocessing scales](preproc-scales.html)
+This is an advanced worksheet, which assumes you have completed the [Absolute Beginners' Guide to R](https://ajwills72.github.io/rminr/#beginners) course, the [Research Methods in Practice (Quantitative section)](https://benwhalley.github.io/rmip/overview-quantitative.html) course, and the [Intermediate Guide to R](https://ajwills72.github.io/rminr/#rmip) course.
 
 # Introduction
 
@@ -70,7 +63,7 @@ TODO: Calculate low, medium, high SES categories
 
 # Compare SES levels against anxiety, stress and depression
 
-```{r anova-anxiety}
+```{r anova-anxiety, message=FALSE}
 library(BayesFactor, quietly = TRUE)
 # FIXME: can't use subj as random factor as only 1 observation per subj
 # Error in base::try(expression, silent = silent) : not enough observations
@@ -125,8 +118,6 @@ bf
 * depression ~ anxiety
 * depression ~ stress
 * anxiety ~ stress
-
-# Table 2: top 10 experiences that participants believed had impacted their feelings of depression, anxiety and stress
 
 ___
 
