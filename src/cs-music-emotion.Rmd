@@ -68,6 +68,8 @@ Line 1 clears the environment. Line 2 loads `tidyverse`. Line 3 loads the data i
 
 ## Excluding data by subject number
 
+See also: [excluding participants](preproc-experiments.html#exclude)
+
 In this study, the researcher excluded participants they considered to be extreme outliers, and those with incomplete data.
 
 ```{r exclude, class.source = 'numberLines lineAnchors'}
@@ -95,7 +97,7 @@ include %>% head(3) %>% pander(split.table = Inf)
 
 ## Score PANAS-SF
 
-These scores matched those in the data, so presumably I scored the PANAS-SF correctly.
+See also: [preprocessing scales](preproc-scales.html), [analysing scales](analyse-scales.html).
 
 ```{r score-panas}
 panas <- include %>%
@@ -141,17 +143,23 @@ ers <- include %>%
 
 ### Explanation of commands
 
-
-
 ## TODO: Tables: for each emotion,PA,NA: mean(sd), time*subculture (Appendix 2)
 
+See also: [better tables](better-tables.html)
+
 ## TODO: 3 ANOVA plots: : PANAS ~ subculture(4)*time(2) (Appendices 6-8)
+
+See also: [better graphs](better-graphs.html)
 
 QUESTION: How are "estimated marginal means" calculated?
 
 ## TODO: 3 mixed ANOVAs: PANAS ~ subculture(4)*time(2)
 
-### Inverse transform NA
+See also: [factorial ANOVA](anova3.html)
+
+### Reciprocal transform NA
+
+See also: [reciprocal transform](preproc-experiments.html#ex1)
 
 ## ERS summary statistics
 
@@ -171,6 +179,7 @@ library(BayesFactor)
 ers_total <- ers_l %>% filter(ers == 'total') %>% drop_na()
 anovaBF(formula = score ~ subculture, data = ers_total)
 ```
+
 ### Explanation of commands
 
 ### Explanation of output
