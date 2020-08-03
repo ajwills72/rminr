@@ -246,19 +246,23 @@ Lines 1-3 build a Bayesian regression model with the demographic and spiritualit
 
 The Bayes Factor for this hypothesis is over 30 million, so we can confidently claim that a model containing these spirituality variables explains more variance in intrinsic religiosity, than a simpler model with just demographics variables.
 
-In this study, the researchers also hypothesized that trait emotional intelligence and extrinsic religiosity would further explain the variance in intrinsic religiosity. These variables were entered together as a block.
 
-```{r oi3, class.source = 'numberLines lineAnchors', warning=FALSE}
-oi_lm3 <- lm(ro_i ~ age + sex + education + religious +
+### Adding yet more variables
+
+In this study, the researchers also hypothesized that trait emotional intelligence and extrinsic religiosity would further explain the variance in intrinsic religiosity. These variables were all added to the third model:
+
+```{r oi3, warning=FALSE}
+oi_lm3 <- lm(ro_i ~ age + sex + edu_sc + religious +
                happiness + universe + others + nature + places +
                wellbeing + self_control + emotionality + sociability + ro_e,
              data = polish)
+oi_lm3
 glance(oi_lm3)
 ```
 
 **Explanation of commands:**
 
-Lines 1-4 build our third model. This contains all of the variables in `oi_lmbf2`, and adds the emotional intelligence variables `wellbeing + self_control + emotionality + sociability`, and `ro_e` for extrinsic religiosity.
+Lines 1-4 builds our third model. This contains all of the variables in `oi_lmbf2`, and adds the emotional intelligence variables `wellbeing + self_control + emotionality + sociability`, and `ro_e` for extrinsic religiosity. Line 5 shows the best fitting line, and Line 6 gives us the $R^2$ value.
 
 **Explanation of output:**
 
@@ -268,10 +272,11 @@ r_squared3 <- round(glance(oi_lm3)$adj.r.squared, 2)
 
 For this model, `adj.r.squared` = `r r_squared3`, which means it explains `r r_squared3 * 100`% of the variance in intrinsic religious orientation, an increase of `r (r_squared3 - r_squared2) * 100`% over the model from step 2.
 
+
 Finally, we compare the Bayesian model, with the one from step 2.
 
-```{r oi3-bf, class.source = 'numberLines lineAnchors', warning=FALSE}
-oi_lmbf3 <- lmBF(ro_i ~ age + sex + education + religious +
+```{r oi3-bf, warning=FALSE}
+oi_lmbf3 <- lmBF(ro_i ~ age + sex + edu_sc + religious +
                happiness + universe + others + nature + places +
                wellbeing + self_control + emotionality + sociability + ro_e,
                data = data.frame(polish))
@@ -280,13 +285,13 @@ oi_lmbf3 / oi_lmbf2
 
 **Explanation of commands:**
 
-Lines 1-4 build the same Bayesian model. Line 5 compares this new model against the previous one.
+Lines 1-4 build the Bayesian model. Line 5 compares this new model against the previous one.
 
 **Explanation of output:**
 
-The Bayes Factor for this hypothesis is over 11,000, which is strong evidence that a model with the additional variables explains more variance than the simpler model in step 2.
+The Bayes Factor for this hypothesis is over 3,000, which is strong evidence that a model with the additional variables explains more variance than the simpler model in step 2.
 
-### A note about 'overfitting'
+### A note about overfitting
 
 All of the regression models we've been creating and comparing were built based on the data from our sample. However, we're normally looking for a model that will predict outcomes for _any_ sample. Adding variables to a model can explain more variance in a particular sample, at the expense of being able to explain data in other samples. This is known as [overfitting](https://en.wikipedia.org/wiki/Overfitting). As a general principle, we can reduce the risk of overfitting by preferring a simpler model over a more complex one, when adding variables doesn't increase _R^2^_ by much. Other methods, such as [cross-validation](https://en.wikipedia.org/wiki/Cross-validation_(statistics)), provide more precise tests of overfitting, but these are outside the scope of this worksheet.
 
