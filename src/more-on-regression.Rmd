@@ -91,7 +91,7 @@ data <- data %>% mutate(edu_sc = recode(education, !!!edu_map))
 
 We now turn to the three scales that the participants completed. In the the data we loaded, the scale scores have already been calculated. In practice, you would need to calculate the scores for each scale from the raw data. This is explained in the [Preprocessing scales worksheet](preproc-scales.html).
 
-##### Religions Orientation
+##### Religious Orientation
  
 Religious orientation (RO) was was measured with the amended Religious Orientation Scale (ROS). According to the ROS, people who are intrinsically religious treat religion as a spiritual end in and of itself. Those who are extrinsically religious practise religion for self-serving reasons, such as social status. Therefore, the ROS has two subscales. 
 
