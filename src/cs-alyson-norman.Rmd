@@ -8,7 +8,6 @@ output: html_document
 ## DEVELOPERS: Uncomment one option, as appropriate
 ## Show only commands.
 ## knitr::opts_chunk$set(echo = TRUE, message = FALSE, results='hide', fig.keep = 'none', comment=NA)
-
 ## Show commands and output.
 knitr::opts_chunk$set(echo = TRUE, comment=NA, cache = TRUE)
 options(tibble.width = Inf) # show all columns in output
@@ -30,9 +29,9 @@ This is an advanced worksheet, which assumes you have completed the [Absolute Be
 
 Open the `rminr-data` project we used [previously](preproc.html#load).
 
-Ensure you have the latest files by asking git to "`pull`" the repository. Select the `Git` tab, which is located in the row of tabs which includes the `Environment` tab. Click the `Pull` button with a downward pointing arrow. A window will open showing the files which have been pulled from the repository. Close the `Git pull` window. The `case-studies` folder should contain a folder named `alison-norman`.
+Ensure you have the latest files by asking git to "`pull`" the repository. Select the `Git` tab, which is located in the row of tabs which includes the `Environment` tab. Click the `Pull` button with a downward pointing arrow. A window will open showing the files which have been pulled from the repository. Close the `Git pull` window. The `case-studies` folder should contain a folder named `alyson-norman`.
 
-Next, create a new, empty R script and save it in the `rminr-data` folder as `cs-alison-norman.R`. Put all the commands from this worksheet into this file, and run them from there. Save your script regularly.
+Next, create a new, empty R script and save it in the `rminr-data` folder as `cs-alyson-norman.R`. Put all the commands from this worksheet into this file, and run them from there. Save your script regularly.
 
 ```{r init-load, message=FALSE}
 rm(list = ls()) # clear the environment
@@ -46,7 +45,7 @@ library(tidyverse)
 See also: [preprocessing scales](preproc-scales.html), [analysing scales](analyse-scales.html).
 
 ```{r preprocess-sses-pre}
-data <- read_csv('case-studies/alison-norman/ses-dass.csv') %>%
+data <- read_csv('case-studies/alyson-norman/ses-dass.csv') %>%
   set_names(~ str_to_lower(.) %>%
               str_replace_all('overall_', '')) %>%
   mutate(ses = factor(ses), ses_category = factor(ses_category),
