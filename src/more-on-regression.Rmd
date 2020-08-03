@@ -128,11 +128,11 @@ In this study, emotional intelligence was treated as a trait; a personality fact
 
 The linear model you built in [the multiple regression worksheet](https://benwhalley.github.io/rmip/multiple-regression.html) worksheet used two predictors. It's straightforward to add additional predictors to a model. We'll start with a model which predicts intrinsic religious orientation from the demographics variables in our Polish sample.
 
-```{r oi1, class.source = 'numberLines lineAnchors', warning=FALSE}
+```{r oi1, class.source = 'numberLines lineAnchors'}
 polish <- data %>% filter(nationality == 'Polish')
-polish <- polish %>% drop_na() %>% as.data.frame()
+polish <- polish %>% drop_na()
 
-oi_lm1 <- lm(ro_i ~ age + sex + education + religious, data = data.frame(polish))
+oi_lm1 <- lm(ro_i ~ age + sex + education + religious, data = polish)
 library(broom)
 glance(oi_lm1)
 ```
@@ -153,10 +153,9 @@ As explained in previous worksheets, the value of `r r_squared1` in `adj.r.squar
 
 [The multiple regression worksheet](https://benwhalley.github.io/rmip/how-good-was-our-model.html) also showed you how to calculate a Bayes factor to decide whether a regression model is any better than a simpler model with no predictors.
 
-```{r oi1-bf, class.source = 'numberLines lineAnchors', warning=FALSE}
+```{r oi1-bf, class.source = 'numberLines lineAnchors', message=FALSE}
 library(BayesFactor, quietly = TRUE)
-oi_lmbf1 <- lmBF(ro_i ~ age + sex + education + religious, data = data.frame(polish),
-                 progress = FALSE)
+oi_lmbf1 <- lmBF(ro_i ~ age + sex + education + religious, data = data.frame(polish))
 oi_lmbf1
 ```
 
@@ -183,7 +182,7 @@ We can test this hypothesis by extending the demographics model to include the s
 ```{r oi2, class.source = 'numberLines lineAnchors', warning=FALSE}
 oi_lm2 <- lm(ro_i ~ age + sex + education + religious +
                happiness + universe + others + nature + places,
-             data = data.frame(polish))
+             data = polish)
 glance(oi_lm2)
 ```
 
@@ -204,7 +203,7 @@ In the previous step, we found that a model with demographics predictors was bet
 ```{r oi2-bf, class.source = 'numberLines lineAnchors', warning=FALSE}
 oi_lmbf2 <- lmBF(ro_i ~ age + sex + education + religious +
                happiness + universe + others + nature + places,
-               data = data.frame(polish), progress = FALSE)
+               data = data.frame(polish))
 oi_lmbf2 / oi_lmbf1
 ```
 
@@ -222,7 +221,7 @@ In this study, the researchers also hypothesised that trait emotional intelligen
 oi_lm3 <- lm(ro_i ~ age + sex + education + religious +
                happiness + universe + others + nature + places +
                wellbeing + self_control + emotionality + sociability + ro_e,
-             data = data.frame(polish))
+             data = polish)
 glance(oi_lm3)
 ```
 
@@ -244,7 +243,7 @@ Finally, we compare the Bayesian model, with the one from step 2.
 oi_lmbf3 <- lmBF(ro_i ~ age + sex + education + religious +
                happiness + universe + others + nature + places +
                wellbeing + self_control + emotionality + sociability + ro_e,
-               data = data.frame(polish), progress = FALSE)
+               data = data.frame(polish))
 oi_lmbf3 / oi_lmbf2
 ```
 
