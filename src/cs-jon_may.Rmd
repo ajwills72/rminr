@@ -180,6 +180,8 @@ Contrary to the first hypothesis, there is no evidence for a positive correlatio
 
 ## Correlation matrix: other personality factors and problems solved
 
+Correlation matrices are covered in the [Better tables](better-tables.html#cor-matrix) worksheet.
+
 ```{r cor-matrix, R.options = list(width = 10000)}
 library(apaTables)
 apa.cor.table(data %>% select(conscientiousness:problems), filename='table1.doc', table.number = 1)
@@ -198,7 +200,9 @@ TODO: one-tailed
 
 TODO: one-tailed
 
-## Correlation plot
+## Pairs plot
+
+Pairs plots are are covered in the [Better graphs](better-graphs.html#pairs) worksheet.
 
 ```{r pairs, class.source = 'numberLines lineAnchors', message=FALSE}
 library(GGally)
