@@ -1,7 +1,9 @@
 ---
 title: "Links between openness to experience, imagery and creative problem solving"
 author: "Jon May, Jessica Hart, Paul Sharpe and Andy Wills"
-output: html_document
+output:
+  html_document:
+    highlight: pygment
 ---
 
 ```{r setup, include=FALSE}
@@ -132,17 +134,15 @@ data <- full_join(ocean.scales, solved, by = 'subj') %>%
 
 ## Histogram and curve showing distribution of problem scores (n=48)
 
-NOTE: This looks like it's addressing H1
-
 https://stackoverflow.com/questions/6967664/ggplot2-histogram-with-normal-curve
 
 ```{r}
-n_obs = sum(!is.na(solved$problems))
+n_obs = sum(!is.na(data$problems))
 bw = 1
-mean <- mean(solved$problems)
-sd <- sd(solved$problems)
+mean <- mean(data$problems)
+sd <- sd(data$problems)
 
-solved %>% ggplot(aes(problems))  + 
+data %>% ggplot(aes(problems))  + 
   geom_histogram(colour = "black", binwidth = bw) + 
   stat_function(fun = function(x) 
     dnorm(x, mean = mean, sd = sd) * bw * n_obs) +
@@ -157,10 +157,7 @@ You learnt how to create a scatterplot and a best fit line in the [regression wo
 
 ## Correlation between openness and problems solved
 
-"the researchers predicted that participants with more open personality types would be better at solving a selection of problems requiring creative solutions" positive correlation.
-Correlations with directional hypotheses.
-
-One-tailed correlations were covered in [More on relationships, part 2.](#corr-extended.html)
+The researchers predicted that participants with more open personality types would be better at solving the problems. In other words, we should expect a positive correlation between openness and problem solving. We test a directional hypothesis with a one-tailed correlation. See the [More on relationships, part 2.](#corr-extended.html) worksheet for more details.
 
 ```{r}
 cor_o_problems <- cor.test(data$problems, data$openness, alternative='greater')
@@ -183,6 +180,8 @@ Contrary to the first hypothesis, there is no evidence for a positive correlatio
 
 ## Correlation matrix: other personality factors and problems solved
 
+Correlation matrices are covered in the [Better tables](better-tables.html#cor-matrix) worksheet.
+
 ```{r cor-matrix, R.options = list(width = 10000)}
 library(apaTables)
 apa.cor.table(data %>% select(conscientiousness:problems), filename='table1.doc', table.number = 1)
@@ -190,41 +189,28 @@ apa.cor.table(data %>% select(conscientiousness:problems), filename='table1.doc'
 
 **Explanation of output:**
 
-Just comment on (lack of) correlations between personality factors and problems?
+There were no correlations between the other four personality factors and problem solving. Note that these are 2-tailed correlations, as it's not possible to specify 1-tailed tests with `apa.cor.table()`.
 
-Note that these are 2-tailed correlations, you can't do 1-tailed with this.
-
-NOTE: H3
 
 ## Correlation between problems solved and flexible thinking
 
-one-tailed
-
-* cor.test(foo$problems, foo$ftt), correlationBF(foo$problems, foo$ftt)
-
-NOTE: H2
+TODO: one-tailed
 
 ## Correlation between problems solved and vividness
 
-one-tailed
+TODO: one-tailed
 
-* cor.test(foo$problems, foo$psiq), correlationBF(foo$problems, foo$psiq)
+## Pairs plot
 
-## Correlation plot (Fig. 3)
+Pairs plots are are covered in the [Better graphs](better-graphs.html#pairs) worksheet.
 
-* PsiQ total, Openness, problem scores, FTT
-
-```{r}
+```{r pairs, class.source = 'numberLines lineAnchors', message=FALSE}
 library(GGally)
-library(ggplot2)
-lowerFn <- function(data, mapping, ...) {
-   ggplot(data = data, mapping = mapping) +
-      geom_point(size=1) +
-      geom_smooth(color = 'black', method='lm', size=.5)
-}
+source('themeapa.R')
 data %>%
-   select(psiq, openness, problems, ftt) %>%
-   ggpairs(lower=list(continuous=wrap(lowerFn)))
+  select(psiq, openness, problems, ftt) %>%
+  ggpairs(lower=list(continuous='smooth')) +
+  theme_APA
 ```
 
 ## References
