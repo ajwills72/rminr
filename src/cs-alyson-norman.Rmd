@@ -28,7 +28,11 @@ This is an advanced worksheet, which assumes you have completed the [Absolute Be
 
 # Getting started
 
-Create a new R project and upload the file `ses-dass.csv`, which you will find in the `case-studies` folder in git repository we used [previously](preproc.html#load).
+Open the `rminr-data` project we used [previously](preproc.html#load).
+
+Ensure you have the latest files by asking git to "`pull`" the repository. Select the `Git` tab, which is located in the row of tabs which includes the `Environment` tab. Click the `Pull` button with a downward pointing arrow. A window will open showing the files which have been pulled from the repository. Close the `Git pull` window. The `case-studies` folder should contain a folder named `alison-norman`.
+
+Next, create a new, empty R script and save it in the `rminr-data` folder as `cs-alison-norman.R`. Put all the commands from this worksheet into this file, and run them from there. Save your script regularly.
 
 ```{r init-load, message=FALSE}
 rm(list = ls()) # clear the environment
@@ -39,11 +43,14 @@ library(tidyverse)
 
 # Preprocessing
 
+See also: [preprocessing scales](preproc-scales.html), [analysing scales](analyse-scales.html).
+
 ```{r preprocess-sses-pre}
-data <- read_csv('case-studies/ses-dass.csv') %>%
+data <- read_csv('case-studies/alison-norman/ses-dass.csv') %>%
   set_names(~ str_to_lower(.) %>%
               str_replace_all('overall_', '')) %>%
-  mutate(ses = factor(ses), ses_category = factor(ses_category), ses_level = factor(ses_level))
+  mutate(ses = factor(ses), ses_category = factor(ses_category),
+         ses_level = factor(ses_level))
 data$subj <- factor(seq.int(nrow(data)))
 
 anxiety <- data %>%
@@ -61,7 +68,24 @@ stress <- mutate(stress, total = rowSums(stress[4:17]))
 
 TODO: Calculate low, medium, high SES categories
 
+### Notes from Alison on defining SES
+
+* Education either by own or parents. If in education still, must use parents:
+  * Q48-b if answer = 0 then use parents education (Q49 + Q50)/2: 0-2 = low, 3-4 = medium, 5-6 = high
+  * Q48-b = 1 then use own education (Q48): 0-2 = low, 3-4 = medium, 5-6 = high
+
+* Employment
+  * Q48-b if answer = 0 then use parents combined employment (combined SES): 0-2 = low, 3-4 = medium, 5-6 = high
+  * Q48-b = 1 then use student first job score: 0-2 = low, 3-4 = medium, 5-6 = high
+
+* Income
+  * Household income: 1-3 = low, 4-6 = medium, 7-8 = high
+
+* combined score = total education + employment + income/3: 1-2 = low, 3-4 = medium, 5+ = high
+
 # Compare SES levels against anxiety, stress and depression
+
+See also: [one-way ANOVA](anova1.html#anovaWS)
 
 ```{r anova-anxiety, message=FALSE}
 library(BayesFactor, quietly = TRUE)
@@ -83,6 +107,8 @@ bf
 
 # SES category descriptives
 
+See also: [better tables](better-tables.html)
+
 ```{r category-descriptives}
 anxiety %>%
   group_by(ses_category) %>%
@@ -99,6 +125,8 @@ stress %>%
 
 # Compare SES categories against anxiety, stress and depression
 
+See also: [one-way ANOVA](anova1.html#anovaWS)
+
 ```{r anova-anxiety-category}
 bf <- anovaBF(formula = total ~ ses_category, data = anxiety)
 bf
@@ -114,6 +142,8 @@ bf
 ```
 
 # Pearson correlations
+
+See also: [correlation](corr.html#corr)
 
 * depression ~ anxiety
 * depression ~ stress
