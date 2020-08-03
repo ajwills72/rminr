@@ -2,8 +2,6 @@
 
 ## With Paul (for RMINR)
 
-1. anova4 (add 2 exercises)
-
 ## With Paul (for feedback to staff)
 
 1. cs-"Musical subcultures case study" (Helen) - (added to non-para + better graphs) - nearly there 1 - Helen happy
@@ -15,6 +13,7 @@
 1. more-on-regression
 1. cs-self-esteem (Sophie H) - (reated pre-proc-scales and anal-scales ) - AW to take quick look at Bayes stuff
 1. better-graphs (no exercises to be included; plots branch, and see issue #29)
+1. anova4 (add 2 exercises)
 
 ## Back to Paul (for RMINR)
 

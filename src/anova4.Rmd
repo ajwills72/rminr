@@ -12,8 +12,6 @@ output: html_document
 
 ## Show commands and putout.
 knitr::opts_chunk$set(echo = TRUE, comment=NA, cache = TRUE)
-
-
 ```
 
 # Contents
@@ -24,7 +22,11 @@ knitr::opts_chunk$set(echo = TRUE, comment=NA, cache = TRUE)
 
 - [Two between-subject factors](#twoBS)
 
+- [Exercise 1](#ex1)
+
 - [Two within-subject factors](#twoWS)
+
+- [Exercise 2](#ex2)
 
 - [One between-subject factor](#oneBS)
 
@@ -43,6 +45,7 @@ In the [factorial differences](anova3.html) worksheet, we did a two-factor Bayes
 We'll be using the same meditation training data we used in [factorial differences](anova3.html) worksheet, so make sure you've completed that worksheet and have the  `words` data frame from that worksheet in your current R project. If for some reason you do not have that data frame, you can re-create it like this, as long as you have `wordnaming2.csv` in your R project (which is available from the _git_ repository we used [previously](preproc.html#load)):
 
 ```{r init, message=FALSE}
+rm(list = ls())
 library(tidyverse)
 library(BayesFactor, quietly = TRUE)
 words <- read_csv("wordnaming2.csv")
@@ -51,7 +54,8 @@ words <- read_csv("wordnaming2.csv")
 Next, you need to create a subject-level summary file that contains all the factors available in this dataset. This includes two factors we haven't analysed yet - `sex` (biological sex of the participant) and `block` (block of trials in the experiment: 1, 2, 3):
 
 ```{r factsum, message=FALSE}
-wordsum <- words %>% group_by(subj, sex, medit, congru, block) %>% summarise(rt = mean(rt))
+wordsum <- words %>%
+    group_by(subj, sex, medit, congru, block) %>% summarise(rt = mean(rt))
 wordsum$sex <- factor(wordsum$sex)
 wordsum$subj <- factor(wordsum$subj)
 wordsum$medit <- factor(wordsum$medit)
@@ -120,6 +124,35 @@ bf2bs[4] / bf2bs[3]
 
 This gives us a Bayes Factor for the interaction close to 0.1. So, there's substantial evidence for the _absence_ of an interaction.
 
+<a name="ex1"></a>
+
+# Exercise 1
+
+The data for this exercise comes from a different between subjects experiment with two factors.
+
+```{r ex1-data, message=FALSE}
+cf_raw <- read_csv('going-further/counterfactual.csv')
+```
+
+In this experiment, participants read a scenario describing some events leading up to an accident. The scenario was written from either a first-person or a third-person perspective. Next, they generated some counterfactual thoughts in relation to the scenario. For example, "If only I hadn't been looking at my phone, then ...". These thoughts were coded as either predictive, or not predictive of whether the accident occurred. Participants rated how much the protagonist was to blame for the accident, on a scale of 1 (strongly disagree) to 7 (strongly agree).
+
+Some of the `predictability` rows contain the value `NA`. Filter these out using `is.na()`, then calculate Bayes Factors for the main effects and the interaction. Because this data has only one observation for each participant, we can't use `subj` as a random factor, so don't include `subj` in the formula, or `whichRandom=subj`. 
+
+Your results should look similar to this:
+
+```{r ex1, echo=FALSE, message=FALSE}
+cf <- cf_raw %>%
+    filter(! is.na(predictability)) %>%
+    mutate(subj = factor(subj), perspective = factor(perspective),
+           predictability = factor(predictability))
+
+cf_bf <- anovaBF(blame ~ perspective*predictability, data=cf)
+cf_bf
+cf_bf[4] / cf_bf[3]
+```
+
+**Copy the R code you used for this exercise into PsycEL.**
+
 <a name="twoWS"></a>
 
 # Two within-subject factors
@@ -178,6 +211,38 @@ bf2ws[4] / bf2ws[3]
 ```
 
 This gives us a Bayes Factor for the interaction close to 0.0004. So, there's substantial evidence for the _absence_ of an interaction.
+
+<a name="ex2"></a>
+
+# Exercise 2
+
+The data for this exercise comes from a different within subjects experiment with two factors.
+
+```{r ex2-data, message=FALSE}
+raw <- read_csv('case-studies/chris-mitchell/priming-faces.csv')
+```
+
+Participants were trained to associate two screen colours with pictures of two different food rewards. At test, they saw pairs of screen colours and food pictures. Their reaction time (RT) in milliseconds was measured for identifying whether the pairs matched (congruent), or didn't match (incongruent) the associations they'd learnt previously. This test was carried out with, and without, a secondary task. In the secondary task, the participant had to verbally rate how much they liked pictures of faces. All participants completed all conditions, so we have a fully between subjects design, with factors congruency (congruent, incongruent) and load (load, no load).
+
+Filter the data to only include test trials. These have the value 'Test' in the `Running` column. Calculate means for each subject for the two factors. You'll need the include `na.rm = TRUE` when calculating the mean, as the data in `RT` contains some `NA` values.
+
+Calculate Bayes Factors for the main effects and the interaction. Your results should look similar to this:
+
+```{r ex2, echo=FALSE, message=FALSE}
+priming <- raw %>%
+    filter(Running == 'Test') %>%
+    mutate(Subject = factor(Subject), Congruency = factor(Congruency),
+           Load = factor(Load)) %>%
+  group_by(Subject, Congruency, Load) %>%
+  summarise(RT = mean(RT, na.rm = TRUE))
+
+priming_bf <- anovaBF(RT ~ Congruency*Load + Subject, data=priming,
+                      whichRandom = 'Subject')
+priming_bf
+priming_bf[4] / priming_bf[3]
+```
+
+**Copy the R code you used for this exercise into PsycEL.**
 
 <a name="oneBS"></a>
 
