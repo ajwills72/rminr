@@ -167,7 +167,7 @@ glance(oi_lm1)
 r_squared1 <- round(glance(oi_lm1)$adj.r.squared, 3)
 ```
 
-As explained in previous worksheets, the value of `r r_squared1` in `adj.r.squared` tells us how much of the variance in `ro_i` is explained by the demographics variables. A model containing demographics variables explains `r r_squared1 * 100`% of the variance in intrinsic religious orientation.
+As explained in previous worksheets, the value of `r r_squared1` in `adj.r.squared` tells us how much of the variance in `ro_i` is explained by the demographics variables. A model containing demographics variables explains `r r_squared1 * 100`% of the variance in intrinsic religious orientation. The other values in this output are beyond the scope of this worksheet and are not discussed here.
 
 ### Evidence for the model
 
@@ -175,7 +175,7 @@ As explained in previous worksheets, the value of `r r_squared1` in `adj.r.squar
 
 ```{r oi1-bf, class.source = 'numberLines lineAnchors', message=FALSE}
 library(BayesFactor, quietly = TRUE)
-oi_lmbf1 <- lmBF(ro_i ~ age + sex + education + religious, data = data.frame(polish))
+oi_lmbf1 <- lmBF(ro_i ~ age + sex + edu_sc + religious, data = data.frame(polish))
 oi_lmbf1
 ```
 
@@ -201,16 +201,19 @@ So far, we have a model which shows that demographics help to predict intrinsic 
 
 We can test this hypothesis by extending the demographics model to include the spirituality variables measured by the SCQ.
 
-```{r oi2, class.source = 'numberLines lineAnchors', warning=FALSE}
-oi_lm2 <- lm(ro_i ~ age + sex + education + religious +
+### Fit the model and report $R^2$
+
+```{r oi2, warning=FALSE}
+oi_lm2 <- lm(ro_i ~ age + sex + edu_sc + religious +
                happiness + universe + others + nature + places,
              data = polish)
+oi_lm2
 glance(oi_lm2)
 ```
 
 **Explanation of commands:**
 
-Lines 1-3 build our new model. This includes the demographics variables, and adds the spirituality variables `happiness + universe + others + nature + places`.
+Lines 1-3 build our new model. This includes the demographics variables, and adds the spirituality variables `happiness + universe + others + nature + places`. Line 4 shows the output of the model, and Line 5 gives us the $R^2$ value.
 
 **Explanation of output:**
 
@@ -220,10 +223,16 @@ r_squared2 <- round(glance(oi_lm2)$adj.r.squared, 2)
 
 For this model, `adj.r.squared` = `r r_squared2`, which means it explains `r r_squared2 * 100`% of the variance in intrinsic religious orientation, an increase of `r (r_squared2 - r_squared1) * 100`% over the model from step 1.
 
-In the previous step, we found that a model with demographics predictors was better than a model with no predictors. To test the hypothesis that the spirituality variables help to explain the variance in intrinsic religiosity, we can compare our second model against the first. This approach was explained in the [multiple regression worksheet](https://benwhalley.github.io/rmip/how-good-was-our-model.html), and you also encountered it when [testing the interaction in a factorial ANOVA](anova4.html#twoBS).
+### Evidence for the new model
+
+Earlier, we found that a model with demographics predictors was better than a model with no predictors. To test the hypothesis that the spirituality variables help to explain the variance in intrinsic religiosity, we can compare our second model against the first. 
+
+We've compared Bayesian models in a couple of previous worksheets. For example, in the [multiple regression worksheet](https://benwhalley.github.io/rmip/how-good-was-our-model.html), we compared a model where the relationship between grades and study time was assumed to be different for men and women, with one where it was assumed to be the same.  You were also comparing two Bayesian models when you [tested for an interaction in a Bayesian ANOVA](anova4.html#twoBS).
+
+We can use the same approach here:
 
 ```{r oi2-bf, class.source = 'numberLines lineAnchors', warning=FALSE}
-oi_lmbf2 <- lmBF(ro_i ~ age + sex + education + religious +
+oi_lmbf2 <- lmBF(ro_i ~ age + sex + edu_sc + religious +
                happiness + universe + others + nature + places,
                data = data.frame(polish))
 oi_lmbf2 / oi_lmbf1
@@ -231,13 +240,13 @@ oi_lmbf2 / oi_lmbf1
 
 **Explanation of commands:**
 
-Lines 1-3 build a Bayesian regression model with the demographic and spirituality predictors. Line 4 compares the model with the demographics and spirituality variables, `oi_lmbf2`, against the model with just the demographics variables, `oi_lmbf1`. You can think of this as dividing a more complex model by a simpler one, but remember that this is actually a comparison between the probabilites of the two models.
+Lines 1-3 build a Bayesian regression model with the demographic and spirituality predictors. Line 4 compares the model with the demographics and spirituality variables, `oi_lmbf2`, against the model with just the demographics variables, `oi_lmbf1`. You can think of this as dividing a more complex model by a simpler one, but remember that this is actually a comparison of the evidence for the two models.
 
 **Explanation of output:**
 
-The Bayes Factor for this hypothesis is over 31 million, so we can confidently claim that a model containing these spirituality variables explains more variance in intrinsic religiosity, than a simpler model with just demographics variables.
+The Bayes Factor for this hypothesis is over 30 million, so we can confidently claim that a model containing these spirituality variables explains more variance in intrinsic religiosity, than a simpler model with just demographics variables.
 
-In this study, the researchers also hypothesised that trait emotional intelligence and extrinsic religiosity would further explain the variance in intrinsic religiosity. These variables were entered together as a block.
+In this study, the researchers also hypothesized that trait emotional intelligence and extrinsic religiosity would further explain the variance in intrinsic religiosity. These variables were entered together as a block.
 
 ```{r oi3, class.source = 'numberLines lineAnchors', warning=FALSE}
 oi_lm3 <- lm(ro_i ~ age + sex + education + religious +
