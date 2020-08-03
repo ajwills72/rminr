@@ -299,20 +299,23 @@ All of the regression models we've been creating and comparing were built based 
 
 ## Exercise 1
 
-Build a model which predicts trait emotional intelligence from the demographics variables. The adjusted _R^2^_ and Bayes Factor should look like this:
+Using just the data from British participants, build a model which predicts trait emotional intelligence from the demographics variables. The adjusted _R^2^_ and Bayes Factor should look like this:
 
 ```{r ei1, echo=FALSE}
 british <- data %>% filter(nationality == 'British') %>%
   drop_na() %>% # ro_e has 4 NAs
   as.data.frame()
 
-ei_lm1 <- lm(tei ~ age + sex + education + religious, data = data.frame(british))
+ei_lm1 <- lm(tei ~ age + sex + edu_sc + religious, data = data.frame(british))
+ei_lm1
 glance(ei_lm1)
 
-ei_bf1 <- lmBF(tei ~ age + sex + education + religious, data = data.frame(british),
+ei_bf1 <- lmBF(tei ~ age + sex + edu_sc + religious, data = data.frame(british),
             progress = FALSE)
 ei_bf1
 ```
+
+**Note:** For reasons [previously explained](anova1.html#anovaWS), your Bayes Factor may not be exactly the same as the one shown here. Any value between about 7 and 8 is fine. 
 
 **Copy the R code you used for this exercise into PsycEL.**
 
@@ -323,12 +326,13 @@ ei_bf1
 Build a second model which predicts trait emotional intelligence from the demographics and spirituality variables. Compare this against the model you built in the previous exercise. The adjusted _R^2^_ and Bayes Factor should look like this:
 
 ```{r ei2, echo=FALSE}
-ei_lm2 <- lm(tei ~ age + sex + education + religious +
+ei_lm2 <- lm(tei ~ age + sex + edu_sc + religious +
                happiness + universe + others + nature + places,
              data = data.frame(british))
+ei_lm2
 glance(ei_lm2)
 
-ei_bf2 <- lmBF(tei ~ age + sex + education + religious  +
+ei_bf2 <- lmBF(tei ~ age + sex + edu_sc + religious  +
                happiness + universe + others + nature + places,
                data = data.frame(british), progress = FALSE)
 ei_bf2 / ei_bf1
