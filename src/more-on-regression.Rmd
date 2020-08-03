@@ -128,28 +128,48 @@ In this study, emotional intelligence was treated as a trait; a personality fact
 
 The linear model you built in [the multiple regression worksheet](https://benwhalley.github.io/rmip/multiple-regression.html) worksheet used two predictors. It's straightforward to add additional predictors to a model. We'll start with a model which predicts intrinsic religious orientation from the demographics variables in our Polish sample.
 
+### Fitting the model
+
 ```{r oi1, class.source = 'numberLines lineAnchors'}
 polish <- data %>% filter(nationality == 'Polish')
 polish <- polish %>% drop_na()
 
-oi_lm1 <- lm(ro_i ~ age + sex + education + religious, data = polish)
-library(broom)
-glance(oi_lm1)
+oi_lm1 <- lm(ro_i ~ age + sex + edu_sc + religious, data = polish)
+oi_lm1
 ```
 
 **Explanation of commands:**
 
-Line 1 filters the data to only include Polish participants. We'll be using Bayesian models to test our hypotheses, as described in [the multiple regression worksheet](https://benwhalley.github.io/rmip/how-good-was-our-model.html). We can't build these models for predictors which don't have a value, so we use `drop_na()` to remove any rows containing `NA`. Line 2 also converts `polish` to a data frame, as this is the format required for calculating Bayes Factors.
+Line 1 filters the data to only include Polish participants. 
 
-Line 4 builds a regression model that predicts intrinsic religious orientation, defined by `ro_i ~`. The variables on the right of the `~` are the predictors. As you can see, these are the four demographics variables `age + sex + education + religious`. Line 5 loads the `broom` library which provides the `glance()` function. Line 6 uses `glance()` to print some statistics for our model.
+Line 2 removes any participants for which we have missing data (shown as `NA` in the data frame). We have to do this because the `lmBF` function we'll use later cannot cope with missing data.
+
+Line 4 builds a regression model that predicts intrinsic religious orientation, defined by `ro_i ~`. The variables on the right of the `~` are the predictors. As you can see, these are the four demographics variables `age + sex + edu_sc + religious`. 
+
+Line 5 prints the result of fitting the regression model. 
+
+**Explanation of output**: We are given the [equation of the line](https://benwhalley.github.io/rmip/automatic-line-fitting.html) for the regression model. We can see from this output that the best fitting line involves a positive relation between `age` and `ro_i`, i.e. older people score higher on intrinsic religious orientation in this sample. For _binary_ predictors, for example `religious`, which only have two levels in our dataset (`yes` or `no` for `religious`), the output indicates which way round R has decided to set these up. In this case, it says `religiousyes`, meaning that `yes` has been taken as the positive value. The co-efficient of `-0.69` is negative, so this means that people who answer `yes` to this question scored lower on intrinsic religious orientation that those who replied `no`. Similarly, `sex` was set up with `male` as the positive value (`sexmale`), and the co-efficient (`.006`) is positive, so men scored higher than women on intrinsic religious oritentation in this sample. 
+
+### Proportion of variance explained
+
+How much of the variance in intrinsic religious orientation is explained by the demographic variables? As explained in [how good was our model?](https://benwhalley.github.io/rmip/how-good-was-our-model.html) worksheet, we can assess this using the $R^2$ statistic:
+
+```{r oi1a, class.source = 'numberLines lineAnchors'}
+library(broom)
+glance(oi_lm1)
+```
+
+**Explanation of commands:** Line 1 loads the `broom` library which provides the `glance()` function. Line 2 uses `glance()` to print some statistics for our model.
 
 **Explanation of output:**
 
 ```{r oi_lm1-hidden, echo=FALSE, results='hide', message=FALSE, warning=FALSE}
-r_squared1 <- round(glance(oi_lm1)$adj.r.squared, 2)
+r_squared1 <- round(glance(oi_lm1)$adj.r.squared, 3)
 ```
 
-As explained in previous worksheets, the value of `r r_squared1` in `adj.r.squared` tells us how much of the variance in `ro_i` is explained by the demographics variables. A model containing demographics variables explain `r r_squared1 * 100`% of the variance in intrinsic religious orientation.
+As explained in previous worksheets, the value of `r r_squared1` in `adj.r.squared` tells us how much of the variance in `ro_i` is explained by the demographics variables. A model containing demographics variables explains `r r_squared1 * 100`% of the variance in intrinsic religious orientation.
+
+### Evidence for the model
 
 [The multiple regression worksheet](https://benwhalley.github.io/rmip/how-good-was-our-model.html) also showed you how to calculate a Bayes factor to decide whether a regression model is any better than a simpler model with no predictors.
 
@@ -161,11 +181,13 @@ oi_lmbf1
 
 **Explanation of commands:**
 
-Line 1 loads the `BayesFactor` package. Lines 2-3 build a Bayesian model using the same outcome and predictors as above. Line 4 displays information about the model.
+Line 1 loads the `BayesFactor` package. Lines 2-3 build a Bayesian model using the same outcome and predictors as above. Line 3 displays information about the model.
 
 **Explanation of output:**
 
-The output `[1] age + sex + education + religious` reminds you of the predictors in your model. The number after the `:` is a Bayes Factor for they hypothesis that your model is a better predictor of the outcome than a simpler model with no predictors. That is, a model which just computes the average of all outcome scores (sometimes called the 'Intercept only' model). The Bayes Factor for this hypothesis is around 3,800, which is strong evidence that these demographics variables help predict intrinsic religiosity.
+The output `[1] age + sex + education + religious` reminds you of the predictors in your model. The number after the `:` is a Bayes Factor for the hypothesis that your model is a better predictor of the outcome than a simpler model with no predictors. That is, a model which just computes the average of all outcome scores (sometimes called the 'Intercept only' model). The Bayes Factor for this hypothesis is around 3,800, which is strong evidence that these demographics variables help predict intrinsic religiosity.
+
+**Note:** This Bayes Factor is for the _whole_ model (`ro_i ~ age + sex + education + religious`), not for the individual predictors that make it up (e.g. `age`). So, this analysis does not tell you that, for example, that there is evidence that `age` on its own predicts intrinsic religiosity. We'll return to this point towards the end of this worksheet.
 
 <a name="hierarchical"></a>
 
