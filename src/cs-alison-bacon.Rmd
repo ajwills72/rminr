@@ -143,13 +143,13 @@ missing <- data %>% filter_all(any_vars(is.na(.)))
 
 ## Descriptives
 
-See also [better tables](better-tables.html).
+See also [better tables](better-tables.html#descriptives).
 
 "Table of descriptives (mean and SD) for the two groups separately (all SCQ subscales) and t tests to compare the two groups on all measures. They will differ significantly only on the two RO measures with Polish group higher scores in both cases."
 
 ## Correlation matrices (Tables 1 & 2)
 
-See also: [better tables](better-tables.html)
+See also: [better tables](better-tables.html#cor-matrix)
 
 It should possible to define this as a comparison between two models.
 
@@ -160,7 +160,7 @@ It should possible to define this as a comparison between two models.
 
 ##  Correlations between spirituality subdomains and religious orientation
 
-See also: [better tables](better-tables.html)
+See also: [better tables](better-tables.html#cor-matrix)
 
 * Custom table (Table 3)
 
