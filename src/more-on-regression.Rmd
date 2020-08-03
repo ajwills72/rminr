@@ -125,7 +125,7 @@ In this study, emotional intelligence was treated as a trait; a personality fact
 
 ## Multiple regression with more than two predictors
 
-The linear model you built in [the multiple regression worksheet](https://benwhalley.github.io/rmip/multiple-regression.html) worksheet used two predictors. It's it's straightforward to add additional predictors to a model. We'll start with a model which predicts intrinsic religious orientation from the demographics variables in our Polish sample.
+The linear model you built in [the multiple regression worksheet](https://benwhalley.github.io/rmip/multiple-regression.html) worksheet used two predictors. It's straightforward to add additional predictors to a model. We'll start with a model which predicts intrinsic religious orientation from the demographics variables in our Polish sample.
 
 ```{r oi1, class.source = 'numberLines lineAnchors', warning=FALSE}
 polish <- data %>% filter(nationality == 'Polish')
