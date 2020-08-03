@@ -11,7 +11,6 @@
 ## Andy review (for RMINR)
 
 1. more-on-regression
-1. cs-self-esteem (Sophie H) - (reated pre-proc-scales and anal-scales ) - AW to take quick look at Bayes stuff
 1. better-graphs (no exercises to be included; plots branch, and see issue #29)
 1. anova4 (add 2 exercises)
 
@@ -26,6 +25,7 @@
 1. better-tables
 1. non-parametric
 1. preproc-experiments
+1. cs-self-esteem (Sophie H) - (reated pre-proc-scales and anal-scales )
 
 ## Completed (fed back to staff, not on RMINR front page)
 
