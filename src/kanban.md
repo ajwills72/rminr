@@ -6,11 +6,12 @@
 
 ## Andy review (for RMINR)
 
-1. more-on-regression
 1. better-graphs (no exercises to be included; plots branch, and see issue #29)
 1. anova4 (add 2 exercises)
 
 ## Back to Paul (for RMINR)
+
+1. more-on-regression
 
 ## Completed (for RMINR)
 
