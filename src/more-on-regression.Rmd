@@ -27,6 +27,8 @@ library(pander)
 
 - [Hierarchical regression](#hierarchical)
 
+- [Evidence for individual predictors](#single)
+
 - [Exercise 1](#ex1)
 
 - [Exercise 2](#ex2)
@@ -185,7 +187,7 @@ Line 1 loads the `BayesFactor` package. Lines 2-3 build a Bayesian model using t
 
 **Explanation of output:**
 
-The output `[1] age + sex + education + religious` reminds you of the predictors in your model. The number after the `:` is a Bayes Factor for the hypothesis that your model is a better predictor of the outcome than a simpler model with no predictors. That is, a model which just computes the average of all outcome scores (sometimes called the 'Intercept only' model). The Bayes Factor for this hypothesis is around 3,800, which is strong evidence that these demographics variables help predict intrinsic religiosity.
+The output `[1] age + sex + education + religious` reminds you of the predictors in your model. The number after the `:` is a Bayes Factor for the hypothesis that your model is a better predictor of the outcome than a simpler model with no predictors. That is, a model which just computes the average of all outcome scores (sometimes called the 'Intercept only' model). The Bayes Factor for this hypothesis is almost 9,000, which is strong evidence that these demographics variables help predict intrinsic religiosity.
 
 **Note:** This Bayes Factor is for the _whole_ model (`ro_i ~ age + sex + education + religious`), not for the individual predictors that make it up (e.g. `age`). So, this analysis does not tell you that, for example, that there is evidence that `age` on its own predicts intrinsic religiosity. We'll return to this point towards the end of this worksheet.
 
@@ -295,6 +297,24 @@ The Bayes Factor for this hypothesis is over 3,000, which is strong evidence tha
 
 All of the regression models we've been creating and comparing were built based on the data from our sample. However, we're normally looking for a model that will predict outcomes for _any_ sample. Adding variables to a model can explain more variance in a particular sample, at the expense of being able to explain data in other samples. This is known as [overfitting](https://en.wikipedia.org/wiki/Overfitting). As a general principle, we can reduce the risk of overfitting by preferring a simpler model over a more complex one, when adding variables doesn't increase _R^2^_ by much. Other methods, such as [cross-validation](https://en.wikipedia.org/wiki/Cross-validation_(statistics)), provide more precise tests of overfitting, but these are outside the scope of this worksheet.
 
+<a name="single"></a>
+
+## Evidence for individual predictors
+
+We earlier saw that there was strong evidence ($BF > 8000$) for the model `ro_i ~ age + sex + edu_sc + religious`, and we noted that this is evidence for the whole model, not for any one predictor (e.g. `age`). Nonetheless, you might sometimes be asked to report whether there is evidence for a particular predictor within a model _individually_ having an effect on the outcome variable. You can answer such questions using the same approach as above. In other words, calculate the evidence for a model omitting that one predictor -- `ro_i ~ sex + edu_sc + religious` -- and compare it to the original model:
+
+```{r single}
+oi_lmbf1_minus_age <- lmBF(ro_i ~ sex + edu_sc + religious, data = data.frame(polish))
+oi_lmbf1 / oi_lmbf1_minus_age
+```
+
+In this case, the result of our analysis is inconclusive. The Bayes Factor is close to 1, so the evidence for and against `age` being an effective predictor in the model is about evenly matched. In contrast, there is strong evidence for `relgion` being an effective predictor within the model:
+
+```{r single2}
+oi_lmbf1_minus_rel <- lmBF(ro_i ~ age + sex + edu_sc, data = data.frame(polish))
+oi_lmbf1 / oi_lmbf1_minus_rel
+```
+
 <a name="ex1"></a>
 
 ## Exercise 1
@@ -341,6 +361,9 @@ ei_bf2 / ei_bf1
 **Copy the R code you used for this exercise into PsycEL.**
 
 **Write a sentence interpreting _R^2^_ and the Bayes Factor for the model comparison.**
+
+
+
 
 ___
 
