@@ -25,8 +25,8 @@ library(pander)
 * [High-quality output](#hq)
 * [Choosing a graph for your data](#choosing)
 * [Within-participants manipulations](#within)
-    + [One factor](#w-1x3)
-    + [Two factors](#w-2x2)
+    + [One factor, ordered variable](#w-1x3)
+    + [Two factors, two levels](#w-2x2)
 * [Between-participants manipulations](#between)
     + [One factor, two levels](#b-1x2)
     + [One factor, four levels](#b-1x4)
@@ -147,6 +147,18 @@ These subjective aspects make it difficult to provide hard and fast rules for th
 
 As a side note, a common criticism of student projects is that results sections don't include a graph, and appendices often contain lots of graphs that don't really contribute to the report. You can overcome this by learning to experiment with different ways of plotting your data. When you've found a graph that contributes to the argument you're trying to make, be confident and include it in your results section! Appendices are seldom read.
 
+The rest of this worksheet gives a variety of examples of graphs one can produce in R. The examples have been categorized on the following criteria:
+
+- **Design type**: Does your hypothesis involve a _within subjects_ manipulation, a _between-subjects_ manipulation, or a _correlation_ between variables?
+
+- **Design complexity**: Does your hypothesis involve a single factor, or an _interaction_ between two factors?
+
+- **Variable type**: If independent variables / predictor variables have more than two levels, are those levels ordered or unordered? For example, age is an ordered variable, but gender is an unordered variable.  
+
+This may help you narrow down the range of possibilities to those most suitable to the question you wish to investigate.
+
+The examples in this worksheet are  just a small sample of what can be achieved in R; for much more, take a look at the excellent [R Graph Gallery](https://www.r-graph-gallery.com/).
+
 <a name="within"></a>
 
 # Within-participants manipulations
@@ -155,7 +167,7 @@ We'll start by producing some graphs for within-participants manipulations.
 
 <a name="w-1x3"></a>
 
-## One factor
+## One factor, ordered variable
 
 Our first example uses data from [an undergraduate student experiment on the Perruchet Effect](awdiss.html). Stay in your `rminr-data` project, create a new R file called `one-within.R`, and enter the commands that follow into that file. 
 
@@ -265,7 +277,7 @@ Most of these commands we've used in previous worksheets. The command `scale_x_c
 
 <a name="w-2x2"></a>
 
-## Two factors
+## Two factors, two levels
 
 Our next example is from an experiment with two within-subjects factors. Participants were trained to associate two screen colours with pictures of two different food rewards. At test, they saw pairs of screen colours and food pictures. Their reaction time (RT) in milliseconds was measured in cases where the pairs matched the associations they'd previously learned (congruent trials), and in cases where the pairs did not match what they had previously learned(incongruent trials). The participants experienced this test both with, and without, a secondary task. In the secondary task, the participant had to verbally rate how much they liked pictures of faces. As all participants completed all conditions, we have a fully within-subjects design, with factors congruency (congruent, incongruent) and load (load, no load).
 
@@ -365,7 +377,7 @@ The black vertical line placed at zero allows us to quickly see approximately si
 
 <a name="between"></a>
 
-# Between participants data
+# Between-participants manipulations
 
 We now look at some graphs for between participants data.
 
