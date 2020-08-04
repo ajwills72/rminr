@@ -11,8 +11,6 @@
 
 ## Back to Paul (for RMINR)
 
-1. more-on-regression
-
 ## Completed (for RMINR)
 
 1. aw-diss (Andy W, case study) - (added to better graphs + preproc expt)
@@ -23,6 +21,7 @@
 1. non-parametric
 1. preproc-experiments
 1. cs-self-esteem (Sophie H) - (reated pre-proc-scales and anal-scales )
+1. more-on-regression
 
 ## Completed (fed back to staff, not on RMINR front page)
 

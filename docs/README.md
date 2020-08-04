@@ -193,6 +193,8 @@ links, you may find just notes, or incomplete worksheets.
 
 - [Data preprocessing for experiments](preproc-experiments.html): **De-duplicating data**, **excluding participants**, **log transform**.
 
+- [More on regression](more-on-regression.html): **Multiple regression with more than two predictors**, **hierarchical regression**, **evidence for individual predictors**.
+
 - [Data management](data-management.html)
 
 - [More on data](more-on-data.html): Reading data directly from Excel.
