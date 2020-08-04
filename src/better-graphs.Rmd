@@ -39,7 +39,7 @@ library(pander)
 
 In this worksheet, we'll look at how to produce publication-quality graphs in R. We start with an example from a previous worksheet. 
 
-In the exercise for the [within-subject differences](anova1.html#densediff) worksheet, we produced a density plot of the within-subject differences in reaction time for congruent versus incongruent trials. Let's pick up where we left off. Go back to your `rminr-data` project, and open up the R file you used for this exercise. If you didn't complete that exercise, or can't find the file, you can get a copy [here](densediff.R)
+In the exercise for the [within-subject differences](anova1.html#densediff) worksheet, we produced a density plot of the within-subject differences in reaction time for congruent versus incongruent trials. Let's pick up where we left off. Go back to your `rminr-data` project, and open up the R file you used for this exercise. If you didn't complete that exercise, or can't find the file, you can get a copy [here](densediff.R).
 
 ```{r init, message=FALSE, echo=FALSE}
 rm(list = ls()) # clear the environment
@@ -141,15 +141,15 @@ A file called _fig1.pdf_ will have appeared in your _Files_ window in RStudio. Y
 
 # Choosing a graph for your data
 
-A graph should visually describe patterns in data that would otherwise be difficult to communicate. Choosing and configuring the most appropriate graph for you data will depend on what you want to communicate to your reader. In practice, making this decision often involves trying out different types of graph, and the elements used to build them. You might generate new ideas for graphs after you have analysed your data and begun to interpret the results.
+So, now you know how to create a professional-quality graph in R, but which type of graph best suits your data? A graph should visually describe patterns in data that would otherwise be difficult to communicate. Choosing and configuring the most appropriate graph for you data will depend on what you want to communicate to your reader. In practice, making this decision often involves trying out different types of graph, and the elements used to build them. You might generate new ideas for graphs after you have analysed your data and begun to interpret the results.
 
 These subjective aspects make it difficult to provide hard and fast rules for the type of plot you should choose, and the elements that it should contain. A general piece of advice is to carefully consider the best way to represent the centre (often the mean), and distribution of your data. We present some suggestions for plotting different types of data in the following sections.
 
-As a side note, a common criticism of student projects is that results sections don't include a graph, and appendices often contain lots of graphs which don't really contribute to the report. You can overcome this by learning to experiment with different ways of plotting your data. When you've found a graph that contributes to the argument you're trying to make, be confident and include it in your results section!
+As a side note, a common criticism of student projects is that results sections don't include a graph, and appendices often contain lots of graphs that don't really contribute to the report. You can overcome this by learning to experiment with different ways of plotting your data. When you've found a graph that contributes to the argument you're trying to make, be confident and include it in your results section! Appendices are seldom read.
 
 <a name="within"></a>
 
-# Within-participants data
+# Within-participants manipulations
 
 We'll start by producing some graphs for within-participants manipulations.
 
@@ -165,7 +165,7 @@ To get started on this example, we need to first load the data:
 lvl.sum <- read_csv('going-further/perruchet-preproc.csv')
 ```
 
-The data we'll focus on here are the mean expectancy ratings (`expect`) made by each participant (`subj`) for each of three Levels of the within-subjects factor (`level`). It's not critical to understand what the within-subjects factor is here, and it would take a while to explain, but take a look at [this worksheet](awdiss.html) for full details if you are curious. 
+The data we'll focus on here are the mean expectancy ratings (`expect`) made by each participant (`subj`) for each of three Levels of the within-subjects factor (`level`). It's not critical to understand what the within-subjects factor is here, and it would take a while to explain, but take a look at [this worksheet](awdiss.html) for full details if you are curious. The main point to appreciate is the this is a _within-subjects_ manipulation, so each participant provided data at each Level. 
 
 Our aim is to plot a graph for this single, within-participants factor called `level`. The simplest graph we could produce here would be to just plot the three means, but, when we graph data from psychology experiments, we generally try to give an indication of the variability between participants - is everyone exactly like the mean, or do people differ? One common way of doing this it to plot some kind of 'error bar'; for example, as shown in Figure 1 of  [McAndrew et al. (2012)](https://www.researchgate.net/profile/IPL_Mclaren/publication/221752843_Dissociating_Expectancy_of_Shock_and_Changes_in_Skin_Conductance_An_Investigation_of_the_Perruchet_Effect_Using_an_Electrodermal_Paradigm/links/0a85e53c10b74f291a000000.pdf). McAndrew et al. are not clear how they calculated these bars, but it's quite likely that they are the standard errors, considering each Level separately -- because this is the most common plot of this type. Such error bars are not particularly informative because, for example, they represent the variability _between_ participants at each Level, when the experiment is a _repeated measures_ design and so it is the variability of the trends across Level that is most relevant.
 
@@ -208,22 +208,30 @@ base
 Next, we add a line for each participant:
 
 
-```{r lines}
+```{r lines, class.source = 'numberLines lineAnchors'}
 ### Add a line for each participant
-lns  <- geom_line(aes(x=level, y=expect, group=subj, colour=subj), data = lvl.sum, alpha = .25)
+lns  <- geom_line(aes(x=level, y=expect, group=subj, colour=subj), 
+                  data = lvl.sum, 
+                  alpha = .25)
 base + lns
 ```
 
-In line 2 above, we use the familiar `geom_line` to draw a line graph, much as we did to plot the individual GSR readings. The difference here is that we set `group=subj`, giving us a different line for each participant (the participant number is in the `subj` column of the `lvl.sum` data frame). These lines are easier to distinguish from each other if they are not all the same colour, so we all set `colour=subj`, so each gets a different colour (in this case, the default is that they all get a slightly different shade of blue). The final part, `alpha = .25`, makes the lines fainter, so that the mean trend line we're going to add next is more noticeable.
+In lines 2-4 above, we use the familiar `geom_line` to draw a line graph, as used previously in the [understanding interactions](anova2.html#linegraph) worksheet. The difference this time is that we set `group=subj`, giving us a different line for each participant (the participant number is in the `subj` column of the `lvl.sum` data frame). These lines are easier to distinguish from each other if they are not all the same colour, so we all set `colour=subj`, so each gets a different colour (in this case, the default is that they all get a slightly different shade of blue). The final part, `alpha = .25`, makes the lines fainter, so that the mean trend line we're going to add next is more noticeable.
 
-In line 3, we display our new line graph on top of the background: `base + lns`. 
+In line 5, we display our new line graph on top of the background: `base + lns`. 
 
-Next, we add an indication of the mean rating at each level. We already calculated those means earlier, so we can just use those calculations, which we stored in `mdata`:
+Next, we add an indication of the mean rating at each level. To do this, we have to calculate the means, which we can do using the `group_by` and `summarise` commands we have used in many previous worksheets:
 
 ```{r mean.trend}
+### Calculate means
 mdata  <- lvl.sum %>% group_by(level) %>%
   summarise(lcval = mean(lcval), expect = mean(expect))
-### Add a mean line
+```
+
+Now we can use `geom_line` to plot those means:
+
+```{r mean.trend.2}
+### Plot the mean line
 mline  <- geom_line(aes(x=level, y=expect), data = mdata, colour="black")
 base + lns + mline
 ```
@@ -235,7 +243,7 @@ mdots  <- geom_point(aes(x=level, y=expect), data = mdata, colour="black")
 base + lns + mline + mdots
 ```
 
-Now, we can do various things to make the graph look nicer. First, load the `themeapa.R` file (written by Tina Seabrooke) from my website. You can then add this theme and add it to the graph:
+Now, we can do various things to make the graph look nicer. First, we add `theme_APA`:
 
 ```{r apa}
 ### Load and add APA theme
@@ -254,7 +262,6 @@ base + lns + mline + mdots + theme_APA + theme(legend.position="none") +
 ```
 
 Most of these commands we've used in previous worksheets. The command `scale_x_continuous` allows us to set exactly what the 'tick marks' on the x-axis are going to be - it makes no sense to have a Level of e.g. 1.5 marked on the graph, because such levels do not exist in the experiment.
-
 
 <a name="w-2x2"></a>
 
