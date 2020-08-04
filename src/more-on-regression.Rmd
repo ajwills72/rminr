@@ -47,7 +47,7 @@ Previous worksheets introduced [linear regression using a single predictor varia
 
 Open the `rminr-data` project we used [previously](preproc.html#load).
 
-Ensure you have the latest files by asking git to "`pull`" the repository. Select the `Git` tab, which is located in the row of tabs which includes the `Environment` tab. Click the `Pull` button with a downward pointing arrow. A window will open showing the files which have been pulled from the repository. Close the `Git pull` window. The `going-further` folder should contain the file `religion.csv`.
+Ensure you have the latest files by asking git to "`pull`" the repository. Select the `Git` tab, which is located in the row of tabs which includes the `Environment` tab. Click the `Pull` button with a downward pointing arrow. A window will open showing the files which have been pulled from the repository. Close the `Git pull` window. The `going-further` folder should contain the file `religion-preproc.csv`.
 
 Next, create a new, empty R script and save it in the `rminr-data` folder as `more-regression.R`. Put all the commands from this worksheet into this file, and run them from there. Save your script regularly.
 
@@ -150,11 +150,11 @@ Line 4 builds a regression model that predicts intrinsic religious orientation, 
 
 Line 5 prints the result of fitting the regression model. 
 
-**Explanation of output**: We are given the [equation of the line](https://benwhalley.github.io/rmip/automatic-line-fitting.html) for the regression model. We can see from this output that the best fitting line involves a positive relation between `age` and `ro_i`, i.e. older people score higher on intrinsic religious orientation in this sample. For _binary_ predictors, for example `religious`, which only have two levels in our dataset (`yes` or `no` for `religious`), the output indicates which way round R has decided to set these up. In this case, it says `religiousyes`, meaning that `yes` has been taken as the positive value. The co-efficient of `-0.69` is negative, so this means that people who answer `yes` to this question scored lower on intrinsic religious orientation that those who replied `no`. Similarly, `sex` was set up with `male` as the positive value (`sexmale`), and the co-efficient (`.006`) is positive, so men scored higher than women on intrinsic religious oritentation in this sample. 
+**Explanation of output**: We are given the [equation of the line](https://benwhalley.github.io/rmip/automatic-line-fitting.html) for the regression model. We can see from this output that the best fitting line involves a positive relation between `age` and `ro_i`, i.e. older people score higher on intrinsic religious orientation in this sample. For _binary_ predictors, for example `religious`, which only have two levels in our dataset (`yes` or `no` for `religious`), the output indicates which way round R has decided to set these up. In this case, it says `religiousyes`, meaning that `yes` has been taken as the positive value. The co-efficient of `-0.69` is negative, so this means that people who answer `yes` to this question scored lower on intrinsic religious orientation that those who replied `no`. Similarly, `sex` was set up with `male` as the positive value (`sexmale`), and the co-efficient (`.006`) is positive, so men scored higher than women on intrinsic religious orientation in this sample. 
 
 ### Proportion of variance explained
 
-How much of the variance in intrinsic religious orientation is explained by the demographic variables? As explained in [how good was our model?](https://benwhalley.github.io/rmip/how-good-was-our-model.html) worksheet, we can assess this using the $R^2$ statistic:
+How much of the variance in intrinsic religious orientation is explained by the demographic variables? As explained in the [how good was our model?](https://benwhalley.github.io/rmip/how-good-was-our-model.html) worksheet, we can assess this using the $R^2$ statistic:
 
 ```{r oi1a, class.source = 'numberLines lineAnchors'}
 library(broom)
@@ -177,7 +177,8 @@ As explained in previous worksheets, the value of `r r_squared1` in `adj.r.squar
 
 ```{r oi1-bf, class.source = 'numberLines lineAnchors', message=FALSE}
 library(BayesFactor, quietly = TRUE)
-oi_lmbf1 <- lmBF(ro_i ~ age + sex + edu_sc + religious, data = data.frame(polish))
+oi_lmbf1 <- lmBF(ro_i ~ age + sex + edu_sc + religious,
+                 data = data.frame(polish))
 oi_lmbf1
 ```
 
@@ -187,9 +188,9 @@ Line 1 loads the `BayesFactor` package. Lines 2-3 build a Bayesian model using t
 
 **Explanation of output:**
 
-The output `[1] age + sex + education + religious` reminds you of the predictors in your model. The number after the `:` is a Bayes Factor for the hypothesis that your model is a better predictor of the outcome than a simpler model with no predictors. That is, a model which just computes the average of all outcome scores (sometimes called the 'Intercept only' model). The Bayes Factor for this hypothesis is almost 9,000, which is strong evidence that these demographics variables help predict intrinsic religiosity.
+The output `[1] age + sex + edu_sc + religious` reminds you of the predictors in your model. The number after the `:` is a Bayes Factor for the hypothesis that your model is a better predictor of the outcome than a simpler model with no predictors. That is, a model which just computes the average of all outcome scores (sometimes called the 'Intercept only' model). The Bayes Factor for this hypothesis is almost 9,000, which is strong evidence that these demographics variables help predict intrinsic religiosity.
 
-**Note:** This Bayes Factor is for the _whole_ model (`ro_i ~ age + sex + education + religious`), not for the individual predictors that make it up (e.g. `age`). So, this analysis does not tell you that, for example, that there is evidence that `age` on its own predicts intrinsic religiosity. We'll return to this point towards the end of this worksheet.
+**Note:** This Bayes Factor is for the _whole_ model (`ro_i ~ age + sex + edu_sc + religious`), not for the individual predictors that make it up (e.g. `age`). So, this analysis does not tell you that, for example, that there is evidence that `age` on its own predicts intrinsic religiosity. We'll return to this point towards the end of this worksheet.
 
 <a name="hierarchical"></a>
 
@@ -246,7 +247,7 @@ Lines 1-3 build a Bayesian regression model with the demographic and spiritualit
 
 **Explanation of output:**
 
-The Bayes Factor for this hypothesis is over 30 million, so we can confidently claim that a model containing these spirituality variables explains more variance in intrinsic religiosity, than a simpler model with just demographics variables.
+The Bayes Factor for this hypothesis is over 25 million, so we can confidently claim that a model containing these spirituality variables explains more variance in intrinsic religiosity, than a simpler model with just demographics variables.
 
 
 ### Adding yet more variables
@@ -291,7 +292,7 @@ Lines 1-4 build the Bayesian model. Line 5 compares this new model against the p
 
 **Explanation of output:**
 
-The Bayes Factor for this hypothesis is over 3,000, which is strong evidence that a model with the additional variables explains more variance than the simpler model in step 2.
+The Bayes Factor for this hypothesis is over 4,000, which is strong evidence that a model with the additional variables explains more variance than the simpler model in step 2.
 
 ### A note about overfitting
 
@@ -304,7 +305,8 @@ All of the regression models we've been creating and comparing were built based 
 We earlier saw that there was strong evidence ($BF > 8000$) for the model `ro_i ~ age + sex + edu_sc + religious`, and we noted that this is evidence for the whole model, not for any one predictor (e.g. `age`). Nonetheless, you might sometimes be asked to report whether there is evidence for a particular predictor within a model _individually_ having an effect on the outcome variable. You can answer such questions using the same approach as above. In other words, calculate the evidence for a model omitting that one predictor -- `ro_i ~ sex + edu_sc + religious` -- and compare it to the original model:
 
 ```{r single}
-oi_lmbf1_minus_age <- lmBF(ro_i ~ sex + edu_sc + religious, data = data.frame(polish))
+oi_lmbf1_minus_age <- lmBF(ro_i ~ sex + edu_sc + religious,
+                           data = data.frame(polish))
 oi_lmbf1 / oi_lmbf1_minus_age
 ```
 
@@ -361,9 +363,6 @@ ei_bf2 / ei_bf1
 **Copy the R code you used for this exercise into PsycEL.**
 
 **Write a sentence interpreting _R^2^_ and the Bayes Factor for the model comparison.**
-
-
-
 
 ___
 

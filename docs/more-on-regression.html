@@ -448,7 +448,7 @@ summary {
 <div id="load-data" class="section level3">
 <h3>Load data</h3>
 <p>Open the <code>rminr-data</code> project we used <a href="preproc.html#load">previously</a>.</p>
-<p>Ensure you have the latest files by asking git to “<code>pull</code>” the repository. Select the <code>Git</code> tab, which is located in the row of tabs which includes the <code>Environment</code> tab. Click the <code>Pull</code> button with a downward pointing arrow. A window will open showing the files which have been pulled from the repository. Close the <code>Git pull</code> window. The <code>going-further</code> folder should contain the file <code>religion.csv</code>.</p>
+<p>Ensure you have the latest files by asking git to “<code>pull</code>” the repository. Select the <code>Git</code> tab, which is located in the row of tabs which includes the <code>Environment</code> tab. Click the <code>Pull</code> button with a downward pointing arrow. A window will open showing the files which have been pulled from the repository. Close the <code>Git pull</code> window. The <code>going-further</code> folder should contain the file <code>religion-preproc.csv</code>.</p>
 <p>Next, create a new, empty R script and save it in the <code>rminr-data</code> folder as <code>more-regression.R</code>. Put all the commands from this worksheet into this file, and run them from there. Save your script regularly.</p>
 <p>We’ll use some data from an undergraduate student dissertation which explored relationships between Polish (n=93) and British (n=104) people’s religious orientation, spiritual beliefs and emotional intelligence. We start by loading the data.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="kw">rm</span>(<span class="dt">list =</span> <span class="kw">ls</span>()) <span class="co"># clear the environment</span></a>
@@ -654,11 +654,11 @@ Coefficients:
 <p>Line 2 removes any participants for which we have missing data (shown as <code>NA</code> in the data frame). We have to do this because the <code>lmBF</code> function we’ll use later cannot cope with missing data.</p>
 <p>Line 4 builds a regression model that predicts intrinsic religious orientation, defined by <code>ro_i ~</code>. The variables on the right of the <code>~</code> are the predictors. As you can see, these are the four demographics variables <code>age + sex + edu_sc + religious</code>.</p>
 <p>Line 5 prints the result of fitting the regression model.</p>
-<p><strong>Explanation of output</strong>: We are given the <a href="https://benwhalley.github.io/rmip/automatic-line-fitting.html">equation of the line</a> for the regression model. We can see from this output that the best fitting line involves a positive relation between <code>age</code> and <code>ro_i</code>, i.e. older people score higher on intrinsic religious orientation in this sample. For <em>binary</em> predictors, for example <code>religious</code>, which only have two levels in our dataset (<code>yes</code> or <code>no</code> for <code>religious</code>), the output indicates which way round R has decided to set these up. In this case, it says <code>religiousyes</code>, meaning that <code>yes</code> has been taken as the positive value. The co-efficient of <code>-0.69</code> is negative, so this means that people who answer <code>yes</code> to this question scored lower on intrinsic religious orientation that those who replied <code>no</code>. Similarly, <code>sex</code> was set up with <code>male</code> as the positive value (<code>sexmale</code>), and the co-efficient (<code>.006</code>) is positive, so men scored higher than women on intrinsic religious oritentation in this sample.</p>
+<p><strong>Explanation of output</strong>: We are given the <a href="https://benwhalley.github.io/rmip/automatic-line-fitting.html">equation of the line</a> for the regression model. We can see from this output that the best fitting line involves a positive relation between <code>age</code> and <code>ro_i</code>, i.e. older people score higher on intrinsic religious orientation in this sample. For <em>binary</em> predictors, for example <code>religious</code>, which only have two levels in our dataset (<code>yes</code> or <code>no</code> for <code>religious</code>), the output indicates which way round R has decided to set these up. In this case, it says <code>religiousyes</code>, meaning that <code>yes</code> has been taken as the positive value. The co-efficient of <code>-0.69</code> is negative, so this means that people who answer <code>yes</code> to this question scored lower on intrinsic religious orientation that those who replied <code>no</code>. Similarly, <code>sex</code> was set up with <code>male</code> as the positive value (<code>sexmale</code>), and the co-efficient (<code>.006</code>) is positive, so men scored higher than women on intrinsic religious orientation in this sample.</p>
 </div>
 <div id="proportion-of-variance-explained" class="section level3">
 <h3>Proportion of variance explained</h3>
-<p>How much of the variance in intrinsic religious orientation is explained by the demographic variables? As explained in <a href="https://benwhalley.github.io/rmip/how-good-was-our-model.html">how good was our model?</a> worksheet, we can assess this using the <span class="math inline">\(R^2\)</span> statistic:</p>
+<p>How much of the variance in intrinsic religious orientation is explained by the demographic variables? As explained in the <a href="https://benwhalley.github.io/rmip/how-good-was-our-model.html">how good was our model?</a> worksheet, we can assess this using the <span class="math inline">\(R^2\)</span> statistic:</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode numberSource r numberLines lineAnchors"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" href="#cb5-1" title="1"><span class="kw">library</span>(broom)</a>
 <a class="sourceLine" id="cb5-2" href="#cb5-2" title="2"><span class="kw">glance</span>(oi_lm1)</a></code></pre></div>
 <pre><code># A tibble: 1 x 11
@@ -674,11 +674,12 @@ Coefficients:
 <h3>Evidence for the model</h3>
 <p><a href="https://benwhalley.github.io/rmip/how-good-was-our-model.html">The multiple regression worksheet</a> also showed you how to calculate a Bayes factor to decide whether a regression model is any better than a simpler model with no predictors.</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode numberSource r numberLines lineAnchors"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" href="#cb7-1" title="1"><span class="kw">library</span>(BayesFactor, <span class="dt">quietly =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb7-2" href="#cb7-2" title="2">oi_lmbf1 &lt;-<span class="st"> </span><span class="kw">lmBF</span>(ro_i <span class="op">~</span><span class="st"> </span>age <span class="op">+</span><span class="st"> </span>sex <span class="op">+</span><span class="st"> </span>edu_sc <span class="op">+</span><span class="st"> </span>religious, <span class="dt">data =</span> <span class="kw">data.frame</span>(polish))</a>
-<a class="sourceLine" id="cb7-3" href="#cb7-3" title="3">oi_lmbf1</a></code></pre></div>
+<a class="sourceLine" id="cb7-2" href="#cb7-2" title="2">oi_lmbf1 &lt;-<span class="st"> </span><span class="kw">lmBF</span>(ro_i <span class="op">~</span><span class="st"> </span>age <span class="op">+</span><span class="st"> </span>sex <span class="op">+</span><span class="st"> </span>edu_sc <span class="op">+</span><span class="st"> </span>religious,</a>
+<a class="sourceLine" id="cb7-3" href="#cb7-3" title="3">                 <span class="dt">data =</span> <span class="kw">data.frame</span>(polish))</a>
+<a class="sourceLine" id="cb7-4" href="#cb7-4" title="4">oi_lmbf1</a></code></pre></div>
 <pre><code>Bayes factor analysis
 --------------
-[1] age + sex + edu_sc + religious : 8493.311 ±1.74%
+[1] age + sex + edu_sc + religious : 8663.621 ±3%
 
 Against denominator:
   Intercept only 
@@ -687,8 +688,8 @@ Bayes factor type: BFlinearModel, JZS</code></pre>
 <p><strong>Explanation of commands:</strong></p>
 <p>Line 1 loads the <code>BayesFactor</code> package. Lines 2-3 build a Bayesian model using the same outcome and predictors as above. Line 3 displays information about the model.</p>
 <p><strong>Explanation of output:</strong></p>
-<p>The output <code>[1] age + sex + education + religious</code> reminds you of the predictors in your model. The number after the <code>:</code> is a Bayes Factor for the hypothesis that your model is a better predictor of the outcome than a simpler model with no predictors. That is, a model which just computes the average of all outcome scores (sometimes called the ‘Intercept only’ model). The Bayes Factor for this hypothesis is almost 9,000, which is strong evidence that these demographics variables help predict intrinsic religiosity.</p>
-<p><strong>Note:</strong> This Bayes Factor is for the <em>whole</em> model (<code>ro_i ~ age + sex + education + religious</code>), not for the individual predictors that make it up (e.g. <code>age</code>). So, this analysis does not tell you that, for example, that there is evidence that <code>age</code> on its own predicts intrinsic religiosity. We’ll return to this point towards the end of this worksheet.</p>
+<p>The output <code>[1] age + sex + edu_sc + religious</code> reminds you of the predictors in your model. The number after the <code>:</code> is a Bayes Factor for the hypothesis that your model is a better predictor of the outcome than a simpler model with no predictors. That is, a model which just computes the average of all outcome scores (sometimes called the ‘Intercept only’ model). The Bayes Factor for this hypothesis is almost 9,000, which is strong evidence that these demographics variables help predict intrinsic religiosity.</p>
+<p><strong>Note:</strong> This Bayes Factor is for the <em>whole</em> model (<code>ro_i ~ age + sex + edu_sc + religious</code>), not for the individual predictors that make it up (e.g. <code>age</code>). So, this analysis does not tell you that, for example, that there is evidence that <code>age</code> on its own predicts intrinsic religiosity. We’ll return to this point towards the end of this worksheet.</p>
 <p><a name="hierarchical"></a></p>
 </div>
 </div>
@@ -736,7 +737,7 @@ Coefficients:
 <a class="sourceLine" id="cb13-4" href="#cb13-4" title="4">oi_lmbf2 <span class="op">/</span><span class="st"> </span>oi_lmbf1</a></code></pre></div>
 <pre><code>Bayes factor analysis
 --------------
-[1] age + sex + edu_sc + religious + happiness + universe + others + nature + places : 27193346 ±2.49%
+[1] age + sex + edu_sc + religious + happiness + universe + others + nature + places : 26877506 ±3.47%
 
 Against denominator:
   ro_i ~ age + sex + edu_sc + religious 
@@ -745,7 +746,7 @@ Bayes factor type: BFlinearModel, JZS</code></pre>
 <p><strong>Explanation of commands:</strong></p>
 <p>Lines 1-3 build a Bayesian regression model with the demographic and spirituality predictors. Line 4 compares the model with the demographics and spirituality variables, <code>oi_lmbf2</code>, against the model with just the demographics variables, <code>oi_lmbf1</code>. You can think of this as dividing a more complex model by a simpler one, but remember that this is actually a comparison of the evidence for the two models.</p>
 <p><strong>Explanation of output:</strong></p>
-<p>The Bayes Factor for this hypothesis is over 30 million, so we can confidently claim that a model containing these spirituality variables explains more variance in intrinsic religiosity, than a simpler model with just demographics variables.</p>
+<p>The Bayes Factor for this hypothesis is over 25 million, so we can confidently claim that a model containing these spirituality variables explains more variance in intrinsic religiosity, than a simpler model with just demographics variables.</p>
 </div>
 <div id="adding-yet-more-variables" class="section level3">
 <h3>Adding yet more variables</h3>
@@ -786,7 +787,7 @@ Coefficients:
 <a class="sourceLine" id="cb19-5" title="5">oi_lmbf3 <span class="op">/</span><span class="st"> </span>oi_lmbf2</a></code></pre></div>
 <pre><code>Bayes factor analysis
 --------------
-[1] age + sex + edu_sc + religious + happiness + universe + others + nature + places + wellbeing + self_control + emotionality +     sociability + ro_e : 3877.429 ±3.05%
+[1] age + sex + edu_sc + religious + happiness + universe + others + nature + places + wellbeing + self_control + emotionality +     sociability + ro_e : 4006.35 ±2.55%
 
 Against denominator:
   ro_i ~ age + sex + edu_sc + religious + happiness + universe + others + nature + places 
@@ -795,7 +796,7 @@ Bayes factor type: BFlinearModel, JZS</code></pre>
 <p><strong>Explanation of commands:</strong></p>
 <p>Lines 1-4 build the Bayesian model. Line 5 compares this new model against the previous one.</p>
 <p><strong>Explanation of output:</strong></p>
-<p>The Bayes Factor for this hypothesis is over 3,000, which is strong evidence that a model with the additional variables explains more variance than the simpler model in step 2.</p>
+<p>The Bayes Factor for this hypothesis is over 4,000, which is strong evidence that a model with the additional variables explains more variance than the simpler model in step 2.</p>
 </div>
 <div id="a-note-about-overfitting" class="section level3">
 <h3>A note about overfitting</h3>
@@ -806,11 +807,12 @@ Bayes factor type: BFlinearModel, JZS</code></pre>
 <div id="evidence-for-individual-predictors" class="section level2">
 <h2>Evidence for individual predictors</h2>
 <p>We earlier saw that there was strong evidence (<span class="math inline">\(BF &gt; 8000\)</span>) for the model <code>ro_i ~ age + sex + edu_sc + religious</code>, and we noted that this is evidence for the whole model, not for any one predictor (e.g. <code>age</code>). Nonetheless, you might sometimes be asked to report whether there is evidence for a particular predictor within a model <em>individually</em> having an effect on the outcome variable. You can answer such questions using the same approach as above. In other words, calculate the evidence for a model omitting that one predictor – <code>ro_i ~ sex + edu_sc + religious</code> – and compare it to the original model:</p>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" title="1">oi_lmbf1_minus_age &lt;-<span class="st"> </span><span class="kw">lmBF</span>(ro_i <span class="op">~</span><span class="st"> </span>sex <span class="op">+</span><span class="st"> </span>edu_sc <span class="op">+</span><span class="st"> </span>religious, <span class="dt">data =</span> <span class="kw">data.frame</span>(polish))</a>
-<a class="sourceLine" id="cb21-2" title="2">oi_lmbf1 <span class="op">/</span><span class="st"> </span>oi_lmbf1_minus_age</a></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" title="1">oi_lmbf1_minus_age &lt;-<span class="st"> </span><span class="kw">lmBF</span>(ro_i <span class="op">~</span><span class="st"> </span>sex <span class="op">+</span><span class="st"> </span>edu_sc <span class="op">+</span><span class="st"> </span>religious,</a>
+<a class="sourceLine" id="cb21-2" title="2">                           <span class="dt">data =</span> <span class="kw">data.frame</span>(polish))</a>
+<a class="sourceLine" id="cb21-3" title="3">oi_lmbf1 <span class="op">/</span><span class="st"> </span>oi_lmbf1_minus_age</a></code></pre></div>
 <pre><code>Bayes factor analysis
 --------------
-[1] age + sex + edu_sc + religious : 1.129717 ±3.01%
+[1] age + sex + edu_sc + religious : 1.147636 ±3.95%
 
 Against denominator:
   ro_i ~ sex + edu_sc + religious 
@@ -821,7 +823,7 @@ Bayes factor type: BFlinearModel, JZS</code></pre>
 <a class="sourceLine" id="cb23-2" title="2">oi_lmbf1 <span class="op">/</span><span class="st"> </span>oi_lmbf1_minus_rel</a></code></pre></div>
 <pre><code>Bayes factor analysis
 --------------
-[1] age + sex + edu_sc + religious : 59448.28 ±2.27%
+[1] age + sex + edu_sc + religious : 60788.11 ±3.87%
 
 Against denominator:
   ro_i ~ age + sex + edu_sc 
@@ -846,7 +848,7 @@ Coefficients:
 # … with 2 more variables: deviance &lt;dbl&gt;, df.residual &lt;int&gt;</code></pre>
 <pre><code>Bayes factor analysis
 --------------
-[1] age + sex + edu_sc + religious : 7.147663 ±1.29%
+[1] age + sex + edu_sc + religious : 7.491637 ±2.43%
 
 Against denominator:
   Intercept only 
@@ -876,7 +878,7 @@ Coefficients:
 # … with 2 more variables: deviance &lt;dbl&gt;, df.residual &lt;int&gt;</code></pre>
 <pre><code>Bayes factor analysis
 --------------
-[1] age + sex + edu_sc + religious + happiness + universe + others + nature + places : 0.04043611 ±3.08%
+[1] age + sex + edu_sc + religious + happiness + universe + others + nature + places : 0.0378861 ±5.83%
 
 Against denominator:
   tei ~ age + sex + edu_sc + religious 
