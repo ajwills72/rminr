@@ -25,11 +25,11 @@ library(pander)
 * [High-quality output](#hq)
 * [Choosing a graph for your data](#choosing)
 * [Within-participants manipulations](#within)
-    + [One factor, ordered variable](#w-1x3)
-    + [Two factors, two levels](#w-2x2)
+    + [Single factor, ordered variable](#w-1x3)
+    + [Interaction, two levels](#w-2x2)
 * [Between-participants manipulations](#between)
-    + [One factor, two levels](#b-1x2)
-    + [One factor, four levels](#b-1x4)
+    + [Single factor, two levels](#b-1x2)
+    + [Single factor, unordered variable](#b-1x4)
 * [Mixed (within-between) data](#mixed)
 * [Pairs plot](#pairs)
 
@@ -167,7 +167,7 @@ We'll start by producing some graphs for within-participants manipulations.
 
 <a name="w-1x3"></a>
 
-## One factor, ordered variable
+## Single factor, ordered variable
 
 Our first example uses data from [an undergraduate student experiment on the Perruchet Effect](awdiss.html). Stay in your `rminr-data` project, create a new R file called `one-within.R`, and enter the commands that follow into that file. 
 
@@ -277,7 +277,7 @@ Most of these commands we've used in previous worksheets. The command `scale_x_c
 
 <a name="w-2x2"></a>
 
-## Two factors, two levels
+## Interaction, two levels
 
 Our next example is from an experiment with two within-subjects factors. Participants were trained to associate two screen colours with pictures of two different food rewards. At test, they saw pairs of screen colours and food pictures. Their reaction time (RT) in milliseconds was measured in cases where the pairs matched the associations they'd previously learned (congruent trials), and in cases where the pairs did not match what they had previously learned(incongruent trials). The participants experienced this test both with, and without, a secondary task. In the secondary task, the participant had to verbally rate how much they liked pictures of faces. As all participants completed all conditions, we have a fully within-subjects design, with factors congruency (congruent, incongruent) and load (load, no load).
 
@@ -379,15 +379,15 @@ The black vertical line placed at zero allows us to quickly see approximately si
 
 # Between-participants manipulations
 
-We now look at some graphs for between participants data.
+We now look at some graphs for between-participants manipulations
 
 <a name="b-1x2"></a>
 
-## One factor, two levels
+## Single factor, two levels
 
-We'll plot some data from [a study in which tested children’s language development](cs-picture-naming.html). The Words in Game (WinG) task uses picture cards to test children's comprehension of, and ability to say, nouns and predicates. A predicate completes an idea about the subject of a sentence. For example, if the card showed a girl pushing a bike, the predicate would be "pushing".
+We'll plot some data from [a study which tested children’s language development](cs-picture-naming.html). The Words in Game (WinG) task uses picture cards to test children's comprehension of, and ability to say, nouns and predicates. A predicate completes an idea about the subject of a sentence. For example, if the card showed a girl pushing a bike, the predicate would be "pushing".
 
-In this study children were tested using one of two sets of picture cards; the set used in the Italian version of WinG, or the set used in the English version. The researchers were primarily interested in whether the children's performance differed depending on which cards were used. We can demonstrate this with plots that show the distribution of scores for the two card sets on the WinG tasks.
+In this study, children were tested using one of two sets of picture cards; the set used in the Italian version of WinG, or the set used in the English version. The researchers were primarily interested in whether the children's performance differed depending on which cards were used. We can demonstrate this with plots that show the distribution of scores for the two card sets on the WinG tasks.
 
 We start by preparing the data for plotting. These steps are described in detail in the [Better tables worksheet](better-tables.html) worksheet, so we won’t repeat the description here. Instead, we’ll just list the commands and show the final output.
 
@@ -408,7 +408,7 @@ wing$task <- wing$task %>% recode(!!!task_names)
 wing %>% head(8) %>% pander()
 ```
 
-We'll plot the data using 'half violin' plots. As the name suggests, this shows one half of a [violin plot](https://en.wikipedia.org/wiki/Violin_plot).
+We'll plot the data using 'half violin' plots. As the name suggests, this shows one half of a [violin plot](https://en.wikipedia.org/wiki/Violin_plot), which is just a density plot (see previous example) rotated through ninety degrees. We've used full violin plots in a previous [worksheet](illusions.html); the advantage of the half-violin plot in this case is that it allows us to more clearly and compactly compare two distributions.
 
 ```{r cloud, class.source = 'numberLines lineAnchors'}
 # between subjects half-violin plot
@@ -416,40 +416,39 @@ library(see)
 wing %>% ggplot(aes(x = task, y = correct, fill = cards)) +
   geom_violinhalf(position = position_identity(), alpha=0.7, size=0) +
   xlab('WinG Task') + ylab('Accuracy (max = 20)') +
-  scale_fill_grey() + theme_APA +
-  theme(axis.text = element_text(size = 10))
+  theme_APA +
+  theme(axis.text = element_text(size = 8))
 ```
 
 ### Explanation of commands
 
-Line 2 loads the `see` package which provides the `half_violin()` function. Line 3 defines the x axis of our plot to be the WinG `task`, the y axis to be task accuracy (`correct`), and to use the `cards` factor for the fill colour. Line 4 creates a the half violin plots. `position = position_identity()` plots the two distributions on top of each other, making it easy to see how much they overlap. `alpha=0.7` changes the transparency, again to help us see the overlapping area. `size=0` removes the outline around the distributions. Line 5 gives our axes meaningful labels. Line 6 converts the fill colours to a grey pallete, and applies our APA theme. Line 7 adjusts the size of the text on the x axis, so that the task names don't overlap.
+Line 2 loads the `see` package which provides the `half_violin()` function. Line 3 defines the x axis of our plot to be the WinG `task`, the y axis to be task accuracy (`correct`), and to use the `cards` factor for the fill colour. Line 4 creates the half violin plots. `position = position_identity()` plots the two distributions on top of each other, making it easy to see how much they overlap. `alpha=0.7` changes the transparency, again to help us see the overlapping area. `size=0` removes the outline around the distributions. Line 5 gives our axes meaningful labels. Line 6 applies our APA theme. Line 7 adjusts the size of the text on the x axis, so that the task names don't overlap.
 
 ### Explanation of plot
 
 The plot gives a visual indication of whether there were differences between the Italian and English cards on each of the tests. Given the extensive overlap in scores between the card sets, this seems unlikely.
 
+<a name="b-1x2a"></a>
+
 ### Why not a bar plot?
 
-We could have used a bar plot to graph this data, but the half violin plot seemed a better choice. For example, [Newman & Scholl (2012)](https://link.springer.com/article/10.3758%2Fs13423-012-0247-5) showed that readers misinterpret bar plots, because the values within the bar are perceived as more likely than those just above, even though this is not the case.
+We could have used a bar plot to graph this data, but the half-violin plot is a better choice, for at least two reasons:
 
-For completeness, here's the same data plotted using bars and confidence intervals. As you can see, the code is similar to the point and line plot above.
+1. [Newman & Scholl (2012)](https://link.springer.com/article/10.3758%2Fs13423-012-0247-5) showed that readers misinterpret bar plots, because the values within the bar are perceived as more likely than those just above, even though this is not the case. 
 
-```{r}
-wing %>% ggplot(aes(x=task, y=correct, fill=cards)) +
-  stat_summary(geom="bar", fun=mean, position=position_dodge(0.95)) +
-  stat_summary(geom="errorbar", width = 0.1, fun.data=mean_cl_boot,
-               position=position_dodge(0.95)) +
-  ylab("Mean RT") + xlab("Congruency") +
-  labs(caption = "Bars are 95% confidence intervals") +
-  theme_APA + scale_fill_grey() +
-  theme(axis.text = element_text(size = 10))
-```
+2. Bar plots lose all of the information about variability, which - as we have covered in previous examples - is usually important to show in psychology, as people tend to vary! 
+
+Although there's not much we can do about the first problem (other than pick a better graph!), we can help with the second one a bit by using _confidence intervals_ -- an idea we'll introduce later in the worksheet. If you decide that your graph simply must be a bar graph, then this [link](barplot-ci.R) provides the R code for replotting the above graph as a bar plot with confidence intervals. 
+
 
 <a name="b-1x4"></a>
 
-## One factor, four levels
+## Single factor, unordered variable
 
-Another common plot is the boxplot. This includes a thick line which represents the median, and a box on either side which shows how the middle 50% of the data is distributed around the median. The areas above and below the median are called the the upper and lower quartiles respectively. Together they form the 'inter-quartile range' (IQR). The 'whiskers' above and below the quartiles represent the distribution of the top and bottom 25% of the data. The dots draw attention to data points which lie outside of these ranges.
+When your hypothesis concerns more than two groups, overlapping half-violin plots (as we did in the last example) can start to get a bit messy -- it can be hard to pick out the three or four distributions when they're all on top of one another. One solution is to spread the half-violin plots out over the x-axis, as we did for the four picture naming tasks in the last example. Another approach is to use boxplots, which is what we'll do here. 
+
+In a boxplot (see figure below), the thick line is the median. That thick line is enclosed inside a rectangle (the 'box'), and the size of the box indicates the inter-quartile range -- a concept we covered in the [facial attractiveness](face-attract.html) worksheet. The top and bottom of the box are called 'hinges'. The vertical lines connected to each hinge are called 'whiskers', and give some indication of the broader range of the data. Exactly what the whiskers show differs depending on the particular command you use to draw a boxplot. In this particular case the upper whisker shows the largest data point that is no more than 1.5 times the inter-quartile range above the upper hinge. The lower whisker is the lowest point no more than 1.5x the IQR below the lower hinge. In this version of a boxplot, any data point outside the range of the whiskers is described as an 'outlying point' and is shown individually as a dot. 
+
 
 We'll create a boxplot to compare the emotional avoidance strategies for fans of Mainstream (control group), Goth, Metal and Emo music. This data came from a final year undergraduate student dissertation.
 
