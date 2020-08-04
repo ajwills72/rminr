@@ -195,7 +195,7 @@ eplot
 
 From this plot, it's clear that: (a) the overall trend is downwards, (b) most but not all participants individually show this trend, and (c) there is some variation in the absolute ratings people use.
 
-## Building up the graph, piece by piece
+### Building up the graph, piece by piece
 
 This graph is a bit more complex than the ones we've produced before, but R and, in particular, `ggplot`, allows us to build up complex graphs like this piece by piece, from familiar components. The way to do this is to start with a blank page, which we do by just using the `ggplot` command on its own:
 
@@ -279,34 +279,44 @@ priming <- raw %>%
   summarise(RT = mean(RT, na.rm = TRUE))
 ```
 
-A two-factor within-subjects design is one of the most common in cognitive psychology, and there is a standard way to plot this type of data -- and we've come across this type of plot in the [understanding interactions](anova2.html#intsect) worksheet.  Specifically, we use points connected by lines to represent the means in each of the four conditions.
+A two-factor within-subjects design is one of the most common in cognitive psychology. There is a standard way to plot this type of data, which we've previously come across in the [understanding interactions](anova2.html#intsect) worksheet.  Specifically, we use points connected by lines to represent the means in each of the four conditions. 
+
+To do this, we first need to calculate the means for each condition, using now-familiar commands:
+
+```{r cond-means}
+priming.sum <- priming %>% group_by(Congruency, Load) %>%
+  summarise(RT = mean(RT, na.rm = TRUE))
+```
+
+We can then plot the same graph as we did in the [understanding interactions](anova2.html#intsect) worksheet:
 
 ```{r w-pointline-2-1, class.source = 'numberLines lineAnchors'}
-within_2x2 <- priming %>%
-  ggplot(aes(x=Congruency, y=RT, group=Load, colour=Load))
-within_2x2 <- within_2x2 +
-  stat_summary(geom="point", fun=mean) +
-  stat_summary(geom="line", fun=mean)
+within_2x2 <- priming.sum %>%
+  ggplot(aes(x=Congruency, y=RT, group=Load, colour=Load)) +
+  geom_line() +
+  geom_point()
 within_2x2
 ```
 
 ### Explanation of commands
 
-Line 1-2 define the x axis of our plot to be the Congruency factor, and the y axis to be RT. They also instruct R to produce different lines for load and no-load (`group=Load`), and to use a different colour for these two lines (`colour=Load`) .
+Lines 1-2 define the x axis of our plot to be the Congruency factor, and the y axis to be RT. They also instruct R to produce different lines for load and no-load (`group=Load`), and to use a different colour for these two lines (`colour=Load`) .
 
-Lines 3-4 add mean points to the plot using `stat_summary()`. `stat_summary()` is a concise way to summarise and plot graphical elements. It works in a similar way to the `group_by()` and `summarise()` commands you've previoulsy used to create summary statistics. The `fun=mean` tells `stat_summary()` to summarise the data using a mean (`fun=mean`). Here, it calculates a mean RT (`y=RT`) for each of the groups created by `x=Congruency` and `group=Load`. `geom="point"` tells `stat_summary()` to plot the means as points. Line 5 uses a similar approach to add lines to the plot, with endpoints positioned at the four mean points. Line 7 tells R to show the plot we have created.
+Lines 3 plots the lines on thge graph, and Line 4 adds plot points. Line 5 tells R to show the plot we have created.
 
-Finally, we apply some formatting to the graph.
+### Tidying up
+
+Finally, we apply some formatting to the graph, in the way we covered at the beginning of the current worksheet:
 
 ```{r w-pointline-2-3, message=FALSE, class.source = 'numberLines lineAnchors'}
 within_2x2 +
   ylab("Mean RT") + xlab("Congruency") +
-  scale_color_grey() + theme_APA
+  theme_APA
 ```
 
 ### Explanation of commands
 
-Line 2 adds meaningful labels to the axes. Line 3 converts the colours to a grey pallete, and applies our APA theme.
+Line 2 adds meaningful labels to the axes. Line 3 applies our APA theme.
  
 ### Explanation of plot
 
