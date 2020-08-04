@@ -32,7 +32,8 @@ library(pander)
     + [Single factor, unordered variable (boxplot)](#b-1x4)
 * [Mixed manipulations]
     + [Pre/post manipulation for different groups (confidence intervals)](#mixed)
-* [Pairs plot](#pairs)
+* [Correlational data]
+    + [Pairs plot](#pairs)
 
 <a name = "intro"></a>
 
@@ -616,7 +617,7 @@ There is basically no good way of showing confidence intervals for both within- 
 
 ## Pairs plot
 
-Like the correlation matrices introduced in the [Better tables](better-tables.html#cor-matrix) worksheet, we can use a 'pairs' plot to show relationships between pairs of variables.
+Like the correlation matrices introduced in the [Better tables](better-tables.html#cor-matrix) worksheet, we can use a 'pairs' plot to show relationships between pairs of variables in a correlational study.
 
 In this plot, a set of variables are listed along the columns, and also down the rows. A pair is the cell defined by a particular row and column. Along the diagonal, variables are paired with themselves, so the correlation doesn't provide any information, as it is always 1. Above the diagonal are all of the combinations of the remaining pairs of variables. The same combinations of pairs are repated below the diagonal.
 
@@ -624,10 +625,10 @@ This format provides an opportunity to provide a lot of information in a small a
 
 We'll plot some data from another undergraduate dissertation. This study was interested in correlations between creative problem solving, and three other variables:
 
-  * problems - number of problems solved
-  * Openness - a common factor used in personality research
-  * PsiQ - vividness of mental imagery
-  * FTT - the score on a flexible thinking task
+  * problems - number of creative problems solved
+  * openness - a common measure used in personality research
+  * psiq - vividness of mental imagery
+  * ftt - score on a flexible thinking task
 
 ```{r pairs-2, class.source = 'numberLines lineAnchors', message=FALSE}
 library(GGally, quietly = TRUE)
@@ -635,8 +636,7 @@ oit <- read_csv('going-further/openness-imagery-thinking.csv')
 
 oit %>%
   select(psiq, openness, problems, ftt) %>%
-  ggpairs(lower=list(continuous='smooth')) +
-  theme_APA
+  ggpairs(lower=list(continuous='smooth')) 
 ```
 
 ### Explanation of commands
@@ -645,9 +645,9 @@ Line 1 loads the `GGally` package, which provides the `ggpairs()` function for c
 
 ### Explanation of plot
 
-There are small positive correlations between FTT and all other variables, and between PsiQ and Openness. There is no correlation between problems solved and either PSiQ or Openness.
+There are small positive correlations between FTT and all other variables, and between PsiQ and Openness. There is no correlation between problems solved and either PSiQ or Openness. The `*` indicates those correlations that are significant by a [traditional test](corr.html#evidence)/
 
-The PsiQ density plot shows that nobody scored less than about 3.5, and above that value the data was normally distributed. The pattern was similar for Openness and FTT, with fewer low scores shifting the distribution slightly to the right. The number of problems solved showed the opposite pattern. There was a steady decline from people who solved only one problem, and nobody solved more than four.
+The PsiQ density plot shows that nobody scored less than about 3.5, and above that value the data was normally distributed. The pattern was similar for FTT, with fewer low scores shifting the distribution slightly to the right. The number of problems solved showed the opposite pattern. There was a steady decline from people who solved only one problem, and nobody solved more than four.
 
 Notice that the limits on the x and y scales of the density plots and scatterplots are set by the range of the data rather than the range of the scale. To keep this example simple, we haven't corrected this. For a journal article, you would use ggplot's scale adjustment functions to set the correct x and y limits for each pair.
 
