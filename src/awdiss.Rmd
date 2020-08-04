@@ -114,7 +114,7 @@ The final line renames the columns, as covered in the [Preprocessing data from e
 
 ## De-duplicating data
 
-We're now going to get the data into a state where we can meaningfully analyse it:
+We're now going to get the data into a state where we can meaningfully analyse it. The following commands were fully explained in the [data preprocessing for experiments](preproc-experiments.html) worksheet.
 
 ```{r tidy, message=FALSE}
 ## De-duplicate data; remove pilot study
@@ -122,19 +122,13 @@ raw <- distinct(raw)
 raw  <- raw %>% filter(subj > 161)
 ```
 
-### Explanation of commands
-
-The second line, `raw <- distinct(raw)` is a _de-duplication_ command. It's a very handy command for tidying up data in cases where people have made the [grave error](https://arstechnica.com/tech-policy/2013/04/microsoft-excel-the-ruiner-of-global-economies/) of trying to use Excel for serious research. What happened in this case was that the experiment was run by three people over many different days. They then tried to stitch all the data files together by copying-and-pasting them into one big file in Excel. This would have been easy using R, as covered in  [Preprocessing data from experiments](preproc.html#combine) but, unfortunately, no one had taught them how to use R. Predictably, they could not do this combination of files in Excel without error (few people could), and they ended up copying some of the data twice. In this case, it's easy to detect and fix in R, because no two rows of this data can be identical - the subject number or the time is always going to be different. So, we can remove duplicates by telling R to give us just one copy of each of the different rows in the data set. The command `distinct` does that for us. 
-
-The final line, `raw  <- raw %>% filter(subj > 161)` should be familiar from previous worksheets; we are keeping only those participants whose subject number is greater than 161. This is because, in this study, we first ran a short pilot experiment, looked at the data, and made a few changes to the experiment. Here, we only wanted to analyze the main study, so we removed the pilot participants.
-
 <a name="exclude"></a>
 
 ## Excluding participants
 
 Participants in this experiment were told to rate their expectancy of the US during the CS, _on every trial_. However, they only had 8 seconds to do this, and the experimenters noticed that sometimes people failed to make a rating. The experimental apparatus records this as a rating of zero. 
 
-Participants who miss a lot of ratings aren't really following the instructions, making their data hard to interpret. In such cases, we normally exclude those participants from further analysis. First, we need to find out how widespread this problem is. One way to do this is to calculate the number of zero ratings each participant makes:
+Participants who miss a lot of ratings aren't really following the instructions, making their data hard to interpret. In such cases, we normally exclude those participants from further analysis. The following commands were fully explained in the [data preprocessing for experiments](preproc-experiments.html) worksheet:
 
 ```{r zeros}
 ## Number of expectancy ratings, by participant
@@ -142,27 +136,11 @@ inspect  <- raw %>% filter(key == "ER") %>% filter(value == 0)
 table(inspect$subj)
 ```
 
-### Explanation of commands
-
-The second line filters to those rows of the raw data that contain expectancy ratings (`key == "ER"`, see `codebook.md`) and then to cases where that rating is zero (`value == 0`). This is then stored in the data frame `inspect`. One could look at this manually, but it's more efficient and less error prone to get R to tell us how many times each participant has a zero rating. This is what the final line, `table(inspect$subj)` does - it counts the number of times each subject number occurs in `inspect`.
-
-### Explanation of output
-
-The output shows the number of trials on which each participant failed to give an expectancy rating. If a participant never made a zero rating, their participant number does not appear on the table. We can see that sixteen participants missed at least one rating, and that six participants missed more than 3 (one participant never made a rating, missing all 46 trials of the experiment!). 
-
-### Removing participants from the dataset
-
-In this case, we decided to exclude all participants who missed more than three ratings:
-
 ```{r exclude}
 ## Exclude participants
 exclude  <- c(164, 166, 176, 199, 236, 239)
 raw  <- raw %>% filter(!(subj %in% exclude))
 ```
-
-### Explanation of commands
-
-The second line creates a list of the participant numbers we wish to exclude. In the second line, we remove those participants from the `raw` data frame. The `filter` command will be familiar from previous worksheets. The command `subj %in% exclude` means 'any participant whose subject number is in our list `exclude`. The use of `!()` in the filter statement means `not`. So, `filter(!(subj %in% exclude))` means keep the participants whose subject number is not in the `exclude` list. 
 
 ### Note
 
@@ -441,7 +419,7 @@ We need a list of the different participant numbers used in this experiment. We 
 
 We now use a loop to go through the same set of steps for each participant. This takes a little while to run, because it preprocesses 2,300 trials (46 trials for each of 50 participants);
 
-```{r preproc-loop}
+```{r preproc-loop, message = FALSE}
 ## Baseline correct all trials for all participants
 sum.data  <- NULL
 for(this.subj in subjs$value) {
@@ -480,27 +458,12 @@ All of these commands are placed inside a `for` loop, which we've used before in
 
 ## Log transform
 
-There are three further preprocessing steps we have to take before we can analyze these data. First, studies of GSR data normally _log transform_ it before analysis. Log transforming data means to take the [logarithm](https://en.wikipedia.org/wiki/Logarithm) of the data, in this case the [natural logarithm](https://en.wikipedia.org/wiki/Natural_logarithm). Two reasonable questions about this preprocessing are: (a) what does that mean, and (b) why would you do it?
-
-To answer the first question, a log transform compresses the range of the data. The following graph should help visualize this:
-
-```{r log plot}
-## Visualizing logarithms
-plot(1:50,log(1:50))
-```
-
-On the x-axis we have the numbers 1 to 50. On the y-axis, we have the natural logarithm of those numbers. As you can see, while the x-axis rises from 1 to 50, the y-axis rises from zero to around 4. You should also be able to notice that for each increase in x, the increase in y gets smaller. So, for example, where x rises from 1 to 2, log(x) rises from 0 to about .8; but where x rises from 2 to 3, log(x) rises by about 0.4. 
-
-As a result, a log transform doesn't change small numbers very much, but reduces large numbers a lot more. This can be useful if, for example, a few participants have unusually large GSRs. These very large GSRs would increase the _variance_ of the data substantially, and this can make it harder to detect real differences between conditions. A log transform can reduce that problem, and hence can make it easier to find real effects in such situations. So, this also answers the second part of the question - we apply a log transform to GSR data because it can make it easier to find real effects.
-
-We log transform our GSR data using the `mutate` command that we used earlier:
+There are three further preprocessing steps we have to take before we can analyze these data. First, studies of GSR data normally _log transform_ it before analysis. The following commands were fully explained in the [data preprocessing for experiments](preproc-experiments.html) worksheet:
 
 ```{r log trans}
 ## Log transformation of GSR
 sum.data  <- sum.data %>% mutate(lcval = log(cval+1))
 ```
-
-The command `log` takes the natural logarithm. We calculate `log(cval+1)` rather than `log(cval)` because the `log(0)` is an infinitely small number, which is something that cannot be analyzed. By adding 1 we don't hit this problem (unless cval is -1 or smaller, which it seldom is).
 
 <a name="rmtrials"></a>
 
