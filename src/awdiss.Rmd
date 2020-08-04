@@ -565,11 +565,7 @@ From these results, we can see that expectancy reduces with Level, as expected. 
 
 ## Better graphs
 
-The simplest graph we could produce here would be to just plot the three means reported above, but this wouldn't really add anything to what we've already done; the trend is clear just from the three numbers. 
-
-Generally, when we graph data from psychology experiments, we try to give an indication of the variability between participants - is everyone exactly like the mean, or do people differ? One common way of doing this it to plot some kind of 'error bar'; for example, as shown in Figure 1 of  [McAndrew et al. (2012)](https://www.researchgate.net/profile/IPL_Mclaren/publication/221752843_Dissociating_Expectancy_of_Shock_and_Changes_in_Skin_Conductance_An_Investigation_of_the_Perruchet_Effect_Using_an_Electrodermal_Paradigm/links/0a85e53c10b74f291a000000.pdf). McAndrew et al., are not clear how they calculated these bars, but it's quite likely that they are the standard errors, considering each Level separately -- because this is the most common plot of this type. Such error bars are not particularly informative because, for example, they represent the variability _between_ participants at each Level, when the experiment is a _repeated measures_ design and so it is the variability of the trends across Level that is most relevant.
-
-In this project, we instead plot one line for each participant, and then overlay this with the means to emphasize the overall trend. Here's the final plot:
+The simplest graph we could produce here would be to just plot the three means reported above, but this wouldn't really add anything to what we've already done; the trend is clear just from the three numbers. Instead, we did the following:
 
 ```{r final-plot, echo= FALSE}
 ## Plot of expectancy by Level
@@ -596,66 +592,7 @@ eplot
 
 From this plot, it's clear that: (a) the overall trend is downwards, (b) most but not all participants individually show this trend, and (c) there is some variation in the absolute ratings people use.
 
-### Building up the graph, piece by piece
-
-This graph is a bit more complex than the ones we've produced before, but R and, in particular, `ggplot`, allows us to build up complex graphs like this piece by piece, from familiar components. The way to do this is to start with a blank page, which we do by just using the `ggplot` command on its own:
-
-```{r blank}
-### Create a blank plot
-base  <- ggplot()
-base
-```
-
-Next, we add a line for each participant:
-
-
-```{r lines}
-### Add a line for each participant
-lns  <- geom_line(aes(x=level, y=expect, group=subj, colour=subj), data = lvl.sum, alpha = .25)
-base + lns
-```
-
-In line 2 above, we use the familiar `geom_line` to draw a line graph, much as we did to plot the individual GSR readings. The difference here is that we set `group=subj`, giving us a different line for each participant (the participant number is in the `subj` column of the `lvl.sum` data frame). These lines are easier to distinguish from each other if they are not all the same colour, so we all set `colour=subj`, so each gets a different colour (in this case, the default is that they all get a slightly different shade of blue). The final part, `alpha = .25`, makes the lines fainter, so that the mean trend line we're going to add next is more noticeable.
-
-In line 3, we display our new line graph on top of the background: `base + lns`. 
-
-Next, we add an indication of the mean rating at each level. We already calculated those means earlier, so we can just use those calculations, which we stored in `mdata`:
-
-```{r mean.trend}
-### Add a mean line
-mline  <- geom_line(aes(x=level, y=expect), data = mdata, colour="black")
-base + lns + mline
-```
-
-We can make the mean line more prominent by also including plot points on it:
-
-```{r mean.trend.dots}
-mdots  <- geom_point(aes(x=level, y=expect), data = mdata, colour="black")
-base + lns + mline + mdots
-```
-
-Now, we can do various things to make the graph look nicer. First, load the `themeapa.R` file (written by Tina Seabrooke) from my website. You can then add this theme and add it to the graph:
-
-```{r apa}
-### Load and add APA theme
-source("http://www.willslab.org.uk/rminr/theme-apa.R")
-base + lns + mline + mdots + theme_APA() + theme(legend.position="none")
-```
-
-This makes the graph more in keeping with the style of graphs one normally sees in psychology journals. We also added the command `theme(legend.position="")`, which removes the legend (i.e. the key relating participant number to shade of blue, which isn't informative). 
-
-Finally, we tidy up the x and y axis labels:
-
-```{r apa.final}
-### Tidy up x and y axis labels
-base + lns + mline + mdots + theme_APA() + theme(legend.position="none") +
-    xlab("Level") + ylab("Expectancy rating") +
-    ylim(1,5) + scale_x_continuous(breaks = c(1,2,3))
-```
-
-Most of these commands we've used in previous worksheets. The command `scale_x_continuous` allows us to set exactly what the 'tick marks' on the x-axis are going to be - it makes no sense to have a Level of e.g. 1.5 marked on the graph, because such levels do not exist in the experiment.
-
-If we were planning to put this graph in another document (e.g. a dissertation write-up) then we'd want to use `ggsave` to do this, see the [Better Graphs](better-graphs.html#hq) worksheet.
+A full explanation of how we built this graph can be found in the [better graphs](better-graphs.html) worksheet.
 
 ### Graphing GSR
 
