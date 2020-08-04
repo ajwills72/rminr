@@ -1,6 +1,6 @@
 ---
 title: "Better graphs"
-author: "Paul Sharpe, Andy Wills"
+author: "Paul Sharpe, Andy Wills, Chris Mitchell"
 output:
   html_document:
     highlight: pygment
@@ -269,6 +269,8 @@ Most of these commands we've used in previous worksheets. The command `scale_x_c
 
 Our next example is from an experiment with two within-subjects factors. Participants were trained to associate two screen colours with pictures of two different food rewards. At test, they saw pairs of screen colours and food pictures. Their reaction time (RT) in milliseconds was measured in cases where the pairs matched the associations they'd previously learned (congruent trials), and in cases where the pairs did not match what they had previously learned(incongruent trials). The participants experienced this test both with, and without, a secondary task. In the secondary task, the participant had to verbally rate how much they liked pictures of faces. As all participants completed all conditions, we have a fully within-subjects design, with factors congruency (congruent, incongruent) and load (load, no load).
 
+A two-factor within-subjects design is one of the most common in cognitive psychology. There is a fairly typical way to plot this type of data, which we've previously come across in the [understanding interactions](anova2.html#intsect) worksheet.  Specifically, we use points connected by lines to represent the means in each of the four conditions. 
+
 We start by loading the data, keeping only the test trials, and then calculating mean reaction time for each condition for each participant, using commands we have used in several previous worksheets:
 
 ```{r w-pointline-2-preproc, message=FALSE}
@@ -279,13 +281,12 @@ priming <- raw %>%
   summarise(RT = mean(RT, na.rm = TRUE))
 ```
 
-A two-factor within-subjects design is one of the most common in cognitive psychology. There is a standard way to plot this type of data, which we've previously come across in the [understanding interactions](anova2.html#intsect) worksheet.  Specifically, we use points connected by lines to represent the means in each of the four conditions. 
-
-To do this, we first need to calculate the means for each condition, using now-familiar commands:
+Next we calculate the means for each condition, using now-familiar commands:
 
 ```{r cond-means}
 priming.sum <- priming %>% group_by(Congruency, Load) %>%
   summarise(RT = mean(RT, na.rm = TRUE))
+priming.sum
 ```
 
 We can then plot the same graph as we did in the [understanding interactions](anova2.html#intsect) worksheet:
@@ -302,7 +303,7 @@ within_2x2
 
 Lines 1-2 define the x axis of our plot to be the Congruency factor, and the y axis to be RT. They also instruct R to produce different lines for load and no-load (`group=Load`), and to use a different colour for these two lines (`colour=Load`) .
 
-Lines 3 plots the lines on thge graph, and Line 4 adds plot points. Line 5 tells R to show the plot we have created.
+Line 3 plots the lines on the graph, and Line 4 adds plot points. Line 5 tells R to show the plot we have created.
 
 ### Tidying up
 
@@ -318,11 +319,15 @@ within_2x2 +
 
 Line 2 adds meaningful labels to the axes. Line 3 applies our APA theme.
  
-### Explanation of plot
+### Plotting variability
 
-The black line is well above the grey line, showing that people were slower to respond on trials where they were rating faces. The average of the black and grey points for congruent is about 625ms, and for incongruent about 640ms. This means that RTs were similar, regardless of the congruencey between the screen colour and food picture.
+The above graph shows that, on average, the effect of congruency on RT is smaller under load. We can see this because the red line is closer to horizontal than the blue line. This is the key result of this experiment and, as in our previous example, it would be good to give our reader a sense of the variability in this key result. Does every participant show this pattern of a smaller congruency effect under load, or is there variability between participants? 
 
-The congruency effect is the difference between incongruent and congruent trials in ms. In this experiment, we're most interested in how much smaller the congruency effect is under cognitive load. We can calculate this in a similar way to the example in the [Within-subject differences](anova1.html) worksheet.
+One approach we could take here is to add some kind of error bars, as we saw in the paper by [McAndrew et al. (2012)](https://www.researchgate.net/profile/IPL_Mclaren/publication/221752843_Dissociating_Expectancy_of_Shock_and_Changes_in_Skin_Conductance_An_Investigation_of_the_Perruchet_Effect_Using_an_Electrodermal_Paradigm/links/0a85e53c10b74f291a000000.pdf) in our previous example. However, as in our previous example, most people who do this use the between-subjects variability, which is largely uninformative, for the same reasons as previously discussed. We could use within-subjects confidence intervals instead, as discussed [here](http://pcl.missouri.edu/sites/default/files/morey.2008.pdf), but these are not straight forward to calculate in R, and are still less informative than the approach we use below. 
+
+In this experiment, we're most interested in how much smaller the congruency effect is under cognitive load. We can therefore show variability in this key result by calculating a difference of differences score, and plotting the distribution of this score. This is a similar approach to the one we previously took in the [within-subject differences](anova1.html) worksheet.
+
+So, first, we calculate the difference of differences score:
 
 ```{r w_diffdiff, class.source = 'numberLines lineAnchors'}
 priming_diff <- priming %>%
@@ -331,27 +336,32 @@ priming_diff <- priming %>%
            (Incongruent_Load - Congruent_Load))
 ```
 
-### Explanation of commands
+**Explanation of commands**: 
 
 Lines 1-2 pivot the data into a wide format so we can calculate the 'difference of differences'. For each participant, lines 3-4 calculate the congruency effect under load `(Incongruent_Load - Congruent_Load)` and no load `(Incongruent_NoLoad - Congruent_NoLoad)`, then subtract the no load difference from the load difference.
 
-Again, we can visualise this using a density plot. The only additional command is `scale_x_continuous(n.breaks = 10)` which puts 10 'ticks' on the x axis, in this case, at every 200 ms.
+**Explanation of output**:
+
+Open `priming_diff` by clicking on it in your _Environment_. As you can see there are a range of scores in the `diff` column. On a quick inspection, just over half the participants seem to have a positive score (i.e. a bigger congruency effect in the absence of load). A positive score is the expected effect, so clearly there's a lot of variability here. 
+
+We can visualize this variability using a density plot:  
 
 ```{r w_diff_plot}
 priming_diff %>% ggplot(aes(diff)) +
   geom_density(aes(y=..scaled..)) +
   scale_x_continuous(n.breaks = 10) +
-  geom_vline(xintercept = 0, colour = 'red') +
+  geom_vline(xintercept = 0, colour = 'black') +
+  geom_vline(xintercept = mean(priming_diff$diff), colour = 'red') +
   xlab("Congruency effect: No Load - Load RT (ms)") +
-  labs(caption = "Congruency effect = Incongruent - Congruent") +
   ylab("Scaled density") +
   theme_APA 
 ```
 
-### Explanation of plot
+**Explanation of commands**: The only command here that we haven't used before (either in this worksheet, or a previous one) is `scale_x_continuous(n.breaks = 10)`, which puts 10 'ticks' on the x axis, in this case, at every 200 ms.
 
-The vertical line allows us to quickly see that the density is about the same 
-either side of zero. In other words, there's no difference in the congruency effect under load. On average, there's no difference between incongruent and congruent trials, regardless of load, although the range is anything from around -400 to +1450 milliseconds.
+**Explanation of plot**: 
+
+The black vertical line placed at zero allows us to quickly see approximately similar numbers of participants show the expected result (a posiitve score), and its reverse (a negative score). The mean score (shown as a red vertical line) is close to zero, but positive, and we can see this positive mean is at least in part due to a few participants with very large positive scores (a long tail on the right of the distribution). 
 
 <a name="between"></a>
 
