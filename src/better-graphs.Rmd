@@ -25,12 +25,13 @@ library(pander)
 * [High-quality output](#hq)
 * [Choosing a graph for your data](#choosing)
 * [Within-participants manipulations](#within)
-    + [Single factor, ordered variable](#w-1x3)
-    + [Interaction, two levels](#w-2x2)
+    + [Single factor, ordered variable (line plot)](#w-1x3)
+    + [Interaction, two levels (line plot, distribution plot)](#w-2x2)
 * [Between-participants manipulations](#between)
-    + [Single factor, two levels](#b-1x2)
-    + [Single factor, unordered variable](#b-1x4)
-* [Mixed manipulations](#mixed)
+    + [Single factor, two levels (distribution plot)](#b-1x2)
+    + [Single factor, unordered variable (boxplot)](#b-1x4)
+* [Mixed manipulations]
+    + [Pre/post manipulation for different groups (confidence intervals)](#mixed)
 * [Pairs plot](#pairs)
 
 <a name = "intro"></a>
@@ -156,6 +157,8 @@ The rest of this worksheet gives a variety of examples of graphs one can produce
 - **Variable type**: If independent variables / predictor variables have more than two levels, are those levels ordered or unordered? For example, age is an ordered variable, but gender is an unordered variable.  
 
 This may help you narrow down the range of possibilities to those most suitable to the question you wish to investigate.
+
+Another way we can categorize plots is by the sort of graphical device we use (e.g. lines, bars, distributions). So, if you're looking to do a particular sort of plot, these examples can also help -- not only on how to produce that plot, but also to think about when such a plot is a good choice. 
 
 The examples in this worksheet are  just a small sample of what can be achieved in R; for much more, take a look at the excellent [R Graph Gallery](https://www.r-graph-gallery.com/).
 
