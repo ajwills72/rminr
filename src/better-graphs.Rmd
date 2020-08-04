@@ -282,22 +282,19 @@ priming <- raw %>%
 A two-factor within-subjects design is one of the most common in cognitive psychology, and there is a standard way to plot this type of data -- and we've come across this type of plot in the [understanding interactions](anova2.html#intsect) worksheet.  Specifically, we use points connected by lines to represent the means in each of the four conditions.
 
 ```{r w-pointline-2-1, class.source = 'numberLines lineAnchors'}
-dodge <- .1
 within_2x2 <- priming %>%
   ggplot(aes(x=Congruency, y=RT, group=Load, colour=Load))
 within_2x2 <- within_2x2 +
-  stat_summary(geom="point", fun=mean,
-               position = position_dodge(width = dodge)) +
-  stat_summary(geom="line", fun=mean,
-               position = position_dodge(width = dodge))
+  stat_summary(geom="point", fun=mean) +
+  stat_summary(geom="line", fun=mean)
 within_2x2
 ```
 
 ### Explanation of commands
 
-Line 1 defines a value that we'll use repeatedly in this worksheet. It will be used adjust the horizontal position of elements, so they don't overlap, making the plot clearer. Line 2-3 define the x axis of our plot to be the Congruency factor, the y axis to be RT, to group Congruency by Load, and to use a different colour for the factor levels `Load`, and `NoLoad`.
+Line 1-2 define the x axis of our plot to be the Congruency factor, and the y axis to be RT. They also instruct R to produce different lines for load and no-load (`group=Load`), and to use a different colour for these two lines (`colour=Load`) .
 
-Lines 4-6 add mean points to the plot using `stat_summary()`. `stat_summary()` is a concise way to summarise and plot graphical elements. It works in a similar way to the `group_by()` and `summarise()` pattern you've used to create summary statistics. The `fun=mean` tells `stat_summary()` to summarise the data by running the `mean` function for the grouped data you defined in `aes()`. Here, it will calculate a mean RT (`y=RT`) for each of the groups created by `x=Congruency` and `group=Load`. `geom="point"` tells `stat_summary()` to plot the means as points. `position = position_dodge(width = dodge)` specifies an offset to use so that the points won't be plotted on top of each other. Lines 7-8 use a similar approach to add lines to the plot, with endpoints positioned at the four mean points.
+Lines 3-4 add mean points to the plot using `stat_summary()`. `stat_summary()` is a concise way to summarise and plot graphical elements. It works in a similar way to the `group_by()` and `summarise()` commands you've previoulsy used to create summary statistics. The `fun=mean` tells `stat_summary()` to summarise the data using a mean (`fun=mean`). Here, it calculates a mean RT (`y=RT`) for each of the groups created by `x=Congruency` and `group=Load`. `geom="point"` tells `stat_summary()` to plot the means as points. Line 5 uses a similar approach to add lines to the plot, with endpoints positioned at the four mean points. Line 7 tells R to show the plot we have created.
 
 Finally, we apply some formatting to the graph.
 
@@ -408,7 +405,7 @@ For completeness, here's the same data plotted using bars and confidence interva
 ```{r}
 wing %>% ggplot(aes(x=task, y=correct, fill=cards)) +
   stat_summary(geom="bar", fun=mean, position=position_dodge(0.95)) +
-  stat_summary(geom="errorbar", width = dodge, fun.data=mean_cl_boot,
+  stat_summary(geom="errorbar", width = 0.1, fun.data=mean_cl_boot,
                position=position_dodge(0.95)) +
   ylab("Mean RT") + xlab("Congruency") +
   labs(caption = "Bars are 95% confidence intervals") +
@@ -478,9 +475,9 @@ Was negative affect lower in any of the groups after they listened to music? We 
 ```{r point, class.source = 'numberLines lineAnchors'}
 na %>%
   ggplot(aes(x=subculture, y=score, colour = pre_post, group = pre_post)) +
-  stat_summary(geom="point", fun=mean, position = position_dodge(width = dodge)) +
-  stat_summary(geom="errorbar", width = dodge, fun.data=mean_cl_boot,
-               position = position_dodge(width = dodge)) +
+  stat_summary(geom="point", fun=mean, position = position_dodge(width = 0.1)) +
+  stat_summary(geom="errorbar", width = 0.1, fun.data=mean_cl_boot,
+               position = position_dodge(width = 0.1)) +
   ylab("NA") + xlab("Subculture") +
   scale_color_grey() + theme_APA +
   labs(caption = "Bars are 95% confidence intervals of within-group means")
@@ -505,7 +502,7 @@ na_diff <- panas %>% mutate(diff = pre_na - post_na)
 na_diff %>%
   ggplot(aes(x=subculture, y=diff)) +
   stat_summary(geom="point", fun=mean) +
-  stat_summary(geom="errorbar", width = dodge, fun.data=mean_cl_boot) +
+  stat_summary(geom="errorbar", width = 0.1, fun.data=mean_cl_boot) +
   ylab("NA difference") + xlab("Subculture") +
   labs(caption = "Bars are 95% confidence intervals of pre-post mean difference") +
   theme_APA
