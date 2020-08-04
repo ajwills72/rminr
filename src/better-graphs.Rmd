@@ -445,20 +445,28 @@ Although there's not much we can do about the first problem (other than pick a b
 
 ## Single factor, unordered variable
 
-When your hypothesis concerns more than two groups, overlapping half-violin plots (as we did in the last example) can start to get a bit messy -- it can be hard to pick out the three or four distributions when they're all on top of one another. One solution is to spread the half-violin plots out over the x-axis, as we did for the four picture naming tasks in the last example. Another approach is to use boxplots, which is what we'll do here. 
+When your hypothesis concerns more than two groups, overlapping half-violin plots (as we did in the last example) can start to get a bit messy -- it can be hard to pick out the three or four distributions when they're all on top of one another. One solution is to spread the violin plots out over the x-axis, as we did for the four picture naming tasks in the last example. Another approach is to use boxplots, which is what we'll do here. 
 
-In a boxplot (see figure below), the thick line is the median. That thick line is enclosed inside a rectangle (the 'box'), and the size of the box indicates the inter-quartile range -- a concept we covered in the [facial attractiveness](face-attract.html) worksheet. The top and bottom of the box are called 'hinges'. The vertical lines connected to each hinge are called 'whiskers', and give some indication of the broader range of the data. Exactly what the whiskers show differs depending on the particular command you use to draw a boxplot. In this particular case the upper whisker shows the largest data point that is no more than 1.5 times the inter-quartile range above the upper hinge. The lower whisker is the lowest point no more than 1.5x the IQR below the lower hinge. In this version of a boxplot, any data point outside the range of the whiskers is described as an 'outlying point' and is shown individually as a dot. 
+To illustrate the use of a boxplot, we'll use some data from an undergraduate project on emotional avoidance strategies in fans of different music types: Mainstream, Goth, Metal and Emo. So, we'll start by loading that data, and selecting just the emotional-avoidance scores (using commands that should be familiar from several previous worksheets):
 
-
-We'll create a boxplot to compare the emotional avoidance strategies for fans of Mainstream (control group), Goth, Metal and Emo music. This data came from a final year undergraduate student dissertation.
-
-```{r avoidance, class.source = 'numberLines lineAnchors', message=FALSE}
+```{r load, message=FALSE}
 ers_l <- read_csv('going-further/music-emotion-preproc.csv')
-ers_l <- ers_l %>%
+avoidance <- ers_l %>% filter(ers == 'avoidance')
+```
+
+By default, R will plot the four groups in alphabetical order from left to right. However, in this particular study the interest was mainly in comparing each of the subcultures (Goth, Metal, Emo) to the control group (Mainstream). So, we'd like to show the Mainstream group first, followed by the other three. We can do this by telling R this order of plotting:
+
+```{r plot-order, message=FALSE}
+avoidance <- avoidance %>%
   mutate(subculture = factor(subculture,
                              levels = c('Mainstream', 'Emo', 'Goth', 'Metal')))
-avoidance <- ers_l %>% filter(ers == 'avoidance')
+```
 
+**Explanation of commands**: We use `mutate` to turn `subculture` into a factor, something we have done in previously worksheets (e.g. [within-subject differences](anova1.html#anovaWS)). The new component here is `levels`, in which we tell R the order in which we want to four levels of the factor to appear. R will then follow that ordering.
+
+Finally, we produce the boxplots:
+
+```{r avoidance, class.source = 'numberLines lineAnchors', message=FALSE}
 avoidance %>% ggplot(aes(x=subculture, y=score)) +
   geom_boxplot() +
   ylab("Emotional avoidance score") + xlab("Music subculture") +
@@ -467,11 +475,26 @@ avoidance %>% ggplot(aes(x=subculture, y=score)) +
 
 ### Explanation of commands
 
-Line 1 loads the data. Lines 3-4 convert subculture to a factor. We use the `levels=` option to order the factor levels, making `Mainstream` first as this group was a control condition. This will make it appear on the left of our plots, so it's easy to compare against the other three subcultures. Line 5 filters out everything except the measure of emotional avoidance. Line 7 puts the avoidance `score` on the y axis and the `subculture` factor on the x axis. Line 8 creates the boxplot with its default settings. Line 9 gives the axes meaningful labels, and line 10 applies our APA theme. 
+Line 1 puts the avoidance `score` on the y axis and the `subculture` factor on the x axis. Line 2 creates the boxplots with their default settings. Line 3 gives the axes meaningful labels, and line 4 applies our APA theme. 
 
-### Explanation of plot
+### Explanation of boxplots
 
-The medians in all groups are towards the upper end of the scale. The extensive overlap between the boxes and whiskers suggests there weren't any differences between the groups. In all of the groups, a few scores fell beyond the bottom 25% of the distribution.
+In a boxplot, the thick line is the median. That thick line is enclosed inside a rectangle (the 'box'), and the size of the box indicates the inter-quartile range -- a concept we covered in the [facial attractiveness](face-attract.html) worksheet. The top and bottom of the box are called 'hinges'. The vertical lines connected to each hinge are called 'whiskers', and give some indication of the broader range of the data. Exactly what the whiskers show differs depending on the particular command you use to draw a boxplot. In this case, the upper whisker shows the largest data point that is no more than 1.5 times the inter-quartile range above the upper hinge. The lower whisker is the lowest point no more than 1.5x the IQR below the lower hinge. In this version of a boxplot, any data point outside the range of the whiskers is described as an 'outlying point' and is shown individually as a dot. 
+
+The extensive overlap between the boxes of the four groups suggests there weren't any major differences between the groups. In all of the groups, there were a few low scores that were considered to be 'outlying points'. 
+
+### Also available in violin
+
+At the beginning of this example, we mentioned that these data could alternatively be displayed as violin plots. Here's what that would look like (see below). As an possible extension exercise, you could write some code to produce this plot. 
+
+```{r cloud2, class.source = 'numberLines lineAnchors', echo=FALSE, warning=FALSE}
+avoidance %>% ggplot(aes(x = subculture, y = score)) +
+  geom_violin() +
+  xlab('WinG Task') + ylab('Accuracy (max = 20)') +
+  ylab("Emotional avoidance score") + xlab("Music subculture") +
+  theme_APA
+```
+
 
 <a name="mixed"></a>
 
