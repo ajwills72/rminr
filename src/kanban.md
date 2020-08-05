@@ -8,8 +8,6 @@
 
 ## Back to Paul (for RMINR)
 
-1. anova4 (add 2 exercises)
-
 ## Completed (for RMINR)
 
 1. aw-diss (Andy W, case study) - (added to better graphs + preproc expt)
@@ -22,6 +20,7 @@
 1. cs-self-esteem (Sophie H) - (reated pre-proc-scales and anal-scales )
 1. more-on-regression
 1. better-graphs (no exercises to be included; plots branch, and see issue #29)
+1. anova4 (add 2 exercises)
 
 ## Completed (fed back to staff, not on RMINR front page)
 
