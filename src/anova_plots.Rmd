@@ -1,0 +1,281 @@
+---
+title: "R Notebook"
+output:
+  html_document:
+    df_print: paged
+---
+
+# Ben's answer to: "[How would you] plot an ANOVA model, and [how does it] differ from
+# plots which look similar, but are produced from raw data."
+
+install.packages(c("tidyverse", "emmeans", "tidybayes", 'ez'), update=T)
+
+```{r}
+library(tidyverse)
+library(BayesFactor)
+library(broom)
+library(emmeans)
+library(afex)
+```
+
+
+## Oneway between
+
+```{r}
+# raw data plot - note that CLs are estimated separately for each group
+carData::Friendly %>% ggplot(aes(condition, correct)) + stat_summary(fun.data=mean_cl_normal)
+
+onewaybetween.model <- lm(correct ~ condition, data=carData::Friendly)
+car::Anova(onewaybetween.model)
+
+# extract bf equivalent to F test
+onewaybetweenbf <- lmBF(correct ~ condition , data=carData::Friendly)
+onewaybetweenbf %>% as_tibble %>% pull(bf)
+
+# plot cell means from the model
+# note that errors are fixed to be the same in each group by the model
+onewaybetween.means <- emmeans(onewaybetween.model, ~condition) 
+onewaybetween.means %>% 
+  tidy() %>% 
+  ggplot(aes(condition, estimate, ymin=conf.low, ymax=conf.high)) + 
+  geom_pointrange()
+
+# plot the differences between groups
+contrast(onewaybetween.means, "pairwise") %>% 
+  confint %>% 
+  as_data_frame() %>% 
+  ggplot(aes(contrast, estimate, ymin=lower.CL, ymax=upper.CL)) +
+  geom_pointrange() +
+  geom_hline(yintercept = 0) + 
+  ylab("Difference (95% CI)") + xlab("Contrast")
+
+```
+
+
+## Oneway Ancova between
+
+Plot raw data at followup in RCT (time 3)
+
+```{r}
+fitdata <- read_csv('https://zenodo.org/record/1120364/files/blind_data.csv')
+fitdata %>% 
+  ggplot(aes(factor(group), kg3)) + 
+  stat_summary(fun.data = mean_cl_normal) +
+  xlab("Treatment") + ylab("Weight (kg) at followup")
+```
+
+Plot the _changes_ from baseline (kg3-kg1)... that is weight lost
+
+```{r}
+fitdata %>% 
+  ggplot(aes(factor(group), kg3-kg1)) + 
+  stat_summary(fun.data = mean_cl_normal) +
+  xlab("Treatment") + ylab("Weight loss (kg)") + 
+  geom_hline(yintercept = 0)
+```
+
+Fit an Ancova to estimate the between-group difference at followup, conditional on baseline (residualised change model)
+
+```{r}
+onewayancova <- lm(kg3 ~ kg1 + group, data=fitdata)
+car::Anova(onewayancova)
+```
+
+Plot model results noting that errors are equal between groups. Also that although the model is still estimating followup weights, the error bars are narrower than first plot above (close to the difference plot) because model estimates are condtional on baseline scores (this is how this trial should be analysed):
+
+```{r}
+emmeans(onewayancova, ~group) %>% 
+  tidy() %>% 
+  ggplot(aes(factor(group), estimate, ymin=conf.low, ymax=conf.high)) +
+  geom_pointrange() + 
+  xlab("Treatment") + ylab("Weight at followup")
+```
+
+Model estimated difference and CI:
+
+```{r}
+contrast(emmeans(onewayancova, ~group), "pairwise") %>% 
+  confint() %>% 
+  as_tibble() 
+```
+
+# Within/between (repeat measures) Anova
+
+(btw I don't really know this dataset... it's just the first example I found)
+
+Raw plot:
+
+```{r}
+afex::ks2013.3 %>% 
+  ggplot(aes(believability, response, color=condition)) + 
+  stat_summary(fun.data = mean_cl_normal, position=position_dodge(width=.2)) +
+  facet_wrap(~validity)
+```
+
+Model:
+
+```{r}
+mixedwithinbetween.model <- lmerTest::lmer(response ~ condition*believability*validity+(1|id), data=afex::ks2013.3)
+anova(mixedwithinbetween.model)
+```
+
+Model plot. Note with balanced design and no missing data this won't look very different to the plot above (although it does allow for shrinkage etc), but with unbalanced or missing data, or with continuous covariates added, then the estimates could be quite different:
+
+```{r}
+mixedwithinbetween.means <- emmeans(mixedwithinbetween.model, ~condition*validity*believability)
+
+mixedwithinbetween.means %>% 
+  tidy() %>% 
+  ggplot(aes(believability, estimate, color=condition, ymin=conf.low, ymax=conf.high)) + 
+  geom_pointrange(position=position_dodge(width=.2)) +
+  facet_wrap(~validity)
+```
+
+Plotting part of the model:
+
+```{r}
+# don't do this if you want to plot just some of the comparisons... 
+mixedwithinbetween.means %>% 
+  tidy() %>% 
+  ggplot(aes(condition, estimate)) + 
+  stat_summary() + ggtitle("This plot is wrong!!!")
+
+# you need to re-estimate just the means you want... but remembering that plotting only part of an interaction  can be misleading
+
+meansjustofconditions <- emmeans(mixedwithinbetween.model, ~condition)
+
+meansjustofconditions %>% 
+  tidy() %>% 
+  ggplot(aes(condition, estimate, ymin=conf.low, ymax=conf.high)) + 
+  geom_pointrange() + ggtitle("This plot is better but still possibly misleading!")
+  
+```
+
+Plotting differences (probably the most useful thing):
+
+```{r}
+# this produces too many to plot usefully
+allpairs <- mixedwithinbetween.means %>% 
+  contrast("pairwise")
+```
+
+Let's say we predicted that the effect of condition would only be seen for invalid and unbelievable items:
+
+```{r}
+conditionwithinothers <- emmeans(mixedwithinbetween.model, ~condition|validity*believability) 
+conditionwithinothers %>% 
+  contrast("pairwise") %>% 
+  confint() %>% 
+  as_tibble() %>% 
+  ggplot(aes(believability, estimate, color=validity, ymin=lower.CL, ymax=upper.CL)) + 
+  geom_pointrange(position=position_dodge(width=.2)) +
+  geom_hline(yintercept = 0) +
+  ylab("Effect of condition (95% CI)")
+```
+
+If Andy insists they use a classical RM anova rather than a mixed model I think it goes like this:
+
+```{r}
+library(ez)
+
+# setting the contrasts first ... I don't think it's correct by default
+options(contrasts = c("contr.sum", "contr.poly"))
+(rmanovaEZ <- ezANOVA(data=afex::ks2013.3, dv = response, wid = id, within = c(believability , validity),
+            between = c(condition), return_aov=T)) 
+```
+
+If we added `return_aov=T` in the first call to ezAnova, we can use the fitted model with emmeans:
+
+```{r}
+# can't remember how to get the multiple comparison adjustment for this... 
+(rmanovacontrasts <- emmeans(rmanovaEZ$aov, ~condition|believability*validity) %>% 
+  contrast("pairwise"))
+
+rmanovacontrasts %>% 
+  confint() %>% 
+  as_tibble() %>% 
+  ggplot(aes(believability, estimate, color=validity, ymin=lower.CL, ymax=upper.CL)) + 
+  geom_pointrange(position=position_dodge(width=.2)) +
+  geom_hline(yintercept = 0) +
+  ylab("Effect of condition (95% CI)")
+```
+
+Need to ask Andy about this, but I think this is the BayesFactor version of the same thing:
+
+```{r}
+bayesrmanova <- anovaBF(response ~ condition*believability*validity+id, 
+                        data=afex::ks2013.3, whichRandom = "id", 
+                        # this simplifies the output greatly and shows the BF for terms similar to the F tests in an Anova
+                        whichModels = 'top')
+
+# the 3 way interaction is tested by term 1
+bayesrmanova
+```
+
+You can also plot estimates/result from a BayesFactor model by drawing from the posterior, but too fiddly for UG students
+
+```{r}
+samples <- posterior(bayesrmanova, iterations = 1000, index=1, progress = FALSE)
+```
+
+```{r}
+samples %>%
+  as.data.frame() %>%
+  mutate(effectofcondition = `condition-random` - `condition-fixed`) %>% 
+  ggplot(aes(".", effectofcondition)) +
+  tidybayes::geom_eye() + 
+  geom_hline(yintercept = 0) +
+  coord_flip()
+```
+
+Bayesfactor is awkward about returning tidy data, so I don't know how to make nicer plots or get proper interaction plots... Andy may know.
+
+Refitting the model with rstanarm is easier, because `tidybayes::add_fitted_samples` will give a tidy dataframe of samples with the model predictors attached, so easy to plot.
+
+```{r}
+```
+
+A big advantage of using lmer/mixed models is that it's then trivial to refit in Stan (same formula and data):
+
+```{r}
+library(rstanarm)
+options(mc.cores = parallel::detectCores()-1)
+mixedwithinbetween.model.stan <- stan_lmer(response ~ condition*believability*validity+(1|id), data=afex::ks2013.3)
+```
+
+We can then use emmeans to draw posterior samples for contrasts and plot them:
+
+```{r}
+mixedwithinbetween.model.stan.means <- emmeans(mixedwithinbetween.model.stan, ~condition|validity*believability)
+mixedwithinbetween.model.stan.means %>% 
+  contrast("pairwise") %>% 
+  as_tibble() %>% 
+  ggplot(aes(believability, estimate, ymin=lower.HPD, ymax=upper.HPD, color=validity)) + 
+    geom_pointrange(position=position_dodge(width=.2)) + 
+  geom_hline(yintercept = 0) +
+  ylab("Effect of condition (95% HPDI)")
+```
+
+And you could do Bayesian hypothesis testing rather than a BayesFactor, following the approach of Kruscke:
+
+```{r}
+contrastposterior <- mixedwithinbetween.model.stan.means %>% 
+  contrast("pairwise") %>% 
+  coda::as.mcmc(combine_chains=T) %>% 
+  .[[1]] %>% as_tibble()
+
+library(tidybayes)
+contrastposterior %>% 
+  pivot_longer(everything()) %>% 
+  ggplot(aes(name, value)) + 
+  stat_halfeye() + coord_flip()
+```
+
+If we set our ROPE (region of percieved equivalence) = .1, then our one-sided bayesian p value would be this:
+
+```{r}
+contrastposterior %>% 
+  pivot_longer(everything()) %>% 
+  group_by(name) %>% 
+  summarise(bayesianp = 1-  mean(value < .1))
+```
