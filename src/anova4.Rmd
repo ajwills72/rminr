@@ -1,6 +1,6 @@
 ---
 title: "More on Bayesian ANOVA"
-author: "Andy Wills, Clare Walsh, Paul Sharpe"
+author: "Andy Wills, Clare Walsh, Paul Sharpe, Chris Mitchell"
 output: html_document
 ---
 
@@ -270,39 +270,55 @@ cf_bf[4] / cf_bf[3]
 
 **Write a short paragraph explaining what, on the basis of your analysis, you can conclude from these data. Copy this paragraph, and the code you used to do your analysis, into PsycEL.**
 
-
 <a name="ex2"></a>
 
 # Exercise 2
 
-The data for this second exercise come from a within-subjects experiment with two factors. Start by loading the data:
+The data for this second exercise come from a within-subjects experiment with two factors. Start by loading the data, selecting the columns and rows we'll need for this analysis, and removing missing data (`NA`):
 
 ```{r ex2-data, message=FALSE}
-raw <- read_csv('case-studies/chris-mitchell/priming-faces.csv')
+raw <- read_csv('case-studies/chris-mitchell/priming-faces.csv') %>%
+  filter(Running == "Test") %>%
+  select(Subject, Congruency, Load, RT) %>%
+  drop_na()
 ```
 
-Participants were trained to associate two screen colours with pictures of two different food rewards. At test, they saw pairs of screen colours and food pictures. Their reaction time (RT) in milliseconds was measured for identifying whether the pairs matched (congruent), or didn't match (incongruent) the associations they'd learnt previously. This test was carried out with, and without, a secondary task. In the secondary task, the participant had to verbally rate how much they liked pictures of faces. All participants completed all conditions, so we have a fully between subjects design, with factors congruency (congruent, incongruent) and load (load, no load).
+The first few rows of data look like this:
+
+```{r, echo=FALSE, cache=FALSE}
+raw %>% head(6) %>% pander()
+```
+
+Participants were trained to associate two screen colours with pictures of two different food rewards. At test, they saw pairs of screen colours and food pictures. Their reaction time (RT) in milliseconds was measured in cases where the pairs matched the associations they'd previously learned (congruent trials), and in cases where the pairs did not match what they had previously learned (incongruent trials). The participants experienced this test both with, and without, a secondary task. In the secondary task, the participant had to verbally rate how much they liked pictures of faces. As all participants completed all conditions, we have a fully within-subjects design, with factors congruency (congruent, incongruent) and load (load, no load).
 
 Filter the data to only include test trials. These have the value 'Test' in the `Running` column. Calculate means for each subject for the two factors. You'll need the include `na.rm = TRUE` when calculating the mean, as the data in `RT` contains some `NA` values.
 
-Calculate Bayes Factors for the main effects and the interaction. Your results should look similar to this:
+Start by calculating the mean RT for each of the four conditions, and plotting these in a line graph. You can use the commands from Exercise 1, slightly modified, to do this. If you get it right, your output should look like this:
+
+```{r ex2a, echo=FALSE, warning=FALSE, message=FALSE}
+con_sum <- raw %>% group_by(Congruency, Load) %>% summarise(RT=mean(RT))
+con_sum
+con_sum %>%
+    ggplot(aes(x = Congruency, y = RT, group = Load, colour = Load)) +
+    geom_line() +
+    geom_point() +
+    theme_bw()
+```
+
+Next, calculate Bayes Factors for the main effects and the interaction. Your results should look similar to this:
 
 ```{r ex2, echo=FALSE, message=FALSE}
 priming <- raw %>%
-    filter(Running == 'Test') %>%
     mutate(Subject = factor(Subject), Congruency = factor(Congruency),
-           Load = factor(Load)) %>%
-  group_by(Subject, Congruency, Load) %>%
-  summarise(RT = mean(RT, na.rm = TRUE))
+           Load = factor(Load)) 
 
-priming_bf <- anovaBF(RT ~ Congruency*Load + Subject, data=priming,
+priming_bf <- anovaBF(RT ~ Congruency*Load + Subject, data=data.frame(priming),
                       whichRandom = 'Subject')
 priming_bf
 priming_bf[4] / priming_bf[3]
 ```
 
-**Copy the R code you used for this exercise into PsycEL.**
-
+**Write a short paragraph explaining what, on the basis of your analysis, you can conclude from these data. Copy this paragraph, and the code you used to do your analysis, into PsycEL.**
 
 ___
 
