@@ -1,6 +1,6 @@
 ---
-title: "Factorial differences, part 2"
-author: "Andy Wills and Clare Walsh"
+title: "More on Bayesian ANOVA"
+author: "Andy Wills, Clare Walsh, Paul Sharpe"
 output: html_document
 ---
 
@@ -36,13 +36,17 @@ knitr::opts_chunk$set(echo = TRUE, comment=NA, cache = TRUE)
 
 # Introduction
 
-In the [factorial differences](anova3.html) worksheet, we did a two-factor Bayesian ANOVA where one factor was within-subject and the other was between-subjects. In this worksheet, we'll use the same data frame to illustrate another couple of two-factor ANOVAs.
+This worksheet builds on three previous worksheets: [within-subject differences](anova1.html), [understanding interactions](anova2.html), and [factorial differences](anova3.html). We therefore assume you are familiar with the concepts and commands in those worksheets. If that is not the case, read (or re-read) those worksheets before proceeding.
+
+In the [factorial differences](anova3.html)  worksheet, we did a two-factor Bayesian ANOVA where one factor was within-subject and the other was between-subjects. In this worksheet, we'll use the same data frame to illustrate another couple of two-factor ANOVAs.
 
 <a name="start"></a>
 
 # Getting started
 
-We'll be using the same meditation training data we used in [factorial differences](anova3.html) worksheet, so make sure you've completed that worksheet and have the  `words` data frame from that worksheet in your current R project. If for some reason you do not have that data frame, you can re-create it like this, as long as you have `wordnaming2.csv` in your R project (which is available from the _git_ repository we used [previously](preproc.html#load)):
+Return to the project that you used for the [factorial differences](anova3.html) worksheet, which you named **rminr-data**. Open a new blank script and save it as **anova4.R**. Put all commands in that script, and save the script regularly. 
+
+First, you'll need to load some standard packages, and the data we used in the previous worksheet:
 
 ```{r init, message=FALSE}
 rm(list = ls())
@@ -62,6 +66,7 @@ wordsum$medit <- factor(wordsum$medit)
 wordsum$congru <- factor(wordsum$congru)
 wordsum$block <- factor(wordsum$block)
 ```
+
 
 <a name="twoBS"></a>
 
