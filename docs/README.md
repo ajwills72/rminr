@@ -165,50 +165,57 @@ These are intermediate-level materials, designed to follow on from _An Absolute 
   one between), plus advice on: pairwise comparisons, better graphs, reporting Bayesian ANOVA, and ordinal (i.e. ordered) independent variables.
 
 
-## 6. Going further with R (work in progress)
+## 6. Going further with R 
 <a name="gfwr"></a>
 
 These are slightly more advanced materials, aimed at a final-year undergraduate psychology audience.
 
-- [Traditional ANOVA](more-on-anova.html): Just in case someone insists you use
-  the older, p-value based, approach to ANOVA ... and you don't feel like
-  saying 'no'.
+- Preprocessing
 
-- [Factorial differences, part 2](anova4.html): More on two-factor Bayesian ANOVA.
+    * [Data preprocessing for experiments](preproc-experiments.html): **De-duplicating data**, **excluding participants**, **log transform**.
 
-- [Better graphs](better-graphs.html): Producing publication-quality graphs in R.
-
-The following materials are currently being developed, so on clicking these
-links, you may find just notes, or incomplete worksheets.
-
-- [Other resources](gfwr-other.html): Links to external resources.
-
-- [Better tables](better-tables.html): **Creating a correlation matrix**, **creating a custom table of descriptive statistics**.
-
-- [Data preprocessing for scales](preproc-scales.html): _Handling missing data_, **calculating scale scores**, **tidying survey data**.
-
-- [Analysing scales](analyse-scales.html): **Cronbach's alpha**.
-
-- [Traditional non-parametric tests](non-parametric.html): **Mann-Whitney U**, **Kruskal-Wallis H**.
-
-- [Data preprocessing for experiments](preproc-experiments.html): **De-duplicating data**, **excluding participants**, **log transform**.
-
-- [More on regression](more-on-regression.html): **Multiple regression with more than two predictors**, **hierarchical regression**, **evidence for individual predictors**.
-
-- [Data management](data-management.html)
-
-- [More on data](more-on-data.html): Reading data directly from Excel.
+    * [Data preprocessing for scales](preproc-scales.html): _Handling missing data_, **calculating scale scores**, **tidying survey data**.
     
+- Descriptive statistics
+
+    * [Better tables](better-tables.html): **Creating a correlation matrix**, **creating a custom table of descriptive statistics**.
+
+    * [Better graphs](better-graphs.html): Producing publication-quality graphs in R.
+
+    * [Analysing scales](analyse-scales.html): **Cronbach's alpha**.
+
+- Bayesian inferential statistics 
+
+    * [More on Bayesian ANOVA](anova4.html): More on two-factor Bayesian ANOVA.
+
+    * [More on regression](more-on-regression.html): **Multiple regression with more than two predictors**, **hierarchical regression**, **evidence for individual predictors**.
+
+- Traditional inferential statistics
+
+    * [Traditional ANOVA](more-on-anova.html): Just in case someone insists you use the older, p-value based, approach to ANOVA ... and you don't feel like saying 'no'.
+
+    * [Traditional non-parametric tests](non-parametric.html): **Mann-Whitney U**, **Kruskal-Wallis H**.
+
+
 <a name="studies"></a>
 
-## 7. Case studies (work in progress)
-These are full preprocessing and analysis pipelines, based on final-year undergraduate psychology projects.
+## 7. Case studies 
+These are full preprocessing and analysis pipelines, mainly based on final-year undergraduate psychology projects.
 
 - [The effects of negative mental imagery on self-esteem](cs-self-esteem.html): **Checking scale reliability**, **Comparing baseline measures (1-way between-subjects ANOVA)**, _2-way mixed ANOVA_.
 
 - [The Perruchet Effect](awdiss.html): **Downloading from OSF**, **De-duplicating data**, **Excluding participants**, _line graphs_, **baseline correction of neuroscience data**, **functions**, _loops_, _merging data frames_, **list of participant numbers**, **log transforms**, _recoding data_, **decent graphs for within-subject designs**, **Bayesian linear regression for within-subjects designs**.
 
 - [Childrens’ language development](cs-picture-naming-wide.html): _Preprocessing_, _Applying exclusion criteria_, **Randomization check**, _tables of descriptive statistics_, _Bayesian t-tests_, _correlations_, _half-violin plot_, _Wilcoxon test_.
+
+## Work in progress
+
+Materials in an early/incomplete stage of development:
+
+- [Data management](data-management.html)
+
+- [More on data](more-on-data.html): Reading data directly from Excel.
+
 
 ____
 
@@ -234,17 +241,17 @@ ____
 Thanks to the following people for their feedback and advice on these materials:
 
 Jackie Andrade, Eleanor Andrade May, Martyn Atkins,
-Patric Bach, Dale Barr, Chris Berry,
-Laura Charlton,
+Patric Bach, Alison Bacon, Dale Barr, Chris Berry,
+Allegra Cattani, Laura Charlton,
 Lisa DeBruine, 
 Charlotte Edmunds,
 Emily Filewood,
 Giorgio Ganis, Phil Gee, Michaela Gummerum,
-Yaniv Hanoch, Cathryn Harries, Courtney Hooton,
+Yaniv Hanoch, Cathryn Harries, Sophie Homer, Courtney Hooton,
 Angus Inkster,
 Jasmin Jones, Peter Jones, 
 Laith Kahn, 
-Chris Longmore,
+Helen Lloyd, Chris Longmore,
 Jon May, Anthony Mee, Chris Mitchell, Millie Monks,
 Karol Nedza,
 Alyson Norman,

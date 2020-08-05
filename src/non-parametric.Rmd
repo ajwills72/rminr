@@ -1,6 +1,6 @@
 ---
 title: "Traditional non-parametric tests"
-author: "Paul Sharpe and Andy Wills"
+author: "Paul Sharpe, Andy Wills, Allegra Cattani, Helen Lloyd"
 output:
   html_document:
     highlight: pygment
