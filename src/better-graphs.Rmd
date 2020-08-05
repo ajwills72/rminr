@@ -416,7 +416,11 @@ task_names <- c(
   pp = 'Predicate Production'  
 )
 wing$task <- wing$task %>% recode(!!!task_names)
-library(pander)
+```
+
+Here are the first few rows of our data:
+
+```{r, echo=FALSE}
 wing %>% head(8) %>% pander()
 ```
 
@@ -521,13 +525,14 @@ Mixed manipulations are those that include both within-subject factors and betwe
     
 We'll demonstrate this process with some further data from the student project we used earlier. In this part of the data, the students compared participants' emotions before and after they listened to their preferred type of music.
 
-First, we'll load the data, and select the columns we're going to use. We'll also put the four subcultures in a particular order, as we did in the last example. We've covered all these commands in previous worksheets, so we won't explain them again here.
+Create a new R file called `pre-post.R`, and enter the commands that follow into that file. First, we'll load the data, and select the columns we're going to use. We'll also put the four subcultures in a particular order, as we did in the last example. We've covered all these commands in previous worksheets, so we won't explain them again here.
 
 ```{r m-load, message=FALSE}
 panas <- read_csv('going-further/music-panas.csv')
 na <- panas %>% select(subj, subculture, pre_na, post_na)
 na <- na %>%
-  mutate(subculture = factor(subculture, levels = c('Mainstream', 'Emo', 'Goth', 'Metal')))
+  mutate(subculture = factor(subculture,
+                             levels = c('Mainstream', 'Emo', 'Goth', 'Metal')))
 ```
 
 Here are the first few rows of our data:
