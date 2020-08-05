@@ -1,6 +1,6 @@
 ---
 title: "Better tables"
-author: "Paul Sharpe, Andy Wills"
+author: "Paul Sharpe, Andy Wills, Allegra Cattani"
 output: html_document
 ---
 
