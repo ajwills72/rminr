@@ -277,6 +277,7 @@ cf_bf[4] / cf_bf[3]
 The data for this second exercise come from a within-subjects experiment with two factors. Start by loading the data, selecting the columns and rows we'll need for this analysis, and removing missing data (`NA`):
 
 ```{r ex2-data, message=FALSE}
+library(tidyverse)
 raw <- read_csv('case-studies/chris-mitchell/priming-faces.csv') %>%
   filter(Running == "Test") %>%
   select(Subject, Congruency, Load, RT) %>%
@@ -285,7 +286,7 @@ raw <- read_csv('case-studies/chris-mitchell/priming-faces.csv') %>%
 
 The first few rows of data look like this:
 
-```{r, echo=FALSE, cache=FALSE}
+```{r, echo=FALSE}
 raw %>% head(6) %>% pander()
 ```
 
