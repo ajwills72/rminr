@@ -131,50 +131,6 @@ This gives us a Bayes Factor for the interaction close to 0.1. So, there's subst
 
 <a name="ex1"></a>
 
-# Exercise 1
-
-The data for this exercise comes from a different between-subjects experiment with two factors. Start by loading the data and removing any missing data (`NA`), using this command:
-
-```{r ex1-data, message=FALSE}
-cf_raw <- read_csv('going-further/counterfactual.csv') %>% drop_na()
-```
-
-In this experiment, participants read a scenario describing some events leading up to an accident. The scenario was written from either a first-person or a third-person perspective. Next, they generated some counterfactual thoughts in relation to the scenario. For example, "If only I hadn't been looking at my phone, then ...". These thoughts were coded as either predictive, or not predictive of whether the accident occurred. Participants rated how much the protagonist was to blame for the accident, on a scale of 1 (strongly disagree) to 7 (strongly agree).
-
-It's crucial to look at your data before analysing it. Start by calculating the mean `blame` score in each of the four conditions of this experiment. You can do this using the `group_by` and `summarise` commands that we have covered in many previous worksheets; for example, in the [group differences](group-differences.html#group) worksheet. 
-
-If you've done it correctly, your means should look like this:
-
-```{r ex1a, echo=FALSE, message=FALSE}
-cf <- cf_raw %>%
-    mutate(subj = factor(subj), perspective = factor(perspective),
-           predictability = factor(predictability))
-cf_sum <- cf %>% group_by(perspective, predictability) %>% summarise(blame=mean(blame))
-cf_sum
-```
-
-Next, plot those means in a line graph - this helps you visualize the patterns in these data. Plotting of line graphs was covered in the [understanding interactions](anova2.html#linegraph) worksheet. Your graph should look like this:
-
-```{r ex1b, echo=FALSE, message=FALSE}
-cf_sum %>%
-    ggplot(aes(x = perspective, y = blame, group = predictability, colour = predictability)) +
-    geom_line() +
-    geom_point() +
-    theme_bw()
-```
-
-Now, do your Bayesian ANOVA. Set each of the independent variables as a `factor` and then use `anovaBF` to conduct the Bayesian ANOVA. There is only one observation for each participant in this dataset, so we can't use `subj` as a random factor, so don't include `subj` in the formula, or `whichRandom=subj`. 
-
-Your results should look similar to this:
-
-```{r ex1, echo=FALSE, message=FALSE}
-cf_bf <- anovaBF(blame ~ perspective*predictability, data=data.frame(cf))
-cf_bf
-cf_bf[4] / cf_bf[3]
-```
-
-**Write a short paragraph explaining what, on the basis of your analysis, you can conclude from these data. Copy this paragraph, and the code you used to do your analysis, into PsycEL**
-
 <a name="twoWS"></a>
 
 # Two within-subject factors
@@ -233,6 +189,52 @@ bf2ws[4] / bf2ws[3]
 ```
 
 This gives us a Bayes Factor for the interaction close to 0.0004. So, there's substantial evidence for the _absence_ of an interaction.
+
+
+# Exercise 1
+
+The data for this exercise comes from a different between-subjects experiment with two factors. Start by loading the data and removing any missing data (`NA`), using this command:
+
+```{r ex1-data, message=FALSE}
+cf_raw <- read_csv('going-further/counterfactual.csv') %>% drop_na()
+```
+
+In this experiment, participants read a scenario describing some events leading up to an accident. The scenario was written from either a first-person or a third-person perspective. Next, they generated some counterfactual thoughts in relation to the scenario. For example, "If only I hadn't been looking at my phone, then ...". These thoughts were coded as either predictive, or not predictive of whether the accident occurred. Participants rated how much the protagonist was to blame for the accident, on a scale of 1 (strongly disagree) to 7 (strongly agree).
+
+It's crucial to look at your data before analysing it. Start by calculating the mean `blame` score in each of the four conditions of this experiment. You can do this using the `group_by` and `summarise` commands that we have covered in many previous worksheets; for example, in the [group differences](group-differences.html#group) worksheet. 
+
+If you've done it correctly, your means should look like this:
+
+```{r ex1a, echo=FALSE, message=FALSE}
+cf <- cf_raw %>%
+    mutate(subj = factor(subj), perspective = factor(perspective),
+           predictability = factor(predictability))
+cf_sum <- cf %>% group_by(perspective, predictability) %>% summarise(blame=mean(blame))
+cf_sum
+```
+
+Next, plot those means in a line graph - this helps you visualize the patterns in these data. Plotting of line graphs was covered in the [understanding interactions](anova2.html#linegraph) worksheet. Your graph should look like this:
+
+```{r ex1b, echo=FALSE, message=FALSE}
+cf_sum %>%
+    ggplot(aes(x = perspective, y = blame, group = predictability, colour = predictability)) +
+    geom_line() +
+    geom_point() +
+    theme_bw()
+```
+
+Now, do your Bayesian ANOVA. Set each of the independent variables as a `factor` and then use `anovaBF` to conduct the Bayesian ANOVA. There is only one observation for each participant in this dataset, so we can't use `subj` as a random factor, so don't include `subj` in the formula, or `whichRandom=subj`. 
+
+Your results should look similar to this:
+
+```{r ex1, echo=FALSE, message=FALSE}
+cf_bf <- anovaBF(blame ~ perspective*predictability, data=data.frame(cf))
+cf_bf
+cf_bf[4] / cf_bf[3]
+```
+
+**Write a short paragraph explaining what, on the basis of your analysis, you can conclude from these data. Copy this paragraph, and the code you used to do your analysis, into PsycEL**
+
 
 <a name="ex2"></a>
 
