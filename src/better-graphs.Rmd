@@ -14,6 +14,7 @@ output:
 
 ## Show commands and output.
 knitr::opts_chunk$set(echo = TRUE, comment=NA, cache=FALSE)
+library(tidyverse)
 library(pander)
 ```
 
@@ -185,6 +186,7 @@ Our first example uses data from [an undergraduate student experiment on the Per
 To get started on this example, we need to first load the data: 
 
 ```{r perruchet-data, message=FALSE}
+library(tidyverse)
 lvl.sum <- read_csv('going-further/perruchet-preproc.csv')
 ```
 
@@ -210,9 +212,10 @@ mdot  <- geom_point(aes(x=level, y=expect), data = mdata, colour="black")
 
 ### Combine plots, tidy up x and y axis labels, and apply APA theme
 eplot <- base + lns + mline + mdot + xlab("Level") +
-    ylab("Expectancy rating") + ylim(1,5) +
-    scale_x_continuous(breaks = c(1,2,3)) +
-    theme_APA + theme(legend.position="none")
+  ylab("Expectancy rating") + ylim(1,5) +
+  scale_x_continuous(breaks = c(1,2,3)) +
+  theme_APA +
+  theme(legend.position="none")
 eplot
 ```
 
@@ -297,6 +300,7 @@ A two-factor within-subjects design is one of the most common in cognitive psych
 Create a new R file called `two-within.R`, and enter the commands that follow into that file. We start by loading the data, keeping only the test trials, and then calculating mean reaction time for each condition for each participant, using commands we have used in several previous worksheets:
 
 ```{r w-pointline-2-preproc, message=FALSE}
+library(tidyverse)
 raw <- read_csv('case-studies/chris-mitchell/priming-faces.csv')
 priming <- raw %>%
   filter(Running == 'Test') %>%
@@ -403,6 +407,7 @@ In this study, children were tested using one of two sets of picture cards; the 
 Create a new R file called `one-between.R`, and enter the commands that follow into that file. We start by preparing the data for plotting. These steps are described in detail in the [Better tables worksheet](better-tables.html) worksheet, so we won’t repeat the description here. Instead, we’ll just list the commands and show the final output.
 
 ```{r message=FALSE, class.source = 'numberLines lineAnchors'}
+library(tidyverse)
 wing_preproc <- read_csv('going-further/picture-naming-preproc.csv')
 wing <- wing_preproc %>%
   pivot_longer(cols = c(nc, np, pc, pp),
@@ -528,6 +533,7 @@ We'll demonstrate this process with some further data from the student project w
 Create a new R file called `pre-post.R`, and enter the commands that follow into that file. First, we'll load the data, and select the columns we're going to use. We'll also put the four subcultures in a particular order, as we did in the last example. We've covered all these commands in previous worksheets, so we won't explain them again here.
 
 ```{r m-load, message=FALSE}
+library(tidyverse)
 panas <- read_csv('going-further/music-panas.csv')
 na <- panas %>% select(subj, subculture, pre_na, post_na)
 na <- na %>%
@@ -655,6 +661,7 @@ We'll plot some data from another undergraduate dissertation. This study was int
 Create a new R file called `pairs.R`, and enter the commands that follow into that file. 
 
 ```{r pairs-2, class.source = 'numberLines lineAnchors', message=FALSE}
+library(tidyverse)
 library(GGally, quietly = TRUE)
 oit <- read_csv('going-further/openness-imagery-thinking.csv')
 
