@@ -17,9 +17,9 @@ _Note to teachers_: These materials have been tested against R version 3.6.3 (re
 
 5. [Intermediate Guide to R](#rmip) 
 
-6. [Going further with R](#gfwr) (work in progress)
+6. [Going further with R](#gfwr) 
 
-7. [Case studies](#studies) (work in progress)
+7. [Case studies](#studies)
 
 8. **[Quick reference guide](cheat-sheet.html)**. List of commonly-used commands in R.
 
@@ -172,41 +172,40 @@ These are slightly more advanced materials, aimed at a final-year undergraduate 
 
 - Preprocessing
 
-    * [Data preprocessing for experiments](preproc-experiments.html): **De-duplicating data**, **excluding participants**, **log transform**.
+    * [Data preprocessing for experiments](preproc-experiments.html): De-duplicating data, excluding participants, log transform.
 
-    * [Data preprocessing for scales](preproc-scales.html): _Handling missing data_, **calculating scale scores**, **tidying survey data**.
+    * [Data preprocessing for scales](preproc-scales.html): Handling missing data, calculating scale scores, tidying survey data.
     
 - Descriptive statistics
 
-    * [Better tables](better-tables.html): **Creating a correlation matrix**, **creating a custom table of descriptive statistics**.
+    * [Better tables](better-tables.html): correlation matrix, custom table of descriptive statistics.
 
-    * [Better graphs](better-graphs.html): **Producing publication-quality graphs in R**, **Within-participants: Single factor, ordered variable (line plot)**, **Within-participants: Interaction, two levels (line plot, distribution plot)**, **Between-participants: Single factor, two levels (distribution plot)**, **Between-participants: Single factor, unordered variable (boxplot)**, **Mixed: Pre/post manipulation for different groups (confidence intervals)**, **Correlation: Pairs plot**.
-
-    * [Analysing scales](analyse-scales.html): **Cronbach's alpha**.
+    * [Better graphs](better-graphs.html): publication-quality graphs showing both central tendency and variability (or uncertainty) of your data, including: line plots, distribution plots (density, violion, half-violin), box plots, and confidence intervals. Suggested plots for one- and two-factor designs, within-subject, between-subject, or mixed designs, and with ordered and unordered variables. Discussion of common bad plots to avoid (bar plots; confusions over confidence intervals). Pairs plot for correlational designs. 
+    
+    * [Analysing scales](analyse-scales.html): Cronbach's alpha.
 
 - Bayesian inferential statistics 
 
     * [More on Bayesian ANOVA](anova4.html): More on two-factor Bayesian ANOVA.
 
-    * [More on regression](more-on-regression.html): **Multiple regression with more than two predictors**, **hierarchical regression**, **evidence for individual predictors**.
+    * [More on regression](more-on-regression.html): Multiple regression with more than two predictors, hierarchical regression, evidence for individual predictors.
 
 - Traditional inferential statistics
 
-    * [Traditional ANOVA](more-on-anova.html): Just in case someone insists you use the older, p-value based, approach to ANOVA ... and you don't feel like saying 'no'.
+    * [Traditional ANOVA](more-on-anova.html): p-value based, approach to ANOVA.
 
-    * [Traditional non-parametric tests](non-parametric.html): **Mann-Whitney U**, **Kruskal-Wallis H**.
-
+    * [Traditional non-parametric tests](non-parametric.html): Mann-Whitney U, Kruskal-Wallis H.
 
 <a name="studies"></a>
 
 ## 7. Case studies 
 These are full preprocessing and analysis pipelines, mainly based on final-year undergraduate psychology projects.
 
-- [The effects of negative mental imagery on self-esteem](cs-self-esteem.html): **Checking scale reliability**, **Comparing baseline measures (1-way between-subjects ANOVA)**, _2-way mixed ANOVA_.
+- [The effects of negative mental imagery on self-esteem](cs-self-esteem.html): preprocessing, Cronbach's alpha, Bayesian ANOVA.
 
-- [The Perruchet Effect](awdiss.html): **Downloading from OSF**, **De-duplicating data**, **Excluding participants**, _line graphs_, **baseline correction of neuroscience data**, **functions**, _loops_, _merging data frames_, **list of participant numbers**, **log transforms**, _recoding data_, **decent graphs for within-subject designs**, **Bayesian linear regression for within-subjects designs**.
+- [The Perruchet Effect](awdiss.html): **Downloading from OSF**, de-duplicating data, excluding participants, line graphs, **baseline correction of neuroscience data**, _functions_, _loops_, _merging data frames_, list of participant numbers, log transforms, _recoding data_, **Bayesian linear regression for within-subjects designs**.
 
-- [Childrens’ language development](cs-picture-naming-wide.html): _Preprocessing_, _Applying exclusion criteria_, **Randomization check**, _tables of descriptive statistics_, _Bayesian t-tests_, _correlations_, _half-violin plot_, _Wilcoxon test_.
+- [Childrens’ language development](cs-picture-naming-wide.html): preprocessing, Bayesian t-test, tables of descriptive statistics, correlations, half-violin plot, Wilcoxon test.
 
 ## Work in progress
 
