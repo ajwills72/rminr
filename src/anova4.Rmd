@@ -1,6 +1,6 @@
 ---
-title: "Factorial differences, part 2"
-author: "Andy Wills and Clare Walsh"
+title: "More on Bayesian ANOVA"
+author: "Andy Wills, Clare Walsh, Paul Sharpe"
 output: html_document
 ---
 
@@ -36,13 +36,17 @@ knitr::opts_chunk$set(echo = TRUE, comment=NA, cache = TRUE)
 
 # Introduction
 
-In the [factorial differences](anova3.html) worksheet, we did a two-factor Bayesian ANOVA where one factor was within-subject and the other was between-subjects. In this worksheet, we'll use the same data frame to illustrate another couple of two-factor ANOVAs.
+This worksheet builds on three previous worksheets: [within-subject differences](anova1.html), [understanding interactions](anova2.html), and [factorial differences](anova3.html). We therefore assume you are familiar with the concepts and commands in those worksheets. If that is not the case, read (or re-read) those worksheets before proceeding.
+
+In the [factorial differences](anova3.html)  worksheet, we did a two-factor Bayesian ANOVA where one factor was within-subject and the other was between-subjects. In this worksheet, we'll use the same data frame to illustrate another couple of two-factor ANOVAs.
 
 <a name="start"></a>
 
 # Getting started
 
-We'll be using the same meditation training data we used in [factorial differences](anova3.html) worksheet, so make sure you've completed that worksheet and have the  `words` data frame from that worksheet in your current R project. If for some reason you do not have that data frame, you can re-create it like this, as long as you have `wordnaming2.csv` in your R project (which is available from the _git_ repository we used [previously](preproc.html#load)):
+Return to the project that you used for the [factorial differences](anova3.html) worksheet, which you named **rminr-data**. Open a new blank script and save it as **anova4.R**. Put all commands in that script, and save the script regularly. 
+
+First, you'll need to load some standard packages, and the data we used in the previous worksheet:
 
 ```{r init, message=FALSE}
 rm(list = ls())
@@ -62,6 +66,7 @@ wordsum$medit <- factor(wordsum$medit)
 wordsum$congru <- factor(wordsum$congru)
 wordsum$block <- factor(wordsum$block)
 ```
+
 
 <a name="twoBS"></a>
 
@@ -131,27 +136,44 @@ This gives us a Bayes Factor for the interaction close to 0.1. So, there's subst
 The data for this exercise comes from a different between subjects experiment with two factors.
 
 ```{r ex1-data, message=FALSE}
-cf_raw <- read_csv('going-further/counterfactual.csv')
+cf_raw <- read_csv('going-further/counterfactual.csv') %>% drop_na()
 ```
 
 In this experiment, participants read a scenario describing some events leading up to an accident. The scenario was written from either a first-person or a third-person perspective. Next, they generated some counterfactual thoughts in relation to the scenario. For example, "If only I hadn't been looking at my phone, then ...". These thoughts were coded as either predictive, or not predictive of whether the accident occurred. Participants rated how much the protagonist was to blame for the accident, on a scale of 1 (strongly disagree) to 7 (strongly agree).
 
-Some of the `predictability` rows contain the value `NA`. Filter these out using `is.na()`, then calculate Bayes Factors for the main effects and the interaction. Because this data has only one observation for each participant, we can't use `subj` as a random factor, so don't include `subj` in the formula, or `whichRandom=subj`. 
+It's crucial to look at your data before analysing it. Start by calculating the mean `blame` score in each of the four conditions of this experiment. You can do this using the `group_by` and `summarise` commands that we have covered in many previous worksheets; for example, in the [group differences](group-differences.html#group) worksheet. 
+
+If you've done it correctly, your means should look like this:
+
+```{r ex1a, echo=FALSE, message=FALSE}
+cf <- cf_raw %>%
+    mutate(subj = factor(subj), perspective = factor(perspective),
+           predictability = factor(predictability))
+cf_sum <- cf %>% group_by(perspective, predictability) %>% summarise(blame=mean(blame))
+cf_sum
+```
+
+Next, plot those means in a line graph - this helps you visualize the patterns in these data. Plotting of line graphs was covered in the [understanding interactions](anova2.html#linegraph) worksheet. Your graph should look like this:
+
+```{r ex1b, echo=FALSE, message=FALSE}
+cf_sum %>%
+    ggplot(aes(x = perspective, y = blame, group = predictability, colour = predictability)) +
+    geom_line() +
+    geom_point() +
+    theme_bw()
+```
+
+Now, do your Bayesian ANOVA. Set each of the independent variables as a `factor` and then use `anovaBF` to conduct the Bayesian ANOVA. There is only one observation for each participant in this dataset, so we can't use `subj` as a random factor, so don't include `subj` in the formula, or `whichRandom=subj`. 
 
 Your results should look similar to this:
 
 ```{r ex1, echo=FALSE, message=FALSE}
-cf <- cf_raw %>%
-    filter(! is.na(predictability)) %>%
-    mutate(subj = factor(subj), perspective = factor(perspective),
-           predictability = factor(predictability))
-
-cf_bf <- anovaBF(blame ~ perspective*predictability, data=cf)
+cf_bf <- anovaBF(blame ~ perspective*predictability, data=data.frame(cf))
 cf_bf
 cf_bf[4] / cf_bf[3]
 ```
 
-**Copy the R code you used for this exercise into PsycEL.**
+**Write a short paragraph explaining what, on the basis of your analysis, you can conclude from these data. Copy this paragraph, and the code you used to do your analysis, into Psyc:EL**
 
 <a name="twoWS"></a>
 
