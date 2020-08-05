@@ -12,6 +12,8 @@ output: html_document
 
 ## Show commands and putout.
 knitr::opts_chunk$set(echo = TRUE, comment=NA, cache = TRUE)
+
+library(pander)
 ```
 
 # Contents
@@ -190,13 +192,42 @@ bf2ws[4] / bf2ws[3]
 
 This gives us a Bayes Factor for the interaction close to 0.0004. So, there's substantial evidence for the _absence_ of an interaction.
 
+<a name="oneBS"></a>
+
+# Single between-subjects factor
+
+It is also possible to use `anovaBF` to analyse a single factor, between-subjects design. Where that factor has two levels, you could alternatively use [ttestBF](evidence.html#bayes-t), although note even in this case the Bayes Factors produced by the two commands will not be exactly the same. This is because `anovaBF` makes use of the factor of participant ID (`subj`), while `ttestBF` does not. The approach `anovaBF` takes is better, but also takes longer to run.  As before, if your choice of analysis technique changes the central conclusions of your study, this is normally an indication that you should replicate your study with a larger sample.
+
+One of the useful things about `anovaBF` is that, unlike `ttestBF`, you can use it in a one-factor design that has more than two levels. For example:
+
+```{r bf-1bs}
+bf1bs <- anovaBF(
+    formula = rt ~ medit + subj,
+    data = data.frame(wordsum),
+    whichRandom = 'subj')
+bf1bs
+```
+
+<a name="three"></a>
+
+# More than two factors?
+
+The previous analysis took several minutes to run. Although in principle it is possible to run Bayesian ANOVAs with more than two factors, they take hours or days to run with realistically large data sets. They also produce output that is considerably harder to interpret than the output of two-factor analyses. For these reasons, we only look at up to two-factor Bayesian ANOVA in these intermediate-level worksheets. If you need to conduct an ANOVA with more than two factors, consider using [traditional ANOVA](more-on-anova.html) techniques (bearing in mind, of course, the interpretative difficulties surrounding p values). 
+
+
 
 # Exercise 1
 
-The data for this exercise comes from a different between-subjects experiment with two factors. Start by loading the data and removing any missing data (`NA`), using this command:
+The data for this first exercise comes from a between-subjects experiment with two factors. Start by loading the data and removing any missing data (`NA`), using this command:
 
 ```{r ex1-data, message=FALSE}
 cf_raw <- read_csv('going-further/counterfactual.csv') %>% drop_na()
+```
+
+The first few rows of data look like this:
+
+```{r, echo=FALSE}
+cf_raw %>% head(6) %>% pander()
 ```
 
 In this experiment, participants read a scenario describing some events leading up to an accident. The scenario was written from either a first-person or a third-person perspective. Next, they generated some counterfactual thoughts in relation to the scenario. For example, "If only I hadn't been looking at my phone, then ...". These thoughts were coded as either predictive, or not predictive of whether the accident occurred. Participants rated how much the protagonist was to blame for the accident, on a scale of 1 (strongly disagree) to 7 (strongly agree).
@@ -268,27 +299,6 @@ priming_bf[4] / priming_bf[3]
 
 **Copy the R code you used for this exercise into PsycEL.**
 
-<a name="oneBS"></a>
-
-# Single between-subjects factor
-
-It is also possible to use `anovaBF` to analyse a single factor, between-subjects design. Where that factor has two levels, you could alternatively use [ttestBF](evidence.html#bayes-t), although note even in this case the Bayes Factors produced by the two commands will not be exactly the same. This is because `anovaBF` makes use of the factor of participant ID (`subj`), while `ttestBF` does not. The approach `anovaBF` takes is better, but also takes longer to run.  As before, if your choice of analysis technique changes the central conclusions of your study, this is normally an indication that you should replicate your study with a larger sample.
-
-One of the useful things about `anovaBF` is that, unlike `ttestBF`, you can use it in a one-factor design that has more than two levels. For example:
-
-```{r bf-1bs}
-bf1bs <- anovaBF(
-    formula = rt ~ medit + subj,
-    data = data.frame(wordsum),
-    whichRandom = 'subj')
-bf1bs
-```
-
-<a name="three"></a>
-
-# More than two factors?
-
-The previous analysis took several minutes to run. Although in principle it is possible to run Bayesian ANOVAs with more than two factors, they take hours or days to run with realistically large data sets. They also produce output that is considerably harder to interpret than the output of two-factor analyses. For these reasons, we only look at up to two-factor Bayesian ANOVA in these intermediate-level worksheets. If you need to conduct an ANOVA with more than two factors, consider using [traditional ANOVA](more-on-anova.html) techniques (bearing in mind, of course, the interpretative difficulties surrounding p values). 
 
 ___
 
