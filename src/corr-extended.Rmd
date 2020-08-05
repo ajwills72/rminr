@@ -128,7 +128,7 @@ The 95% confidence interval is only thing reported by a traditional analysis tha
 
 ### One-tailed tests
 
-In a one-tailed test, you decide before looking at your data which direction the effect should be in. For example, you may have read a lot of scientific papers about group relations, so you're pretty sure that if you find a correlation between ingroup closeness and outgroup distrance, that correlation will be positive. 
+In a one-tailed test, you decide before looking at your data which direction the effect should be in. For example, you may have read a lot of scientific papers about group relations, so you're pretty sure that if you find a correlation between ingroup closeness and outgroup distance, that correlation will be positive. 
 
 If this case, you'd use this command to do this _one-tailed_ test:
 
