@@ -46,7 +46,11 @@ In the [factorial differences](anova3.html)  worksheet, we did a two-factor Baye
 
 # Getting started
 
-Return to the project that you used for the [factorial differences](anova3.html) worksheet, which you named **rminr-data**. Open a new blank script and save it as **anova4.R**. Put all commands in that script, and save the script regularly. 
+Return to the project that you used for the [factorial differences](anova3.html) worksheet, which you named **rminr-data**. 
+
+Ensure you have the files required for this worksheet, by asking git to "`pull`" the repository. Select the `Git` tab, which is located in the row of tabs which includes the `Environment` tab. Click the `Pull` button with a downward pointing arrow. A window will open showing the files which have been pulled from the repository. Close the `Git pull` window.
+
+Now, open a new blank script and save it as **anova4.R**. Put all commands in that script, and save the script regularly. 
 
 First, you'll need to load some standard packages, and the data we used in the previous worksheet:
 
@@ -212,7 +216,7 @@ bf1bs
 
 # More than two factors?
 
-The previous analysis took several minutes to run. Although in principle it is possible to run Bayesian ANOVAs with more than two factors, they take hours or days to run with realistically large data sets. They also produce output that is considerably harder to interpret than the output of two-factor analyses. For these reasons, we only look at up to two-factor Bayesian ANOVA in these intermediate-level worksheets. If you need to conduct an ANOVA with more than two factors, consider using [traditional ANOVA](more-on-anova.html) techniques (bearing in mind, of course, the interpretative difficulties surrounding p values). 
+The previous analysis took several minutes to run. Although in principle it is possible to run Bayesian ANOVAs with more than two factors, they take hours or days to run with realistically large data sets. They also produce output that is considerably harder to interpret than the output of two-factor analyses. For these reasons, we only look at up to two-factor Bayesian ANOVA in these worksheets. If you need to conduct an ANOVA with more than two factors, consider using [traditional ANOVA](more-on-anova.html) techniques (bearing in mind, of course, the interpretative difficulties surrounding p values - and the factor that any kind of analysis with more than two factors is often going to be pretty difficult to interpret). 
 
 
 
@@ -264,14 +268,14 @@ cf_bf
 cf_bf[4] / cf_bf[3]
 ```
 
-**Write a short paragraph explaining what, on the basis of your analysis, you can conclude from these data. Copy this paragraph, and the code you used to do your analysis, into PsycEL**
+**Write a short paragraph explaining what, on the basis of your analysis, you can conclude from these data. Copy this paragraph, and the code you used to do your analysis, into PsycEL.**
 
 
 <a name="ex2"></a>
 
 # Exercise 2
 
-The data for this exercise comes from a different within subjects experiment with two factors.
+The data for this second exercise come from a within-subjects experiment with two factors. Start by loading the data:
 
 ```{r ex2-data, message=FALSE}
 raw <- read_csv('case-studies/chris-mitchell/priming-faces.csv')
