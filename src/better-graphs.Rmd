@@ -17,6 +17,12 @@ knitr::opts_chunk$set(echo = TRUE, comment=NA, cache=FALSE)
 library(pander)
 ```
 
+# Before you start
+
+1. Open the `rminr-data` project we used [previously](preproc.html#load).
+
+1. Ensure you have the files required for this worksheet, by asking git to "`pull`" the repository. Select the `Git` tab, which is located in the row of tabs which includes the `Environment` tab. Click the `Pull` button with a downward pointing arrow. A window will open showing the files which have been pulled from the repository. Close the `Git pull` window.
+
 # Contents
 
 * [Introduction](#intro)
@@ -30,9 +36,9 @@ library(pander)
 * [Between-participants manipulations](#between)
     + [Single factor, two levels (distribution plot)](#b-1x2)
     + [Single factor, unordered variable (boxplot)](#b-1x4)
-* [Mixed manipulations]
-    + [Pre/post manipulation for different groups (confidence intervals)](#mixed)
-* [Correlational data]
+* [Mixed manipulations](#mixed)
+    + [Pre/post manipulation for different groups (confidence intervals)](#m-2x4)
+* [Correlational data](#cor)
     + [Pairs plot](#pairs)
 
 <a name = "intro"></a>
@@ -120,7 +126,8 @@ dgraph
 We can now use the `ggsave` command to save a high-quality version of that graph:
 
 ```{r ggsave}
-ggsave(filename = "fig1.pdf", plot = dgraph, units = "cm", width = 15, height = 10)
+ggsave(filename = "fig1.pdf", plot = dgraph, units = "cm", width = 15,
+       height = 10)
 ```
 
 ## Explanation of command
@@ -506,6 +513,10 @@ avoidance %>% ggplot(aes(x = subculture, y = score)) +
 
 Mixed manipulations are those that include both within-subject factors and between-subject factors. As with all our other examples, the key to producing a good graph is to be really clear what your main hypothesis is, and then to come up with a graph that shows both the central tendencies (means) and variabilities most relevant to that hypothesis. 
 
+<a name="m-2x4"></a>
+
+## Pre/post manipulation for different groups (confidence intervals)
+    
 We'll demonstrate this process with some further data from the student project we used earlier. In this part of the data, the students compared participants' emotions before and after they listened to their preferred type of music.
 
 First, we'll load the data, and select the columns we're going to use. We'll also put the four subcultures in a particular order, as we did in the last example. We've covered all these commands in previous worksheets, so we won't explain them again here.
@@ -612,6 +623,10 @@ However, the error bars are rather misleading for the effect of the within-subje
 We cannot use confidence intervals calculated for the between-subject manipulation to make inferences about the within-subject manipulation, because the latter is based on difference scores. For example, Goths might vary widely in their pre-music negative affect, but all show very similar reductions in negative affect as a result of listening to music. This would lead to wide confidence intervals for both the pre- and post- scores, but small confidence intervals for the difference score.
 
 There is basically no good way of showing confidence intervals for both within- and between-subject factors on the same graph. The same goes for distribution plots. Normally, the best solution is to think carefully about what it is you are trying to show, and create the simplest, clearest plot that shows just that. If you want to show more than one thing, and those things are difficult to combine into one graph, use more than one graph. 
+
+<a name="cor"></a>
+
+# Correlational data
 
 <a name="pairs"></a>
 
