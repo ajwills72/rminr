@@ -603,7 +603,7 @@ Line 6 is quite important. As we just mentioned, error bars (I-bars) are used to
 
 Line 7 applies APA style.
 
-_Note_: If case you're curious, the full meaning of `mean_cl_boot` is that we want the **c**onfidence **l**imits (another phrase for confidence intervals) for the **mean**, and we want to use **boot*strapping to work these out. [Bootstrapping](https://en.wikipedia.org/wiki/Bootstrapping_(statistics)) is a way of calculating statistics that makes fewer assumptions about the distribution of the population than more traditional methods. 
+_Note_: If case you're curious, the full meaning of `mean_cl_boot` is that we want the **c**onfidence **l**imits (another phrase for confidence intervals) for the **mean**, and we want to use **boot**strapping to work these out. [Bootstrapping](https://en.wikipedia.org/wiki/Bootstrapping_(statistics)) is a way of calculating statistics that makes fewer assumptions about the distribution of the population than more traditional methods. 
 
 ## Why is this a bad plot?
 
@@ -652,6 +652,8 @@ We'll plot some data from another undergraduate dissertation. This study was int
   * psiq - vividness of mental imagery
   * ftt - score on a flexible thinking task
 
+Create a new R file called `pairs.R`, and enter the commands that follow into that file. 
+
 ```{r pairs-2, class.source = 'numberLines lineAnchors', message=FALSE}
 library(GGally, quietly = TRUE)
 oit <- read_csv('going-further/openness-imagery-thinking.csv')
@@ -667,7 +669,7 @@ Line 1 loads the `GGally` package, which provides the `ggpairs()` function for c
 
 ### Explanation of plot
 
-There are small positive correlations between FTT and all other variables, and between PsiQ and Openness. There is no correlation between problems solved and either PSiQ or Openness. The `*` indicates those correlations that are significant by a [traditional test](corr.html#evidence)/
+There are small positive correlations between FTT and all other variables, and between PsiQ and Openness. There is no correlation between problems solved and either PSiQ or Openness. The `*` indicates those correlations that are significant by a [traditional test](corr.html#evidence).
 
 The PsiQ density plot shows that nobody scored less than about 3.5, and above that value the data was normally distributed. The pattern was similar for FTT, with fewer low scores shifting the distribution slightly to the right. The number of problems solved showed the opposite pattern. There was a steady decline from people who solved only one problem, and nobody solved more than four.
 

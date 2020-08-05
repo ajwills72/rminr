@@ -180,7 +180,7 @@ These are slightly more advanced materials, aimed at a final-year undergraduate 
 
     * [Better tables](better-tables.html): **Creating a correlation matrix**, **creating a custom table of descriptive statistics**.
 
-    * [Better graphs](better-graphs.html): Producing publication-quality graphs in R.
+    * [Better graphs](better-graphs.html): **Producing publication-quality graphs in R**, **Within-participants: Single factor, ordered variable (line plot)**, **Within-participants: Interaction, two levels (line plot, distribution plot)**, **Between-participants: Single factor, two levels (distribution plot)**, **Between-participants: Single factor, unordered variable (boxplot)**, **Mixed: Pre/post manipulation for different groups (confidence intervals)**, **Correlation: Pairs plot**.
 
     * [Analysing scales](analyse-scales.html): **Cronbach's alpha**.
 
