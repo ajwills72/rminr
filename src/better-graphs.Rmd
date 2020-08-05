@@ -365,7 +365,7 @@ Lines 1-2 pivot the data into a wide format so we can calculate the 'difference 
 
 **Explanation of output**:
 
-Open `priming_diff` by clicking on it in your _Environment_. As you can see there are a range of scores in the `diff` column. On a quick inspection, just over half the participants seem to have a positive score (i.e. a bigger congruency effect in the absence of load). A positive score is the expected effect, so clearly there's a lot of variability here. 
+Open `priming_diff` by clicking on it in your _Environment_. As you can see there are a range of scores in the `diff` column. Click the `diff` column heading to sort the values. On a quick inspection, just over half the participants seem to have a positive score (i.e. a bigger congruency effect in the absence of load). A positive score is the expected effect, so clearly there's a lot of variability here. 
 
 We can visualize this variability using a density plot:  
 
@@ -400,7 +400,7 @@ We'll plot some data from [a study which tested children’s language developmen
 
 In this study, children were tested using one of two sets of picture cards; the set used in the Italian version of WinG, or the set used in the English version. The researchers were primarily interested in whether the children's performance differed depending on which cards were used. We can demonstrate this with plots that show the distribution of scores for the two card sets on the WinG tasks.
 
-We start by preparing the data for plotting. These steps are described in detail in the [Better tables worksheet](better-tables.html) worksheet, so we won’t repeat the description here. Instead, we’ll just list the commands and show the final output.
+Create a new R file called `one-between.R`, and enter the commands that follow into that file. We start by preparing the data for plotting. These steps are described in detail in the [Better tables worksheet](better-tables.html) worksheet, so we won’t repeat the description here. Instead, we’ll just list the commands and show the final output.
 
 ```{r message=FALSE, class.source = 'numberLines lineAnchors'}
 wing_preproc <- read_csv('going-further/picture-naming-preproc.csv')
@@ -416,6 +416,7 @@ task_names <- c(
   pp = 'Predicate Production'  
 )
 wing$task <- wing$task %>% recode(!!!task_names)
+library(pander)
 wing %>% head(8) %>% pander()
 ```
 
@@ -461,6 +462,7 @@ When your hypothesis concerns more than two groups, overlapping half-violin plot
 To illustrate the use of a boxplot, we'll use some data from an undergraduate project on emotional avoidance strategies in fans of different music types: Mainstream, Goth, Metal and Emo. So, we'll start by loading that data, and selecting just the emotional-avoidance scores (using commands that should be familiar from several previous worksheets):
 
 ```{r load, message=FALSE}
+# single factor, ordered variable
 ers_l <- read_csv('going-further/music-emotion-preproc.csv')
 avoidance <- ers_l %>% filter(ers == 'avoidance')
 ```
