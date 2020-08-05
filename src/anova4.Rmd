@@ -133,7 +133,7 @@ This gives us a Bayes Factor for the interaction close to 0.1. So, there's subst
 
 # Exercise 1
 
-The data for this exercise comes from a different between subjects experiment with two factors.
+The data for this exercise comes from a different between-subjects experiment with two factors. Start by loading the data and removing any missing data (`NA`), using this command:
 
 ```{r ex1-data, message=FALSE}
 cf_raw <- read_csv('going-further/counterfactual.csv') %>% drop_na()
@@ -173,7 +173,7 @@ cf_bf
 cf_bf[4] / cf_bf[3]
 ```
 
-**Write a short paragraph explaining what, on the basis of your analysis, you can conclude from these data. Copy this paragraph, and the code you used to do your analysis, into Psyc:EL**
+**Write a short paragraph explaining what, on the basis of your analysis, you can conclude from these data. Copy this paragraph, and the code you used to do your analysis, into PsycEL**
 
 <a name="twoWS"></a>
 
