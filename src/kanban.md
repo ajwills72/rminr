@@ -6,9 +6,9 @@
 
 ## Andy review (for RMINR)
 
-1. anova4 (add 2 exercises)
-
 ## Back to Paul (for RMINR)
+
+1. anova4 (add 2 exercises)
 
 ## Completed (for RMINR)
 
@@ -28,17 +28,13 @@
 1. cs-"Musical subcultures case study" (Helen) - (added to non-para + better graphs) - nearly there 1 - Helen happy
 1. cs-"Personality, imagery, creativity" (Jon May) - (Added to better tables + better graphs) - nearly there 2 - Jon happy
 1. cs-"Emotional intelligence and religion" (Alison B) - (created more-on-regression) - nearly there 3 - Alison happy
-
 1. cs-"Depression anxiety and stress" (Alyson N) - doesn't add to generic - outstanding email conversation.
-
 1. cs-"Counterfactual thinking" (Clare W) - doesn't add to generic - Clare happy
-
 1. cs-"Goal direct and cog load" (Chris Mitchell) - no conversation held (added to better graphs) - Chris was away or busy for duration
-
 
 ## Done
 
-# Definitions of done
+### Paul's suggested definitions of done
 
 Workshop: Worksheet tested by > 1 person who will teach workshop
 Case study: Worksheet tested by project supervisor
