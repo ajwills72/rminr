@@ -177,7 +177,7 @@ bf2ws
 
 ### `[1] congru`
 
-The is the **main effect** of congruence. More specifically, it is the hypothesis that `congru`  affects `rt`. This is compared against the hypothesis that there is no effect of sex.
+The is the **main effect** of congruence. More specifically, it is the hypothesis that `congru`  affects `rt`. This is compared against the hypothesis that there is no effect of congruence.
 
 The Bayes Factor is very large (about 3,800), meaning the evidence for a main effect of congruence is conclusive.
 
