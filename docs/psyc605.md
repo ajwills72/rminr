@@ -1,4 +1,4 @@
-# PSYC604
+# PSYC605
 
 ## Automark
 
