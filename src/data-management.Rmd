@@ -53,7 +53,7 @@ Given a dataset with numeric factor levels and the related journal article, reco
 
 ## Code books
 
-Include a "code book" which explains what each of the columns in a data files means. See [The Perruchet Effect worksheet](#awdiss.html) for an example.
+Include a "code book" which explains what each of the columns in a data files means. See [The Perruchet Effect worksheet](awdiss.html) for an example.
 
 ## Exercise
 
