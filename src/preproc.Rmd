@@ -237,7 +237,7 @@ tibble(filename = list.files("rawdata", "*.csv", full.names=TRUE))
 
 ### Load every file 
 
-We know how to make a new dataframe containing a list of filenames to process. We can use this to load each file in term and combine them into a single large datset.
+We know how to make a new dataframe containing a list of filenames to process. We can use this to load each file in turn and combine them into a single large datset.
 
 To do this, we make use another tidyverse function called `do`. 
 
