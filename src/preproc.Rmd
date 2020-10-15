@@ -147,12 +147,12 @@ You may have noticed that the list of 'columns to keep' is not in alphabetical o
 Having worked out which columns we need, we now tidy things up by selecting just the columns we need and putting them into a new data frame. This is done using R's `select` command
 
 ```{r select}
-tidydat <- dat %>% select(subject_nr, phase, live_row, type, response)
+dat_subset <- dat %>% select(subject_nr, phase, live_row, type, response)
 ```
 
-**Explanation of command** - Our original data frame `dat` is piped (sent to, `%>%`) the `select` command, which picks just the columns we name. These selected columns are put (`<-`) into a new dataframe called `tidydat`. 
+**Explanation of command** - Our original data frame `dat` is piped (sent to, `%>%`) the `select` command, which picks just the columns we name. These selected columns are put (`<-`) into a new dataframe called `dat_subset`. 
 
-Click on `tidydat` in the _Environment_ window. You'll see we have a much easier-to-read data frame, still with 56 rows, but now only 5 columns. 
+Click on `dat_subset` in the _Environment_ window. You'll see we have a much easier-to-read data frame, still with 56 rows, but now only 5 columns. 
 
 <a name="rename"></a>
 
@@ -161,10 +161,11 @@ Click on `tidydat` in the _Environment_ window. You'll see we have a much easier
 When working with data, it's useful to have meaningful column names, because it makes it easier to remember what they contain. The column `live_row` could be more clearly named as `trial`, as that's the information it contains. Also, `subject_nr` is longer than it needs to be, `subj` is clear, and quicker to type. We rename columns in R using the `colnames` command:
 
 ```{r rename}
-colnames(tidydat) <- c("subj", "phase", "trial", "type", "response")
+tidydat <- dat_subset %>% 
+  set_names(c("subj", "phase", "trial", "type", "response"))
 ```
 
-**Explanation of command** - The command `c()` means _concatenate_ i.e. put together. So `c("subj", "phase", "trial", "type", "response")` is a way of putting the four names together so they can be sent somewhere. They are  sent (`<-`) to the `colnames()` command, which changes the column names of `tidydat`.
+**Explanation of command** - The command `c()` means _concatenate_ i.e. put together. So `c("subj", "phase", "trial", "type", "response")` is a way of putting the five names together so they can be sent somewhere. We use the `set_names` function to change the column names of the dataframe to be this list. The result is sent (`<-`) and saved in a new variable, `tidydat`.
 
 <a name="filter"></a>
 
