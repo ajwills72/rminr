@@ -154,9 +154,9 @@ dat_subset <- dat %>% select(subject_nr, phase, live_row, type, response)
 
 Click on `dat_subset` in the _Environment_ window. You'll see we have a much easier-to-read data frame, still with 56 rows, but now only 5 columns. 
 
-<a name="rename"></a>
 
-# Renaming columns
+
+# Renaming columns {#rename}
 
 When working with data, it's useful to have meaningful column names, because it makes it easier to remember what they contain. The column `live_row` could be more clearly named as `trial`, as that's the information it contains. Also, `subject_nr` is longer than it needs to be, `subj` is clear, and quicker to type. We rename columns in R using the `colnames` command:
 
