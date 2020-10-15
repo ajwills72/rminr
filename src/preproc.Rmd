@@ -237,7 +237,7 @@ tibble(filename = list.files("rawdata", "*.csv", full.names=TRUE))
 
 ### Load every file 
 
-We know how to make a new dataframe containing a list of filenames to process. We can use this to load each file in term and combine them into a single large datset.
+We know how to make a new dataframe containing a list of filenames to process. We can use this to load each file in turn and combine them into a single large datset.
 
 To do this, we make use another tidyverse function called `do`. 
 
@@ -256,7 +256,7 @@ alldat <- tibble(filename = list.files("rawdata", "*.csv", full.names=TRUE)) %>%
 ```
 
 **Explanation of command**: At the start of line 1 we write `alldat <-`. This means the results will be saved with the name `alldat`. Then we reuse the code from above to create a new dataframe with one column: `filename`. 
-We then use `group_by` to tell R to process each filename individually. If didn't do this then R would ask `read_csv` to open all the files at once, and `read_csv` would be confused!
+We then use `group_by` to tell R to process each filename individually. If we didn't do this then R would ask `read_csv` to open all the files at once, and `read_csv` would be confused!
 
 When we write `do(read_csv(.$filename))` we are telling `do` to apply the `read_csv` function to each filename. The `".$filename"` part is shorthand: The period `"."` means "the group in the data I am working with now". The `"$filename"` part means use the values from the `filename` column. So `read_csv(.$filename)` means, read the csv file using the value in the `filename` column.
 
