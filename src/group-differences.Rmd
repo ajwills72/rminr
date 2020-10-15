@@ -244,7 +244,7 @@ In the R output, the terms `inf` and `sup` are short for _inferior_ and _superio
 ## Exercise 1
 In this exercise, you'll consolidate what you've learned so far. 
 
-**The task is to further exmaine this sample of participants who are living in the US, and earning less than $150k (`cpslow`).** 
+**The task is to further examine this sample of participants who are living in the US, and earning less than $150k (`cpslow`).** 
 
 Specifically, the question to answer is whether people born in the US earn more. In order to do this, you should calculate the mean income for each group, produce a density plot with one line for each group, and calculate the effect size. Below are the answers you are aiming for:
 
