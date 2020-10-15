@@ -237,7 +237,7 @@ So the effect size is about 0.20. This is typically described as a _small_ effec
 
 The other lines of output report the _95% confidence interval_ for the effect size. This tell us that while our best estimate of the effect size on the basis of the data we have is about 0.202, it might not be exactly 0.202. However, we can be pretty confident the effect size is somewhere between 0.16 and 0.24. If we had more data, we could be more precise. 
 
-In the R output, the terms `inf` and `sup` are short for _inferior_ and _superior_  --- meaning, in this case, the _lower_ and _upper_ ends of the range of likely effect sizes.
+In the R output, _lower_ and _upper_ indicate the two ends of the range of likely effect sizes.
 
 <a name="ex1"></a>
 
