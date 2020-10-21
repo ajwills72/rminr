@@ -1,6 +1,6 @@
 ---
 title: "More on preprocessing data from experiments"
-author: "Andy Wills and Chris Longmore"
+author: "Andy Wills, Chris Longmore and Ben Whalley"
 output: html_document
 ---
 

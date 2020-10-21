@@ -1,6 +1,6 @@
 ---
 title: "Preprocessing data from experiments"
-author: "Andy Wills, Clare Walsh and Chris Longmore"
+author: "Andy Wills, Clare Walsh, Chris Longmore and Ben Whalley"
 output: html_document
 ---
 
