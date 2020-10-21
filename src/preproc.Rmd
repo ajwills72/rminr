@@ -281,7 +281,7 @@ Now we have this combined file, we summarise the test phase data for each partic
 
 ```{r sumagain, echo=FALSE, message=F}
 test <- alldat %>% filter(phase == "test")
-test.sum <- test %>% group_by(subj=filename, type) %>% summarise(mean(response))
+test.sum <- test %>% group_by(filename, type) %>% summarise(mean(response))
 test.sum
 ```
 
