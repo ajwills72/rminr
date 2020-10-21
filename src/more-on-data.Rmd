@@ -42,9 +42,9 @@ data <- path %>%
 1. We clear the workspace and load `tidyverse`.
 1. `library(readxl)` loads a package containing functions for reading Excel spreadsheets.
 1. `path <- 'going-further/picture-naming.xlsx'` defines the location of our spreadsheet.
-1. `path %>% excel_sheets()` creates a vector (a list) containing the names of the subsheets.
-1. Items in a vector can be given names. Without an argument, `set_names()` sets the name the same as the value in the vector, thereby naming each item after its subsheet. It will become clear why we do this in the next step.
-1. `map_df()` processes each item in the vector, by assigning it to `.x` and then running the function `read_excel(path = path, sheet = .x, range = "A1:V20")`. For each subsheet of the spreadsheet file (`path`), this reads data from the range `A1:V20` on the subsheet (the cells containing the data we need). The argument `.id = "sheet"` creates a column named `sheet` with the name associated with the current vector item `.x`. This is the name that we set in the previous step. The results are returned as a data frame.
+1. `path %>% excel_sheets()` creates a vector (R calls this type of list a vector) containing the names of the subsheets.
+1. Items in a list can be given names. Without an argument, `set_names()` sets the name the same as the value in the list, thereby naming each item after its subsheet. It will become clear why we do this in the next step.
+1. `map_df()` processes each item in the list, by assigning it to `.x` and then running the function `read_excel(path = path, sheet = .x, range = "A1:V20")`. For each subsheet of the spreadsheet file (`path`), this reads data from the range `A1:V20` on the subsheet (the cells containing the data we need). The argument `.id = "sheet"` creates a column named `sheet` with the name associated with the current list item `.x`. This is the name that we set in the previous step. The results are returned as a data frame.
 1. Because `map_df()` adds the results of each of function call to the end of the previously created data frame, `data` is assigned a single data frame containing the data from all subsheets.
 
 Here's a selection of rows from `data`:
