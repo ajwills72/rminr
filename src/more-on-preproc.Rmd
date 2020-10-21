@@ -73,9 +73,12 @@ str_extract("participant-9999", "(\\d+)")
 
 **Explanation of the code**: `str_extract` is being used to match patterns in the text `"participant-9999"`. The pattern used is `"\\d+"`. The `\\d` part means 'match any digit from 0 to 9. The `+` means, match as many of what went before as you can. So `\\d+` means match as many digits as you can.
 
-- Adapt the code from above to use `str_extract` rather than `str_sub`.
-- If you think matching patterns in your text data might be a useful skill see this guide for lots more detail: https://www.princeton.edu/~mlovett/reference/Regular-Expressions.pdf
 
+# Exercise
+
+Adapt the code from above to use `str_extract` rather than `str_sub`.
+
+Optionally, if you think matching patterns in your text data might be a useful skill, see this guide for lots more detail: https://www.princeton.edu/~mlovett/reference/Regular-Expressions.pdf
 
 
 ___
