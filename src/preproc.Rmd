@@ -300,16 +300,13 @@ Your task is to write R code that gives the mean reaction time for each particip
 This can, and should, be done with less than 15 files of R code (plus comments, see below). In fact, excluding the `library(tidverse)` command and comments, it can be done in 10 lines. When your code is working correctly, it will give you the following numbers:
 
 ```{r ex1, echo=FALSE, message=FALSE}
-# this used map_df which was alternative method considered but not used above because
-# you would have to use names(filenamevector) <- filenamevector to preserve the 
-# original filename in the output... the names of the vector are used for the new
-# subj column, but if not present it's just indexed by position.
-lexdat <- list.files("lexdec", pattern = "csv", full.names=TRUE) %>% 
-  map_df(read_csv , .id="subj") 
+lexdat <- tibble(filename=list.files("lexdec", pattern = "csv", full.names=TRUE)) %>% 
+  group_by(filename) %>% 
+  do(read_csv(.$filename)) 
 
 lexdat.tidy <- lexdat %>% 
   select(subject_nr, practice, live_row, category, correct, response_time) %>% 
-  set_names( c("subj", "practice", "trial", "type", "acc", "rt"))
+  set_names( c("filenamme", "subj", "practice", "trial", "type", "acc", "rt"))
 
 lexdat.tidy %>% 
   filter(practice == "no") %>% 
