@@ -20,9 +20,8 @@ Sometimes, a data file does not contain a participant number within it, it's jus
 
 ```{r load, message=FALSE}
 library(tidyverse)
-
 subj.11 <- read_csv('rawdata/subject-11.csv') %>%
-  add_column(subj = 11, .before = 1)  # .before = 1 means insert the column before the first existing column
+  add_column(subj = 11, .before = "acc")  # .before = "acc" means: 'insert the new column before the existing column called "acc"'
 ```
 
 In the case that you need to read multiple participants' datafiles at once, we saw how to use `do` with `read_csv` in the [preproc worksheet](preproc.html):
@@ -56,7 +55,7 @@ Looking at the filename `rawdata/subject-11.csv`, we can see that the participan
 alldat <- tibble(filename = list.files("rawdata", "*.csv", full.names=TRUE)) %>% 
   group_by(filename) %>% 
   do(read_csv(.$filename)) %>% 
-  mutate(subj = str_sub(filename, 17, 18), .before=1)
+  mutate(subj = str_sub(filename, 17, 18), .before="filename")
 ```
 
 These four lines of code load and combine every data file, and extract the participant number for each row.
