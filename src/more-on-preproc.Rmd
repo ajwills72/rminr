@@ -33,7 +33,7 @@ alldat <- tibble(filename = list.files("rawdata", "*.csv", full.names=TRUE)) %>%
 ```
 
 
-**Explanation of command**: This is the same code we saw in the [preproc worksheet](preproc.html). We use `list.files` to produce a vector of all the files in the `rawdata` directory which end in `.csv`.  This vector is used to make a column in a new dataframe, which is piped to the `group_by(filename)` function.
+**Explanation of command**: This is the same code we saw in the [preproc worksheet](preproc.html). We use `list.files` to produce a list of all the files in the `rawdata` directory which end in `.csv`.  This list is used to make a column in a new dataframe, which is piped to the `group_by(filename)` function.
 The grouped data is then piped to the `do` function. This works on each group (in this case, each filename) in turn and uses the `filename` column as input the `read_csv` command.  
 Because `read_csv` produces a dataframe as output, these are automatically combined into a single dataframe of all participants. The `filename` column remains and provides a record of where the data came from.
 
