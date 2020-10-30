@@ -73,13 +73,24 @@ Private repositories can only been seen by people who you invite. Folow these st
 
 ## Add your repository as an RStudio project
 
-Back in the [preprocessing data](preproc.html#load) worksheet, you created a new RStudio project from a github repository I had created. Do the same now for your own github repository. The location of the repository is:
+Back in the [preprocessing data](preproc.html#load) worksheet, you created a new RStudio project from a github repository I had created. Go back to that worksheet, and do the same now for your own github repository. The location of your repository is:
 
 `https://github.com/your-username/your-repository-name`
 
 ## Your computer, RStudio project, and github
 
 Always keep in mind that there are three computers involved in building a github repository using Rstudio. The first computer is the computer on your desk/lap. We call this the 'local' computer. The second computer is the one running RStudio for you, which you connect to using your web browser. To get a file from your local computer to Rstudio, we must upload it to Rstudio, as we have in previous worksheets (revised here). The third computer is the one running github. To get your file onto github, we must send it from Rstudio. This process involves _pulling_, _staging_, _committing_, and _pushing_, which we'll cover below.
+
+## Saying who you are
+
+Next, you must tell Rstudio a little bit of information that it will share with github about your identity. At the top of the Rstudio window, select the _Tools_ menu item, then _Terminal_, then _New terminal_. This will open a Terminal tab at the bottom left of Rstudio (same place as the Console window). In the Terminal window (_not_ the Console window), enter the following two commands, one at a time, replacing with your own information. Use the same email and username as you used to set up your github account:
+
+```
+git config --global user.email "your.email@your-uni.ac.uk"
+git config --global user.name "my-username"
+```
+
+You only need to do this once; Rstudio will then remember your answers forever, even for different repositories. 
 
 ## Adding your first file to RStudio
 
@@ -160,7 +171,7 @@ Let's say we decided that the change to our file was not in fact an improvement,
 
 1. Select 'Shell...'
 
-1. In the new Terminal window you have openned (bottom left of Rstudio), type:
+1. In the new Terminal window you have opened (bottom left of Rstudio), type:
 
 `git checkout SHA -- path/to/file.txt`
 
