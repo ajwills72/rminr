@@ -2,6 +2,8 @@
 
 _Andy J. Wills_
 
+_The first two sections of this worksheet are also summarized in the following [slides](data-github-slides.pdf)._
+
 Whether you're working on a study by yourself, or with a team, it's critical to keep organized logs and records of what was done when, and by whom. It should be possible to go back through those logs and records and for example, reconstruct if there was a problem with a particular participant. It's also important (and often required) that you are able to share these records as part of assessments. Later on, if the work is published, good practice in open science involves sharing anonymized data, materials, and analysis scripts publicly. 
 
 This worksheet is an introduction to using [github](https://github.com/) repositories as your data archive and log book. It can also (eventually) be your open science publication platform, although that aspect is not covered in the current worksheet. 
