@@ -609,7 +609,7 @@ Line 6 is quite important. As we just mentioned, error bars (I-bars) are used to
 
 Line 7 applies APA style.
 
-_Note_: If case you're curious, the full meaning of `mean_cl_boot` is that we want the **c**onfidence **l**imits (another phrase for confidence intervals) for the **mean**, and we want to use **boot**strapping to work these out. [Bootstrapping](https://en.wikipedia.org/wiki/Bootstrapping_(statistics)) is a way of calculating statistics that makes fewer assumptions about the distribution of the population than more traditional methods. 
+_Note_: In case you're curious, the full meaning of `mean_cl_boot` is that we want the **c**onfidence **l**imits (another phrase for confidence intervals) for the **mean**, and we want to use **boot**strapping to work these out. [Bootstrapping](https://en.wikipedia.org/wiki/Bootstrapping_(statistics)) is a way of calculating statistics that makes fewer assumptions about the distribution of the population than more traditional methods. 
 
 ## Why is this a bad plot?
 
