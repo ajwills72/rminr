@@ -246,11 +246,11 @@ Pairs plots are are covered in the [Better graphs](better-graphs.html#pairs) wor
 
 ```{r pairs, class.source = 'numberLines lineAnchors', message=FALSE}
 library(GGally)
-#source('themeapa.R')
+source('themeapa.R')
 data %>%
   select(psiq, openness, problems, ftt) %>%
-  ggpairs(lower=list(continuous='smooth')) #+
-  #theme_APA
+  ggpairs(lower=list(continuous='smooth')) +
+  theme_APA
 ```
 
 ## References
