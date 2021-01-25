@@ -132,6 +132,14 @@ data <- full_join(ocean.scales, solved, by = 'subj') %>%
 
 ## Mean, Standard deviation, skewness, kurtosis for all independent variables (n=48)
 
+The `psych` library has a useful function `describe` to obtain descriptive statistics.
+
+```{r}
+library(psych)
+
+describe(data)
+```
+
 ## Histogram and curve showing distribution of problem scores (n=48)
 
 https://stackoverflow.com/questions/6967664/ggplot2-histogram-with-normal-curve
@@ -155,17 +163,26 @@ You learnt how to create a scatterplot and a best fit line in the [regression wo
 
 <a name="cor-o-problems"></a>
 
+```{r}
+data %>%
+  ggplot(aes(openness, problems)) +
+  geom_point() +
+  geom_smooth(method=lm, se=F)
+
+```
+
 ## Correlation between openness and problems solved
 
 The researchers predicted that participants with more open personality types would be better at solving the problems. In other words, we should expect a positive correlation between openness and problem solving. We test a directional hypothesis with a one-tailed correlation. See the [More on relationships, part 2.](#corr-extended.html) worksheet for more details.
 
 ```{r}
-cor_o_problems <- cor.test(data$problems, data$openness, alternative='greater')
+cor_o_problems<-cor.test(data$problems, data$openness, alternative='greater')
 cor_o_problems
 
 # note that this is a 2-tailed test
 library(BayesFactor)
-cor_o_problems_bf <- correlationBF(data$problems, data$openness)
+cor_o_problems_bf<-correlationBF(data$problems, data$openness)
+cor_o_problems_bf
 ```
 
 **Explanation of commands:**
@@ -174,7 +191,7 @@ We use a Pearson correlation to look at the relationship between openness and th
 
 **Explanation of output:**
 
-Contrary to the first hypothesis, there is no evidence for a positive correlation  between openness and creative problem solving  (_r_ = `r round(cor_o_problems$statistic,2)`, one-tailed, _BF_ = `r round(BayesFactor::extractBF(cor_o_problems_bf)$bf,2)`).
+Contrary to the first hypothesis, there is no evidence for a positive correlation  between openness and creative problem solving  (_r_ = `r round(cor_o_problems$estimate,2)`, one-tailed, _BF_ = `r round(BayesFactor::extractBF(cor_o_problems_bf)$bf,2)`).
 
 <a name="cor-matrix"></a>
 
@@ -194,11 +211,34 @@ There were no correlations between the other four personality factors and proble
 
 ## Correlation between problems solved and flexible thinking
 
-TODO: one-tailed
+```{r}
+cor_f_problems<-cor.test(data$problems, data$ftt, alternative='greater')
+cor_f_problems
 
+# note that this is a 2-tailed test
+library(BayesFactor)
+cor_f_problems_bf<-correlationBF(data$problems, data$ftt)
+cor_f_problems_bf
+```
 ## Correlation between problems solved and vividness
 
-TODO: one-tailed
+```{r}
+cor_v_problems<-cor.test(data$problems, data$psiq, alternative='greater')
+cor_v_problems
+
+# note that this is a 2-tailed test
+library(BayesFactor)
+cor_v_problems_bf<-correlationBF(data$problems, data$psiq)
+cor_v_problems_bf
+```
+**Explanation of commands:**
+
+As for Openness, we use Pearson correlations to look at the relationship between the number of problems solved, Flexible Thinking and Vividness. We specify `alternative='greater'` to indicate that we are predicting a positive correlation (one-tailed test). We also calculate a Bayes factor to test the evidence for the correlations.
+
+**Explanation of output:**
+
+There is evidence for a positive correlation between flexibility and creative problem solving  (_r_ = `r round(cor_f_problems$estimate,2)`, one-tailed, _BF_ = `r round(BayesFactor::extractBF(cor_f_problems_bf)$bf,2)`). There is no evidence for a positive correlation between imagery vividness and creative problem solving  (_r_ = `r round(cor_v_problems$estimate,2)`, one-tailed, _BF_ = `r round(BayesFactor::extractBF(cor_v_problems_bf)$bf,2)`).
+
 
 ## Pairs plot
 

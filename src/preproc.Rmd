@@ -1,6 +1,6 @@
 ---
 title: "Preprocessing data from experiments"
-author: "Andy Wills, Clare Walsh and Chris Longmore"
+author: "Andy Wills, Clare Walsh, Chris Longmore and Ben Whalley"
 output: html_document
 ---
 
@@ -147,24 +147,25 @@ You may have noticed that the list of 'columns to keep' is not in alphabetical o
 Having worked out which columns we need, we now tidy things up by selecting just the columns we need and putting them into a new data frame. This is done using R's `select` command
 
 ```{r select}
-tidydat <- dat %>% select(subject_nr, phase, live_row, type, response)
+dat_subset <- dat %>% select(subject_nr, phase, live_row, type, response)
 ```
 
-**Explanation of command** - Our original data frame `dat` is piped (sent to, `%>%`) the `select` command, which picks just the columns we name. These selected columns are put (`<-`) into a new dataframe called `tidydat`. 
+**Explanation of command** - Our original data frame `dat` is piped (sent to, `%>%`) the `select` command, which picks just the columns we name. These selected columns are put (`<-`) into a new dataframe called `dat_subset`. 
 
-Click on `tidydat` in the _Environment_ window. You'll see we have a much easier-to-read data frame, still with 56 rows, but now only 5 columns. 
+Click on `dat_subset` in the _Environment_ window. You'll see we have a much easier-to-read data frame, still with 56 rows, but now only 5 columns. 
 
-<a name="rename"></a>
 
-# Renaming columns
+
+# Renaming columns {#rename}
 
 When working with data, it's useful to have meaningful column names, because it makes it easier to remember what they contain. The column `live_row` could be more clearly named as `trial`, as that's the information it contains. Also, `subject_nr` is longer than it needs to be, `subj` is clear, and quicker to type. We rename columns in R using the `colnames` command:
 
 ```{r rename}
-colnames(tidydat) <- c("subj", "phase", "trial", "type", "response")
+tidydat <- dat_subset %>% 
+  set_names(c("subj", "phase", "trial", "type", "response"))
 ```
 
-**Explanation of command** - The command `c()` means _concatenate_ i.e. put together. So `c("subj", "phase", "trial", "type", "response")` is a way of putting the four names together so they can be sent somewhere. They are  sent (`<-`) to the `colnames()` command, which changes the column names of `tidydat`.
+**Explanation of command** - The command `c()` means _concatenate_ i.e. put together. So `c("subj", "phase", "trial", "type", "response")` is a way of putting the five names together so they can be sent somewhere. We use the `set_names` function to change the column names of the dataframe to be this list. The result is sent (`<-`) and saved in a new variable, `tidydat`.
 
 <a name="filter"></a>
 
@@ -229,57 +230,46 @@ Generally, we have a lot more than two people in an experiment. You could use th
 The first thing we need to do to combine many participants is to get a list of the names of their data files (e.g. `subject-11.csv`). We do this using the `list.files` command:
 
 ```{r listfiles}
-fnamlist <- list.files("rawdata", "csv", full.names=TRUE)
-fnamlist
+tibble(filename = list.files("rawdata", "*.csv", full.names=TRUE))
 ```
 
-**Explanation of command**: The first part of `list.files`, `"rawdata"`, tells R which folder the data files are in. Generally, it's a good idea to keep all your data files inside a single folder, so it is easier for commands like this to find them. The second part of `list.files`, `"csv"` tells R to only give the names of files that contain `csv` somewhere in their name. This is useful, because sometimes raw data folders contain other files, too. For example, `rawdata` contains `README.md`, a file that generally provides information relating to the data, rather than being data itself. The third part, `full.names=TRUE`, tells R to give the name of the file including the name of the folder it is in, so `rawdata/subject-11.csv` rather than just `subject-11.csv`.  The output of `list.files` is written to a _vector_ called `fnamlist`, which is then printed to the screen by the command `fnamlist`. A vector is a dataframe with only one column, and R prints it across the screen rather than down, to save space.
+**Explanation of command**: We say `tibble(filename=` to tell R to make a new dataframe, with a column containing filenames. The first part of `list.files`, `"rawdata"`, tells R which folder the data files are in. Generally, it's a good idea to keep all your data files inside a single folder, so it is easier for commands like this to find them. The second part of `list.files`, `"*.csv"` tells R to only give the names of files that end in `.csv` (the `"*"` means "any character or number"). This is useful, because sometimes raw data folders contain other files, too. For example, `rawdata` contains `README.md`, a file that generally provides information relating to the data, rather than being data itself. The third part, `full.names=TRUE`, tells R to give the name of the file including the name of the folder it is in, so `rawdata/subject-11.csv` rather than just `subject-11.csv`.
 
 ### Load every file 
 
-We now have a vector called `fnamlist` that contains all the names of CSV files in the `rawdata` directory. We can use `fnamlist` to load every file and combine them all. To do this, we make use of a `for` loop. A loop is a way of getting R to do a bunch of commands several times. This is not something we've used before in these worksheets, so we'll look closely at each line in turn.
+We know how to make a new dataframe containing a list of filenames to process. We can use this to load each file in turn and combine them into a single large datset.
 
-The first thing we have to do is set up an empty new data frame for all the data to go in. We do that like this:
+To do this, we make use another tidyverse function called `do`. 
+
+The `do` function performs an operation for each group in a dataframe. All of the results are joined into a large, combined datafile. All we need to do is:
+
+- Make a dataframe containing the list of file names to be used
+- Remind R to read the files one at a time (explanation below)
+- Tell it which function to use to read the raw files
+
+The entire command looks like this:
 
 ```{r readinit,message=FALSE}
-alldat <- NULL
+alldat <- tibble(filename = list.files("rawdata", "*.csv", full.names=TRUE)) %>% 
+  group_by(filename) %>% 
+  do(read_csv(.$filename))
 ```
 
-**Explanation of command**: `alldat <- NULL`. This creates a new data frame called `alldat` but doesn't put anything in it yet (`NULL` means nothing, so `<- NULL` means "make it have nothing in it"). This is the data frame we'll put all the data into next.
+**Explanation of command**: At the start of line 1 we write `alldat <-`. This means the results will be saved with the name `alldat`. Then we reuse the code from above to create a new dataframe with one column: `filename`. 
+We then use `group_by` to tell R to process each filename individually. If we didn't do this then R would ask `read_csv` to open all the files at once, and `read_csv` would be confused!
 
-Now, we use the following commands to add all the data files to this new data frame, one at a time:
+When we write `do(read_csv(.$filename))` we are telling `do` to apply the `read_csv` function to each filename. The `".$filename"` part is shorthand: The period `"."` means "the group in the data I am working with now". The `"$filename"` part means use the values from the `filename` column. So `read_csv(.$filename)` means, read the csv file using the value in the `filename` column.
 
-```{r readin,message=FALSE}
-for(fnam in fnamlist) {
-  dat <- read_csv(fnam)
-  alldat <- bind_rows(alldat, dat)
-}
-```
+---
 
-**Explanation of commands:**
+If you look at `alldat` in the Environment window, you'll see that it has 168 rows. Using `do` has combined all three participants, each with 56 trials, into one big data frame. Although with three participants we could have done this as quickly in other ways, generally we have much more data than this - typically somewhere between 30 and 300 participants in a single experiment. Using `do` saves a lot of time in these situations.
 
-**Line 1**: `for(fnam in fnams) {`. `fnams` is the vector of filenames we made earlier. `for(fnam in fnams) {` means "do what follows for every filename (`fnam`) in that vector of filenames. So, R will take the first filename `rawdata/subject-11.csv` and set `fnam` to that. It'll then run lines 3 and 4 (see below). When it gets to Line 5 (`}`), it will go back to line 2, set `fnam` to the second filename `rawdata/subject-12.csv`, and run lines 3 and 4 again. It'll do this over and over again until it reaches the end of the filenames in `fnamlist`
-
-**Line 2**: `dat <- read_csv(fnam)`. This reads in one data file, just like before. The difference is that rather than writing `"rawdata/subject-11.csv"` we say `fnam`. This means that a different file will be loaded each time we go around this for loop.
-
-**Line 3**: `alldat <- bind_rows(alldat, dat)`. This combines two data files, just like before. The difference is that `alldat` is always the first of the two files. That way, each time we go around the loop, the data file we just read gets added to the end of the files we've already combined.
-
-**Line 4**: `}`. This means "this is the end of the loop". It's important to have this, otherwise R would try to loop around every subsequent command in your script, which would cause some weird errors. 
-
-You may have noticed that the lines of code inside the loop (Lines 2-3) were _indented_ i.e. there are a couple of spaces before the beginning of the text. R ignores these spaces, but we include them because it makes it easier for us to see which commands are inside a loop.
-
-If you look at `alldat` in the Environment window, you'll see that it has 168 rows. This loop has combined all three participants, each with 56 trials, into one big data frame. Although with three participants we could have done this as quickly in other ways, generally we have much more data than this - typically somewhere between 30 and 300 participants in a single experiment. Using a loop saves a lot of time in these situations.
 
 ## Back to tidying and summarizing
 
 Of course, this combined data file has the same problems as the individual files that make it up -- there are over 100 columns, most of which we don't need. We can fix this with the same commands as before.
 
 **WRITE SOME COMMANDS** to select the relevant columns, put them into `tidydat` and then rename the columns.
-
-```{r tidyagain, echo=FALSE}
-tidydat <- alldat %>% select(subject_nr, phase, live_row, type, response)
-colnames(tidydat) <- c("subj", "phase", "trial", "type", "response")
-```
 
 Click on `tidydat`, you'll see a human-readable data frame with 168 rows, and 5 columns. This is the full dataset for the experiment, so we can now start analyzing it.
 
@@ -289,9 +279,9 @@ Now we have this combined file, we summarise the test phase data for each partic
 
 **WRITE SOME COMMANDS** to filter the data to the test phase, and put that data into a data fram called `test`. Now use `test` to group by subject and trial type, and summarize using the mean response, and put the resulting summary into `test.sum`. If you've got this right, you'll end up with this summary. You can view it either by typing `test.sum`, or by clicking on `test.sum` in the _Environment_ window:
 
-```{r sumagain, echo=FALSE}
-test <- tidydat %>% filter(phase == "test")
-test.sum <- test %>% group_by(subj, type) %>% summarise(mean(response))
+```{r sumagain, echo=FALSE, message=F}
+test <- alldat %>% filter(phase == "test")
+test.sum <- test %>% group_by(filename, type) %>% summarise(mean(response))
 test.sum
 ```
 
@@ -310,18 +300,19 @@ Your task is to write R code that gives the mean reaction time for each particip
 This can, and should, be done with less than 15 files of R code (plus comments, see below). In fact, excluding the `library(tidverse)` command and comments, it can be done in 10 lines. When your code is working correctly, it will give you the following numbers:
 
 ```{r ex1, echo=FALSE, message=FALSE}
-library(tidyverse)
-fnamlist <- list.files("lexdec", pattern = "csv", full.names=TRUE)
-alldat <- NULL
-for(fnam in fnamlist) {
-  dat <- read_csv(fnam)
-  alldat <- bind_rows(alldat, dat)
-}
-alldat <- alldat %>% select(subject_nr, practice, live_row, category, correct, response_time)
-colnames(alldat) <- c("subj", "practice", "trial", "type", "acc", "rt")
-test <- alldat %>% filter(practice == "no") %>% filter(acc == 1) 
-test.sum <- test %>% group_by(subj, type) %>% summarise(mean(rt))
-test.sum
+lexdat <- tibble(filename=list.files("lexdec", pattern = "csv", full.names=TRUE)) %>% 
+  group_by(filename) %>% 
+  do(read_csv(.$filename)) 
+
+lexdat.tidy <- lexdat %>% 
+  select(subject_nr, practice, live_row, category, correct, response_time) %>% 
+  set_names( c("filenamme", "subj", "practice", "trial", "type", "acc", "rt"))
+
+lexdat.tidy %>% 
+  filter(practice == "no") %>% 
+  filter(acc == 1)  %>% 
+  group_by(subj, type) %>% 
+  summarise(mean(rt))
 ```
 
 Other requirements:
@@ -330,12 +321,12 @@ Other requirements:
 
 - Use comments in your code to make it more human readable. Comments are any line that begins with `##` and are ignored by R. They are there to make your code easier for humans to understand. For example:
 
-```{r clearcomm}
-## Set up an empty data frame
-alldat <- NULL
+```{r clearcomm, eval=F}
+# Create a dataframe containing all the filenames we want to read
+raw.data.files <- tibble(filename = list.files("rawdata", "*.csv", full.names=TRUE))
 ```
 
-**Hints:** Your code should first get a list of files, then use a loop to load all those files in and combine them. Next you'll have to find the relevant columns among the 100+ columns of the data file. Once you've found them, use `select` to select just those columns and use `colnames` to give the selected columns better names. Use `filter` to remove the practice phase and keep only the correct responses. Note that accuracy in this data file is a number, not a word, so the correct phrase is something like `acc == 1`, rather than `acc == "1"`. Finally, use `group_by` and `summarise` to report the mean response time for words and non words for each participant. Good luck!
+**Hints:** Your code should first get a list of files, then `do` to load all those files in and combine them. Next you'll have to find the relevant columns among the 100+ columns of the data file. Once you've found them, use `select` to select just those columns and use `set_names` to give the selected columns better names. Use `filter` to remove the practice phase and keep only the correct responses. Note that accuracy in this data file is a number, not a word, so the correct phrase is something like `acc == 1`, rather than `acc == "1"`. Finally, use `group_by` and `summarise` to report the mean response time for words and non words for each participant. Good luck!
 
 **Once you're getting the right answers, paste your R code into PsycEL**.
 

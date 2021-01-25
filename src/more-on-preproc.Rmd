@@ -1,6 +1,6 @@
 ---
 title: "More on preprocessing data from experiments"
-author: "Andy Wills and Chris Longmore"
+author: "Andy Wills, Chris Longmore and Ben Whalley"
 output: html_document
 ---
 
@@ -20,38 +20,67 @@ Sometimes, a data file does not contain a participant number within it, it's jus
 
 ```{r load, message=FALSE}
 library(tidyverse)
-fnamlist <- list.files("rawdata", "csv", full.names=TRUE)
-alldat <- NULL
-for(fnam in fnamlist) {
-  dat <- read_csv(fnam)
-  dat <- dat %>% add_column(subj = fnam, .before = TRUE)
-  alldat <- bind_rows(alldat, dat)
-}
+subj.11 <- read_csv('rawdata/subject-11.csv') %>%
+  add_column(subj = 11, .before = "acc")  # .before = "acc" means: 'insert the new column before the existing column called "acc"'
 ```
 
-**Explanation of command**: Only the sixth line of code above is new. The `dat` dataframe is piped (`%>%`) to the `add_column_` command, which adds a column called `subj`, in which every row contains the number `11` (the subject number). `.before = TRUE` means it adds the `subj` column before any of the others (i.e. on the left). Without this, it would add it at the end. This data frame with an added column is written back into `dat`, so it's `dat` (rather than some new data frame) that contains the added column. 
+In the case that you need to read multiple participants' datafiles at once, we saw how to use `do` with `read_csv` in the [preproc worksheet](preproc.html):
 
-When you run this code, you should notice that `alldat` has a new column that contains the filename. That's OK, but it would be better if we could just have the participant number (e.g. `11`) because it's more compact and easy to use like that. So, we need to be able to cut out the participant number `11` from the filename. We can do this using the `substr` command. Here's an example of how `substr` works:
-
-```{r substr}
-substr("investment", 3, 6)
+```{r, message=F}
+alldat <- tibble(filename = list.files("rawdata", "*.csv", full.names=TRUE)) %>% 
+  group_by(filename) %>% 
+  do(read_csv(.$filename))
 ```
 
-**Explanation of command**: `substr` is short for "subset string", with a string being a collection of characters (e.g. a word) and a subset being part of that string. The first number, `3` is the start of the substring, and the second number `6` is the end of the substring. So, if we take from the third to the sixth character in "investment", we get "vest".
+
+**Explanation of command**: This is the same code we saw in the [preproc worksheet](preproc.html). We use `list.files` to produce a list of all the files in the `rawdata` directory which end in `.csv`.  This list is used to make a column in a new dataframe, which is piped to the `group_by(filename)` function.
+The grouped data is then piped to the `do` function. This works on each group (in this case, each filename) in turn and uses the `filename` column as input the `read_csv` command.  
+Because `read_csv` produces a dataframe as output, these are automatically combined into a single dataframe of all participants. The `filename` column remains and provides a record of where the data came from.
+
+---
+
+When you run this code, you should notice that `alldat` has a new column, `filename`. This contains the original file name of the raw data.
+
+That's OK, but it would be better if we could just have the participant number (e.g. `11`) because it's more compact and easy to use like that. So, we need to be able to cut out the participant number `11` from the filename. We can do this using the `str_sub` command. Here's an example of how `str_sub` works:
+
+```{r str_sub}
+str_sub("investment", 3, 6)
+```
+
+**Explanation of command**: `str_sub` is short for "string subset", with a string being a collection of characters (e.g. a word) and a subset being part of that string. The first number, `3` is the start of the substring, and the second number `6` is the end of the substring. So, if we take from the third to the sixth character in "investment", we get "vest".
 
 Looking at the filename `rawdata/subject-11.csv`, we can see that the participant number starts at the 17th position and ends at the 18th. This will be true for any two-digit participant number (a good reason to start subject numbers at 11 rather than at 1). So, putting this all together, we get:
 
 ```{r fulload, message=FALSE}
-alldat <- NULL
-for(fnam in fnamlist) {
-  dat <- read_csv(fnam)
-  dat <- dat %>% add_column(subj = substr(fnam, 17, 18), .before = TRUE)
-  alldat <- bind_rows(alldat, dat)
-}
+alldat <- tibble(filename = list.files("rawdata", "*.csv", full.names=TRUE)) %>% 
+  group_by(filename) %>% 
+  do(read_csv(.$filename)) %>% 
+  mutate(subj = str_sub(filename, 17, 18), .before="filename")
 ```
 
-These six lines of code load and combine every data file, and add a participant number to each.
+These four lines of code load and combine every data file, and extract the participant number for each row.
+
+
+### Matching patterns
+
+If you didn't always use 2-digit subject numbers in your experiment (e.g. you used 1..9, 10, 11, 12 and so on), or have more than 99 participants, there is another more advanced trick which can be useful.
+
+The `str_extract` function uses a special language to define patterns in a string. These can be used to identify and extact regular or repeating patterns in your filenames. These patterns are called [regular expressions](https://www.princeton.edu/~mlovett/reference/Regular-Expressions.pdf). To give one example:
+
+```{r}
+str_extract("participant-9999", "(\\d+)")
+```
+
+**Explanation of the code**: `str_extract` is being used to match patterns in the text `"participant-9999"`. The pattern used is `"\\d+"`. The `\\d` part means 'match any digit from 0 to 9. The `+` means, match as many of what went before as you can. So `\\d+` means match as many digits as you can.
+
+
+# Exercise
+
+Adapt the code from above to use `str_extract` rather than `str_sub`.
+
+Optionally, if you think matching patterns in your text data might be a useful skill, see this guide for lots more detail: https://www.princeton.edu/~mlovett/reference/Regular-Expressions.pdf
+
 
 ___
 
-This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0. 
+This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0.

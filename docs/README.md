@@ -170,6 +170,10 @@ These are intermediate-level materials, designed to follow on from _An Absolute 
 
 These are slightly more advanced materials, aimed at a final-year undergraduate psychology audience.
 
+- Data management
+
+    * [Data management](data-github.html): Anonymity and privacy, good and bad file types, creating and sharing a private github repository, adding a repository to Rstudio, adding files to github using Rstudio, modifying and updating files, git log as your logbook, branching, recovering an earlier version of a file.
+
 - Preprocessing
 
     * [Data preprocessing for experiments](preproc-experiments.html): De-duplicating data, excluding participants, log transform.
@@ -211,10 +215,7 @@ These are full preprocessing and analysis pipelines, mainly based on final-year 
 
 Materials in an early/incomplete stage of development:
 
-- [Data management](data-management.html)
-
 - [More on data](more-on-data.html): Reading data directly from Excel.
-
 
 ____
 
