@@ -212,13 +212,11 @@ task_names <- c(
 descript$task <- descript$task %>% recode(!!!task_names)
 ```
 
-**Explanation of commands**: We're using the `recode` command that we've previously used in the [cleaning up questionnaire data](https://benwhalley.github.io/rmip/worksheet-recoding.html) worksheet:
+**Explanation of commands**: We're using the `recode` command that we've previously used in the [cleaning up questionnaire data](https://benwhalley.github.io/rmip/data.html#using-recode) worksheet:
 
 1. We start by telling R what each of the codes, `nc` etc., mean. So, for example `nc = 'Noun Comprehension'`. We combine the four 'translations' together into `task_names` using `c()` (short for 'concatenate', i.e. put things together).
 
 2. We then take the `task` columns of the `descript` data frame (`descript$task`) and pipe (`%>%`) it to `recode`, where it uses `task_names` to do the recoding. We write (`<-`) that result back into `descript$task`. 
-
-3. It's not critical to understand the `!!!` part of the `recode` command, but an explanation is [here](https://benwhalley.github.io/rmip/explain-exclamationmarks.html#explain-exclamationmarks) if you are curious.
 
 Our table now looks like this:
 
@@ -314,7 +312,7 @@ descript_table %>% kable(digits=2) %>%  kable_styling()
 
 **Explanation of output:**
 
-Try copying the table into your word processor now. In the **Viewer** pane, select all of the rows and columns in the table, then right-click and select `Copy`. Open your word processor and select `Paste`.
+Try copying the table into your word processor now. In the **Viewer** pane, select all of the rows and columns in the table, then right-click and select `Copy`. Open your word processor and select `Paste`. (For this to work on a Mac, you will need be working with RStudio in Chrome rather than Safari.)
 
 <a name="ex2"></a>
 
