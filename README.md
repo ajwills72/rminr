@@ -3,6 +3,10 @@
 This is the website we use to develop these teaching materials. If you were looking for the actual materials, 
 [click here](https://ajwills72.github.io/rminr/)
 
+## Notes for new contributors
+
+If you've a suggestion for an improvement, or a bug report, please make a pull request. Or, if you don't know how to do that, use the Issues function of github to log an issue and someone will pick it up and deal with it as soon as possible.
+
 ## Notes to developers
 
 The files in the _docs_ directory are the live contents of the RMINR website. The files are a mix of .md and .html. If you change the .md files, the live contents of the site changes. Use .md when possible, see below if you need to use RMarkdown.
