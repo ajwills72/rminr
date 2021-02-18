@@ -484,7 +484,7 @@ avoidance <- avoidance %>%
                              levels = c('Mainstream', 'Emo', 'Goth', 'Metal')))
 ```
 
-**Explanation of commands**: We use `mutate` to turn `subculture` into a factor, something we have done in previously worksheets (e.g. [within-subject differences](anova1.html#anovaWS)). The new component here is `levels`, in which we tell R the order in which we want to four levels of the factor to appear. R will then follow that ordering.
+**Explanation of commands**: We use `mutate` to turn `subculture` into a factor, something we have done in previous worksheets (e.g. [within-subject differences](anova1.html#anovaWS)). The new component here is `levels`, in which we tell R the order in which we want to four levels of the factor to appear. R will then follow that ordering.
 
 Finally, we produce the boxplots:
 
@@ -601,7 +601,7 @@ Lines 1-2 set up the plot, with `subculture` on the x-axis and the difference sc
 
 Line 3 draws the confidence intervals. This makes use of a new command, `stat_summary`, which is particularly useful for drawing confidence intervals. The term _error bar_ means draw an I-bar, while `fun.data=mean_cl_boot` is a somewhat cryptic way we tell it that we want that I-bar to be a confidence interval. There are different sorts of error bar we could draw, but we're focussing on confidence intervals here, because they are the easiest to interpret correctly. The `width = 0.1` part sets the width of the horizontal lines of the I-bar. 
 
-Line 4 adds a plot point for the mean related to each error bar, using the same `stat_summary` command as the previous line. As we've seen, there are other ways to add a plot point for a mean to this graph, but this is the most concise way of doing so here. 
+Line 4 adds a plot point for the mean related to each error bar, using the same `stat_summary` command as the previous line. As we've seen, there are other ways to add a plot point for a mean to this graph, but this is the most concise way of doing so here.
 
 Line 5 adds more meaningful labels to the x- and y-axes. 
 
