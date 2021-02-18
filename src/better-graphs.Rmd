@@ -507,7 +507,7 @@ The extensive overlap between the boxes of the four groups suggests there weren'
 
 ### Also available in violin
 
-At the beginning of this example, we mentioned that these data could alternatively be displayed as violin plots. Here's what that would look like (see below). As an possible extension exercise, you could write some code to produce this plot. 
+At the beginning of this example, we mentioned that these data could alternatively be displayed as violin plots. Here's what that would look like (see below). As an extension exercise, you could write some code to produce this plot. 
 
 ```{r cloud2, class.source = 'numberLines lineAnchors', echo=FALSE, warning=FALSE}
 avoidance %>% ggplot(aes(x = subculture, y = score)) +
