@@ -672,7 +672,7 @@ oit %>%
 
 ### Explanation of commands
 
-Line 1 loads the `GGally` package, which provides the `ggpairs()` function for creating a pairs plot. Line 2 loads the data. Line 5 selects the variables to compare. Line 6 creates the plot. For the upper area and diagaonal, we don't need to tell `ggpairs()` what to display, as the defaults are exactly what we want. This gives us a Pearson correlation coefficient for each pair above the diaganol, and a density plot for each of the four variables along the diaganol. The option `lower=list(continuous='smooth')`, tells `ggplot()` to create a scatterplot with a best-fit line for each pair in the lower area of the grid. The dots are the individual data points, the black line is the line of best fit. The grey area shows [the standard error of the line of best fit](https://benwhalley.github.io/rmip/explanations-regression.html#explanation-shaded-area-geom-smooth).
+Line 1 loads the `GGally` package, which provides the `ggpairs()` function for creating a pairs plot. Line 2 loads the data. Line 5 selects the variables to compare. Line 6 creates the plot. For the upper area and diagaonal, we don't need to tell `ggpairs()` what to display, as the defaults are exactly what we want. This gives us a Pearson correlation coefficient for each pair above the diaganol, and a density plot for each of the four variables along the diaganol. The option `lower=list(continuous='smooth')`, tells `ggplot()` to create a scatterplot with a best-fit line for each pair in the lower area of the grid. The dots are the individual data points, the black line is the line of best fit. The grey area shows the standard error of the line of best fit.
 
 ### Explanation of plot
 
