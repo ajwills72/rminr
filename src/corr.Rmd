@@ -246,7 +246,7 @@ The _p value_ in this case is about .00029. The _p value_ is **not** the probabi
 
 Psychologists generally include some numbers from their analyses in their writeups. In the case of a correlation, you'd normally write something like:
 
-"ingroup closeness and outgroup distance were significantly correlated, _r_ = .66, _BF_ = 89.7, _p_ < .05."
+"ingroup closeness and outgroup distance were significantly correlated, _r_ = .66, _BF_ = 89.7, _p_ < .001."
 
 <a name="ex"></a>
 
