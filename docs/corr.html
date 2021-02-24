@@ -9,7 +9,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
-<meta name="author" content="Andy Wills, Sylvia Terbeck" />
+<meta name="author" content="Andy Wills, Sylvia Terbeck, Nadège Bault" />
 
 
 <title>Relationships, part 2.</title>
@@ -363,7 +363,7 @@ summary {
 
 
 <h1 class="title toc-ignore">Relationships, part 2.</h1>
-<h4 class="author">Andy Wills, Sylvia Terbeck</h4>
+<h4 class="author">Andy Wills, Sylvia Terbeck, Nadège Bault</h4>
 
 </div>
 
@@ -461,7 +461,7 @@ data &lt;- read_csv(&quot;corr.csv&quot;)</code></pre>
             outgroup = mean(outgroup),
             dominance = mean(dominance))</code></pre>
 <pre><code>`summarise()` ungrouping output (override with `.groups` argument)</code></pre>
-<p>We’ve put our answers into a new data frame, <code>gdata</code>, so go to the <em>Environment</em> window of RStudio and click on <code>gdata</code> to see your summarised data. You’ll now see one line for each group in your study.</p>
+<p>We’ve put our answers into a new data frame, <code>gdata</code>, so go to the <em>Environment</em> window of RStudio and click on <code>gdata</code> to see your summarised data. You’ll now see one line for each group in your study. As <a href="group-differences.html#group">before</a>, you can safely ignore the “ungrouping” message that you receive.</p>
 <div id="explanation-of-command" class="section level3">
 <h3>Explanation of command</h3>
 <p>Most of the above command is the same as in the <a href="group-differences.html">group differences</a> worksheet, and the <a href="face-recognition.html">face recognition</a> workseet — take a look back at those sheets if you need a reminder. The new thing here is that we are calculating the mean for more than one variable. In fact, we’re calculating it for three variables (<code>ingroup, outgroup, dominance</code>). The <code>summarise</code> command can do this, as long as there is a comma (<code>,</code>) separating the things you want a summary of.</p>
@@ -566,7 +566,7 @@ sample estimates:
 <div id="reporting-a-correlation" class="section level3">
 <h3>Reporting a correlation</h3>
 <p>Psychologists generally include some numbers from their analyses in their writeups. In the case of a correlation, you’d normally write something like:</p>
-<p>“ingroup closeness and outgroup distance were significantly correlated, <em>r</em> = .66, <em>BF</em> = 89.7, <em>p</em> &lt; .05.”</p>
+<p>“ingroup closeness and outgroup distance were significantly correlated, <em>r</em> = .66, <em>BF</em> = 89.7, <em>p</em> &lt; .001.”</p>
 <p><a name="ex"></a></p>
 </div>
 </div>

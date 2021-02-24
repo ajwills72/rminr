@@ -1,6 +1,6 @@
 ---
 title: "Relationships, part 2."
-author: "Andy Wills, Sylvia Terbeck"
+author: "Andy Wills, Sylvia Terbeck, Nadège Bault"
 output: html_document
 ---
 
