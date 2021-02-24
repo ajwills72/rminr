@@ -243,7 +243,7 @@ ____
 Thanks to the following people for their feedback and advice on these materials:
 
 Jackie Andrade, Eleanor Andrade May, Martyn Atkins,
-Patric Bach, Alison Bacon, Dale Barr, Chris Berry,
+Patric Bach, Alison Bacon, Dale Barr, Nadège Bault, Chris Berry,
 Allegra Cattani, Laura Charlton,
 Lisa DeBruine, 
 Charlotte Edmunds,
