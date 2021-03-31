@@ -190,6 +190,8 @@ These are slightly more advanced materials, aimed at a final-year undergraduate 
 
 - Bayesian inferential statistics 
 
+    * [One-sample Bayesian t-test](one-sample.html): Comparing a single-group sample of data against a population mean. 
+
     * [More on Bayesian ANOVA](anova4.html): More on two-factor Bayesian ANOVA.
 
     * [More on regression](more-on-regression.html): Multiple regression with more than two predictors, hierarchical regression, evidence for individual predictors.

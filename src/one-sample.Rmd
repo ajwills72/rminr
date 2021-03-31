@@ -1,0 +1,92 @@
+---
+title: "One-sample t-test"
+author: "Andy Wills"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+## DEVELOPERS: Uncomment one option, as appropriate
+
+## Show only commands.
+## knitr::opts_chunk$set(echo = TRUE, message = FALSE, results='hide', fig.keep = 'none', comment=NA)
+
+## Show commands and putout.
+knitr::opts_chunk$set(echo = TRUE, comment=NA, cache = TRUE)
+```
+
+# Introduction
+
+In the [Absolute Beginners' Guide to R](evidence.html#bf) we used a Bayesian between-subjects t-test to look at the strength of evidence for the presence (or absence) of a difference _between_ groups. Then, in the [Intermediate Guide to R](anova1.html#anovaWS), we looked at how to calculate a Bayes Factor for _within-subjects_ experiments. A third, less commonly used, type of t-test is a _one-sample_ t-test, and this is the topic of the current worksheet.
+
+In a _one-sample_ test, you compare the mean of a set of data against a single number; in this worksheet, we'll compare the mean IQ of a sample of students entering a psychology degree with the known mean IQ of the non-brain damaged population (100). 
+
+# Getting started 
+
+In the [preprocessing](preproc.html) worksheet, you loaded data from a _git_ repository into an R project. **Go back to that project now.** This is very important. Do not stay in your current project, change your Rstudio project using the the drop-down list on the top right of Rstudio. Change to the  `rminr-data` project you used for the preprocessing worksheet. If you do not do this, the rest of this worksheet will not work.
+
+Now that you're in the `rminr-data` project, "pull" from the repository to make sure you have the most up to date version. If you're not sure how to do this, see the [data management](data-github.html) worksheet.
+
+Finally, create a new script called **onesample.R**, put all the commands you use in this worksheet into that file, and save regularly. 
+
+You will notice that your _Environment_ still contains all the data frames from the previous worksheet. You can leave them there if you like, but some people prefer to start with a "clean slate". If that's you, see the [within-subjects differences](anova1.html#clear) for information on how to clear your environment.
+
+# Loading data
+
+Now load this new data set: 
+
+```{r newdat, message=FALSE}
+library(tidyverse)
+iq.data <- read_csv("going-further/iqdata.csv")
+```
+
+Click on the `iqdata` data frame in the _Environment_ tab, and take a look. You'll see that its a data frame with 2 columns and 285 rows. The `SRN` columns contains the student reference number for a student, and the `IQ` column contains the IQ score for that student.
+
+Note that these data have already been preprocessed - in other words, the students' performance on individual questions on the IQ test have been combined to give a single score for each participant. 
+
+<a name="ex"></a>
+
+# Exercise: Density plot
+
+Now, as you did in the Absolute Beginners' Guide to R, **WRITE A COMMAND** to create a density plot of IQ. Put a red vertical line at the population mean (IQ = 100), change the y-axis label, and add journal styling.
+
+If you get it right, it should look like this:
+
+```{r graph1, echo=FALSE}
+source("themeapa.R")
+iq.data %>% ggplot(aes(IQ)) +
+    geom_density(aes(y=..scaled..)) +
+    geom_vline(xintercept = 100, colour = "red") +
+    ylab("Scaled density") +
+    theme_APA
+```
+
+If you need some revision, look at previous worksheets on [density plots](group-differences.html#density), on [drawing vertical lines on graphs](risk-rat.html), and on making [better graphs](better-graphs.html#style).
+
+We can see from this plot that the distribution of IQs in our sample peaks higher than the population average of 100. In fact, a rather small proportion of students have an IQ below the population mean. 
+
+<a name="anovaWS"></a>
+
+# Bayesian t-test (one-sample)
+
+We can use the command `ttestBF` to look at the evidence for this apparent difference between our sample of students and the population mean. We've used this command before to do a _between-groups_ test, but we can also use it in a slightly different way to do a one-sample test:
+
+```{r bf-init, message=FALSE}
+library(BayesFactor)
+ttestBF(iq.data$IQ, mu = 100)
+```
+
+## Explanation of command
+
+Line 1 loads the BayesFactor package. Line 2 runs a one-sample Bayesian t-test; `mu` is the single number against which you are comparing the sample (in this case, the population mean IQ of 100). As covered in previous worksheets, `iq.data$IQ` says to use the `IQ` column of the `iq.data` data frame.
+
+## Explanation of output
+
+The output shows the Bayes Factor, in a similar format to previous Bayes Factor tests you have performed; for details, see the [More on Bayes Factors](more-on-bf.html) worksheet. 
+
+The key figure here is around 1.3 x 10<sup>70</sup>; recall that this is [standard notation](https://www.bbc.com/education/guides/zxsv97h/revision) and so indicates a very large number. The evidence that the IQs of this group are different (higher) than the population mean of 100 is overwhelming.
+
+___
+
+This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0. 
+
+
