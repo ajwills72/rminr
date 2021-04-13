@@ -5,6 +5,12 @@ _Research Methods in R_ is a set of guides on how to use R as your central resea
 
 _Note to teachers_: These materials have been tested against R version 3.6.3 (released 29th Feb 2020), and the most recent version of packages that were available on [MRAN](https://mran.microsoft.com/) on the 29th June 2020. 
 
+## Curriculum map
+
+To see how a subset of these resources is used in the undergraduate psychology teaching, click below:
+
+- [University of Plymouth](maps/plymouth-map.html)
+
 ## List of guides
 
 1. [Absolute Beginners' Guide to R](#beginners)
