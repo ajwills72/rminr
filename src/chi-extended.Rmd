@@ -1,6 +1,6 @@
 ---
 title: "More on relationships"
-author: "Michaela Gummerum, Andy Wills"
+author: "Michaela Gummerum, Andy Wills, Gokcek Kul"
 output: html_document
 ---
 
@@ -128,25 +128,27 @@ cramer(cont)
 
 In this example, Cramer's Phi is about 0.28. For a contingency table that has 2 rows and 2 columns, this is conventionally described as a "medium" effect size (with 0.1 being "small" and 0.5 being "large"). For larger tables, see this [website](http://www.real-statistics.com/chi-square-and-f-distributions/effect-size-chi-square/).
 
-Where there is no within-group variability, Cramer's Phi is 1:
+Where there is no within-group variability, Cramer's Phi is 1. Let's illustrate this with a different contingency table, which we'll just generate here and now to illustrate:
 
 ```{r phi1, echo=FALSE}
 cont[] <- rbind(c(20,0), c(0,40))
-cont
+cont2 <- cont
 ```
 ```{r phi1a}
-cramer(cont)
+cont2
+cramer(cont2)
 ```
 
-Where there is no between-group variability, Cramer's Phi is zero:
+Where there is no between-group variability, Cramer's Phi is zero. Here's an illustration with another new contingency table:
 
 ```{r phi2, echo=FALSE}
 cont[] <- rbind(c(10,10), c(20,20))
-cont
+cont3 <- cont
 ```
 
 ```{r phi2a}
-cramer(cont)
+cont3
+cramer(cont3)
 ```
 
 ___
