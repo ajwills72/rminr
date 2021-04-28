@@ -468,20 +468,23 @@ cont</code></pre>
 <pre><code>[1] 0.2798143</code></pre>
 <p><strong>Note:</strong> If you get an error here, try installing the package, <code>install.packages(&quot;sjstats&quot;)</code></p>
 <p>In this example, Cramer’s Phi is about 0.28. For a contingency table that has 2 rows and 2 columns, this is conventionally described as a “medium” effect size (with 0.1 being “small” and 0.5 being “large”). For larger tables, see this <a href="http://www.real-statistics.com/chi-square-and-f-distributions/effect-size-chi-square/">website</a>.</p>
-<p>Where there is no within-group variability, Cramer’s Phi is 1. Let’s illustrate this with a different contingency table, which we’ll just generate here and now to illustrate:</p>
-<pre class="r"><code>cont2</code></pre>
-<pre><code>       
-        helping length
-  China      20      0
-  Other       0     40</code></pre>
+<p>Where there is no within-group variability, Cramer’s Phi is 1. Let’s illustrate this with a different contingency table. Don’t worry too much about the first three lines, they’re just a way of setting up a contingency table without having the raw data to base it on. This is not something you’ll need to do that often - it’s only a good idea to do this if you don’t have the raw data.</p>
+<pre class="r"><code>cont2 &lt;- as.table(rbind(c(20,0), c(0,40)))
+colnames(cont2) &lt;- c(&quot;helping&quot;, &quot;length&quot;)
+rownames(cont2) &lt;- c(&quot;China&quot;, &quot;other&quot;)
+cont2</code></pre>
+<pre><code>      helping length
+China      20      0
+other       0     40</code></pre>
 <pre class="r"><code>cramer(cont2)</code></pre>
 <pre><code>[1] 1</code></pre>
-<p>Where there is no between-group variability, Cramer’s Phi is zero. Here’s an illustration with another new contingency table:</p>
-<pre class="r"><code>cont3</code></pre>
-<pre><code>       
-        helping length
-  China      10     10
-  Other      20     20</code></pre>
+<p>Where there is no between-group variability, Cramer’s Phi is zero. Here’s an illustration:</p>
+<pre class="r"><code>cont3 &lt;- cont2
+cont3[] &lt;- as.table(rbind(c(10,10), c(20,20)))
+cont3</code></pre>
+<pre><code>      helping length
+China      10     10
+other      20     20</code></pre>
 <pre class="r"><code>cramer(cont3)</code></pre>
 <pre><code>[1] 0</code></pre>
 <hr />
