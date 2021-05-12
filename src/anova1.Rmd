@@ -44,7 +44,7 @@ dat2 <- read_csv("rawdata/subject-12.csv")
 
 - [Multiple comparisons and replication](#mcr)
 
-<a name="into"></a>
+<a name="intro"></a>
 
 # Introduction
 
