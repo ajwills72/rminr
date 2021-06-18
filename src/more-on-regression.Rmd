@@ -74,7 +74,7 @@ In order to follow the rest of this worksheet, you need to understand the data y
 | religious  | Did the participant identify with a recognised religion? | yes, no  |
 | nationality | Nationality of participant         | British, Polish |
 
-We need to do a little bit of preprocessing of the `education` variable. Specifically, `education` is an _ordered_ variable -- people in this sample have a reported level of education which ranges from low (`no formal quals`) to high (`degree`). R does not know what order to put these levels in unless we tell it. The easiest way to do this is to recode the data, as you did previously in the [cleaning up questionnaire data](https://benwhalley.github.io/rmip/worksheet-recoding.html) worksheet:
+We need to do a little bit of preprocessing of the `education` variable. Specifically, `education` is an _ordered_ variable -- people in this sample have a reported level of education which ranges from low (`no formal quals`) to high (`degree`). R does not know what order to put these levels in unless we tell it. The easiest way to do this is to recode the data, as you did previously in the [cleaning up questionnaire data](https://benwhalley.github.io/rmip/data.html#using-recode) worksheet:
 
 ```{r demographics2, warning=FALSE}
 edu_map <- c('no formal quals' = 1, 
