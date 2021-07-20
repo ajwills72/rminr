@@ -17,7 +17,7 @@ R is a piece of software for handling data. It's the one used on this course, bu
 Students prefer R. In a recent study, undergraduate psychology students at Glasgow University were given a choice between R and SPSS, having experienced both. Two-thirds of the students chose R. Those who chose R did better in the final assessments and showed lower stats anxiety. R is being used to teach Plymouth University undergraduates (and visiting Year 10 students) across a range of different courses. [Read more](https://github.com/gupsych/trdair_workshop/blob/master/LTC_workshop.pdf).
 
 ### Employability
-[Data science][7] is a graduate skill in high demand, and using R is a key skill in that market. In contrast, demand for SPSS skills has been declining dramatically for a decade. At SPSS's current rate of decline, it'll be gone by the time you graduate. [Read more](http://r4stats.com/articles/popularity/).
+[Data science][7] is a graduate skill in high demand, and using R is a key skill in that market. In contrast, demand for SPSS skills has been declining dramatically for a decade. At SPSS's current rate of decline, it'll be gone by the time you graduate. Read more at [r4stats](http://r4stats.com/articles/popularity/) and at [loveR](https://www.discovr.rocks/lover/).
 
 [7]: https://hbr.org/2012/10/data-scientist-the-sexiest-job-of-the-21st-century
 
