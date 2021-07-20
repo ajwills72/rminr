@@ -19,6 +19,8 @@ _Research Methods in R_ is deliberately introductory, only scratching the surfac
 
 ## Graphs
 
+[psyntur](https://github.com/mark-andrews/psyntur) - An R package by Mark Andrews at Nottingham Trent University, the largest UK psychology course using R. This package provides command for common graph types that are less flexible than ggplot, but easier to use for beginners.
+
 [Cookbook for R: Graphs](http://www.cookbook-r.com/Graphs/)
 - Recipes for common graph types in R. Written by Winston Chang, former Psychology graduate student and now a programmer at RStudio. _CC-BY-SA_
 
