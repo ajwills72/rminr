@@ -2,10 +2,15 @@
 author: Lenard Dome
 title: Estimating Sample Size for Bayes Factor
 subtitle: Estimate sample size for planned analysis with Bayes Factor
-output: html_document
+output:
+  html_document:
+    toc: true
+    toc_depth: 2
 date: '`r format(Sys.Date())`'
 bibliography: 'power_bayesian.bib'
 ---
+
+
 
 # Before you start
 
@@ -125,6 +130,8 @@ have some data you can use, but nowadays people share their data on places, like
 [OSF](https://osf.io/). Here, I just made up the data according to some really
 vague description by the original authors. Let us start by importing said data.
 
+You can download the data from this [link](https://raw.githubusercontent.com/ajwills72/rminr/power-bayes/src/data/mcdougall1921madeup.csv).
+
 ```{r}
 # import dataset
 dta <- read_csv("data/mcdougall1921madeup.csv")
@@ -134,23 +141,25 @@ Let us have a look at how the data look like.
 
 ```{r}
 dta %>%
-    ggplot(aes(x = ppt, y = fluctuations, color = condition)) +
-    geom_line(aes(group = ppt), color = "black",
-              linetype = 1, arrow = arrow()) +
-    geom_point(size = 2) +
-    theme_classic()
-```
-
-```{r}
-dta %>%
     group_by(condition) %>%
     summarise(mean = mean(fluctuations), sd = sd(fluctuations))
 ```
+
+The means are indeed promising, but we have long learned not to base
+our conclusion solely on the mean, so we go on and do the analysis we hope to
+do on our own data.
 
 ```{r}
 bf <- ttestBF(x = dta$fluctuations[dta$condition == "before"],
               y = dta$fluctuations[dta$condition == "after"], paired = TRUE)
 bf
+```
+
+Now we see that it is an inconclusive result. Some would say that it is
+anecdotal evidence for the difference, but there just isn't enough data to
+say that.
+
+```{r}
 cohen.d(fluctuations ~ condition | Subject(ppt), data = dta, paired = TRUE)
 ```
 
@@ -250,7 +259,14 @@ get_bf <- function(n, data) {
 
 ## Determining Sample Size
 
-This will take a while :)
+Now we are at the stage when we can actually run a simulation. These simualtions
+will be based on a mathematical technique called random sampling or Monte Carlo
+methods. Beware that there are no special equations or complicated math
+involved here. Monte Carlo is simply a tool that is used to estimate possible
+outcomes of uncertain events. In our case, the possible outcome is the Bayes
+factor and the uncertain event is the data we collect.
+
+This will take a while.
 
 ```{r}
 monte <- tibble(n = rep(seq(10, 200, 10), each = 1000)) %>%
@@ -286,8 +302,10 @@ monte %>%
     summarise(power = 1 - (sum(between(bf, 1/3, 3)) / 1000)) %>%
     ggplot(aes(x = n, y = power)) +
     geom_line() +
+    geom_point() +
     xlab("sample size") +
-    ylab("power")
+    ylab("power") +
+    theme_classic()
 ```
 
 ## Exercise and Assessment
@@ -306,6 +324,7 @@ You will need to report that sample size in Psych:EL. You will also need to uplo
 3. The code you wrote for calculating the power.
 
 You will also need to create two plots and **upload it to Psych:EL as a PDF**:
+
 1. A plot showing the distribution of the data you generated - `geom_density()`
 2. A plot showing the power for each sample size - `geom_line()`
 
