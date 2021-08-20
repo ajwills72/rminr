@@ -15,7 +15,7 @@ bibliography: 'power_bayesian.bib'
 
 This is an advanced worksheet, which assumes you have completed the [Absolute Beginners' Guide to R](https://ajwills72.github.io/rminr/#beginners), the [Research Methods in Practice (Quantitative section)](https://benwhalley.github.io/rmip/overview-quantitative.html), and the [Intermediate Guide to R](https://ajwills72.github.io/rminr/#rmip).
 
-If your memory is a bit fuzzy, have a look at these resources:
+f you understand the following worksheets, then you should be able to follow this one:
 
 - [Evidence pt.1 Bayesian and traditional t-tests](https://ajwills72.github.io/rminr/vbg_evidence.html)
 - [Evidence pt.2 Bayes and traditional correlation, scatterplot](https://ajwills72.github.io/rminr/vbg_corr.html)
@@ -23,47 +23,63 @@ If your memory is a bit fuzzy, have a look at these resources:
 - [Statistical Power](https://www.andywills.info/rminr/power.html)
 - [More on Statistical Power](https://www.andywills.info/rminr/effsize_from_papers.html)
 
-# Power analysis with Bayes Factors
+# What is the problem we are trying to solve?
+
+Introduce the problem of collecting enough data and reference the
+reproducability problem. Link it back to statistical power material.
+
+# Traditional power calculations
 
 In traditional null hypothesis significance testing, power analysis estimates
-the likelihood
-of rejecting the null hypothesis given the specific effect size of the
-alternative hypothesis. So if you have two groups, you could use a point value,
-like that of [Cohen's *d*](https://www.andywills.info/rminr/power.html), to
-find out how many data points you need to get a
-significant result when comparing the two groups. This is useful, because it
+the likelihood of rejecting the null hypothesis given the effect size of the
+alternative hypothesis. So if you have two groups, you could use a single effect
+size, like that of [Cohen's *d*](https://www.andywills.info/rminr/power.html),
+to find out how many participants you need to get a get a p-value below 0.05
+with high probability. This is useful, because it
 explicitly states how likely to achieve the researchers goal in the anticipated
 experiment [@kruschke2013bayesian]. Ideally, you also want to do it
-prospectively rather than retrospectively - before data collection and not
-after. In order to estimate a sample size and power, we need to think about
+before data collection and not after. Using your own data to
+post-hoc estimate power, after the analysis has been carried out, adds nothing
+that a p-value wouldn't tell you. Post-hoc power is not useful for making
+inferences from/about the data that you have.
+
+In order to estimate a sample size and power, we need to think about
 both our experimen, our planned analysis and what others have already done.
 
 There is a good chance that someone has done an experiment similar to what you
 are planning. So you can use their data to find the effect size and estimate
-something about your experiment - usually sample size. Using your own data to
-post-hoc estimate power, after the analysis has been carried out, adds nothing
-that a p-value wouldn't tell you. Post-hoc power is not useful for making
-inferences from/about the data that you have. It also doesn't allow you to
+something about your experiment - usually sample size.
+
+It also doesn't allow you to
 plan for the event when the null hypothesis is true. This is because p-values
 don't let you conclude from null results.
 
-In Bayesian Power Analysis, we are looking at it from a different
-angle. Here, we want to estimate precision - the probability of a value
-falling within a certain interval. This tells us how likely that we will
-have conclusive results given some details of your experiment
-(i.e. sample size). We calculate it for the Bayes Factor (BF) as
+# Power analysis with Bayes Factors
 
-$$1 - Pr(lower bound < BF < upper bound)$$
+In Bayesian Power Analysis, we are looking at it from a different
+angle. Here, we want to estimate precision - the probability of the Bayes Factor
+falling within a certain interval. Intervals are groups of numbers lying
+between two numbers. This probability tells us how likely that we will
+have conclusive results given different sample sizes.
+
+In psychology, people like to think categorically, therefore define
+categories of BFs depending on different intervals. In reality,
+BF is a continuous value, that gives you an estimate on how likely
+is it that your belief describes the data compared to some other belief.
+
+Traditionally, a BF of three and above is considered as evidence for a
+difference, and ⅓ and below is considered as evidence for the absence of a
+difference.
 
 This might be a bit confusing, because now we will be looking at intervals
 and not thresholds, because we are interested in an entire distribution of
-values. In psychology, people like to think categorically, therefore define
-categories of BFs depending on different intervals. In reality,
-BF is a continuous value, that gives you an estimate on how likely
-is it that your belief describes the data compared to some other belief. For
+values.  For
 estimating the sample size, we can define two big groups of Bayes Factors:
 conclusive vs inconclusive. Inconclusive BF can be any BF that falls between
 the lower bound and the upper bound. All other BFs are conclusive.
+We calculate power for the Bayes Factor (BF) as
+
+$$1 - Pr(lower bound < BF < upper bound)$$
 
 **When we think about Bayes Factors and Power, we want to know how
 many data points we need to get a conclusive Bayes Factor.**
@@ -317,12 +333,22 @@ of data points is random.
 
 There are two things to decide before we start imitating data collection:
 
-1. The sample sizes we want to check.
-2. The number of draws we wish to
+1. The sample sizes we want to check. We create all sample sizes as a `tibble`
+object. This means that we will have a one-column data frame with all the
+sample sizes we want to check.
+2. The number of draws we wish to make for each sample sizes. This will simply
+be the number of times a certain sample size occurs in our `tibble` data frame.
 
-This will take a while.
+
+First, we will create sample sizes from 10 to 200. We will also repeat each sample size 1000 times.
+
+Then we will mutate the data frame, which will add another column that we
+call `bf`. We then use `map_dbl`, which can go over each sample size in our
+`tibble` and run the `get_bf` function we just wrote. `get_bf` needs to
+have the data as well, which we will add within the `map_dbl` command below.
 
 ```{r}
+## this can take quite a while
 monte <- tibble(n = rep(seq(10, 200, 10), each = 1000)) %>%
     mutate(bf = map_dbl(n, get_bf, data = ideal_data))
 ```
@@ -362,7 +388,7 @@ If you have learning criterion, you can end up excluding 30% of all
 participants. This means that it is not uncomon to add 15 more participants
 on top of that 50, just to be safe.
 
-BV
+Before moving on to the exercises, it is worth looking at the
 
 As you can see, the power goes up not linearly, but more as
 a curve. This resembles more to a logarithmic function, which has this
@@ -391,11 +417,7 @@ null effect. Additionally, you will need to do so for a harsher interval,
 where the Bayes Factor falls outside of 1/10 and 10. You will need
 to find the sample size, that will give you at least 90% of power.
 
-You will need to report that sample size in Psych:EL. You will also need to upload the code with comments for:
-
-1. The `function` that extracts the Bayes Factor.
-2. The code you wrote for the simulation.
-3. The code you wrote for calculating the power.
+You will need to report that sample size and the associated power in Psych:EL.
 
 You will also need to create two plots and **upload it to Psych:EL as a PDF**:
 
