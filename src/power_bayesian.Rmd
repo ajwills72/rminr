@@ -1,5 +1,5 @@
 ---
-author: Lenard Dome
+author: Lenard Dome, Paul Sharpe, Andy Wills
 title: Estimating Sample Size for Bayes Factor
 subtitle: Estimate sample size for planned analysis with Bayes Factor
 output:
@@ -15,7 +15,7 @@ bibliography: 'power_bayesian.bib'
 
 This is an advanced worksheet, which assumes you have completed the [Absolute Beginners' Guide to R](https://ajwills72.github.io/rminr/#beginners), the [Research Methods in Practice (Quantitative section)](https://benwhalley.github.io/rmip/overview-quantitative.html), and the [Intermediate Guide to R](https://ajwills72.github.io/rminr/#rmip).
 
-f you understand the following worksheets, then you should be able to follow this one:
+If you understand the following worksheets, then you should be able to follow this one:
 
 - [Evidence pt.1 Bayesian and traditional t-tests](https://ajwills72.github.io/rminr/vbg_evidence.html)
 - [Evidence pt.2 Bayes and traditional correlation, scatterplot](https://ajwills72.github.io/rminr/vbg_corr.html)
@@ -24,6 +24,21 @@ f you understand the following worksheets, then you should be able to follow thi
 - [More on Statistical Power](https://www.andywills.info/rminr/effsize_from_papers.html)
 
 # What is the problem we are trying to solve?
+
+One of the most important things in research is to make sure you have enough
+evidence/data to make reliable conclusions. Collecting enough data requires
+time and effort. In psychology, until recently, [researchers didn't collect
+enough data](http://www.marjanbakker.eu/Bakker%20et%20al.%202016.pdf) to
+make reliable conclusion with traditional frequentist statistics (methods that
+rely on p-value significance testing). Throughout your undergraduate course,
+you relied on Bayesian techniques. One exemption was the
+[worksheet](https://www.andywills.info/rminr/power.html), where you first
+encountered the concept of statistical power. In that worksheet, you used
+traditional frequentist techniques to estimate how many participants you need
+to recruit for your experiment. The reason was that simply there is no
+clear-cut formula for estimating sample size for and with Bayesian techniques.
+Most techniques were beyond an undergraduate course. Fortunately, you now have
+the R coding and statistical skills to learn about it.
 
 Introduce the problem of collecting enough data and reference the
 reproducability problem. Link it back to statistical power material.
@@ -38,42 +53,46 @@ to find out how many participants you need to get a get a p-value below 0.05
 with high probability. This is useful, because it
 explicitly states how likely to achieve the researchers goal in the anticipated
 experiment [@kruschke2013bayesian]. Ideally, you also want to do it
-before data collection and not after. Using your own data to
-post-hoc estimate power, after the analysis has been carried out, adds nothing
-that a p-value wouldn't tell you. Post-hoc power is not useful for making
-inferences from/about the data that you have.
+before data collection and not after. Estimating the power of your experiment
+after data is collected and analysed, you will learn nothing that the Bayes
+Factor or a p-value wouldn't tell you.
 
-In order to estimate a sample size and power, we need to think about
-both our experimen, our planned analysis and what others have already done.
+Traditional techniques to estimate sample size are also limited. For example,
+they don't allow you to plan for the null hypothesis being true. This is
+because p-values don't let you conclude from null results.
 
-There is a good chance that someone has done an experiment similar to what you
-are planning. So you can use their data to find the effect size and estimate
-something about your experiment - usually sample size.
+For example, you might want to know how many participants you need to test so
+that you will know for certain that two treatments (or a treatment and palcebo)
+are no different. Another example is when there are contradicting evidence that
+a psychological effect is real. You might want to know how many participants
+you need to have to show that an effect is present in the data or not.
 
-It also doesn't allow you to
-plan for the event when the null hypothesis is true. This is because p-values
-don't let you conclude from null results.
+You can also have two estimates: one for the null hypothesis being true, and
+one for the alternative being true. In that case, it is not unreasonable to
+check the data at the lower estimate, to see if you need to collect more data.
+
+A p-value and traditional techniques do not allow you to incorporate the
+possibility that the null hypothesis is true, even though in some cases it might
+be important plan for that outcome as well.
 
 # Power analysis with Bayes Factors
 
-In Bayesian Power Analysis, we are looking at it from a different
+In Bayesian Power Analysis, we are looking at power from a different
 angle. Here, we want to estimate precision - the probability of the Bayes Factor
-falling within a certain interval. Intervals are groups of numbers lying
-between two numbers. This probability tells us how likely that we will
+being conclusive or inconclusive. We determine this by checking whether the
+Bayes Factor falls within a certain interval. Intervals are groups of numbers
+lying between two numbers. This probability tells us how likely that we will
 have conclusive results given different sample sizes.
 
-In psychology, people like to think categorically, therefore define
-categories of BFs depending on different intervals. In reality,
-BF is a continuous value, that gives you an estimate on how likely
-is it that your belief describes the data compared to some other belief.
-
-Traditionally, a BF of three and above is considered as evidence for a
-difference, and ⅓ and below is considered as evidence for the absence of a
-difference.
+In psychology, people like to think categorically, therefore [define
+categories of BFs](https://www.andywills.info/rminr/evidence.html#bf)
+depending on different intervals. Traditionally, a BF of three and above is
+considered as evidence for a difference, and ⅓ and below is considered as
+evidence for the absence of a difference.
 
 This might be a bit confusing, because now we will be looking at intervals
 and not thresholds, because we are interested in an entire distribution of
-values.  For
+values. For
 estimating the sample size, we can define two big groups of Bayes Factors:
 conclusive vs inconclusive. Inconclusive BF can be any BF that falls between
 the lower bound and the upper bound. All other BFs are conclusive.
@@ -89,9 +108,9 @@ many data points we need to get a conclusive Bayes Factor.**
 > An algorithm is a list of rules to follow in order to solve a problem.
 
 The algorithm for estimating sample size for more sophisticated Bayesian
-analysis was described by [@kruschke2013bayesian; @kruschke2014doing].
-@schonbrodt2018bayes adapts this algorithm to **fixed-n designs** and
-to the already familiar **Bayes Factor**. In a fixed-n design, you test
+analysis was first described by @kruschke2013bayesian.
+@schonbrodt2018bayes adapts this algorithm to **fixed-n designs** with
+**Bayes Factor**. In a fixed-n design, you test
 a set number of participants and calculate something like a Bayes Factor
 at the end. @schonbrodt2018bayes decide to group this technique under an
 umbrella term: **Bayes Factor Design Analysis**. I just call it estimating
@@ -111,6 +130,14 @@ in the algorithm:
 5. Pick a well-powered sample size.
 
 ## Walk-through Bayesian Power Analysis
+
+In order to estimate a sample size and power, we need to think about
+both our experiment, our planned analysis and what other researchers have
+already learned about the topic of interest.
+
+There is a good chance that someone has done an experiment similar to what you
+are planning. So you can use their data to find the effect size and estimate
+something about your experiment - usually sample size.
 
 Let us say that we are interested in multistable perception and want to do
 a replication of @mcdougall1921effects. They did not include the data, but
@@ -200,7 +227,7 @@ analysis can conclude. First, let us look at the effect size.
 cohen.d(fluctuations ~ condition | Subject(ppt), data = dta, paired = TRUE)
 ```
 
-## Generating data
+### Generating data
 
 The next step is to come up with some generated data. If you don't have access
 to any real data to begin with, you should start with this step. We know that
@@ -265,7 +292,7 @@ ideal_data <- tibble(ppt = participants,
 Now we check whether it looks okay. First, we should have three columns.
 `ppt` should include the participant ID, `condition` should include
 whether it is before or after caffeine intake, and `fluctuations`
-should be the number of fluctuations people reported.
+should be the number of fluctuations.
 
 The distribution of the data also looks exactly what we want.
 
@@ -275,7 +302,7 @@ ideal_data %>% ggplot(aes(x = fluctuations, fill = condition)) +
     theme_void()
 ```
 
-## Writing a function to get the Bayes Factor
+### Writing a function to get the Bayes Factor
 
 Every function (commands) that you use has been written by a person. Functions
 as you have noticed, take something as an input, do something to that input,
@@ -314,7 +341,7 @@ get_bf <- function(n, data) {
 }
 ```
 
-## Determining Sample Size
+### Determining Sample Size
 
 > Simulations are pretend games. When we say simulate, we mean to imitate some
 real-world process over time.
@@ -408,7 +435,7 @@ monte %>%
     theme_classic()
 ```
 
-# Exercise and Assessment
+# Exercise 1: Estimate the sample for a null effect
 
 **This is a Psyc:EL task.**
 
@@ -417,7 +444,9 @@ null effect. Additionally, you will need to do so for a harsher interval,
 where the Bayes Factor falls outside of 1/10 and 10. You will need
 to find the sample size, that will give you at least 90% of power.
 
-You will need to report that sample size and the associated power in Psych:EL.
+On Psyc:EL, you will need to insert the code you used to
+
+# Exercise 2: Create a plot.
 
 You will also need to create two plots and **upload it to Psych:EL as a PDF**:
 
@@ -429,7 +458,7 @@ You will also need to create two plots and **upload it to Psych:EL as a PDF**:
 These readings will give you a general overview of this exact topic, but can
 also serve as a good induction to a bit more thought-out power analysis.
 
-- [Schönbrodt, F. D. & Wagenmakers, E.-J. (2018). Bayes Factor Design Analysis: Planning for compelling evidence. Psychonomic Bulletin & Review, 25, 128-142.](https://osf.io/d4dcu)
+- [Schönbrodt, F. D. & Wagenmakers, E.-J. (2018). Bayes Factor Design Analysis: Planning for compelling evidence. Psychonomic Bulletin & Review, 25, 128-142.](https://link.springer.com/content/pdf/10.3758/s13423-017-1230-y.pdf)
 - [Vandekerckhove, J., Rouder, J. N., & Kruschke, J. K. (2018). Bayesian methods for advancing psychological science.](https://link.springer.com/article/10.3758/s13423-018-1443-8)
 
 Here is a list of papers already using Bayesian Power Analysis:
@@ -439,4 +468,4 @@ Here is a list of papers already using Bayesian Power Analysis:
 They can give you a few examples on how to write up what we have done for your
 final reports.
 
-## REFERENCES
+# References
