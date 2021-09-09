@@ -18,9 +18,12 @@ knitr::opts_chunk$set(echo = TRUE, comment=NA)
 
 Before starting this exercise, you should have had a brief introduction to getting and using RStudio -- [Introduction to RStudio](intro-rstudio.html). You should also have also completed the workshop exercises for [Exploring Data](exploring-incomes.html) and [Group Differences](group-differences.html). If not, take a look these earlier worksheets before continuing.
 
-First, log in to <a href = "https://rstudio.plymouth.ac.uk" target = "blank">RStudio server</a>.
+First, log in to <a href = "https://rstudio.plymouth.ac.uk" target = "blank">RStudio server</a>, and make sure you are in your `psyc411` project.
 
-You also need to load _tidyverse_ and the income _data frame_, and create the `cpslow` data frame, as covered in [Group Differences](group-differences.html). Here's a reminder of the commands you need to do this:
+Next, create a **new** script file in your project, called `evidence.R`.
+
+Now, you load _tidyverse_ and you load the income _data frame_, and create the `cpslow` data frame by adding the following commands to your R script, and using CTRL+ENTER to run each command in turn:
+
 ```{r init,message=FALSE}
 library(tidyverse)
 cpsdata <- read_csv(url("http://www.willslab.org.uk/cps2.csv"))
@@ -64,7 +67,9 @@ We are aiming to calculate the probability of the income data we have collected,
 
 If we hope to find a low probability despite a low effect size, we will need a large sample. Although our effect size is small (about 0.2, see [Group Differences](group-differences.html)), our sample is quite large (10,000 people).
 
-In R, the command for a t-test is very similar to the command for calculating effect size (see [Group Differences](group-differences.html)). In fact, all we need to do is replace `cohen.d` with `t.test`:
+In R, the command for a t-test is very similar to the command for calculating effect size (see [Group Differences](group-differences.html)). In fact, all we need to do is replace `cohen.d` with `t.test`.
+
+**So, the command to add to your script and run is:**
 
 ```{r ttest}
 t.test(cpsdata$income ~ cpsdata$sex)
@@ -154,13 +159,15 @@ A Bayesian t-test is used for the same sorts of things as a traditional t-test (
 
 The easiest way to do a Bayesian t-test in R is to use the _BayesFactor_ package. Recall, that you load a package using the `library` command. 
 
+**So, the next command to add to your script and run is:**
+
 ```{r bayesfactor, message=FALSE}
 library(BayesFactor)
 ```
 
 R will return a welcome message and various other text in response to this command (we do not show this text here, as it is quite long). You can safely ignore that text. However, if you get an error here, please see [common errors](common-errors.html).
 
-The command for a Bayesian t-test is similar, but not identical, to the commands for effect size and for a traditional t-test. For our gender pay gap example, we type:
+The command for a Bayesian t-test is similar, but not identical, to the commands for effect size and for a traditional t-test. For our gender pay gap example, **we add the following command to our script and run it:**
 
 ```{r bfttest}
 ttestBF(formula = income ~ sex, data = data.frame(cpsdata))
@@ -188,7 +195,7 @@ Sometimes, you'll see  Bayes Factor written as BF~10~, which means the same thin
 #### Which Bayesian t-test?
 In order to calculate a Bayes Factor, R has to make some assumptions about how big the difference is likely to be. The `ttestBF` command does this for you,  making some broad assumptions that cover the range of effect sizes typically seen in psychology. Other commands may make different assumptions, including estimating the likely effect size from previous experiments. So, when reporting Bayes Factors, it's particularly important to report, somewhere in your Results section, the specific method that you used. For the `ttestBF` function you'd write something like:
 
-"Bayesian t-tests were calculated using the BayesFactor package (Morey & Rouder, 2018), within the R environment (R Core Team, 2018)."
+"Bayesian t-tests were calculated using the BayesFactor package (Morey & Rouder, 2018), within the R environment (R Core Team, 2021)."
 
 You can get the references for these citations by typing `citation("BayesFactor")` and `citation()`.
 
@@ -199,7 +206,7 @@ In this exercise, you'll consolidate what you've learned so far.
 
 **The task is to further examine this sample of participants who are living in the US (`cpsdata`) , and earning less than $150k (`cpslow`).** 
 
-Specifically, the task is to perform a traditional t-test and a Bayesian t-test to address the question of whether people born in the US earn more. Your output should look like the below if you've got it right.
+Specifically, the task is to perform a traditional t-test and a Bayesian t-test to address the question of whether people born in the US earn more. **So, add commands to the end of your script to do this, and run them**. Your output should look like the below if you've got it right.
 
 As you can see, the Bayesian evidence for a difference is pretty overwhelming in this case -- it's about 3.5 million times more likely there is a difference than there isn't!
 
