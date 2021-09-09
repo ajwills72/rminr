@@ -1,14 +1,12 @@
 ---
 author: Lenard Dome, Paul Sharpe, Andy Wills
-title: Estimating Sample Size for Bayes Factor
-subtitle: Estimate sample size for planned analysis with Bayes Factor
+title: Estimating Sample Size with Bayes Factor
 output:
   html_document:
     toc: true
     toc_depth: 2
     number_sections: true
 date: '`r format(Sys.Date())`'
-bibliography: 'power_bayesian.bib'
 ---
 
 # Before you start
@@ -30,32 +28,33 @@ evidence/data to make reliable conclusions. Collecting enough data requires
 time and effort. In psychology, until recently, [researchers didn't collect
 enough data](http://www.marjanbakker.eu/Bakker%20et%20al.%202016.pdf) to
 make reliable conclusion with traditional frequentist statistics (methods that
-rely on p-value significance testing). Throughout your undergraduate course,
+rely on p-value significance testing).
+
+Throughout your undergraduate course,
 you relied on Bayesian techniques. One exemption was the
 [worksheet](https://www.andywills.info/rminr/power.html), where you first
 encountered the concept of statistical power. In that worksheet, you used
 traditional frequentist techniques to estimate how many participants you need
 to recruit for your experiment. The reason was that simply there is no
 clear-cut formula for estimating sample size for and with Bayesian techniques.
-Most techniques were beyond an undergraduate course. Fortunately, you now have
-the R coding and statistical skills to learn about it.
+Most techniques were beyond the requirements of an undergraduate course.
+Fortunately, you now have the coding skill to tackle this problem with ease.
+This method is also simple and require no sophisticated statistical and
+mathematical skills.
 
-Introduce the problem of collecting enough data and reference the
-reproducability problem. Link it back to statistical power material.
-
-# Traditional power calculations
+# Brushing up on traditional power
 
 In traditional null hypothesis significance testing, power analysis estimates
 the likelihood of rejecting the null hypothesis given the effect size of the
 alternative hypothesis. So if you have two groups, you could use a single effect
 size, like that of [Cohen's *d*](https://www.andywills.info/rminr/power.html),
 to find out how many participants you need to get a get a p-value below 0.05
-with high probability. This is useful, because it
-explicitly states how likely to achieve the researchers goal in the anticipated
-experiment [@kruschke2013bayesian]. Ideally, you also want to do it
-before data collection and not after. Estimating the power of your experiment
-after data is collected and analysed, you will learn nothing that the Bayes
-Factor or a p-value wouldn't tell you.
+with high probability. This is useful, because it explicitly states how likely
+to achieve the researchers goal in the anticipated experiment
+[(Kruschke, 2013)](https://jkkweb.sitehost.iu.edu/articles/Kruschke2013JEPG.pdf).
+Ideally, you also want to do it before data collection
+and not after. If you estimate power after the data is collected and analysed,
+you will learn nothing that the Bayes Factor or a p-value wouldn't tell you.
 
 Traditional techniques to estimate sample size are also limited. For example,
 they don't allow you to plan for the null hypothesis being true. This is
@@ -73,7 +72,16 @@ check the data at the lower estimate, to see if you need to collect more data.
 
 A p-value and traditional techniques do not allow you to incorporate the
 possibility that the null hypothesis is true, even though in some cases it might
-be important plan for that outcome as well.
+be important to plan for that outcome as well.
+
+Another important point to note is that effect sizes are uncertain
+[(Kruschke, 2013)](https://jkkweb.sitehost.iu.edu/articles/Kruschke2013JEPG.pdf), but
+traditional power calculations use a single point-value. Effect sizes can vary
+from experiment from experiment (sometimes even substiantially), so it is
+uncertain if you will get the same effect size with a new sample. This
+experiment-to-experiment variance is not incorporated in traditional methods.
+Effect sizes are also often [overestimated](http://marjanbakker.eu/Bakker%20Van%20Dijk%20Wicherts%202012.pdf)
+which [causes a lot of problem](https://www.andywills.info/rminr/effsize_from_papers.html#replication) for scientist and researchers.
 
 # Power analysis with Bayes Factors
 
@@ -108,42 +116,43 @@ many data points we need to get a conclusive Bayes Factor.**
 > An algorithm is a list of rules to follow in order to solve a problem.
 
 The algorithm for estimating sample size for more sophisticated Bayesian
-analysis was first described by @kruschke2013bayesian.
-@schonbrodt2018bayes adapts this algorithm to **fixed-n designs** with
-**Bayes Factor**. In a fixed-n design, you test
-a set number of participants and calculate something like a Bayes Factor
-at the end. @schonbrodt2018bayes decide to group this technique under an
-umbrella term: **Bayes Factor Design Analysis**. I just call it estimating
-sample size.
+analysis was first described by Kruschke (2013) while he was promoting an
+alternative to frequentist statistics.
+[Schönbrodt and Wagenmakers (2018)](https://www.researchgate.net/publication/314158724_Bayes_factor_design_analysis_Planning_for_compelling_evidence) adapts
+his algorithm to **fixed-n designs** with **Bayes Factor**. In a fixed-n
+design, you test a set number of participants and calculate something like a
+Bayes Factor at the end. Schönbrodt and Wagenmakers (2018) decided to group
+this technique under an umbrella term: **Bayes Factor Design Analysis**.
 
-We will use @schonbrodt2018bayes algorithm, because it is the simplest form and
-is suitable for most psychology experiments you will be doing in your final
-year project.
+We will use Schönbrodt and Wagenmakers (2018) algorithm, because it is the
+simplest form and is suitable for most psychology experiments you will be doing
+in your final year project.
 
 Here I will show you the algorithm and then walk you through it. The steps
 in the algorithm:
 
-1. Generate a large number (e.g. 2000) of random data points by taking some assumptions about what to expect. Data should be generated according to how the actual data will be collected in the planned experiment. For example, there will be a fixed number of participants, fixed number of trials, fixed number of conditions. You also want to take some other assumptions, like what is the effect size you might expect.
-2. Subset the data to include a fixed number of data points (40 participant). You ideally want to do it for different sample sizes for the same data set.
-3. Run a test on the subset and tally whether the test is precise enough. You simply run a Bayes Factor t-test in the subsets and check if the Bayes Factor is between 1/3 and 3.
-4. Repeat steps 2 and 3 many thousands of times, for example 10000.
-5. Pick a well-powered sample size.
+1. **Generate a large number (e.g. 2000) of random data points** by taking some assumptions about what to expect. Data should be generated according to how the actual data will be collected in the planned experiment. For example, there will be a fixed number of participants, fixed number of trials, fixed number of conditions. You also want to take some other assumptions, like what is the effect size you might expect.
+2. **Subset the data to include a fixed number of data points** (40 participant). You ideally want to do it for different sample sizes for the same data set.
+3. **Run a test on the subset** and tally whether the test is precise enough. You simply run a Bayes Factor t-test in the subsets and check if the Bayes Factor is between 1/3 and 3.
+4. **Repeat steps 2 and 3 many thousands of times**, for example 10000.
+5. **Pick** a well-powered sample size.
 
 ## Walk-through Bayesian Power Analysis
 
-In order to estimate a sample size and power, we need to think about
+In order to estimate a sample size, we need to think about
 both our experiment, our planned analysis and what other researchers have
 already learned about the topic of interest.
 
 There is a good chance that someone has done an experiment similar to what you
 are planning. So you can use their data to find the effect size and estimate
-something about your experiment - usually sample size.
+something about your experiment - usually sample size. If you need it for
+your own project, look at [this material](https://www.andywills.info/rminr/effsize_from_papers.html#estimate).
 
 Let us say that we are interested in multistable perception and want to do
-a replication of @mcdougall1921effects. They did not include the data, but
+a replication of [McDougall and Smith (1921)](https://onlinelibrary-wiley-com.plymouth.idm.oclc.org/doi/pdfdirect/10.1002/j.2050-0416.1921.tb02471.x). They did not include the data, but
 told us some details about their analysis, including some summary statistics.
 
-@mcdougall1921effects were interested in how different substances (coffee,
+McDougall and Smith (1921) were interested in how different substances (coffee,
 antidepressant) affects the perception of a subset of visual illusions.
 Here we will only focus on the condition where participants viewed an
 an ambiguous figure called the
@@ -155,9 +164,9 @@ at the front. If you keep looking at the cube, you can see that the orientiation
 switches between these two percepts - having the lower-left or upper-right
 square as its front side.
 
-![Necker Cube](https://upload.wikimedia.org/wikipedia/commons/5/52/Necker_cube_and_impossible_cube.svg)
+![Necker Cube](https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Necker_cube_and_impossible_cube.svg/1280px-Necker_cube_and_impossible_cube.svg.png)
 
-@mcdougall1921effects reported that people passively switch
+McDougall and Smith (1921) reported that people passively switch
 between the two percepts
 at a higher rate after they had coffee compared to when they hadn't had
 any other drug.
@@ -268,7 +277,9 @@ whatever `size` we set. Note that `size` has to be same for both conditions.
 The third argument `prob` will determine the mean proportion of fluctuations
 relative to fluctuating every second. This is that we will vary between conditions.
 there will be a 3% increase in the experimental conditions, which will result
-in a small effect size.
+in a small effect size. We take the assumption that this effect size is the
+mean effect size of this phenomenon. So if you have ran dozens of experiment,
+all effect sizes would cluster around this value.
 
 We will do the same for the experimental condition, but the mean proportion
 will be larger. We pick the difference to reflect the effect size we saw in the
@@ -323,7 +334,7 @@ So what does our function need to do? It needs to :
 4. At the end, return the Bayes Factor.
 
 ```{r}
-## we take the sample size n and data as inputs
+## we take the sample size n and a data set as inputs
 get_bf <- function(n, data) {
     ## 1. we randomly pick n number of participants from data
     ideal_dta <- data %>% filter(ppt %in% sample(1000, n))
@@ -346,17 +357,26 @@ get_bf <- function(n, data) {
 > Simulations are pretend games. When we say simulate, we mean to imitate some
 real-world process over time.
 
-Now we are at the stage when we can actually run a simulation. These simualtions
+Now we are at the stage when we can actually run a simulation. These simulations
 will be based on a mathematical technique called random sampling or Monte Carlo
 methods. Beware that there are no special equations or complicated math
 involved here. Monte Carlo is simply a tool that is used to estimate possible
 outcomes of uncertain events. In our case, the possible outcome is the Bayes
 factor and the uncertain event is the data we collect. So we imitate
-data collection by generating some random data, check the Bayes Factor for
-the data, and repeat it many times to get a robust and more accurate result.
+the whole scientific process by generating some random data, checking the Bayes
+Factor for the data, and repeat it many times to get a robust and more accurate
+estimate.
 
 We have to repeat it many times, because the process of sampling *n* number
-of data points is random.
+of data points is semi-random (not unlike how we should recruit participants).
+The more you repeat it and the more data points you have, the more your
+distribution will resemble to a normal distribution due to the
+[central limit theorem](https://ajwills72.github.io/critical-thinking/distributions-samples.pdf). Monte Carlo methods also address another point
+we made before: uncertainty in effect sizes. Because we sample randomly from
+a much larger distribution of values, the difference will vary slightly every
+time we draw *n* number of data points. The mean effect size remains the same,
+but it allows us to make more precise and reliable estimate on how many
+participants we need to recruit.
 
 There are two things to decide before we start imitating data collection:
 
@@ -400,7 +420,8 @@ times we got a Bayes Factor that was conclusive - outside of the interval
 ```{r}
 monte %>%
     group_by(n) %>%
-    summarise(power = 1 - (sum(between(bf, 1/3, 3)) / 1000))
+    summarise(power = 1 - (sum(between(bf, 1/3, 3)) / 1000)) %>%
+    data.frame()
 ```
 
 The only thing that remains is to find out the actual sample size we need.
@@ -408,14 +429,15 @@ In frequentist methods, people usually expect your study to have at least
 80% power. If we accept that convention for this as well, **we can settle on
 a sample size of 50.** On the other hand, the story doesn't end here.
 
-This is the exact moment, you might want to stop and think about how
+This is the exact moment, when you might want to stop and think about how
 many participants you might potentially end up excluding. This depends a lot
 on the nature of your experiment and the characteristics of the population.
-If you have learning criterion, you can end up excluding 30% of all
-participants. This means that it is not uncomon to add 15 more participants
-on top of that 50, just to be safe.
+If you have a learning criterion, you can end up excluding 30% of all
+participants. It is not uncommon to add 15 more participants on top of that 50,
+just to be safe.
 
-Before moving on to the exercises, it is worth looking at the
+Before moving on to the exercises, it is worth looking at the how power improves
+for each sample size.
 
 As you can see, the power goes up not linearly, but more as
 a curve. This resembles more to a logarithmic function, which has this
@@ -427,31 +449,44 @@ not harmful, but can be unnecessary.
 monte %>%
     group_by(n) %>%
     summarise(power = 1 - (sum(between(bf, 1/3, 3)) / 1000)) %>%
+    mutate(criterion = power > 0.80) %>%
     ggplot(aes(x = n, y = power)) +
-    geom_line() +
-    geom_point() +
+    geom_line(linetype = 2) +
+    geom_point(aes(colour = criterion), size = 2) +
+    geom_vline(aes(xintercept = 50)) +
+    scale_x_continuous(breaks = sort(c(50, seq(0, 200, 100)))) +
     xlab("sample size") +
     ylab("power") +
     theme_classic()
 ```
 
-# Exercise 1: Estimate the sample for a null effect
+You can see on this graph, that beyond a certain sample size, there are no
+improvement. This means that keep collecting data will add no detectable
+benefit to your analysis.
 
-**This is a Psyc:EL task.**
+# Exercise 1: Estimate the sample for a null effect
 
 In this exercise you will need to estimate the sample size for detecting
 null effect. Additionally, you will need to do so for a harsher interval,
 where the Bayes Factor falls outside of 1/10 and 10. You will need
-to find the sample size, that will give you at least 90% of power.
+to find the sample size, that will give you at least 80% of power.
 
-On Psyc:EL, you will need to insert the code you used to
+On Psyc:EL, you will need to insert the code you used to estimate the sample
+size for the null hypothesis.
+
+Hint: the null hypothesis essentially means that there is no difference between
+conditions, so the means are equal. You might also need to increase how many
+sample sizes you need to test.
 
 # Exercise 2: Create a plot.
 
-You will also need to create two plots and **upload it to Psych:EL as a PDF**:
+**This is a Psyc:EL task.**
 
-1. A plot showing the distribution of the data you generated - `geom_density()`
-2. A plot showing the power for each sample size - `geom_line()`
+Using the estimate from Exercise 1, create a plot showing power for each sample
+size and **upload it to Psych:EL as a PDF**. You will need to edit the code for
+the plot we have already created once, so you already have a template to go by.
+Remember to (a) add the line for the adequate sample size and (b) edit the axis
+ticks, so it includes the lowest estimated sample size with at least 80% power.
 
 # Further Intermediate Reading
 
@@ -466,6 +501,8 @@ Here is a list of papers already using Bayesian Power Analysis:
 - [BFDA in practice: A list of published examples](https://github.com/nicebread/BFDA/blob/master/BFDA_examples.md)
 
 They can give you a few examples on how to write up what we have done for your
-final reports.
+a potential reports.
 
-# References
+___
+
+This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0.

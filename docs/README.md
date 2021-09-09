@@ -3,7 +3,7 @@ _2020 Edition._
 
 _Research Methods in R_ is a set of guides on how to use R as your central research methods tool. The target audience is psychology undergraduate students. _Research Methods in R_ is [Creative Commons](https://creativecommons.org/), so you are free to reuse these materials and adapt them as you wish, as long as you attribute them to their authors, and as long as your modifications have a Creative Commons licence. They come with absolutely no warranty of any kind.
 
-_Note to teachers_: These materials have been tested against R version 3.6.3 (released 29th Feb 2020), and the most recent version of packages that were available on [MRAN](https://mran.microsoft.com/) on the 29th June 2020. 
+_Note to teachers_: These materials have been tested against R version 3.6.3 (released 29th Feb 2020), and the most recent version of packages that were available on [MRAN](https://mran.microsoft.com/) on the 29th June 2020.
 
 ## Curriculum map
 
@@ -21,9 +21,9 @@ To see how a subset of these resources is used in the undergraduate psychology t
 
 4. [Research Methods in Practice](#rmip)
 
-5. [Intermediate Guide to R](#rmip) 
+5. [Intermediate Guide to R](#rmip)
 
-6. [Going further with R](#gfwr) 
+6. [Going further with R](#gfwr)
 
 7. [Case studies](#studies)
 
@@ -39,8 +39,8 @@ To see how a subset of these resources is used in the undergraduate psychology t
 
 1. [Who is using R?](rminrinpsy.html) Partial list of psychology degree
    programmes around the world than use R.
-   
-1. [Other resources](resources.html). A list of other Creative Commons resources about using R. 
+
+1. [Other resources](resources.html). A list of other Creative Commons resources about using R.
 
 1. [Calculating your module mark](modmark.html). How to calculate a final module mark from your component marks, using R.
 
@@ -50,11 +50,11 @@ To see how a subset of these resources is used in the undergraduate psychology t
 ## 1. Absolute Beginners' Guide to R
 <a name="beginners"></a>
 
-A series of worksheets on using R for data analysis in psychology. No previous knowledge of R, or of psychology, is assumed. 
+A series of worksheets on using R for data analysis in psychology. No previous knowledge of R, or of psychology, is assumed.
 
 * [Introduction to RStudio](intro-rstudio.md). How to get RStudio, and a basic introduction to the software.
 
-* [Exploring data](exploring-incomes.html). Means, medians, and histograms. 
+* [Exploring data](exploring-incomes.html). Means, medians, and histograms.
 
     * [More on tibbles](more-on-tibbles.html). Deeper explanation of 'tibbles' in R.
 
@@ -68,22 +68,22 @@ A series of worksheets on using R for data analysis in psychology. No previous k
 
     * [More on Bayes Factors](more-on-bf.html). A more detailed discussion of Bayes Factors.
 
-* [Using RStudio projects](using-projects.html). Creating a new project. Using an R script. Analysing your own data. 
+* [Using RStudio projects](using-projects.html). Creating a new project. Using an R script. Analysing your own data.
 
 * [Entering data by hand](entering-data-by-hand.html). Entering data into a spreadsheet. Saving data into your RStudio project.
 
-* [Inter-rater reliability](irr.html). Percentage agreement. Cohen's kappa. 
+* [Inter-rater reliability](irr.html). Percentage agreement. Cohen's kappa.
 
     * [More on Cohen's kappa](more-on-kappa.html). A discussion of some potentially surprising outputs from a Cohen's kaapa calculation.
 
-* [Relationships](chi.html). Frequency and contingency tables. Mosaic plots. Traditional chi-square test. Bayesian test. 
+* [Relationships](chi.html). Frequency and contingency tables. Mosaic plots. Traditional chi-square test. Bayesian test.
 
     * [More on relationships](chi-extended.html). Extension material on chi-square calculations, including issues surrounding ordered variables (e.g. age), the interpretation of large contingency tables, and a further explanation of the output of the Bayesian chi-square test.
 
-* [Relationships, part 2](corr.html). Density plots. Scatter plots. Correlation co-efficient. Bayesian and traditional tests. 
+* [Relationships, part 2](corr.html). Density plots. Scatter plots. Correlation co-efficient. Bayesian and traditional tests.
 
     * [More on relationships, part 2](corr-extended.html). Spearman's correlation, Kendall's tau, one-tailed tests, confidence intervals, plus a deeper look at the output of the Bayesian correlation test.
-    
+
 * [Sample characteristics](sample.html). How to calculate summary information about your sample, such as number of participants or gender balance, from your data file.
 
 * [Making reports with R](insert-image.html). How to insert an RStudio graph into your wordprocessor document (e.g. Word). Links to _RMarkdown_ as an alternative.
@@ -92,7 +92,7 @@ A series of worksheets on using R for data analysis in psychology. No previous k
 ## 2. Putting R to work
 <a name="rtowork"></a>
 
-These are mainly further practice in the skills learned in _Absolute Beginners'_. Where the exercises contain completely new skills, these are shown in **bold**. Where the excercises extend a skill you've already been taught, these are shown in _italics_. The exercises become somewhat more difficult as you go down the list. 
+These are mainly further practice in the skills learned in _Absolute Beginners'_. Where the exercises contain completely new skills, these are shown in **bold**. Where the excercises extend a skill you've already been taught, these are shown in _italics_. The exercises become somewhat more difficult as you go down the list.
 
 If you are a current undergraduate student at Plymouth University, you should complete the accompanying Psych:EL (Psychology: Experiential Learning) activity first, in order to generate your own set of data. If you're not, you can download sample data files [here](rtoworkdata.html).
 
@@ -106,7 +106,7 @@ If you are a current undergraduate student at Plymouth University, you should co
 
 * [Visual illusions](illusions.html). Filtering data, means, **violin plot**, Bayesian t-test.
 
-* [Facial attractiveness](face-attract.html). Means, standard deviations, **inter-quartile range**, and _density plots_. 
+* [Facial attractiveness](face-attract.html). Means, standard deviations, **inter-quartile range**, and _density plots_.
 
 * [Police lineup](lineup.html). Contingency table, mosaic plot, Bayesian contingency test, means, density plot, Bayesian t-test
 
@@ -116,7 +116,7 @@ If you are a current undergraduate student at Plymouth University, you should co
 
 * [Creativity and the environment](green.html). **Preprocessing**, means, density plots, effect size, Bayesian t-test.
 
-* [Political psychology](brexit.html). Means, filtering data, _summarising data_, density plots, effect size, Bayesian t-test, traditional t-test. 
+* [Political psychology](brexit.html). Means, filtering data, _summarising data_, density plots, effect size, Bayesian t-test, traditional t-test.
 
 ## 3. A Very Brief Guide to R
 
@@ -130,7 +130,7 @@ The _Absolute Beginners' Guide to R_ and _Putting R to Work_ provide, between th
 
 * [Group differences](vbg_groups.html): Grouping, density plots, filtering.
 
-* [Evidence, part 1](vbg_evidence.html): Bayesian and traditional t-tests 
+* [Evidence, part 1](vbg_evidence.html): Bayesian and traditional t-tests
 
 * [Evidence, part 2](vbg_corr.html): Bayes and traditional correlation, scatterplot
 
@@ -152,15 +152,15 @@ These are intermediate-level materials, designed to follow on from _An Absolute 
 
 - [Revision](revision.html): A quick recap of key information covered in earlier courses.
 
-- [Statistical power](power.html): How to calculate the statistical power of experiments. 
+- [Statistical power](power.html): How to calculate the statistical power of experiments.
 
     - [More on statistical power](effsize_from_papers.html): A deeper discussion on statistical power, including: (1) relation between statistical power and the replication crisis, (2) better standards for statistical power, (3) how to improve effect size, (4) estimating effect size from previous work.
 
 - [Data preprocessing](preproc.html): Getting data from lab-based (OpenSesame)
   experiments into a format closer to something you can actually analyse, in
-  five steps: loading, selecting, filtering, summarising, and combining. Also covers combining data frames, renaming columns, and using **loops**. 
+  five steps: loading, selecting, filtering, summarising, and combining. Also covers combining data frames, renaming columns, and using **loops**.
     - [More on preprocessing](more-on-preproc.html): A slightly more advanced worksheet, covering adding columns to a data frame, and subsetting strings.
-    
+
 - [Within-subject differences](anova1.html): Data preprocessing (pivoting and
   mutating). One-factor within-subject Bayesian ANOVA. Pairwise comparisons, multiple comparisons.
 
@@ -171,7 +171,7 @@ These are intermediate-level materials, designed to follow on from _An Absolute 
   one between), plus advice on: pairwise comparisons, better graphs, reporting Bayesian ANOVA, and ordinal (i.e. ordered) independent variables.
 
 
-## 6. Going further with R 
+## 6. Going further with R
 <a name="gfwr"></a>
 
 These are slightly more advanced materials, aimed at a final-year undergraduate psychology audience.
@@ -185,18 +185,20 @@ These are slightly more advanced materials, aimed at a final-year undergraduate 
     * [Data preprocessing for experiments](preproc-experiments.html): De-duplicating data, excluding participants, log transform.
 
     * [Data preprocessing for scales](preproc-scales.html): Handling missing data, calculating scale scores, tidying survey data.
-    
+
 - Descriptive statistics
 
     * [Better tables](better-tables.html): correlation matrix, custom table of descriptive statistics.
 
-    * [Better graphs](better-graphs.html): publication-quality graphs showing both central tendency and variability (or uncertainty) of your data, including: line plots, distribution plots (density, violion, half-violin), box plots, and confidence intervals. Suggested plots for one- and two-factor designs, within-subject, between-subject, or mixed designs, and with ordered and unordered variables. Discussion of common bad plots to avoid (bar plots; confusions over confidence intervals). Pairs plot for correlational designs. 
-    
+    * [Better graphs](better-graphs.html): publication-quality graphs showing both central tendency and variability (or uncertainty) of your data, including: line plots, distribution plots (density, violion, half-violin), box plots, and confidence intervals. Suggested plots for one- and two-factor designs, within-subject, between-subject, or mixed designs, and with ordered and unordered variables. Discussion of common bad plots to avoid (bar plots; confusions over confidence intervals). Pairs plot for correlational designs.
+
     * [Analysing scales](analyse-scales.html): Cronbach's alpha.
 
-- Bayesian inferential statistics 
+- Bayesian inferential statistics
 
-    * [One-sample Bayesian t-test](one-sample.html): Comparing a single-group sample of data against a population mean. 
+    * [Bayesian approach to estimate sample size](power-bayesian.html): An introduction and how-to on estimating sample size with a Bayesian approach.
+
+    * [One-sample Bayesian t-test](one-sample.html): Comparing a single-group sample of data against a population mean.
 
     * [More on Bayesian ANOVA](anova4.html): More on two-factor Bayesian ANOVA.
 
@@ -210,7 +212,7 @@ These are slightly more advanced materials, aimed at a final-year undergraduate 
 
 <a name="studies"></a>
 
-## 7. Case studies 
+## 7. Case studies
 These are full preprocessing and analysis pipelines, mainly based on final-year undergraduate psychology projects.
 
 - [The effects of negative mental imagery on self-esteem](cs-self-esteem.html): preprocessing, Cronbach's alpha, Bayesian ANOVA.
@@ -231,12 +233,12 @@ ____
 
 #### Source code
 
-These teaching materials were generated using a combination of Markdown and RMarkdown. The full source code is available on [github](https://github.com/ajwills72/rminr). 
+These teaching materials were generated using a combination of Markdown and RMarkdown. The full source code is available on [github](https://github.com/ajwills72/rminr).
 
 ___
 
 #### Licence
-This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0. 
+This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0.
 
 Parts of this material have been adpated from these other Creative Commons materials:
 
@@ -253,22 +255,20 @@ Thanks to the following people for their feedback and advice on these materials:
 Jackie Andrade, Eleanor Andrade May, Martyn Atkins,
 Patric Bach, Alison Bacon, Dale Barr, Nadège Bault, Chris Berry,
 Allegra Cattani, Laura Charlton,
-Lisa DeBruine, 
+Lisa DeBruine,
 Charlotte Edmunds,
 Emily Filewood,
 Giorgio Ganis, Phil Gee, Michaela Gummerum,
 Yaniv Hanoch, Cathryn Harries, Jessica Hart, Sophie Homer, Courtney Hooton,
 Angus Inkster,
-Jasmin Jones, Peter Jones, 
+Jasmin Jones, Peter Jones,
 Laith Kahn, Gokcek Kul
 Helen Lloyd, Chris Longmore,
 Jon May, Anthony Mee, Chris Mitchell, Millie Monks,
 Karol Nedza,
 Alyson Norman,
 Charlie Reynolds, Matt Roser,
-Paul Sharpe, Alastair Smith, Julian Stander, 
+Paul Sharpe, Alastair Smith, Julian Stander,
 Sylvia Terbeck,
 Michael Verde,
 Clare Walsh, Ben Whalley.
-
-
