@@ -23,18 +23,18 @@ Before starting this exercise, you should have completed **all** the previous [A
 
 ## Getting the data into R
 
-**Relevant worksheet:** [Using RStudio projects](using-projects.html)
+**Relevant worksheet:** [Intro to R Studio](intro-rstudio.html)
 
 You and your partner must first complete the friendship interview coding exercise. You'll then get a CSV file that contains both your ratings. If you were unable to complete the coding exercise, you can use this [example CSV file](irr.csv) instead. _You can only gain marks for this exercise if you use your personal CSV file._
 
-Once you have downloaded your CSV file, [set up a new project](using-projects.html) on RStudio Server for this analysis, and [upload your CSV](entering-data-by-hand.html#upload) to your project.
+Once you have downloaded your CSV file, [set up a new project](intro-rstudio.html) on RStudio Server (**Plymouth University students**: Call your new project `psyc414`), [upload your CSV](entering-data-by-hand.html#upload) to your project, and create a new R script called `irr.R`. 
 
 ## Exploring your data
 
 ### Load
 **Relevant worksheet:** [Exploring data](exploring-incomes.html) 
 
-Load the _tidyverse_ package, and load your data.
+**Add commands to your script to load the _tidyverse_ package, and load your data, and run them (CTRL+ENTER)**:
 
 ```{r init-load, message=FALSE} 
 library(tidyverse)
@@ -65,7 +65,9 @@ For realistically-sized data sets, calculating percent agreement by hand would b
 
 **Relevant worksheet:** [Group differences](group-differences.html). 
 
-Your `friends` data frame contains not only your ratings, but also a list of participant numbers in the `subj` column. For the next step to work properly, we have to remove this column. We can do this using the `select` command. In the _Group Differences_ worksheet, you learned how to use the `filter` command to say which rows of a data frame you wanted to keep. The command `select` works in a similar way, except that it filters columns:
+Your `friends` data frame contains not only your ratings, but also a list of participant numbers in the `subj` column. For the next step to work properly, we have to remove this column. We can do this using the `select` command. In the _Group Differences_ worksheet, you learned how to use the `filter` command to say which rows of a data frame you wanted to keep. The command `select` works in a similar way, except that it filters columns.
+
+**Add this command to your script and run it:**
 
 ```{r select, message=FALSE} 
 ratings <- friends %>% select(rater1, rater2)
@@ -74,13 +76,15 @@ ratings <- friends %>% select(rater1, rater2)
 In the command above, we take the `friends` data frame, select the `rater1` and `rater2` columns, and put them in a new data frame called `ratings`. 
 
 ### 2. Calculate percentage agreement
-We can now use the `agree` command to work out percentage agreement. The `agree` command is part of the package `irr` (short for Inter-Rater Reliability), so we need to load that package first:
+We can now use the `agree` command to work out percentage agreement. The `agree` command is part of the package `irr` (short for Inter-Rater Reliability), so we need to load that package first.
+
+**Add these commands to your script and run them**:
 
 ```{r pc, message=FALSE} 
 library(irr)
 agree(ratings)
 ```
-**NOTE**: If you get an error here, type `install.packages("irr")`, wait for the pacakge to finish installing, and try again. 
+**NOTE**: If you get an error here, type `install.packages("irr")`, wait for the package to finish installing, and try again. 
 
 The key result here is `%-agree`, which is your percentage agreement. The output also tells you how many subjects you rated, and the number of people who made ratings. The bit that says `Tolerance=0` refers to an aspect of percentage agreement not covered in this course. If you're curious about _tolerance_ in a percentage agreement calculation, type `?agree` into the Console and read the help file for this command.
 
@@ -108,7 +112,9 @@ So, on a scale of zero (chance) to one (perfect), your agreement in this example
 
 Cohen's kappa is a measure of agreement that's calculated in a similar way to the above example. The difference between Cohen's kappa and what we just did is that Cohen's kappa also deals with situations where raters use some of the categories more than others. This affects the calculation of how likely it is they will agree by chance. For more information on this, see [more on Cohen's kappa](more-on-kappa.html).
 
-To calculate Cohen's kappa in R, we use the command `kappa2` from the `irr` package, like this: 
+To calculate Cohen's kappa in R, we use the command `kappa2` from the `irr` package.
+
+**Add this command to your script and run it:**
 
 ```{r ckauto}
 kappa2(ratings)
