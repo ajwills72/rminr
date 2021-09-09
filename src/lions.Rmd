@@ -19,9 +19,13 @@ Before starting this exercise, you should have completed **all** the relevant [A
 
 ## Getting the data into R
 
-**Relevant worksheet:** [Using RStudio projects](using-projects.html)
+**Relevant worksheet:** [Intro to RStudio](intro-rstudio.html)
 
-You and your partner must first complete the behaviour coding exercise. You'll then get a CSV file that contains both your ratings. [Set up an RStudio project](using-projects.html) for this analysis, and [upload the CSV file](entering-data-by-hand.html#upload) to it. 
+You and your partner must first complete the behaviour coding exercise. You'll then get a CSV file that contains both your ratings. 
+
+Once you have your CSV file, [open a project](intro-rstudio.html) on RStudio Server for this analysis, create a script file, and [upload your CSV](entering-data-by-hand.html#upload) to your project.
+
+**Plymouth University students**: Create/open your project named `psyc416`; within that create a script file called `lions.R`. Enter all commands into that script and run them from there.
 
 ## Exploring your data
 

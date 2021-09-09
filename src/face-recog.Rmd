@@ -18,11 +18,14 @@ knitr::opts_chunk$set(echo = TRUE, comment=NA)
 Before starting this exercise, you should have completed **all** the [Absolute Beginners', Part 1](index.html) workshop exercises. If not, take a look at those exercises before continuing. Each section below also indicates which of the earlier worksheets are relevant.
 
 ## Getting the data into R
-**Relevant worksheet:** [Using RStudio projects](using-projects.html)
+**Relevant worksheet:** [Intro to RStudio](intro-rstudio.html)
 
 In order to complete this worksheet, you'll need to have downloaded your CSV file from the PsycEL exercise. **See the instructions on PsycEL for how to do this.**
 
-Once you have downloaded your CSV file, [set up a new project](using-projects.html) on RStudio Server for this analysis, and [upload your CSV](entering-data-by-hand.html#upload) to your project.
+Once you have downloaded your CSV file, [open a project](intro-rstudio.html) on RStudio Server for this analysis, create a script file, and [upload your CSV](entering-data-by-hand.html#upload) to your project.
+
+**Plymouth University students**: Create/open your project named `psyc412`; within that create a script file called `face-recog.R`. Enter all commands into that script and run them from there.
+
 
 ## Exploring your data
 

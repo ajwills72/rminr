@@ -64,8 +64,6 @@
 
 * PsycEL exercise "Risk taking" uses the [risk taking](../risk-rat.html) worksheet. Means, **combining data frames**, filtering data, and _density plots_.
 
-* A former PsycEL exercise used the [police lineup](../lineup.html) worksheet. Contingency table, mosaic plot, Bayesian contingency test, means, density plot, Bayesian t-test
-
 * A former PsycEL exercise used the  [creativity and the environment](../green.html). **Preprocessing**, means, density plots, effect size, Bayesian t-test.
 
 ## PSYC416 Connecting Psychology (Semester 2, from 5th week)

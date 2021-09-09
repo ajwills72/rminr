@@ -18,9 +18,9 @@ knitr::opts_chunk$set(echo = TRUE, comment=NA)
 Before starting this exercise, you should have completed **all** the [Absolute Beginners', Part 1](index.html) worksheets. If not, take a look at those exercises before continuing. Each section below also indicates which of the earlier worksheets are relevant.
 
 ## Getting the data into R
-**Relevant worksheet:** [Using RStudio projects](using-projects.html)
+**Relevant worksheet:** [Intro to RStudio](intro-rstudio.html)
 
-You'll need to complete the Psych:EL excerise to get the CSV files containing your data, and data for your group. [Set up an RStudio project](using-projects.html) for this analysis, and [upload the CSV files](entering-data-by-hand.html#upload) to it.
+You'll need to complete the Psych:EL excerise to get the CSV files containing your data, and data for your group. [Open an RStudio project](intro-rstudio.html) for this analysis, within that create a script file for this analysis, and [upload the CSV files](entering-data-by-hand.html#upload) to the project.
 
 ## Exploring your data
 
