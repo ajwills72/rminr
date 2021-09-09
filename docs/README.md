@@ -52,7 +52,7 @@ To see how a subset of these resources is used in the undergraduate psychology t
 
 A series of worksheets on using R for data analysis in psychology. No previous knowledge of R, or of psychology, is assumed. 
 
-* [Introduction to RStudio](intro-rstudio.md). How to get RStudio, and a basic introduction to the software.
+* [Introduction to RStudio](intro-rstudio.md). A basic introduction to the software.
 
 * [Exploring data](exploring-incomes.html). Means, medians, and histograms. 
 
@@ -68,7 +68,7 @@ A series of worksheets on using R for data analysis in psychology. No previous k
 
     * [More on Bayes Factors](more-on-bf.html). A more detailed discussion of Bayes Factors.
 
-* [Using RStudio projects](using-projects.html). Creating a new project. Using an R script. Analysing your own data. 
+* [Analyzing your project data](using-projects.html). Analysing your own data. 
 
 * [Entering data by hand](entering-data-by-hand.html). Entering data into a spreadsheet. Saving data into your RStudio project.
 
