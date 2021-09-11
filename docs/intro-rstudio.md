@@ -34,7 +34,7 @@ The bottom rectangle has the tabs "Files", "Plots", "Packages", "Help", and "Vie
 
 RStudio uses _projects_ to help you keep your work organized, and to make sure you have a reproducible record of your analyses. Reproducible analysis is essential to good, open science. 
 
-An R Studio project is a way to organise data and anlyses that belong together. We're going to use **one** project to organize all the analyses and data you'll do and use during this _Absolute Beginners' Guide to R_. **Don't** create a new project for each worksheet, keep the same project until we get to the end of this guide (Plymouth University students: **one** project for **all** of PSYC411, please).
+An R Studio project is a way to organise data and anlyses that belong together. We're going to use **one** project to organize all the analyses and data you'll do and use during this first part of the _Absolute Beginners' Guide to R_. **Don't** create a new project for each worksheet, keep the same project until we get to the end of this guide (Plymouth University students: **one** project for **all** of PSYC411, please).
 
 Here's how to create a new project:
 

@@ -52,6 +52,8 @@ To see how a subset of these resources is used in the undergraduate psychology t
 
 A series of worksheets on using R for data analysis in psychology. No previous knowledge of R, or of psychology, is assumed. 
 
+### Part 1
+
 * [Introduction to RStudio](intro-rstudio.md). A basic introduction to the software.
 
 * [Exploring data](exploring-incomes.html). Means, medians, and histograms. 
@@ -71,6 +73,8 @@ A series of worksheets on using R for data analysis in psychology. No previous k
 * [Analyzing your project data](using-projects.html). Analysing your own data. 
 
 * [Entering data by hand](entering-data-by-hand.html). Entering data into a spreadsheet. Saving data into your RStudio project.
+
+### Part 2
 
 * [Inter-rater reliability](irr.html). Percentage agreement. Cohen's kappa. 
 

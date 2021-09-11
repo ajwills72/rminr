@@ -32,7 +32,7 @@ Before starting this exercise, you should have had a brief introduction to using
 
 <a name="how-to"></a>
 
-## How to use these worksheets.
+## How to use these worksheets
 
 Throughout this worksheet, you'll see the commands you should type into RStudio inside a grey box, followed by the output you should expect to see in one or more white boxes. Any differences in the colour of the text can be ignored.
 
@@ -58,7 +58,7 @@ If you get an output that includes the word 'error', please see [common errors](
 
 ## Saving your script
 
-You should notice that the name `Untitled1` on the _Script_ window has now gone red. This is to remind you that your script has changed since the last time you saved it. So, click on the "Save" icon (the little floppy disk) and save your R script with some kind of meaningful name, for example `briefguide.R`. The `.R` indicates that it is an R script.
+You should notice that the name `Untitled1` on the _Script_ window has now gone red. This is to remind you that your script has changed since the last time you saved it. So, click on the "Save" icon (the little floppy disk) and save your R script with some kind of meaningful name, for example `vbgr.R` (**Plymouth University students**: Please use this exact name). The `.R` indicates that it is an R script.
 
 Re-save your script each time you change something in it; that way, you won't lose any of your work.
 
