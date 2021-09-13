@@ -7,7 +7,7 @@ _Note to teachers_: These materials have been tested against R version 4.1.0 (re
 
 ## Curriculum map
 
-To see how a subset of these resources is used in the undergraduate psychology teaching, click below:
+To see how a subset of these resources is used in undergraduate psychology teaching, click below:
 
 - [University of Plymouth](maps/plymouth-map.html)
 
