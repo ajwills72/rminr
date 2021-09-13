@@ -42,7 +42,9 @@ knitr::opts_chunk$set(echo = TRUE, comment=NA, cache = FALSE)
 
 Return to the project that you used for the [understanding interactions](anova2.html) worksheet, which you named **rminr-data**. Open a new blank script and save it as **anova3.R**. Put all commands in that script, and save the script regularly. 
 
-This worksheet makes use of the preprocessed `MCwordsCIsum` data frame we made in the [understanding interactions](anova2.html) worksheet. Start by running the following commands to make sure you have this data frame in your _environment_:
+This worksheet makes use of the preprocessed `MCwordsCIsum` data frame we made in the [understanding interactions](anova2.html) worksheet. Start by running the following commands to make sure you have this data frame in your _environment_.
+
+**Enter these commands into your R script and run them**:
 
 ```{r init, message=FALSE}
 library(tidyverse)
@@ -72,7 +74,9 @@ The command `anovaBF` allows us to answer all these three questions in one go.
 
 # Defining factors
 
-Take a look at the data frame `MCwordsCIsum`. It gives the mean congruent reaction time, and mean incongruent reaction time, for each participant. As before, you have to tell R which of the columns of this data frame are _factors_. The columns `medit` and `congru` are factors - they are the two factors of the design. Recall that the participant ID is also a factor. So, you need to set three of the four columns of `MCwordsCIsum` as factors, like this:
+Take a look at the data frame `MCwordsCIsum`. It gives the mean congruent reaction time, and mean incongruent reaction time, for each participant. As before, you have to tell R which of the columns of this data frame are _factors_. The columns `medit` and `congru` are factors - they are the two factors of the design. Recall that the participant ID is also a factor. So, you need to set three of the four columns of `MCwordsCIsum` as factors, as follows.
+
+**Enter these commands into your R script and run them**:
 
 ```{r three-factors}
 MCwordsCIsum$subj <- factor(MCwordsCIsum$subj)
@@ -93,6 +97,8 @@ Once you have told R which columns are _factors_, you're ready to answer these t
 3. Is there an _interaction_ between these two factors?
 
 This is a big calculation for R, so run the following commands, and then read the explanation while you're waiting for the results. It could take up to a minute to get the answer.
+
+**Enter this command into your R script and run it**:
 
 ```{r bf-fact-1, cache=TRUE}
 bf <- anovaBF(formula = rt ~ medit*congru + subj,
@@ -150,7 +156,9 @@ Recall that a Bayes Factor is a comparison of evidence of two hypotheses. So, in
 
 The Bayes Factor for this hypothesis is around 340, which is really strong evidence that there is a main effect of meditation training. But which direction is the main effect in? Does meditation training make you faster overall, or slower overall?
 
-We can find this out by using the `group_by` and `summarise` commands we have used several times before:
+We can find this out by using the `group_by` and `summarise` commands we have used several times before.
+
+**Enter this command into your R script and run it**:
 
 ```{r meditME, message=FALSE}
 MCwordsCIsum %>% group_by(medit) %>% summarise(mean(rt))
@@ -162,7 +170,9 @@ From this, we can see that people in the meditation condition are about 30 ms fa
 
 This is the **main effect** of congruence. More specifically, it is the hypothesis that `congru`  affects `rt`. This is compared against the hypothesis that there is no effect of congruence.
 
-The Bayes Factor is about 860, strong evidence for  a main effect of congruence. As before, we can find out which direction this effect is in:
+The Bayes Factor is about 860, strong evidence for  a main effect of congruence. As before, we can find out which direction this effect is in.
+
+**Enter this command into your R script and run it**:
 
 ```{r congruME, message=FALSE}
 MCwordsCIsum %>% group_by(congru) %>% summarise(mean(rt))
@@ -190,7 +200,9 @@ The BF for this hypothesis is also large (about $1.8 \times 10^{9}$). We'd expec
 
 Remember that a Bayes Factor is always a comparison of two types of evidence. So far, we've always compared some experimental hypothesis with  the null hypothesis. But we can also compare the evidence for two different experimental hypotheses. The hypothesis that there is an interaction is the hypothesis that there is something more going on that just the combination of main effects. For example, the hypothesis that the congruency effect is smaller after mediation. So, to get a Bayes Factor for the interaction, we compare the evidence for hypothesis `[4]` with the evidence for hypothesis `[3]`. To do this, we divide the Bayes Factor for `[4]` by the Bayes Factor for `[3]`. 
 
-In R we can use the `bf` object to do this:
+In R we can use the `bf` object to do this.
+
+**Enter this command into your R script and run it**:
 
 ```{r int-fact}
 bf[4] / bf[3]

@@ -60,7 +60,9 @@ This worksheet uses the same _git_ repository as the [preprocessing](preproc.htm
 
 Open a new blank script, and save it as **anova2.R**. Enter all your commands into this script and run them from there. Save the script regularly.
 
-The first step is to make sure you have loaded the data, and have loaded the R packages you need:
+The first step is to make sure you have loaded the data, and have loaded the R packages you need.
+
+**Add the following commands to your script and run them:**
 
 ```{r started, message=FALSE}
 library(tidyverse)
@@ -120,6 +122,8 @@ _EXPECTED OUTPUT_: A new data frame called `MCwordsCIsum` will be in your _Envir
 
 Exactly as we did in the [within-subject differences](anova1.html#preproc2) worksheet, we can now use the `pivot_wider` and `mutate` commands to work out a _difference score_ for each participant. This gives us the size of the _congruency effect_ for that participant, i.e. how much more time they take on incongruent trials than congruent trials (on average). 
 
+**Enter these commands into your R script and run them**:
+
 ```{r diffscore}
 medidiff <- MCwordsCIsum %>%
     pivot_wider(names_from = congru, values_from = rt) %>%
@@ -132,7 +136,9 @@ Take a look at the `medidiff` data frame in your _Environment_. You'll see there
 
 # Density plot of differences
 
-We can look at this difference in congruency effect  more closely using a density plot. We make such a plot in the same way as we have  on many previous occasions:
+We can look at this difference in congruency effect  more closely using a density plot. We make such a plot in the same way as we have  on many previous occasions.
+
+**Enter these commands into your R script and run them**:
 
 ```{r diffplot}
 medidiff %>% ggplot(aes(diff, colour=medit)) +
@@ -237,7 +243,9 @@ In the next part of this exercise, we'll use R to generate another graph of main
 
 #### Load the data
 
-The data points for these graphs were loaded from a CSV file. There's a copy of this file in the same _git_ repository that we've being using throughout this worksheet, so the first thing to do is load it:
+The data points for these graphs were loaded from a CSV file. There's a copy of this file in the same _git_ repository that we've being using throughout this worksheet, so the first thing to do is load it.
+
+**Enter this command into your R script and run it**:
 
 ```{r load-int, message = FALSE}
 interact <- read_csv("interact.csv")
@@ -256,13 +264,17 @@ Graphs 1 to 3 are the three shown above. There are no reaction times for Graph 4
 
 #### Reproducing Graph 1
 
-First, we're going to reproduce Graph 1. The first step is to `filter` the data so it just includes the first graph:
+First, we're going to reproduce Graph 1. The first step is to `filter` the data so it just includes the first graph.
+
+**Enter this command into your R script and run it**:
 
 ```{r filter-g}
 graph1 <- interact %>% filter(Graph == 1)
 ```
 
-Once that's done, we can make a line graph, like this:
+Once that's done, we can make a line graph, like this.
+
+**Enter these commands into your R script and run them**:
 
 ```{r line-graph}
 graph1 %>%
