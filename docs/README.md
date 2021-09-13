@@ -1,9 +1,9 @@
 # Research Methods in R
-_2020 Edition._
+_2021 Edition._
 
 _Research Methods in R_ is a set of guides on how to use R as your central research methods tool. The target audience is psychology undergraduate students. _Research Methods in R_ is [Creative Commons](https://creativecommons.org/), so you are free to reuse these materials and adapt them as you wish, as long as you attribute them to their authors, and as long as your modifications have a Creative Commons licence. They come with absolutely no warranty of any kind.
 
-_Note to teachers_: These materials have been tested against R version 3.6.3 (released 29th Feb 2020), and the most recent version of packages that were available on [MRAN](https://mran.microsoft.com/) on the 29th June 2020. 
+_Note to teachers_: These materials have been tested against R version 4.1.0 (released 18th May 2021), and the most recent version of packages that were available on [MRAN](https://mran.microsoft.com/) on the 17th June 2021. 
 
 ## Curriculum map
 
@@ -26,8 +26,6 @@ To see how a subset of these resources is used in the undergraduate psychology t
 6. [Going further with R](#gfwr) 
 
 7. [Case studies](#studies)
-
-8. **[Quick reference guide](cheat-sheet.html)**. List of commonly-used commands in R.
 
 <a name="gen"></a>
 
@@ -222,12 +220,6 @@ These are full preprocessing and analysis pipelines, mainly based on final-year 
 - [The Perruchet Effect](awdiss.html): **Downloading from OSF**, de-duplicating data, excluding participants, line graphs, **baseline correction of neuroscience data**, _functions_, _loops_, _merging data frames_, list of participant numbers, log transforms, _recoding data_, **Bayesian linear regression for within-subjects designs**.
 
 - [Childrens’ language development](cs-picture-naming-wide.html): preprocessing, Bayesian t-test, tables of descriptive statistics, correlations, half-violin plot, Wilcoxon test.
-
-## Work in progress
-
-Materials in an early/incomplete stage of development:
-
-- [More on data](more-on-data.html): Reading data directly from Excel.
 
 ____
 
