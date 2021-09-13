@@ -44,7 +44,7 @@ This was a 2 (time) x 3 (condition) mixed design.
 
 ## Preprocessing
 
-The initial preprocessing steps for this data are described in the [Data preprocessing for scales worksheet](preproc-scales.html). Complete that worksheet first, then add the code in this worksheet to the end of `scales.R`.
+The initial preprocessing steps for this data are described in the [Data preprocessing for scales worksheet](preproc-scales.html). Complete that worksheet first, **then add the code in this worksheet to the end of `scales.R` and run it**.
 
 ```{r preproc, message=FALSE, echo=FALSE}
 # from tables.R
@@ -82,7 +82,7 @@ sses_post_raw <- select(sses, 1, 25:45) %>%
   select(subj, condition, time, q1:q20)
 ```
 
-We start with some final bits of preprocessing.
+We start with some final bits of preprocessing. **Enter these commands into your script, and run them:**
 
 ```{r}
 sses_raw <- bind_rows(sses_pre_raw, sses_post_raw)
@@ -102,6 +102,8 @@ The `mutate()` in the second line uses `rowSums()` to add up the values in the c
 
 We can get a feel for our data by using the familiar `group_by()` and `summarise()` commands to calculate means and standard deviations by group within time.
 
+**Enter these commands into your script, and run them:**
+
 ```{r descriptive}
 sses_raw %>%
   group_by(time, condition) %>%
@@ -115,6 +117,8 @@ From these results, we can see that, compared to the pre-intervention scores, se
 ## Checking SSES reliability
 
 To check the reliability of our SSES measurements, we'll calculate Cronbach's alpha for the pre-intervention SSES data. Cronbach's alpha was introduced in the [Analysing scales worksheet](analyse-scales.html).
+
+**Enter these commands into your script, and run them:**
 
 ```{r cronbach-all}
 library(psy)
@@ -135,6 +139,8 @@ sses_cronbach_total <- sses_pre %>% select(q1:q20) %>% cronbach()
 The value of alpha (`r round(sses_cronbach_total$alpha,2)`) could be a cause for concern, as it is below [the 0.7-0.8 convention of acceptable reliability](#analyse-scales.html#cronbach), and well below the alpha of 0.92 reported by the authors of the SSES (Heatherton & Polivy, 1991).
 
 We'll do an additional analysis to see how the scale performed in each group.
+
+**Enter these commands into your script, and run them:**
 
 ```{r cronbach-pre-post}
 sses_pre %>% filter(condition == 'control') %>%
@@ -159,6 +165,8 @@ We can now see from these results that alpha was especially low in the `self` an
 
 Putting aside the reliability of the measurements for now, we would like to check that there were no major self-esteem differences between conditions before our intervention. This should be the case if we successfully randomised participants to conditions. If there are baseline differences we would need to account for these when comparing them to post-intervention scores. We can use a between-subjects ANOVA to compare the baseline SSES scores in our three conditions. This is the similar to the ANOVA described in the [Within-subject differences worksheet](anova1.html), but for a between-subjects factor.
 
+**Enter these commands into your script, and run them:**
+
 ```{r baseline, warning=FALSE, message=FALSE}
 library(BayesFactor, quietly = TRUE)
 sses_pre <- sses_raw %>% filter(time == 'pre')
@@ -173,6 +181,8 @@ In line 1, we load the BayesFactor package. Line 2 assigns just the pre-interven
 
 The Bayes factor of .68 is greater than the conventional `0.33` which would satisfy us that there were no differences between the conditions. This could be due to the slightly lower mean in the `other` condition. We'll address this issue at the end of the worksheet.
 
+**Enter these commands into your script, and run them:**
+
 ```{r baseline-descriptives}
 sses_raw %>% filter(time == 'pre') %>%
   group_by(condition) %>%
@@ -185,6 +195,8 @@ sses_raw %>% filter(time == 'pre') %>%
 
 The main question we'd like to answer is whether our two imagery interventions 
 (visualising a negative mental image of oneself, or someone else) had effects on self esteem which differed from our control condition. We can test this using a [factorial ANOVA](anova3.html#bfact) to compare SSES scores before and after the three interventions. In this design, `condition` is a between-subjects variable, and `time` (pre and post intervention) is a repeated measure.
+
+**Enter these commands into your script, and run them:**
 
 ```{r prepost}
 bf <- anovaBF(formula = total ~ time*condition + subj,

@@ -48,9 +48,11 @@ Open the `rminr-data` project we used [previously](preproc.html#load).
 
 Ensure you have the latest files by asking git to "`pull`" the repository. Select the `Git` tab, which is located in the row of tabs which includes the `Environment` tab. Click the `Pull` button with a downward pointing arrow. A window will open showing the files which have been pulled from the repository. Close the `Git pull` window. The `case-studies` folder should contain a folder named `allegra-cattani`.
 
-Next, create a new, empty R script and save it in the `rminr-data` folder as `wing.R`. Put all the commands from this worksheet into this file, and run them from there. Save your script regularly.
+Next, **create a new, empty R script and save it in the `rminr-data` folder as `wing.R`. Put all the commands from this worksheet into this file, and run them from there.** Save your script regularly.
 
-We start by reading the data:
+We start by reading the data.
+
+**Enter these commands into your script, and run them:**
 
 ```{r load, message=FALSE}
 rm(list = ls()) # clear the environment
@@ -73,7 +75,9 @@ pp <- read_csv('case-studies/allegra-cattani/predicate_production.csv')
 
 ## Preprocessing WinG data
 
-Next we preprocess the WinG data.  Preprocessing is generally easier if our data is in long format (many rows, few columns), and is all contained in a single data frame. For now, we'll combine the data frames for the four WinG tasks:
+Next we preprocess the WinG data.  Preprocessing is generally easier if our data is in long format (many rows, few columns), and is all contained in a single data frame. For now, we'll combine the data frames for the four WinG tasks.
+
+**Enter these commands into your script, and run them:**
 
 ```{r nc}
 # preprocess 
@@ -103,7 +107,9 @@ Here are the first few rows of `wing`:
 wing %>% head(3) %>% pander(split.table = Inf)
 ```
 
-Later on in our analysis, we will need to be able to refer to card by its number (e.g. "card 18") rather than the word it represents (e.g. "Mountain"). So, we'll add another column, numbering each card from 1 to 20: 
+Later on in our analysis, we will need to be able to refer to card by its number (e.g. "card 18") rather than the word it represents (e.g. "Mountain"). So, we'll add another column, numbering each card from 1 to 20.
+
+**Enter these commands into your script, and run them:**
 
 ```{r trials}
 wing <- wing %>% add_column(card = rep(1:20, 76))
@@ -121,7 +127,9 @@ The only new command here is `rep`, which means "repeat". So, for example, `rep(
 
 ### Tidy up
 
-The data frames we originally loaded the CSV files into are no longer needed, so we can remove them from our environment:
+The data frames we originally loaded the CSV files into are no longer needed, so we can remove them from our environment.
+
+**Enter these commands into your script, and run them:**
 
 ```{r tidy}
 rm(nc, np, pc, pp)
@@ -139,7 +147,9 @@ Now we need to recode the data. The child's response to each card has been repre
 
 In order to analyze these data more easily, we're going to convert these letter codes into numbers. First, we're going to create a new column which will contain a `1` if the letter code is `C` or `C*`, and a `0` otherwise. This is going to be useful later, because we can then just add up the numbers in this column to work out how many questions each child got right on each task.
 
-This is how we create that new column:
+This is how we create that new column.
+
+**Enter these commands into your script, and run them:**
 
 ```{r recode1}
 # Recode accuracy
@@ -157,6 +167,8 @@ New to the current worksheet is `.default`, which allows us to give a default va
 
 We can use the same technique to create two further columns. The first column, `related` contains a `1` if the answer is wrong but semantically related. The second new column, `inter` contains a 1 if the task was interrupted for some reason. 
 
+**Enter these commands into your script, and run them:**
+
 ```{r recode2}
 # Recode semantically-related responses, and interruptions
 relmap = c("NTS" = 1)
@@ -169,7 +181,9 @@ wing <- wing %>% mutate(inter = recode(value, !!!intermap, .default = 0))
 
 The authors of this dissertation decided to exclude a child's answers for a task if there was an interruption at any point during the first 17 questions. Such interruptions make the task hard to interpret, so removing the data before analysis was thought to be the best option.
 
-In order to do this, we need to work out which participants were interrupted during the first 17 cards of each task. It would be possible to do this by hand, but it would be tedious and error prone. Instead, we get R to tell us who was interrupted:
+In order to do this, we need to work out which participants were interrupted during the first 17 cards of each task. It would be possible to do this by hand, but it would be tedious and error prone. Instead, we get R to tell us who was interrupted.
+
+**Enter these commands into your script, and run them:**
 
 ```{r ex1}
 # List interrupted tasks
@@ -183,7 +197,9 @@ wing %>% group_by(subj, task) %>%
 
 ### Removing participants from the dataset
 
-We can see from the above list that participant 18 was interrupted in all four tasks, while participants 1 and 10 were both interrupted in the two predicate tasks. We can remove these participants like this:
+We can see from the above list that participant 18 was interrupted in all four tasks, while participants 1 and 10 were both interrupted in the two predicate tasks. We can remove these participants as follows.
+
+**Enter these commands into your script, and run them:**
 
 ```{r ex2}
 wing <- wing %>% filter(!(subj == 18))
@@ -197,7 +213,9 @@ _Note_: In the original report, some participants were also excluded for poor pe
 
 ### Calculate scores
 
-Next, we calculate how many questions each participant got right in each task, and also how many semantically-related errors they made. We can do this using a small set of commands we have used many times before:
+Next, we calculate how many questions each participant got right in each task, and also how many semantically-related errors they made. We can do this using a small set of commands we have used many times before.
+
+**Enter these commands into your script, and run them:**
 
 ```{r calc}
 wing_sum <- wing %>% group_by(subj, Cards, task) %>% 
@@ -212,7 +230,9 @@ wing_sum %>% head(3) %>% pander(split.table = Inf)
 
 ### Pivot
 
-Our preprocessing is now nearly over, but some of the analyses we do later will be easier to perform with a wider data frame, so we'll widen it now, using the `pivot_wider` command that we've come across before, in the [within-subject differences](anova1.html#pivot) worksheet:
+Our preprocessing is now nearly over, but some of the analyses we do later will be easier to perform with a wider data frame, so we'll widen it now, using the `pivot_wider` command that we've come across before, in the [within-subject differences](anova1.html#pivot) worksheet.
+
+**Enter these commands into your script, and run them:**
 
 ```{r widen}
 # Widen
@@ -230,7 +250,9 @@ Notice how `pivot_wider` sets cells to the value `NA` for participants whose res
 
 ### Combine
 
-The final step of preprocessing is to combine some information we have in the `demographics` data frame into `task_by_subj`:
+The final step of preprocessing is to combine some information we have in the `demographics` data frame into `task_by_subj`.
+
+**Enter these commands into your script, and run them:**
 
 ```{r comb2}
 # Combine
@@ -252,7 +274,9 @@ task_by_subj %>% pander(split.table = Inf)
 
 In our preprocessed data frame, `task_by_subj`, we included two columns, `CDI_U` and `CDI_S`. These are the parent's ratings of their child's level of mastery of a list of words, both in terms of the child _understanding_ the words (`CDI_U`) and _speaking_ the words (`CDI_S`). 
 
-In this first analysis, we're going to use these measures as a check of whether the random allocation of children to the two conditions of the experiment (English cards versus Italian cards) was successful in eliminating pre-experimental differences in language mastery between those two groups. If it was, we should be able to demonstrate evidence for the null hypothesis that the two groups do not differ in their `CDI_U` or `CDI_S` scores.  We do this using Bayesian between-subjects t-tests of their parents' CD_I ratings. Bayesian t-tests were introduced in the [Evidence worksheet](evidence.html):
+In this first analysis, we're going to use these measures as a check of whether the random allocation of children to the two conditions of the experiment (English cards versus Italian cards) was successful in eliminating pre-experimental differences in language mastery between those two groups. If it was, we should be able to demonstrate evidence for the null hypothesis that the two groups do not differ in their `CDI_U` or `CDI_S` scores.  We do this using Bayesian between-subjects t-tests of their parents' CD_I ratings. Bayesian t-tests were introduced in the [Evidence worksheet](evidence.html).
+
+**Enter these commands into your script, and run them:**
 
 ```{r cdi, message=FALSE}
 # compare children's language ability using CDI
@@ -277,6 +301,8 @@ Here, we're hoping to find evidence for the null hypothesis i.e. no differences 
 ### Table of descriptive statistics
 
 The authors were interested in whether there were gender differences on any of the four WinG tasks. We'll start by making a table of descriptive statistics (means, standard deviations) by gender, for each task. This part of the pipeline for this dissertation was discussed in detail in the [Better tables worksheet](#better-tables.html), so we won't discuss it again here. Instead, we'll just list the commands and show the final output. For further explanation, see the [Better tables worksheet](#better-tables.html).
+
+**Enter these commands into your script, and run them:**
 
 ```{r from-bt, message=FALSE,warning=FALSE}
 # table of descriptives for WinG by gender
@@ -313,7 +339,9 @@ descript_table %>% kable(digits=2) %>% kable_styling()
 
 ### Bayesian t-tests
 
-We can examine whether there is evidence for gender differences, or their absence, using a Bayesian t-test. Let's look at the noun comprehension task first:
+We can examine whether there is evidence for gender differences, or their absence, using a Bayesian t-test. Let's look at the noun comprehension task first.
+
+**Enter these commands into your script, and run them:**
 
 ```{r bf-gender}
 one.task <- task_by_subj_l %>% filter(task == "correct_nc") %>% drop_na()
@@ -323,7 +351,9 @@ ttestBF(formula=correct ~ Gender, data = data.frame(one.task))
 
 **Explanation of output**: The Bayes Factor is indeterminate - we have no substantial evidence for or against our hypothesis of a gender difference. This is unsurprising give the small sample size.
 
-We can then use basically the same commands to look at gender differences in our other three tasks:
+We can then use basically the same commands to look at gender differences in our other three tasks.
+
+**Enter these commands into your script, and run them:**
 
 ```{r bf-gender-2}
 one.task <- task_by_subj_l %>% filter(task == "correct_np") %>% drop_na()
@@ -348,7 +378,9 @@ ttestBF(formula=correct ~ Gender, data = data.frame(one.task))
 
 Are parents able to estimate the level of word mastery in their children? If so, we would expect to observe a significant correlation between, for example, `CDI_U` scores and performance on the noun-comprehension task. Do we?
 
-We can calculate both the correlation co-efficient, and a Bayes Factor for that correlation, using the following two commands. We covered these commands in the [relationships, part 2, worksheet](corr.html), take a look back at that worksheet if you need a reminder. The only new thing here is `use="complete.obs"`. We need this extra bit in this case because we have some missing data. The option `use="complete.obs"` means only use those cases where we have both a parent's rating (`CDI_U`) and a task performance score (`nc`):
+We can calculate both the correlation co-efficient, and a Bayes Factor for that correlation, using the following two commands. We covered these commands in the [relationships, part 2, worksheet](corr.html), take a look back at that worksheet if you need a reminder. The only new thing here is `use="complete.obs"`. We need this extra bit in this case because we have some missing data. The option `use="complete.obs"` means only use those cases where we have both a parent's rating (`CDI_U`) and a task performance score (`nc`).
+
+**Enter these commands into your script, and run them:**
 
 **CDI_U and noun comprehension**:
 
@@ -360,6 +392,8 @@ correlationBF(task_by_subj$CDI_U, task_by_subj$correct_nc)
 This particular correlation is relatively small (around 0.2), and the evidence for a relationship is inconclusive (0.33 < BF < 3). 
 
 We can go on and do the same thing for the other three relevant correlations:
+
+**Enter these commands into your script, and run them:**
 
 **CDI_U and predicate comprehension**:
 
@@ -394,6 +428,8 @@ We're now ready to examine our main hypothesis, which predicts that there will b
 
 We'll start by creating plots to show the distribution of scores for the two card sets on the WinG tasks. 
 
+**Enter these commands into your script, and run them:**
+
 ```{r raincloud, class.source = 'numberLines lineAnchors'}
 # plot WinG accuracy by card set
 task_by_subj_l$task <- task_by_subj_l$task %>% recode(!!!task_names)
@@ -413,10 +449,11 @@ The warning `Removed 4 rows...` is just a reminder that some data is missing. We
 
 The plot gives a visual indication of whether there were differences between the Italian and English cards on each of the tests. Given the extensive overlap in scores between the card sets, this seems unlikely. 
 
-
 ### Non-parametric tests
 
-The authors of this report chose to perform non-parametric tests of their central hypotheses. The conditions under which such tests are a good choice are discussed in the [traditional non-parametric]() worksheet. The example of a Wilcoxon test in that worksheet uses the noun comprehension data from this dissertation, so we'll just reproduce the commands here - take a look at the worksheet if you need further explanation:
+The authors of this report chose to perform non-parametric tests of their central hypotheses. The conditions under which such tests are a good choice are discussed in the [traditional non-parametric]() worksheet. The example of a Wilcoxon test in that worksheet uses the noun comprehension data from this dissertation, so we'll just reproduce the commands here - take a look at the worksheet if you need further explanation.
+
+**Enter these commands into your script, and run them:**
 
 **Noun comprehension**:
 
@@ -437,7 +474,9 @@ Unlike traditional tests, a Bayesian t-test can assessment evidence for the null
 ttestBF(formula=correct ~ Cards, data = data.frame(test_include))
 ```
 
-We can apply the same commands to the other four tests. Once again, we find the unsurprising result that all the analyses are inconclusive:
+We can apply the same commands to the other four tests. Once again, we find the unsurprising result that all the analyses are inconclusive.
+
+**Enter these commands into your script, and run them:**
 
 **Predicate comprehension**:
 
@@ -480,7 +519,9 @@ ttestBF(formula=correct ~ Cards, data = data.frame(test_include))
 
 ## Comparing semantically-related production errors by card set
 
-Finally, we compare Italian and English cards on the frequency of semantically-related production errors. We can use the same commands as before, with minor modifications:
+Finally, we compare Italian and English cards on the frequency of semantically-related production errors. We can use the same commands as before, with minor modifications.
+
+**Enter these commands into your script, and run them:**
 
 ```{r nts-production-mw, message=FALSE, warning=FALSE}
 # Compare semantically-related production errors by card set

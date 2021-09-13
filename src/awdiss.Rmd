@@ -63,9 +63,11 @@ A basic principle of open science is that you publicly share your raw data (in a
 
 So, first, [create a new project](using-projects.html) in R. 
 
-Next, create a new, empty R script and save it as `perruchet.R`. Put all the commands from this worksheet into `perruchet.R`, and run them from there. Save your script regularly.
+Next, **create a new, empty R script and save it as `perruchet.R`. Put all the commands from this worksheet into `perruchet.R`, and run them from there**. Save your script regularly.
 
-Now, download data from OSF into your R project using the following commands:
+Now, download data from OSF into your R project using the following commands.
+
+**Enter these commands into your script, and run them:**
 
 ```{r osf, message=FALSE, results='hide'}
 ## Load data from OSF (commands only need to be run once)
@@ -95,7 +97,9 @@ You can ignore the file `MAIN.csv`, which we're not going to use. The first file
 
 ## Loading data
 
-As with any analysis, the first step is to load the data into R:
+As with any analysis, the first step is to load the data into R. 
+
+**Enter these commands into your script, and run them:**
 
 ```{r load, message=FALSE}
 ## Load packages, data. Rename data frame columns
@@ -116,6 +120,8 @@ The final line renames the columns, as covered in the [Preprocessing data from e
 
 We're now going to get the data into a state where we can meaningfully analyse it. The following commands were fully explained in the [data preprocessing for experiments](preproc-experiments.html) worksheet.
 
+**Enter these commands into your script, and run them:**
+
 ```{r tidy, message=FALSE}
 ## De-duplicate data; remove pilot study
 raw <- distinct(raw)
@@ -128,7 +134,9 @@ raw  <- raw %>% filter(subj > 161)
 
 Participants in this experiment were told to rate their expectancy of the US during the CS, _on every trial_. However, they only had 8 seconds to do this, and the experimenters noticed that sometimes people failed to make a rating. The experimental apparatus records this as a rating of zero. 
 
-Participants who miss a lot of ratings aren't really following the instructions, making their data hard to interpret. In such cases, we normally exclude those participants from further analysis. The following commands were fully explained in the [data preprocessing for experiments](preproc-experiments.html) worksheet:
+Participants who miss a lot of ratings aren't really following the instructions, making their data hard to interpret. In such cases, we normally exclude those participants from further analysis. The following commands were fully explained in the [data preprocessing for experiments](preproc-experiments.html) worksheet.
+
+**Enter these commands into your script, and run them:**
 
 ```{r zeros}
 ## Number of expectancy ratings, by participant
@@ -150,7 +158,9 @@ There are still a few trials where the participant makes no expectancy rating, a
 
 ## Graphing GSR
 
-The GSR data from this experiment is very rich, with a skin conductance measure taken from each participant approximately twenty times a second throughout the whole 30-40 minutes of the experiment. To 'get a feel' for these data, and also to check that the equipment was working properly, we need to plot that GSR as a graph, with time on the x-axis and GSR on the y-axis. We'll need to do this one participant at a time, otherwise the graph will be really hard to read:
+The GSR data from this experiment is very rich, with a skin conductance measure taken from each participant approximately twenty times a second throughout the whole 30-40 minutes of the experiment. To 'get a feel' for these data, and also to check that the equipment was working properly, we need to plot that GSR as a graph, with time on the x-axis and GSR on the y-axis. We'll need to do this one participant at a time, otherwise the graph will be really hard to read. 
+
+**Enter these commands into your script, and run them:**
 
 ```{r gsr}
 ## GSR plot
@@ -174,7 +184,7 @@ We can see the GSR going up and down over time. Why is it doing that? Our assump
 
 ## Adding CS onsets to our graph
 
-We can add CS onset times like this: 
+We can add CS onset times like this; **enter these commands into your script, and run them:** 
 
 ```{r cs}
 ## Add CS onset times to graph
@@ -206,7 +216,9 @@ By 'drift', we mean that these differences across trials are not random, they ar
 
 The combination of noise and drift means that, not only do we need to average across a lot of trials, we also need to try and make those trials more comparable to each other before we average them. The process we use to do that here is _baseline correction_. This is simply a subtraction. We calculate the average GSR response in the 500 ms before the CS arrives (the _baseline_), and then we subtract that baseline from all the GSR readings while the CS is present. 
 
-Let's illustrate this with a single trial from participant 168. For no particular reason, let's take trial 10:
+Let's illustrate this with a single trial from participant 168. For no particular reason, let's take trial 10. 
+
+**Enter these commands into your script, and run them:**
 
 ```{r select}
 ## Plot a single trial
@@ -235,7 +247,9 @@ First, we need to apply the baseline correction to these data. In other words, w
 
 Second, we're going to need to average all these trials, so we need the x-axis to be the same for all of them. To do this, we subtract the onset time from all the values on the x-axis, meaning we end up with data that goes from -500 ms to +8000 ms.
 
-We can do all this in four lines of code, plus one to plot the new graph:
+We can do all this in four lines of code, plus one to plot the new graph. 
+
+**Enter these commands into your script, and run them:**
 
 ```{r correct}
 ## Basline correct that trial, and replot
@@ -275,6 +289,8 @@ When we want R to do the same thing many times, we can use _functions_ and _loop
 
 Pretty much every command you run in R is a function that someone has written. For example, `mean(precs$value`) uses the function `mean()`, which is built in to R. The command `read_csv` is a function added to R by loading the `tidyverse` library. You can also write your own functions. Here's a function that contains all the commands we used to baseline-correct one trial of participant 168:
 
+**Enter these commands into your script, and run them:**
+
 ```{r basefunc}
 ## Define function for baseline correction
 base.correct  <- function(trial) {
@@ -290,6 +306,8 @@ base.correct  <- function(trial) {
 ```
 
 Ignoring the first and the last two lines for a moment, notice that these commands are almost identical to the ones we just used. The only difference is that we've changed `cs$time[10]` to `cs$time[trial]`. So, instead of always looking at trial 10, we look at whatever trial is specified by `trial`, and that is set by calling the function. A function doesn't do anything until we ask it to, by 'calling' it. So, for example, we can now look at trial 9 by calling the `base.correct` function like this:
+
+**Enter these commands into your script, and run them:**
 
 ```{r callfunc}
 eg  <- base.correct(9)
@@ -309,6 +327,8 @@ The key aspect of this command is `add_column` which, perhaps unsurprisingly, ad
 ### Using a loop
 
 We can now use a loop to run this function for every trial of one participant. We've used loops in a similar way before, to combine data files from multiple participants using `bind_rows`, see the [preprocessing data from experiments](preproc.html#combine) worksheet.
+
+**Enter these commands into your script, and run them:**
 
 ```{r one-s-loop}
 ## Use a loop to baseline correct all 46 trials
@@ -334,7 +354,9 @@ The loop runs `base.correct(trial)` for each of the 46 trials the participant di
 
 ## Trial-level summary
 
-Let's take a look at what we've generated:
+Let's take a look at what we've generated.
+
+**Enter these commands into your script, and run them:**
 
 ```{r peek}
 onep
@@ -342,7 +364,9 @@ onep
 
 The dataframe `onep` contains all the GSR data during the CS presentations(and the baseline) for one participant, including columns that record the trial each reading comes from, and the _run length_ of that trial (see experiment description). Each trial is 8.5 seconds of readings at about 20 readings a second and 46 trials, giving us about 7820 readings in total for this participant. 
 
-For the purposes of analysis, we need to summarize this data down to just one number per trial, representing how large the GSR was on that trial. There's a few ways one could do this; here we're just going to take the average GSR for trial:
+For the purposes of analysis, we need to summarize this data down to just one number per trial, representing how large the GSR was on that trial. There's a few ways one could do this; here we're just going to take the average GSR for trial.
+
+**Enter these commands into your script, and run them:**
 
 ```{r gsr-av}
 ## Calculate mean GSR for each trial
@@ -367,7 +391,9 @@ The output shows the contents of `gsr.sum`. Each row is one trial. For each tria
 
 ## Adding a second dependent variable
 
-The data frame `onep` contains a GSR for each trial, but there is also an expectancy rating for each trial. It will make it easier to look at these data if we also include these expectancy ratings into `onep`. So, using the following commands, we first create a new data frame with the expectancy ratings:
+The data frame `onep` contains a GSR for each trial, but there is also an expectancy rating for each trial. It will make it easier to look at these data if we also include these expectancy ratings into `onep`. So, using the following commands, we first create a new data frame with the expectancy ratings.
+
+**Enter these commands into your script, and run them:**
 
 ```{r add-expect}
 ## Extract expectancy ratings
@@ -385,7 +411,9 @@ The dataframe `expect` contains one row for each trial, and the column `value` c
 
 ### Combining expectancy and GSR data
 
-In the final step of preprocessing this participant, we join the expectancy ratings `expect` and the mean GSRs (`gsr.sum`) into a single data frame:
+In the final step of preprocessing this participant, we join the expectancy ratings `expect` and the mean GSRs (`gsr.sum`) into a single data frame.
+
+**Enter these commands into your script, and run them:**
 
 ```{r one frame}
 ## Combine GSR and expectancy data
@@ -401,7 +429,9 @@ The command `full_join` joins together two separate data frames, using a column 
 
 ## List of participant numbers
 
-We've now completed the preprocessing of one participant (`168`). In principle, we could go through all the same steps for each of the other approximately 50 participants, but that would be rather tedious. Instead, we can use a _loop_ to automate this for us, as we'll see in a minute, but first we need to get a list of participant numbers
+We've now completed the preprocessing of one participant (`168`). In principle, we could go through all the same steps for each of the other approximately 50 participants, but that would be rather tedious. Instead, we can use a _loop_ to automate this for us, as we'll see in a minute, but first we need to get a list of participant numbers.
+
+**Enter these commands into your script, and run them:**
 
 ```{r ppts}
 ## Create list of participant numbers
@@ -417,7 +447,9 @@ We need a list of the different participant numbers used in this experiment. We 
 
 ## More on loops
 
-We now use a loop to go through the same set of steps for each participant. This takes a little while to run, because it preprocesses 2,300 trials (46 trials for each of 50 participants);
+We now use a loop to go through the same set of steps for each participant. This takes a little while to run, because it preprocesses 2,300 trials (46 trials for each of 50 participants).
+
+**Enter these commands into your script, and run them:**
 
 ```{r preproc-loop, message = FALSE}
 ## Baseline correct all trials for all participants
@@ -458,7 +490,9 @@ All of these commands are placed inside a `for` loop, which we've used before in
 
 ## Log transform
 
-There are three further preprocessing steps we have to take before we can analyze these data. First, studies of GSR data normally _log transform_ it before analysis. The following commands were fully explained in the [data preprocessing for experiments](preproc-experiments.html) worksheet:
+There are three further preprocessing steps we have to take before we can analyze these data. First, studies of GSR data normally _log transform_ it before analysis. The following commands were fully explained in the [data preprocessing for experiments](preproc-experiments.html) worksheet.
+
+**Enter these commands into your script, and run them:**
 
 ```{r log trans}
 ## Log transformation of GSR
@@ -471,7 +505,9 @@ sum.data  <- sum.data %>% mutate(lcval = log(cval+1))
 
 In our Perruchet Effect experiment, we have runs of various lengths. For example, for something to be a `+2` run there must be a sequence of four trials in the following order `NSSN` where N means no sound, and S means sound. The third trial in that sequence is a +2 trial, because there have been two sounds in a row, and on the following trial there will not be a sound so the run will end. Importantly, at least the way people normally analyse these data, the second trial in that sequence has no definable run length. One might say it is a `+1` trial because, at that point, there has only been one sound in a row. However, the experimenter knows that the run will continue on the next trial, so calling it a `+1` trial somehow doesn't seem quite right (although, from the perspective of the participant, at the time they are reacting to that trial, clearly it is a `+1` trial). 
 
-Normally, these experimenter-ambiguous trials are described as having a zero run length, and are excluded from the analysis. Run length is recorded directly into the data file itself, so we can remove zero run-length trials like this:
+Normally, these experimenter-ambiguous trials are described as having a zero run length, and are excluded from the analysis. Run length is recorded directly into the data file itself, so we can remove zero run-length trials as follows.
+
+**Enter these commands into your script, and run them:**
 
 ```{r no-zero}
 ## Remove trials where run length is zero
@@ -486,7 +522,9 @@ This is a standard `filter` command. The `!=` part reads as 'not equal to'. So, 
 
 Another convention of analyzing Perruchet effect experiments is that you convert run length (-3 to +3) into a dependent variable called "Level". This involves coding `-3` and `+1` as Level 1, `-2` and `+2` as Level 2, and `-1` and `+3` as Level 3. If GSR rises from -3 to +3 run lengths, it will also rise from Level 1 to Level 3. Equally, if GSR drops from -3 to +3, it will also drop from Level 1 to Level 3. The reasons for recoding the dependent variable in this way are not straight forward, and are a matter of some debate. Nonetheless, as this experiment is essentially an attempt to replicate McAndrew et al.'s paper with an unpleasant noise, we chose to use the same analyses they did, and that involves recoding the run length as Level. 
 
-We covered recoding data in the _Cleaning up questionnaire data_ part of [Research Methods in Practice (Quantitative Section)](https://benwhalley.github.io/rmip/overview-quantitative.html). To recode some data, we need to take two steps. First, we define the _mapping_ - so, for each run length, what Level is that? We do this as follows:
+We covered recoding data in the _Cleaning up questionnaire data_ part of [Research Methods in Practice (Quantitative Section)](https://benwhalley.github.io/rmip/overview-quantitative.html). To recode some data, we need to take two steps. First, we define the _mapping_ - so, for each run length, what Level is that? We do this as follows.
+
+**Enter these commands into your script, and run them:**
 
 ```{r def-levels}
 ## Define mapping of run length to Levels
@@ -497,12 +535,16 @@ So, for example, a run length of `-2` becomes a Level of `2`.
 
 Once we have our mapping, we can use it, via `mutate` to create a new column called `level`. We use the `recode` command to do this, converting the column `run` using the mapping `level.code` we've just written. The `!!!` part probably isn't worth spending the time to understand deeply, but if you'd like to dig deeper, see the explanation in  [Research Methods in Practice (Quantitative Section)](https://benwhalley.github.io/rmip/overview-quantitative.html).
 
+**Enter these commands into your script, and run them:**
+
 ```{r recode}
 ## Recode run length as Levels
 sum.data <- sum.data %>% mutate(level = recode(run, !!!level.code))
 ```
 
-Finally, we create a new participant-level summary of our data, using `level` (rather than `run`, as `sum.data` did):
+Finally, we create a new participant-level summary of our data, using `level` (rather than `run`, as `sum.data` did).
+
+**Enter these commands into your script, and run them:**
 
 ```{r recode2}
 ## Summarize GSR and expectancy, by Level, for each participant
@@ -514,7 +556,9 @@ lvl.sum  <- sum.data %>%
 
 ## Reporting means
 
-The preprocessing is done! As a first, quick test of our hypotheses, we can just take a peek at the mean GSR and expectancy rating, across all participants, for each Level. We use the familiar `group_by` and `summarise` commands to do this:
+The preprocessing is done! As a first, quick test of our hypotheses, we can just take a peek at the mean GSR and expectancy rating, across all participants, for each Level. We use the familiar `group_by` and `summarise` commands to do this.
+
+**Enter these commands into your script, and run them:**
 
 ```{r means}
 ## Overall mean GSR and expectancy, by Level
@@ -528,7 +572,9 @@ From these results, we can see that expectancy reduces with Level, as expected. 
 
 ## Better graphs
 
-The simplest graph we could produce here would be to just plot the three means reported above, but this wouldn't really add anything to what we've already done; the trend is clear just from the three numbers. Instead, we did the following:
+The simplest graph we could produce here would be to just plot the three means reported above, but this wouldn't really add anything to what we've already done; the trend is clear just from the three numbers. Instead, we did the following.
+
+**Enter these commands into your script, and run them:**
 
 ```{r final-plot, echo= FALSE}
 ## Plot of expectancy by Level
@@ -559,7 +605,9 @@ A full explanation of how we built this graph can be found in the [better graphs
 
 ### Graphing GSR
 
-We can now follow exactly the same procedure to produce a second graph, for GSR:
+We can now follow exactly the same procedure to produce a second graph, for GSR.
+
+**Enter these commands into your script, and run them:**
 
 ```{r final-plot-gsr}
 ### Plot GSR by Level
@@ -577,7 +625,9 @@ We can see from this plot that the GSR data is a lot more variable than the expe
 
 In the [within-subject differences](anova1.html#anovaWS) worksheet you learned how to apply a Bayesian ANOVA to data from within-subjects manipulations, and in the [Research Methods in Practice (Quantitative Section)](https://benwhalley.github.io/rmip/overview-quantitative.html) course, you learned how to apply a Bayesian linear regression to a set of between-subjects data. To analyze these data, we need to combine those two techniques.
 
-First, some preliminaries:
+First, some preliminaries.
+
+**Enter these commands into your script, and run them:**
 
 ```{r bf.setup}
 ## Load BayesFactor pacakge; define subject as factor
@@ -587,7 +637,9 @@ lvl.sum$subj  <- factor(lvl.sum$subj)
 
 In line 2, we load the `BayesFactor` package, which we use to do Bayesian ANOVAs and regressions. In line 3, we set the participant numbers as factors, for the reasons discussed in the [within-subject differences](anova1.html#anovaWS) worksheet. Note that we don't set the Level column of `lvl.sum` as a factor, because the our three Levels are ordered - 1, 2, 3. 
 
-The first step in our analysis is identical to a Bayesian ANOVA, except we use the command `lmBF` instead of `anovaBF`. Note that, just like in `anovaBF`, we need to tell R that these data come from many different participants, hence the `+ subj` and `whichRandom = "subj"` parts of the command:
+The first step in our analysis is identical to a Bayesian ANOVA, except we use the command `lmBF` instead of `anovaBF`. Note that, just like in `anovaBF`, we need to tell R that these data come from many different participants, hence the `+ subj` and `whichRandom = "subj"` parts of the command.
+
+**Enter these commands into your script, and run them:**
 
 ```{r bf.lm.1}
 ## Bayesian regression model on GSR, by Level
@@ -601,12 +653,16 @@ It's pretty self-evident from the graphs that there are some individual differen
 
 More specifically, we create a model in which only individual differences affect the GSR...
 
+**Enter these commands into your script, and run them:**
+
 ```{r bf.lm.2}
 ## Individual differences baseline model 
 g.subj  <- lmBF(lcval ~ subj, data = data.frame(lvl.sum), whichRandom = "subj")
 ```
 
 ...and then we compare the two models by dividing one by the other:
+
+**Enter these commands into your script, and run them:**
 
 ```{r bf.lm.3}
 ## Bayes Factor for GSR, by Level
@@ -617,7 +673,9 @@ From the output, we can see that the relevant Bayes Factor is around 1.9. So, th
 
 ### Linear regression of expectancies
 
-We can now follow the same procedure for the expectancy ratings:
+We can now follow the same procedure for the expectancy ratings.
+
+**Enter these commands into your script, and run them:**
 
 ```{r bf.lm.expect}
 ## Bayes Factor for expectancy, by Level

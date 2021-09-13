@@ -223,8 +223,6 @@ These are full preprocessing and analysis pipelines, mainly based on final-year 
 
 - [Childrens’ language development](cs-picture-naming-wide.html): preprocessing, Bayesian t-test, tables of descriptive statistics, correlations, half-violin plot, Wilcoxon test.
 
-- [Openness, imagery and creativity](cs-jon_may.html): preprocessing, _summary statistics_, _histograms and density plots_, scatter plots, correlations, pairs plot.
-
 ## Work in progress
 
 Materials in an early/incomplete stage of development:
