@@ -17,7 +17,7 @@ knitr::opts_chunk$set(echo = TRUE, comment=NA)
 
 # Contents
 
-- [Set up a new project](#setup)
+- [Set up](#setup)
 
 - [Introduction](#intro)
 
@@ -39,9 +39,9 @@ knitr::opts_chunk$set(echo = TRUE, comment=NA)
 
 <a name="setup"></a>
 
-# Set up a new project
+# Set up 
 
-Create a new project in RStudio, and call it **int-power**. Now create a new script and call it **power.R**. Put all the commands you use in this worksheet in `power.R` and save regularly. This way it is easier to see what you have done, and refer back to it later for revision.
+Open the project you created in the [revision worksheet](revision.html). Now create a new script within that project and call it **power.R**. Put all the commands you use in this worksheet in `power.R` and save regularly. This way it is easier to see what you have done, and refer back to it later for revision.
 
 <a name="intro"></a>
 
@@ -52,8 +52,6 @@ Collecting data takes time and effort, both for the experimenter and for the par
 In these _Research Methods in R_ materials, we generally use Bayesian techniques (e.g.  Bayes Factors), rather than more traditional techniques (e.g.  p values). We do this because Bayes Factors are easy to interpret. This is in contrast to p values, which are traditionally used in psychology, but which are widely misunderstood. This worksheet, however, is an exception - it uses traditional techniques. This is because there is no Bayesian method to answer these particular questions that is sufficiently simple for this intermediate-level course. 
 
 <a name="size"></a>
-
-
 
 # Determining your sample size
 
