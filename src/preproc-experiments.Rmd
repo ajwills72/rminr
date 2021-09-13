@@ -47,7 +47,7 @@ To prepare for this worksheet:
 
 1. Open the `rminr-data` project we used [previously](preproc.html#load).
 
-1. Open the `Files` tab. You should see a `going-further` which contains the files `perruchet-raw.csv` and `perruchet-sum.csv`.
+1. Open the `Files` tab. You should see a `going-further` folder which contains the files `perruchet-raw.csv` and `perruchet-sum.csv`.
 
 1. If you don't see the folder or files, ask git to "`pull`" the latest version of the repository. Select the `Git` tab, which is located in the row of tabs which includes the `Environment` tab. Click the `Pull` button with a downward pointing arrow. A window will open showing the files which have been pulled from the repository. Close the `Git pull` window.
 
@@ -58,6 +58,8 @@ To prepare for this worksheet:
 ## Loading data
 
 We'll start by loading some data from [an undergraduate student dissertation on the Perruchet Effect](awdiss.html). Participants were repeatedly shown a picture of a brown cylinder. This picture was sometimes followed by a loud unpleasant noise. Their reaction to the noise was measured using their galvanic skin response. In addition, every time the cylinder was shown, participants rated their expectancy that the noise was about to occur on a 1-5 scale. 
+
+**Enter these commands into your script, and run them:**
 
 ```{r load, message=FALSE, class.source = 'numberLines lineAnchors'}
 rm(list = ls()) # clear the environment
@@ -85,13 +87,13 @@ Our data is in long format i.e. one observation per row. It is a large file, con
 
 - `value` : The actual observation. Where `key` is `GS`, these are galvanic skin response values, which are measures of conductance (the reciprocal of electrical resistance). Higher values indicate higher arousal. Where the `key` is `ES`, the scores are ratings on a scale of 1-5. 
 
-
-
 <a name="dedup"></a>
 
 ## De-duplicating data
 
 This experiment was run by three people over many different days. They tried to manually stitch all their data files together, by copying-and-pasting them into one big file in Excel. This type of manual manipulation of data is notoriously error prone, and in the process, they accidentally duplicated some data. In this case, it's easy to detect and fix in R, because no two rows of this data can be identical - the subject number or the time is always going to be different. So, we can remove duplicates by telling R to give us just one copy of each of the different rows in the data set. The command `distinct` does that for us. 
+
+**Enter this command into your script, and run it:**
 
 ```{r tidy, message=FALSE, class.source = 'numberLines lineAnchors'}
 ## De-duplicate data; remove pilot study
@@ -104,7 +106,9 @@ raw <- distinct(raw)
 
 ### Exclusions by participant number
 
-In this dissertation, the student first ran a _pilot_ study, with just a few participants. On the basis of this pilot, they changed their experiment a bit, and then went on to collect data from many more participants. They only wanted to analyze the main study, so they removed the pilot participants. This was easy, because the participants in the pilot study all had participant numbers of 161 or higher, so they could use a simple `filter` command, such as we have used in many previous worksheets:
+In this dissertation, the student first ran a _pilot_ study, with just a few participants. On the basis of this pilot, they changed their experiment a bit, and then went on to collect data from many more participants. They only wanted to analyze the main study, so they removed the pilot participants. This was easy, because the participants in the pilot study all had participant numbers of 161 or higher, so they could use a simple `filter` command, such as we have used in many previous worksheets.
+
+**Enter this command into your script, and run it:**
 
 ```{r ex1, message=FALSE, class.source = 'numberLines lineAnchors'}
 ## De-duplicate data; remove pilot study
@@ -115,7 +119,9 @@ raw <- raw %>% filter(subj > 161)
 
 As part of this experiment, participants were told to rate their expectancy of hearing an unpleasant noise, _on every trial_. However, they only had 8 seconds to do this, and the experimenters noticed that sometimes people failed to make a rating. The experimental apparatus recorded this as a rating of zero. 
 
-Participants who miss a lot of ratings aren't really following the instructions, making their data hard to interpret. In such cases, we normally exclude those participants from further analysis. In order to do this, we need to find out how widespread the problem is. One way to do this is to calculate the number of zero ratings each participant makes:
+Participants who miss a lot of ratings aren't really following the instructions, making their data hard to interpret. In such cases, we normally exclude those participants from further analysis. In order to do this, we need to find out how widespread the problem is. One way to do this is to calculate the number of zero ratings each participant makes.
+
+**Enter these commands into your script, and run them:**
 
 ```{r zeros, class.source = 'numberLines lineAnchors'}
 ## Number of expectancy ratings, by participant
@@ -133,7 +139,9 @@ The output shows the number of trials on which each participant failed to give a
 
 ### Removing participants from the dataset
 
-In this case, the students decided to exclude all participants who missed more than three ratings. There would have been a number of ways to do this, but the simplest in this case was just to manually put together a list of the subject numbers they wanted to exclude:
+In this case, the students decided to exclude all participants who missed more than three ratings. There would have been a number of ways to do this, but the simplest in this case was just to manually put together a list of the subject numbers they wanted to exclude.
+
+**Enter these commands into your script, and run them:**
 
 ```{r exclude, class.source = 'numberLines lineAnchors'}
 ## Exclude participants
@@ -157,7 +165,9 @@ There are still a few trials where the participant makes no expectancy rating, a
 
 After they had excluded participants, the students then performed a large number of further preprocessing steps. These steps were specific to the type of large neuroscience data set they had collected, so we won't go through them in this more general-purpose worksheet. You can read about the steps they took in the [case study](awdiss.html) if you are curious. 
 
-Instead, we'll just load in the results of their preprocessing:
+Instead, we'll just load in the results of their preprocessing. 
+
+**Enter this command into your script, and run it:**
 
 ```{r log load2, message=FALSE, class.source = 'numberLines lineAnchors'}
 ## Log transformation of GSR
@@ -170,7 +180,9 @@ The data frame `sum.data` now contains one row for each trial of the experiment,
 
 The central measurement in this study was Galvanic Skin Response (GSR). Studies of GSR data normally _log transform_ it before analysis. Log transforming data means to take the [logarithm](https://en.wikipedia.org/wiki/Logarithm) of the data, in this case the [natural logarithm](https://en.wikipedia.org/wiki/Natural_logarithm). Two reasonable questions about this preprocessing are: (a) what does that mean, and (b) why would you do it?
 
-To answer the first question, a log transform compresses the range of the data. The following graph should help visualize this:
+To answer the first question, a log transform compresses the range of the data. The following graph should help visualize this.
+
+**Enter this command into your script, and run it:**
 
 ```{r log plot}
 ## Visualizing logarithms
@@ -181,7 +193,9 @@ On the x-axis we have the numbers 1 to 50. On the y-axis, we have the natural lo
 
 As a result, a log transform doesn't change small numbers very much, but reduces large numbers a lot more. This can be useful if, for example, a few participants have unusually large GSRs. These very large GSRs would increase the _variance_ of the data substantially, and this can make it harder to detect real differences between conditions. A log transform can reduce that problem, and hence can make it easier to find real effects in such situations. So, this also answers the second part of the question - we apply a log transform to GSR data because it can make it easier to find real effects. Other common transformations of this type include a _square root_ transformation, and a _reciprocal_ (1/x) transformation. 
 
-The students log transformed their GSR data using the `mutate` command we have come across in previous worksheets:
+The students log transformed their GSR data using the `mutate` command we have come across in previous worksheets.
+
+**Enter this command into your script, and run it:**
 
 ```{r log trans, message=FALSE, class.source = 'numberLines lineAnchors'}
 ## Log transformation of GSR
@@ -199,6 +213,8 @@ sum.data <- sum.data %>% mutate(lcval = log(cval+1))
 This exercise uses data from a study which compared emotion regulation strategies between fans of mainstream (control group), goth, metal and emo music. Before and after each group listened to a clip of their preferred music, measurements were taken using the 20-item Positive and Negative Affect Schedule (PANAS). The data is in wide format, with one row per participant.
 
 We start by loading the data and counting the number of rows in the data frame.
+
+**Enter these commands into your script, and run them:**
 
 ```{r ex-load, message=FALSE}
 panas <- read_csv('going-further/music-panas.csv')

@@ -52,7 +52,9 @@ Ensure you have the files required for this worksheet, by asking git to "`pull`"
 
 Now, open a new blank script and save it as **anova4.R**. Put all commands in that script, and save the script regularly. 
 
-First, you'll need to load some standard packages, load the data we used in the previous worksheet, and set the appropriate columns up as factors:
+First, you'll need to load some standard packages, load the data we used in the previous worksheet, and set the appropriate columns up as factors. 
+
+**Enter these commands into your script, and run them:**
 
 ```{r init, message=FALSE}
 rm(list = ls())
@@ -72,13 +74,15 @@ words$block <- factor(words$block)
 
 We can use `anovaBF` to do a factorial Bayesian ANOVA where both factors are between-subjects. It works exactly the same way as before. For example, we can do a factorial Bayesian ANOVA for  `sex` and `medit` like this:
 
-First we create a subject-level summary of the data - this involves averaging across the 90 data points that contribute to the reaction time (RT) measure for each participant. We do this using the now-familiar `group_by` and `summarise` commands:
+First we create a subject-level summary of the data - this involves averaging across the 90 data points that contribute to the reaction time (RT) measure for each participant. We do this using the now-familiar `group_by` and `summarise` commands. 
+
+**Enter these commands into your script, and run them:**
 
 ```{r preproc}
 wordsum <- words %>% group_by(subj, medit, sex) %>% summarise(rt = mean(rt))
 ```
 
-Now we run the Bayesian ANOVA, as follows:
+Now we run the Bayesian ANOVA, as follows; **enter these commands into your script, and run them:**
 
 ```{r bf-2bs}
 bf2bs <- anovaBF(
@@ -90,7 +94,7 @@ Note that, unlike the Bayesian ANOVAs we previously did that included a within-s
 
 ## Explanation of output
 
-The output is interpreted the same way as before: 
+The output is interpreted the same way as before; **enter this command into your script, and run it:**
 
 ```{r reveal}
 bf2bs
@@ -129,7 +133,7 @@ The BF for this hypothesis is also large (about 85). We'd expect this, because t
 
 #### Interaction BF
 
-The Bayes Factor for the interaction is given, as before, by:
+The Bayes Factor for the interaction is given, as before, by **entering this command into your script, and running it:**
 
 ```{r int-fact}
 bf2bs[4] / bf2bs[3]
@@ -145,7 +149,9 @@ This gives us a Bayes Factor for the interaction around 0.07. So, there's substa
 
 We can also use `anovaBF` to look at two within-subjects factors. Again, this works just the same way as before. For example, we can do a factorial Bayesian ANOVA for `congru` and `block` like this:
 
-First, we create the appropriate subject-level summary for our analysis:
+First, we create the appropriate subject-level summary for our analysis. 
+
+**Enter these commands into your script, and run them:**
 
 ```{r preproc2}
 wordsum2 <- words %>%
@@ -154,11 +160,15 @@ wordsum2 <- words %>%
 ```
 Next, for the purposes of this worksheet, we're also going to reduce the sample size from 420 participants to 60 participants. This is something you'd never do in a real analysis, but here we need to address the issue that within-subject Bayesian ANOVAs can take a very long time to run when we have, as in this case, several hundred participants (in this case, it would take around 15 minutes). The correct approach when analysing your own data is, of course, to just wait for the analysis to finish. 
 
+**Enter this command into your script, and run it:**
+
 ```{r reduce}
 wordsum2 <- wordsum2 %>% filter(as.numeric(subj) < 61)
 ```
 
-Now we run the Bayesian analysis as before:
+Now we run the Bayesian analysis as before.
+
+**Enter these commands into your script, and run them:**
 
 ```{r bf-2ws}
 bf2ws <- anovaBF(
@@ -169,7 +179,7 @@ bf2ws <- anovaBF(
 
 ## Explanation of output
 
-The output is interpreted the same way as before: 
+The output is interpreted the same way as before; **enter this command into your script, and run it:**
 
 ```{r reveal-2}
 bf2ws
@@ -205,7 +215,7 @@ The BF for this hypothesis is considerably lower than for the `main effects` hyp
 
 #### Interaction BF
 
-The Bayes Factor for the interaction is given, as before, by:
+The Bayes Factor for the interaction is given, as before. **Enter this command into your script, and run it:**
 
 ```{r int-fact-2}
 bf2ws[4] / bf2ws[3]
@@ -217,7 +227,7 @@ This gives us a Bayes Factor for the interaction is around 0.01. So, there's sub
 
 # Single between-subjects factor
 
-It is also possible to use `anovaBF` to analyse a single factor, between-subjects design. Where that factor has two levels, you could alternatively use [ttestBF](evidence.html#bayes-t). One of the useful things about `anovaBF` is that, unlike `ttestBF`, you can use it in a one-factor design that has more than two levels. For example:
+It is also possible to use `anovaBF` to analyse a single factor, between-subjects design. Where that factor has two levels, you could alternatively use [ttestBF](evidence.html#bayes-t). One of the useful things about `anovaBF` is that, unlike `ttestBF`, you can use it in a one-factor design that has more than two levels. For example: (**enter these commands into your script, and run them:**)
 
 ```{r bf-1bs}
 wordsum3 <- words %>%
@@ -238,7 +248,9 @@ Although in principle it is possible to run Bayesian ANOVAs with more than two f
 
 # Exercise 1
 
-The data for this first exercise comes from a between-subjects experiment with two factors. Start by loading the data and removing any missing data (`NA`), using this command:
+The data for this first exercise comes from a between-subjects experiment with two factors. Start by loading the data and removing any missing data (`NA`), using thd following command.
+
+**Enter these commands into your script, and run them:**
 
 ```{r ex1-data, message=FALSE}
 cf_raw <- read_csv('going-further/counterfactual.csv') %>% drop_na()
@@ -290,7 +302,9 @@ cf_bf[4] / cf_bf[3]
 
 # Exercise 2
 
-The data for this second exercise come from a within-subjects experiment with two factors. Start by loading the data, selecting the columns and rows we'll need for this analysis, and removing missing data (`NA`):
+The data for this second exercise come from a within-subjects experiment with two factors. Start by loading the data, selecting the columns and rows we'll need for this analysis, and removing missing data (`NA`). 
+
+**Enter these commands into your script, and run them:**
 
 ```{r ex2-data, message=FALSE}
 raw <- read_csv('case-studies/chris-mitchell/priming-faces.csv') %>%

@@ -69,6 +69,8 @@ To prepare for this worksheet:
 
 We start with some lines to clear the workspace and load `tidyverse`.
 
+**Enter these commands into your script, and run them:**
+
 ```{r init-load, message=FALSE}
 rm(list = ls()) # clear the environment
 library(tidyverse)
@@ -80,7 +82,9 @@ library(tidyverse)
 
 Our first step will be to load the data and remove columns from the raw survey data which aren't needed for analysis. We'll demonstrate this using some real data from the Depression Anxiety Stress Scales—21 (DASS-21, Henry & Crawford, 2005), a 21-item scale for measuring depression, anxiety and stress.
 
-```{r pre-process-dass}
+**Enter these commands into your script, and run them:**
+
+```{r pre-process-dass, message=FALSE}
 dass21_raw <- read_csv("going-further/dass21.csv")
 dass21_raw <- dass21_raw %>% select(partID, Age:DASS21)
 ```
@@ -111,6 +115,8 @@ We can see that participants `108`, and `109` (rows 3 and 4) have numbers in all
 
 If you select `dass21_raw` in the **Environment** pane and look through the rest of the data, you'll see that participants 35, 49, 61, and 77 also have no data for this survey. We exclude these participants from the data frame.
 
+**Enter these commands into your script, and run them:**
+
 ```{r exclude-missing}
 exclude <- c(35,49,61,77,106,107)
 dass21 <- dass21_raw %>% filter(!(partID %in% exclude))
@@ -126,7 +132,9 @@ If you look at the **Value** column in the **Environment** pane, you'll see that
 
 ## Calculating subscale scores
 
-Our next step is to calculate the scores for the constructs measured by our scale. Many scales consist of groups of questions which measure multiple, distinct constructs. The DASS-21 is an example of a scale with subscale scores for depression, anxiety and stress. These are calculated by adding together responses for specific items, which we can do using the `rowSums()` function:
+Our next step is to calculate the scores for the constructs measured by our scale. Many scales consist of groups of questions which measure multiple, distinct constructs. The DASS-21 is an example of a scale with subscale scores for depression, anxiety and stress. These are calculated by adding together responses for specific items, which we can do using the `rowSums()` function.
+
+**Enter these commands into your script, and run them:**
 
 ```{r dass21-subscales}
 dass21 <- dass21 %>%
@@ -168,7 +176,9 @@ Some data benefits from a little more tidying than simply removing columns which
 
 The experiment used the State Self-Esteem Scale (SSES, Heatherton & Polivy, 1991), a 20-item scale used to measure short-lived (state) changes in self-esteem.
 
-```{r, R.options = list(width = 100)}
+**Enter this command into your script, and run it:**
+
+```{r, R.options = list(width = 100), message=FALSE}
 sses <- read_csv('going-further/sses.csv')
 ```
 
@@ -176,7 +186,9 @@ sses <- read_csv('going-further/sses.csv')
 sses %>% head(3) %>% pander(split.table = Inf)
 ```
 
-The data will be easier to analyse if we rename the columns. It will also be useful to divide the data into two data frames, one for the pre-intervention SSES, the other for the post-intervention SSES. We'll do this in stages:
+The data will be easier to analyse if we rename the columns. It will also be useful to divide the data into two data frames, one for the pre-intervention SSES, the other for the post-intervention SSES. We'll do this in stages. 
+
+**Enter this command into your script, and run it:**
 
 ```{r preprocess-sses-pre-1}
 sses_pre_raw  <- sses %>% select(1, 5:25)
@@ -194,6 +206,8 @@ sses_pre_raw %>% head(3) %>% pander(split.table = Inf)
 
 Next, we'll rename the SSES columns based on their question number. This will make them easier to refer to in the rest of our code.
 
+**Enter these commands into your script, and run them:**
+
 ```{r preprocess-sses-pre-2}
 sses_pre_raw  <- sses_pre_raw %>%
   set_names(~ str_to_lower(.) %>% str_replace_all("pre_sse_", "q"))
@@ -208,6 +222,8 @@ sses_pre_raw %>% head(3) %>% pander(split.table = Inf)
 ```
 
 Now we'll convert some columns to [factors](anova1.html#anovaWS).
+
+**Enter these commands into your script, and run them:**
 
 ```{r preprocess-sses-pre-3}
 sses_pre_raw <- sses_pre_raw %>%
@@ -225,7 +241,7 @@ Our data is now much tidier:
 sses_pre_raw %>% head(3) %>% pander(split.table = Inf)
 ```
 
-Note that we could do all of these steps in a single pipeline:
+Note that we could do all of these steps in a single pipeline (**DO NOT enter these commands**, you do not need to do the same thing twice, this is just an illustration of how the previous commands could be combined).
  
 ```{r preprocess-sses-pre}
 sses_pre_raw  <- select(sses, 1, 5:25) %>%
