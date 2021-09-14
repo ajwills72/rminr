@@ -149,7 +149,7 @@ unscientific estimate).
 
 Add a comment to explain the code in steps 1-4 e.g. # calculate power at different sample sizes
 
-"In frequentist methods, people usually expect your study to have at least 80% power. If we accept that convention for this as well, we can settle on a sample size of 50." Why 50? Explain.
+"In frequentist methods, people usually expect your study to have at least 80% power. If we accept that convention for this as well, we can settle on a sample size of 50." Why 50? Explain. (Orient lazy people towards row 5!)
 
 "This is the exact moment, when you might want to stop and think about how many participants you might potentially end up excluding. This depends a lot on the nature of your experiment and the characteristics of the population. If you have a learning criterion, you can end up excluding 30% of all participants. It is not uncommon to add 15 more participants on top of that 50, just to be safe."
 
