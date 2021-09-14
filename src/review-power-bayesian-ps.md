@@ -80,3 +80,82 @@ I would be a bit more prescriptive here, to circumvent having to do basic R supp
 * Upload the CSV file to the `data` folder
 
 Maybe add some more comments in each grey box for the copy-paste brigade (of which I'm a member!).
+
+"but that is a bit of a cop-out" - why? language too informal?
+
+4.2.2p1
+
+"Cohen’s d=0.217" doesn't match *d* in the output above.
+
+4.2.2p2-3
+
+"The first thing to jot down is to decide how our dependent variable will look like.
+
+We know that we will have count data, because our dependent variable is the count of how many switches participants made between having the lower-left or upper-right square as the cube’s front side."
+
+I think you could be more concise here e.g. 
+
+"Our dependent variable will have count data, because it is the count of how many switches participants made between having the lower-left or upper-right square as the cube’s front side."
+
+Why is `rbinom()` most suitable?
+
+4.2.2p5
+
+"Note that size has to be same for both conditions." I need reminding what the 2 conditions are here (drug vs. nothing?)
+as the design was quite a few paragraphs back.
+
+4.2.2p8
+
+Might be worth `ideal_data %>% head(20)` before this para to so the reader can see the results of the last few lines.
+
+Ah, I see I was wrong about design: within Ps before/after. On reflection, these 3 columns with some example data would be useful when you introduce the study earlier.
+
+4.2.3p1
+
+I would just summarise what a function in one sentence (just use the last sentence of the para?) and link to Andy's
+explanation "for a more detailed explanation of functions". BTW, the link
+(https://www.andywills.info/rminr/awdiss.html#funcloop) didn't work for me, possibly because I'm looking at a preview of
+your worksheet.
+
+4.2.3p2
+
+I think rhetorical questions get in the way of "hands-on" sections.
+
+4.2.4p1
+
+"Beware that there are no special equations or complicated math involved here."
+
+This sentence is a bit odd. It's a bit like saying "LOOK OUT! There are no #baers here."
+
+4.2.4p2
+
+I would be consistent and use "simulate" rather than "imitate".
+
+I like the #callback to the central limit theorem.
+
+4.2.4p3
+
+Omit "object". They don't need to worry about implementation.
+
+4.2.4p5
+
+`mutate` (i.e. all function names in backticks)
+
+I think you need a bit of explanation of how `map_dbl()` is using the function they wrote. Also point out in text (as
+well as comment) that **this will take about 2-3 minutes on the RStudio server** (time how long it takes as this was my
+unscientific estimate).
+
+4.2.4
+
+Add a comment to explain the code in steps 1-4 e.g. # calculate power at different sample sizes
+
+"In frequentist methods, people usually expect your study to have at least 80% power. If we accept that convention for this as well, we can settle on a sample size of 50." Why 50? Explain.
+
+"This is the exact moment, when you might want to stop and think about how many participants you might potentially end up excluding. This depends a lot on the nature of your experiment and the characteristics of the population. If you have a learning criterion, you can end up excluding 30% of all participants. It is not uncommon to add 15 more participants on top of that 50, just to be safe."
+
+I didn't follow this. Are you talking about testing more participants based on an expectation of excluding participants according to some criterion specific to an experiment? 
+
+5.
+
+* Does this use the same `monte` data?
+* I certainly had to think about how to do this, which I guess means it's a good test of understanding.
