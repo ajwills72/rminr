@@ -37,19 +37,27 @@ I've been advised to avoid language like "Another important point to note is ...
 
 "Rather than a single value, effect sizes are best thought of as a range of possible values with different probabilities (Kruschke). However, ..."
 
+LD: Nice!
+
 4p1
 
 I'm still with you at this point, but what about a #powerful #callback along the lines of "Many of the limitations of traditional power calculations highlighted so far can be addressed by doing power calculations using Bayes Factors."
 
+LD: Great suggestion! #powerful #callback
+
 4.1p1
 
 Too much background info? Maybe shorten and cite for the really keen.
+
+LD: I will keep it in anticipation of people outside of our cohort using it.
 
 4.1algorithm.2
 
 (40 participant)
 
 Do you mean "40 per participant"?
+
+LD: No, 40 participants. Amended.
 
 I have 2 general thoughts on 4.1:
 
@@ -61,6 +69,8 @@ Use the same (short) names of the algorithm steps as sub-headings under 4.2. Thi
 in 4.1, and after you've understood 4.2 you can consolidate your knowledge by look at the summary algorithm and ensuring
 you (now fully) understand what's happening in each step.
 
+LD: Would have a really nice structure. I will try to do it.
+
 4.2p1
 
 I didn't understand this:
@@ -68,6 +78,8 @@ I didn't understand this:
 "If you need it for your own project, look at this material."
 
 That 3d Necker cube is twisting my melon, man. Is it needed here or can you just use the traditional one?
+
+LD: Melon #horsename. Also, amended, took out the second cube.
 
 4.2.1
 
@@ -87,17 +99,23 @@ Maybe add some more comments in each grey box for the copy-paste brigade (of whi
 
 "Cohen’s d=0.217" doesn't match *d* in the output above.
 
+LD: got rid of effect size.
+
 4.2.2p2-3
 
 "The first thing to jot down is to decide how our dependent variable will look like.
 
 We know that we will have count data, because our dependent variable is the count of how many switches participants made between having the lower-left or upper-right square as the cube’s front side."
 
-I think you could be more concise here e.g. 
+I think you could be more concise here e.g.
 
 "Our dependent variable will have count data, because it is the count of how many switches participants made between having the lower-left or upper-right square as the cube’s front side."
 
 Why is `rbinom()` most suitable?
+
+LD: `rbinom` is suitable because each participants raw data is a Bernoulli distribution, where each "trial" has a binary outcome - see Necker Cube. Therefore we want to generate binomial data, not a gaussian distribution per se.
+
+LD: 2021-09-16 Amended. Decided to use `rnorm` instead of `rbinom`, and change the dependent variable to the proportion of switches. This is a dummy example, so I am not worried about how the proportions were calculated - trying to simplify things.
 
 4.2.2p5
 
@@ -121,11 +139,15 @@ your worksheet.
 
 I think rhetorical questions get in the way of "hands-on" sections.
 
+LD: Amended
+
 4.2.4p1
 
 "Beware that there are no special equations or complicated math involved here."
 
 This sentence is a bit odd. It's a bit like saying "LOOK OUT! There are no #baers here."
+
+LD: No #baers should be an issue. Amended.
 
 4.2.4p2
 
@@ -151,11 +173,17 @@ Add a comment to explain the code in steps 1-4 e.g. # calculate power at differe
 
 "In frequentist methods, people usually expect your study to have at least 80% power. If we accept that convention for this as well, we can settle on a sample size of 50." Why 50? Explain. (Orient lazy people towards row 5!)
 
+LD: Amended.
+
 "This is the exact moment, when you might want to stop and think about how many participants you might potentially end up excluding. This depends a lot on the nature of your experiment and the characteristics of the population. If you have a learning criterion, you can end up excluding 30% of all participants. It is not uncommon to add 15 more participants on top of that 50, just to be safe."
 
-I didn't follow this. Are you talking about testing more participants based on an expectation of excluding participants according to some criterion specific to an experiment? 
+I didn't follow this. Are you talking about testing more participants based on an expectation of excluding participants according to some criterion specific to an experiment?
+
+LD: Amended. Removed for brevity.
 
 5.
 
 * Does this use the same `monte` data?
 * I certainly had to think about how to do this, which I guess means it's a good test of understanding.
+
+LD: I will change the data they need to use.

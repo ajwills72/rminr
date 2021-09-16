@@ -9,11 +9,20 @@ output:
 date: '`r format(Sys.Date())`'
 ---
 
+```{r setup, include=FALSE}
+## DEVELOPERS: Uncomment one option, as appropriate
+## Show only commands.
+## knitr::opts_chunk$set(echo = TRUE, message = FALSE, results='hide', fig.keep = 'none', comment=NA)
+## Show commands and output.
+knitr::opts_chunk$set(echo = TRUE, comment=NA, cache = TRUE)
+```
+
 # Before you start
 
 This is an advanced worksheet, which assumes you have completed the [Absolute Beginners' Guide to R](https://ajwills72.github.io/rminr/#beginners), the [Research Methods in Practice (Quantitative section)](https://benwhalley.github.io/rmip/overview-quantitative.html), and the [Intermediate Guide to R](https://ajwills72.github.io/rminr/#rmip).
 
-If you understand the following worksheets, then you should be able to follow this one:
+You should be able to follow this worksheet if you understand the following
+materials:
 
 - [Evidence pt.1 Bayesian and traditional t-tests](https://ajwills72.github.io/rminr/vbg_evidence.html)
 - [Evidence pt.2 Bayes and traditional correlation, scatterplot](https://ajwills72.github.io/rminr/vbg_corr.html)
@@ -30,15 +39,12 @@ enough data](http://www.marjanbakker.eu/Bakker%20et%20al.%202016.pdf) to
 make reliable conclusion with traditional frequentist statistics (methods that
 rely on p-value significance testing).
 
-Throughout your undergraduate course,
-you relied on Bayesian techniques. One exemption was the
-[worksheet](https://www.andywills.info/rminr/power.html), where you first
-encountered the concept of statistical power. In that worksheet, you used
+Throughout your undergraduate course, you relied on Bayesian techniques. One
+exemption was [the worksheet that introduced statistical power](https://www.andywills.info/rminr/power.html). In that worksheet, you used
 traditional frequentist techniques to estimate how many participants you need
 to recruit for your experiment. The reason was that simply there is no
 clear-cut formula for estimating sample size for and with Bayesian techniques.
 Most techniques were beyond the requirements of an undergraduate course.
-Fortunately, you now have the coding skill to tackle this problem with ease.
 This method is also simple and require no sophisticated statistical and
 mathematical skills.
 
@@ -53,42 +59,49 @@ with high probability. This is useful, because it explicitly states how likely
 to achieve the researchers goal in the anticipated experiment
 [(Kruschke, 2013)](https://jkkweb.sitehost.iu.edu/articles/Kruschke2013JEPG.pdf).
 Ideally, you also want to do it before data collection
-and not after. If you estimate power after the data is collected and analysed,
-you will learn nothing that the Bayes Factor or a p-value wouldn't tell you.
+and not after. If you estimate power after the data are collected and analysed,
+you will learn nothing that the Bayes Factor (BF) or a p-value wouldn't tell you.
 
 Traditional techniques to estimate sample size are also limited. For example,
 they don't allow you to plan for the null hypothesis being true. This is
-because p-values don't let you conclude from null results.
+because p-values don't let you conclude from null results. See the
+[Evidence worksheet](https://www.andywills.info/rminr/evidence.html)
+for more explanation.
+
+A p-value and traditional techniques do not allow you to incorporate this
+possibility, even though in some cases it might be important to plan for that
+outcome as well.
 
 For example, you might want to know how many participants you need to test so
-that you will know for certain that two treatments (or a treatment and palcebo)
-are no different. Another example is when there are contradicting evidence that
-a psychological effect is real. You might want to know how many participants
-you need to have to show that an effect is present in the data or not.
+that you will know for certain that two treatments (a drug and a palcebo)
+are no different. Another example is when there are conflicting evidence from
+underpowered studies that a psychological effect is real. You might want to
+know how many participants you need to have to show that an effect is present
+in the data or not.
 
-You can also have two estimates: one for the null hypothesis being true, and
-one for the alternative being true. In that case, it is not unreasonable to
-check the data at the lower estimate, to see if you need to collect more data.
+You can also have multiple estimates of sample size: one for the null hypothesis
+being true, and one for the alternative being true. In that case, it is not
+unreasonable to check the data at the lower estimate, to see if you need to
+collect more data.
 
-A p-value and traditional techniques do not allow you to incorporate the
-possibility that the null hypothesis is true, even though in some cases it might
-be important to plan for that outcome as well.
-
-Another important point to note is that effect sizes are uncertain
-[(Kruschke, 2013)](https://jkkweb.sitehost.iu.edu/articles/Kruschke2013JEPG.pdf), but
-traditional power calculations use a single point-value. Effect sizes can vary
-from experiment from experiment (sometimes even substiantially), so it is
+Rather than a single value, effect sizes are best thought of as a range of
+possible values with different probabilities - effect sizes are uncertain
+[(Kruschke, 2013)](https://jkkweb.sitehost.iu.edu/articles/Kruschke2013JEPG.pdf),
+but traditional power calculations use a single point-value. Effect sizes can
+vary from experiment from experiment (sometimes even substiantially), so it is
 uncertain if you will get the same effect size with a new sample. This
 experiment-to-experiment variance is not incorporated in traditional methods.
 Effect sizes are also often [overestimated](http://marjanbakker.eu/Bakker%20Van%20Dijk%20Wicherts%202012.pdf)
 which [causes a lot of problem](https://www.andywills.info/rminr/effsize_from_papers.html#replication) for scientist and researchers.
 
+Many of the limitations of traditional power calculations highlighted so far can be addressed by doing power calculations using BFs.
+
 # Power analysis with Bayes Factors
 
 In Bayesian Power Analysis, we are looking at power from a different
-angle. Here, we want to estimate precision - the probability of the Bayes Factor
+angle. Here, we want to estimate precision - the probability of the BF
 being conclusive or inconclusive. We determine this by checking whether the
-Bayes Factor falls within a certain interval. Intervals are groups of numbers
+BF falls within a certain interval. Intervals are groups of numbers
 lying between two numbers. This probability tells us how likely that we will
 have conclusive results given different sample sizes.
 
@@ -101,15 +114,23 @@ evidence for the absence of a difference.
 This might be a bit confusing, because now we will be looking at intervals
 and not thresholds, because we are interested in an entire distribution of
 values. For
-estimating the sample size, we can define two big groups of Bayes Factors:
+estimating the sample size, we can define two big groups of BFs:
 conclusive vs inconclusive. Inconclusive BF can be any BF that falls between
 the lower bound and the upper bound. All other BFs are conclusive.
-We calculate power for the Bayes Factor (BF) as
+We calculate power for BF as
 
 $$1 - Pr(lower bound < BF < upper bound)$$
 
-**When we think about Bayes Factors and Power, we want to know how
-many data points we need to get a conclusive Bayes Factor.**
+Simply put, we take the percentage of BFs that
+were inconclusive and subtract it from 100%. So if we have 40% of Bayes
+Factors that were inconclusive, then 100 - 40 will give us 60% of Bayes
+Factors that were conclusive. This means that we have a 60% chance of
+getting a conclusive result. Usually, we don't use percentages, but rather
+use values from 0 to 1. So 60% will be the same as 0.6 and 100% will be the
+same as 1.
+
+**When we think about BFs and Power, we want to know how
+many data points we need to get a conclusive BF.**
 
 ## The Algorithm
 
@@ -119,21 +140,17 @@ The algorithm for estimating sample size for more sophisticated Bayesian
 analysis was first described by Kruschke (2013) while he was promoting an
 alternative to frequentist statistics.
 [Schönbrodt and Wagenmakers (2018)](https://www.researchgate.net/publication/314158724_Bayes_factor_design_analysis_Planning_for_compelling_evidence) adapts
-his algorithm to **fixed-n designs** with **Bayes Factor**. In a fixed-n
+his algorithm to **fixed-n designs** with a **BF**. In a fixed-n
 design, you test a set number of participants and calculate something like a
-Bayes Factor at the end. Schönbrodt and Wagenmakers (2018) decided to group
+BF at the end. Schönbrodt and Wagenmakers (2018) decided to group
 this technique under an umbrella term: **Bayes Factor Design Analysis**.
 
-We will use Schönbrodt and Wagenmakers (2018) algorithm, because it is the
-simplest form and is suitable for most psychology experiments you will be doing
-in your final year project.
+Here I will outline the algorithm we'll be using and then walk you through it.
+The steps in the algorithm:
 
-Here I will show you the algorithm and then walk you through it. The steps
-in the algorithm:
-
-1. **Generate a large number (e.g. 2000) of random data points** by taking some assumptions about what to expect. Data should be generated according to how the actual data will be collected in the planned experiment. For example, there will be a fixed number of participants, fixed number of trials, fixed number of conditions. You also want to take some other assumptions, like what is the effect size you might expect.
-2. **Subset the data to include a fixed number of data points** (40 participant). You ideally want to do it for different sample sizes for the same data set.
-3. **Run a test on the subset** and tally whether the test is precise enough. You simply run a Bayes Factor t-test in the subsets and check if the Bayes Factor is between 1/3 and 3.
+1. **Generate a large number (e.g. 2000) of random data points** by taking some assumptions about what to expect.
+2. **Subset the data to include a fixed number of data points** (e.g. data from 40 participants). You ideally want to do it for different sample sizes for the same data set.
+3. **Run a test on the subset** and tally whether the test is precise enough. You simply run a Bayesian t-test on the subsets and check if the BF is between 1/3 and 3.
 4. **Repeat steps 2 and 3 many thousands of times**, for example 10000.
 5. **Pick** a well-powered sample size.
 
@@ -149,34 +166,41 @@ something about your experiment - usually sample size. If you need it for
 your own project, look at [this material](https://www.andywills.info/rminr/effsize_from_papers.html#estimate).
 
 Let us say that we are interested in multistable perception and want to do
-a replication of [McDougall and Smith (1921)](https://onlinelibrary-wiley-com.plymouth.idm.oclc.org/doi/pdfdirect/10.1002/j.2050-0416.1921.tb02471.x). They did not include the data, but
+a replication of [George (1935)](https://www.tandfonline.com/doi/abs/10.1080/00221309.1936.9917904). They did not include the data, but
 told us some details about their analysis, including some summary statistics.
 
-McDougall and Smith (1921) were interested in how different substances (coffee,
+George (1935) were interested in how different substances (coffee,
 antidepressant) affects the perception of a subset of visual illusions.
 Here we will only focus on the condition where participants viewed an
 an ambiguous figure called the
 [Necker Cube](https://en.wikipedia.org/wiki/Necker_cube). A necker cube
 is the frame of the cube with no visual cues on its orientation, which
 makes it ambiguous. It is ambiguous, because while viewing the figure
-you can interpret it to have either the lower-left or the upper-right square
-at the front. If you keep looking at the cube, you can see that the orientiation
-switches between these two percepts - having the lower-left or upper-right
-square as its front side.
+you can interpret it to have either the lower-left or the upper-right
+square at the front. If you keep looking at the cube, you can see that the
+orientiation switches between these two percepts - having the lower-left
+or upper-right square as its front side.
 
-![Necker Cube](https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Necker_cube_and_impossible_cube.svg/1280px-Necker_cube_and_impossible_cube.svg.png)
+![Public Domain](https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Filled_necker_cube.svg/480px-Filled_necker_cube.svg.png)
 
-McDougall and Smith (1921) reported that people passively switch
-between the two percepts
-at a higher rate after they had coffee compared to when they hadn't had
-any other drug.
+George (1935) reported that people passively switch between the two
+percepts at a higher rate after they had coffee compared to when they
+hadn't had any other drug.
 
 ### Starting with the data
+
+First, let us start by setting everything up. If you have trouble remembering
+how to create projects and R scripts, look at [this brief intro to Rstudio worksheet](https://www.andywills.info/rminr/intro-rstudio.html).
+
+* Create a new project called power-bayesian
+* Add the code in this worksheet to a script called power.R
+* Right click on [the data I made](https://raw.githubusercontent.com/ajwills72/rminr-data/master/going-further/george1935pilot.csv) and save the CSV file.
+* Create a folder called `data` in your R project.
+* Upload the CSV file to the `data` folder.
 
 ```{r, include = FALSE}
 # always start with loading all the packages you need for a given analysis
 library(BayesFactor, quietly = TRUE)
-library(effsize)
 library(tidyverse)
 
 # set seed for reproducability
@@ -186,126 +210,122 @@ set.seed(1)
 ```r
 # always start with loading all the packages you need for a given analysis
 library(BayesFactor, quietly = TRUE)
-library(effsize)
 library(tidyverse)
 
 # set seed for reproducability
 set.seed(1)
 ```
 
-In most scenarios, you will start from the next step, but your supervisor might
-have some data you can use. Nowadays people share their data on places like
-[OSF](https://osf.io/) or [GitHub](https://github.com/). Here, I just made up
-the data according to some really vague description by the original authors.
-Let us start by importing said data.
-
-You can download the data from this [link](https://raw.githubusercontent.com/ajwills72/rminr/power-bayes/src/data/mcdougall1921madeup.csv).
+In most scenarios, you will start from the next step, but your supervisor might have some data you can use. Nowadays people share their data on places like [OSF](https://osf.io/) or [GitHub](https://github.com/). Here, I just made up the data according to some really vague description by the original authors. Let us start by importing said data.
 
 ```{r}
 # import dataset
-dta <- read_csv("data/mcdougall1921madeup.csv")
+dta <- read_csv("data/george1935pilot.csv")
+# make sure that every column is in the right format
+dta$condition <- factor(dta$condition)
+dta$ppt <- factor(dta$ppt)
 ```
 
-Let us have a look at how the data look like.
+The first thing we note is that it is not a within-subject design as in the
+original paper. Generating within-subject data is more ardous, as it
+involves a correlation between the two conditions. Here, we just assume
+that we collected data from a between-subject [pilot experiment](https://en.wikipedia.org/wiki/Pilot_experiment).
+
+Now, let us have a look at how the data look like. The meaning of the
+columns are as follows:
+
+* `ppt` - These are the participant identifiers
+* `condition` - This column contains the name of the condition. `caffeine` is our experimental condition: participants drank coffee before starting the task. `control` is our control condition: participants didn't take any stimulant before starting the task.
+* `fluctuations` - This is our dependent variable. It contains the proportion of fluctuations participants reported during the experiment. For this exercise, imagine that we showed the Necker Cube to participants for 100 seconds and they can switch between percepts once in every second. This means that if participants keep switching between percepts as fast as possible, they can report a maximum of 100 switches. The proportion of fluctiation is then whatever they reported divided by a 100.
 
 ```{r}
+# inspect our data
+dta %>%
+    head(20)
+```
+
+Look at the means and standard deviations first.
+
+```{r}
+# look at some descriptive statistics
 dta %>%
     group_by(condition) %>%
     summarise(mean = mean(fluctuations), sd = sd(fluctuations))
 ```
 
 The means are indeed promising, but we have long learned not to base
-our conclusion solely on the mean, so we go on and do the analysis we plan to
-do on our own data.
+our conclusion solely on the mean, so we go on and do the analysis we plan
+to do on our own data. We will use a
 
 ```{r}
-bf <- ttestBF(x = dta$fluctuations[dta$condition == "before"],
-              y = dta$fluctuations[dta$condition == "after"], paired = TRUE)
-bf
+ttestBF(formula = fluctuations ~ condition, data = dta)
 ```
 
 This is an inconclusive result. Some would say that it is
-anecdotal evidence for the difference, but that is a bit of a cop-out.
-We just don't have enough data to conclude.
+anecdotal evidence for the null, but that simply means that we don't have
+enough data to conclude. When the results are inconclusive, the BF
+can end up going to either direction.
 
 Our results are not conclusive, as BF = `r data.frame(bf)$bf`. The next step
 is then to figure out how many participants we need to recruit so that our
-analysis can conclude. First, let us look at the effect size.
-
-```{r}
-cohen.d(fluctuations ~ condition | Subject(ppt), data = dta, paired = TRUE)
-```
+analysis can conclude.
 
 ### Generating data
 
-The next step is to come up with some generated data. If you don't have access
-to any real data to begin with, you should start with this step. We know that
-we have a small effect size with Cohen's $d = 0.217$ and that our inconclsive
-BF shifts towards the alternative hypothesis - that there is a difference.
-If the effect size is not reported by the authors, you can still work it out.
-More information on how to do it can be found in the
-[more on power worksheet](https://www.andywills.info/rminr/effsize_from_papers.html).
+So we need to come up with some generated data. If you don't have access
+to any real data to begin with, you should start with this step. Data should
+be generated according to how the actual data will be collected in the planned
+experiment. For example, there will be a fixed number of participants, fixed
+number of trials, fixed number of conditions. You also want to take some other
+assumptions, like what is the size of the difference you might expect.
 
 Based on these, we can quantitatively express what we expect to happen in
-our experiment.
-We do this by generating some data that will look exactly like the one
-that we will collect. The first thing to jot down is to decide how our
-dependent variable will look like.
+our experiment. We do this by generating some data that will look exactly like
+the one that we will collect. First, we need to decide our dependent variable.
+For some tests, you might want to put some extra effort into this. For example,
+if you need to have count or categorical data, you will need to use different
+commands and approaches.
 
-We know that we will have count data, because
-our dependent variable is the count of how many switches participants made
-between having the lower-left or upper-right square as the cube's front side.
-`rbinom` is the command that is most suitable to generating this type of
-data. `rbinom` looks like this:
+For now, we will make it easy and straightforward. We will use `rnorm` to create our data. The command looks like this:
 
 ```r
-rbinom(n, size, prob)
+rnorm(n = group_size, mean = mean_from_data, sd = standard_deviation)
 ```
 
-The first argument `n` will be the number of observation we
-make (how many participants we want overall). We will set it to 1000,
-because we will randomly pick a smaller subset from this 1000 when we
-start estimating the sample size.
-
-The second argument will be `size`,
-which specifies the maximum number of fluctuation a person can experience
-in a given time. We will set it to 100. We assume that participant will
-fixate on the Necker Cube for 100 seconds and they can't have more than one
-in a second. This is less important here, because `n` will scale up to
-whatever `size` we set. Note that `size` has to be same for both conditions.
-
-The third argument `prob` will determine the mean proportion of fluctuations
-relative to fluctuating every second. This is that we will vary between conditions.
-there will be a 3% increase in the experimental conditions, which will result
-in a small effect size. We take the assumption that this effect size is the
-mean effect size of this phenomenon. So if you have ran dozens of experiment,
-all effect sizes would cluster around this value.
-
-We will do the same for the experimental condition, but the mean proportion
-will be larger. We pick the difference to reflect the effect size we saw in the
-real data. Alternatively, if you have no data you can just use an effect size
-you think is reasonable.
+The next step is to simply give `rnorm` the mean and standard deviation we
+saw a few commands before. We will do it for each condition
 
 ```{r}
-# each data point is a single participant
-control <- rbinom(1000, 100, 0.60)
-experimental <- rbinom(1000, 100, 0.63)
+# generate random data for the control condition
+control <- rnorm(n = 1000, mean = 0.561, sd = 0.147)
+# generate random data for the caffein condition
+caffeine <- rnorm(n = 1000, mean = 0.706, sd = 0.178)
 # here we create a vector for the group column
-group <- rep(c("before", "after"), each = 1000)
-# this object will have the participant unique IDs
-participants <- rep(1:1000, 2)
+group <- rep(c("control", "caffeine"), each = 1000)
+# create a participant column
+ppt <- 1:2000
 # here we combine everything together
-ideal_data <- tibble(ppt = participants,
+ideal_data <- tibble(ppt = ppt,
                      condition = group,
-                     fluctuations = c(control, experimental))
+                     fluctuations = c(control, caffeine))
 ```
 
 Now we check whether it looks okay. First, we should have three columns.
 `ppt` should include the participant ID, `condition` should include
 whether it is before or after caffeine intake, and `fluctuations`
-should be the number of fluctuations.
+should be the number of fluctuations. We need to briefly inspect the data
+before moving on.
 
-The distribution of the data also looks exactly what we want.
+```{r}
+# see first ten lines of data
+ideal_data %>%
+    head(10)
+```
+
+This looks exactly what we want. `fluctuations` differ in the number of decimal
+places that we had in our original data. Fortunately, it will make no
+difference to our power calculation. Let us look at the distribution as well
+with `geom_density`.
 
 ```{r}
 ideal_data %>% ggplot(aes(x = fluctuations, fill = condition)) +
@@ -313,40 +333,42 @@ ideal_data %>% ggplot(aes(x = fluctuations, fill = condition)) +
     theme_void()
 ```
 
-### Writing a function to get the Bayes Factor
+The distribution of the data also looks exactly what we want.
+
+### Getting the Bayes Factor
+
+#### Compressing what we have just done
 
 Every function (commands) that you use has been written by a person. Functions
 as you have noticed, take something as an input, do something to that input,
 and return the result of what they have done to the input. There is some good
-material already on [function](https://www.andywills.info/rminr/awdiss.html#funcloop)
-by Paul Sharpe and Andy Wills. To put it briefly, a **function is an
+material already on [how to write functions](https://www.andywills.info/rminr/awdiss.html#funcloop). To put it briefly, a **function is an
 instruction sequence that takes something as an input and translates it
 into an output.**
 
-Here we will write our own function that extracts the Bayes Factor for our
+Here we will write our own function that extracts the BF for our
 sample size. The function will need to know `n` which is our sample size,
-and `data` which is the generated data.
-So what does our function need to do? It needs to :
+and `data` which is the generated data. Our function will:
 
-1. Take `n` number of randomly selected participant from `data`.
-2. Then run the paired-sample Bayesian t-test on the subset data.
-3. Store the output and put it into a format, where we can extract the Bayes Factor.
-4. At the end, return the Bayes Factor.
+1. Take `n` number of randomly selected participant from each group in `data`. We do this by randomly selecting participant identifiers for each group.
+2. Then run the Bayesian t-test on the subset data.
+3. Store the output and put it into a format, where we can extract the BF.
+4. At the end, return the BF.
+
+You can simply copy-paste the code below into your R script.
 
 ```{r}
 ## we take the sample size n and a data set as inputs
 get_bf <- function(n, data) {
-    ## 1. we randomly pick n number of participants from data
-    ideal_dta <- data %>% filter(ppt %in% sample(1000, n))
+    ## 1. we randomly pick n number of participants for each group
+    control <- sample(1000, n) # get participant identifiers for control
+    caffeine <- sample(1000, n) + 1000 # get participant identifiers for caffeine
+    random_data <- data %>% filter(ppt %in% c(control, caffeine))
     ## 2. do the Bayesian t-test
-    test <- ttestBF(x = ideal_dta$fluctuations[ideal_dta$condition == "before"],
-                  y = ideal_dta$fluctuations[ideal_dta$condition == "after"],
-                  paired = TRUE)
+    test <- ttestBF(formula = fluctuations ~ condition, data = random_data)
     ## 3. get the Bayes Factor
-    ## we have to change the data format to extract the Bayes Factor
-    test <- data.frame(test)
-    ## copy it into a new R object
-    bf <-  test$bf
+    ## we have to change the format to data.frame to extract the Bayes Factor
+    bf <- test %>% data.frame() %>% select(bf) %>% as.numeric()
     ## 4. return it to the user
     return(bf)
 }
@@ -359,7 +381,7 @@ real-world process over time.
 
 Now we are at the stage when we can actually run a simulation. These simulations
 will be based on a mathematical technique called random sampling or Monte Carlo
-methods. Beware that there are no special equations or complicated math
+methods. There are no special equations or complicated math
 involved here. Monte Carlo is simply a tool that is used to estimate possible
 outcomes of uncertain events. In our case, the possible outcome is the Bayes
 factor and the uncertain event is the data we collect. So we imitate
@@ -378,31 +400,46 @@ time we draw *n* number of data points. The mean effect size remains the same,
 but it allows us to make more precise and reliable estimate on how many
 participants we need to recruit.
 
-There are two things to decide before we start imitating data collection:
+There are two things to decide before we start simulating data collection:
 
-1. The sample sizes we want to check. We create all sample sizes as a `tibble`
-object. This means that we will have a one-column data frame with all the
-sample sizes we want to check.
-2. The number of draws we wish to make for each sample sizes. This will simply
-be the number of times a certain sample size occurs in our `tibble` data frame.
+1. The sample sizes we want to check. We create all sample sizes as tibble. If you want to know more about what tibble is, see [More on Tibbles](https://www.andywills.info/rminr/more-on-tibbles.html). This means that we will have a one-column data frame with all the sample sizes we want to check.
+2. The number of draws we wish to make for each sample sizes. This will simply be the number of times a certain sample size occurs in our `tibble` data frame.
 
+First, we will create sample sizes from 10 to 200. We will also repeat each
+sample size 1000 times. After creating the sample sizes, we need to apply our
+`get_bf` function to every one of the sample sizes in our tibble and somehow
+make R remember every BF we get. One option is to do it by hand. We go take
+one sample size at a time in our tibble and record the Bayes Factor. We would
+need to repeat it 20000 times to complete our power calculation.
 
-First, we will create sample sizes from 10 to 200. We will also repeat each sample size 1000 times.
+The better option is to make R do it. We can make R do the legwork
+for us by using `map_dbl`. `map_dbl` is a member of a family of `map` commands.
+They take a *function* and apply it to every element in the object you select.
+We can use `map_dbl` over each sample size in our `tibble` and run the `get_bf`
+function we just wrote. `get_bf` needs to have the data as well, which we will
+add within the `map_dbl` command below as `data = ideal_data`. `map_dbl` is
+smart enough to know that this is something that our `get_bf` function needs.
 
-Then we will mutate the data frame, which will add another column that we
-call `bf`. We then use `map_dbl`, which can go over each sample size in our
-`tibble` and run the `get_bf` function we just wrote. `get_bf` needs to
-have the data as well, which we will add within the `map_dbl` command below.
+Then we will `mutate` the data frame, which will add another column that we
+call `bf`.
 
-```{r}
-## this can take quite a while
-monte <- tibble(n = rep(seq(10, 200, 10), each = 1000)) %>%
+We also need to make sure to store the results in an object.
+
+We will also get a *warning message* from R that it converted our tibble
+to a data.frame. This is not an error message. R still succesfully executed the
+code below.
+
+**The command below will take approximately 4 minutes 30 seconds to complete.**
+
+```{r, warning = FALSE}
+monte <- tibble(n = rep(seq(from = 10, to = 200, by = 10), each = 1000)) %>%
     mutate(bf = map_dbl(n, get_bf, data = ideal_data))
 ```
 
-Now we have everything that we need. So let us do the math.
+Now we have everything that we need. So let us find out the lowest sample size
+that gives us a decent chance at getting a conclusive BF.
 
-1. We will group by the sample sizes.
+1. We will group the data by the sample sizes.
 
 2. Check whether the BF fell between 1/3 and 3. We do this with the
 command `between`, which will return TRUE if the value of interest falls
@@ -414,41 +451,37 @@ return TRUE, because 30 is somewhere between 18 and 60.
 Divide that number by a 100 to get the proportions.
 
 4. Then we move on to subtract it from 1, which will give us the proportion of
-times we got a Bayes Factor that was conclusive - outside of the interval
+times we got a BF that was conclusive - outside of the interval
 1/3 and 1.
 
 ```{r}
-monte %>%
+power <- monte %>%
     group_by(n) %>%
-    summarise(power = 1 - (sum(between(bf, 1/3, 3)) / 1000)) %>%
-    data.frame()
+    summarise(power = 1 - (sum(between(bf, 1/10, 10)) / 1000))
+
+# show all the rows where power is larger than 80%
+power %>%
+    filter(power > 0.80)
 ```
 
 The only thing that remains is to find out the actual sample size we need.
 In frequentist methods, people usually expect your study to have at least
-80% power. If we accept that convention for this as well, **we can settle on
-a sample size of 50.** On the other hand, the story doesn't end here.
+80% power. If we accept that convention for this as well, we can settle on
+a sample size of `r power$n[power$power > 0.80][1]` **for each group**.
+You can see in the output above, that this is the first sample size where we
+had 80% of BFs conclusive. This means that you need to recruit
+`r 2*power$n[power$power > 0.80][1]` participants overall.
 
-This is the exact moment, when you might want to stop and think about how
-many participants you might potentially end up excluding. This depends a lot
-on the nature of your experiment and the characteristics of the population.
-If you have a learning criterion, you can end up excluding 30% of all
-participants. It is not uncommon to add 15 more participants on top of that 50,
-just to be safe.
+Remember that we picked *n* number of people from each group. So each sample
+size we checked has to be multipled by 2 as it is a between-subject experiment -
+compares measures between at least two groups.
 
 Before moving on to the exercises, it is worth looking at the how power improves
-for each sample size.
-
-As you can see, the power goes up not linearly, but more as
-a curve. This resembles more to a logarithmic function, which has this
-steep curve that seems to plateau after a certain point. Power after a certain
-point remains stationary. This means that collecting too much data is
-not harmful, but can be unnecessary.
+for each sample size. Let us visualise this via a plot.
 
 ```{r}
-monte %>%
-    group_by(n) %>%
-    summarise(power = 1 - (sum(between(bf, 1/3, 3)) / 1000)) %>%
+power %>%
+# classify every sample size as over or below 80% power or not
     mutate(criterion = power > 0.80) %>%
     ggplot(aes(x = n, y = power)) +
     geom_line(linetype = 2) +
@@ -460,23 +493,30 @@ monte %>%
     theme_classic()
 ```
 
-You can see on this graph, that beyond a certain sample size, there are no
-improvement. This means that keep collecting data will add no detectable
-benefit to your analysis.
+As you can see, the power goes up not linearly, but more as
+a curve. This resembles more to a logarithmic function, which has this
+steep curve that seems to plateau after a certain point. Power after a certain
+point remains stationary. This means that collecting too much data is
+not harmful, but can be unnecessary.
 
-# Exercise 1: Estimate the sample for a null effect
+# Exercise 1: Estimate the sample size for a new data set.
 
-In this exercise you will need to estimate the sample size for detecting
-null effect. Additionally, you will need to do so for a harsher interval,
-where the Bayes Factor falls outside of 1/10 and 10. You will need
+In this exercise you will need to estimate the sample size for a different
+data set.
+
+The data will be on the production effect in memory. More explanation on the
+data can be found in the [Revision worksheet](https://www.andywills.info/rminr/revision.html).
+You can right click on [production data](https://raw.githubusercontent.com/ajwills72/rminr-data/master/production.csv) and
+save it as a CSV.
+
+Additionally, you will need to do so for a harsher interval,
+where the BF falls outside of 1/10 and 10. You will need
 to find the sample size, that will give you at least 80% of power.
 
-On Psyc:EL, you will need to insert the code you used to estimate the sample
-size for the null hypothesis.
-
-Hint: the null hypothesis essentially means that there is no difference between
-conditions, so the means are equal. You might also need to increase how many
-sample sizes you need to test.
+**Hint**: If the effect size is small, it often requires large samples to
+reliably detect an effect. Sample size can go sometimes as high as a 500
+participants per group. If you increase the number of sample sizes you want to
+check, it will also take longer to run the command.
 
 # Exercise 2: Create a plot.
 
@@ -484,9 +524,10 @@ sample sizes you need to test.
 
 Using the estimate from Exercise 1, create a plot showing power for each sample
 size and **upload it to Psych:EL as a PDF**. You will need to edit the code for
-the plot we have already created once, so you already have a template to go by.
-Remember to (a) add the line for the adequate sample size and (b) edit the axis
-ticks, so it includes the lowest estimated sample size with at least 80% power.
+the plot we have created at the end of the worksheet, so you already have a
+template to go by. Remember to (a) add the line for the adequate sample size
+and (b) edit the axis ticks, so it includes the lowest estimated sample size
+with at least 80% power.
 
 # Further Intermediate Reading
 
