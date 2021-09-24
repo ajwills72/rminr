@@ -21,7 +21,7 @@ Your command of English was generally really good, but there are some minor gram
 
 - Telling our students they have 'coding skills' may scare a lot of them.
 
-LD 2021-09-16: Interesting. Omitted compliment. :)
+LD 2021-09-16: Amended.
 
 ### S4
 

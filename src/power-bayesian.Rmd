@@ -121,13 +121,16 @@ We calculate power for BF as
 
 $$1 - Pr(lower bound < BF < upper bound)$$
 
-Simply put, we take the percentage of BFs that
-were inconclusive and subtract it from 100%. So if we have 40% of Bayes
+Simply put, we take the percentage of BFs that were inconclusive and subtract
+it from 100%. We have the probability of BF falling between ⅓ and 3 written as
+$Pr(lower bound < BF < upper bound)$. 100% is written here as one.
+So if we have 40% of Bayes
 Factors that were inconclusive, then 100 - 40 will give us 60% of Bayes
 Factors that were conclusive. This means that we have a 60% chance of
 getting a conclusive result. Usually, we don't use percentages, but rather
 use values from 0 to 1. So 60% will be the same as 0.6 and 100% will be the
-same as 1.
+same as 1. We will also refer to these values as probabilities and not
+percentages. For our purposes, the two are the same.
 
 **When we think about BFs and Power, we want to know how
 many data points we need to get a conclusive BF.**
@@ -181,7 +184,7 @@ square at the front. If you keep looking at the cube, you can see that the
 orientiation switches between these two percepts - having the lower-left
 or upper-right square as its front side.
 
-![Public Domain](https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Filled_necker_cube.svg/480px-Filled_necker_cube.svg.png)
+![](pics/necker_wikimedia.png){ style="display: block; margin: 0 auto" }
 
 George (1935) reported that people passively switch between the two
 percepts at a higher rate after they had coffee compared to when they
@@ -228,7 +231,7 @@ dta$ppt <- factor(dta$ppt)
 
 The first thing we note is that it is not a within-subject design as in the
 original paper. Generating within-subject data is more ardous, as it
-involves a correlation between the two conditions. Here, we just assume
+involves some correlation between the two conditions. Here, we just assume
 that we collected data from a between-subject [pilot experiment](https://en.wikipedia.org/wiki/Pilot_experiment).
 
 Now, let us have a look at how the data look like. The meaning of the
@@ -261,6 +264,10 @@ to do on our own data. We will use a
 ttestBF(formula = fluctuations ~ condition, data = dta)
 ```
 
+```{r, include = FALSE}
+bf <- ttestBF(formula = fluctuations ~ condition, data = dta)
+```
+
 This is an inconclusive result. Some would say that it is
 anecdotal evidence for the null, but that simply means that we don't have
 enough data to conclude. When the results are inconclusive, the BF
@@ -289,17 +296,17 @@ commands and approaches.
 For now, we will make it easy and straightforward. We will use `rnorm` to create our data. The command looks like this:
 
 ```r
+# do not copy and paste it
 rnorm(n = group_size, mean = mean_from_data, sd = standard_deviation)
 ```
 
-The next step is to simply give `rnorm` the mean and standard deviation we
-saw a few commands before. We will do it for each condition
+The next step is to simply give `rnorm` the mean and standard deviation of our data. We will do it for each condition
 
 ```{r}
 # generate random data for the control condition
-control <- rnorm(n = 1000, mean = 0.561, sd = 0.147)
+control <- rnorm(n = 1000, mean = 0.566, sd = 0.173)
 # generate random data for the caffein condition
-caffeine <- rnorm(n = 1000, mean = 0.706, sd = 0.178)
+caffeine <- rnorm(n = 1000, mean = 0.666, sd = 0.118)
 # here we create a vector for the group column
 group <- rep(c("control", "caffeine"), each = 1000)
 # create a participant column
@@ -337,6 +344,51 @@ The distribution of the data also looks exactly what we want.
 
 ### Getting the Bayes Factor
 
+Start with subsetting the data, so we can check power for one sample size at a
+time. Let's say that we want to check power for 40 participants.
+
+So we start by selecting 40 participants from each condition. We will do so
+by randomly generating participant identifiers. This is easy because
+participants are identified in our ideal data by a single number between 1 and
+a 2000, inclusive. The first 1000 belong to the control condition, while the second belongs to the caffeine condition.
+
+We can use `sample` to generate random participant numbers.
+`sample` essentially picks random elements from a predefined set. So we want
+`sample` to pick 40 random numbers between 1 and a 1000 and 1001:2000
+
+```{r}
+# for the control condition
+control <- sample(1:1000, size = 40)
+caffeine <- sample(1001:2000, size = 40)
+```
+
+Now we crated two objects that contain random numbers exactly like our
+participants numbers. We now filter the data by our participant numbers.
+
+```{r}
+random_data <- ideal_data %>%
+  filter(ppt %in% c(control, caffeine))
+```
+
+If the data is subset, we will need to do a Bayesian t-test on this data.
+
+```{r}
+test <- ttestBF(formula = fluctuations ~ condition, data = random_data)
+```
+
+The final step is to extract the Bayes Factor.
+
+```{r}
+bf <- test %>%
+    data.frame() %>% # change the format to a data frame for usability
+    select(bf) %>% # select the bf column
+    as.numeric() # make sure that R converts BF to a number and not a character
+
+bf
+```
+
+And now we have our BF of `bf`.
+
 #### Compressing what we have just done
 
 Every function (commands) that you use has been written by a person. Functions
@@ -361,8 +413,9 @@ You can simply copy-paste the code below into your R script.
 ## we take the sample size n and a data set as inputs
 get_bf <- function(n, data) {
     ## 1. we randomly pick n number of participants for each group
-    control <- sample(1000, n) # get participant identifiers for control
-    caffeine <- sample(1000, n) + 1000 # get participant identifiers for caffeine
+    control <- sample(1:1000, n) # get participant identifiers for control
+    caffeine <- sample(2:2000, n) # get participant identifiers for caffeine
+    # subset data
     random_data <- data %>% filter(ppt %in% c(control, caffeine))
     ## 2. do the Bayesian t-test
     test <- ttestBF(formula = fluctuations ~ condition, data = random_data)
@@ -407,12 +460,12 @@ There are two things to decide before we start simulating data collection:
 
 First, we will create sample sizes from 10 to 200. We will also repeat each
 sample size 1000 times. After creating the sample sizes, we need to apply our
-`get_bf` function to every one of the sample sizes in our tibble and somehow
-make R remember every BF we get. One option is to do it by hand. We go take
-one sample size at a time in our tibble and record the Bayes Factor. We would
-need to repeat it 20000 times to complete our power calculation.
+`get_bf` function to every one of the sample sizes in our tibble a 1000 times
+and somehow make R remember every BF we get. One option is to do it by hand. We
+go take one sample size at a time in our tibble and record the Bayes Factor. We
+would need to repeat it 20000 times to complete our power calculation.
 
-The better option is to make R do it. We can make R do the legwork
+The better option is to make R do the legwork
 for us by using `map_dbl`. `map_dbl` is a member of a family of `map` commands.
 They take a *function* and apply it to every element in the object you select.
 We can use `map_dbl` over each sample size in our `tibble` and run the `get_bf`
@@ -469,27 +522,57 @@ In frequentist methods, people usually expect your study to have at least
 80% power. If we accept that convention for this as well, we can settle on
 a sample size of `r power$n[power$power > 0.80][1]` **for each group**.
 You can see in the output above, that this is the first sample size where we
-had 80% of BFs conclusive. This means that you need to recruit
-`r 2*power$n[power$power > 0.80][1]` participants overall.
+had 80% of BFs conclusive. **This means that you need to recruit
+`r 2*power$n[power$power > 0.80][1]` participants overall.**
 
 Remember that we picked *n* number of people from each group. So each sample
 size we checked has to be multipled by 2 as it is a between-subject experiment -
 compares measures between at least two groups.
 
 Before moving on to the exercises, it is worth looking at the how power improves
-for each sample size. Let us visualise this via a plot.
+for each sample size. Let us visualise this via a plot. This plot will be similar to what you already made in the [Understanding interactions](https://www.andywills.info/rminr/anova2.html)
+and [Factorial Differences](https://www.andywills.info/rminr/anova3.html).
+
+First, we are going to create a new column that will tell us whether the sample
+size has at least 80% power or not. We will also save the object by overwriting
+`power`.
 
 ```{r}
-power %>%
-# classify every sample size as over or below 80% power or not
-    mutate(criterion = power > 0.80) %>%
-    ggplot(aes(x = n, y = power)) +
+power <- power %>%
+    mutate(criterion = power > 0.80)
+```
+
+Now in order to make a graph, we will use two additional functions to show us
+where is the smallest sample size that meets our criteria.
+
+`geom_vline` will simply insert a vertical line onto the graph. A simple
+vertical line can be very powerful. It will tell us exactly where to look on
+the plot.
+`scale_x_continuous` will let us specify how many ticks we want to draw on
+the x-axis. We can use the `breaks` option within this function to let it know
+what we need. We want to have more ticks than one, so that whoever is viewing
+the plot can have a sense of how the smallest adequate sample size fairs with
+other options.
+
+We also need to make sure that axis labels are correct and informative. On top
+of that, I also choose to better look for our plot by using `"theme_classic`.
+
+```{r}
+## sample size on the x-axis and power on the y-axis
+ggplot(power, aes(x = n, y = power)) +
+    # make a line graph
     geom_line(linetype = 2) +
+    # add points with different colours for our criterion
+    # we also want to increase the size of those points
     geom_point(aes(colour = criterion), size = 2) +
-    geom_vline(aes(xintercept = 50)) +
-    scale_x_continuous(breaks = sort(c(50, seq(0, 200, 100)))) +
+    # put a vertical line at 70 on the x axis
+    geom_vline(aes(xintercept = 70)) +
+    # put a tick on the x-axis at 50, 100, and 200
+    scale_x_continuous(breaks = sort(c(70, 100, 200))) +
+    # rename axis labels
     xlab("sample size") +
     ylab("power") +
+    # nice theme
     theme_classic()
 ```
 
@@ -542,7 +625,7 @@ Here is a list of papers already using Bayesian Power Analysis:
 - [BFDA in practice: A list of published examples](https://github.com/nicebread/BFDA/blob/master/BFDA_examples.md)
 
 They can give you a few examples on how to write up what we have done for your
-a potential reports.
+potential report.
 
 ___
 
