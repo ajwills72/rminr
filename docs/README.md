@@ -2,7 +2,7 @@
 _2021 Edition._
 
 
-_Research Methods in R_ is a set of guides on how to use R as your central research methods tool. They are written by various authors, and curated by [Andy Wills](https://www.andywils.info). The target audience is psychology undergraduate students. _Research Methods in R_ is [Creative Commons](https://creativecommons.org/), so you are free to reuse these materials and adapt them as you wish, as long as you attribute them to their authors, and as long as your modifications have a Creative Commons licence. They come with absolutely no warranty of any kind.
+_Research Methods in R_ is a set of guides on how to use R as your central research methods tool. They are written by various authors, and curated by [Andy Wills](https://www.andywills.info). The target audience is psychology undergraduate students. _Research Methods in R_ is [Creative Commons](https://creativecommons.org/), so you are free to reuse these materials and adapt them as you wish, as long as you attribute them to their authors, and as long as your modifications have a Creative Commons licence. They come with absolutely no warranty of any kind.
 
 _Note to teachers_: These materials have been tested against R version 4.1.0 (released 18th May 2021), and the most recent version of packages that were available on [MRAN](https://mran.microsoft.com/) on the 17th June 2021. 
 
