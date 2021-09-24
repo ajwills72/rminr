@@ -1,7 +1,8 @@
 # Research Methods in R
 _2021 Edition._
 
-_Research Methods in R_ is a set of guides on how to use R as your central research methods tool. The target audience is psychology undergraduate students. _Research Methods in R_ is [Creative Commons](https://creativecommons.org/), so you are free to reuse these materials and adapt them as you wish, as long as you attribute them to their authors, and as long as your modifications have a Creative Commons licence. They come with absolutely no warranty of any kind.
+
+_Research Methods in R_ is a set of guides on how to use R as your central research methods tool. They are written by various authors, and curated by [Andy Wills](https://www.andywils.info). The target audience is psychology undergraduate students. _Research Methods in R_ is [Creative Commons](https://creativecommons.org/), so you are free to reuse these materials and adapt them as you wish, as long as you attribute them to their authors, and as long as your modifications have a Creative Commons licence. They come with absolutely no warranty of any kind.
 
 _Note to teachers_: These materials have been tested against R version 4.1.0 (released 18th May 2021), and the most recent version of packages that were available on [MRAN](https://mran.microsoft.com/) on the 17th June 2021. 
 
@@ -17,27 +18,27 @@ To see how a subset of these resources is used in undergraduate psychology teach
 
 Start with **ONE** of these three options:
 
-1. Long, easy-going introduction
+- Long, easy-going introduction
     - [Absolute Beginners' Guide to R](#beginners)
     - [Putting R to Work](#rtowork)
 
-2. Somewhat shorter introduction
+- Somewhat shorter introduction
     - [LifesavR](http://benwhalley.github.io/lifesavR/)
 	
-3. Even shorter introduction
+- Even shorter introduction
     - [A Very Brief Guide to R](#vbgtr)
 
 ### Intermediate guides
 
 Next, go through **BOTH** of these guides.
 
-4. [Research Methods in Practice](#rmip)
+- [Research Methods in Practice](#rmip)
 
-5. [Intermediate Guide to R](#rmip) 
+- [Intermediate Guide to R](#rmip) 
 
 ### Advanced guide
 
-6. [Going further with R](#gfwr) 
+- [Going further with R](#gfwr) 
 
 
 <a name="gen"></a>
