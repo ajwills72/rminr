@@ -383,11 +383,22 @@ bf <- test %>%
     data.frame() %>% # change the format to a data frame for usability
     select(bf) %>% # select the bf column
     as.numeric() # make sure that R converts BF to a number and not a character
+```
 
+Let us look at the Bayes Factor.
+
+```{r}
 bf
 ```
 
-And now we have our BF of `bf`.
+This is our whole procedure for extracting a Bayes Factor for a single sample.
+
+We see that our BF of `bf` is not conclusive. This is not promising, but we
+have only sampled from our ideal data once for the sample size 40. In
+principle, we could go through our procedure line by line for each sample size
+many times. A more compact way to do this is to collage it together into a
+_function_. Than we can use the _function_, tell it the sample size, and it will
+go through the whole procedure for us.
 
 #### Compressing what we have just done
 
@@ -414,7 +425,7 @@ You can simply copy-paste the code below into your R script.
 get_bf <- function(n, data) {
     ## 1. we randomly pick n number of participants for each group
     control <- sample(1:1000, n) # get participant identifiers for control
-    caffeine <- sample(2:2000, n) # get participant identifiers for caffeine
+    caffeine <- sample(1001:2000, n) # get participant identifiers for caffeine
     # subset data
     random_data <- data %>% filter(ppt %in% c(control, caffeine))
     ## 2. do the Bayesian t-test
@@ -427,13 +438,24 @@ get_bf <- function(n, data) {
 }
 ```
 
+This is our function. Let's try it out for a sample size of 40 with our `ideal_data`.
+So we will have `n = 40` and `data = ideal_data`.
+
+```{r}
+get_bf(n = 40, data = ideal_data)
+```
+
+We get a warning message, but it is nothing to be concerned about. It simply
+tells us that the `ttestBF` changed the format of our data, so it can do the
+test we wanted. Apart from the warning message, it works flawlessly.
+
 ### Determining Sample Size
 
 > Simulations are pretend games. When we say simulate, we mean to imitate some
 real-world process over time.
 
 Now we are at the stage when we can actually run a simulation. These simulations
-will be based on a mathematical technique called random sampling or Monte Carlo
+will be based on a technique called random sampling or Monte Carlo
 methods. There are no special equations or complicated math
 involved here. Monte Carlo is simply a tool that is used to estimate possible
 outcomes of uncertain events. In our case, the possible outcome is the Bayes
@@ -626,7 +648,6 @@ Here is a list of papers already using Bayesian Power Analysis:
 
 They can give you a few examples on how to write up what we have done for your
 potential report.
-
 ___
 
 This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0.
