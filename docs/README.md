@@ -13,19 +13,32 @@ To see how a subset of these resources is used in undergraduate psychology teach
 
 ## List of guides
 
-1. [Absolute Beginners' Guide to R](#beginners)
+### Introductory quides
 
-2. [Putting R to Work](#rtowork)
+Start with **ONE** of these three options:
 
-3. [A Very Brief Guide to R](#vbgtr)
+1. Long, easy-going introduction
+    - [Absolute Beginners' Guide to R](#beginners)
+    - [Putting R to Work](#rtowork)
+
+2. Somewhat shorter introduction
+    - [LifesavR](http://benwhalley.github.io/lifesavR/)
+	
+3. Even shorter introduction
+    - [A Very Brief Guide to R](#vbgtr)
+
+### Intermediate guides
+
+Next, go through **BOTH** of these guides.
 
 4. [Research Methods in Practice](#rmip)
 
 5. [Intermediate Guide to R](#rmip) 
 
+### Advanced guide
+
 6. [Going further with R](#gfwr) 
 
-7. [Case studies](#studies)
 
 <a name="gen"></a>
 
@@ -44,8 +57,10 @@ To see how a subset of these resources is used in undergraduate psychology teach
 
 1. [Dealing with common errors](common-errors.html). List of commonly-encountered errors and how to solve them.
 
+1. [Case studies](#studies)
 
-## 1. Absolute Beginners' Guide to R
+
+## Absolute Beginners' Guide to R
 <a name="beginners"></a>
 
 A series of worksheets on using R for data analysis in psychology. No previous knowledge of R, or of psychology, is assumed. 
@@ -91,7 +106,7 @@ A series of worksheets on using R for data analysis in psychology. No previous k
 * [Making reports with R](insert-image.html). How to insert an RStudio graph into your wordprocessor document (e.g. Word). Links to _RMarkdown_ as an alternative.
 
 
-## 2. Putting R to work
+## Putting R to work
 <a name="rtowork"></a>
 
 These are mainly further practice in the skills learned in _Absolute Beginners'_. Where the exercises contain completely new skills, these are shown in **bold**. Where the excercises extend a skill you've already been taught, these are shown in _italics_. The exercises become somewhat more difficult as you go down the list. 
@@ -120,7 +135,7 @@ If you are a current undergraduate student at Plymouth University, you should co
 
 * [Political psychology](brexit.html). Means, filtering data, _summarising data_, density plots, effect size, Bayesian t-test, traditional t-test. 
 
-## 3. A Very Brief Guide to R
+## A Very Brief Guide to R
 
 <a name="vbgtr"></a>
 
@@ -137,20 +152,22 @@ The _Absolute Beginners' Guide to R_ and _Putting R to Work_ provide, between th
 * [Evidence, part 2](vbg_corr.html): Bayes and traditional correlation, scatterplot
 
 
-## 4. Research Methods in Practice (Quantitative section)
+## Research Methods in Practice (Quantitative section)
 
 <a name="rmip"></a>
 
-These are intermediate-level materials, designed to follow on from _An Absolute Beginners' Guide to R_ and _Putting R to work_ (or from _A Very Brief Guide to R_, if you're in a hurry). They are maintained by Ben Whalley on a separate site,
-but have been designed to fit in here in this sequence of materials. Only the _quantitative_ section of Ben's site contains information concerning the usage of R.
+These are intermediate-level materials. They are maintained by Ben Whalley on a
+separate site, but have been designed to fit in here in this sequence of
+materials. Only the _quantitative_ section of Ben's site contains information
+concerning the usage of R.
 
 - [Research Methods in Practice](https://benwhalley.github.io/rmip/data.html): Data handling, [fitting lines](https://benwhalley.github.io/rmip/regression.html) - _scatterplot with best fit line_ , **converting Likert scales from text to numbers**, **reverse scoring scale items**, multiple regression.
 
-## 5. Intermediate Guide to R
+## Intermediate Guide to R
 
 <a name="rmip"></a>
 
-These are intermediate-level materials, designed to follow on from _An Absolute Beginners' Guide to R_ and _Putting R to work_ (or from _A Very Brief Guide to R_, if you're in a hurry). They  provide analysis methods for conducting realistic, high-quality studies in psychology. They are aimed at a second-year undergraduate audience.
+These are intermediate-level materials. They  provide analysis methods for conducting realistic, high-quality studies in psychology. They are aimed at a second-year undergraduate audience.
 
 - [Revision](revision.html): A quick recap of key information covered in earlier courses.
 
@@ -173,7 +190,7 @@ These are intermediate-level materials, designed to follow on from _An Absolute 
   one between), plus advice on: pairwise comparisons, better graphs, reporting Bayesian ANOVA, and ordinal (i.e. ordered) independent variables.
 
 
-## 6. Going further with R 
+## Going further with R 
 <a name="gfwr"></a>
 
 These are slightly more advanced materials, aimed at a final-year undergraduate psychology audience.
@@ -212,7 +229,7 @@ These are slightly more advanced materials, aimed at a final-year undergraduate 
 
 <a name="studies"></a>
 
-## 7. Case studies 
+## Case studies 
 These are full preprocessing and analysis pipelines, mainly based on final-year undergraduate psychology projects.
 
 - [The effects of negative mental imagery on self-esteem](cs-self-esteem.html): preprocessing, Cronbach's alpha, Bayesian ANOVA.
