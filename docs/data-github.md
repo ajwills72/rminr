@@ -65,7 +65,7 @@ You should create just one repository for your whole project, to be used by all 
 
 Private repositories can only been seen by people who you invite. Folow these steps to invite someone:
 
-1. CLick 'settings' (a cog wheel)
+1. Click 'settings' (a cog wheel)
 
 1. Click "manage access"
 

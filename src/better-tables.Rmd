@@ -76,6 +76,8 @@ attitude %>% head(5) %>% pander()
 
 We'll use the `apaTables` package to generate the correlation matrix.
 
+**Enter these commands into your script, and run them:**
+
 ```{r, R.options = list(width = 10000)}
 rm(list = ls()) # clear the environment
 library(apaTables)
@@ -106,7 +108,9 @@ Evidence for the correlation is calculated using traditional statistics, rather 
 
 For this exercise, we'll load some data from a study which measured aspects of participants' personality.
 
-```{r}
+**Enter these commands into your script, and run them:**
+
+```{r, message=FALSE}
 # Exercise 1
 library(tidyverse)
 big5 <- read_csv('case-studies/jon-may/big5_total.csv')
@@ -136,7 +140,7 @@ As with graphs, there is often an element of design involved in presenting tabul
 
 We'll demonstrate this process by producing a table of descriptive statistics. The data we'll use comes from an experiment which evaluated children’s language development using the Words in Game (WinG) test. WinG consists of a set of picture cards which are used in four tests: noun comprehension, noun production, predicate comprehension, and predicate production. The Italian and English versions of the WinG cards use different pictures to depict the associated words. The experiment tested whether English-speaking children aged approximately 30 months, produce similar responses for the two sets of cards. We would like to produce a single table, containing descriptive statistics for all four tests.
 
-We start by loading the data:
+We start by loading the data; **enter this command into your script, and run it:**
 
 ```{r excel, message=FALSE}
 # Load data
@@ -153,6 +157,8 @@ wing_preproc %>% head() %>% pander(split.table = Inf)
 
 Our test scores are currently in _wide_ format (lots of columns, few rows), but R generally requires data to be in _long_ format 
 (lots of rows, few columns). This means we first have to make the data frame wider, so we can calculate summary statistics.
+
+**Enter these commands into your script, and run them:**
 
 ```{r pivot}
 # wide to long
@@ -173,7 +179,9 @@ The first few rows of `task_by_subj` look like this:
 task_by_subj %>% head(5) %>% pander()
 ```
 
-Now we can calculate some summary statistics, using commands that we've already used in previous worksheets:
+Now we can calculate some summary statistics, using commands that we've already used in previous worksheets. 
+
+**Enter these commands into your script, and run them:**
 
 ```{r descriptives-1}
 # Table of descriptive statistics
@@ -189,7 +197,6 @@ descript <- task_by_subj %>%
 
 2. We've also come across `summarize` [before](exploring-incomes.html#means), including the use of `na.rm = TRUE` to deal with missing data. 
 
-
 Our data now looks like this:
 
 ```{r echo=FALSE}
@@ -198,8 +205,9 @@ descript %>% pander()
 
 ### Meaningful labels
 
-The `descript` data frame contains just the numbers we want to include in our report - the means and standard deviations for each of the eight groups. However, the row labels (`np`, etc.) are not particularly clear, so we replace them with something more human readable:
+The `descript` data frame contains just the numbers we want to include in our report - the means and standard deviations for each of the eight groups. However, the row labels (`np`, etc.) are not particularly clear, so we replace them with something more human readable.
 
+**Enter these commands into your script, and run them:**
 
 ```{r mean-labels}
 task_names <- c(
@@ -253,7 +261,9 @@ rm(descript_table)
 
 In other words, it would be _wider_: more columns and fewer rows. 
 
-We can widen the table, using the `pivot_wider` command we have previously used in the [within-subject differences](anova1.html#pivot) worksheet:
+We can widen the table, using the `pivot_wider` command we have previously used in the [within-subject differences](anova1.html#pivot) worksheet. 
+
+**Enter these commands into your script, and run them:**
 
 ```{r descriptives-2}
 # Widen table
@@ -267,7 +277,9 @@ Our table now has the same format as an APA table...
 descript_table %>% pander()
 ```
 
-...but the columns are in a different order. APA format dictates that means should be placed next to their associated standard deviations in a table (APA format is weirdly specific). Fortunately, we can rearrange columns using the `select` command that we've come across before:
+...but the columns are in a different order. APA format dictates that means should be placed next to their associated standard deviations in a table (APA format is weirdly specific). Fortunately, we can rearrange columns using the `select` command that we've come across before.
+
+**Enter this command into your script, and run it:**
 
 ```{r rearrange}
 # Re-order columns
@@ -278,7 +290,9 @@ descript_table <- descript_table %>% select(task, mean_female, sd_female, mean_m
 descript_table %>% pander()
 ```
 
-Finally, we can replace the column names with something a bit more human readable, using the `colnames` function:
+Finally, we can replace the column names with something a bit more human readable, using the `colnames` function. 
+
+**Enter this command into your script, and run it:**
 
 ```{r rename-cols}
 # Column names
@@ -297,7 +311,7 @@ Note that it would arguably be clearer to write "mean" rather than "M", but it's
 
 There are a number of different ways to get a table in R into your wordprocessor. We're going to use the `kableExtra` package, because it's really flexible, so it's capable of producing almost any table you might need. We're only going to use it in the most basic way here; for some other examples of what it can do, see the kableExtra [website](https://haozhu233.github.io/kableExtra/awesome_table_in_html.html).
 
-To get a version of `descript_table` that you can cut-and-paste into your wordprocessor, do this:
+To get a version of `descript_table` that you can cut-and-paste into your wordprocessor, **enter these commands into your script, and run them:**
 
 ```{r kable-descriptives,results='hide'}
 library(kableExtra)

@@ -66,7 +66,7 @@ For example, a Bayes Factor of 10 means it's ten times more likely there is a di
 
 A Bayes Factor less than 1 is also informative. For example, a Bayes Factor of 0.1 (1/10) tells you it's ten times more likely that there *isn't* a difference than there is. 
 
-A Bayes Factor of exactly 1 tells you that the presence or absence of a difference is equally likely.
+All the above assumes that, before you collected the data, you thought the presence or absence of a difference were equally likely outcomes. If that is not the case, see [more on Bayes Factors](more-on-bf.html).
 
 Psychologists love a "line in the sand", so a convention has emerged that we believe there is a difference if the Bayes Factor is greater than 3, and believe there isn't a difference if the Bayes Factor is less than 0.33. We sometimes describe these lines in the sand as "substantial evidence for a difference" (BF > 3) and "substantial evidence for the null" (BF < 0.33). 
 
@@ -76,7 +76,7 @@ All the above assumes that, before you collected the data, you thought the prese
 
 ## Bayesian t-test 
 
-The easiest way to calculate a Bayes Factor in R is to use something called a between-subjects Bayesian t-test. This test looks at how big the difference in means between groups is, how much the variation in the two groups overlaps, and how big the sample is. It then does some calculations, based on some assumptions about how large real differences tend to be in psychology, and works out a Bayes Factor. The exact nature of that calculation is largely a matter for  mathematicians and methods experts; other psychologists generally take the answer on trust. 
+The easiest way to calculate a Bayes Factor in R is to use something called a between-subjects Bayesian t-test. This test looks at how big the difference in means between groups is, how much the variation in the two groups overlaps, and how big the sample is. It then does some calculations, based on some assumptions about how large real differences tend to be in psychology, and works out a Bayes Factor. The exact nature of that calculation is largely a matter for mathematicians and methods experts; other psychologists generally take the answer on trust. 
 
 We start by loading the  _BayesFactor_ package. Recall, that you load a package using the `library` command. 
 

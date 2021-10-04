@@ -4,7 +4,7 @@
 
 ## PSYC411 Learning (Semester 1, first four weeks)
 
-* [Introduction to RStudio](../intro-rstudio.md). How to get RStudio, and a basic introduction to the software.
+* [Introduction to RStudio](../intro-rstudio.md). A basic introduction to the software.
 
 * [Exploring data](../exploring-incomes.html). Means, medians, and histograms. 
 
@@ -20,7 +20,7 @@
 
     * [More on Bayes Factors](../more-on-bf.html). A more detailed discussion of Bayes Factors.
 
-* [Using RStudio projects](../using-projects.html). Creating a new project. Using an R script. Analysing your own data. 
+* [Analyzing your project data](../using-projects.html). Analysing your own data. 
 
 * [Entering data by hand](../entering-data-by-hand.html). Entering data into a spreadsheet. Saving data into your RStudio project.
 
@@ -63,8 +63,6 @@
 * PsycEL exercise "Eye Witness Memory" uses the [police lineup](../lineup.html) worksheet. Contingency table, mosaic plot, Bayesian contingency test, means, density plot, Bayesian t-test
 
 * PsycEL exercise "Risk taking" uses the [risk taking](../risk-rat.html) worksheet. Means, **combining data frames**, filtering data, and _density plots_.
-
-* A former PsycEL exercise used the [police lineup](../lineup.html) worksheet. Contingency table, mosaic plot, Bayesian contingency test, means, density plot, Bayesian t-test
 
 * A former PsycEL exercise used the  [creativity and the environment](../green.html). **Preprocessing**, means, density plots, effect size, Bayesian t-test.
 

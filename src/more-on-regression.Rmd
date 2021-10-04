@@ -53,6 +53,8 @@ Next, create a new, empty R script and save it in the `rminr-data` folder as `mo
 
 We'll use some data from an undergraduate student dissertation which explored relationships between Polish (n=93) and British (n=104) people's religious orientation, spiritual beliefs and emotional intelligence. We start by loading the data.
 
+**Enter these commands into your script, and run them:**
+
 ```{r load, message=FALSE}
 rm(list = ls()) # clear the environment
 library(tidyverse)
@@ -74,7 +76,9 @@ In order to follow the rest of this worksheet, you need to understand the data y
 | religious  | Did the participant identify with a recognised religion? | yes, no  |
 | nationality | Nationality of participant         | British, Polish |
 
-We need to do a little bit of preprocessing of the `education` variable. Specifically, `education` is an _ordered_ variable -- people in this sample have a reported level of education which ranges from low (`no formal quals`) to high (`degree`). R does not know what order to put these levels in unless we tell it. The easiest way to do this is to recode the data, as you did previously in the [cleaning up questionnaire data](https://benwhalley.github.io/rmip/data.html#using-recode) worksheet:
+We need to do a little bit of preprocessing of the `education` variable. Specifically, `education` is an _ordered_ variable -- people in this sample have a reported level of education which ranges from low (`no formal quals`) to high (`degree`). R does not know what order to put these levels in unless we tell it. The easiest way to do this is to recode the data, as you did previously in the [cleaning up questionnaire data](https://benwhalley.github.io/rmip/data.html#using-recode) worksheet.
+
+**Enter these commands into your script, and run them:**
 
 ```{r demographics2, warning=FALSE}
 edu_map <- c('no formal quals' = 1, 
@@ -132,6 +136,8 @@ The linear model you built in [the multiple regression worksheet](https://benwha
 
 ### Fitting the model
 
+**Enter these commands into your script, and run them:**
+
 ```{r oi1, class.source = 'numberLines lineAnchors'}
 polish <- data %>% filter(nationality == 'Polish')
 polish <- polish %>% drop_na()
@@ -154,7 +160,9 @@ Line 5 prints the result of fitting the regression model.
 
 ### Proportion of variance explained
 
-How much of the variance in intrinsic religious orientation is explained by the demographic variables? As explained in the [how good was our model?](https://benwhalley.github.io/rmip/how-good-was-our-model.html) worksheet, we can assess this using the $R^2$ statistic:
+How much of the variance in intrinsic religious orientation is explained by the demographic variables? As explained in the [how good was our model?](https://benwhalley.github.io/rmip/how-good-was-our-model.html) worksheet, we can assess this using the $R^2$ statistic.
+
+**Enter these commands into your script, and run them:**
 
 ```{r oi1a, class.source = 'numberLines lineAnchors'}
 library(broom)
@@ -174,6 +182,8 @@ As explained in previous worksheets, the value of `r r_squared1` in `adj.r.squar
 ### Evidence for the model
 
 [The multiple regression worksheet](https://benwhalley.github.io/rmip/how-good-was-our-model.html) also showed you how to calculate a Bayes factor to decide whether a regression model is any better than a simpler model with no predictors.
+
+**Enter these commands into your script, and run them:**
 
 ```{r oi1-bf, class.source = 'numberLines lineAnchors', message=FALSE}
 library(BayesFactor, quietly = TRUE)
@@ -206,6 +216,8 @@ We can test this hypothesis by extending the demographics model to include the s
 
 ### Fit the model and report $R^2$
 
+**Enter these commands into your script, and run them:**
+
 ```{r oi2, warning=FALSE}
 oi_lm2 <- lm(ro_i ~ age + sex + edu_sc + religious +
                happiness + universe + others + nature + places,
@@ -232,7 +244,9 @@ Earlier, we found that a model with demographics predictors was better than a mo
 
 We've compared Bayesian models in a couple of previous worksheets. For example, in the [multiple regression worksheet](https://benwhalley.github.io/rmip/how-good-was-our-model.html), we compared a model where the relationship between grades and study time was assumed to be different for men and women, with one where it was assumed to be the same.  You were also comparing two Bayesian models when you [tested for an interaction in a Bayesian ANOVA](anova4.html#twoBS).
 
-We can use the same approach here:
+We can use the same approach here.
+
+**Enter these commands into your script, and run them:**
 
 ```{r oi2-bf, class.source = 'numberLines lineAnchors', warning=FALSE}
 oi_lmbf2 <- lmBF(ro_i ~ age + sex + edu_sc + religious +
@@ -249,10 +263,11 @@ Lines 1-3 build a Bayesian regression model with the demographic and spiritualit
 
 The Bayes Factor for this hypothesis is over 25 million, so we can confidently claim that a model containing these spirituality variables explains more variance in intrinsic religiosity, than a simpler model with just demographics variables.
 
-
 ### Adding yet more variables
 
-In this study, the researchers also hypothesized that trait emotional intelligence and extrinsic religiosity would further explain the variance in intrinsic religiosity. These variables were all added to the third model:
+In this study, the researchers also hypothesized that trait emotional intelligence and extrinsic religiosity would further explain the variance in intrinsic religiosity. These variables were all added to the third model.
+
+**Enter these commands into your script, and run them:**
 
 ```{r oi3, warning=FALSE}
 oi_lm3 <- lm(ro_i ~ age + sex + edu_sc + religious +
@@ -275,8 +290,9 @@ r_squared3 <- round(glance(oi_lm3)$adj.r.squared, 2)
 
 For this model, `adj.r.squared` = `r r_squared3`, which means it explains `r r_squared3 * 100`% of the variance in intrinsic religious orientation, an increase of `r (r_squared3 - r_squared2) * 100`% over the model from step 2.
 
-
 Finally, we compare the Bayesian model, with the one from step 2.
+
+**Enter these commands into your script, and run them:**
 
 ```{r oi3-bf, warning=FALSE}
 oi_lmbf3 <- lmBF(ro_i ~ age + sex + edu_sc + religious +
@@ -302,7 +318,9 @@ All of the regression models we've been creating and comparing were built based 
 
 ## Evidence for individual predictors
 
-We earlier saw that there was strong evidence ($BF > 8000$) for the model `ro_i ~ age + sex + edu_sc + religious`, and we noted that this is evidence for the whole model, not for any one predictor (e.g. `age`). Nonetheless, you might sometimes be asked to report whether there is evidence for a particular predictor within a model _individually_ having an effect on the outcome variable. You can answer such questions using the same approach as above. In other words, calculate the evidence for a model omitting that one predictor -- `ro_i ~ sex + edu_sc + religious` -- and compare it to the original model:
+We earlier saw that there was strong evidence ($BF > 8000$) for the model `ro_i ~ age + sex + edu_sc + religious`, and we noted that this is evidence for the whole model, not for any one predictor (e.g. `age`). Nonetheless, you might sometimes be asked to report whether there is evidence for a particular predictor within a model _individually_ having an effect on the outcome variable. You can answer such questions using the same approach as above. In other words, calculate the evidence for a model omitting that one predictor -- `ro_i ~ sex + edu_sc + religious` -- and compare it to the original model.
+
+**Enter these commands into your script, and run them:**
 
 ```{r single}
 oi_lmbf1_minus_age <- lmBF(ro_i ~ sex + edu_sc + religious,
@@ -310,7 +328,9 @@ oi_lmbf1_minus_age <- lmBF(ro_i ~ sex + edu_sc + religious,
 oi_lmbf1 / oi_lmbf1_minus_age
 ```
 
-In this case, the result of our analysis is inconclusive. The Bayes Factor is close to 1, so the evidence for and against `age` being an effective predictor in the model is about evenly matched. In contrast, there is strong evidence for `relgion` being an effective predictor within the model:
+In this case, the result of our analysis is inconclusive. The Bayes Factor is close to 1, so the evidence for and against `age` being an effective predictor in the model is about evenly matched. In contrast, there is strong evidence for `relgion` being an effective predictor within the model.
+
+**Enter these commands into your script, and run them:**
 
 ```{r single2}
 oi_lmbf1_minus_rel <- lmBF(ro_i ~ age + sex + edu_sc, data = data.frame(polish))

@@ -18,9 +18,11 @@ knitr::opts_chunk$set(echo = TRUE, comment=NA)
 Before starting this exercise, you should have completed **all** the [Absolute Beginners'](index.html) workshop exercises. If not, take a look at those exercises before continuing. Each section below also indicates which of the earlier worksheets are relevant.
 
 ## Getting the data into R
-**Relevant worksheet:** [Using RStudio projects](using-projects.html)
+**Relevant worksheet:** [Intro to RStudio](intro-rstudio.html)
 
-You'll be provided with a single CSV file containing both your data, and that of your classmates. Set up an RStudio project for this analysis, and copy the CSV file into it. 
+You'll be provided with a single CSV file containing both your data, and that of your classmates. [Open a project](intro-rstudio.html) on RStudio Server for this analysis, create a script file, and [upload your CSV](entering-data-by-hand.html#upload) to your project.
+
+**Plymouth University students**: Create/open your project named `psyc414`; within that create a script file called `face-attract.R`. Enter all commands into that script and run them from there.
 
 ## Exploring your data
 

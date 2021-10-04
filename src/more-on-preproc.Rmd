@@ -37,8 +37,6 @@ alldat <- tibble(filename = list.files("rawdata", "*.csv", full.names=TRUE)) %>%
 The grouped data is then piped to the `do` function. This works on each group (in this case, each filename) in turn and uses the `filename` column as input the `read_csv` command.  
 Because `read_csv` produces a dataframe as output, these are automatically combined into a single dataframe of all participants. The `filename` column remains and provides a record of where the data came from.
 
----
-
 When you run this code, you should notice that `alldat` has a new column, `filename`. This contains the original file name of the raw data.
 
 That's OK, but it would be better if we could just have the participant number (e.g. `11`) because it's more compact and easy to use like that. So, we need to be able to cut out the participant number `11` from the filename. We can do this using the `str_sub` command. Here's an example of how `str_sub` works:

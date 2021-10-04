@@ -73,7 +73,7 @@ To prepare for this worksheet:
 
 We'll demonstrate the Wilcoxon rank-sum test using data from an experiment which evaluated children’s language development using the Words in Game (WinG) test. WinG consists of a set of picture cards that are used in four tests: noun comprehension, noun production, predicate comprehension, and predicate production. The Italian and English versions of the WinG cards use different pictures to depict the associated concepts. The experiment tested whether English-speaking children aged approximately 30 months produce different responses for the two sets of cards.
 
-We start by loading the data:
+We start by loading the data. **Enter these commands into your script, and run them:**
 
 ```{r load, message=FALSE, class.source = 'numberLines lineAnchors'}
 rm(list = ls()) # clear the environment
@@ -94,6 +94,8 @@ The first three columns are the participant ID number, gender of the participant
 
 In the next section, we are going to compare English and Italian on the noun comprehension task. So, we filter the data (which contains all four tasks) to include just that task. We also remove any missing data.
 
+**Enter this command into your script, and run it:**
+
 ```{r}
 # Filter
 nc_include <- wing_preproc %>% filter(task == 'nc') %>% drop_na()
@@ -106,6 +108,8 @@ nc_include <- wing_preproc %>% filter(task == 'nc') %>% drop_na()
 ### Calculating descriptive statistics
 
 When we report non-parametric tests, we normally report the median (rather than the mean) as our descriptive statistic. This makes practical sense, because [the mean can be misleading when the distribution is skewed](https://ajwills72.github.io/critical-thinking/distributions-samples.pdf) and, if we have chosen to do a non-parametric test, we are (presumably) uncertain whether the distribution is skewed or not.
+
+**Enter these commands into your script, and run them:**
 
 ```{r}
 # summary statistics
@@ -121,6 +125,8 @@ nc_include %>%
 As we said earlier in this worksheet, the Wilcoxon rank sum test is a non-parametric equivalent of a between-subjects t-test. It works by ranking all of the scores in the two groups, adding the ranks in each group, and comparing these "summed ranks" to determine if they differ.
 
 We'll run a Wilcoxon rank-sum test to see if there were any significant differences between scores for the Italian and English cards on the noun comprehension (`nc`) task.
+
+**Enter this command into your script, and run it:**
 
 ```{r mw-nc}
 # Wilcoxon rank-sum test (Mann-Whitney U) for noun comprehension
@@ -181,9 +187,9 @@ The Kruskal-Wallis H test is a non-parametric equivalent of a one-way between su
 
 We'll demonstrate the Kruskal-Wallis test using data from a study which compared emotion regulation strategies between fans of mainstream (control group), goth, metal and emo music. Participants were measured using the Emotion Regulation Strategies for Artistic Creative Activities Scale (ERS-ACA), an 18 item inventory, with each item scored from 1 ('strongly disagree') to 5 ('strongly agree'). The ERS-ACA gives an overall measure of the strategy people use to regulate their emotions when they engage in artistic, creative activities, and scores on three strategy sub-scales; avoidance, approach and self-development.
 
-We start by loading the data:
+We start by loading the data; **enter this command into your script, and run it:**
 
-```{r load-ers}
+```{r load-ers, message=FALSE}
 # Kruskal-Wallis H test
 ers_l <- read_csv('going-further/music-emotion-preproc.csv')
 ```
@@ -199,6 +205,8 @@ ers_l %>% head(8) %>% pander()
 ### Descriptive statistics
 
 We'll start by calculating the medians for the 'approach' subscale.
+
+**Enter these commands into your script, and run them:**
 
 ```{r k-w-summary, class.source = 'numberLines lineAnchors'}
 approach <- ers_l %>% filter(ers == 'approach') %>% drop_na()
@@ -217,7 +225,9 @@ The differences in medians between groups look quite small.
 
 ### Calculating the Kruskal-Wallis
 
-We can now run the Kruskal-Wallis test:
+We can now run the Kruskal-Wallis test. 
+
+**Enter this command into your script, and run it:**
 
 ```{r k-w}
 kruskal.test(score ~ subculture, data = approach)

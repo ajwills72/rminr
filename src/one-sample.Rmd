@@ -32,7 +32,9 @@ You will notice that your _Environment_ still contains all the data frames from 
 
 # Loading data
 
-Now load this new data set: 
+Now load this new data set.
+
+**Enter these commands into your script, and run them:**
 
 ```{r newdat, message=FALSE}
 library(tidyverse)
@@ -68,7 +70,9 @@ We can see from this plot that the distribution of IQs in our sample peaks highe
 
 # Bayesian t-test (one-sample)
 
-We can use the command `ttestBF` to look at the evidence for this apparent difference between our sample of students and the population mean. We've used this command before to do a _between-groups_ test, but we can also use it in a slightly different way to do a one-sample test:
+We can use the command `ttestBF` to look at the evidence for this apparent difference between our sample of students and the population mean. We've used this command before to do a _between-groups_ test, but we can also use it in a slightly different way to do a one-sample test.
+
+**Enter these commands into your script, and run them:**
 
 ```{r bf-init, message=FALSE}
 library(BayesFactor)

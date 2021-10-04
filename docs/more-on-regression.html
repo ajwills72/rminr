@@ -279,6 +279,7 @@ pre code {
 <p>Ensure you have the latest files by asking git to “<code>pull</code>” the repository. Select the <code>Git</code> tab, which is located in the row of tabs which includes the <code>Environment</code> tab. Click the <code>Pull</code> button with a downward pointing arrow. A window will open showing the files which have been pulled from the repository. Close the <code>Git pull</code> window. The <code>going-further</code> folder should contain the file <code>religion-preproc.csv</code>.</p>
 <p>Next, create a new, empty R script and save it in the <code>rminr-data</code> folder as <code>more-regression.R</code>. Put all the commands from this worksheet into this file, and run them from there. Save your script regularly.</p>
 <p>We’ll use some data from an undergraduate student dissertation which explored relationships between Polish (n=93) and British (n=104) people’s religious orientation, spiritual beliefs and emotional intelligence. We start by loading the data.</p>
+<p><strong>Enter these commands into your script, and run them:</strong></p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(<span class="at">list =</span> <span class="fu">ls</span>()) <span class="co"># clear the environment</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&#39;going-further/religion-preproc.csv&#39;</span>)</span></code></pre></div>
@@ -334,7 +335,8 @@ pre code {
 </tr>
 </tbody>
 </table>
-<p>We need to do a little bit of preprocessing of the <code>education</code> variable. Specifically, <code>education</code> is an <em>ordered</em> variable – people in this sample have a reported level of education which ranges from low (<code>no formal quals</code>) to high (<code>degree</code>). R does not know what order to put these levels in unless we tell it. The easiest way to do this is to recode the data, as you did previously in the <a href="https://benwhalley.github.io/rmip/data.html#using-recode">cleaning up questionnaire data</a> worksheet:</p>
+<p>We need to do a little bit of preprocessing of the <code>education</code> variable. Specifically, <code>education</code> is an <em>ordered</em> variable – people in this sample have a reported level of education which ranges from low (<code>no formal quals</code>) to high (<code>degree</code>). R does not know what order to put these levels in unless we tell it. The easiest way to do this is to recode the data, as you did previously in the <a href="https://benwhalley.github.io/rmip/data.html#using-recode">cleaning up questionnaire data</a> worksheet.</p>
+<p><strong>Enter these commands into your script, and run them:</strong></p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>edu_map <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&#39;no formal quals&#39;</span> <span class="ot">=</span> <span class="dv">1</span>, </span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>             <span class="st">&#39;GCSE or equiv&#39;</span> <span class="ot">=</span> <span class="dv">2</span>, </span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>             <span class="st">&#39;A level or equiv&#39;</span> <span class="ot">=</span> <span class="dv">3</span>,</span>
@@ -465,6 +467,7 @@ pre code {
 <p>The linear model you built in <a href="https://benwhalley.github.io/rmip/multiple-regression.html">the multiple regression worksheet</a> worksheet used two predictors. It’s straightforward to add additional predictors to a model. We’ll start with a model which predicts intrinsic religious orientation from the demographics variables in our Polish sample.</p>
 <div id="fitting-the-model" class="section level3">
 <h3>Fitting the model</h3>
+<p><strong>Enter these commands into your script, and run them:</strong></p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode numberSource r numberLines lineAnchors"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>polish <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span> <span class="fu">filter</span>(nationality <span class="sc">==</span> <span class="st">&#39;Polish&#39;</span>)</span>
 <span id="cb3-2"><a href="#cb3-2"></a>polish <span class="ot">&lt;-</span> polish <span class="sc">%&gt;%</span> <span class="fu">drop_na</span>()</span>
 <span id="cb3-3"><a href="#cb3-3"></a></span>
@@ -486,14 +489,15 @@ Coefficients:
 </div>
 <div id="proportion-of-variance-explained" class="section level3">
 <h3>Proportion of variance explained</h3>
-<p>How much of the variance in intrinsic religious orientation is explained by the demographic variables? As explained in the <a href="https://benwhalley.github.io/rmip/how-good-was-our-model.html">how good was our model?</a> worksheet, we can assess this using the <span class="math inline">\(R^2\)</span> statistic:</p>
+<p>How much of the variance in intrinsic religious orientation is explained by the demographic variables? As explained in the <a href="https://benwhalley.github.io/rmip/how-good-was-our-model.html">how good was our model?</a> worksheet, we can assess this using the <span class="math inline">\(R^2\)</span> statistic.</p>
+<p><strong>Enter these commands into your script, and run them:</strong></p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode numberSource r numberLines lineAnchors"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="fu">library</span>(broom)</span>
 <span id="cb5-2"><a href="#cb5-2"></a><span class="fu">glance</span>(oi_lm1)</span></code></pre></div>
-<pre><code># A tibble: 1 x 11
+<pre><code># A tibble: 1 x 12
   r.squared adj.r.squared sigma statistic    p.value    df logLik   AIC   BIC
-      &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;      &lt;dbl&gt; &lt;int&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-1     0.306         0.273 0.509      9.46 0.00000219     5  -65.0  142.  157.
-# … with 2 more variables: deviance &lt;dbl&gt;, df.residual &lt;int&gt;</code></pre>
+      &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;      &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+1     0.306         0.273 0.509      9.46 0.00000219     4  -65.0  142.  157.
+# … with 3 more variables: deviance &lt;dbl&gt;, df.residual &lt;int&gt;, nobs &lt;int&gt;</code></pre>
 <p><strong>Explanation of commands:</strong> Line 1 loads the <code>broom</code> library which provides the <code>glance()</code> function. Line 2 uses <code>glance()</code> to print some statistics for our model.</p>
 <p><strong>Explanation of output:</strong></p>
 <p>As explained in previous worksheets, the value of 0.273 in <code>adj.r.squared</code> tells us how much of the variance in <code>ro_i</code> is explained by the demographics variables. A model containing demographics variables explains 27.3% of the variance in intrinsic religious orientation. The other values in this output are beyond the scope of this worksheet and are not discussed here.</p>
@@ -501,13 +505,14 @@ Coefficients:
 <div id="evidence-for-the-model" class="section level3">
 <h3>Evidence for the model</h3>
 <p><a href="https://benwhalley.github.io/rmip/how-good-was-our-model.html">The multiple regression worksheet</a> also showed you how to calculate a Bayes factor to decide whether a regression model is any better than a simpler model with no predictors.</p>
+<p><strong>Enter these commands into your script, and run them:</strong></p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode numberSource r numberLines lineAnchors"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="fu">library</span>(BayesFactor, <span class="at">quietly =</span> <span class="cn">TRUE</span>)</span>
 <span id="cb7-2"><a href="#cb7-2"></a>oi_lmbf1 <span class="ot">&lt;-</span> <span class="fu">lmBF</span>(ro_i <span class="sc">~</span> age <span class="sc">+</span> sex <span class="sc">+</span> edu_sc <span class="sc">+</span> religious,</span>
 <span id="cb7-3"><a href="#cb7-3"></a>                 <span class="at">data =</span> <span class="fu">data.frame</span>(polish))</span>
 <span id="cb7-4"><a href="#cb7-4"></a>oi_lmbf1</span></code></pre></div>
 <pre><code>Bayes factor analysis
 --------------
-[1] age + sex + edu_sc + religious : 8423.42 ±2.3%
+[1] age + sex + edu_sc + religious : 8882.404 ±2.94%
 
 Against denominator:
   Intercept only 
@@ -529,6 +534,7 @@ Bayes factor type: BFlinearModel, JZS</code></pre>
 <p>We can test this hypothesis by extending the demographics model to include the spirituality variables measured by the SCQ.</p>
 <div id="fit-the-model-and-report-r2" class="section level3">
 <h3>Fit the model and report <span class="math inline">\(R^2\)</span></h3>
+<p><strong>Enter these commands into your script, and run them:</strong></p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>oi_lm2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(ro_i <span class="sc">~</span> age <span class="sc">+</span> sex <span class="sc">+</span> edu_sc <span class="sc">+</span> religious <span class="sc">+</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>               happiness <span class="sc">+</span> universe <span class="sc">+</span> others <span class="sc">+</span> nature <span class="sc">+</span> places,</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">data =</span> polish)</span>
@@ -544,11 +550,11 @@ Coefficients:
    happiness      universe        others        nature        places  
     0.295375      0.004245     -0.043822     -0.045118     -0.020146  </code></pre>
 <div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glance</span>(oi_lm2)</span></code></pre></div>
-<pre><code># A tibble: 1 x 11
+<pre><code># A tibble: 1 x 12
   r.squared adj.r.squared sigma statistic  p.value    df logLik   AIC   BIC
-      &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt; &lt;int&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-1     0.622         0.580 0.387      14.8 6.90e-14    10  -37.4  96.8  124.
-# … with 2 more variables: deviance &lt;dbl&gt;, df.residual &lt;int&gt;</code></pre>
+      &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+1     0.622         0.580 0.387      14.8 6.90e-14     9  -37.4  96.8  124.
+# … with 3 more variables: deviance &lt;dbl&gt;, df.residual &lt;int&gt;, nobs &lt;int&gt;</code></pre>
 <p><strong>Explanation of commands:</strong></p>
 <p>Lines 1-3 build our new model. This includes the demographics variables, and adds the spirituality variables <code>happiness + universe + others + nature + places</code>. Line 4 shows the output of the model, and Line 5 gives us the <span class="math inline">\(R^2\)</span> value.</p>
 <p><strong>Explanation of output:</strong></p>
@@ -558,14 +564,15 @@ Coefficients:
 <h3>Evidence for the new model</h3>
 <p>Earlier, we found that a model with demographics predictors was better than a model with no predictors. To test the hypothesis that the spirituality variables help to explain the variance in intrinsic religiosity, we can compare our second model against the first.</p>
 <p>We’ve compared Bayesian models in a couple of previous worksheets. For example, in the <a href="https://benwhalley.github.io/rmip/how-good-was-our-model.html">multiple regression worksheet</a>, we compared a model where the relationship between grades and study time was assumed to be different for men and women, with one where it was assumed to be the same. You were also comparing two Bayesian models when you <a href="anova4.html#twoBS">tested for an interaction in a Bayesian ANOVA</a>.</p>
-<p>We can use the same approach here:</p>
+<p>We can use the same approach here.</p>
+<p><strong>Enter these commands into your script, and run them:</strong></p>
 <div class="sourceCode" id="cb13"><pre class="sourceCode numberSource r numberLines lineAnchors"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a>oi_lmbf2 <span class="ot">&lt;-</span> <span class="fu">lmBF</span>(ro_i <span class="sc">~</span> age <span class="sc">+</span> sex <span class="sc">+</span> edu_sc <span class="sc">+</span> religious <span class="sc">+</span></span>
 <span id="cb13-2"><a href="#cb13-2"></a>               happiness <span class="sc">+</span> universe <span class="sc">+</span> others <span class="sc">+</span> nature <span class="sc">+</span> places,</span>
 <span id="cb13-3"><a href="#cb13-3"></a>               <span class="at">data =</span> <span class="fu">data.frame</span>(polish))</span>
 <span id="cb13-4"><a href="#cb13-4"></a>oi_lmbf2 <span class="sc">/</span> oi_lmbf1</span></code></pre></div>
 <pre><code>Bayes factor analysis
 --------------
-[1] age + sex + edu_sc + religious + happiness + universe + others + nature + places : 26831761 ±2.61%
+[1] age + sex + edu_sc + religious + happiness + universe + others + nature + places : 25973454 ±3.54%
 
 Against denominator:
   ro_i ~ age + sex + edu_sc + religious 
@@ -578,7 +585,8 @@ Bayes factor type: BFlinearModel, JZS</code></pre>
 </div>
 <div id="adding-yet-more-variables" class="section level3">
 <h3>Adding yet more variables</h3>
-<p>In this study, the researchers also hypothesized that trait emotional intelligence and extrinsic religiosity would further explain the variance in intrinsic religiosity. These variables were all added to the third model:</p>
+<p>In this study, the researchers also hypothesized that trait emotional intelligence and extrinsic religiosity would further explain the variance in intrinsic religiosity. These variables were all added to the third model.</p>
+<p><strong>Enter these commands into your script, and run them:</strong></p>
 <div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>oi_lm3 <span class="ot">&lt;-</span> <span class="fu">lm</span>(ro_i <span class="sc">~</span> age <span class="sc">+</span> sex <span class="sc">+</span> edu_sc <span class="sc">+</span> religious <span class="sc">+</span></span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>               happiness <span class="sc">+</span> universe <span class="sc">+</span> others <span class="sc">+</span> nature <span class="sc">+</span> places <span class="sc">+</span></span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>               wellbeing <span class="sc">+</span> self_control <span class="sc">+</span> emotionality <span class="sc">+</span> sociability <span class="sc">+</span> ro_e,</span>
@@ -598,16 +606,17 @@ Coefficients:
    wellbeing  self_control  emotionality   sociability          ro_e  
    -0.002467     -0.091592     -0.004978     -0.006091      0.643421  </code></pre>
 <div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glance</span>(oi_lm3)</span></code></pre></div>
-<pre><code># A tibble: 1 x 11
+<pre><code># A tibble: 1 x 12
   r.squared adj.r.squared sigma statistic  p.value    df logLik   AIC   BIC
-      &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt; &lt;int&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-1     0.746         0.699 0.327      15.9 3.20e-17    15  -19.3  70.6  111.
-# … with 2 more variables: deviance &lt;dbl&gt;, df.residual &lt;int&gt;</code></pre>
+      &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+1     0.746         0.699 0.327      15.9 3.20e-17    14  -19.3  70.6  111.
+# … with 3 more variables: deviance &lt;dbl&gt;, df.residual &lt;int&gt;, nobs &lt;int&gt;</code></pre>
 <p><strong>Explanation of commands:</strong></p>
 <p>Lines 1-4 builds our third model. This contains all of the variables in <code>oi_lmbf2</code>, and adds the emotional intelligence variables <code>wellbeing + self_control + emotionality + sociability</code>, and <code>ro_e</code> for extrinsic religiosity. Line 5 shows the best fitting line, and Line 6 gives us the <span class="math inline">\(R^2\)</span> value.</p>
 <p><strong>Explanation of output:</strong></p>
 <p>For this model, <code>adj.r.squared</code> = 0.7, which means it explains 70% of the variance in intrinsic religious orientation, an increase of 12% over the model from step 2.</p>
 <p>Finally, we compare the Bayesian model, with the one from step 2.</p>
+<p><strong>Enter these commands into your script, and run them:</strong></p>
 <div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>oi_lmbf3 <span class="ot">&lt;-</span> <span class="fu">lmBF</span>(ro_i <span class="sc">~</span> age <span class="sc">+</span> sex <span class="sc">+</span> edu_sc <span class="sc">+</span> religious <span class="sc">+</span></span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>               happiness <span class="sc">+</span> universe <span class="sc">+</span> others <span class="sc">+</span> nature <span class="sc">+</span> places <span class="sc">+</span></span>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>               wellbeing <span class="sc">+</span> self_control <span class="sc">+</span> emotionality <span class="sc">+</span> sociability <span class="sc">+</span> ro_e,</span>
@@ -615,7 +624,7 @@ Coefficients:
 <span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>oi_lmbf3 <span class="sc">/</span> oi_lmbf2</span></code></pre></div>
 <pre><code>Bayes factor analysis
 --------------
-[1] age + sex + edu_sc + religious + happiness + universe + others + nature + places + wellbeing + self_control + emotionality +     sociability + ro_e : 4121.668 ±2.19%
+[1] age + sex + edu_sc + religious + happiness + universe + others + nature + places + wellbeing + self_control + emotionality +     sociability + ro_e : 4147.131 ±2.67%
 
 Against denominator:
   ro_i ~ age + sex + edu_sc + religious + happiness + universe + others + nature + places 
@@ -634,24 +643,26 @@ Bayes factor type: BFlinearModel, JZS</code></pre>
 </div>
 <div id="evidence-for-individual-predictors" class="section level2">
 <h2>Evidence for individual predictors</h2>
-<p>We earlier saw that there was strong evidence (<span class="math inline">\(BF &gt; 8000\)</span>) for the model <code>ro_i ~ age + sex + edu_sc + religious</code>, and we noted that this is evidence for the whole model, not for any one predictor (e.g. <code>age</code>). Nonetheless, you might sometimes be asked to report whether there is evidence for a particular predictor within a model <em>individually</em> having an effect on the outcome variable. You can answer such questions using the same approach as above. In other words, calculate the evidence for a model omitting that one predictor – <code>ro_i ~ sex + edu_sc + religious</code> – and compare it to the original model:</p>
+<p>We earlier saw that there was strong evidence (<span class="math inline">\(BF &gt; 8000\)</span>) for the model <code>ro_i ~ age + sex + edu_sc + religious</code>, and we noted that this is evidence for the whole model, not for any one predictor (e.g. <code>age</code>). Nonetheless, you might sometimes be asked to report whether there is evidence for a particular predictor within a model <em>individually</em> having an effect on the outcome variable. You can answer such questions using the same approach as above. In other words, calculate the evidence for a model omitting that one predictor – <code>ro_i ~ sex + edu_sc + religious</code> – and compare it to the original model.</p>
+<p><strong>Enter these commands into your script, and run them:</strong></p>
 <div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>oi_lmbf1_minus_age <span class="ot">&lt;-</span> <span class="fu">lmBF</span>(ro_i <span class="sc">~</span> sex <span class="sc">+</span> edu_sc <span class="sc">+</span> religious,</span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>                           <span class="at">data =</span> <span class="fu">data.frame</span>(polish))</span>
 <span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>oi_lmbf1 <span class="sc">/</span> oi_lmbf1_minus_age</span></code></pre></div>
 <pre><code>Bayes factor analysis
 --------------
-[1] age + sex + edu_sc + religious : 1.040865 ±6.75%
+[1] age + sex + edu_sc + religious : 1.17624 ±4.6%
 
 Against denominator:
   ro_i ~ sex + edu_sc + religious 
 ---
 Bayes factor type: BFlinearModel, JZS</code></pre>
-<p>In this case, the result of our analysis is inconclusive. The Bayes Factor is close to 1, so the evidence for and against <code>age</code> being an effective predictor in the model is about evenly matched. In contrast, there is strong evidence for <code>relgion</code> being an effective predictor within the model:</p>
+<p>In this case, the result of our analysis is inconclusive. The Bayes Factor is close to 1, so the evidence for and against <code>age</code> being an effective predictor in the model is about evenly matched. In contrast, there is strong evidence for <code>relgion</code> being an effective predictor within the model.</p>
+<p><strong>Enter these commands into your script, and run them:</strong></p>
 <div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>oi_lmbf1_minus_rel <span class="ot">&lt;-</span> <span class="fu">lmBF</span>(ro_i <span class="sc">~</span> age <span class="sc">+</span> sex <span class="sc">+</span> edu_sc, <span class="at">data =</span> <span class="fu">data.frame</span>(polish))</span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>oi_lmbf1 <span class="sc">/</span> oi_lmbf1_minus_rel</span></code></pre></div>
 <pre><code>Bayes factor analysis
 --------------
-[1] age + sex + edu_sc + religious : 57751.08 ±2.62%
+[1] age + sex + edu_sc + religious : 59250.91 ±3.2%
 
 Against denominator:
   ro_i ~ age + sex + edu_sc 
@@ -669,14 +680,14 @@ lm(formula = tei ~ age + sex + edu_sc + religious, data = data.frame(british))
 Coefficients:
  (Intercept)           age       sexmale        edu_sc  religiousyes  
      4.02501       0.02486       0.62775      -0.08031       0.17461  </code></pre>
-<pre><code># A tibble: 1 x 11
+<pre><code># A tibble: 1 x 12
   r.squared adj.r.squared sigma statistic p.value    df logLik   AIC   BIC
-      &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt; &lt;int&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-1     0.164         0.130 0.934      4.76 0.00150     5  -135.  282.  298.
-# … with 2 more variables: deviance &lt;dbl&gt;, df.residual &lt;int&gt;</code></pre>
+      &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+1     0.164         0.130 0.934      4.76 0.00150     4  -135.  282.  298.
+# … with 3 more variables: deviance &lt;dbl&gt;, df.residual &lt;int&gt;, nobs &lt;int&gt;</code></pre>
 <pre><code>Bayes factor analysis
 --------------
-[1] age + sex + edu_sc + religious : 7.339347 ±2.3%
+[1] age + sex + edu_sc + religious : 7.455111 ±3.31%
 
 Against denominator:
   Intercept only 
@@ -699,14 +710,14 @@ Coefficients:
      4.26541       0.02580       0.62405      -0.05840       0.08868  
    happiness      universe        others        nature        places  
     -0.20410      -0.00543       0.21218       0.01457      -0.07620  </code></pre>
-<pre><code># A tibble: 1 x 11
+<pre><code># A tibble: 1 x 12
   r.squared adj.r.squared sigma statistic p.value    df logLik   AIC   BIC
-      &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt; &lt;int&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-1     0.196         0.118 0.940      2.50  0.0133    10  -133.  288.  317.
-# … with 2 more variables: deviance &lt;dbl&gt;, df.residual &lt;int&gt;</code></pre>
+      &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+1     0.196         0.118 0.940      2.50  0.0133     9  -133.  288.  317.
+# … with 3 more variables: deviance &lt;dbl&gt;, df.residual &lt;int&gt;, nobs &lt;int&gt;</code></pre>
 <pre><code>Bayes factor analysis
 --------------
-[1] age + sex + edu_sc + religious + happiness + universe + others + nature + places : 0.03843934 ±3.28%
+[1] age + sex + edu_sc + religious + happiness + universe + others + nature + places : 0.03694778 ±3.88%
 
 Against denominator:
   tei ~ age + sex + edu_sc + religious 

@@ -43,19 +43,21 @@ knitr::opts_chunk$set(echo = TRUE, comment=NA, cache=TRUE)
 
 In the [within-subject differences](anova1.html) and [factorial differences](anova2.html) worksheets, we looked at Bayesian ANOVA methods. Throughout _Research Methods in R_ we focus on Bayesian, rather than traditional ("p value") methods, because Bayes Factors are more useful and easier to understand. However, psychologists have been using traditional ANOVA methods since the 1970s, and it was not until the 2010s that we started using Bayesian methods. So, there's a lot of older work out there that uses a different technique. For this reason, it is probably still worth knowing how to do a traditional ANOVA. This is what we'll cover in this worksheet.
 
-The following assumes you have completed the  [within-subject differences](anova1.html) and [factorial differences](anova2.html) worksheets. Make sure you are in your R project that contains the data downloaded from the _git_ repository - see the [preprocessing](preproc.html#load) worksheet for details.
+The following assumes you have completed the  [within-subject differences](anova1.html) and [factorial differences](anova2.html) worksheets. Make sure you are in your R project that contains the data downloaded from the _git_ repository - see the [preprocessing](preproc.html#load) worksheet for details. **Create a new R script called `afex.R`** and enter all commands from this worksheet into it.
 
 <a name="afex"></a>
 
 # Getting started
 
-To do traditional ANVOA in R, you will need to load the `afex` package:
+To do traditional ANVOA in R, you will need to load the `afex` package. 
+
+**Enter these commands into your script, and run them:**
 
 ```{r load, message=FALSE}
 library(afex)
 ```
 
-You'll also need to load the data, preprocess it, and set factors, as we did for Bayesian ANOVA. Here's how:
+You'll also need to load the data, preprocess it, and set factors, as we did for Bayesian ANOVA. Here's how (**enter these commands into your script, and run them**):
 
 ```{r started, message=FALSE}
 library(tidyverse)
@@ -72,7 +74,9 @@ wordsum$medit <- factor(wordsum$medit)
 
 # One between-subject factor
 
-To do a traditional, one between-subject factor ANOVA, use the following command:
+To do a traditional, one between-subject factor ANOVA, use the following command.
+
+**Enter this command into your script, and run it:**
 
 ```{r anovaBS}
 aov_car(formula = rt ~ medit + Error(subj), data = wordsum)
@@ -102,7 +106,9 @@ Note that some authors will instead report a related measure called _partial_ et
 
 # One within-subject factor
 
-First, preprocess the data for this example:
+First, preprocess the data for this example.
+
+**Enter these commands into your script, and run them:**
 
 ```{r init2, message=FALSE}
 words <- read_csv("wordnaming2.csv")
@@ -116,7 +122,7 @@ wordctrlCIsum$subj <- factor(wordctrlCIsum$subj)
 ```
 
 
-Now, this is the command to run a traditional within-subjects ANOVA:
+Now, this is the command to run a traditional within-subjects ANOVA (**Enter this command into your script, and run iT**):
 
 ```{r tradWS}
 aov_car(formula = rt ~ Error(subj/congru), data = wordctrlCIsum)
@@ -136,7 +142,9 @@ The two conditions differed significantly, _F_(1, 139) = 44.78, _p_ < .0001, $\e
 
 # More than two levels
 
-First, preprocess the data for this example:
+First, preprocess the data for this example.
+
+**Enter these commands into your script, and run them:**
 
 ```{r init3, message=FALSE}
 wordctrlsum <- wordctrl %>%
@@ -146,7 +154,7 @@ wordctrlsum$congru <- factor(wordctrlsum$congru)
 wordctrlsum$subj <- factor(wordctrlsum$subj)
 ```
 
-The command to run a traditional ANOVA with more than two levels is exactly the same as it is with two levels. For example, the within-subjects version is:
+The command to run a traditional ANOVA with more than two levels is exactly the same as it is with two levels. For example, the within-subjects version is (**Enter this command into your script, and run it**):
 
 ```{r tradWS2}
 aov_car(formula = rt ~ Error(subj/congru), data = wordctrlsum)
@@ -166,7 +174,7 @@ You'll see something like this in traditional ANOVA outputs when a within-subjec
 
 Fortunately, there are ways of correcting this error. These are called _sphericity corrections_ ("sphericity" is the property of being spherical). The two main methods are Greenhouse-Geisser (`GG`) correction, and Huynh-Feldt (`HF`) correction. `aov_car` picks the most appropriate one, makes the correction, and tells you it's done so by including that statement `Sphericity correction method: GG` at the end. Another way you can tell a sphericity correction has been applied is that the degrees of freedom (`df`) are normally not whole numbers (`1.05` and `145.44` in this case). 
 
-You would normally report towards the begining of your results that you used such a correction. For example:
+You would normally report towards the beginning of your results that you used such a correction. For example:
 
 "Greenhouse-Geisser corrections for non-sphericity were applied where appropriate."
 
@@ -180,7 +188,9 @@ You can do pairwise comparisons in traditional ANOVA in the same way you do them
 
 # Factorial ANOVA
 
-First, preprocess the data for this example:
+First, preprocess the data for this example.
+
+**Enter these commands into your script, and run them:**
 
 ```{r fact-prep}
 wordsum <-
@@ -192,7 +202,7 @@ wordsum$medit <- factor(wordsum$medit)
 wordsum$congru <- factor(wordsum$congru)
 ```
 
-A traditional ANOVA with one within-subjects factor and one between-subjects factor is conducted like this:
+A traditional ANOVA with one within-subjects factor and one between-subjects factor is conducted like this (**Enter this command into your script, and run it**):
 
 ```{r fact-anova}
 aov_car(formula = rt ~ medit + Error(subj/congru), data = wordsum)
@@ -210,7 +220,9 @@ The first two lines of the output are the main effect for `medit` and the _main 
 
 # Two between-subject factors
 
-First, preprocess the data for this example:
+First, preprocess the data for this example.
+
+**Enter these commands into your script, and run them:**
 
 ```{r more-prep}
 wordsum <- words %>% group_by(subj, sex, medit) %>% summarise(rt = mean(rt))
@@ -222,6 +234,8 @@ wordsum$medit <- factor(wordsum$medit)
 The command for a two between-subject factor traditional ANOVA is given below. 
 This is much like previous commands, the only thing to note is that `*` is used to combine between-subjects factors in `aov_car`. The output can be interpreted in the same way as before. 
 
+**Enter this command into your script, and run it:**
+
 ```{r twoBS}
 aov_car(formula = rt ~ medit*sex + Error(subj), data = wordsum)
 ```
@@ -230,7 +244,9 @@ aov_car(formula = rt ~ medit*sex + Error(subj), data = wordsum)
 
 # Two within-subject factors
 
-First, preprocess the data for this example:
+First, preprocess the data for this example.
+
+**Enter these commands into your script, and run them:**
 
 ```{r more-prep-2}
 wordsum <- words %>% group_by(subj, congru, block) %>% summarise(rt = mean(rt))
@@ -242,6 +258,8 @@ wordsum$block <- factor(wordsum$block)
 The command for a two within-subject factor traditional ANOVA is given below. 
 This is much like previous commands, the only thing to note is that `*` is used to combine within-subjects factors in `aov_car`. The output can be interpreted in the same way as before.
 
+**Enter this command into your script, and run it:**
+
 ```{r twoWS}
 aov_car(formula = rt ~ Error(subj/congru*block), data = wordsum)
 ```
@@ -252,7 +270,7 @@ aov_car(formula = rt ~ Error(subj/congru*block), data = wordsum)
 
 Unlike Bayesian ANOVA, traditional ANOVA techniques can handle designs with more than two factors quite efficiently. 
 
-First, preprocess the data for this example:
+First, preprocess the data for this example; **Enter these commands into your script, and run them:**
 
 ```{r readiness}
 wordsum <- words %>% group_by(subj, sex, medit, congru, block) %>% summarise(rt = mean(rt))
@@ -263,7 +281,7 @@ wordsum$congru <- factor(wordsum$congru)
 wordsum$block <- factor(wordsum$block)
 ```
 
-Now, we can run an ANOVA with all four factors:
+Now, we can run an ANOVA with all four factors; **Enter this command into your script, and run it:**
 
 ```{r stupid}
 aov_car(formula = rt ~ sex*medit + Error(subj/congru*block), data = wordsum)

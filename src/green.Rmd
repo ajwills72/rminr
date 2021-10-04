@@ -18,11 +18,11 @@ Before starting this exercise, you should have completed all the relevant [Absol
 
 ## Getting the data into R
 
-**Relevant worksheet:** [Using RStudio projects](using-projects.html)
+**Relevant worksheet:** [Intro to RStudio](intro-rstudio.html)
 
 In this excercise, you'll be analysing some data that you and your peers recently collected. To get this data into R, follow these steps:
 
-1. [Set up an RStudio project](using-projects.html) for this analysis. 
+1. [Open a RStudio project](intro-rstudio.html) for this analysis and, within that, create a script file.
 
 2. [Upload the CSV file](entering-data-by-hand.html#upload) you have been given for this activity into your RStudio project folder. If you want to try out this worksheet without that data file, you can use this [example CSV file](data/green.csv) instead. _You can only complete your PsycEL activity if you  use the CSV file you were sent_. 
 

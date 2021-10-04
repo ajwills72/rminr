@@ -56,7 +56,7 @@ The technique we're going to use is called _ANOVA_, short for **AN**alysis **O**
 
 # Getting started 
 
-In the [preprocessing](preproc.html) worksheet, you loaded data from a _git_ repository into an R project. **Go back to that project now.** This is very important. Do not stay in your current project, change your Rstudio project using the the drop-down list on the top right of Rstudio. Change to the  `rminr-data` project you used for the preprocessing worksheet. If you do not do this, the rest of this worksheet will not work. 
+In the [preprocessing](preproc.html) worksheet, you loaded data from a _git_ repository into an R project. **Go back to that project now on RStudio; the project was called `rminr-data`** This is very important. Make sure you are in the `rminr-data` project, changing your Rstudio project using the drop-down list on the top right of Rstudio if you need to (change to the  `rminr-data` project you used for the preprocessing worksheet). If you do not do this, the rest of this worksheet will not work. 
 
 Now that you're in the `rminr-data` project, create a new script called **anova1.R**, put all the commands you use in this worksheet into that file, and save regularly. 
 
@@ -80,7 +80,7 @@ Notice that your _Environment_ tab in Rstudio is now empty. This command only cl
 
 <a name="load"></a>
 
-Now  load this new  data set: 
+**Now add these commands to your script, and run them**, to load this new  data set: 
 
 ```{r newdat, message=FALSE}
 library(tidyverse)
@@ -197,7 +197,9 @@ In order to do this, we have to learn some new types of data preprocessing - _pi
 
 _Pivoting_ is where you take a long data file (lots of rows, few columns) and make it wider. Or where you take a wide data file (lots of columns, few rows) and make it longer. In this case, we need to make `wordctrlCIsum` wider, for reasons that will become clearer in the next step.
 
-To make a data frame wider, we can use the `pivot_wider` command from the `tidyverse` package. So, when we do this:
+To make a data frame wider, we can use the `pivot_wider` command from the `tidyverse` package. So, when we do the following:
+
+**Enter the following command into your R script and run it**:
 
 ```{r pivot1}
 ctrl <- wordctrlCIsum %>% pivot_wider(names_from = congru, values_from = rt)
@@ -211,7 +213,9 @@ and look at `ctrl` in the Environment window, we can see that it now has fewer r
 
 ## Mutating
 
-_Mutation_ in this context means to take some things and change them to make something new. In this case, we want to mutate the congruent and incongruent reaction times into a difference score, i.e. incongruent RT minus congruent RT. We do this using the `mutate` command:
+_Mutation_ in this context means to take some things and change them to make something new. In this case, we want to mutate the congruent and incongruent reaction times into a difference score, i.e. incongruent RT minus congruent RT. We do this using the `mutate` command, as follows:
+
+**Enter the following command into your R script and run it**:
 
 ```{r mutate1}
 ctrldiff <- ctrl %>% mutate(diff = incong - cong)
@@ -225,7 +229,9 @@ Look at `ctrldiff` in the _Environment_ window - you will see that it has a four
 
 # Density plots of differences
 
-Now we have the difference scores, we can take a look at their distribution. We do this using a density plot, as we have on several previous occasions:
+Now we have the difference scores, we can take a look at their distribution. We do this using a density plot, as we have on several previous occasions.
+
+**Enter the following commands into your R script and run them**:
 
 ```{r diffgraph}
 ctrldiff %>% ggplot(aes(diff)) +
@@ -249,7 +255,9 @@ We can use the command `anovaBF` to look at the evidence for this _within-subjec
 
 The word _factor_ is a jargon term for "column that contains information about the experimental design". To understand the meaning of this term, take a look at the `wordctrlCIsum` data frame in your _environment_. In `wordctrlCIsum`, the column `congru` is a _factor_ because it tells us whether the reaction time comes from an congruent trial (`cong`) or an incongruent trial (`incong`). The column `subj` is also a factor, because it tells us which participant the reaction time comes from. The `rt` column is **not** a factor, because it contains the data (reaction times) that we're analyzing.
 
-We tell R this in the following way:
+We tell R this in the following way.
+
+**Enter these commands into your R script and run them**:
 
 ```{r factor2}
 wordctrlCIsum$congru <- factor(wordctrlCIsum$congru)
@@ -268,13 +276,17 @@ The second command works in the same way as the first.
 
 ## Evidence
 
-Now we've given R this information about factors, we're ready to calculate a Bayes Factor for the difference between congruent and incongruent trials. To do this, first we load the _BayesFactor_ package as before:
+Now we've given R this information about factors, we're ready to calculate a Bayes Factor for the difference between congruent and incongruent trials. To do this, first we load the _BayesFactor_ package as before.
+
+**Enter this command into your R script and run it**:
 
 ```{r bf-init, message=FALSE}
 library(BayesFactor)
 ```
 
-and then we use the command:
+and then we use the following command.
+
+**Enter this command into your R script and run it**:
 
 ```{r bfwithin}
 anovaBF(formula = rt ~ congru + subj,
@@ -399,7 +411,7 @@ Your output should look like the example below. Note that your Bayes Factor may 
 
 Once it does, **copy and paste your R script for this exercise into PsycEL**. REMEMBER: This should be _all_ the code you need to complete this exercise, and _only_ the code you need to complete this exercise (not any other code from this worksheet). Even with comments, it shouldn't be longer than around 25 lines of code. Your code has to run, produce the correct answer, and not include irrelevant code, to pass this exercise. 
 
-```{r ex1,echo = FALSE}
+```{r ex1,echo = FALSE, message = FALSE}
 ## Clear the environment
 rm(list = ls())
 
@@ -443,9 +455,9 @@ Just before we finish, some notes on the issue of _multiple comparisons_, just b
 
 To explain the concept of multiple comparisons, I'd like you to imagine you had a factor with five levels. The command `anovaBF` would cope just fine with this. But, with five levels, there are ten pairwise comparisons you could do (1 versus 2, 1 versus 3, etc.). In traditional analysis techniques (i.e. techniques resulting in p values) you will sometimes hear people talking about 'correcting for multiple comparisons'. This is because the more tests you do, the more likely it is that one of them will be 'significant' ($p < .05$), even if there is in fact no difference between any of the levels of the factor. One common suggestion is to use a stricter significance level (e.g. $p < .01$) if you're doing a lot of tests. 
 
-This is not an approach covered  in these worksheets. This is for two reasons:
+This is not an approach covered in these worksheets. This is for two reasons:
 
-First, we're using Bayesian methods, not traditional ANOVA. Although issues around multiple comparisons still occur with Bayesian techniques, the issues are not the same, the solutions are not same, and the whole thing is just  a bit too complex for this intermediate-level worksheet.
+First, we're using Bayesian methods, not traditional ANOVA. Although issues around multiple comparisons still occur with Bayesian techniques, the issues are not the same, the solutions are not same, and the whole thing is just a bit too complex for this intermediate-level worksheet.
 
 Second, correcting for multiple comparisons is seldom the answer anyway. If you knew you needed to compare those two conditions before you looked at the data, this is known as a _confirmatory_ analysis, and we don't generally adjust for multiple comparisons for such analyses. Alternatively, you might be exploring your data after you collected it. For example, you might observe a difference you didn't expect to see, and do a test on this. This is called _exploratory_ analysis, and it's fine --- it's good to fully explore your data. But, results from _exploratory_ analysis should normally be replicated before we are particularly convinced by them, whatever the p value (or Bayes Factor). In other words, you should run the study again, predict you would see the difference again, and then test for it. This is because, if you look long and hard enough, you'll always find some pattern in a set of data, even if there is not actually anything to be found. 
 

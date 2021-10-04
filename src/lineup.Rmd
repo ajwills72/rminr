@@ -18,11 +18,11 @@ knitr::opts_chunk$set(echo = TRUE, comment=NA)
 Before starting this exercise, you should have completed **all** the [Absolute Beginners'](index.html) workshop exercises. If not, take a look at those exercises before continuing. Each section below also indicates which of the earlier worksheets are relevant.
 
 ## Getting the data into R
-**Relevant worksheet:** [Using RStudio projects](using-projects.html)
+**Relevant worksheet:** [Intro to RStudio](intro-rstudio.html)
 
-In this excercise, you'll be analysing some data that has already been collected. To get this data into R, follow these steps:
+In this exercise, you'll be analysing some data that has already been collected. To get this data into R, follow these steps:
 
-1. [Set up an RStudio project](using-projects.html) for this analysis. 
+1. [Set up an RStudio project](using-projects.html) for this analysis, and create a script file within that project. **Plymouth University students**: Create/open your project named `psyc415`; within that create a script file called `lineup.R`. Enter all commands into that script and run them from there.
 
 2. Upload [this CSV file](data/lineup.csv) into your RStudio project folder. Here's a reminder of [how to upload CSV files](entering-data-by-hand.html#upload).
 

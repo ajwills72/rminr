@@ -36,11 +36,11 @@ Before starting this exercise, you should have completed **all** the previous [A
 
 ## Getting the data into R
 
-**Relevant worksheet:** [Using RStudio projects](using-projects.html), [Exploring data](exploring-incomes.html)
+**Relevant worksheet:** [Introduction to RStudio](intro-rstudio.html), [Exploring data](exploring-incomes.html)
 
-Dowload this [CSV file](data/chi.csv), which contains the all the data you need for this worksheet. Then, [set up a new project](using-projects.html) on RStudio Server for this analysis, and [upload your CSV](entering-data-by-hand.html#upload) to your project.
+Download this [CSV file](data/chi.csv), which contains the all the data you need for this worksheet. Then, create or open an appropriate project on RStudio Server for this analysis (**Plymouth University students**: use the project 'psyc414' created in the [inter-rater reliability](irr.html) worksheet), [upload your CSV](entering-data-by-hand.html#upload) to your project, and create a new R script called `chi.R`.
 
-Now, load the _tidyverse_ package, and load your data.
+**Now, add these commands to your script and run them**; the will load the _tidyverse_ package, and load your data.
 
 ```{r init-load, message=FALSE} 
 library(tidyverse)
@@ -52,8 +52,8 @@ Look at the data by clicking on it in the _Environment_ tab in RStudio. Each row
 | Column    | Description                             | Values             |
 | --------- | --------------------------------------- | ------------------ |
 | subj      | Anonymous ID number of participant          | a number        |
-| age    | Age of the participant | One of: "7 years", "9 years", "12 years", "15 years"" |
-| gender | Gender of the participant        | One of: "male", "female"" |
+| age    | Age of the participant | One of: "7 years", "9 years", "12 years", "15 years" |
+| gender | Gender of the participant        | One of: "male", "female" |
 | culture    | Culture of participant | One of: "China", "East Germany", "Iceland", or "Russia" |
 | coded | How their interview response was coded | One of "activity", "feelings", "helping", "length", "norms", or "trust" |
 
@@ -63,7 +63,9 @@ This is a large dataset comprising over 700 participants of different ages, gend
 
 ## Frequency tables
 
-Let's start by looking at how often each of the coded responses (i.e. _actitivites, feelings, helping, length, norms, and trust_) appear in the interviews. We could do this by hand, but it would be slow and error prone. Instead, we use the `table` command in R to do it for us:
+Let's start by looking at how often each of the coded responses (i.e. _actitivites, feelings, helping, length, norms, and trust_) appear in the interviews. We could do this by hand, but it would be slow and error prone. Instead, we use the `table` command in R to do it for us.
+
+**Add this command to your script and run it (CTRL+ENTER)**:
 
 ```{r starting}
 table(friends$coded)
@@ -85,13 +87,16 @@ Here's a step-by-step explanation of how the above command works. You'll need th
 
 Now produce frequency tables for each of the other _variables_ in this _dataframe_ (i.e. `age`, `gender`, and `culture`). You do this by changing the command `table(friends$coded)` so that it now refers to a different column in the `friends` dataframe. Re-read the above _Explanation of command_ section if you're stuck.
 
-**Enter the command for creating a _frequency table for culture_ into your lab book.**
+**Enter the command for creating a _frequency table for culture_ into your script, and also into your lab book.**
 
 <a name="cont"></a>
 
 ## Contingency tables
 
 Do childrens' ideas about friendship differ across cultures? We can use the `table` command to look at this, too. We use it to produce a _frequency table_ for each of the different cultures in our sample, like this:
+
+**Add the following commands to your script and run them:**
+
 ```{r cont}
 cont <- table(friends$culture, friends$coded)
 cont
@@ -120,7 +125,9 @@ Close inspection of the contingency table reveals that, for example, the "helpin
 
 ## Mosaic plots
 
-Some people find it quite hard to notice these kinds of patterns in contingency tables, and the patterns are certainly harder to spot in a table than in a good visualization. The visualization we're going to use here is called a _mosaic plot_. The command to do this in R is
+Some people find it quite hard to notice these kinds of patterns in contingency tables, and the patterns are certainly harder to spot in a table than in a good visualization. The visualization we're going to use here is called a _mosaic plot_. The command to do this in R is as follows:
+
+**Add the following command to your script and run it**:
 
 ```{r mosaic}
 mosaicplot(cont)
@@ -141,6 +148,8 @@ Looking at this mosaic plot, it's visually obvious that "length" is a less commo
 ## Evidence
 
 So, it looks like there's some kind of relationship between culture and conceptions of friendship ... but how good is the evidence that this is a real result, and not just some kind of fluke we can put down to chance? As we covered in the _Evidence_ worksheet, the best way to answer this question is to calculate a Bayes Factor (BF). In R, we can calculate the Bayes Factor for a contingency table like this:
+
+**Add the following commands to your script and run them**:
 
 ```{r bf, message=FALSE}
 library(BayesFactor, quietly = TRUE)
@@ -167,6 +176,8 @@ If you're curious about what the rest of the output means, see [more on relation
 
 There's a long history in psychology of performing a _contingency-table chi-square_ test to examine the level of evidence for a relationship. The results of such tests are widely misinterpreted by psychologists, but some still like to see them anyway. Here's how to calculate one for these data:
 
+**Add the following command to your script and run it**:
+
 ```{r chi}
 chisq.test(cont)
 ```
@@ -187,13 +198,13 @@ The second is the _degrees of freedom_ (`df` in the above output). In this case,
 
 In you were writing up this analysis in a report, you would write something like:
 
-_The coded friendship concepts occured with different frequency across cultures, BF = 1.08 x 10<sup>8</sup>, X<sup>2</sup>(15) = 89.2, p < .001, see Table 1._
+_The coded friendship concepts occurred with different frequency across cultures, BF = 1.08 x 10<sup>8</sup>, X<sup>2</sup>(15) = 89.2, p < .001, see Table 1._
 
 "Table 1" would be the contingency table you'd produced with the `table` command.
 
 As discussed in the _Evidence_ worksheet, it is also important to report the method by which you calculated your Bayes Factor. So, somewhere in you report, you should say something like:
 
-_Bayes Factors were calculated using the BayesFactor package (Morey & Rouder, 2018), within the R enviornment (R Core Team, 2018)._
+_Bayes Factors were calculated using the BayesFactor package (Morey & Rouder, 2018), within the R environment (R Core Team, 2021)._
 
 You can get the references for these citations by typing `citation("BayesFactor")` and `citation()`.
 
@@ -201,6 +212,10 @@ You can get the references for these citations by typing `citation("BayesFactor"
 
 ## Exercise 2
 Each step in this exercise can be completed by slightly modifying a command you have already used. 
+
+**Add these modified commands to your script and run them**.
+
+Here are the things you should do:
 
 1. Produce a contingency table that shows the relationship between gender and concepts of friendship in this data set. Do this by modifying `cont <- table(friends$culture, friends$coded)` appropriately. 
 

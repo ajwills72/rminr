@@ -61,7 +61,9 @@ ctrl <- wordctrlCIsum %>% pivot_wider(names_from = congru, values_from = rt)
 ctrldiff <- ctrl %>% mutate(diff = incong - cong)
 ```
 
-After some preprocessing, the graphing command we used in that exercise was:
+After some preprocessing, the graphing command we used in that exercise was as follows. 
+
+**Enter this command into your script, and run it:**
 
 ```{r graph}
 ctrldiff %>% ggplot(aes(diff)) +
@@ -75,7 +77,9 @@ This graph looks OK, but would need some improvement before including in a repor
 
 # Meaningful labels
 
-The first thing to do is change the axis labels to something a bit more human readable. We use the `xlab` and `ylab` commands for this. We covered these commands previously in the [Absolute Beginners' guide](exploring-incomes.html#custom-graphs):
+The first thing to do is change the axis labels to something a bit more human readable. We use the `xlab` and `ylab` commands for this. We covered these commands previously in the [Absolute Beginners' guide](exploring-incomes.html#custom-graphs).
+
+**Update the commands in your script to look like this, and re-run them:**
 
 ```{r graph2}
 ctrldiff %>% ggplot(aes(diff)) +
@@ -89,13 +93,17 @@ ctrldiff %>% ggplot(aes(diff)) +
 
 # Journal styling
 
-The default styling for `ggplot` is different to what is preferred in most psychology journals. Fortunately, we can use Tina Seabrooke's `theme_APA` to correct this. You'll find the code in the same _git_ repository as the data, so all you need to do is load in her code:
+The default styling for `ggplot` is different to what is preferred in most psychology journals. Fortunately, we can use Tina Seabrooke's `theme_APA` to correct this. You'll find the code in the same _git_ repository as the data, so all you need to do is load in her code.
+
+**Enter this command at the top of your your script, and run it:**
 
 ```{r source}
 source("themeapa.R")
 ```
 
-and then add it as a theme to your graph (much as you have used `theme_bw` in the past):
+and then add it as a theme to your graph (much as you have used `theme_bw` in the past).
+
+**Update the commands in your script to look like this, and re-run them:**
 
 ```{r graph3}
 ctrldiff %>% ggplot(aes(diff)) +
@@ -114,6 +122,8 @@ If you are writing a report or journal article, it's generally a bad idea to scr
 
 To produce high-quality output, you should first create an object for your graph, much as we created an [object for the output of analysis](anova3.html#bfact).
 
+**Update the commands in your script to look like this, and re-run them:**
+
 ```{r graph4}
 dgraph <- ctrldiff %>% ggplot(aes(diff)) +
     geom_density(aes(y=..scaled..)) +
@@ -124,7 +134,9 @@ dgraph <- ctrldiff %>% ggplot(aes(diff)) +
 dgraph
 ```
 
-We can now use the `ggsave` command to save a high-quality version of that graph:
+We can now use the `ggsave` command to save a high-quality version of that graph.
+
+**Enter this command at the bottom of your script, and run it:**
 
 ```{r ggsave}
 ggsave(filename = "fig1.pdf", plot = dgraph, units = "cm", width = 15,
@@ -183,7 +195,9 @@ We'll start by producing some graphs for within-participants manipulations.
 
 Our first example uses data from [an undergraduate student experiment on the Perruchet Effect](awdiss.html). Stay in your `rminr-data` project, create a new R file called `one-within.R`, and enter the commands that follow into that file. 
 
-To get started on this example, we need to first load the data: 
+To get started on this example, we need to first load the data.
+
+**Enter these commands into your script, and run them:**
 
 ```{r perruchet-data, message=FALSE}
 library(tidyverse)
@@ -223,7 +237,9 @@ From this plot, it's clear that: (a) the overall trend is downwards, (b) most bu
 
 ### Building up the graph, piece by piece
 
-This graph is a bit more complex than the ones we've produced before, but R and, in particular, `ggplot`, allows us to build up complex graphs like this piece by piece, from familiar components. The way to do this is to start with a blank page, which we do by just using the `ggplot` command on its own:
+This graph is a bit more complex than the ones we've produced before, but R and, in particular, `ggplot`, allows us to build up complex graphs like this piece by piece, from familiar components. The way to do this is to start with a blank page, which we do by just using the `ggplot` command on its own.
+
+**Enter these commands into your script, and run them:**
 
 ```{r blank}
 ### Create a blank plot
@@ -231,8 +247,9 @@ base  <- ggplot()
 base
 ```
 
-Next, we add a line for each participant:
+Next, we add a line for each participant.
 
+**Add these commands to your script, and run them:**
 
 ```{r lines, class.source = 'numberLines lineAnchors'}
 ### Add a line for each participant
@@ -246,7 +263,9 @@ In lines 2-4 above, we use the familiar `geom_line` to draw a line graph, as use
 
 In line 5, we display our new line graph on top of the background: `base + lns`. 
 
-Next, we add an indication of the mean rating at each level. To do this, we have to calculate the means, which we can do using the `group_by` and `summarise` commands we have used in many previous worksheets:
+Next, we add an indication of the mean rating at each level. To do this, we have to calculate the means, which we can do using the `group_by` and `summarise` commands we have used in many previous worksheets.
+
+**Add these commands to your script, and run them:**
 
 ```{r mean.trend}
 ### Calculate means
@@ -254,7 +273,9 @@ mdata  <- lvl.sum %>% group_by(level) %>%
   summarise(lcval = mean(lcval), expect = mean(expect))
 ```
 
-Now we can use `geom_line` to plot those means:
+Now we can use `geom_line` to plot those means.
+
+**Add these commands to your script, and run them:**
 
 ```{r mean.trend.2}
 ### Plot the mean line
@@ -262,7 +283,9 @@ mline  <- geom_line(aes(x=level, y=expect), data = mdata, colour="black")
 base + lns + mline
 ```
 
-We can make the mean line more prominent by also including plot points on it:
+We can make the mean line more prominent by also including plot points on it.
+
+**Add these commands to your script, and run them:**
 
 ```{r mean.trend.dots}
 mdots  <- geom_point(aes(x=level, y=expect), data = mdata, colour="black")
@@ -271,6 +294,8 @@ base + lns + mline + mdots
 
 Now, we can do various things to make the graph look nicer. First, we add `theme_APA`:
 
+**Enter this command into your script, and run it:**
+
 ```{r apa}
 ### Load and add APA theme
 base + lns + mline + mdots + theme_APA + theme(legend.position="none")
@@ -278,7 +303,9 @@ base + lns + mline + mdots + theme_APA + theme(legend.position="none")
 
 This makes the graph more in keeping with the style of graphs one normally sees in psychology journals. We also added the command `theme(legend.position="")`, which removes the legend (i.e. the key relating participant number to shade of blue, which isn't informative). 
 
-Finally, we tidy up the x and y axis labels:
+Finally, we tidy up the x and y axis labels.
+
+**Enter these commands into your script, and run them:**
 
 ```{r apa.final}
 ### Tidy up x and y axis labels
@@ -297,7 +324,9 @@ Our next example is from an experiment with two within-subjects factors. Partici
 
 A two-factor within-subjects design is one of the most common in cognitive psychology. There is a fairly typical way to plot this type of data, which we've previously come across in the [understanding interactions](anova2.html#intsect) worksheet.  Specifically, we use points connected by lines to represent the means in each of the four conditions. 
 
-Create a new R file called `two-within.R`, and enter the commands that follow into that file. We start by loading the data, keeping only the test trials, and then calculating mean reaction time for each condition for each participant, using commands we have used in several previous worksheets:
+**Create a new R file called `two-within.R`**, and enter the commands that follow into that file. We start by loading the data, keeping only the test trials, and then calculating mean reaction time for each condition for each participant, using commands we have used in several previous worksheets.
+
+**Enter these commands into your script, and run them:**
 
 ```{r w-pointline-2-preproc, message=FALSE}
 library(tidyverse)
@@ -308,7 +337,9 @@ priming <- raw %>%
   summarise(RT = mean(RT, na.rm = TRUE))
 ```
 
-Next we calculate the means for each condition, using now-familiar commands:
+Next we calculate the means for each condition, using now-familiar commands.
+
+**Enter these commands into your script, and run them:**
 
 ```{r cond-means}
 priming.sum <- priming %>% group_by(Congruency, Load) %>%
@@ -316,7 +347,9 @@ priming.sum <- priming %>% group_by(Congruency, Load) %>%
 priming.sum
 ```
 
-We can then plot the same graph as we did in the [understanding interactions](anova2.html#intsect) worksheet:
+We can then plot the same graph as we did in the [understanding interactions](anova2.html#intsect) worksheet.
+
+**Enter these commands into your script, and run them:**
 
 ```{r w-pointline-2-1, class.source = 'numberLines lineAnchors'}
 within_2x2 <- priming.sum %>%
@@ -336,6 +369,8 @@ Line 3 plots the lines on the graph, and Line 4 adds plot points. Line 5 tells R
 
 Finally, we apply some formatting to the graph, in the way we covered at the beginning of the current worksheet:
 
+**Enter these commands into your script, and run them:**
+
 ```{r w-pointline-2-3, message=FALSE, class.source = 'numberLines lineAnchors'}
 within_2x2 +
   ylab("Mean RT") + xlab("Congruency") +
@@ -354,7 +389,9 @@ One approach we could take here is to add some kind of error bars, as we saw in 
 
 In this experiment, we're most interested in how much smaller the congruency effect is under cognitive load. We can therefore show variability in this key result by calculating a difference of differences score, and plotting the distribution of this score. This is a similar approach to the one we previously took in the [within-subject differences](anova1.html) worksheet.
 
-So, first, we calculate the difference of differences score:
+So, first, we calculate the difference of differences score.
+
+**Enter these commands into your script, and run them:**
 
 ```{r w_diffdiff, class.source = 'numberLines lineAnchors'}
 priming_diff <- priming %>%
@@ -371,7 +408,9 @@ Lines 1-2 pivot the data into a wide format so we can calculate the 'difference 
 
 Open `priming_diff` by clicking on it in your _Environment_. As you can see there are a range of scores in the `diff` column. Click the `diff` column heading to sort the values. On a quick inspection, just over half the participants seem to have a positive score (i.e. a bigger congruency effect in the absence of load). A positive score is the expected effect, so clearly there's a lot of variability here. 
 
-We can visualize this variability using a density plot:  
+We can visualize this variability using a density plot.
+
+**Enter these commands into your script, and run them:**
 
 ```{r w_diff_plot}
 priming_diff %>% ggplot(aes(diff)) +
@@ -404,7 +443,7 @@ We'll plot some data from [a study which tested children’s language developmen
 
 In this study, children were tested using one of two sets of picture cards; the set used in the Italian version of WinG, or the set used in the English version. The researchers were primarily interested in whether the children's performance differed depending on which cards were used. We can demonstrate this with plots that show the distribution of scores for the two card sets on the WinG tasks.
 
-Create a new R file called `one-between.R`, and enter the commands that follow into that file. We start by preparing the data for plotting. These steps are described in detail in the [Better tables worksheet](better-tables.html) worksheet, so we won’t repeat the description here. Instead, we’ll just list the commands and show the final output.
+**Create a new R file called `one-between.R`**, and enter the commands that follow into that file. We start by preparing the data for plotting. These steps are described in detail in the [Better tables worksheet](better-tables.html) worksheet, so we won’t repeat the description here. Instead, we’ll just list the commands and show the final output.
 
 ```{r message=FALSE, class.source = 'numberLines lineAnchors'}
 library(tidyverse)
@@ -430,6 +469,8 @@ wing %>% head(8) %>% pander()
 ```
 
 We'll plot the data using 'half violin' plots. As the name suggests, this shows one half of a [violin plot](https://en.wikipedia.org/wiki/Violin_plot), which is just a density plot (see previous example) rotated through ninety degrees. We've used full violin plots in a previous [worksheet](illusions.html); the advantage of the half-violin plot in this case is that it allows us to more clearly and compactly compare two distributions.
+
+**Enter these commands into your script, and run them:**
 
 ```{r cloud, class.source = 'numberLines lineAnchors'}
 # between subjects half-violin plot
@@ -461,14 +502,15 @@ We could have used a bar plot to graph this data, but the half-violin plot is a 
 
 Although there's not much we can do about the first problem (other than pick a better graph!), we can help with the second one a bit by using _confidence intervals_ -- an idea we'll introduce later in the worksheet. If you decide that your graph simply must be a bar graph, then this [link](barplot-ci.R) provides the R code for replotting the above graph as a bar plot with confidence intervals. 
 
-
 <a name="b-1x4"></a>
 
 ## Single factor, unordered variable
 
 When your hypothesis concerns more than two groups, overlapping half-violin plots (as we did in the last example) can start to get a bit messy -- it can be hard to pick out the three or four distributions when they're all on top of one another. One solution is to spread the violin plots out over the x-axis, as we did for the four picture naming tasks in the last example. Another approach is to use boxplots, which is what we'll do here. 
 
-To illustrate the use of a boxplot, we'll use some data from an undergraduate project on emotional avoidance strategies in fans of different music types: Mainstream, Goth, Metal and Emo. So, we'll start by loading that data, and selecting just the emotional-avoidance scores (using commands that should be familiar from several previous worksheets):
+To illustrate the use of a boxplot, we'll use some data from an undergraduate project on emotional avoidance strategies in fans of different music types: Mainstream, Goth, Metal and Emo. So, we'll start by loading that data, and selecting just the emotional-avoidance scores (using commands that should be familiar from several previous worksheets).
+
+**Enter these commands into your script, and run them:**
 
 ```{r load, message=FALSE}
 # single factor, ordered variable
@@ -476,7 +518,9 @@ ers_l <- read_csv('going-further/music-emotion-preproc.csv')
 avoidance <- ers_l %>% filter(ers == 'avoidance')
 ```
 
-By default, R will plot the four groups in alphabetical order from left to right. However, in this particular study the interest was mainly in comparing each of the subcultures (Goth, Metal, Emo) to the control group (Mainstream). So, we'd like to show the Mainstream group first, followed by the other three. We can do this by telling R this order of plotting:
+By default, R will plot the four groups in alphabetical order from left to right. However, in this particular study the interest was mainly in comparing each of the subcultures (Goth, Metal, Emo) to the control group (Mainstream). So, we'd like to show the Mainstream group first, followed by the other three. We can do this by telling R this order of plotting.
+
+**Enter these commands into your script, and run them:**
 
 ```{r plot-order, message=FALSE}
 avoidance <- avoidance %>%
@@ -486,7 +530,9 @@ avoidance <- avoidance %>%
 
 **Explanation of commands**: We use `mutate` to turn `subculture` into a factor, something we have done in previous worksheets (e.g. [within-subject differences](anova1.html#anovaWS)). The new component here is `levels`, in which we tell R the order in which we want to four levels of the factor to appear. R will then follow that ordering.
 
-Finally, we produce the boxplots:
+Finally, we produce the boxplots.
+
+**Enter these commands into your script, and run them:**
 
 ```{r avoidance, class.source = 'numberLines lineAnchors', message=FALSE}
 avoidance %>% ggplot(aes(x=subculture, y=score)) +
@@ -530,7 +576,9 @@ Mixed manipulations are those that include both within-subject factors and betwe
     
 We'll demonstrate this process with some further data from the student project we used earlier. In this part of the data, the students compared participants' emotions before and after they listened to their preferred type of music.
 
-Create a new R file called `pre-post.R`, and enter the commands that follow into that file. First, we'll load the data, and select the columns we're going to use. We'll also put the four subcultures in a particular order, as we did in the last example. We've covered all these commands in previous worksheets, so we won't explain them again here.
+**Create a new R file called `pre-post.R`**, and enter the commands that follow into that file. First, we'll load the data, and select the columns we're going to use. We'll also put the four subcultures in a particular order, as we did in the last example. We've covered all these commands in previous worksheets, so we won't explain them again here.
+
+**Enter these commands into your script, and run them:**
 
 ```{r m-load, message=FALSE}
 library(tidyverse)
@@ -549,7 +597,9 @@ na %>% head() %>% pander()
 
 There were four groups of fans: Mainstream (control), Goth, Metal and Emo. This was the between-subjects variable. The within-subjects variable was time - emotions were measured before (`pre_`) and after (`post_`) listening to their favourite music. Emotion was measured using the 20-item Positive and Negative Affect Schedule (PANAS). In this example, we're going to focus on negative affect component of that scale (`na`). 
 
-The main question of interest to the researchers was whether, in each of the four groups, listening to music changed the level of negative affect experienced by participants. In other words, as in our previous example of reaction times, the central hypothesis involves a _difference_ score. So, we start by calculating that difference score, in much the same way as before:
+The main question of interest to the researchers was whether, in each of the four groups, listening to music changed the level of negative affect experienced by participants. In other words, as in our previous example of reaction times, the central hypothesis involves a _difference_ score. So, we start by calculating that difference score, in much the same way as before.
+
+**Enter this command into your script, and run it:**
 
 ```{r diff}
 na_diff <- na %>% mutate(diff = post_na - pre_na)
@@ -583,7 +633,9 @@ However, the range of likely values for the Mainstream group are within the rang
 
 ## Drawing the graph
 
-Here are the commands we use to draw this graph:
+Here are the commands we use to draw this graph. 
+
+**Enter these commands into your script, and run them:**
 
 ```{r m-diff, class.source = 'numberLines lineAnchors'}
 na_diff %>%
@@ -597,7 +649,7 @@ na_diff %>%
 
 ### Explanation of commands
 
-Lines 1-2 set up the plot, with `subculture` on the x-axis and the difference score we previously calcualted(`diff`) on the y-axis.
+Lines 1-2 set up the plot, with `subculture` on the x-axis and the difference score we previously calculated(`diff`) on the y-axis.
 
 Line 3 draws the confidence intervals. This makes use of a new command, `stat_summary`, which is particularly useful for drawing confidence intervals. The term _error bar_ means draw an I-bar, while `fun.data=mean_cl_boot` is a somewhat cryptic way we tell it that we want that I-bar to be a confidence interval. There are different sorts of error bar we could draw, but we're focussing on confidence intervals here, because they are the easiest to interpret correctly. The `width = 0.1` part sets the width of the horizontal lines of the I-bar. 
 
@@ -605,7 +657,7 @@ Line 4 adds a plot point for the mean related to each error bar, using the same 
 
 Line 5 adds more meaningful labels to the x- and y-axes. 
 
-Line 6 is quite important. As we just mentioned, error bars (I-bars) are used to represent a number of different things, often without explanation. This leads to a great deal of confusion, so it's really important to always say how your error bars were calculated. This can be addedd to the graph itself using the `labs` command, or it can be added to your Figure caption (not shown here).
+Line 6 is quite important. As we just mentioned, error bars (I-bars) are used to represent a number of different things, often without explanation. This leads to a great deal of confusion, so it's really important to always say how your error bars were calculated. This can be added to the graph itself using the `labs` command, or it can be added to your Figure caption (not shown here).
 
 Line 7 applies APA style.
 
@@ -647,7 +699,7 @@ There is basically no good way of showing confidence intervals for both within- 
 
 Like the correlation matrices introduced in the [Better tables](better-tables.html#cor-matrix) worksheet, we can use a 'pairs' plot to show relationships between pairs of variables in a correlational study.
 
-In this plot, a set of variables are listed along the columns, and also down the rows. A pair is the cell defined by a particular row and column. Along the diagonal, variables are paired with themselves, so the correlation doesn't provide any information, as it is always 1. Above the diagonal are all of the combinations of the remaining pairs of variables. The same combinations of pairs are repated below the diagonal.
+In this plot, a set of variables are listed along the columns, and also down the rows. A pair is the cell defined by a particular row and column. Along the diagonal, variables are paired with themselves, so the correlation doesn't provide any information, as it is always 1. Above the diagonal are all of the combinations of the remaining pairs of variables. The same combinations of pairs are repeated below the diagonal.
 
 This format provides an opportunity to provide a lot of information in a small area. In this plot, we'll use some different ways of showing associations between variables, all of which will be familiar from other worksheets. In the upper part of the grid, we'll plot a [correlation coefficient](corr.html) for each pair. For the pairs in the lower part of the grid, we'll create a [scatterplot with a line of best fit](https://benwhalley.github.io/rmip/regression.html). Along the diagonal, we'll create a [density plot](corr.html#sum), to show the variability for each variable.
 
@@ -658,7 +710,7 @@ We'll plot some data from another undergraduate dissertation. This study was int
   * psiq - vividness of mental imagery
   * ftt - score on a flexible thinking task
 
-Create a new R file called `pairs.R`, and enter the commands that follow into that file. 
+**Create a new R file called `pairs.R`, and enter the commands that follow into that file**:
 
 ```{r pairs-2, class.source = 'numberLines lineAnchors', message=FALSE}
 library(tidyverse)

@@ -18,9 +18,13 @@ knitr::opts_chunk$set(echo = TRUE, comment=NA)
 Before starting this exercise, you should have completed **all** the [Absolute Beginners'](index.html) workshop exercises. If not, take a look at those exercises before continuing. Each section below also indicates which of the earlier worksheets are relevant.
 
 ## Getting the data into R
-**Relevant worksheet:** [Using RStudio projects](using-projects.html)
+**Relevant worksheet:** [Intro to RStudio](intro-rstudio.html)
 
-You'll need to complete the Psych:EL excerise to get the CSV file containing your data. You'll also need to get an older person to complete the same Psych:EL exercise to get a second CSV file containing their data. Set up an RStudio project for this analysis, and copy the CSV files into it. 
+You'll need to complete the Psych:EL excerise to get the CSV file containing your data. You'll also need to get an older person to complete the same Psych:EL exercise to get a second CSV file containing their data. 
+
+Once you have downloaded your CSV files, [open a project](intro-rstudio.html) on RStudio Server for this analysis, create a script file, and [upload your CSV](entering-data-by-hand.html#upload) to your project.
+
+**Plymouth University students**: Create/open your project named `psyc415`; within that create a script file called `risk-rat.R`. Enter all commands into that script and run them from there.
 
 ## Exploring your data
 

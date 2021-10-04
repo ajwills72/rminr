@@ -47,18 +47,18 @@ Before starting this exercise, you should have completed **all** the previous [A
 
 ## Getting the data into R
 
-**Relevant worksheet:** [Using RStudio projects](using-projects.html)
+**Relevant worksheet:** [Introduction to RStudio](intro-rstudio.html)
 
-You'll be provided with a CSV file before or during the workshop. Set up an RStudio project for this analysis, and copy the CSV file into it. 
+You'll be provided with a CSV file before or during the workshop. If you want to try out this worksheet without that data file, you can use this [example CSV file](data/corr.csv) instead. _You can only gain marks for this exercise if you use the CSV file from the workshop_.
 
-If you want to try out this worksheet without that data file, you can use this [example CSV file](data/corr.csv) instead. _You can only gain marks for this exercise if you use the CSV file from the workshop_.
+**Create or open an appropriate project on RStudio Server for this analysis (**Plymouth University students**: use the project 'psyc414' created in the [inter-rater reliability](irr.html) worksheet), [upload your CSV](entering-data-by-hand.html#upload) to your project, and create a new R script called `corr.R`.**
 
 ## Exploring your data
 
 ### Load
 **Relevant worksheet:** [Exploring data](exploring-incomes.html) 
 
-Load the _tidyverse_ package, and load your data.
+**Now, add these commands to your script and run them**; the will load the _tidyverse_ package, and load your data.
 
 ```{r init-load, message=FALSE} 
 library(tidyverse)
@@ -88,7 +88,9 @@ This is a large dataset comprising over 200 participants.
 
 The data from this study is different to other data you have looked at so far in this course. In particular, the participants worked as a group, rather than individually. This means that, for example, the ratings of ingroup closeness are likely to be more similar _within_ a group, than _between_ groups. For example, one group might have got on really well with one another, so they all gave quite high closeness ratings. Another group might not have 'gelled', and went on to all give quite low ratings. Of course, even within groups, some ratings may be higher than others (some members of group X might feel closer to Group X than others), but it's likely that ratings within the same group will be more similar than ratings across groups. We call this sort of data **hierarchical** data. 
 
-We won't cover how to make the most out of hierarchical data until a later course. For this introductory course, we're going to take the simple approach of averaging ratings within each group. So, for example, if the group had two members, one who gave a rating of 5 and the other a rating of 7, we would average these and record the group's score as 6. As we covered in the [group differences](group-differences.html) worksheet, we can do this using the `group_by` and `summarise` commands:
+We won't cover how to make the most out of hierarchical data until a later course. For this introductory course, we're going to take the simple approach of averaging ratings within each group. So, for example, if the group had two members, one who gave a rating of 5 and the other a rating of 7, we would average these and record the group's score as 6. As we covered in the [group differences](group-differences.html) worksheet, we can do this using the `group_by` and `summarise` commands.
+
+**Add the following commands to your script and run them (CTRL+ENTER)**:
 
 ```{r summarise}
 gdata <- data %>% 
@@ -110,7 +112,9 @@ Most of the above command is the same as in the [group differences](group-differ
 
 **Relevant worksheets:** [Group differences](group-differences.html), [facial attractiveness](face-attract.html)
 
-Did every group give basically the same rating of ingroup closeness, or did closeness vary a lot between groups? One way to take a look at this is to produce a _density plot_, as we covered in the [group differences](group-differences.html) and [facial attractiveness](face-attract.html) worksheets:
+Did every group give basically the same rating of ingroup closeness, or did closeness vary a lot between groups? One way to take a look at this is to produce a _density plot_, as we covered in the [group differences](group-differences.html) and [facial attractiveness](face-attract.html) worksheets.
+
+**Add the following commands to your script and run them**:
 
 ```{r density}
 gdata %>% ggplot(aes(ingroup)) + geom_density(aes(y=..scaled..)) + xlim(1, 10)
@@ -118,7 +122,9 @@ gdata %>% ggplot(aes(ingroup)) + geom_density(aes(y=..scaled..)) + xlim(1, 10)
 
 In the example above, the most common (modal) rating of ingroup closeness is between 7 and 8. So, on average, people rated the ingroup closeness as quite high. However, there were quite a range of ratings, both above and below this modal rating. Your data may be different.
 
-We can ask the same question about outgroup distance. Did everyone give bascially the same rating, or did outgroup distance vary a lot between groups? Changing `ingroup` to `outgroup` in the above command gives us the answer:
+We can ask the same question about outgroup distance. Did everyone give bascially the same rating, or did outgroup distance vary a lot between groups? Changing `ingroup` to `outgroup` in the above command gives us the answer.
+
+**Add the following commands to your script and run them**:
 
 ```{r density-2}
 gdata %>% ggplot(aes(outgroup)) + geom_density(aes(y=..scaled..)) + xlim(1, 10)
@@ -140,7 +146,9 @@ Or perhaps high ingroup closeness is associated with low outgroup distance --- f
 
 One way to look at this question is to produce a _scatterplot_. On a scatterplot, each point represents one group. That point's position on the x-axis represents their ingroup closeness, and that point's position on the y-axis represents their outgroup distance. 
 
-The command to produce a scatterplot in R is much like the command for a bar graph, as you used in, for example, the [face recognition](face-recog.html) worksheet. The only difference is that we use the `geom_point()` command (because the graph is a set of dots or _points_) rather than the `geom_col()` command we used for bar (_column_) charts:
+The command to produce a scatterplot in R is much like the command for a bar graph, as you used in, for example, the [face recognition](face-recog.html) worksheet. The only difference is that we use the `geom_point()` command (because the graph is a set of dots or _points_) rather than the `geom_col()` command we used for bar (_column_) charts.
+
+**Add the following commands to your script and run them**:
 
 ```{r scatter}
 gdata %>% ggplot(aes(x = ingroup, y = outgroup)) + geom_point() 
@@ -156,7 +164,9 @@ So it seems that, in this example dataset, ingroup closeness and outgroup distan
 
 **Relevant worksheets:** [Group differences](group-differences.html)
 
-Sometimes, it's useful to have a single number that summarises how well two variables are correlated. We can calculate this number, called a _correlation co-efficient_, using the `cor` command in R:
+Sometimes, it's useful to have a single number that summarises how well two variables are correlated. We can calculate this number, called a _correlation co-efficient_, using the `cor` command in R.
+
+**Add the following command to your script and run it**:
 
 ```{r corr}
 cor(gdata$ingroup, gdata$outgroup)
@@ -218,13 +228,17 @@ A correlation co-efficient is much like an _effect size_, which we covered in th
 
 So far, we've produced a scatterplot of _ingroup closeness_ versus _outgroup distance_, and we've calculated a correlation co-efficient for that relationship ( _r=0.66_ in the example above ). But is the relationship between these two variables real, or a fluke? Much like the Bayesian t-test we calculated in the [evidence](evidence.html) worksheet, we can calculate a Bayes Factor for the relationship between two variables. 
 
-The first step is to load the _BayesFactor_ packages, which we previously used in the [evidence](evidence.html) worksheet:
+The first step is to load the _BayesFactor_ packages, which we previously used in the [evidence](evidence.html) worksheet.
+
+**Add the following command to your script and run it**:
 
 ```{r bf-load, message=FALSE}
 library(BayesFactor, quietly = TRUE)
 ```
 
-Then, we use the `correlationBF` command, which has a similar format to the `cor` command above:
+Then, we use the `correlationBF` command, which has a similar format to the `cor` command above.
+
+**Add the following command to your script and run it**:
 
 ```{r bf}
 correlationBF(gdata$ingroup, gdata$outgroup)
@@ -234,7 +248,9 @@ The Bayes Factor is reported on the third line, towards the right. In this examp
 
 ### Traditional analysis
 
-As we covered in the [Evidence](evidence.html) worksheet, psychologists have typically reported _p values_, despite the fact that _p values_ are widely misinterpreted. If you want to calculate a _p value_ for a correlation co-efficient, you can use the following command:
+As we covered in the [Evidence](evidence.html) worksheet, psychologists have typically reported _p values_, despite the fact that _p values_ are widely misinterpreted. If you want to calculate a _p value_ for a correlation co-efficient, you can use the following command.
+
+**Add the following command to your script and run it**:
 
 ```{r r-sig}
 cor.test(gdata$ingroup, gdata$outgroup)
@@ -255,6 +271,8 @@ Psychologists generally include some numbers from their analyses in their writeu
 In this exercise, you'll apply what you've learned to the relationship between _ingroup closeness_, and _group-leader dominance_. Do each of the following analyses, and **include them as part of your report**. In order to get graphs from RStudio into your wordprocessor, follow [these instructions](insert-image.html).
 
 **Hint:** Most of these steps can be completed by copying the commands you used earlier, and replacing `outgroup` with `dominance`. 
+
+**Add commands to your script to do the following, and run those commands**:
 
 - Make a density plot of the _dominance_ scores. 
 

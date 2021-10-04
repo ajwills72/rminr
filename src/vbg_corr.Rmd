@@ -32,7 +32,7 @@ source("multiplot.R")
 ## Before you start...
 Before starting this worksheet, you should have completed all three previous worksheets of the [Very Brief Guide to R](index.html#vbgtr). Once you have, you'll have an R project that contains a script like this:
 
-```{r init, message=FALSE, cache=TRUE, echo=TRUE, results='hide', fig.keep = 'none'}
+```{r init, message=FALSE, cache=FALSE, echo=TRUE, results='hide', fig.keep = 'none'}
 ## Exploring data
 library(tidyverse)
 cpsdata <- read_csv("cps2.csv")
@@ -73,11 +73,11 @@ t.test(cpslow$income ~ cpslow$native)
 
 We're going to use some new data in this final worksheet, so download it from [here](data/gcorr.csv) and upload it to RStudio, and then load the data into a dataframe called `gdata`. Look at the [Exploring data](vbg_explore.html) worksheet if you need a reminder on how to do this. If you've done it correctly, you'll get an output like this:
 
-```{r init-load, echo=FALSE} 
+```{r init-load, echo=FALSE}
 gdata <- read_csv("gcorr.csv")
 ```
 
-Next, click on `gdata` in the Environment window, and take a look. The data is from an experiment where each of 25 groups of people selected a leader and then completed a task together. Afterwards, they  answered some questions about their group. Specifically, they rated their _ingroup closeness_ (how close, psychologically speaking, they felt to members of their own group), their _outgroup distance_ (how distant they felt from members of other groups), and how _dominant_ their group leader was in their group. The ratings were made inidivually, and then averaged to give one number per group per measure. 
+Next, click on `gdata` in the Environment window, and take a look. The data is from an experiment where each of 25 groups of people selected a leader and then completed a task together. Afterwards, they  answered some questions about their group. Specifically, they rated their _ingroup closeness_ (how close, psychologically speaking, they felt to members of their own group), their _outgroup distance_ (how distant they felt from members of other groups), and how _dominant_ their group leader was in their group. The ratings were made inidividually, and then averaged to give one number per group per measure. 
 
 Here's what each of the column labels mean:
 

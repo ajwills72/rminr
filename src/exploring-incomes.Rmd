@@ -48,14 +48,19 @@ Each command in this worksheet is followed by one or more  _explanation_ section
 ## Loading a package
 First, we need to load a package called *tidyverse*. A package is an extension to R that adds new commands. Nearly everything we'll do in this course uses the tidyverse package, so pretty much every project starts with this instruction. 
 
-**Type (or copy and paste) the command in the grey box into the _Console_ window of RStudio, and press the RETURN key.**
+Here's how you do this: 
 
+1. Type (or copy and paste) the command in the grey box below into the _script_ you have already created on RStudio (top left window, `exploring.R`).
+
+1. Save your script again (click the Save icon), so you don't lose anything. Do this each time you add something important to your script. 
+
+1. Now ask RStudio to run this command. You do this by putting your cursor on the line of the script window containing the command, and pressing CTRL+ENTER (i.e. press the key marked 'Ctrl' and the RETURN or ENTER key together). Line 1 is automatically copied to your _Console_ window and run. 
 
 ```{r init}
 library(tidyverse)
 ```
 
-When you type the command above and press RETURN, RStudio will print some text to the Console (shown in the white box, above). This text tells you that the _tidyverse_ package has loaded ("attached") some other pacakges (e.g. _dplyr_). It also tells you that the _dplyr_ package changes the way some commands in R work ("conflicts"). That's OK.
+When you do this, RStudio will print some text to the Console (shown in the white box, above). This text tells you that the _tidyverse_ package has loaded ("attached") some other packages (e.g. _dplyr_). It also tells you that the _dplyr_ package changes the way some commands in R work ("conflicts"). That's OK.
 
 If you get an output that includes the word 'error', please see [common errors](common-errors.html).
 
@@ -63,6 +68,9 @@ If you get an output that includes the word 'error', please see [common errors](
 
 ## Loading data
 Now, we're going to load some data on the income of 10,000 people in the United States of America. I've made up this dataset for teaching purposes, but it's somewhat similar to large open data sets available on the web, such as [US Current Population Survey](https://www.census.gov/programs-surveys/cps/data.html).
+
+**Copy the command in the grey box to line 2 of your script in RStudio and then press CTRL+ENTER to run it:** (don't forget to save your script)
+
 ```{r load,cache=TRUE}
 cpsdata <- read_csv("http://www.willslab.org.uk/cps2.csv")
 ```
@@ -112,7 +120,7 @@ It would also be a little bit tedious and error prone in a spreadsheet applicati
 
 In R, we can calculate the mean instantly, and it's harder to make the sorts of errors that are common in Excel-based analysis.
 
-To calculate mean income in  R, we type the following command:
+**To calculate mean income in  R, add the following command to line 3 of your script and run it:**
 
 ```{r mean}
 cpsdata %>% summarise(mean(income))
@@ -141,8 +149,6 @@ This command has three components:
 Now we're going to calculate the median income of the people in this sample. As you learned in school, you calculate a median by putting all the numbers into rank order and then picking the number in the middle. As with the calculation of mean outcome, R allows us to calculate the median quickly and without error.
 
 This time, I haven't given you the command you need to type -- your task is to work out what you need to type. Re-read the explanation above for clues if you need them. The way to indicate that the summary you want is a median is to use the command `median`. 
-
-**TIP**: You can get back to commands you've typed previously by pressing the up arrow on your keyboard while you're in the Console. This way, you can get the command for calculating a mean, and edit it to calculate a median.
 
 If you've entered the correct command, you'll get this answer:
 ```{r median, echo=FALSE}
@@ -250,7 +256,7 @@ Take a look at the [R Graph Gallery](https://www.r-graph-gallery.com/) for lots 
 
 In class, we discussed how the histogram helped us to understand why the mean and median incomes were so different, and whether the mean or the median gave a better account of average US income. Here are the [slides](mean-median.html), if you'd like to look at them again.
 
-On the Psyc\:EL Answer Section, you'll find the question "Does the mean or the median give a better indication of average salary in this case?". **In the text box provided, give a short answer to this question**. You need not write more than a few sentences, but you should explain your reasoning. 
+On the Psyc\:EL Answer Section, you'll find the question "Does the mean or the median give a better indication of average salary in this case?" **In the text box provided, give a short answer to this question**. You need not write more than a few sentences, but you should explain your reasoning. 
 
 ___
 

@@ -5,7 +5,9 @@ A big part of psychology is collecting data about people, visualizing it (graphs
 
 ## Getting started
 
-Open a web browser (e.g. [Firefox](https://www.mozilla.org/en-US/firefox/new/), Safari, Chrome, _not_ Edge) and go to a <a href = "https://rstudio.plymouth.ac.uk" target = "blank">RStudio server</a>. Log on, using the username and password you have been given. 
+Using your web browser, go to an <a href = "https://rstudio.plymouth.ac.uk" target = "blank">RStudio server</a> and log on, using the username and password you have been given. 
+
+_NOTE_: We strongly recommend using the [Firefox](https://www.mozilla.org/en-US/firefox/new/) web browser to access RStudio. If you are having problems and you're using something other than Firefox, the first thing to try is to download and install Firefox on your machine and see if it fixes the problem. Firefox is free and open source.
 
 If that works, you should see something like this:
 
@@ -15,7 +17,7 @@ We'll go through what it all means in a bit. But, first, we're going to...
 
 ## Create a new project
 
-RStudio uses _projects_ to help you keep your work organized, and to make sure you have a record of your analyses. You should start a new project each time you start a new module in your degree (possibly more frequently, but we'll come back to that later). Here's how to create a new project:
+RStudio uses _projects_ to help you keep your work organized, and to make sure you have a record of your analyses. You should start a new project each time you start a new module in your degree. Here's how to create a new project:
 
 1. At the top right of RStudio, you will see a little blue cube, with the text "Project: (none)". Click on this, and select "New project". 
 
@@ -29,7 +31,7 @@ RStudio uses _projects_ to help you keep your work organized, and to make sure y
 
 ![Project dialog #2](pics/create2.png)
 
-4. Next, type in a name for the project that makes sense to you in the "Directory name" box. I've typed _psyc411_, but you should pick something more meaningful to you (e.g. _briefcourse_). Then click "Create project".
+4. Next, type in a name for the project that makes sense to you in the "Directory name" box. (**Plymouth University students**: Use the code of the module you're currently studying as your project name, e.g. _psyc519_**). Then click "Create project".
 
 ![Project dialog #3](pics/create3.png)
 
@@ -51,4 +53,5 @@ You should be able to see four parts:
 
 4.  The **Files** - This is the rectangle on the bottom right. This is a bit like the _File Explorer_ in Windows, or the _Finder_ on a Mac. It shows you what files are in your R project. 
 
-That's it! You're all set to start learning how to analyse data in R.
+
+**Please now move on to the next worksheet**.

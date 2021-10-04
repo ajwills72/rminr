@@ -1,33 +1,55 @@
 # Research Methods in R
-_2020 Edition._
+_2021 Edition._
 
-_Research Methods in R_ is a set of guides on how to use R as your central research methods tool. The target audience is psychology undergraduate students. _Research Methods in R_ is [Creative Commons](https://creativecommons.org/), so you are free to reuse these materials and adapt them as you wish, as long as you attribute them to their authors, and as long as your modifications have a Creative Commons licence. They come with absolutely no warranty of any kind.
 
+<<<<<<< HEAD
 _Note to teachers_: These materials have been tested against R version 3.6.3 (released 29th Feb 2020), and the most recent version of packages that were available on [MRAN](https://mran.microsoft.com/) on the 29th June 2020.
+=======
+_Research Methods in R_ is a set of guides on how to use R as your central research methods tool. They are written by various authors, and curated by [Andy Wills](https://www.andywills.info). The target audience is psychology undergraduate students. _Research Methods in R_ is [Creative Commons](https://creativecommons.org/), so you are free to reuse these materials and adapt them as you wish, as long as you attribute them to their authors, and as long as your modifications have a Creative Commons licence. They come with absolutely no warranty of any kind.
+
+_Note to teachers_: These materials have been tested against R version 4.1.0 (released 18th May 2021), and the most recent version of packages that were available on [MRAN](https://mran.microsoft.com/) on the 17th June 2021. 
+>>>>>>> master
 
 ## Curriculum map
 
-To see how a subset of these resources is used in the undergraduate psychology teaching, click below:
+To see how a subset of these resources is used in undergraduate psychology teaching, click below:
 
 - [University of Plymouth](maps/plymouth-map.html)
 
 ## List of guides
 
-1. [Absolute Beginners' Guide to R](#beginners)
+### Introductory quides
 
-2. [Putting R to Work](#rtowork)
+Start with **ONE** of these three options:
 
-3. [A Very Brief Guide to R](#vbgtr)
+- Long, easy-going introduction
+    - [Absolute Beginners' Guide to R](#beginners)
+    - [Putting R to Work](#rtowork)
 
-4. [Research Methods in Practice](#rmip)
+- Somewhat shorter introduction
+    - [LifesavR](http://benwhalley.github.io/lifesavR/)
+	
+- Even shorter introduction
+    - [A Very Brief Guide to R](#vbgtr)
 
+### Intermediate guides
+
+Next, go through **BOTH** of these guides.
+
+<<<<<<< HEAD
 5. [Intermediate Guide to R](#rmip)
 
 6. [Going further with R](#gfwr)
+=======
+- [Research Methods in Practice](#rmip)
 
-7. [Case studies](#studies)
+- [Intermediate Guide to R](#rmip) 
+>>>>>>> master
 
-8. **[Quick reference guide](cheat-sheet.html)**. List of commonly-used commands in R.
+### Advanced guide
+
+- [Going further with R](#gfwr) 
+
 
 <a name="gen"></a>
 
@@ -46,13 +68,17 @@ To see how a subset of these resources is used in the undergraduate psychology t
 
 1. [Dealing with common errors](common-errors.html). List of commonly-encountered errors and how to solve them.
 
+1. [Case studies](#studies)
 
-## 1. Absolute Beginners' Guide to R
+
+## Absolute Beginners' Guide to R
 <a name="beginners"></a>
 
 A series of worksheets on using R for data analysis in psychology. No previous knowledge of R, or of psychology, is assumed.
 
-* [Introduction to RStudio](intro-rstudio.md). How to get RStudio, and a basic introduction to the software.
+### Part 1
+
+* [Introduction to RStudio](intro-rstudio.md). A basic introduction to the software.
 
 * [Exploring data](exploring-incomes.html). Means, medians, and histograms.
 
@@ -68,11 +94,21 @@ A series of worksheets on using R for data analysis in psychology. No previous k
 
     * [More on Bayes Factors](more-on-bf.html). A more detailed discussion of Bayes Factors.
 
+<<<<<<< HEAD
 * [Using RStudio projects](using-projects.html). Creating a new project. Using an R script. Analysing your own data.
 
 * [Entering data by hand](entering-data-by-hand.html). Entering data into a spreadsheet. Saving data into your RStudio project.
 
 * [Inter-rater reliability](irr.html). Percentage agreement. Cohen's kappa.
+=======
+* [Analyzing your project data](using-projects.html). Analysing your own data. 
+
+* [Entering data by hand](entering-data-by-hand.html). Entering data into a spreadsheet. Saving data into your RStudio project.
+
+### Part 2
+
+* [Inter-rater reliability](irr.html). Percentage agreement. Cohen's kappa. 
+>>>>>>> master
 
     * [More on Cohen's kappa](more-on-kappa.html). A discussion of some potentially surprising outputs from a Cohen's kaapa calculation.
 
@@ -89,7 +125,7 @@ A series of worksheets on using R for data analysis in psychology. No previous k
 * [Making reports with R](insert-image.html). How to insert an RStudio graph into your wordprocessor document (e.g. Word). Links to _RMarkdown_ as an alternative.
 
 
-## 2. Putting R to work
+## Putting R to work
 <a name="rtowork"></a>
 
 These are mainly further practice in the skills learned in _Absolute Beginners'_. Where the exercises contain completely new skills, these are shown in **bold**. Where the excercises extend a skill you've already been taught, these are shown in _italics_. The exercises become somewhat more difficult as you go down the list.
@@ -118,7 +154,7 @@ If you are a current undergraduate student at Plymouth University, you should co
 
 * [Political psychology](brexit.html). Means, filtering data, _summarising data_, density plots, effect size, Bayesian t-test, traditional t-test.
 
-## 3. A Very Brief Guide to R
+## A Very Brief Guide to R
 
 <a name="vbgtr"></a>
 
@@ -135,20 +171,22 @@ The _Absolute Beginners' Guide to R_ and _Putting R to Work_ provide, between th
 * [Evidence, part 2](vbg_corr.html): Bayes and traditional correlation, scatterplot
 
 
-## 4. Research Methods in Practice (Quantitative section)
+## Research Methods in Practice (Quantitative section)
 
 <a name="rmip"></a>
 
-These are intermediate-level materials, designed to follow on from _An Absolute Beginners' Guide to R_ and _Putting R to work_ (or from _A Very Brief Guide to R_, if you're in a hurry). They are maintained by Ben Whalley on a separate site,
-but have been designed to fit in here in this sequence of materials. Only the _quantitative_ section of Ben's site contains information concerning the usage of R.
+These are intermediate-level materials. They are maintained by Ben Whalley on a
+separate site, but have been designed to fit in here in this sequence of
+materials. Only the _quantitative_ section of Ben's site contains information
+concerning the usage of R.
 
 - [Research Methods in Practice](https://benwhalley.github.io/rmip/data.html): Data handling, [fitting lines](https://benwhalley.github.io/rmip/regression.html) - _scatterplot with best fit line_ , **converting Likert scales from text to numbers**, **reverse scoring scale items**, multiple regression.
 
-## 5. Intermediate Guide to R
+## Intermediate Guide to R
 
 <a name="rmip"></a>
 
-These are intermediate-level materials, designed to follow on from _An Absolute Beginners' Guide to R_ and _Putting R to work_ (or from _A Very Brief Guide to R_, if you're in a hurry). They  provide analysis methods for conducting realistic, high-quality studies in psychology. They are aimed at a second-year undergraduate audience.
+These are intermediate-level materials. They  provide analysis methods for conducting realistic, high-quality studies in psychology. They are aimed at a second-year undergraduate audience.
 
 - [Revision](revision.html): A quick recap of key information covered in earlier courses.
 
@@ -171,7 +209,11 @@ These are intermediate-level materials, designed to follow on from _An Absolute 
   one between), plus advice on: pairwise comparisons, better graphs, reporting Bayesian ANOVA, and ordinal (i.e. ordered) independent variables.
 
 
+<<<<<<< HEAD
 ## 6. Going further with R
+=======
+## Going further with R 
+>>>>>>> master
 <a name="gfwr"></a>
 
 These are slightly more advanced materials, aimed at a final-year undergraduate psychology audience.
@@ -212,7 +254,11 @@ These are slightly more advanced materials, aimed at a final-year undergraduate 
 
 <a name="studies"></a>
 
+<<<<<<< HEAD
 ## 7. Case studies
+=======
+## Case studies 
+>>>>>>> master
 These are full preprocessing and analysis pipelines, mainly based on final-year undergraduate psychology projects.
 
 - [The effects of negative mental imagery on self-esteem](cs-self-esteem.html): preprocessing, Cronbach's alpha, Bayesian ANOVA.
@@ -220,14 +266,6 @@ These are full preprocessing and analysis pipelines, mainly based on final-year 
 - [The Perruchet Effect](awdiss.html): **Downloading from OSF**, de-duplicating data, excluding participants, line graphs, **baseline correction of neuroscience data**, _functions_, _loops_, _merging data frames_, list of participant numbers, log transforms, _recoding data_, **Bayesian linear regression for within-subjects designs**.
 
 - [Childrens’ language development](cs-picture-naming-wide.html): preprocessing, Bayesian t-test, tables of descriptive statistics, correlations, half-violin plot, Wilcoxon test.
-
-- [Openness, imagery and creativity](cs-jon_may.html): preprocessing, _summary statistics_, _histograms and density plots_, scatter plots, correlations, pairs plot.
-
-## Work in progress
-
-Materials in an early/incomplete stage of development:
-
-- [More on data](more-on-data.html): Reading data directly from Excel.
 
 ____
 

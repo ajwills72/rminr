@@ -66,7 +66,7 @@ Each CSV file (e.g. `subject-11.csv`) contains the data from one participant in 
 
 ## Create a new script
 
-Create a new script file and call in **preproc.R**. Put all your commands for this worksheet into this script, and save regularly. This will make it easier to see what you have done, espcially when you come back to it after a break.
+Within the `rminr-data` project, create a new script file and call it **preproc.R**. Put all your commands for this worksheet into this script, and save regularly. This will make it easier to see what you have done, especially when you come back to it after a break.
 
 ## Summary of the experiment
 
@@ -260,8 +260,6 @@ We then use `group_by` to tell R to process each filename individually. If we di
 
 When we write `do(read_csv(.$filename))` we are telling `do` to apply the `read_csv` function to each filename. The `".$filename"` part is shorthand: The period `"."` means "the group in the data I am working with now". The `"$filename"` part means use the values from the `filename` column. So `read_csv(.$filename)` means, read the csv file using the value in the `filename` column.
 
----
-
 If you look at `alldat` in the Environment window, you'll see that it has 168 rows. Using `do` has combined all three participants, each with 56 trials, into one big data frame. Although with three participants we could have done this as quickly in other ways, generally we have much more data than this - typically somewhere between 30 and 300 participants in a single experiment. Using `do` saves a lot of time in these situations.
 
 
@@ -297,7 +295,7 @@ In this experiment, words are shown on the screen one at a time. Some are real w
 
 Your task is to write R code that gives the mean reaction time for each participant, for both words and non-words. You should analyse only reaction times for trials in which they made the correct response, and you should not include the practice phase in your analysis. 
 
-This can, and should, be done with less than 15 files of R code (plus comments, see below). In fact, excluding the `library(tidverse)` command and comments, it can be done in 10 lines. When your code is working correctly, it will give you the following numbers:
+This can, and should, be done with less than 15 files of R code (plus comments, see below). When your code is working correctly, it will give you the following numbers:
 
 ```{r ex1, echo=FALSE, message=FALSE}
 lexdat <- tibble(filename=list.files("lexdec", pattern = "csv", full.names=TRUE)) %>% 

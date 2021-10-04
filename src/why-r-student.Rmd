@@ -1,5 +1,18 @@
-# Some reasons to use R
-_Andy Wills_
+---
+title: "Some reasons to use R"
+author: "Andy Wills"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+## DEVELOPERS: Uncomment one option, as appropriate
+
+## Show only commands.
+## knitr::opts_chunk$set(echo = TRUE, message = FALSE, results='hide', fig.keep = 'none', comment=NA)
+
+## Show commands and output.
+knitr::opts_chunk$set(echo = TRUE, comment=NA)
+```
 
 **This document covers some of the reasons we use R in this course. It's not "required reading", but take a look if you're interested.**
 
@@ -17,9 +30,20 @@ R is a piece of software for handling data. It's the one used on this course, bu
 Students prefer R. In a recent study, undergraduate psychology students at Glasgow University were given a choice between R and SPSS, having experienced both. Two-thirds of the students chose R. Those who chose R did better in the final assessments and showed lower stats anxiety. R is being used to teach Plymouth University undergraduates (and visiting Year 10 students) across a range of different courses. [Read more](https://github.com/gupsych/trdair_workshop/blob/master/LTC_workshop.pdf).
 
 ### Employability
-[Data science][7] is a graduate skill in high demand, and using R is a key skill in that market. In contrast, demand for SPSS skills has been declining dramatically for a decade. At SPSS's current rate of decline, it'll be gone by the time you graduate. [Read more](http://r4stats.com/articles/popularity/).
+[Data science][7] is a graduate skill in high demand, and using R is a key skill in that market. In contrast, demand for SPSS skills has been declining dramatically for a decade. At SPSS's current rate of decline, it'll be gone by the time you graduate. Read more at [r4stats](http://r4stats.com/articles/popularity/) and at [loveR](https://www.discovr.rocks/lover/).
 
 [7]: https://hbr.org/2012/10/data-scientist-the-sexiest-job-of-the-21st-century
+
+```{r popularity, echo=FALSE, message=FALSE}
+library(tidyverse)
+cit  <- read_csv("google-cites.csv")
+options(scipen=999)
+citline  <- cit %>%
+    ggplot(aes(x=year, y=scholar, group=software, colour=software)) +
+    geom_line() + geom_point() + ylab("Citations") +
+    xlab("Year")  + ylim(0, 600000) + theme_classic() + labs(colour="")
+citline
+```
 
 ### Free
 R is free. You don't need to pay anything to download or use it, and never will. In contrast, once you leave university, SPSS would cost you or your employer around [£3000 per person per year](https://www.ibm.com/products/spss-statistics/pricing).
