@@ -173,7 +173,7 @@ a between-subject replication of [George (1935)](https://www.tandfonline.com/doi
 
 George (1935) were interested in how different substances (coffee,
 antidepressant) affects the perception of a subset of visual illusions.
-Here we will only focus on the condition where participants viewed an
+Here we will only focus on the condition where participants viewed
 an ambiguous figure called the
 [Necker Cube](https://en.wikipedia.org/wiki/Necker_cube). A necker cube
 is the frame of the cube with no visual cues on its orientation, which
@@ -304,9 +304,7 @@ For now, we will make it easy and straightforward. We will use `rnorm` to create
 rnorm(n = group_size, mean = mean_from_data, sd = standard_deviation)
 ```
 
-The next step is to simply give `rnorm` the mean and standard deviation of our
-data. We already have these from before, so we can move on. We will do it for
-each condition
+The next step is to simply give `rnorm` the means and standard deviations of the two conditions we already looked at.
 
 ```{r}
 # generate random data for the control condition
