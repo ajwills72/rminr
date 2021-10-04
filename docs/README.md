@@ -2,13 +2,9 @@
 _2021 Edition._
 
 
-<<<<<<< HEAD
-_Note to teachers_: These materials have been tested against R version 3.6.3 (released 29th Feb 2020), and the most recent version of packages that were available on [MRAN](https://mran.microsoft.com/) on the 29th June 2020.
-=======
 _Research Methods in R_ is a set of guides on how to use R as your central research methods tool. They are written by various authors, and curated by [Andy Wills](https://www.andywills.info). The target audience is psychology undergraduate students. _Research Methods in R_ is [Creative Commons](https://creativecommons.org/), so you are free to reuse these materials and adapt them as you wish, as long as you attribute them to their authors, and as long as your modifications have a Creative Commons licence. They come with absolutely no warranty of any kind.
 
-_Note to teachers_: These materials have been tested against R version 4.1.0 (released 18th May 2021), and the most recent version of packages that were available on [MRAN](https://mran.microsoft.com/) on the 17th June 2021. 
->>>>>>> master
+_Note to teachers_: These materials have been tested against R version 4.1.0 (released 18th May 2021), and the most recent version of packages that were available on [MRAN](https://mran.microsoft.com/) on the 17th June 2021.
 
 ## Curriculum map
 
@@ -28,7 +24,7 @@ Start with **ONE** of these three options:
 
 - Somewhat shorter introduction
     - [LifesavR](http://benwhalley.github.io/lifesavR/)
-	
+
 - Even shorter introduction
     - [A Very Brief Guide to R](#vbgtr)
 
@@ -36,19 +32,13 @@ Start with **ONE** of these three options:
 
 Next, go through **BOTH** of these guides.
 
-<<<<<<< HEAD
-5. [Intermediate Guide to R](#rmip)
-
-6. [Going further with R](#gfwr)
-=======
 - [Research Methods in Practice](#rmip)
 
-- [Intermediate Guide to R](#rmip) 
->>>>>>> master
+- [Intermediate Guide to R](#rmip)
 
 ### Advanced guide
 
-- [Going further with R](#gfwr) 
+- [Going further with R](#gfwr)
 
 
 <a name="gen"></a>
@@ -94,21 +84,13 @@ A series of worksheets on using R for data analysis in psychology. No previous k
 
     * [More on Bayes Factors](more-on-bf.html). A more detailed discussion of Bayes Factors.
 
-<<<<<<< HEAD
-* [Using RStudio projects](using-projects.html). Creating a new project. Using an R script. Analysing your own data.
-
-* [Entering data by hand](entering-data-by-hand.html). Entering data into a spreadsheet. Saving data into your RStudio project.
-
-* [Inter-rater reliability](irr.html). Percentage agreement. Cohen's kappa.
-=======
-* [Analyzing your project data](using-projects.html). Analysing your own data. 
+* [Analyzing your project data](using-projects.html). Analysing your own data.
 
 * [Entering data by hand](entering-data-by-hand.html). Entering data into a spreadsheet. Saving data into your RStudio project.
 
 ### Part 2
 
-* [Inter-rater reliability](irr.html). Percentage agreement. Cohen's kappa. 
->>>>>>> master
+* [Inter-rater reliability](irr.html). Percentage agreement. Cohen's kappa.
 
     * [More on Cohen's kappa](more-on-kappa.html). A discussion of some potentially surprising outputs from a Cohen's kaapa calculation.
 
@@ -209,11 +191,7 @@ These are intermediate-level materials. They  provide analysis methods for condu
   one between), plus advice on: pairwise comparisons, better graphs, reporting Bayesian ANOVA, and ordinal (i.e. ordered) independent variables.
 
 
-<<<<<<< HEAD
-## 6. Going further with R
-=======
-## Going further with R 
->>>>>>> master
+## Going further with R
 <a name="gfwr"></a>
 
 These are slightly more advanced materials, aimed at a final-year undergraduate psychology audience.
@@ -254,11 +232,7 @@ These are slightly more advanced materials, aimed at a final-year undergraduate 
 
 <a name="studies"></a>
 
-<<<<<<< HEAD
-## 7. Case studies
-=======
-## Case studies 
->>>>>>> master
+## Case studies
 These are full preprocessing and analysis pipelines, mainly based on final-year undergraduate psychology projects.
 
 - [The effects of negative mental imagery on self-esteem](cs-self-esteem.html): preprocessing, Cronbach's alpha, Bayesian ANOVA.
