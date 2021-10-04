@@ -216,7 +216,7 @@ These are slightly more advanced materials, aimed at a final-year undergraduate 
 
 - Bayesian inferential statistics
 
-    * [Bayesian approach to estimate sample size](power-bayesian.html): An introduction and how-to on estimating sample size with a Bayesian approach.
+    * [Estimate sample size with Bayes Factors](power-bayesian.html): An introduction and manual to Bayesian Power Calculations.
 
     * [One-sample Bayesian t-test](one-sample.html): Comparing a single-group sample of data against a population mean.
 
