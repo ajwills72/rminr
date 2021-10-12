@@ -50,7 +50,7 @@ First, we need to load a package called *tidyverse*. A package is an extension t
 
 Here's how you do this: 
 
-1. Type (or copy and paste) the command in the grey box below into the _script_ you have already created on RStudio (top left window, `exploring.R`).
+1. Type (or copy and paste) the command in the grey box below into the _script_ you have already created on RStudio (top left window, _exploring.R_).
 
 1. Save your script again (click the Save icon), so you don't lose anything. Do this each time you add something important to your script. 
 
