@@ -3,9 +3,12 @@ _Andy Wills, Paul Sharpe, Stuart Spicer, Ben Whalley_
 
 ## Starting RStudio
 
+_NOTE 1_: **DO NOT use a tablet (Android or iOS) or a phone or a Chromebook to access an RStudio server. **EVER**. It might seem like it's working to start with, but sooner or later it will bite you in the ass in an unpredictable and hard to diagnose way. These materials and, by extension, any teaching based on them, support only the use of a Windows, Mac, or Linux PC (laptop or desktop).**
+
 Using your web browser, go to an <a href = "https://rstudio.plymouth.ac.uk" target = "blank">RStudio server</a> and log on, using the username and password you have been given. 
 
-_NOTE_: We strongly recommend using the [Firefox](https://www.mozilla.org/en-US/firefox/new/) web browser to access RStudio. If you are having problems and you're using something other than Firefox, the first thing to try is to download and install Firefox on your machine and see if it fixes the problem. Firefox is free and open source.
+_NOTE 1_: We strongly recommend using the [Firefox](https://www.mozilla.org/en-US/firefox/new/) web browser to access RStudio. If you are having problems and you're using something other than Firefox, the first thing to try is to download and install Firefox on your machine and see if it fixes the problem. Firefox is free and open source.
+
 
 ## First look at RStudio
 
@@ -78,7 +81,9 @@ We're now going to write a very simple R script. In the script file you have jus
 
 In R, any line beginning with a `#` is a **comment**. This means it's text design to be read only by humans, the `#` tells the computer to ignore anything else written on that line. It is helpful to include comments in your scripts -- as you go through this guide, write comments so as to remind yourself what you did and why. 
 
-You should notice that the name `Untitled1` on the script tab has now gone red. This is to remind you that your script has changed since the last time you saved it. So, click on the "Save" icon (the little floppy disk) and save your R script **using the name `exploring.R`**. The `.R` indicates that it is an R script.
+_Mac users_: On a UK Mac keyboard, you get the `#` symbol by pressing Alt + 3. If you need a longer explanation, click this [link](https://www.macworld.co.uk/how-to/hashtag-mac-3688542/).
+
+You should notice that the name `Untitled1` on the script tab has now gone red. This is to remind you that your script has changed since the last time you saved it. So, click on the "Save" icon (the little floppy disk) and save your R script **using the name `exploring.R`** The `.R` indicates that it is an R script. Note that it is very important that the name ends with `.R`. For example, using `exploring R.` will cause a problem, because R will not realise the file is an R script. Make sure you always end the name of your R scripts with `.R`. 
 
 **Please now move on to the next worksheet**.
 

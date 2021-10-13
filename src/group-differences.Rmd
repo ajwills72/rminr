@@ -292,8 +292,6 @@ If you get an error, please see [common errors](common-errors.html).
 
 **Add commands to complete this exercise to the end of your script, and run them**. Below are the answers you are aiming for:
 
-Below are the answers you are aiming for:
-
 ```{r ex2, echo=FALSE}
 pubpri <- cpslow %>% filter(job == "private" | job == "public")
 pubpri %>% group_by(job) %>% summarise(mean(income))
