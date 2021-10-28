@@ -304,7 +304,7 @@ For now, we will make it easy and straightforward. We will use `rnorm` to create
 rnorm(n = group_size, mean = mean_from_data, sd = standard_deviation)
 ```
 
-The next step is to simply give `rnorm` the means and standard deviations of the two conditions we already looked at.
+The next step is to simply give `rnorm` the means and standard deviations of the two conditions we already looked at. Remember in a few steps before, we looked at the mean and standard deviation of each group in our data. Those will be the values we use in `rnorm`. 
 
 ```{r}
 # generate random data for the control condition
@@ -323,8 +323,8 @@ ideal_data <- tibble(ppt = ppt,
 
 Now we check whether it looks okay. First, we should have three columns.
 `ppt` should include the participant ID, `condition` should include
-whether it is before or after caffeine intake, and `fluctuations`
-should be the number of fluctuations. We need to briefly inspect the data
+whether it is the control or caffeine condition, and `fluctuations`
+should be the number of fluctuations. We should briefly inspect the data
 before moving on.
 
 ```{r}
@@ -333,10 +333,7 @@ ideal_data %>%
     head(10)
 ```
 
-This looks exactly what we want. `fluctuations` differ in the number of decimal
-places that we had in our original data. Fortunately, it will make no
-difference to our power calculation. Let us look at the distribution as well
-with `geom_density`.
+This looks exactly what we want.
 
 ```{r}
 ideal_data %>% ggplot(aes(x = fluctuations, fill = condition)) +
@@ -344,7 +341,7 @@ ideal_data %>% ggplot(aes(x = fluctuations, fill = condition)) +
     theme_void()
 ```
 
-The distribution of the data also looks exactly what we want.
+The distribution of the data also looks exactly what we would expect.
 
 ### Getting the Bayes Factor
 
@@ -369,7 +366,7 @@ control <- sample(1:1000, size = 40)
 caffeine <- sample(1001:2000, size = 40)
 ```
 
-Now we crated two objects that contain random numbers exactly like our
+Here, we created two objects that contain random numbers exactly like our
 participant numbers. We now filter the data by these numbers.
 
 ```{r}
@@ -379,7 +376,7 @@ random_data <- ideal_data %>%
 
 `c(control, caffeine)` essentially puts the two objects together.
 
-If the data is subset, we will need to do a Bayesian t-test on this data.
+If the data is subset, we can carry out the Bayesian t-test.
 
 ```{r}
 test <- ttestBF(formula = fluctuations ~ condition, data = random_data)
@@ -394,20 +391,15 @@ bf <- test %>%
     as.numeric() # make sure that R converts BF to a number and not a character
 ```
 
-Let us look at the Bayes Factor.
+Let us now look at the Bayes Factor.
 
 ```{r}
 bf
 ```
 
-This is our whole procedure for extracting a Bayes Factor for a single sample,
-but we have only sampled from our ideal data once only for the sample size
-of 40. Randomly picking participants will result in different BFs every time we
-do this.
+This is our whole procedure for extracting a Bayes Factor for a single sample, but we have only sampled from our ideal data once and only for the sample size of 40. Randomly picking participants will result in different BFs every time we do this.
 
-In principle, we could go through our procedure line by line for each sample size many thousands of times. A more compact way to do this is to collage it
-together into a _function_. Than we can use the _function_, tell it the sample
-size, and it will go through the whole procedure for us.
+In principle, we could go through our procedure line by line for each sample size many thousands of times. A more compact way to do this is to collage it together into a _function_. Then we can use the _function_ to go through the whole procedure for us for all the thousand iteration of each sample size.
 
 #### Compressing what we have just done
 
@@ -423,8 +415,8 @@ sample size. The function will need to know `n` which is our sample size,
 and `data` which is the generated data. Our function will:
 
 1. Take `n` number of randomly selected participant from each group in `data`. We do this by randomly selecting participant identifiers for each group.
-2. Then run the Bayesian t-test on the subset data.
-3. Store the output and put it into a format, where we can extract the BF.
+2. Then run the Bayesian t-test on the subset.
+3. Store the output and put it into a `data.frame` format, so we can extract the BF.
 4. At the end, return the BF.
 
 This is exactly what we just did, but described in a simpler way. You can
@@ -448,8 +440,7 @@ get_bf <- function(n, data) {
 }
 ```
 
-This is our function. Let's try it out for a sample size of 40 with our `ideal_data`.
-So we will have `n = 40` and `data = ideal_data`.
+This is our function. Let's try it out for a sample size of 40 with our `ideal_data`. So we will have `n = 40` and `data = ideal_data`.
 
 ```{r}
 get_bf(n = 40, data = ideal_data)
@@ -490,13 +481,14 @@ There are two things to decide before we start simulating data collection:
 1. The sample sizes we want to check. We create all sample sizes as a `tibble`. If you want to know more about what tibble is, see [More on Tibbles](https://www.andywills.info/rminr/more-on-tibbles.html). This means that we will have a one-column data frame with all the sample sizes we want to check.
 2. The number of draws we wish to make for each sample sizes. This will simply be the number of times a certain sample size occurs in our `tibble` data frame.
 
-First, we will create a tibble with sample sizes from 10 to 200. We will also
+First, we will create a `tibble` with sample sizes from 10 to 200. We will also
 repeat each
 sample size 1000 times. After creating the sample sizes, we need to apply our
 `get_bf` function to every one of the sample sizes in our tibble a 1000 times
 and somehow make R remember every BF we get. One option is to do it by hand. We
-go take one sample size at a time in our tibble and record the Bayes Factor. We
-would need to repeat it 20000 times to complete our power calculation.
+go and take one sample size at a time in our `tibble` and record the Bayes
+Factor. We would need to repeat it 20000 times to complete our power
+calculation.
 
 The better option is to make R do the legwork
 for us by using `map_dbl`. `map_dbl` is a member of a family of `map` commands.
@@ -646,7 +638,7 @@ template to go by. Remember to (a) add the line for the adequate sample size
 and (b) edit the axis ticks, so it includes the lowest estimated sample size
 with at least 80% power.
 
-# Further Intermediate Reading
+# Further Reading
 
 These readings will give you a general overview of this exact topic, but can
 also serve as a good induction to a bit more thought-out power analysis.
