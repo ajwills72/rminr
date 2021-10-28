@@ -50,11 +50,11 @@ First, we need to load a package called *tidyverse*. A package is an extension t
 
 Here's how you do this: 
 
-1. Type (or copy and paste) the command in the grey box below into the _script_ you have already created on RStudio (top left window, `exploring.R`).
+1. Type (or copy and paste) the command in the grey box below into the _script_ you have already created on RStudio (top left window, _exploring.R_). **Use line 2 of the script.** (Line 1 contains the comment you entered in the last worksheet).
 
 1. Save your script again (click the Save icon), so you don't lose anything. Do this each time you add something important to your script. 
 
-1. Now ask RStudio to run this command. You do this by putting your cursor on the line of the script window containing the command, and pressing CTRL+ENTER (i.e. press the key marked 'Ctrl' and the RETURN or ENTER key together). Line 1 is automatically copied to your _Console_ window and run. 
+1. Now ask RStudio to run this command. You do this by putting your cursor on the line of the script window containing the command, and pressing CTRL+ENTER (i.e. press the key marked 'Ctrl' and the RETURN or ENTER key together). The line is automatically copied to your _Console_ window and run. 
 
 ```{r init}
 library(tidyverse)
@@ -69,7 +69,7 @@ If you get an output that includes the word 'error', please see [common errors](
 ## Loading data
 Now, we're going to load some data on the income of 10,000 people in the United States of America. I've made up this dataset for teaching purposes, but it's somewhat similar to large open data sets available on the web, such as [US Current Population Survey](https://www.census.gov/programs-surveys/cps/data.html).
 
-**Copy the command in the grey box to line 2 of your script in RStudio and then press CTRL+ENTER to run it:** (don't forget to save your script)
+**Copy the command in the grey box to line 3 of your script in RStudio and then press CTRL+ENTER to run it:** (don't forget to save your script)
 
 ```{r load,cache=TRUE}
 cpsdata <- read_csv("http://www.willslab.org.uk/cps2.csv")
@@ -120,7 +120,7 @@ It would also be a little bit tedious and error prone in a spreadsheet applicati
 
 In R, we can calculate the mean instantly, and it's harder to make the sorts of errors that are common in Excel-based analysis.
 
-**To calculate mean income in  R, add the following command to line 3 of your script and run it:**
+**To calculate mean income in  R, add the following command to line 4 of your script and run it:**
 
 ```{r mean}
 cpsdata %>% summarise(mean(income))
@@ -236,7 +236,7 @@ Now, export your histogram, using the _Export_ icon on RStudio's _Plots_ window,
 
 ### Downloading files from RStudio Online
 
-Follow [these instructions](using-projects.html#download).
+Instructions on how to do download a file from RStudio online are on the [Analyzing Your Project Data](using-projects.html#download) worksheet. Read those instructions then return to this worksheet.
 
 ### Uploading files to PsycEL
 

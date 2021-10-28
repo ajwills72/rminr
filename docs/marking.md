@@ -44,7 +44,7 @@ incomes in the distribution. A median is nearly always better in cases where
 the distribution is skewed."
 
 The tutor awards marks on the basis of accuracy and clear expression. Only a
-perfect answer should score 5 marks. A competent answer scores 4 marks. An
+perfect answer should score 5 marks. A competent answer scores 4 marks. An answer that is correct but without explanation (e.g. "the median") gets 3 marks. An
 answer that contains a conceptual error should score no more than 2 marks. Not
 answering scores 0.
 
