@@ -61,6 +61,17 @@ You should create just one repository for your whole project, to be used by all 
 
 1. Click 'create repository'
 
+
+## Sharing your repository
+
+Private repositories can only been seen by people who you invite. Folow these steps to invite someone:
+
+1. Click 'settings' (a cog wheel)
+
+1. Click "manage access"
+
+1. Click 'invite a collaborator'. To share it, you need to know their github username. For now, share with me - `ajwills72`. After the session, invite your supervisor, and your dissertation partner(s). 
+
 ## Creating your PAT for github
 
 A **PAT** is a Personal Access Token. It's something you need to use github and Rstudio together. It's a bit like a password, except that you don't get to decide what it is, github does. And, by default, it expires after 30 days, so you have to make a new one each month. This is a bit of a faff but it improves security.
@@ -77,17 +88,8 @@ To generate your github PAT, follow these steps on the github website (make sure
 
 1. Click 'generate token'.
 
-1. Copy and paste the token, which will look something like ` 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` to a document on your laptop (e.g. a wordprocessor document). **Treat this token with the same care, security and confidentiality as you would, for example, the password to your online bank account. **
+1. Copy and paste the token, which will look something like ` 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` to a document on your laptop (e.g. a wordprocessor document). **Treat this token with the same care, security and confidentiality as you would, for example, the password to your online bank account.**
 
-## Sharing your repository
-
-Private repositories can only been seen by people who you invite. Folow these steps to invite someone:
-
-1. Click 'settings' (a cog wheel)
-
-1. Click "manage access"
-
-1. Click 'invite a collaborator'. To share it, you need to know their github username. For now, share with me - `ajwills72`. After the session, invite your supervisor, and your dissertation partner(s). 
 
 ## Add your repository as an RStudio project
 
