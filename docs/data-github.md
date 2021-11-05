@@ -61,6 +61,24 @@ You should create just one repository for your whole project, to be used by all 
 
 1. Click 'create repository'
 
+## Creating your PAT for github
+
+A **PAT** is a Personal Access Token. It's something you need to use github and Rstudio together. It's a bit like a password, except that you don't get to decide what it is, github does. And, by default, it expires after 30 days, so you have to make a new one each month. This is a bit of a faff but it improves security.
+
+So, for github, you will have both a password (which you use to login to the github website) and a PAT (which you use when Rstudio asks for your github 'password').
+
+To generate your github PAT, follow these steps on the github website (make sure you are logged in)
+
+1. Go to [https://github.com/settings/tokens](https://github.com/settings/tokens)
+
+1. Click 'generate new token'
+
+1. You'll see a long list of tick boxes. Select the `repo`, `workflow` and `user` tick boxes.
+
+1. Click 'generate token'.
+
+1. Copy and paste the token, which will look something like ` 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` to a document on your laptop (e.g. a wordprocessor document). **Treat this token with the same care, security and confidentiality as you would, for example, the password to your online bank account. **
+
 ## Sharing your repository
 
 Private repositories can only been seen by people who you invite. Folow these steps to invite someone:
@@ -115,9 +133,11 @@ The first file you're going to add is some aspect of the materials of your disse
 
 At this point, your file (e.g. 'instructions.txt') is ready to be added to github, but it has not yet been added. To do this, we'd click the green up arrow (known as 'pushing' to the repository). However, first we need to make sure that we have the latest version of the github repository. This is really important, because you have shared the repository with others, who may have made changes. To get these changes, you click the blue down arrow (known as 'pulling' from the repository). So, the steps are:
 
-1. Pull from the repository: Click the blue arrow, enter your username and password if requested, click 'close'.
+1. Pull from the repository: Click the blue arrow, enter your username and PAT, click 'close'.
 
-1. Push to the repository: Click the green arrow, enter your username and password if requested, click 'Close'. 
+1. Push to the repository: Click the green arrow, enter your username and PAT, click 'Close'. 
+
+**NOTE**: Although RStudio asks for your 'password', it actually wants your PAT. Remember that your github password is what you use to log into the github website, while the PAT is what you use in RStudio when it asks for a password to confirm pulling or pushing from github.
 
 Finally, and we wouldn't normally bother with this, but as this is your first commit to the repository, go to the github website and check that your folder and file are showing up there. You should be able to click through to find and read your file. 
 
