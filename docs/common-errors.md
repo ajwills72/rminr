@@ -7,14 +7,6 @@ _Andy Wills_
 
 **Restart R** - If the output you get is very different to what is shown in this worksheet, go to "Session" on the RStudio menu, and select "Restart R". If that doesn't fix your problem, see below. 
 
-## Errors when loading a package
-
-If you've installed R on your own machine, and you get a message  like:
-
-`Error in library(tidyverse) : there is no package called ‘tidyverse’`
-
-Have you installed this package? You need to install it before you can use it, see the [cheat sheet](cheat-sheet.html).
-
 ## Errors when loading data
 
 If you get a message like:
