@@ -159,7 +159,7 @@ wing <- wing %>% mutate(correct = recode(value, !!!cormap, .default = 0))
 
 **Explanation of command:** 
 
-We've recoded data before, in the [cleaning up questionnaire data](https://benwhalley.github.io/rmip/worksheet-recoding.html) worksheet. First, we tell R how we want each value to be recoded, in this case in `cormap`. Then we use `mutate` to add a column called `correct` that recodes the `value` column using the mapping in `cormap`. 
+We've recoded data before, in the [cleaning up questionnaire data](https://benwhalley.github.io/rmip/data.html#using-recode) worksheet. First, we tell R how we want each value to be recoded, in this case in `cormap`. Then we use `mutate` to add a column called `correct` that recodes the `value` column using the mapping in `cormap`. 
 
 New to the current worksheet is `.default`, which allows us to give a default value for the recoding. That way, we don't have to explicitly say that all the other letters should be recoded as `0`, we can just write `.default = 0`. 
 
