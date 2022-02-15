@@ -49,7 +49,7 @@ Before starting this exercise, you should have completed **all** the previous [A
 
 **Relevant worksheet:** [Introduction to RStudio](intro-rstudio.html)
 
-You'll be provided with a CSV file before or during the workshop. If you want to try out this worksheet without that data file, you can use this [example CSV file](data/corr.csv) instead. _You can only gain marks for this exercise if you use the CSV file from the workshop_.
+Use this [example CSV file](data/corr.csv) for the workshop and assessment.
 
 **Create or open an appropriate project on RStudio Server for this analysis (**Plymouth University students**: use the project 'psyc414' created in the [inter-rater reliability](irr.html) worksheet), [upload your CSV](entering-data-by-hand.html#upload) to your project, and create a new R script called `corr.R`.**
 
