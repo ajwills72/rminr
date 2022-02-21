@@ -244,7 +244,7 @@ Then, we use the `correlationBF` command, which has a similar format to the `cor
 correlationBF(gdata$ingroup, gdata$outgroup)
 ```
 
-The Bayes Factor is reported on the third line, towards the right. In this example, our Bayes Factor is about 89.7. This means it's about ninety times as likely there is a relationship between these two variables as there isn't. This is larger than the conventional threshold of 3, so psychologists will generally believe you when you claim that there is a relationship between ingroup closeness and outgroup distance. If the Bayes Factor had been less than 0.33, this would have been evidence that there was no relationship.
+The Bayes Factor is reported on the third line, towards the right. In this example, our Bayes Factor is about 89.71. This means it's about ninety times as likely there is a relationship between these two variables as there isn't. This is larger than the conventional threshold of 3, so psychologists will generally believe you when you claim that there is a relationship between ingroup closeness and outgroup distance. If the Bayes Factor had been less than 0.33, this would have been evidence that there was no relationship.
 
 ### Traditional analysis
 
@@ -262,7 +262,7 @@ The _p value_ in this case is about .00029. The _p value_ is **not** the probabi
 
 Psychologists generally include some numbers from their analyses in their writeups. In the case of a correlation, you'd normally write something like:
 
-"ingroup closeness and outgroup distance were significantly correlated, _r_ = .66, _BF_ = 89.7, _p_ < .001."
+"ingroup closeness and outgroup distance were significantly correlated, _r_ = .66, _BF_ = 89.71, _p_ < .001."
 
 <a name="ex"></a>
 
