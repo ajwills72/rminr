@@ -1,5 +1,5 @@
 ---
-title: "Childrens' language development"
+title: "Children's language development"
 author: "Allegra Cattani, Adele Conn, Paul Sharpe and Andy Wills"
 output:
   html_document:
@@ -36,7 +36,7 @@ This is an advanced worksheet, which assumes you have completed the [Absolute Be
 
 ## Introduction
 
-This worksheet describes a full analysis pipeline for an undergraduate student dissertation on children’s language development. This study was an experiment which evaluated the _Words in Game_ (WinG) test. WinG consists of a set of picture cards which are used in four tests: noun comprehension, noun production, predicate comprehension, and predicate production. The Italian and English versions of the WinG cards use different pictures to depict the associated words.
+This worksheet describes a full analysis pipeline for an undergraduate student dissertation on children’s language development. This study was an experiment which evaluated the [Words in Game (WinG)](http://www.psy.plymouth.ac.uk/wing/) test. WinG consists of a set of picture cards which are used in four tests: noun comprehension, noun production, predicate comprehension, and predicate production. The Italian and English versions of the WinG cards use different pictures to depict the associated words.
 
 An earlier study found a difference between the English and Italian cards, for adults' ratings of how well each picture represented the underlying construct. In this study, the researchers hypothesised that this difference would influence children's WinG task scores, depending on which set of cards they were tested with. The experiment compared WinG performance of English-speaking children, aged approximately 30 months, tested with either the Italian or English cards.
 
