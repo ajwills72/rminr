@@ -19,14 +19,6 @@ ____
 
 In the sections below, a word in **bold** after the heading indicates the R package you need to load. So, for example, in the _Load_ section, you need to load the _tidyverse_ package.
 
-### Installing packages
-
-If you've installed R on your personally-owned machine, you need to install the package before you can use it:
-
-```
-options("repos" = "https://mran.microsoft.com/snapshot/2020-06-29")
-install.packages("tidyverse")
-```
 
 ____
 

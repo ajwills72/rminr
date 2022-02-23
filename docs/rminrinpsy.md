@@ -20,10 +20,11 @@ sure how to do that, just email me: andy@willslab.co.uk
 | Stanford University | U.S.A. | 2018 |    | [UG](http://statsthinking21.org)
 | [University of Edinburgh](https://www.ed.ac.uk/ppls/psychology/research/seminars-and-reading-groups/psychology-statistics-group) | U.K.   | 2018  | 2018  | |           
 | [University of Glasgow](https://psyteachr.github.io/)  | U.K.    | 2015  | 2010 | [UG](https://psyteachr.github.io/), [PG](https://psyteachr.github.io/) | 
+| University of Lancaster | U.K. | 2020 | ? | [UG](https://tombeesley.github.io/PSYC121_2021-22/) |
 | University of Lincoln | U.K. |     | 2018| [PG](https://craddm.github.io/resmethods)|
 | University of Manchester | U.K. |   | 2018 | [PG](https://r-openresearch-reproducibility.netlify.app/)
 | University of Plymouth | U.K.    | 2018 (Year 1) - 2020 (Year 3)| 2017 | [UG](https://ajwills72.github.io/rminr), [PG](https://benwhalley.github.io/just-enough-r/) |
-| University of Sussex   | U.K.  | 2019 | 2017  |    |
+| University of Sussex   | U.K.  | 2019 | 2017  | [UG](https://and.netlify.app/), [more UG](https://www.discovr.rocks/discovr/)   |
 
 
 ## Labs 
