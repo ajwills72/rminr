@@ -180,9 +180,15 @@ In the last two exercises, we found that median US income was much lower than me
 A histogram is a graph that shows us how many people have an income that is within a number of equal, consecutive, ranges (also called *bins*). In this example, we're going to count how many people earn $0-19,999, how many earn $20,000-39,999, and so on, until we reach the highest income in the sample. So, our *bin width* will be $20,000. We're then going to represent these counts by the height of a series of bars.
 
 In R, we can do this with a single command:
-```{r histo}
+```{r histo-code, fig.keep='none'}
 cpsdata %>% ggplot(aes(income)) + geom_histogram(binwidth=20000)
 ```
+
+```{r histo, echo=FALSE, fig.keep='all'}
+cpsdata %>% ggplot(aes(income)) + geom_histogram(binwidth=20000) +
+  annotate("text", x = Inf, y = -Inf, label = "EXAMPLE PLOT", col = "red", hjust = 5.1, vjust = -1.1)
+```
+
 
 ### Explanation of command
 
@@ -200,26 +206,46 @@ There are a lot of ways to modify the standard graphs produced by R, to make the
 
 ### Changing the theme
 We can change the overall look of a graph by changing the *theme*. In this example, we use a **lighter background** by adding the command `+ theme_light()`:
-```{r themes,fig.keep='none'}
+
+```{r hist-theme-code, fig.keep='none'}
 cpsdata %>% ggplot(aes(income)) + geom_histogram(binwidth=20000) + theme_light()
 ```
+
+```{r hist-theme, echo=FALSE, fig.keep='all'}
+cpsdata %>% ggplot(aes(income)) + geom_histogram(binwidth=20000) + theme_light() +
+  annotate("text", x = Inf, y = -Inf, label = "EXAMPLE PLOT", col = "red", hjust = 5.1, vjust = -1.1)
+```
+
 
 There are quite a lot of different themes. Try replacing `light` above with one of the following: `bw, classic, gray, linedraw, light, minimal, void, dark` 
 
 ### Changing the colour
 We can also change the way particular parts of the graph look -- for example, changing the colour of the bars on the histogram, using the command `fill`. Here's one particularly nasty-looking example:
 
-```{r colours}
+```{r colours-code, fig.keep='none'}
 cpsdata %>% ggplot(aes(income)) + geom_histogram(fill = 'yellow', binwidth=20000) + theme_dark()
 ```
+
+```{r colours, echo=FALSE, fig.keep='all'}
+cpsdata %>% ggplot(aes(income)) +  geom_histogram(fill = 'yellow', binwidth=20000) + theme_dark() +
+  annotate("text", x = Inf, y = -Inf, label = "EXAMPLE PLOT", col = "red", hjust = 5.1, vjust = -1.1)
+```
+
 
 Try replacing `yellow` with some other colour name. R knows quite a lot of colour names.
 
 ### Changing the labels
 We can also change the labels that appear on the x-axis and on the y-axis. Here's an example with some not-very-helpful labels:
-```{r labels}
+
+```{r labels-code, fig.keep='none'}
 cpsdata %>% ggplot(aes(income)) + geom_histogram(binwidth=20000) + 
   xlab('insert a x-axis label here') + ylab('insert a y-axis label here')
+```
+
+```{r labels, echo=FALSE, fig.keep='all'}
+cpsdata %>% ggplot(aes(income)) + geom_histogram(binwidth=20000) + 
+  xlab('insert a x-axis label here') + ylab('insert a y-axis label here') +
+  annotate("text", x = Inf, y = -Inf, label = "EXAMPLE PLOT", col = "red", hjust = 5.1, vjust = -1.1)
 ```
 
 ### Lab book exercise - Upload a graph
