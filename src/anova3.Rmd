@@ -194,7 +194,7 @@ The BF for this hypothesis is large (about 300,000). We'd expect this, given tha
 
 This is the Bayes Factor for the hypothesis that there are main effects for both factors (`medit + congru`) _and_ that the two factors interact (`+ medit:congru`). This is again compared against the null hypothesis that neither `medit` nor `congru` have any effect. 
 
-The BF for this hypothesis is also large (about $1.8 \times 10^{9}$). We'd expect this, because there was substantial evidence for the 'main effects' hypothesis `medit + congru`. 
+The BF for this hypothesis is also large (about 1.8 billion). We'd expect this, because there was substantial evidence for the 'main effects' hypothesis `medit + congru`. 
 
 #### Interaction BF
 
@@ -256,6 +256,8 @@ bfall <- anovaBF(formula = rt ~ medit*congru + subj,
 ```{r ex-e, echo=FALSE}
 bfall
 ```
+
+**NOTE**: Large numbers are reported by R in the form e.g. `1.8e+14`, which is read as $1.8 \times 10^{14}$ (click [here](https://www.bbc.com/education/guides/zxsv97h/revision) if you need a reminder about _scientific notation_). 
 
 4. Calculate the BF for the interaction.
 
