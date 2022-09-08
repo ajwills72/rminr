@@ -1,0 +1,11 @@
+Bayes Factors, Interpretation
+> 100,Extreme evidence for the alternative hypothesis
+30 - 100,Very strong evidence for the alternative hypothesis
+10 - 30,Strong evidence for the alternative hypothesis
+3 - 10,Moderate evidence for the alternative hypothesis
+1 - 3,Anecdotal evidence for the alternative hypothesis
+0.33 - 1,Anecdotal evidence for the null hypothesis
+0.10 – 0.33,Moderate evidence for the null hypothesis
+0.03 – 0.10,Strong evidence for the null hypothesis
+0.01 – 0.03,Very strong evidence for the null hypothesis
+< 0.01,Extreme evidence for the null hypothesis
