@@ -1,10 +1,10 @@
 # Research Methods in R
-_2021 Edition._
+_2022 Edition._
 
 
 _Research Methods in R_ is a set of guides on how to use R as your central research methods tool. They are written by various authors, and curated by [Andy Wills](https://www.andywills.info). The target audience is psychology undergraduate students. _Research Methods in R_ is [Creative Commons](https://creativecommons.org/), so you are free to reuse these materials and adapt them as you wish, as long as you attribute them to their authors, and as long as your modifications have a Creative Commons licence. They come with absolutely no warranty of any kind.
 
-_Note to teachers_: These materials have been tested against R version 4.1.0 (released 18th May 2021), and the most recent version of packages that were available on [MRAN](https://mran.microsoft.com/) on the 17th June 2021.
+_Note to teachers_: These materials have been tested against R version 4.2.1 (released 23rd June 2022), and the most recent version of packages that were available on [MRAN](https://mran.microsoft.com/) on the 1st June 2022.
 
 ## Curriculum map
 
@@ -36,10 +36,11 @@ Next, go through **BOTH** of these guides.
 
 - [Intermediate Guide to R](#rmip)
 
-### Advanced guide
+### Advanced guides
 
 - [Going further with R](#gfwr)
 
+- [R for Pros](#pro)
 
 <a name="gen"></a>
 
@@ -240,6 +241,16 @@ These are full preprocessing and analysis pipelines, mainly based on final-year 
 - [The Perruchet Effect](awdiss.html): **Downloading from OSF**, de-duplicating data, excluding participants, line graphs, **baseline correction of neuroscience data**, _functions_, _loops_, _merging data frames_, list of participant numbers, log transforms, _recoding data_, **Bayesian linear regression for within-subjects designs**.
 
 - [Childrens’ language development](cs-picture-naming-wide.html): preprocessing, Bayesian t-test, tables of descriptive statistics, correlations, half-violin plot, Wilcoxon test.
+
+<a name="pro"></a>
+
+## R for Pros
+
+These worksheets go beyond what is taught in previous sections of RMINR. They are aimed at
+high-achieving undergraduates, as well as postgraduate students and professional researchers. They
+assume familiarity with material up to and including _Going Further with R_.
+
+- [Bayesian ANOVA for Pros](anova5.html): doing two-factor within-subjects Bayesian ANOVA better.
 
 ____
 

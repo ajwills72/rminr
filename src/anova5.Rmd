@@ -1,0 +1,197 @@
+---
+title: "Bayesian ANOVA for Pros"
+author: "Andy Wills"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+## DEVELOPERS: Uncomment one option, as appropriate
+
+## Show only commands.
+## knitr::opts_chunk$set(echo = TRUE, message = FALSE, results='hide', fig.keep = 'none', comment=NA)
+
+## Show commands and putout.
+knitr::opts_chunk$set(echo = TRUE, comment=NA, cache = TRUE)
+
+```
+
+This is a "pro" worksheet, meaning that it assumes familiarity with the material covered in sections
+up to and including _Going Further With R_.  For this worksheet, you'll need to use the **rminr-data** project; details of how to access this are provided on the [preprocessing](preproc.html#load) worksheet. Once you've opened that project, create a file **anova5.R** in which to enter your R commands.
+
+# Two-factor within-subjects 
+
+In [More on Bayesian ANOVA](anova4.html) we looked at the simplest possible way of doing this
+kind of analysis within R. There is a reasonable case to be made that the approach we took there
+is too simple. In particular, it assumes that the true size of the effect is the same in every 
+participant. In other words, it assumes the absence of individual differences. As discussed
+by [van den Berg et al. (2022)](https://psyarxiv.com/fb8zn/), this is not only unlikely to be true,
+where there is more than one within-subjects factor, it can also lead to substantively different 
+conclusions to a traditional (NHST) ANOVA. This led them to propose an alternative analysis that
+is more similar in concept to the traditional analysis. In what follows we demonstrate how
+to do this analysis for the same data set as used in Exercise 2 of 
+[More on Bayesian ANOVA](anova4.html#ex2). 
+
+Whether emulating the models of traditional ANOVA is in itself the best thing to do is debatable,
+as traditional ANOVA is potentially problematic in a number of respects other than the use of NHST. 
+However, this is a discussion that we'll leave for another time - if you're curious, read 
+[Rouder et al. (2022)](https://link.springer.com/article/10.1007/s42113-022-00132-7).
+
+## Load and preprocess data
+
+The following commands are part of the answer to Exercise 2 of
+[More on Bayesian ANOVA](anova4.html#ex2) and
+are not discussed further here:
+
+```{r ex2-data, message=FALSE}
+library(tidyverse)
+library(BayesFactor)
+raw <- read_csv('case-studies/chris-mitchell/priming-faces.csv') %>%
+  filter(Running == "Test") %>%
+  select(Subject, Congruency, Load, RT) %>%
+  drop_na()
+
+priming <- raw %>%
+    mutate(Subject = factor(Subject), Congruency = factor(Congruency),
+           Load = factor(Load)) %>%
+  group_by(Subject, Congruency, Load) %>% summarise(RT = mean(RT))
+```
+
+## Calculate some initial Bayes factors
+
+Enter this code into your script and run it; it may take a minute or so to produce a result:
+
+```{r bf-2bs}
+BFo <- generalTestBF(
+    formula = RT ~ Congruency*Load + Subject + Subject:Congruency + Subject:Load,
+    data = data.frame(priming),
+    whichRandom = "Subject",
+    neverExclude = c("Subject", "Subject:Congruency", "Subj:Load"),
+    whichModels = "all"
+)
+BFo
+```
+### Explanation of command
+
+Much of the above code is the same as previous worksheets and is not re-described here. The new 
+components are:
+
+`generalTestBF` - Where you previously used the  `anovaBF` command, we now use this more powerful
+command, which we need in order to do this more complex analysis.
+
+`formula = RT ~ Congruency*Load + Subject + Subject:Congruency + Subject:Load` - This specifies what
+you wish to calculate. It has the same form as the simpler calculation you did in Exercise 2,
+but adds two new terms: `Subject:Congruency` and `Subject:Load`. The `:` means "interaction". So,
+the two new terms we're adding here are an interaction of the Subject factor with the Congruency
+condition, and an interaction of the Subject factor with the Load condition. These interactions
+allow for the possibility that (i) the true size of the effect of congruency differs between
+individuals, and (ii) the true size of the effect of Load differs between individuals.
+
+`neverExclude = c("Subject", "Subject:Congruency", "Subj:Load"), whichModels = "all"` - There is
+nothing conceptually deep about these two lines of code, they just tell the `generalTestBF` 
+command to generate the set of Bayes Factors we need in the next step. When using this code with
+your own data, all you need to do is ensure that the `neverExclude` terms include the Subject factor,
+and the interaction of that factor with each of your two within-subject factors (in this case 
+Congruency and Load)
+
+### Explanation of output
+
+Although longer, the table is much the same as the one we saw in Exercise 2. Each row is a Bayes 
+Factor, and in each case that Bayes Factor is calculated against a null model (`Intercept only` - 
+the model that RT is unaffected by any of the factors, including the participants). So, for
+example, `[8] Subject + Congruency:Subject + Load:Subject` has a large BF in favour of the
+alternative model that RT is affected by individual differences in overall RT and the size of
+the Congruency and Load effects.
+
+
+## Calculate further Bayes Factors
+
+In this (and many other) experiments, our focus is on the overall effect of our experimental manipulation
+(Congruency, Load) on RT, rather than on individual differences. We can get Bayes Factors for these
+effects by using the _subject_ model (model 8 above), rather than the _intercept_,  as the null model.
+
+We do this in much the same way as we calculated the Bayes Factor for the interaction in Exercise 2,
+i.e. by the `/` operator. What we want to do is apply that operator for each of the models,
+which we can do with the following command:
+
+```{r further-bf}
+BF <- BFo[-length(BFo)] / BFo[length(BFo)]
+BF
+```
+### Explanation of output
+
+The effect of this command is to give us a Bayes Factor for each of the other models, relative
+to the _subject_ model. It achieves this in the following way:
+
+### Explanation of command
+
+`length(BFo)` - This gives the number of rows in the table of results (8 in this case)
+
+`BFo[length(BFo)]` - This returns the last row of the table
+
+`BFo[-length(BFo)]` - The `-` operator in this case means "remove", so this returns all the rows
+apart from the last one.
+
+`BFo[-length(BFo)] / BFo[length(BFo)]` - Putting the two previous commands together, this gives us
+a BF for each of the models (except the last one), compared to the last one.
+
+## Pruning the Bayes Factors
+
+That's quite a lot of Bayes Factors! Some of these, we're not going to use. Specifically, there
+are Bayes Factors in that list for models where interactions between the manipulated factors
+(Congruency, Load) are assumed without the presence of
+corresponding main effects of those manipulated factors. For example,
+model 3 is `Congruency:Load + Subject + Congruency:Subject + Load:Subject`, which includes an
+interaction between Congurency and Load, but not a main effect of either Congruency or Load. These kinds 
+of models are _ill-defined_, which is sometimes considered to be a bad thing. So, we won't consider 
+them here. A relatively accessible discussion of the problems of ill-defined models is provided by
+[Rouder et al. (2022)](https://link.springer.com/article/10.1007/s42113-022-00132-7)
+
+We remove the models that are ill-defined on the manipulated factors by identifying them manually, 
+and then removing them from the list.
+In this case, the ill-defined models are 3, 5 and 6; and we remove them using the `-` operator.
+
+```{r prune}
+BFp <- BF[-c(3, 5, 6)]
+BFp
+```
+## Main effects
+
+At this point, we have an table of Bayes Factors of the same form as Excercise 2. Row 1 is the
+main effect of Conrguency. Row 2 is the main effect of Load. The Bayes Factors are not quite the
+same as in Exercise 2 - we shouldn't expect them to be, as this is a different test. But the
+conclusions are the same. There is moderate evidence for the null in the case of Congruency, and 
+strong evidence for an effect of Load. 
+
+## Interaction
+
+Finally, as in Exercise 2, we assess evidence for the interaction by comparing two models - the
+model that contains just the two main effects (model 3), and the model that also contains the 
+interaction term (model 4)
+
+```{r interaction}
+BFp[4] / BFp[3]
+```
+
+Again, the Bayes Factor is not the same as before, because this is a different test, but the conclusion
+is similar - there is moderate evidence for the absence of an interaction.
+
+## Robustness of analysis
+
+You might feel a bit uneasy that
+the results of two analyses - both called Bayesian ANOVAs - are not the same. You should not. 
+Analyzing data always involves making assumptions about those data and the underlying psychological processes
+that generated them. For example, here, the assumptions you make about the presence of 
+individual differences can matter for your conclusions about the presence of group effects. Making
+reasonable assumptions is part of being a scientist, and your conclusions can be affected
+by the assumptions that you make. 
+
+What we saw in this case was that Exercise 2, and the current analysis, led to largely the same
+substantive conclusions, despite starting from different assumptions. When this happens, it 
+increases our confidence in the conclusions we have drawn - we say the analysis is robust across
+a range of assumptions. If your substantive conclusions depend on your assumptions, and those
+assumptions are not well founded, then your data may not be good enough to answer your questions. 
+
+
+
+
+

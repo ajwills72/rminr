@@ -147,6 +147,9 @@ This gives us a Bayes Factor for the interaction around 0.07. So, there's substa
 
 # Two within-subject factors
 
+**NOTE:** In this section, we present the simplest possible way to perform this calculation. There
+are better ways. For further discussion, see [Bayesian ANOVA for Pros](anova5.html)
+
 We can also use `anovaBF` to look at two within-subjects factors. Again, this works just the same way as before. For example, we can do a factorial Bayesian ANOVA for `congru` and `block` like this:
 
 First, we create the appropriate subject-level summary for our analysis. 
