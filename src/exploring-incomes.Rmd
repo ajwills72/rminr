@@ -50,13 +50,15 @@ First, we need to load a package called *tidyverse*. A package is an extension t
 
 Here's how you do this: 
 
-1. Type (or copy and paste) the command in the grey box below into the _script_ you have already created on RStudio (top left window, _exploring.R_). **Use line 2 of the script.** (Line 1 contains the comment you entered in the last worksheet).
+1. Type (or copy and paste) the comments and command in the grey box below into the _script_ you have already created on RStudio (top left window, _exploring.R_). **Use line 2 of the script.** (Line 1 contains the comment you entered in the last worksheet).
 
 1. Save your script again (click the Save icon), so you don't lose anything. Do this each time you add something important to your script. 
 
-1. Now ask RStudio to run this command. You do this by putting your cursor on the line of the script window containing the command, and pressing CTRL+ENTER (i.e. press the key marked 'Ctrl' and the RETURN or ENTER key together). The line is automatically copied to your _Console_ window and run. 
+1. Now ask RStudio to run the command `library(tidyverse)`. You do this by putting your cursor on the line of the script window containing the command, and pressing CTRL+ENTER (i.e. press the key marked 'Ctrl' and the RETURN or ENTER key together). The line is automatically copied to your _Console_ window and run. 
 
 ```{r init}
+# EXPLORING INCOMES
+# Load packages
 library(tidyverse)
 ```
 
@@ -69,20 +71,21 @@ If you get an output that includes the word 'error', please see [common errors](
 ## Loading data
 Now, we're going to load some data on the income of 10,000 people in the United States of America. I've made up this dataset for teaching purposes, but it's somewhat similar to large open data sets available on the web, such as [US Current Population Survey](https://www.census.gov/programs-surveys/cps/data.html).
 
-**Copy the command in the grey box to line 3 of your script in RStudio and then press CTRL+ENTER to run it:** (don't forget to save your script)
+**Copy the comment and command in the grey box to your script in RStudio and then press CTRL+ENTER to run it:** (don't forget to save your script)
 
 ```{r load,cache=TRUE}
-cpsdata <- read_csv("http://www.willslab.org.uk/cps2.csv")
+# Load data
+cpsdata <- read_csv("https://www.andywills.info/cps2.csv")
 ```
 
 ### Explanation of command
-There are three parts to the command `cpsdata <- read_csv("http://www.willslab.org.uk/cps2.csv")`:
+There are three parts to the command `cpsdata <- read_csv("https://www.andywills.info/cps2.csv")`:
 
 1. The first part of the command is `cpsdata`. This gives a name to the data we are going to load. We'll use this name to refer to it later, so it's worth using a name that is both short and meaningful. I've called it `cpsdata` because it's somewhat similar to data from the US Current Population Survey, but you can give data pretty much any name you choose (e.g. _fart_). 
 
 2. The bit in the middle, `<-`, is an arrow and is typed by pressing `<` and then `-`, without a space. This arrow means "put the thing on the right of the arrow into the thing on the left of the arrow". 
 
-3. The last part of the command is `read_csv("http://www.willslab.org.uk/cps2.csv")`. It's a way of downloading data from the Internet. The part inside the speech marks, `http://www.willslab.org.uk/cps2.csv`, is a web address, such as you'd use to access any other web page (e.g. <http://www.twitter.com/ajwills72>)
+3. The last part of the command is `read_csv("https://www.andywills.info/cps2.csv")`. It's a way of downloading data from the Internet. The part inside the speech marks, `https://www.andywills.info/cps2.csv`, is a web address, such as you'd use to access any other web page (e.g. <http://www.twitter.com/ajwills72>)
 
 ### Explanation of output
 R likes to print things in red sometimes -- this does not mean there's a problem. If there's a problem, it will actually say 'error'. The output here tells us that R has loaded the data, which has eight parts (columns, or `cols`). It gives us the name of the columns (`ID, sex, ...`) and tells us what sort of data each column contains: `character` means the data is words  (e.g. 'female'), `integer` means the data is a whole number (e.g. '42').
@@ -120,9 +123,10 @@ It would also be a little bit tedious and error prone in a spreadsheet applicati
 
 In R, we can calculate the mean instantly, and it's harder to make the sorts of errors that are common in Excel-based analysis.
 
-**To calculate mean income in  R, add the following command to line 4 of your script and run it:**
+**To calculate mean income in  R, add the following comment and command to your script and run it:**
 
 ```{r mean}
+# Calculate mean income
 cpsdata %>% summarise(mean(income))
 ```
 
@@ -148,6 +152,12 @@ This command has three components:
 ## Calculating a median
 Now we're going to calculate the median income of the people in this sample. As you learned in school, you calculate a median by putting all the numbers into rank order and then picking the number in the middle. As with the calculation of mean outcome, R allows us to calculate the median quickly and without error.
 
+Add this comment to your script:
+
+```
+# Calculate median income
+```
+
 This time, I haven't given you the command you need to type -- your task is to work out what you need to type. Re-read the explanation above for clues if you need them. The way to indicate that the summary you want is a median is to use the command `median`. 
 
 If you've entered the correct command, you'll get this answer:
@@ -164,6 +174,7 @@ cpsdata %>% summarise(median(income))
 To calculate the mean number of hours worked per week, we have to deal with the fact that there is some missing data - we don't know for all 10,000 people how many hours they work in a week, because they didn't all tell us. To get a mean of those who did tell us, we tell R to ignore the missing data, like this:
 
 ```{r mean-hours-narm}
+# Calculate mean hours worked
 cpsdata %>% summarise(mean(hours, na.rm = TRUE))
 ```
 
@@ -181,6 +192,7 @@ A histogram is a graph that shows us how many people have an income that is with
 
 In R, we can do this with a single command:
 ```{r histo-code, fig.keep='none'}
+# Plot histogram of incomes
 cpsdata %>% ggplot(aes(income)) + geom_histogram(binwidth=20000)
 ```
 
@@ -208,6 +220,7 @@ There are a lot of ways to modify the standard graphs produced by R, to make the
 We can change the overall look of a graph by changing the *theme*. In this example, we use a **lighter background** by adding the command `+ theme_light()`:
 
 ```{r hist-theme-code, fig.keep='none'}
+# Plot histogram with a white background
 cpsdata %>% ggplot(aes(income)) + geom_histogram(binwidth=20000) + theme_light()
 ```
 
@@ -223,6 +236,7 @@ There are quite a lot of different themes. Try replacing `light` above with one 
 We can also change the way particular parts of the graph look -- for example, changing the colour of the bars on the histogram, using the command `fill`. Here's one particularly nasty-looking example:
 
 ```{r colours-code, fig.keep='none'}
+# Plot yellow histogram on a grey background
 cpsdata %>% ggplot(aes(income)) + geom_histogram(fill = 'yellow', binwidth=20000) + theme_dark()
 ```
 
@@ -238,6 +252,7 @@ Try replacing `yellow` with some other colour name. R knows quite a lot of colou
 We can also change the labels that appear on the x-axis and on the y-axis. Here's an example with some not-very-helpful labels:
 
 ```{r labels-code, fig.keep='none'}
+# Plot a histogram with axis labels
 cpsdata %>% ggplot(aes(income)) + geom_histogram(binwidth=20000) + 
   xlab('insert a x-axis label here') + ylab('insert a y-axis label here')
 ```
@@ -249,7 +264,15 @@ cpsdata %>% ggplot(aes(income)) + geom_histogram(binwidth=20000) +
 ```
 
 ### Lab book exercise - Upload a graph
-Generate a histogram of these data with a bin width of $50,000. The histogram bars should be blue, and you should use `theme_bw`. Give your x-axis and y-axis meaningful labels. If you get it right, your graph should look something like this (without the words "EXAMPLE PLOT", of course):
+
+Enter this comment into your script:
+
+```
+# Plot lab-book-exercise histogram
+```
+
+Now, write a command that generates a histogram of these data with a bin width of $50,000. The histogram bars should be blue, and you should use `theme_bw`. Give your x-axis and y-axis meaningful labels. If you get it right, your graph should look something like this (without the words "EXAMPLE PLOT", of course):
+
 ```{r hist-assess, echo=FALSE, fig.keep='all'}
 cpsdata %>% ggplot(aes(income)) + geom_histogram(fill = 'blue', binwidth=50000) + theme_bw() +
   xlab('Income in US dollars') + ylab('Number of people') + 
@@ -272,10 +295,6 @@ Instructions on how to do download a file from RStudio online are on the [Analyz
 
 3. Click 'Upload image' on your Psyc\:EL answer sheet. 
 
-### Extension exercise
-
-Take a look at the [R Graph Gallery](https://www.r-graph-gallery.com/) for lots of other examples of how to make graphs in R. Make a pretty graph of some aspect of this data set that interests you.
-
 <a name="writing"></a>
 
 ## PsycEL writing exercise
@@ -283,6 +302,10 @@ Take a look at the [R Graph Gallery](https://www.r-graph-gallery.com/) for lots 
 In class, we discussed how the histogram helped us to understand why the mean and median incomes were so different, and whether the mean or the median gave a better account of average US income. Here are the [slides](mean-median.html), if you'd like to look at them again.
 
 On the Psyc\:EL Answer Section, you'll find the question "Does the mean or the median give a better indication of average salary in this case?" **In the text box provided, give a short answer to this question**. You need not write more than a few sentences, but you should explain your reasoning. 
+
+## Extension exercise
+
+Take a look at the [R Graph Gallery](https://www.r-graph-gallery.com/) for lots of other examples of how to make graphs in R. Make a pretty graph of some aspect of this data set that interests you.
 
 ___
 
