@@ -12,9 +12,21 @@ Before starting this exercise, you should have had a brief introduction to getti
 
 ## Exercise
 
-First, you're going to need to load your own data. The [Entering Data by Hand](entering-data-by-hand.html) worksheet explains how to do this, so take a look at that now. Once you've read it and done it, add this command to the next line of your script:
+First, make sure you are in your **psyc411** project. Next, create a new script called **project.R**,
+and add the following:
 
-`p411data <- read_csv("psyc411data.csv")`
+```
+## Project analysis
+# Load package
+library(tidyverse)
+```
+
+Next, you're going to need to upload your own data into the RStudio server. The [Entering Data by Hand](entering-data-by-hand.html) worksheet explains how to do this, so take a look at that now. Once you've read it and done it, add this command to the next line of your script:
+
+```
+# Load data
+p411data <- read_csv("psyc411data.csv")
+```
 
 If you gave your CSV file a different name, change the name inside the quote marks accordingly
 
@@ -35,25 +47,27 @@ In order to analyse the data from your experiment, you need to use the commands 
 Here's what such a script looks like for the gender pay gap analyses.
 
 ```
-## Load packages 
+## Gender pay gap analysis
+
+# Load packages 
 library(tidyverse)
 library(effsize)
 library(BayesFactor)
 
-## Load data
+# Load data
 cpsdata <- read_csv("cps2.csv")
 
-## Produce density plot
+# Produce density plot
 cpsdata %>% ggplot(aes(income, colour=factor(sex))) + geom_density(aes(y=..scaled..)) +
   xlab("Income in US Dollars") + ylab("Density")
 
-## Calculate effect size
+# Calculate effect size
 cohen.d(cpsdata$income ~ cpsdata$sex)
 
-## Perform t-test
+# Perform t-test
 t.test(cpsdata$income ~ cpsdata$sex)
 
-## Perform Bayesian t-test
+# Perform Bayesian t-test
 ttestBF(formula = income ~ sex, data = data.frame(cpsdata))
 ```
 
