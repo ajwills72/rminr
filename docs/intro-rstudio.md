@@ -5,7 +5,7 @@ _Andy Wills, Paul Sharpe, Stuart Spicer, Ben Whalley_
 
 _NOTE 1_: **DO NOT use a tablet (Android or iOS) or a phone or a Chromebook to access an RStudio server. **EVER**. It might seem like it's working to start with, but sooner or later it will bite you in the ass in an unpredictable and hard to diagnose way. These materials and, by extension, any teaching based on them, support only the use of a Windows, Mac, or Linux PC (laptop or desktop).**
 
-Using your web browser, go to an <a href = "https://rstudio.plymouth.ac.uk" target = "blank">RStudio server</a> and log on, using the username and password you have been given. 
+Using your web browser, go to an <a href = "https://psyrstudio.plymouth.ac.uk/" target = "blank">RStudio server</a> and log on, using the username and password you have been given. 
 
 _NOTE 1_: We strongly recommend using the [Firefox](https://www.mozilla.org/en-US/firefox/new/) web browser to access RStudio. If you are having problems and you're using something other than Firefox, the first thing to try is to download and install Firefox on your machine and see if it fixes the problem. Firefox is free and open source.
 
