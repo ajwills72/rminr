@@ -35,19 +35,22 @@ Before starting this exercise, you should have had a brief introduction to using
 <a name="revision"></a>
 
 ## Loading packages and data (revision)
-The first few steps are the same as in the _Exploring Incomes_ workshop. First, log in to <a href = "https://rstudio.plymouth.ac.uk" target = "blank">RStudio server</a>, and make sure you are in your `psyc411` project.
+The first few steps are the same as in the _Exploring Incomes_ workshop. First, log in to <a href = "https://psyrstudio.plymouth.ac.uk/" target = "blank">RStudio server</a>, and make sure you are in your `psyc411` project.
 
 Next, create a **new** script file in your project, called `groupdiff.R`.
 
-Now, you load _tidyverse_ and you load the income _data frame_, by adding the following commands to your R script, and using CTRL+ENTER to run each command in turn:
+Now, you load _tidyverse_ and you load the income _data frame_, by adding the following comments and commands to your R script, and using CTRL+ENTER to run each command in turn:
 
 
 ```{r init,message=FALSE}
+# GROUP DIFFERENCES
+# Load packages
 library(tidyverse)
 ```
 
 ```{r load,message=FALSE,cache=TRUE}
-cpsdata <- read_csv(url("http://www.willslab.org.uk/cps2.csv"))
+# Load data
+cpsdata <- read_csv("https://www.andywills.info/cps2.csv")
 ```
 As a reminder, here's what each of the columns in the income data frame contain:
 
@@ -68,6 +71,7 @@ One of the most widely discussed issues concerning income is the difference betw
 We'll start by calculating median income, irrespective of biological sex. You already did this in the [Exploring data](exploring-incomes.html) workshop, so this is revision. If you need to, take a look back at that last worksheet to remind yourself how this works:
 
 ```{r mean, results='hide'}
+# Calculate median income
 cpsdata %>% summarise(median(income))
 ```
 
@@ -80,6 +84,7 @@ What we need, though, are two median incomes -- one for males and one for female
 **So, the full command to add to your script and run (CTRL+ENTER) is:**
 
 ```{r group-median}
+# Calculate median income by sex
 cpsdata %>% group_by(sex) %>% summarise(median(income))
 ```
 
@@ -88,6 +93,7 @@ Looking at your output, you'll be able to see that median income for males is ar
 R also works as a calculator, so we can work out female median income as a percentage of male median income -- this is a standard way of expressing the gender pay gap:
 
 ```{r calculator}
+# Calculate gender pay gap
 52558 * 100 / 61746
 ```
 
@@ -107,6 +113,7 @@ What is the _standard deviation_ in pay for males, and for females? We can calcu
 **So, the command to add to your script and run is:**
 
 ```{r group-sd}
+# Calculate standard deviation of income by sex
 cpsdata %>% group_by(sex) %>% summarise(sd(income))
 ```
 
@@ -123,6 +130,7 @@ The main difference between a scaled density plot and a histogram is that the hi
 So **here's the command to add to your script**, that will do a scaled density plot for incomes, ignoring biological sex. It works the same way as the histogram command from last time, except that we've replaced `geom_histogram` with `+ geom_density`. 
 
 ```{r density}
+# Produce a scaled density plot for income
 cpsdata %>% ggplot(aes(income)) + geom_density(aes(y=..scaled..)) 
 ```
 
@@ -140,6 +148,7 @@ We want these two density plots to be different colours, to make it easy for us 
 **Here's the command to add to your script and run**:
 
 ```{r group-density}
+# Produce a scaled density plot for income, by sex
 cpsdata %>% ggplot(aes(income, colour=factor(sex))) + geom_density(aes(y=..scaled..)) 
 ```
 
@@ -150,12 +159,14 @@ Oh dear! That was not very revealing! These two lines seem basically on top of e
 The problem is one of scale. As we discussed in [Exploring data](exploring-incomes.html), there are a small number of people who earn very high salaries. In fact, both the highest-paid man, and the highest-paid woman in our sample earn considerably more than $1m. We can find their exact salaries using the `max` (short for "maximum") summary; **here's the command to add to your script and run**:
 
 ```{r group-max}
+# Find highest income, by sex
 cpsdata %>% group_by(sex) %>% summarise(max(income))
 ```
 
-These figures relate to another big issue in the US (and many other countries) -- income inequality. When we work out income inequality for a company (e.g. Starbucks), we take the salary of the CEO and divide it by the median salary of the workers. The [CEO of Starbucks earns about 700 times as much as the average worker at Starbucks](https://www.glassdoor.com/research/ceo-pay-ratio/). In our sample of 10,000 people, the best paid woman earns about 36 times more than the average (median) woman: 
+These figures relate to another phenomenon in the US (and many other countries) -- income inequality. When we work out income inequality for a company (e.g. Starbucks), we take the salary of the CEO and divide it by the median salary of the workers. The [CEO of Starbucks earns about 700 times as much as the average worker at Starbucks](https://www.glassdoor.com/research/ceo-pay-ratio/). In our sample of 10,000 people, the best paid woman earns about 36 times more than the average (median) woman: 
 
 ```{r income inequality}
+# Calculate income inequality
 1908742 / 52558
 ```
 
@@ -174,6 +185,7 @@ We'll be using this dataset of people with <$150k incomes a few times, so we're 
 So, what we need to do is *pipe* (`%>%`) our `cpsdata` data to our `filter(income < 150000)`, and use an arrow, `<-`, to send this data to our new *data frame*, `cpslow`. Recall that `<-` sends the thing on its right to the thing on its left, so **the full command to add to your script and run is**:
 
 ```{r group-filtered}
+# Select people with incomes under £150K, put into 'cpslow'
 cpslow <- cpsdata %>% filter(income < 150000)
 ```
 
@@ -181,7 +193,11 @@ We can take a look at this new *data frame* by clicking on it in RStudio's _Envi
 
 Now, we can plot these filtered data in the same way as before, by changing the name of the dataframe from `cpsdata` to `cpslow`. 
 
-So start with the command `cpsdata %>% ggplot(aes(income, colour=factor(sex))) + geom_density(aes(y=..scaled..))`, **make that change, add it to your script, and run it.**.
+So start with the command `cpsdata %>% ggplot(aes(income, colour=factor(sex))) + geom_density(aes(y=..scaled..))`, **make that change, add it to your script (after copying the comment below), and run it.**.
+
+```
+# Produce a scaled density plot for income, by sex (for incomes < £150k)
+```
 
 If you've got it right, your graph will look like this:
 
@@ -216,18 +232,20 @@ In this section, we're going to calculate the effect size for the gender pay gap
 
 Recall that _packages_ in R are a way to add new commands. So, the first thing we need to do is load the `effsize` package using the `library` command.
 
-**So, add this command to your script and run it**:
+**So, add this comment and command to your script and run it**:
 
 ```{r load-effsize}
+# Load effect size package
 library(effsize)
 ```
 If you get an error here, please see [common errors](common-errors.html).
 
 Next, we calculate effect size. **Note:** Take care if typing this in by hand. `$` is the US dollar symbol. `~` is a _tilde_. On a standard UK keyboard, the tilde is immediately to the right of `:`. On a UK Mac, it's immediately left of `Z`.
 
-**Here's the command to add to your script and run**:
+**Here's the comment command to add to your script and run**:
 
 ```{r cohend}
+# Calculate effect size for income gender gap
 cohen.d(cpslow$income ~ cpslow$sex)
 ```
 
@@ -262,7 +280,12 @@ In this exercise, you'll consolidate what you've learned so far.
 
 Specifically, the question to answer is whether people born in the US earn more. In order to do this, you should calculate the mean income for each group, produce a density plot with one line for each group, and calculate the effect size. 
 
-**Add commands to do this to the end of your script to do this, and run them**. Below are the answers you are aiming for:
+```
+# EXERCISE 1
+```
+
+**After adding the above comment to your script, add commands and comments to answer the question
+to your script, and run them**. Below are the answers you are aiming for:
 
 ```{r ex1, echo=FALSE}
 cpslow %>% group_by(native) %>% summarise(mean(income))
@@ -290,7 +313,14 @@ The symbol `|` is read "or", so the command is "give me the people who have a Ma
 
 If you get an error, please see [common errors](common-errors.html).
 
-**Add commands to complete this exercise to the end of your script, and run them**. Below are the answers you are aiming for:
+
+```
+# EXERCISE 2
+```
+
+**After adding the above comment to your script, add commands and comments to answer the question
+to your script, and run them**. Below are the answers you are aiming for:
+
 
 ```{r ex2, echo=FALSE}
 pubpri <- cpslow %>% filter(job == "private" | job == "public")
