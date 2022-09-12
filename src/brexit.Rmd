@@ -10,8 +10,8 @@ output: html_document
 ## Show only commands.
 ## knitr::opts_chunk$set(echo = TRUE, message = FALSE, results='hide', fig.keep = 'none', comment=NA)
 
-## Show commands and ouptut.
-knitr::opts_chunk$set(echo = TRUE, comment=NA)
+## Show commands and output.
+knitr::opts_chunk$set(echo = TRUE, comment = NA)
 ```
 
 ## Before you start...
@@ -20,7 +20,7 @@ Before starting this exercise, you should have completed **all** the [Absolute B
 ## Getting the data into R
 **Relevant worksheet:** [Intro to RStudio](intro-rstudio.html)
 
-You'll need to complete the Psych:EL excerise to get the CSV files containing your data, and data for your group. [Open an RStudio project](intro-rstudio.html) for this analysis, within that create a script file for this analysis, and [upload the CSV files](entering-data-by-hand.html#upload) to the project.
+You'll need to complete the Psych:EL exercise to get the CSV files containing your data, and data for your group. [Open an RStudio project](intro-rstudio.html) for this analysis, within that create a script file for this analysis, and [upload the CSV files](entering-data-by-hand.html#upload) to the project.
 
 ## Exploring your data
 
@@ -30,7 +30,10 @@ You'll need to complete the Psych:EL excerise to get the CSV files containing yo
 Load the _tidyverse_ package, and load your data.
 
 ```{r init-load, message=FALSE} 
+# Policital psychology
+# Load tidyverse
 library(tidyverse)
+# Load data
 brex <- read_csv("brexit.csv")
 ```
 
@@ -57,6 +60,7 @@ How highly did you score on each of the two questionnaires (Authoritarian Person
 To look at this, you have to calculate your average (mean) rating for each questionnaire. To do this, use the `group_by` and `summarise` commands you learned in the _Group Differences_ worksheet.
 
 ```{r brex_groups}
+# Group data by 'type', display mean of 'rating'
 brex %>% group_by(type) %>% summarise(mean(rating))
 ```
 
@@ -70,10 +74,10 @@ As [before](group-differences.html#group), you can safely ignore the "ungrouping
 
 **Relevant worksheet:** [Exploring data](exploring-incomes.html) 
 
-Load the _tidyverse_ package, and load the data.
+Load the data.
 
 ```{r second-load, message=FALSE} 
-library(tidyverse)
+# Load everyone's data into 'brex.all'
 brex.all <- read_csv("brexit-all.csv")
 ```
 
@@ -89,17 +93,19 @@ It'll take a few steps to answer this question:
 
 #### 1. Filter
 
-First, we first need to filter the data so it only contains the responses to the Authoritatian Personality questionniare (and not the Social Dominance Orientation questionniare). We do this using the `filter` command we covered in the _Group Differences_ worksheet:
+First, we first need to filter the data so it only contains the responses to the Authoritarian Personality questionnaire (and not the Social Dominance Orientation questionnaire). We do this using the `filter` command we covered in the _Group Differences_ worksheet:
 
 ```{r filter-auth, message=FALSE} 
+# Filter 'auth' questionnaire into 'auth' data frame
 auth <- brex.all %>% filter(type == "auth")
 ```
 
 #### 2. Summarise
 
-Next, we summarise this large amount of data, so we have just one overall score on the questionnaire for each person. We use the `summarise` command to do this, which we learned in the _Exploring Data_ worksheet. We also need to use the `group_by` command (covered in _Group Differences_), so that we get one score for each person (using the column `SRN`). We also add the column `cond` to the `group_by` command, so that our summarised data still contains information about which condition each person was in (i.e. whether they voted _leave_ or _remain_):
+Next, we summarize this large amount of data, so we have just one overall score on the questionnaire for each person. We use the `summarise` command to do this, which we learned in the _Exploring Data_ worksheet. We also need to use the `group_by` command (covered in _Group Differences_), so that we get one score for each person (using the column `SRN`). We also add the column `cond` to the `group_by` command, so that our summarized data still contains information about which condition each person was in (i.e. whether they voted _leave_ or _remain_):
 
 ```{r sum-auth, message=FALSE} 
+# Group 'auth' by 'cond' and 'SRN'; calculate mean of 'rating'; place results in 'auth.sum'
 auth.sum <- auth %>% group_by(cond, SRN) %>% summarise(rating = mean(rating))
 ```
 
@@ -110,7 +116,8 @@ If you look at `auth.sum` by clicking on it in the _Environment_ tab in RStudio,
 Now we can look at the distribution of scores on this personality scale for _leavers_ and _remainers_. A _density plot_ is a good choice for this (you learned to produce these in the _Group Differences_ worksheet). Here, we're going to make a density plot of the data in column `rating` of the `auth.sum` data frame. We use the `cond` column to set the colour of the density plot, leaving us with two distributions -- one for _leavers_ and one for _remainers_ :
 
 ```{r auth-density, message=FALSE} 
-auth.sum %>% ggplot(aes(rating, colour=factor(cond))) + geom_density(aes(y=..scaled..)) 
+# Display density plot of 'rating', by 'cond'
+auth.sum %>% ggplot(aes(rating, colour = factor(cond))) + geom_density(aes(y = ..scaled..)) 
 ```
 
 Your plot should look something like this, although the coloured lines will be somewhat different. In this example plot, the _leavers_ seem to score a bit higher overall than the _remainers_, although the two sets of scores also overlap a lot. _What happens in your plot?_
@@ -120,7 +127,9 @@ Your plot should look something like this, although the coloured lines will be s
 As we covered in the _Group Differences_ worksheet, an effect size is the difference between the mean scores of the two groups, divided by the _standard deviation_ (a measure of how much the scores vary around those means). Here, we're going to calculate the effect size for this personality difference in _leavers_ and _remainers_. We use the `cohen.d` command to do this, as covered in the _Group Differences_ worksheet.
 
 ```{r auth-effect, message=FALSE} 
+# Load package that calculates effect sizes
 library(effsize)
+# Calculate Cohen's d for effect of 'cond' on 'rating'
 cohen.d(auth.sum$rating ~ auth.sum$cond)
 ```
 
@@ -135,7 +144,9 @@ If the example above, our effect size (_Cohen's d_) is around 0.48, which is nor
 How good is the evidence that this is a real result, and not just some kind of fluke we can put down to chance? The best way to answer this question is to calculate a Bayes Factor, as was covered in the _Evidence_ worksheet. In this case, the data frame is `auth.sum`, with the column `rating` containing the questionnaire scores, and the column `cond` containing information about the _condition_ (i.e. whether each person voted _leave_ or _remain_):
 
 ```{r auth-bf, message=FALSE} 
+# Load BayesFactor package
 library(BayesFactor, quietly = TRUE)
+# Calculate Bayesian t-test for effect of 'cond' on 'rating'.
 ttestBF(formula = rating ~ cond, data = data.frame(auth.sum))
 ```
 
@@ -144,9 +155,11 @@ In this example, The Bayes Factor is about 14, meaning it's about 14 times as li
  **Enter your exact Bayes Factor into PsycEL.** (The Bayes Factor for your data will likely be a bit different to the one above).
 
 ### Do 'leavers' score higher on a Social Dominance Orientation scale?
+
 In this final part of the exercise, the task is to produce a density plot, calculate the effect size, and calculate the Bayes Factor, for the _other_ questionnaire ... the Social Dominance questionnaire. Go through the steps above, changing the code so you're doing the same analyses on this other questionnaire. To get you started, here's Step 1:
 
 ```{r filter-dom, message=FALSE} 
+# Filter 'dom' questionnaire into 'dom' data frame
 dom <- brex.all %>% filter(type == "dom")
 ```
 
