@@ -10,8 +10,8 @@ output: html_document
 ## Show only commands.
 ## knitr::opts_chunk$set(echo = TRUE, message = FALSE, results='hide', fig.keep = 'none', comment=NA)
 
-## Show commands and ouptut.
-knitr::opts_chunk$set(echo = TRUE, comment=NA)
+## Show commands and output.
+knitr::opts_chunk$set(echo = TRUE, comment = NA)
 ```
 
 ## Before you start...
@@ -35,7 +35,10 @@ Once you have your CSV file, [open a project](intro-rstudio.html) on RStudio Ser
 Load the _tidyverse_ package, and load your data.
 
 ```{r init-load, message=FALSE} 
+# Animal welfare
+# Load tidyverse
 library(tidyverse)
+# Load data into 'animals'
 animals <- read_csv("animals.csv")
 ```
 
@@ -61,16 +64,19 @@ Look at the data by clicking on it in the _Environment_ tab in RStudio. Each row
 To what extent did you and your workshop partner agree on how each behaviour should be coded? As we covered in the _inter-rater reliability_ worksheet, to look at this, we first have to `select` the relevant columns of the data frame. For example, to look at inter-rater reliability for the _behaviour_ category, we select:
 
 ```{r select, message=FALSE} 
+# Select columns; insert into 'behav'
 behav <- animals %>% select(behav.r1, behav.r2)
 ```
 
 We can now use the `agree` command to work out percentage agreement:
 
 ```{r pc, message=FALSE} 
+# Load inter-rater-reliability package
 library(irr)
+# Calculate percentage agreement
 agree(behav)
 ```
-**NOTE**: If you get an error here, type `install.packages("irr")`, wait for the pacakge to finish installing, and try again. 
+**NOTE**: If you get an error here, type `install.packages("irr")`, wait for the package to finish installing, and try again. 
 
 The key result here is `%-agree`, which is your percentage agreement. The term `Subjects` here is a bit misleading, it doesn't mean the number of animals you observed (this data file contains your ratings of one animal), it means the number of time points you recorded an observation for. 
 
@@ -80,9 +86,10 @@ The key result here is `%-agree`, which is your percentage agreement. The term `
 
 **Relevant worksheet:** [Inter-rater reliability](irr.html) 
 
-One problem with the _percentage agreement_ measure is that people will sometimes agree purely by chance. Jacob Cohen thought it would be much neater if we could have a measure of agreement where zero always meant the level of agreement expected by chance, and 1 always meant perfect agreement. To calculate his mesaure, Cohen's kappa, in R we use the command `kappa2`: 
+One problem with the _percentage agreement_ measure is that people will sometimes agree purely by chance. Jacob Cohen thought it would be much neater if we could have a measure of agreement where zero always meant the level of agreement expected by chance, and 1 always meant perfect agreement. To calculate his measure, Cohen's kappa, in R we use the command `kappa2`: 
 
 ```{r ckauto}
+# Calculate Cohen's Kappa
 kappa2(behav)
 ```
 
@@ -94,14 +101,14 @@ There are some words that psychologists sometimes use to describe the level of a
 
 If either of those descriptions are 'moderate' or lower, reflect on why that might be. For example, is there a problem with the definitions of the behavioural categories you used? What else might have caused the lack of agreement? 
 
-**Write a few sentences into PsycEL summarising your reflections.** 
+**Write a few sentences into PsycEL summarizing your reflections.** 
 
 
 ## Behaviour and feeding time
 
 **Relevant worksheet:** [Relationships](relationships.html) 
 
-Does the lion behave differently when it’s close to feeding time? To look at
+Does the animal behave differently when it’s close to feeding time? To look at
 this, we need to calculate the frequency of each behaviour at our two time
 periods (10 minutes before feeding, and 180 minutes before feeding). You can
 use the `table` command we learned in the _Relationships_ worksheet to do this, but you’re going to have to choose which behaviour, and which of your two raters,
@@ -114,24 +121,29 @@ will use.
 If you choose "behaviour" and rater 2, the commands would be:
 
 ```{r cont}
+# Create contingency table for 'period' by 'behav.r2'
 cont <- table(animals$period, animals$behav.r2)
+# Display contingency table
 cont
 ```
 
 ### Explanation of command
 
-What you have just done here, as we covered in the [relationships](relationships.htm#cont) worksheet, is to convert your _data frame_, called  `animals`, into a _contingency table_, called `cont`. This contingency table shows how often each behaviour occurs at each time period. Recall that `table(rows, columns)` is the command used in R for producing contingency tables. We replace the word `rows` with the name of the variable we want to appear on the rows of the table, and we replace the word `columns` with the name of the variable we wnat to appear in the columns of the table.
+What you have just done here, as we covered in the [relationships](relationships.htm#cont) worksheet, is to convert your _data frame_, called  `animals`, into a _contingency table_, called `cont`. This contingency table shows how often each behaviour occurs at each time period. Recall that `table(rows, columns)` is the command used in R for producing contingency tables. We replace the word `rows` with the name of the variable we want to appear on the rows of the table, and we replace the word `columns` with the name of the variable we want to appear in the columns of the table.
 
 ### Bar chart
 
 **Relevant worksheet:** [Face recognition](face-recog.html) 
 
-To visualise the relationship between behaviour and feeding time, we're going to use a bar chart. We covered bar charts in the _Face recognition_ worksheet; here we're going to extend that example to create a bar chart that shows our two different time periods on the same axes. 
+To visualize the relationship between behaviour and feeding time, we're going to use a bar chart. We covered bar charts in the _Face recognition_ worksheet; here we're going to extend that example to create a bar chart that shows our two different time periods on the same axes. 
 
 ```{r bars, fig.show='hide'}
+# Turn contingency table into a data frame, 'df'
 df <- data.frame(cont)
+# Name the columns of the data frame
 colnames(df) <- c("Period", "Behaviour", "Frequency")
-df %>% ggplot(aes(x = Behaviour, y = Frequency, fill = Period)) + geom_col(position="dodge")
+# Display a bar chart of 'Frequency' by 'Behaviour', grouping by 'Period'
+df %>% ggplot(aes(x = Behaviour, y = Frequency, fill = Period)) + geom_col(position = "dodge")
 ```
 
 ### Explanation of command
@@ -152,7 +164,7 @@ If you click on `df` in the _Environment_ tab of RStudio, you'll see that the ro
 ```{r bars-eg, echo=FALSE}
 df <- data.frame(cont)
 colnames(df) <- c("Period", "Behaviour", "Frequency")
-df %>% ggplot(aes(x = Behaviour, y = Frequency, fill = Period)) + geom_col(position="dodge") +
+df %>% ggplot(aes(x = Behaviour, y = Frequency, fill = Period)) + geom_col(position = "dodge") +
 annotate("text", x = Inf, y = -Inf, label = "EXAMPLE PLOT", col = "red", hjust = 3.1, vjust = -1.1)
 
 ```
@@ -169,7 +181,7 @@ behaviours were most affected?
 
 ### Uploading your graph
 
-1. Export your graph, using the _Export_ icon on RStudio's _Plots_ window, and selecting "Save as image...". Give it a meaninful file name (e.g. "feed-time") and click 'Save'. 
+1. Export your graph, using the _Export_ icon on RStudio's _Plots_ window, and selecting "Save as image...". Give it a meaningful file name (e.g. "feed-time") and click 'Save'. 
 
 2. Download your graph from RStudio server - see [these instructions](using-projects.html#download) for a reminder of how to do this.
 
