@@ -11,7 +11,7 @@ output: html_document
 ## knitr::opts_chunk$set(echo = TRUE, message = FALSE, results='hide', fig.keep = 'none', comment=NA)
 
 ## Show commands and ouptut.
-knitr::opts_chunk$set(echo = TRUE, comment=NA)
+knitr::opts_chunk$set(echo = TRUE, comment = NA)
 ```
 
 ## Before you start...
@@ -36,7 +36,10 @@ Load the _tidyverse_ package, and load your data.
 **Note**: Everyone's CSV file has a different name. For example, yours might be called `10435678 trials.csv`. In the example below, you'll need to replace `facerec.csv` with the name of your personal CSV file.
 
 ```{r init-load, message=FALSE} 
+# Face recognition
+# Load package
 library(tidyverse)
+# Load data into 'recog'
 recog <- read_csv("facerec.csv")
 ```
 
@@ -59,6 +62,7 @@ Look at the data by clicking on it in the _Environment_ tab in RStudio. Each row
 Calculate your overall accuracy in this task -- the proportion of trials you got right.The `Correct` column codes a correct response as `1` and an incorrect response as `0`. This is helpful, because the mean of this column gives the proportion of trials you got right. 
 
 ```{r accuracy}
+# Calculate my accuracy
 recog %>% summarise(mean(Correct))
 ```
 
@@ -72,6 +76,7 @@ These kinds of experiments typically focus on the faces that were presented duri
 We have to tell the `filter` which trials we want to _keep_, so the filter we need is `Condition != 'NS'` where `!=` means 'not equal to'. We put this filtered data into a new data frame, which we've called `recog.old` (because it only contains "old" faces, i.e. the ones seen during training).
 
 ```{r filter}
+# Filter out 'NS' Condition from 'recog', put results in 'recog.old'
 recog.old <- recog %>% filter(Condition != "NS")
 ```
 
@@ -81,10 +86,11 @@ recog.old <- recog %>% filter(Condition != "NS")
 Were you more accurate when the photograph was the same as the one you studied, than when it was a different photograph of the same person? To find out, we `group_by` the type of trial (`Condition`) and then calculate the mean score for each group. 
 
 ```{r compare-means}
+# Group data by 'Condition', calculate mean accuracy; place results in 'grpmeans'
 grpmeans <- recog.old %>% group_by(Condition) %>% summarise(Correct = mean(Correct))
 ```
 
-We've put our answers into a new data frame, `grpmeans`, so go to the _Enviornment_ window of RStudio and click on `grpmeans' to see your answers.
+We've put our answers into a new data frame, `grpmeans`, so go to the _Environment_ window of RStudio and click on `grpmeans' to see your answers.
 
 As [before](group-differences.html#group), you can safely ignore the "ungrouping" message that you receive.
 
@@ -99,7 +105,9 @@ Notice that we used `summarise(Correct = mean(Correct))`, rather than just `summ
 Next, let's make those two numbers into a bar chart. We didn't cover bar charts in the _Absolute Beginners' Guide_, so here's how to do one:
 
 ```{r bar-chart}
+# Generate a bar plot of accuracy by Condition.
 meanplot <- grpmeans %>% ggplot(aes(x = Condition, y = Correct)) + geom_col()
+# Display bar plot
 meanplot
 ```
 
@@ -121,10 +129,12 @@ Your output will look a bit like the above, but the heights of the bars will pro
 
 **Relevant worksheet:** [Exploring data](exploring-incomes.html). 
 
-Next, give your bar chart a more appropriate label for the y-axis. "Correct" isn't very informative, "Mean proprotion correct" would make more sense. So, we'll use the `ylab` command to add this y-axis label.
+Next, give your bar chart a more appropriate label for the y-axis. "Correct" isn't very informative, "Mean proportion correct" would make more sense. So, we'll use the `ylab` command to add this y-axis label.
 
 ```{r bar-chart-label}
+# Add y-axis label
 meanplot <- meanplot + ylab("A more meaningful label")
+# Display plot
 meanplot
 ```
 
@@ -134,12 +144,13 @@ If you get it right, it'll look something like this -- but of course with your m
 
 **Relevant worksheet:** [Exploring data](exploring-incomes.html). 
 
-The graph you now have is readable, but it doesn't look much like the graphs you seen in journal articles. In the [Exploring data](exploring-incomes.html) worksheet, we saw that we could change the way graphs looked using _themes_; for example, `theme_bw()`. In this exercise, we're going to use a theme that makes graphs look like they do in journal articles. It's called `theme_APA` because it's based on how the Amercian Psychological Association says graphs should look.
+The graph you now have is readable, but it doesn't look much like the graphs you seen in journal articles. In the [Exploring data](exploring-incomes.html) worksheet, we saw that we could change the way graphs looked using _themes_; for example, `theme_bw()`. In this exercise, we're going to use a theme that makes graphs look like they do in journal articles. It's called `theme_APA` because it's based on how the American Psychological Association says graphs should look.
 
 The APA theme is not part of any R package at the moment, but you can download it from my website like this:
 
 ```{r theme-apa-load}
-source("http://www.willslab.org.uk/rminr/theme-apa.R")
+# Download Theme APA function, from andywills.info
+source("https://andywills.info/theme-apa.R")
 ```
 
 Now all you need to do is add this theme to your graph, using `+ theme_APA()`. If you get it right, your graph will look something like this (without the words "example plot", of course, and with your meaningful y-axis label):
@@ -151,9 +162,9 @@ meanplot
 
 **Use RStudio to export your graph as an Image, and upload it to your lab book.**
 
-### Recording our answer
+### Recording your answer
 
-1. Export your graph, using the _Export_ icon on RStudio's _Plots_ window, and selecting "Save as image...". Give it a meaninful file name (e.g. "face-bar") and click 'Save'. 
+1. Export your graph, using the _Export_ icon on RStudio's _Plots_ window, and selecting "Save as image...". Give it a meaningful file name (e.g. "face-bar") and click 'Save'. 
 
 2. Download your graph from RStudio server - see [these instructions](using-projects.html#download) for a reminder of how to do this.
 
