@@ -10,8 +10,8 @@ output: html_document
 ## Show only commands.
 ## knitr::opts_chunk$set(echo = TRUE, message = FALSE, results='hide', fig.keep = 'none', comment=NA)
 
-## Show commands and ouptut.
-knitr::opts_chunk$set(echo = TRUE, comment=NA)
+## Show commands and output.
+knitr::opts_chunk$set(echo = TRUE, comment = NA)
 ```
 
 ## Before you start...
@@ -32,7 +32,9 @@ You'll be provided with a single CSV file containing both your data, and that of
 Load the _tidyverse_ package, and load your data. 
 
 ```{r init-load, message=FALSE} 
+# Load tidyverse package
 library(tidyverse)
+# Load data into 'att'
 att <- read_csv("faceattract.csv")
 ```
 
@@ -55,22 +57,25 @@ This is a large data set, with about 250 people rating each of 100 faces for att
 To look at differences in facial attractiveness, we can look at the average (mean) rating each face received, i.e. the average across the hundreds of people who rated it. To do this, we use the `group_by` and `summarise` commands you learned in the _Group Differences_ worksheet.
 
 ```{r mean_att}
+# Calculate mean attractiveness, per face; place into 'av.att'
 av.att <- att %>% group_by(Stimulus) %>% summarise(mean = mean(Rating))
 ```
 
 As [before](group-differences.html#group), you can safely ignore the "ungrouping" message that you receive.
 
-You can look at these averages by clicking on `av.att` in the _Environment_ tab in RStudio. You should be able to notice that some faces score higher than others, on average. However, it's pretty hard to get your head around a long list of numbers like this, so next we're going to draw a graph. This _visualisation_ will help us more easily comprehend our data.
+You can look at these averages by clicking on `av.att` in the _Environment_ tab in RStudio. You should be able to notice that some faces score higher than others, on average. However, it's pretty hard to get your head around a long list of numbers like this, so next we're going to draw a graph. This _visualization_ will help us more easily comprehend our data.
 
 A _density plot_ is a good choice for this kind of data. We covered density plots in the _Group Differences_ worksheet, and we can use the same commands here. 
 
 ```{r att_hist, fig.show='hide'}
-av.att %>% ggplot(aes(mean)) + geom_density(aes(y=..scaled..)) 
+# Display density plot of attractiveness ratings
+av.att %>% ggplot(aes(mean)) + geom_density(aes(y = ..scaled..)) 
 ```
 
 The density plot the above command gives you is OK, but it could be better. First, let's fix the fact that the x-axis doesn't cover the full range of the rating scale. Our rating scale goes from 1 to 10. To force R to use that full 1 to 10 range, we use the `xlim` (short for "x-axis limits") command, like this:
 
 ```{r att_hist_xlim, fig.show='hide'}
+# Display above density plot, with x-axis forced to range from 1 to 10.
 av.att %>% ggplot(aes(mean)) + geom_density(aes(y=..scaled..)) + xlim(1, 10)
 ```
 
@@ -90,9 +95,10 @@ av.att %>% ggplot(aes(mean)) + geom_density(aes(y=..scaled..)) + xlim(1, 10) +
 
 For any given face, does everyone give about the same attractiveness rating? Or, do some people rate it as attractive, while other people rate it as unattractive? 
 
-One way we could look at this is to calculate the _standard deviation_ of the attractiveness ratings for each face. As we covered in the _Group Differences_ worksheet, _standard deviation_ is a number that basically represents how far, on average, people are from the mean. We calculate the standard devation of the face ratings pretty much the same way we calculated the means, just using the command `sd` instead of `mean`:
+One way we could look at this is to calculate the _standard deviation_ of the attractiveness ratings for each face. As we covered in the _Group Differences_ worksheet, _standard deviation_ is a number that basically represents how far, on average, people are from the mean. We calculate the standard deviation of the face ratings pretty much the same way we calculated the means, just using the command `sd` instead of `mean`:
 
 ```{r sd_att}
+# Calculate standard deviation of ratings by face; record into 'sd.att'
 sd.att <- att %>% group_by(Stimulus) %>% summarise(sd = sd(Rating))
 ```
 
@@ -114,12 +120,14 @@ The larger the _inter-quartile range_, the more people's ratings of the same fac
 Calculating inter-quartile range in R works much the same way as calculating a mean, median, or standard deviation. The command is `IQR`, which we use like this:
 
 ```{r iqr_att}
+# Calculate inter-quartile range of ratings by face; record into 'iqr.att'
 iqr.att <- att %>% group_by(Stimulus) %>% summarise(IQR = IQR(Rating))
 ```
 
 We can then look at these inter-quartile ranges by clicking on `iqr.att` in the _Environment_ tab in RStudio. While this might be a bit of an improvement, it's still a very long table of numbers. So, as the final exercise in this worksheet, calculate the mean inter-quartile range from your `iqr.att` data frame, using the `summarise` and `mean` commands. If you've done it right, your output will look something like this (the exact number will be different):
 
 ```{r iqr_mean, echo=FALSE}
+# Calculate mean inter-quartile range
 iqr.att %>% summarise(mean(IQR))
 ```
 
