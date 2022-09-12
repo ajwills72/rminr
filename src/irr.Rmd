@@ -34,10 +34,13 @@ Once you have downloaded your CSV file, [set up a new project](intro-rstudio.htm
 ### Load
 **Relevant worksheet:** [Exploring data](exploring-incomes.html) 
 
-**Add commands to your script to load the _tidyverse_ package, and load your data, and run them (CTRL+ENTER)**:
+**Add comments and commands to your script to load the _tidyverse_ package, and load your data, and run them (CTRL+ENTER)**:
 
 ```{r init-load, message=FALSE} 
+## Inter-rater reliability
+# Load package
 library(tidyverse)
+# Load data
 friends <- read_csv("irr.csv")
 ```
 
@@ -67,9 +70,10 @@ For realistically-sized data sets, calculating percent agreement by hand would b
 
 Your `friends` data frame contains not only your ratings, but also a list of participant numbers in the `subj` column. For the next step to work properly, we have to remove this column. We can do this using the `select` command. In the _Group Differences_ worksheet, you learned how to use the `filter` command to say which rows of a data frame you wanted to keep. The command `select` works in a similar way, except that it filters columns.
 
-**Add this command to your script and run it:**
+**Add this comment and command to your script and run it:**
 
 ```{r select, message=FALSE} 
+# Select 'rater1' and 'rater2' columns from 'friends', write to 'ratings'
 ratings <- friends %>% select(rater1, rater2)
 ```
 
@@ -78,10 +82,12 @@ In the command above, we take the `friends` data frame, select the `rater1` and 
 ### 2. Calculate percentage agreement
 We can now use the `agree` command to work out percentage agreement. The `agree` command is part of the package `irr` (short for Inter-Rater Reliability), so we need to load that package first.
 
-**Add these commands to your script and run them**:
+**Add these comments and commands to your script and run them**:
 
 ```{r pc, message=FALSE} 
+# Load inter-rater reliability package
 library(irr)
+# Calculate percentage agreement
 agree(ratings)
 ```
 **NOTE**: If you get an error here, type `install.packages("irr")`, wait for the package to finish installing, and try again. 
@@ -114,9 +120,10 @@ Cohen's kappa is a measure of agreement that's calculated in a similar way to th
 
 To calculate Cohen's kappa in R, we use the command `kappa2` from the `irr` package.
 
-**Add this command to your script and run it:**
+**Add this comment and command to your script and run it:**
 
 ```{r ckauto}
+# Calculate Cohen's kappa
 kappa2(ratings)
 ```
 
