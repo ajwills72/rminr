@@ -29,7 +29,9 @@ In this excercise, you'll be analysing some data that you and your peers recentl
 3. Load the _tidyverse_ package, and then load your data into R.
 
 ```{r init-load, message=FALSE} 
+# Load tidyverse
 library(tidyverse)
+# Load data
 data <- read_csv("green.csv")
 ```
 
@@ -62,6 +64,7 @@ In some cases, a participant did not provide a rating of a solution -- this is t
 Although it's good to explicitly record that a response was not made, keeping these `NA`  in the dataset will cause problems later on, so we're going to remove them:
 
 ```{r drop_na}
+# Remove NAs
 data  <- data %>% drop_na(score)
 ```
 
@@ -73,28 +76,30 @@ Each solution was rated by several people. We're going to take the average (mean
 We use the `group_by`,  `summarise`, and `mean` commands we used in the _Group Differences_ worksheet to do this: 
 
 ```{r preproc}
+# Group by 'Cond' and 'Solution', calculate mean score; place results into 'creative'
 creative <- data %>% group_by(Cond, Solution) %>% summarise(score = mean(score))
 ```
 
 As [before](group-differences.html#group), you can safely ignore the "ungrouping" message that you receive.
 
-If we look at this summarised data, by clicking on the _Environment_ tab of RStudio, we can see that we now have one creativity score per solution.
+If we look at this summarized data, by clicking on the _Environment_ tab of RStudio, we can see that we now have one creativity score per solution.
 
 ## Creativity and the environment
 
 **Relevant worksheets:** [Group Differences](group-differences.html), [Evidence](evidence.html)
 
-
 We start by looking to see how the mean creativity scores differ for those who were in a nature or an urban environment. We can do this using the `group_by` and `summarise` functions in a similar way to before, but on our preprocessed data, which we have stored in the data frame `creative`:
 
 ```{r means}
+# Group by 'Cond', calculate mean score.
 creative %>% group_by(Cond) %>% summarise(mean(score))
 ```
 
 Your output will look similar to this, but the numbers will probably be different. In this example, it looks like there's a small difference, with the creativity ratings slightly higher in the Nature environment -- but how does this between-group difference compare to the within-group variability? As we covered in the _Group Differences_ worksheet, this is most easily looked at with a scaled density plot:
 
 ```{r density}
-creative %>% ggplot(aes(score, colour=factor(Cond))) + geom_density(aes(y=..scaled..)) + xlim(0, 100)
+# Display density plots of 'score', by 'Cond'
+creative %>% ggplot(aes(score, colour = factor(Cond))) + geom_density(aes(y = ..scaled..)) + xlim(0, 100)
 ```
 
 **Explanation of command:** The only new part here is `xlim(0, 100)`, which sets **lim**its on the **x**-axis of your graph. Specifically, it forces the lowest value on the x-axis to be 0 and the highest value to be 100. Without `xlim`, R chooses limits that it thinks are sensible. Like all computer programs, R isn't that bright, so often it makes sense to tell it more precisely what you want. 
@@ -104,7 +109,9 @@ In this example, the graph tells a somewhat different story to the means - altho
 We can express the size of the difference in means, relative to the within-group variability, as an effect size. As we said in the _Group Differences_ worksheet, we calculate an effect size in R like this:
 
 ```{r effect}
+# Load a package that calculates effect sizes
 library(effsize)
+# Calculate Cohen's d for the effect of 'Cond' on 'score'
 cohen.d(creative$score ~ creative$Cond)
 ```
 
@@ -113,7 +120,9 @@ In this example, the effect size is around 0.21, which is typically described as
 At this point, the most pressing question is probably whether the difference observed in the mean scores is likely to be real, or whether it's more likely down to chance. As we saw in the _Evidence_ worksheet, the best way to look at this is with a Bayesian t-test:
 
 ```{r bf2,message=FALSE}
+# Load BayesFactor package
 library(BayesFactor, quietly = TRUE)
+# Calculate Bayesian t-test for effect of 'Cond' on 'score'
 ttestBF(formula = score ~ Cond, data = data.frame(creative))
 ```
 
