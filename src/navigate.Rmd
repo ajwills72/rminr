@@ -11,7 +11,7 @@ output: html_document
 ## knitr::opts_chunk$set(echo = TRUE, message = FALSE, results='hide', fig.keep = 'none', comment=NA)
 
 ## Show commands and ouptut.
-knitr::opts_chunk$set(echo = TRUE, comment=NA)
+knitr::opts_chunk$set(echo = TRUE, comment = NA)
 ```
 
 ## Before you start...
@@ -35,7 +35,9 @@ Load the _tidyverse_ package, and load your data.
 **Note**: Everyone's CSV file has a different name. For example, yours might be called `10435678 data.csv`. In the example below, you'll need to replace `navigate.csv` with the name of your personal CSV file.
 
 ```{r init-load, message=FALSE} 
+# Load tidyverse
 library(tidyverse)
+# Load data
 nav <- read_csv("navigate.csv")
 ```
 
@@ -55,7 +57,9 @@ Look at the data by clicking on it in the _Environment_ tab in RStudio. Each row
 In the [Face Recognition](face-recog.html) exercise, you made a simple bar chart with two bars. This time, you'll make a more complex, eight-bar plot. The data you loaded has eight test scores, four for your personal scores, and four for the mean scores of your peers. In order to make it easy to compare each of your scores to the cohort mean, we are going to plot four pairs of bars: (1) Your Direction score, (2) Cohort Direction score, (3) Your Landmark score, and so on. For clarity, and beautification, the bars for your scores are going to be a different colour to the bars for the cohort mean. Here's the command we need:
 
 ```{r bar-chart}
+# Create bar plot of 'Percent' by 'Test', coloured by 'Who'
 navplot <- nav %>% ggplot(aes(x = Test, y = Percent, fill = Who)) + geom_col(position = "dodge")
+# Show bar plot
 navplot
 ```
 
@@ -84,15 +88,16 @@ Your output will look a bit like the above, but the heights of the bars will pro
 Personally, I'm not mad keen on R's choice of colours. Fortunately, we can choose colours more to our liking. In honour of my [Hogwart's house](https://en.wikipedia.org/wiki/Hogwarts#Hufflepuff), let's change these to yellow and black:
 
 ```{r cols, }
-navplot <- navplot + scale_fill_manual(values=c("yellow","black"))
+# Change bar plot colours to yellow and black
+navplot <- navplot + scale_fill_manual(values = c("yellow","black"))
 navplot
 ```
 
 Type `colours()` into the console to see the 657 named colours available in R. Pick two you find clear and pleasing, and modify the command above to use them. 
 
-### Recording our answer
+### Recording your answer
 
-1. Export your graph, using the _Export_ icon on RStudio's _Plots_ window, and selecting "Save as image...". Give it a meaninful file name (e.g. "nav-bar") and click 'Save'. 
+1. Export your graph, using the _Export_ icon on RStudio's _Plots_ window, and selecting "Save as image...". Give it a meaningful file name (e.g. "nav-bar") and click 'Save'. 
 
 2. Download your graph from RStudio server - see [these instructions](using-projects.html#download) for a reminder of how to do this.
 
