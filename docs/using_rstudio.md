@@ -5,7 +5,7 @@ A big part of psychology is collecting data about people, visualizing it (graphs
 
 ## Getting started
 
-Using your web browser, go to an <a href = "https://rstudio.plymouth.ac.uk" target = "blank">RStudio server</a> and log on, using the username and password you have been given. 
+Using your web browser, go to an <a href = "https://psyrstudio.plymouth.ac.uk" target = "blank">RStudio server</a> and log on, using the username and password you have been given. 
 
 _NOTE_: We strongly recommend using the [Firefox](https://www.mozilla.org/en-US/firefox/new/) web browser to access RStudio. If you are having problems and you're using something other than Firefox, the first thing to try is to download and install Firefox on your machine and see if it fixes the problem. Firefox is free and open source.
 
