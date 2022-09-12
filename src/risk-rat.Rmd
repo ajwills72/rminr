@@ -10,8 +10,8 @@ output: html_document
 ## Show only commands.
 ## knitr::opts_chunk$set(echo = TRUE, message = FALSE, results='hide', fig.keep = 'none', comment=NA)
 
-## Show commands and ouptut.
-knitr::opts_chunk$set(echo = TRUE, comment=NA)
+## Show commands and output.
+knitr::opts_chunk$set(echo = TRUE, comment = NA)
 ```
 
 ## Before you start...
@@ -34,8 +34,12 @@ Once you have downloaded your CSV files, [open a project](intro-rstudio.html) on
 Load the _tidyverse_ package, and load your *own* data, and that of your _older_ participant.
 
 ```{r init-load, message=FALSE} 
+# Risk-taking
+# Load tidyverse
 library(tidyverse)
+# Load my data into 'risk.me'
 risk.me <- read_csv("riskrat.csv")
+# Load older participant's data into 'risk.other'
 risk.other <- read_csv("riskrat-other.csv")
 ```
 
@@ -49,7 +53,7 @@ Look at the data by clicking on it in the _Environment_ tab in RStudio. Each row
 | SRN       | Your Student Reference Number           |        |
 | who       | Is this data from you, or from the other (older) person you tested? | "you", "other" |
 | group     | Which sort of risk-taking behaviour is this question about? | "ethical", "financial", "health", "social", "recreation" |
-| qu  | This number unqiuely idenifies the question that was asked  | 1 - 26, e.g. qu. 19 is "Taking a skydiving class"    |
+| qu  | This number uniquely identifies the question that was asked  | 1 - 26, e.g. qu. 19 is "Taking a skydiving class"    |
 | rating    | The rating given in response to this question | 1 - 7, higher numbers = more likely to engage in the risky behaviour described in the question. |
 
 ### Calculating your risk-taking scores
@@ -61,6 +65,7 @@ How highly did you score on each of the types of risk-taking behaviour (e.g. eth
 To look at this, we take the average (mean) rating you made for each type of behaviour. To do this, we use the `group_by` and `summarise` commands you learned in the _Group Differences_ worksheet.
 
 ```{r risk_groups}
+# Group by 'group', calculate mean of 'rating'
 risk.me %>% group_by(group) %>% summarise(mean(rating))
 ```
 
@@ -81,6 +86,7 @@ People tend to be less likely to take risks as they get older. Is this the case 
 We can use the `bind_rows` command to combine two data frames, like this:
 
 ```{r risk_rbind}
+# Combine 'risk.me' and 'risk.other' into one data frame
 risk <- bind_rows(risk.me, risk.other)
 ```
 
@@ -88,6 +94,7 @@ risk <- bind_rows(risk.me, risk.other)
 Now we can compare you and your older adult on your overall mean risk-taking score. We do this by grouping by the `who` variable in the `risk` _data frame_. If you get this right, your output will look a bit like this, although the exact numbers will be different:
 
 ```{r risk_age}
+# Group 'risk' by 'who', calculate mean of 'rating'
 risk %>% group_by(who) %>% summarise(mean(rating))
 ```
 
@@ -106,13 +113,13 @@ This part of the exercise can only be completed once sufficient number of people
 Load the _tidyverse_ package, and load your everyone's data.
 
 ```{r second-load, message=FALSE} 
-library(tidyverse)
+# Load data into 'risk.all'
 risk.all <- read_csv("riskrat-all.csv")
 ```
 
 ### Inspect
 
-Look at the data by clicking on it in the _Environment_ tab in RStudio. You'll see it has the same columns as the the other data files, it's just has a lot more rows (because it contains a lot of participants).
+Look at the data by clicking on it in the _Environment_ tab in RStudio. You'll see it has the same columns as the the other data files, it just has a lot more rows (because it contains a lot of participants).
 
 ### How do you compare to your peers?
 
@@ -123,6 +130,7 @@ Look at the data by clicking on it in the _Environment_ tab in RStudio. You'll s
 Let's start by looking at the range of scores your peers got on this questionnaire. The first thing we'll need to do is _filter_ the data so it only contains your classmates, not the older adults. This is because older adults tend to score lower on risk taking than younger adults, and so it's best to compare your score to people who are closer to your own age. We do this using the `filter` command you learned in the _Group Differences_ worksheet. Here, we want to keep all ratings where the column `who` says _you_, because these are the ratings for when your peers are answering the questionnaire themselves. We can filter like this:
 
 ```{r filter-young, message=FALSE} 
+# Filter the 'you' data into 'risk.young'
 risk.young <- risk.all %>% filter(who == "you")
 ```
 
@@ -131,7 +139,8 @@ risk.young <- risk.all %>% filter(who == "you")
 Now we can look at the range of scores given by your peers. A _density plot_ is a good choice for this, which you learned to produce in the _Group Differences_ worksheet. Here, we're going to make a density plot of the data in column `rating` of the `risk.young` data frame:
 
 ```{r risk-density, message=FALSE} 
-risk.young %>% ggplot(aes(rating)) + geom_density(aes(y=..scaled..), adjust = 2)
+# Display density plot of 'rating'
+risk.young %>% ggplot(aes(rating)) + geom_density(aes(y = ..scaled..), adjust = 2)
 ```
 
 _Note:_ You may have noticed the addition of `adjust = 2` in the above command, which we didn't use in the _Group Differences_ worksheet. The `adjust` command changes how smooth the density plot looks, with higher numbers making for smoother plots. Try changing the value to see what effect it has on your plot.
@@ -141,17 +150,19 @@ In this particular plot, a rating of around 5 is the most common, with higher an
 To do this, we use the command `geom_vline` (`vline` being short for "vertical line") to draw a line on the plot to show your score. Replace the number `4.35` in the command below with your score:
 
 ```{r risk-density-line, message=FALSE} 
-risk.young %>% ggplot(aes(rating)) + geom_density(aes(y=..scaled..), adjust = 2) +
+# Plot as above, with vertical line added
+risk.young %>% ggplot(aes(rating)) + geom_density(aes(y = ..scaled..), adjust = 2) +
   geom_vline(xintercept = 4.35)
 ```
 
-In the above example, the individual's score is close to the cente of the distribution. Are *you* towards the bottom, towards the top, or near the middle?
+In the above example, the individual's score is close to the centre of the distribution. Are *you* towards the bottom, towards the top, or near the middle?
 
 Finally, we'll make this plot a bit prettier by the addition of some colour. Here, I've used some fair ugly colours, for your plot use a `lightblue` fill and a `red` line:
 
 ```{r risk-density-line-cols, message=FALSE} 
+# Plot as above, with a green fill and yellow line
 risk.young %>% ggplot(aes(rating)) + 
-  geom_density(aes(y=..scaled..), adjust = 2, fill = "green") +
+  geom_density(aes(y = ..scaled..), adjust = 2, fill = "green") +
   geom_vline(xintercept = 4.35, colour = 'yellow')
 ```
 
