@@ -10,8 +10,8 @@ output: html_document
 ## Show only commands.
 ## knitr::opts_chunk$set(echo = TRUE, message = FALSE, results='hide', fig.keep = 'none', comment=NA)
 
-## Show commands and ouptut.
-knitr::opts_chunk$set(echo = TRUE, comment=NA)
+## Show commands and output.
+knitr::opts_chunk$set(echo = TRUE, comment = NA)
 
 ```
 
@@ -21,9 +21,14 @@ Before starting this worksheet, you should have had a brief introduction to usin
 If you have completed those worksheets, then you'll have set up an R project, and you'll have a script in it that looks like this:
 
 ```{r init, message=FALSE, cache=FALSE, echo=TRUE, results='hide'}
+# Exploring data (briefly)
+# Load package
 library(tidyverse)
+# Load data into 'cpsdata'
 cpsdata <- read_csv("cps2.csv")
+# Display mean income
 cpsdata %>% summarise(mean(income))
+# Calculate mean hours per week
 cpsdata %>% summarise(mean(hours, na.rm = TRUE))
 ```
 
@@ -44,6 +49,7 @@ One of the most widely discussed issues concerning income is the difference betw
 In order to do this, we need to split our data into two groups -- males and females. In R, the command `group_by` allows us to do this. In this case, we want to group the data by biological sex, so the command is `group_by(sex)`. We *pipe* (`%>%`) the data in `cpsdata` to the `group_by` command in order to group it, and then we *pipe* (`%>%`) it to `summarise` to get a summary for each group (a mean, in this case). So, the full command is:
 
 ```{r group-mean}
+# Group by sex, display mean income
 cpsdata %>% group_by(sex) %>% summarise(mean(income))
 ```
 Copy it into your script and run it (CTRL+ENTER). The message concerning "ungrouping output" just means that after R gives you the means, it forgets that you grouped the data (so if you want to use these groups again, you'll have to ask for them again).
@@ -58,10 +64,11 @@ The graph we're going to draw is a density plot. If you recall histograms from s
 
 We're going to produce what's called a _scaled_ density plot. The highest point on a scaled density plot is always one. This can make it easier to compare two groups, particularly if one group has fewer people in it than the other. 
 
-So here's the command to do a scaled density plot for incomes, plotting men and women separately. Copy it into your script and run it (CTRL+ENTER).
+So here's the comment and command to do a scaled density plot for incomes, plotting men and women separately. Copy it into your script and run it (CTRL+ENTER).
 
 ```{r group-density}
-cpsdata %>% ggplot(aes(income, colour=factor(sex))) + geom_density(aes(y=..scaled..)) 
+# Display density plot of income, by sex
+cpsdata %>% ggplot(aes(income, colour = factor(sex))) + geom_density(aes(y = ..scaled..)) 
 ```
 
 ### Explanation of command
@@ -105,6 +112,7 @@ We'll be using this dataset of people with <$150k incomes a few times, so we're 
 So, what we need to do is *pipe* (`%>%`) our `cpsdata` data to our `filter(income < 150000)`, and use an arrow, `<-`, to send this data to our new *data frame*, `cpslow`. Recall that `<-` sends the thing on its right to the thing on its left, so the full command is:
 
 ```{r group-filtered}
+# Filter people with income < $150K into 'cpslow'
 cpslow <- cpsdata %>% filter(income < 150000)
 ```
 
@@ -112,12 +120,12 @@ We can take a look at this new *data frame* by clicking on it in RStudio's _Envi
 
 Now, we can plot these filtered data in the same way as before, by changing the name of the dataframe from `cpsdata` to `cpslow`. 
 
-**So start with the command** `cpsdata %>% ggplot(aes(income, colour=factor(sex))) + geom_density(aes(y=..scaled..))`, copy it onto the next line in your script, **make that change, and press CTRL+RETURN.** 
+**So start with the command** `cpsdata %>% ggplot(aes(income, colour=factor(sex))) + geom_density(aes(y=..scaled..))`, copy it onto the next line in your script, **make that change, and press CTRL+RETURN.** Also add a comment above your new command to explain what it does.
 
 If you've got it right, your graph will look like this:
 
 ```{r group-density-filtered, echo = FALSE}
-cpslow %>% ggplot(aes(income, colour=factor(sex))) + geom_density(aes(y=..scaled..)) 
+cpslow %>% ggplot(aes(income, colour = factor(sex))) + geom_density(aes(y = ..scaled..)) 
 ```
 
 At first glance, the two distributions of incomes still look quite similar. For example, the *modal* income -- the point where the graph is highest -- is at quite a low income, and that income is quite similar for both men and women. However, on closer inspection, you'll also see that the red line (females) is above the blue line (men) until about 25-50k, and below the blue line from then on. This means that more women than men earn less than 50k, and more men than women earn more than 50k. 
@@ -138,7 +146,16 @@ cpslow %>% group_by(native) %>% summarise(mean(income))
 cpslow %>% ggplot(aes(income, colour=factor(native))) + geom_density(aes(y=..scaled..))
 ```
 
+Enter the following into your script:
+
+```
+# EXERCISE
+```
+
+, followed by the comments and commands you need to complete this exercise.
+
 ## Extension exercise
+
 If you've some spare time and are looking for something a bit more challenging, try Exercise 2 on this slightly [more advanced worksheet](group-differences.html#ex2). 
 
 ___
