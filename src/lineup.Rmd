@@ -10,8 +10,8 @@ output: html_document
 ## Show only commands.
 ## knitr::opts_chunk$set(echo = TRUE, message = FALSE, results='hide', fig.keep = 'none', comment=NA)
 
-## Show commands and ouptut.
-knitr::opts_chunk$set(echo = TRUE, comment=NA)
+## Show commands and output.
+knitr::opts_chunk$set(echo = TRUE, comment = NA)
 ```
 
 ## Before you start...
@@ -29,7 +29,10 @@ In this exercise, you'll be analysing some data that has already been collected.
 5. Load the _tidyverse_ package, and then load your data into R.
 
 ```{r init-load, message=FALSE} 
+# Police lineup experiment
+# Load tidyverse
 library(tidyverse)
+# Load data into 'lup'
 lup <- read_csv("lineup.csv")
 ```
 
@@ -61,13 +64,16 @@ _Will being told they made the right choice change peoples' answers to these que
 Will witnesses be more likely to testify in court if they are told they are right? We can look at this question with the data set you just loaded. Looking at the `lup` data frame, the column `Cond` tells us whether each participant was given feedback or not. The `Q2` column tells us whether they said they would be willing to testify in court or not. Both of these variables have unordered ("nominal") data, so the appropriate form of analysis here is a contingency table. As we covered in the _Relationships_ worksheet, we produce a contingency table using the `table` command:
 
 ```{r table}
+# Create contingency table of 'Cond' by 'Q2'
 cont <- table(lup$Cond, lup$Q2)
+# Display contigency table
 cont
 ```
 
 Often, it's easier to see what's going on in a contingency table if we draw a mosaic plot:
 
 ```{r mosaic}
+# Display mosaic plot
 mosaicplot(cont)
 ```
 
@@ -76,7 +82,9 @@ It looks like, with feedback, people are about 50:50 on whether they would testi
 Is this a real effect, or could it just be down to chance? As we covered in the _Relationships_ worksheet, the best way to look at this is with a Bayesian test. We use the `cont` contingency table we generated above:
 
 ```{R bf,message=FALSE}
+# Load BayesFactor package
 library(BayesFactor, quietly = TRUE)
+# Calculate Bayes Factor for the contingency table 'cont'
 contingencyTableBF(cont, sampleType = "indepMulti", fixedMargin = "rows" )
 ```
 
@@ -101,6 +109,7 @@ Did participants think their view was better if they were told they made the cor
 We start by looking to see how the mean scores on Question 3 differ for those who were and weren't given feedback. As we saw in the _Group Differences_ worksheet, we use the `group_by`,  `summarise`, and `mean` commands to do this:
 
 ```{r means}
+# Group by 'Cond', take mean for Q3.
 lup %>% group_by(Cond) %>% summarise(mean(Q3))
 ```
 
@@ -109,7 +118,8 @@ As [before](group-differences.html#group), you can safely ignore the "ungrouping
 It looks like there's a small difference, with the ratings of their view slightly higher in the feedback condition -- but how does this between-group difference compare to the within-group variability? As we covered in the _Group Differences_ worksheet, this most easily looked at with a scaled density plot:
 
 ```{r density}
-lup %>% ggplot(aes(Q3, colour=factor(Cond))) + geom_density(aes(y=..scaled..)) 
+# Display density plot of 'Q3', by 'Cond'
+lup %>% ggplot(aes(Q3, colour = factor(Cond))) + geom_density(aes(y = ..scaled..)) 
 ```
 
 This graph tells a somewhat different story to the means. The two groups almost completely overlap, with the main difference being that the No Feedback participants mostly give scores close to 50, while the Feedback participants give a broader range of scores. 
@@ -117,6 +127,7 @@ This graph tells a somewhat different story to the means. The two groups almost 
 At this point, the most pressing question is probably whether the difference observed in the mean scores is likely to be real, or whether it's more likely down to chance. As we saw in the _Evidence_ worksheet, the best way to look at this is with a Bayesian t-test:
 
 ```{r bf2}
+# Calculate Bayesian t-test for effect of 'Cond' on 'Q3'
 ttestBF(formula = Q3 ~ Cond, data = data.frame(lup))
 ```
 
