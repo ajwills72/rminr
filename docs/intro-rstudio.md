@@ -1,6 +1,13 @@
 # Introduction to RStudio
 _Andy Wills, Paul Sharpe, Stuart Spicer, Ben Whalley_
 
+We use software called _R_ for data analysis on this course (reasons for this choice can be found [here](why-r-student.html)). One convenient way of using R is inside a software package called
+_RStudio_, which provides the most commonly-used interface to _R_. One advantage of _RStudio_ is that
+it can be accessed via a web browser, with no need to install software on your laptop. This is
+sometimes referred to as _RStudio Online_ or _RStudio Server_, and this web-based interface is used throughout this 
+course.
+
+
 ## Starting RStudio
 
 _NOTE 1_: **DO NOT use a tablet (Android or iOS) or a phone or a Chromebook to access an RStudio server. **EVER**. It might seem like it's working to start with, but sooner or later it will bite you in the ass in an unpredictable and hard to diagnose way. These materials and, by extension, any teaching based on them, support only the use of a Windows, Mac, or Linux PC (laptop or desktop).**
