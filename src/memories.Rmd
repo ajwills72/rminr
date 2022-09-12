@@ -28,8 +28,11 @@ Once you have downloaded your CSV file, [open a project](intro-rstudio.html) on 
 
 Finally, load the _tidyverse_ package, and load your data. 
 
-```{r init-load, message=FALSE} 
+```{r init-load, message=FALSE}
+# Memories from life
+# Load package
 library(tidyverse)
+# Load data
 mems <- read_csv("memories-single.csv")
 ```
 
@@ -42,6 +45,7 @@ Your CSV file may have a different name to the example above. If so, you will ne
 Are memories from all time periods about equally common? Or are recent memories more common than remote ones? Or perhaps some other pattern? A histogram can help us to answer this question by visualising our data. You covered how to make a histogram in the _Exploring Data_ worksheet. In this case, our data of interest are in the `period` column of the `mems` data frame, so the command we use is:
 
 ```{r hist}
+# Plot a histogram of 'period'
 mems %>% ggplot(aes(period)) + geom_histogram(binwidth=.5) 
 ```
 
@@ -57,6 +61,7 @@ mems %>% ggplot(aes(period)) + geom_histogram(binwidth=.5)
 Not bad...but it could be better. In particular, having the time periods labelled as numbers doesn't make for a very readable graph; it would be better if we used more meaningful labels. We can use the `scale_x_continuous` command of _ggplot_ to add our own labels to a histogram:
 
 ```{r hist-labels}
+# Plot the histogram with labels on the x-axis
 mems %>% ggplot(aes(period)) + 
   geom_histogram(binwidth=.5) + 
   scale_x_continuous(limits = c(0.75,5.25), breaks = 1:5, labels = c("Fred", "Wilma", "Barney", "Betty", "Pebbles"))
@@ -72,11 +77,17 @@ mems %>% ggplot(aes(period)) +
 
 ### Exercise
 
+```
+# EXERCISE
+```
+
+Add the above to your script and then complete the exercise below
+
 1. Modify the command above to add more meaningful labels to your histogram. If you get it right, it'll look something like this (without the words "example plot", of course):
 
 ```{r hist-labels2, echo = FALSE, warning=FALSE}
 mems %>% ggplot(aes(period)) + 
-  geom_histogram(binwidth=.5) + 
+  geom_histogram(binwidth = .5) + 
   scale_x_continuous(limits = c(0.75,5.25), breaks = 1:5, 
                      labels = c("Age 0-3", "Age 3-6",  "The rest", "1-2 yrs. ago", "< 1yr. ago")) + 
   annotate("text", x = Inf, y = -Inf, label = "EXAMPLE PLOT", col = "red", hjust = 5.1, vjust = -1.1)
