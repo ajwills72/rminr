@@ -48,7 +48,7 @@ We don't use RStudio to enter data by hand. Instead, we use a spreadsheet applic
 
 3. **Choose your Downloads folder**.
   
-4. **Name your data file**: Give the file you are saving a sensible name. Here, I've called it "psyc411data". It would be better to use a name that was unique to your group, and to the date you finished collecting the data. So, something like "psyc411_wills_2018_10_15" would be good. 
+4. **Name your data file**: Give the file you are saving a sensible name. Here, I've called it "psyc411data". It would be better to use a name that was unique to your group, and to the date you finished collecting the data. So, something like "psyc411_wills_2022_10_15" would be good. 
  
 5. **Save it!** Once you've done all this, click on the "Save" button.
 
@@ -68,7 +68,7 @@ We don't use RStudio to enter data by hand. Instead, we use a spreadsheet applic
 
 11. Click "OK".
 
-**`unexpected response from server` error**:  In rare cases, you might experience this error message. If so, changing to a different browser (e.g. Explorer or Edge) sometimes resolves this issue. The issue may be caused by certain specialist software running on _your_ machine, for example software installed to support dyslexia. If you are running such software and encounter this error, report the issue to the person or company that installed your support software.
+**`unexpected response from server` error**:  In rare cases, you might experience this error message. If so, changing to a different browser (e.g. Edge) sometimes resolves this issue. The issue may be caused by certain specialist software running on _your_ machine, for example software installed to support dyslexia. If you are running such software and encounter this error, report the issue to the person or company that installed your support software.
 
 <a name="repeat"></a>
 
