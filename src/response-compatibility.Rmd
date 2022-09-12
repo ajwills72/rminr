@@ -10,8 +10,8 @@ output: html_document
 ## Show only commands.
 ## knitr::opts_chunk$set(echo = TRUE, message = FALSE, results='hide', fig.keep = 'none', comment=NA)
 
-## Show commands and ouptut.
-knitr::opts_chunk$set(echo = TRUE, comment=NA)
+## Show commands and output.
+knitr::opts_chunk$set(echo = TRUE, comment = NA)
 ```
 
 ## Before you start...
@@ -33,7 +33,10 @@ Once you have downloaded your CSV file, [open a project](intro-rstudio.html) on 
 
 Load the _tidyverse_ package, and load your data.
 ```{r init-load, message=FALSE} 
+# Response compatibility
+# Load tidyverse package
 library(tidyverse)
+# Load data into 'compdata'
 compdata <- read_csv("respcompat.csv")
 ```
 
@@ -61,6 +64,7 @@ The `cond` column in your data shows the condition for each trial, while the `RT
 To look at this, you will first need to make sure that you filter out the trials in which you made an error. People always behave a bit differently when they are making an error; these trials therefore need to be removed first. You can do this with the following command:
 
 ```{r filter}
+# Remove error trials; store in 'cordata'
 cordata <- compdata %>% filter(error == 0)
 ```
 
@@ -69,6 +73,7 @@ Recall that the `filter` command needs to be told which data to _keep_, so we te
 Another problem is that response times measurements are sometimes strongly skewed by rare very slow responses, for example when people get distracted by their mobile ringing and only respond after several seconds. It is therefore good to remove such very long “outlier” trials -- this is much like what you did with outlier incomes in the [Exploring Incomes](exploring-incomes.html) worksheet. Usually people respond well within 2 seconds. Remove all trials with responses longer than that with the following command:
 
 ```{r filter-rt}
+# Remove outlier RTs
 cordata <- cordata %>% filter(RT < 2000)
 ```
 
@@ -77,6 +82,7 @@ Recall that your data file measures reaction time in milliseconds, and that `fil
 Now you are ready to calculate the mean reaction time for the two conditions of your experiment (_compatible_ and _incompatible_ trials), using this command:
 
 ```{r rt-means}
+# Calculate mean RT, by 'cond'
 cordata %>% group_by(cond) %>% summarise(mean(RT))
 ```
 The output will look something like the above (the actual numbers won't be the same). In the above example, the participant responded on average about 40 milliseconds more quickly in compatible compared to incompatible trials.
@@ -92,6 +98,7 @@ It is also useful to look at the variability of your responses times in both con
 To get the standard deviations, you'll need to modify the command above by changing `mean` to `sd`. 
 
 ```{r rt-sd, echo=FALSE}
+# Calculate standard deviation of RT, by 'cond'
 cordata %>% group_by(cond) %>% summarise(sd(RT))
 ```
 If you get it right, the output will look something like this (the actual numbers won't be the same).
@@ -104,6 +111,7 @@ One way of looking at variability of response times graphically, as you covered 
 Take a look at the distribution of reaction times, using the following command. 
 
 ```{r rt-hist}
+# Produce density plot of RT, by 'cond'
 cordata %>% ggplot(aes(RT, colour=factor(cond))) + geom_density(aes(y=..scaled..)) 
 ```
 
@@ -111,7 +119,7 @@ If you get it right, the output will look something like the above (it won't be 
 
 _Now do the following:_
 
-1. Export your density plot, using the _Export_ icon on RStudio's _Plots_ window, and selecting "Save as image...". Give it a meaninful file name (e.g. "rt-dist") and click 'Save'. 
+1. Export your density plot, using the _Export_ icon on RStudio's _Plots_ window, and selecting "Save as image...". Give it a meaningful file name (e.g. "rt-dist") and click 'Save'. 
 
 2. Download your density plot from RStudio server - see [these instructions](using-projects.html#download) for a reminder of how to do this.
 
@@ -128,7 +136,7 @@ After having uploaded the RT histogram, **write a few sentences on the PsycEL pa
 
 Finally, take a look at the mean errors by condition (compatible vs. incompatible). Typically, seeing a different action does not only make one slower, but also causes more errors, when people carry out the action that they saw rather than the action they would need to do in the given trials. To do this, you will need to work out the proportion of trials in which you made an error for each of the two conditions.
 
-You'll need to use the `compdata` data fram for this, because the `cordata` dataframe only contains the trials on which you were correct. In the `compdata` dataframe, the `errors` column codes an error as `1` and a correct response as `0`. This is helpful, because the mean of this gives the probability of an error. Modify the command you used for mean reaction times to calculate the probability of error for each condition. 
+You'll need to use the `compdata` dataframe for this, because the `cordata` dataframe only contains the trials on which you were correct. In the `compdata` dataframe, the `errors` column codes an error as `1` and a correct response as `0`. This is helpful, because the mean of this gives the probability of an error. Modify the command you used for mean reaction times to calculate the probability of error for each condition. 
 
 ```{r p-error, echo=FALSE}
 compdata %>% group_by(cond) %>% summarise(mean(error))
