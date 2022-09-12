@@ -11,17 +11,17 @@ output: html_document
 ## knitr::opts_chunk$set(echo = TRUE, message = FALSE, results='hide', fig.keep = 'none', comment=NA)
 
 ## Show commands and ouptut.
-knitr::opts_chunk$set(echo = TRUE, comment=NA)
+knitr::opts_chunk$set(echo = TRUE, comment = NA)
 
 ## Define custom functions
 coreg <- function(r, scale) {
   samples = 25
   library(MASS)
-  data <- mvrnorm(n=samples, mu=c(0, 0), Sigma=matrix(c(1, r, r, 1), nrow=2), empirical=TRUE)
+  data <- mvrnorm(n = samples, mu = c(0, 0), Sigma = matrix(c(1, r, r, 1), nrow = 2), empirical = TRUE)
   data <- (data + 2.5) * 2
   data[,2] <- data[,2] / scale
   data <- as.data.frame(data)
-  data %>% ggplot(aes(x = V1, y = V2)) + geom_point(shape=1) +
+  data %>% ggplot(aes(x = V1, y = V2)) + geom_point(shape = 1) +
   theme_minimal() + xlab("") + ylab("") + xlim(0, 10) + ylim(0, 10) +
   ggtitle(paste("r = ", r))
 }
@@ -58,10 +58,13 @@ Use this [example CSV file](data/corr.csv) for the workshop and assessment.
 ### Load
 **Relevant worksheet:** [Exploring data](exploring-incomes.html) 
 
-**Now, add these commands to your script and run them**; the will load the _tidyverse_ package, and load your data.
+**Now, add these comments and commands to your script and run them**; they will load the _tidyverse_ package, and load your data.
 
 ```{r init-load, message=FALSE} 
+## Correlations
+# Load package
 library(tidyverse)
+# Load data
 data <- read_csv("corr.csv")
 ```
 
@@ -90,9 +93,10 @@ The data from this study is different to other data you have looked at so far in
 
 We won't cover how to make the most out of hierarchical data until a later course. For this introductory course, we're going to take the simple approach of averaging ratings within each group. So, for example, if the group had two members, one who gave a rating of 5 and the other a rating of 7, we would average these and record the group's score as 6. As we covered in the [group differences](group-differences.html) worksheet, we can do this using the `group_by` and `summarise` commands.
 
-**Add the following commands to your script and run them (CTRL+ENTER)**:
+**Add the following comment and commands to your script and run them (CTRL+ENTER)**:
 
 ```{r summarise}
+# Group 'data'; take means of 'ingroup', 'outgroup', 'dominance' columns; put results in 'gdata'
 gdata <- data %>% 
   group_by(grp) %>%
   summarise(ingroup = mean(ingroup),
@@ -100,11 +104,11 @@ gdata <- data %>%
             dominance = mean(dominance))
 ```
 
-We've put our answers into a new data frame, `gdata`, so go to the _Environment_ window of RStudio and click on `gdata` to see your summarised data. You'll now see one line for each group in your study. As [before](group-differences.html#group), you can safely ignore the "ungrouping" message that you receive.
+We've put our answers into a new data frame, `gdata`, so go to the _Environment_ window of RStudio and click on `gdata` to see your summarized data. You'll now see one line for each group in your study. As [before](group-differences.html#group), you can safely ignore the "ungrouping" message that you receive.
 
 ### Explanation of command
 
-Most of the above command is the same as in the [group differences](group-differences.html) worksheet, and the [face recognition](face-recognition.html) workseet --- take a look back at those sheets if you need a reminder. The new thing here is that we are calculating the mean for more than one variable. In fact, we're calculating it for three variables (`ingroup, outgroup, dominance`). The `summarise` command can do this, as long as there is a comma (`,`) separating the things you want a summary of. 
+Most of the above command is the same as in the [group differences](group-differences.html) worksheet, and the [face recognition](face-recognition.html) worksheet --- take a look back at those sheets if you need a reminder. The new thing here is that we are calculating the mean for more than one variable. In fact, we're calculating it for three variables (`ingroup, outgroup, dominance`). The `summarise` command can do this, as long as there is a comma (`,`) separating the things you want a summary of. 
 
 <a name="var"></a>
 
@@ -114,20 +118,22 @@ Most of the above command is the same as in the [group differences](group-differ
 
 Did every group give basically the same rating of ingroup closeness, or did closeness vary a lot between groups? One way to take a look at this is to produce a _density plot_, as we covered in the [group differences](group-differences.html) and [facial attractiveness](face-attract.html) worksheets.
 
-**Add the following commands to your script and run them**:
+**Add the following comment and commands to your script and run them**:
 
 ```{r density}
-gdata %>% ggplot(aes(ingroup)) + geom_density(aes(y=..scaled..)) + xlim(1, 10)
+# Produce density plot of 'ingroup'
+gdata %>% ggplot(aes(ingroup)) + geom_density(aes(y = ..scaled..)) + xlim(1, 10)
 ```
 
 In the example above, the most common (modal) rating of ingroup closeness is between 7 and 8. So, on average, people rated the ingroup closeness as quite high. However, there were quite a range of ratings, both above and below this modal rating. Your data may be different.
 
-We can ask the same question about outgroup distance. Did everyone give bascially the same rating, or did outgroup distance vary a lot between groups? Changing `ingroup` to `outgroup` in the above command gives us the answer.
+We can ask the same question about outgroup distance. Did everyone give basically the same rating, or did outgroup distance vary a lot between groups? Changing `ingroup` to `outgroup` in the above command gives us the answer.
 
-**Add the following commands to your script and run them**:
+**Add the following comment and commands to your script and run them**:
 
 ```{r density-2}
-gdata %>% ggplot(aes(outgroup)) + geom_density(aes(y=..scaled..)) + xlim(1, 10)
+# Produce density plot of 'outgroup'
+gdata %>% ggplot(aes(outgroup)) + geom_density(aes(y = ..scaled..)) + xlim(1, 10)
 ```
 
 In the example above, most groups gave close to the lowest possible rating (1), so we see a large peak in the plot at around 1. We also see a series of much smaller peaks, indicating that a few groups gave much higher ratings. It is possible that these mostly low ratings are due to _social desirability bias_ -- the phenomenon that people are reluctant to give answers that their social group would view negatively. 
@@ -148,13 +154,14 @@ One way to look at this question is to produce a _scatterplot_. On a scatterplot
 
 The command to produce a scatterplot in R is much like the command for a bar graph, as you used in, for example, the [face recognition](face-recog.html) worksheet. The only difference is that we use the `geom_point()` command (because the graph is a set of dots or _points_) rather than the `geom_col()` command we used for bar (_column_) charts.
 
-**Add the following commands to your script and run them**:
+**Add the following comment and commands to your script and run them**:
 
 ```{r scatter}
+# Produce scatterplot of 'ingroup' against 'outgroup'
 gdata %>% ggplot(aes(x = ingroup, y = outgroup)) + geom_point() 
 ```
 
-In the above example, many of the points are close to the x axis. This is becasue, as we saw above, most groups gave a rating close to 1 for outgroup distance. However, once we get to an ingroup closeness above 8, an interesting pattern starts to emerge. As ingroup closeness increases from 8 to 10, outgroup distance rises from around 1 to around 7 or 8. 
+In the above example, many of the points are close to the x axis. This is because, as we saw above, most groups gave a rating close to 1 for outgroup distance. However, once we get to an ingroup closeness above 8, an interesting pattern starts to emerge. As ingroup closeness increases from 8 to 10, outgroup distance rises from around 1 to around 7 or 8. 
 
 So it seems that, in this example dataset, ingroup closeness and outgroup distance are related. We call this type of relationship a _correlation_. 
 
@@ -164,11 +171,12 @@ So it seems that, in this example dataset, ingroup closeness and outgroup distan
 
 **Relevant worksheets:** [Group differences](group-differences.html)
 
-Sometimes, it's useful to have a single number that summarises how well two variables are correlated. We can calculate this number, called a _correlation co-efficient_, using the `cor` command in R.
+Sometimes, it's useful to have a single number that summarizes how well two variables are correlated. We can calculate this number, called a _correlation co-efficient_, using the `cor` command in R.
 
-**Add the following command to your script and run it**:
+**Add the following comment and command to your script and run it**:
 
 ```{r corr}
+# Calculate correlation co-efficient between 'ingroup' and 'outgroup'
 cor(gdata$ingroup, gdata$outgroup)
 ```
 
@@ -228,19 +236,21 @@ A correlation co-efficient is much like an _effect size_, which we covered in th
 
 So far, we've produced a scatterplot of _ingroup closeness_ versus _outgroup distance_, and we've calculated a correlation co-efficient for that relationship ( _r=0.66_ in the example above ). But is the relationship between these two variables real, or a fluke? Much like the Bayesian t-test we calculated in the [evidence](evidence.html) worksheet, we can calculate a Bayes Factor for the relationship between two variables. 
 
-The first step is to load the _BayesFactor_ packages, which we previously used in the [evidence](evidence.html) worksheet.
+The first step is to load the _BayesFactor_ package, which we previously used in the [evidence](evidence.html) worksheet.
 
-**Add the following command to your script and run it**:
+**Add the following comment and command to your script and run it**:
 
 ```{r bf-load, message=FALSE}
+# Load BayesFactor package
 library(BayesFactor, quietly = TRUE)
 ```
 
 Then, we use the `correlationBF` command, which has a similar format to the `cor` command above.
 
-**Add the following command to your script and run it**:
+**Add the following comment and command to your script and run it**:
 
 ```{r bf}
+# Calculate Bayes Factor for correlation between 'ingroup' and 'outgroup'
 correlationBF(gdata$ingroup, gdata$outgroup)
 ```
 
@@ -250,9 +260,10 @@ The Bayes Factor is reported on the third line, towards the right. In this examp
 
 As we covered in the [Evidence](evidence.html) worksheet, psychologists have typically reported _p values_, despite the fact that _p values_ are widely misinterpreted. If you want to calculate a _p value_ for a correlation co-efficient, you can use the following command.
 
-**Add the following command to your script and run it**:
+**Add the following comment and command to your script and run it**:
 
 ```{r r-sig}
+# Traditional test for correlation between 'ingroup' and 'outgroup'
 cor.test(gdata$ingroup, gdata$outgroup)
 ```
 
@@ -260,7 +271,7 @@ The _p value_ in this case is about .00029. The _p value_ is **not** the probabi
 
 ### Reporting a correlation
 
-Psychologists generally include some numbers from their analyses in their writeups. In the case of a correlation, you'd normally write something like:
+Psychologists generally include some numbers from their analyses in their write ups. In the case of a correlation, you'd normally write something like:
 
 "ingroup closeness and outgroup distance were significantly correlated, _r_ = .66, _BF_ = 89.71, _p_ < .001."
 
@@ -268,11 +279,15 @@ Psychologists generally include some numbers from their analyses in their writeu
 
 ## Exercise
 
-In this exercise, you'll apply what you've learned to the relationship between _ingroup closeness_, and _group-leader dominance_. Do each of the following analyses, and **include them as part of your report**. In order to get graphs from RStudio into your wordprocessor, follow [these instructions](insert-image.html).
+In this exercise, you'll apply what you've learned to the relationship between _ingroup closeness_, and _group-leader dominance_. Do each of the following analyses, and **include them as part of your report**. In order to get graphs from RStudio into your word processor, follow [these instructions](insert-image.html).
 
 **Hint:** Most of these steps can be completed by copying the commands you used earlier, and replacing `outgroup` with `dominance`. 
 
-**Add commands to your script to do the following, and run those commands**:
+```
+# EXERCISE
+```
+
+**Add the above to your script. Then, add comments and commands to your script to do the following, and run those commands**:
 
 - Make a density plot of the _dominance_ scores. 
 
