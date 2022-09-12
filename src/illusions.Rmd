@@ -10,8 +10,8 @@ output: html_document
 ## Show only commands.
 ## knitr::opts_chunk$set(echo = TRUE, message = FALSE, results='hide', fig.keep = 'none', comment=NA)
 
-## Show commands and ouptut.
-knitr::opts_chunk$set(echo = TRUE, comment=NA)
+## Show commands and output.
+knitr::opts_chunk$set(echo = TRUE, comment = NA)
 ```
 
 ## Before you start...
@@ -24,7 +24,7 @@ In order to complete this worksheet, you'll need to have downloaded your CSV fil
 
 Once you have downloaded your CSV file, [open a project](intro-rstudio.html) on RStudio Server for this analysis, create a script file, and [upload your CSV](entering-data-by-hand.html#upload) to your project.
 
-**Plymouth University students**: Create/open your project named `psyc413`; within that create a script file called `illusions.R`. Enter all commands into that script and run them from there.
+**Plymouth University students**: Create/open your project named `psyc413`; within that create a script file called `illusions.R`. Enter all comments and commands into that script and run them from there.
 
 ## Exploring your data
 
@@ -33,7 +33,9 @@ Once you have downloaded your CSV file, [open a project](intro-rstudio.html) on 
 
 Load the _tidyverse_ package, and load your data.
 ```{r init-load, message=FALSE} 
+# Load tidyverse
 library(tidyverse)
+# Load data into 'ill'
 ill <- read_csv("GG.csv")
 ```
 
@@ -60,6 +62,7 @@ There may be an extra column called "Pattern", but you can just ignore it. You c
 To look at the Muller-Lyer illusion, you first need to filter the data, so that you just have the trials on which you did the Muller-Lyer illusion. We use the `filter` command to do this, as covered in the _Group Differences_ worksheet:
 
 ```{r filter}
+# Put data from Muller-Lyer illusion into 'mull'
 mull <- ill %>% filter(Illusion == "M")
 ```
 
@@ -68,11 +71,12 @@ Your Muller-Lyer data are now in the data frame `mull`.
 ### Size of illusion, by angle
 Did you experience the Muller-Lyer illusion? If so, did the angle of the lines affect the size of the illusion?
 
-To look at this,  you calculate the average(mean) size of your error in estimating the length of the line. You do this seperately for each angle. If you did not experience the illusion, your average error would be around zero for all angles. 
+To look at this,  you calculate the average(mean) size of your error in estimating the length of the line. You do this separately for each angle. If you did not experience the illusion, your average error would be around zero for all angles. 
 
 The error of your judgement on each trial is in the `Difference200` column of your `mull` data frame. The angle is in the `Angle` column. You can therefore calculate your mean error for each angle using the `group_by`, `summarize` and `mean` commands, as we covered in the _Group Differences_ worksheet:
 
 ```{r mean}
+# Group data by 'Angle', take mean of 'Difference200'
 mull %>% group_by(Angle) %>% summarise(mean(Difference200))
 ```
 
@@ -89,12 +93,14 @@ One way of looking at variability, as you covered in the _Exploring Data_ worksh
 So, instead, we're going to make a _violin plot_. A violin plot is just a density plot, rotated anticlockwise, and mirror copied to make a symmetrical, vase-like picture.  For example, here's a density plot of some data:
 
 ```{r densityeg, echo=FALSE}
+# Produce density plot of 'Difference200'
 mull %>% ggplot(aes(Difference200)) + geom_density() 
 ```
 
 ...and here's the same data shown as a violin plot:
 
 ```{r violineg, echo=FALSE}
+# Produce violin plot of 'Difference200'
 mull %>% ggplot(aes(x=1, y=Difference200)) + geom_violin() + 
   theme(axis.title.x=element_blank(),
         axis.text.x=element_blank(),
@@ -108,6 +114,7 @@ It's called a violin plot because some people think it looks a bit like a violin
 The thing that makes a violin plot useful is that we can put a lot of them on the same graph, like this:
 
 ```{r violinfull}
+# Produce violin plots for 'Difference200', for each value of 'Angle'
 mull %>% ggplot(aes(x=factor(Angle), y=Difference200)) + geom_violin()
 ```
 
@@ -128,6 +135,7 @@ In this example, we can see that the range of lengths the participant produced i
 There's quite a lot more that might be done with this data set, but you haven't yet been taught the best techniques to do so (these will come in a later course). For now, we're just going to compare the two stimuli most commonly used in a Muller-Lyer experiment - the 45 degree, and 135 degree stimuli. To do this, we make use of the `filter` command again, selecting just the 45 degree and 135 degree angles:
 
 ```{r filter2}
+# Select data from 45- and 135-degree conditions; place into 'mut'
 mut <- mull %>% filter(Angle == 45 | Angle == 135)
 ```
 
@@ -136,11 +144,21 @@ As we've already seen (at least for our example data), the length of the line wa
 How likely is it that this difference between the estimates at 45 degrees and 135 degrees is down to chance? As we saw in the _Evidence_ worksheet, the best way to answer this question is to calculate a Bayes Factor. In this case, the data frame is `mut`, which we just made with the `filter` command above. The column `Difference200` contains the size of the illusion, and the column `Angle` contains the angle of the stimulus:
 
 ```{r  mull-bf, message=FALSE} 
+# Load BayesFactor package
 library(BayesFactor, quietly = TRUE)
+# Perform Bayesian t-test on effect of 'Angle' on 'Difference200'
 ttestBF(formula = Difference200 ~ Angle, data = data.frame(mut))
 ```
 
 In this example, the Bayes Factor is about 9986, so it's almost 10,000 times as likely there is a difference, than there isn't. This is good evidence for the presence of a Muller-Lyer illusion in this participant. How does it look for your data?
+
+**Note**: If you're looking back at this activity after having done the _Intermediate Guide to R_, 
+you might be wondering why an _independent samples_ test is being used here, when this appears
+to be a repeated-measures ("within-subject") design. This is because the current experiment is a
+special case. Although the manipulation is within-subject, there is just one participant in total
+(you). In these single-participant designs, we typically treat each response as an independent
+sample of the underlying distribution from that single participant. When we have multiple responses
+from multiple participants, it gets more complicated, and we need to use repeated-measures designs.
 
 ## T illusion
 
