@@ -98,20 +98,20 @@ A series of worksheets on using R for data analysis in psychology. No previous k
 * [Relationships](chi.html). Frequency and contingency tables. Mosaic plots. Traditional chi-square test. Bayesian test.
 
     * [More on relationships](chi-extended.html). Extension material on chi-square calculations, including issues surrounding ordered variables (e.g. age), the interpretation of large contingency tables, and a further explanation of the output of the Bayesian chi-square test.
+    
+    * [Sample characteristics](sample.html). How to calculate summary information about your sample, such as number of participants or gender balance, from your data file.
 
 * [Relationships, part 2](corr.html). Density plots. Scatter plots. Correlation co-efficient. Bayesian and traditional tests.
 
     * [More on relationships, part 2](corr-extended.html). Spearman's correlation, Kendall's tau, one-tailed tests, confidence intervals, plus a deeper look at the output of the Bayesian correlation test.
 
-* [Sample characteristics](sample.html). How to calculate summary information about your sample, such as number of participants or gender balance, from your data file.
-
-* [Making reports with R](insert-image.html). How to insert an RStudio graph into your wordprocessor document (e.g. Word). Links to _RMarkdown_ as an alternative.
+    * [Making reports with R](insert-image.html). How to insert an RStudio graph into your word processor document (e.g. Word). Links to _RMarkdown_ as an alternative.
 
 
 ## Putting R to work
 <a name="rtowork"></a>
 
-These are mainly further practice in the skills learned in _Absolute Beginners'_. Where the exercises contain completely new skills, these are shown in **bold**. Where the excercises extend a skill you've already been taught, these are shown in _italics_. The exercises become somewhat more difficult as you go down the list.
+These are mainly further practice in the skills learned in _Absolute Beginners'_. Where the exercises contain completely new skills, these are shown in **bold**. Where the exercises extend a skill you've already been taught, these are shown in _italics_. The exercises become somewhat more difficult as you go down the list.
 
 If you are a current undergraduate student at Plymouth University, you should complete the accompanying Psych:EL (Psychology: Experiential Learning) activity first, in order to generate your own set of data. If you're not, you can download sample data files [here](rtoworkdata.html).
 
@@ -135,7 +135,7 @@ If you are a current undergraduate student at Plymouth University, you should co
 
 * [Creativity and the environment](green.html). **Preprocessing**, means, density plots, effect size, Bayesian t-test.
 
-* [Political psychology](brexit.html). Means, filtering data, _summarising data_, density plots, effect size, Bayesian t-test, traditional t-test.
+* [Political psychology](brexit.html). Means, filtering data, _summarizing data_, density plots, effect size, Bayesian t-test, traditional t-test.
 
 ## A Very Brief Guide to R
 
