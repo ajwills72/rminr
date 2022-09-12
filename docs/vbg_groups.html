@@ -412,7 +412,8 @@ the command is <code>group_by(sex)</code>. We <em>pipe</em>
 <em>pipe</em> (<code>%&gt;%</code>) it to <code>summarise</code> to get
 a summary for each group (a mean, in this case). So, the full command
 is:</p>
-<pre class="r"><code># Group by sex, display mean income
+<pre class="r"><code># Group differences (briefly)
+# Group by sex, display mean income
 cpsdata %&gt;% group_by(sex) %&gt;% summarise(mean(income))</code></pre>
 <pre><code># A tibble: 2 × 2
   sex    `mean(income)`

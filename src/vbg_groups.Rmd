@@ -49,6 +49,7 @@ One of the most widely discussed issues concerning income is the difference betw
 In order to do this, we need to split our data into two groups -- males and females. In R, the command `group_by` allows us to do this. In this case, we want to group the data by biological sex, so the command is `group_by(sex)`. We *pipe* (`%>%`) the data in `cpsdata` to the `group_by` command in order to group it, and then we *pipe* (`%>%`) it to `summarise` to get a summary for each group (a mean, in this case). So, the full command is:
 
 ```{r group-mean}
+# Group differences (briefly)
 # Group by sex, display mean income
 cpsdata %>% group_by(sex) %>% summarise(mean(income))
 ```
