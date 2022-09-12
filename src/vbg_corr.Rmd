@@ -1,5 +1,5 @@
 ---
-title: "Relationships (briefly), part 2."
+title: "Evidence (briefly), part 2."
 author: "Andy Wills"
 output: html_document
 ---
@@ -33,29 +33,42 @@ source("multiplot.R")
 Before starting this worksheet, you should have completed all three previous worksheets of the [Very Brief Guide to R](index.html#vbgtr). Once you have, you'll have an R project that contains a script like this:
 
 ```{r init, message=FALSE, cache=FALSE, echo=TRUE, results='hide', fig.keep = 'none'}
-## Exploring data
+# Exploring data (briefly)
+# Load package
 library(tidyverse)
+# Load data into 'cpsdata'
 cpsdata <- read_csv("cps2.csv")
+# Display mean income
 cpsdata %>% summarise(mean(income))
+# Calculate mean hours per week
 cpsdata %>% summarise(mean(hours, na.rm = TRUE))
 
-## Grouping data: worksheet
+# Group differences (briefly)
+# Group by sex, display mean income
 cpsdata %>% group_by(sex) %>% summarise(mean(income))
-cpsdata %>% ggplot(aes(income, colour=factor(sex))) + geom_density(aes(y=..scaled..)) 
+# Display density plot of income, by sex
+cpsdata %>% ggplot(aes(income, colour = factor(sex))) + geom_density(aes(y = ..scaled..)) 
+# Filter people with income < $150K into 'cpslow'
 cpslow <- cpsdata %>% filter(income < 150000)
-
-## Grouping data: exercise
-cpslow %>% ggplot(aes(income, colour=factor(sex))) + geom_density(aes(y=..scaled..))
+# Display density plot of incomes below $150K, by sex
+cpslow %>% ggplot(aes(income, colour = factor(sex))) + geom_density(aes(y = ..scaled..)) 
+# EXERCISE
+# Group by 'native', display mean income below $150K
 cpslow %>% group_by(native) %>% summarise(mean(income))
-cpslow %>% ggplot(aes(income, colour=factor(native))) + geom_density(aes(y=..scaled..))
+# Display density plot of incomes below $150K, by 'native'
+cpslow %>% ggplot(aes(income, colour = factor(native))) + geom_density(aes(y = ..scaled..))
 
-## Evidence Part 1
+# Evidence (briefly), part 1
+# Load BayesFactor package
 library(BayesFactor, quietly = TRUE)
+# Calculate Bayesian t-test for effect of 'sex', on 'income'
 ttestBF(formula = income ~ sex, data = data.frame(cpsdata))
+# Calculate traditional t-test for effect of 'sex' on 'income'
 t.test(cpsdata$income ~ cpsdata$sex)
-
-## Evidence Part 1: Exercise
+# Exercise
+# Calculate Bayesian t-test for effect of 'native', on incomes below $150K
 ttestBF(formula = income ~ native, data = data.frame(cpslow))
+# Calculate traditional t-test for effect of 'native' on incomes below £150K
 t.test(cpslow$income ~ cpslow$native)
 ```
 
@@ -74,10 +87,12 @@ t.test(cpslow$income ~ cpslow$native)
 We're going to use some new data in this final worksheet, so download it from [here](data/gcorr.csv) and upload it to RStudio, and then load the data into a dataframe called `gdata`. Look at the [Exploring data](vbg_explore.html) worksheet if you need a reminder on how to do this. If you've done it correctly, you'll get an output like this:
 
 ```{r init-load, echo=FALSE}
+# Evidence (briefly), part 2
+# Load data into 'gdata'
 gdata <- read_csv("gcorr.csv")
 ```
 
-Next, click on `gdata` in the Environment window, and take a look. The data is from an experiment where each of 25 groups of people selected a leader and then completed a task together. Afterwards, they  answered some questions about their group. Specifically, they rated their _ingroup closeness_ (how close, psychologically speaking, they felt to members of their own group), their _outgroup distance_ (how distant they felt from members of other groups), and how _dominant_ their group leader was in their group. The ratings were made inidividually, and then averaged to give one number per group per measure. 
+Next, click on `gdata` in the Environment window, and take a look. The data is from an experiment where each of 25 groups of people selected a leader and then completed a task together. Afterwards, they  answered some questions about their group. Specifically, they rated their _ingroup closeness_ (how close, psychologically speaking, they felt to members of their own group), their _outgroup distance_ (how distant they felt from members of other groups), and how _dominant_ their group leader was in their group. The ratings were made individually, and then averaged to give one number per group per measure. 
 
 Here's what each of the column labels mean:
 
@@ -105,6 +120,7 @@ One way to look at this question is to produce a _scatterplot_. On a scatterplot
 The command to produce a scatterplot in R is much like the command for a density plot. It is:
 
 ```{r scatter}
+# Display scatterplot of 'ingroup' versus 'outgroup'
 gdata %>% ggplot(aes(x = ingroup, y = outgroup)) + geom_point() 
 ```
 
@@ -129,6 +145,7 @@ So it seems that, in this example dataset, ingroup closeness and outgroup distan
 Sometimes, it's useful to have a single number that summarises how well two variables are correlated. We can calculate this number, called a _correlation co-efficient_, using the `cor` command in R:
 
 ```{r corr}
+# Display correlation co-efficient for 'ingroup' versus 'outgroup'
 cor(gdata$ingroup, gdata$outgroup)
 ```
 
@@ -181,6 +198,7 @@ So far, we've produced a scatterplot of _ingroup closeness_ versus _outgroup dis
 To calculate a Bayes Factor for the correlation, we use the  `correlationBF` command, which has a similar format to the `cor` command above:
 
 ```{r bf}
+# Calculate Bayes Factor for correlation between 'ingroup' and 'outgroup'
 correlationBF(gdata$ingroup, gdata$outgroup)
 ```
 
@@ -191,13 +209,21 @@ The Bayes Factor is reported on the third line, towards the right. In this examp
 As we covered in the [Evidence](vbg_evidence.html) worksheet, historically psychologists have typically reported _p values_, despite the fact that _p values_ are widely misinterpreted. If you want to calculate a _p value_ for a correlation co-efficient, you can use the following command:
 
 ```{r r-sig, results='hide'}
+# Calculate traditional test for correlation between 'ingroup' and 'outgroup'
 cor.test(gdata$ingroup, gdata$outgroup)
 ```
 <a name="ex"></a>
 
 ## Exercise
 
-In this exercise, you'll apply what you've learned to the relationship between _ingroup closeness_, and _group-leader dominance_. Do each of the following analyses:
+Start by adding the following to your script:
+
+```
+# EXERCISE
+```
+
+In this exercise, you'll apply what you've learned to the relationship between _ingroup closeness_, and _group-leader dominance_. Do each of the following analyses, adding the appropriate comments and
+commands to your script:
 
 1. Make a scatterplot with _ingroup_ closeness on the x-axis, and group-leader _dominance_ on the y-axis. 
 

@@ -114,6 +114,7 @@ The easiest way to calculate a Bayes Factor in R is to use something called a be
 We start by loading the  _BayesFactor_ package. Recall, that you load a package using the `library` command. 
 
 ```{r bayesfactor, message=FALSE}
+# Evidence (briefly), part 1
 # Load BayesFactor package
 library(BayesFactor, quietly = TRUE)
 ```
