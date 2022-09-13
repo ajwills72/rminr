@@ -11,7 +11,7 @@ output: html_document
 ## knitr::opts_chunk$set(echo = TRUE, message = FALSE, results='hide', fig.keep = 'none', comment=NA)
 
 ## Show commands and putout.
-knitr::opts_chunk$set(echo = TRUE, comment=NA, cache = TRUE)
+knitr::opts_chunk$set(echo = TRUE, comment = NA, cache = TRUE)
 
 library(tidyverse)
 dat <- read_csv("rawdata/subject-11.csv")
@@ -48,7 +48,32 @@ dat2 <- read_csv("rawdata/subject-12.csv")
 
 # Introduction
 
-In the [Absolute Beginners' Guide to R](evidence.html#bf) and in the [revision worksheet](revision.html) we used a Bayesian between-subjects t-test to look at the strength of evidence for the presence (or absence) of a difference _between_ groups. For example, in the revision worksheet, we looked at whether the way you experienced a word (silently read, or spoken out loud) affected how good your memory of it was. We found a Bayes Factor close to 1, indicating there was neither good evidence for, nor good evidence against, there being a difference (an indecisive result). Bayes Factors greater than 3 are generally considered to be evidence for a difference worth listening to, while Bayes Factors less than one-third (0.33) are generally considered to be evidence for the _absence_ of a difference that is worth listening to.
+In the [Absolute Beginners' Guide to R](evidence.html#bf) and in the [revision worksheet](revision.html) we used a Bayesian between-subjects t-test to look at the strength of evidence for the presence (or absence) of a difference _between_ groups. For example, in the revision worksheet, we looked at whether the way you experienced a word (silently read, or spoken out loud) affected how good your memory of it was. We found a Bayes Factor close to 1, indicating there was neither good evidence for, nor good evidence against, there being a difference (an indecisive result). Bayes Factors greater than 3 are generally considered to be evidence for a difference worth listening to, while Bayes Factors less than one-third (0.33) are generally considered to be evidence for the _absence_ of a difference that is worth listening to. Others have provided some additional guidelines on how to interpret Bayes Factors; the following comes from [Andraszewicz et al. (2014)](https://www.ejwagenmakers.com/2015/AndraszewiczEtAl2015.pdf):
+
+```{r bayes-factor-table, echo = FALSE, warning = FALSE, message = FALSE}
+library(viridis)
+library(gt) 
+
+bf <- read_csv("bayes_factors.csv")
+bf_table <- gt(bf)
+colors <- viridis(nrow(bf), option = "B", begin = 0.3, end = 1, direction = -1)
+
+bf_table %>%
+tab_header(title = md("A rule-of-thumb interpretation of Bayes Factors")) %>%
+tab_source_note(source_note = html(paste(
+        "Note that this is BF<sub>10</sub>, which",
+        "means that the larger the Bayes Factor is, the more evidence we have for the",
+        "alternative hypothesis."))
+        ) %>%
+data_color(columns = Interpretation,
+           colors = scales::col_factor(palette = colors, levels = Interpretation, ordered = FALSE),
+           autocolor_text = TRUE,
+        ) %>%
+tab_options(table.font.size = 14)
+```
+
+<br>
+
 
 In this worksheet, we'll cover  how to calculate a Bayes Factor for a simple _within-subjects_ experiment. As we covered in the [statistical power](power.html#ws) worksheet, a within-subjects experiment is one where all the conditions are done by all the participants. Within-subjects designs are often a really good idea, because they are more efficient. In other words, they tend to allow us to give confident answers to questions while testing fewer people than would be needed in a between-subjects experiment.
 
@@ -58,20 +83,21 @@ The technique we're going to use is called _ANOVA_, short for **AN**alysis **O**
 
 In the [preprocessing](preproc.html) worksheet, you loaded data from a _git_ repository into an R project. **Go back to that project now on RStudio; the project was called `rminr-data`** This is very important. Make sure you are in the `rminr-data` project, changing your Rstudio project using the drop-down list on the top right of Rstudio if you need to (change to the  `rminr-data` project you used for the preprocessing worksheet). If you do not do this, the rest of this worksheet will not work. 
 
-Now that you're in the `rminr-data` project, create a new script called **anova1.R**, put all the commands you use in this worksheet into that file, and save regularly. 
+Now that you're in the `rminr-data` project, create a new script called **anova1.R**, put all the comments and commands you use in this worksheet into that file, and save regularly. 
 
 # Clearing the environment
 
-You will notice that your _Environment_ still contains all the data frames from the previous worksheet. You can leave them there if you like, but some people prefer to start with a "clean slate". If that's you, you can remove data frames with the `rm` command (as in **r**e**m**ove). For example, to remove the `dat` data frame, type:
+You will notice that your _Environment_ still contains all the data frames from the previous worksheet. You can leave them there if you like, but some people prefer to start with a "clean slate". You can remove data frames with the `rm` command (as in **r**e**m**ove). For example, to remove the `dat` data frame you'd 
+type `rm(dat)`.
 
-```{r rm}
-rm(dat)
-```
+The `rm` command can also be used with the `ls()` command. The `ls()` command gives you a list of the names of the things in your environment. The command is called `ls` because it **l**i**s**ts them. We can use the `ls()` and `rm()` commands together to remove everything from our _Environment_, as follows.
 
-The `rm` command can also be used with the `ls()` command. The `ls()` command gives you a list of the names of the things in your environment. The command is called `ls` because it **l**i**s**ts them. We can use the `ls()` and `rm()` commands together to remove everything from our _Environment_, like this:
+Add the following comments and commands to your script and run them:
 
 ```{r rmls}
-rm(list=ls())
+# Within-subject differences
+# Clear environment
+rm(list = ls())
 ```
 
 Notice that your _Environment_ tab in Rstudio is now empty. This command only clears the _Environment_, it leaves all the files in your project as they were (you can still see them in the _Files_ panel). 
@@ -80,10 +106,12 @@ Notice that your _Environment_ tab in Rstudio is now empty. This command only cl
 
 <a name="load"></a>
 
-**Now add these commands to your script, and run them**, to load this new  data set: 
+**Now add these comments and commands to your script, and run them**, to load this new  data set: 
 
 ```{r newdat, message=FALSE}
+# Load tidyverse
 library(tidyverse)
+# Load data into 'words'
 words <- read_csv("wordnaming2.csv")
 ```
 
@@ -128,9 +156,14 @@ As covered in the [preprocessing](preproc.html) worksheet, the first thing we ne
 
 ## Filtering
 
-In our first analyses, we're going to take a look at the participants who had no pre-training in meditation or relaxation (i.e. the control group), so we get a sense of what performance on this task 'normally' looks like. So:
+In our first analyses, we're going to take a look at the participants who had no pre-training in meditation or relaxation (i.e. the control group), so we get a sense of what performance on this task 'normally' looks like. So,
+enter the following comment into your script:
 
-**WRITE A COMMAND:** Use a `filter` command to extract just the control condition, and put it into a new data frame called `wordctrl`. If you need a reminder of how the `filter` command works, take a look at the [preprocessing](preproc.html#filter) worksheet.
+```
+# Filter control condition into 'wordctrl'
+```
+
+and then **add and run a command** that uses  `filter` to extract just the control condition, and put it into a new data frame called `wordctrl`. If you need a reminder of how the `filter` command works, take a look at the [preprocessing](preproc.html#filter) worksheet.
 
 ```{r filter1, echo=FALSE}
 wordctrl <- words %>% filter(medit == "control")
@@ -138,9 +171,13 @@ wordctrl <- words %>% filter(medit == "control")
 
 _EXPECTED OUTPUT_: There will be new data frame in your _Environment_ window that has 12,600 rows and 10 columns and is called `control`.
 
-Also, for now, we're not going to look at the _neutral_ trials, just the _congruent_ and _incongruent_ ones. So:
+Also, for now, we're not going to look at the _neutral_ trials, just the _congruent_ and _incongruent_ ones. So, add this comment to your script:
 
-**WRITE A COMMAND**: Filter out the _neutral_ trials from `wordctrl` and put the remaining data into `wordctrlCI`. You may find that the command `!=` is the most efficient way to do this. For example, if you were trying to exclude the relaxation condition, you could use `filter(medit != "relax")`. The command `!=` means 'not equal to'.
+```
+# Filter out neutral trials, pass remainder to 'wordctrlCI'
+```
+
+and **add and run a command** to filter out the _neutral_ trials from `wordctrl` and put the remaining data into `wordctrlCI`. You may find that the command `!=` is the most efficient way to do this. For example, if you were trying to exclude the relaxation condition, you could use `filter(medit != "relax")`. The command `!=` means 'not equal to'.
 
 ```{r filter2, echo=FALSE}
 wordctrlCI <- wordctrl %>% filter(congru != "neutral")
@@ -152,14 +189,18 @@ _EXPECTED OUTPUT_: There will be a new data frame in your _Environment_ window t
 
 ## Summarising
 
-The data frame is still very long, because it contains data for every trial. What we want to know, for each participant, is whether they are quicker to name the words on the _congruent_ trials (where the picture and word match) than on the _incongruent_ trials (where the picture and word are different). So, we need to summarise each person's data down to just two numbers - their mean reaction time on congruent trials, and their mean reaction time on incongruent trials. So:
+The data frame is still very long, because it contains data for every trial. What we want to know, for each participant, is whether they are quicker to name the words on the _congruent_ trials (where the picture and word match) than on the _incongruent_ trials (where the picture and word are different). So, we need to summarise each person's data down to just two numbers - their mean reaction time on congruent trials, and their mean reaction time on incongruent trials. So, add the following comment to your script:
 
-**WRITE A COMMAND** to _group_ the data by participant (`subj`) and experimental condition (`congru`), using the `group_by` command, get the mean reaction times using the `summarise` command, and put this summarised data into a new data frame called `wordctrlCIsum`. If you need a reminder of how to group and summarise data, take a look at the [preprocessing](preproc.html#filter) worksheet. 
+```
+# Group by 'subj' and 'congru'; calculate mean RT; pass to 'wordctrlCIsum'
+```
+
+and then **write and run a command** to _group_ the data by participant (`subj`) and experimental condition (`congru`), using the `group_by` command, get the mean reaction times using the `summarise` command, and put this summarised data into a new data frame called `wordctrlCIsum`. If you need a reminder of how to group and summarise data, take a look at the [preprocessing](preproc.html#filter) worksheet. 
 
 **Column names with `summarize`**: There is one new thing to learn here, though, relative to the previous worksheet. The column containing the RT data in this new data frame will need to have the name `rt`, because we use this name later on. You can set the column name within the `summarise` command. For example, `summarise(acc = mean(acc))` takes the mean of the column `acc` and puts the answer into a column called `acc` in your new data frame. If you just use `summarise(mean(acc))` then the column name you end up with is `mean(acc)` and this would be a pain to use in later commands, so we rename the column as `acc` by typing `summarise(acc = mean(acc))` instead.
 
 
-```{r sum1, echo=FALSE}
+```{r sum1, echo=FALSE,message=FALSE}
 wordctrlCIsum <- wordctrlCI %>% group_by(subj, congru) %>% summarise(rt = mean(rt))
 ```
 
@@ -169,14 +210,18 @@ _EXPECTED OUTPUT_: There will be a new data frame in your _Environment_ window  
 
 # Density plots
 
-Now, as you did in the [Absolute Beginners' Guide to R](group-differences.html#group-density):
+Add the following comment to your script:
 
-**WRITE A COMMAND** to create a density plot of this summarised data (`wordctrlCIsum`), showing the distribution of reaction times in the two conditions. Click on the link above if you need to revise how to do this.
+```
+# Density plot of RT, by 'congru'
+```
+
+Now, as you did in the [Absolute Beginners' Guide to R](group-differences.html#group-density), **write and run a command** to create a density plot of this summarised data (`wordctrlCIsum`), showing the distribution of reaction times in the two conditions. Click on the link above if you need to revise how to do this.
 
 If you get it right, it should look like this:
 
 ```{r graph1, echo=FALSE}
-wordctrlCIsum %>% ggplot(aes(rt, colour=congru)) + geom_density(aes(y=..scaled..))
+wordctrlCIsum %>% ggplot(aes(rt, colour = congru)) + geom_density(aes(y = ..scaled..))
 ```
 
 We can see a few different things in  this plot. First, there's quite a lot of variation between people in how fast they react, with mean reaction time for incongruent trials anywhere from about 200 milliseconds to 800 milliseconds. Second, reaction times seem to vary less on congruent trials (averages around 400-600 milliseconds). Third, the peak of the incongruent distribution is slightly to the right of the congruent distribution, suggesting that, overall, incongruent trials might take a bit longer to react to than congruent trials. 
@@ -197,11 +242,11 @@ In order to do this, we have to learn some new types of data preprocessing - _pi
 
 _Pivoting_ is where you take a long data file (lots of rows, few columns) and make it wider. Or where you take a wide data file (lots of columns, few rows) and make it longer. In this case, we need to make `wordctrlCIsum` wider, for reasons that will become clearer in the next step.
 
-To make a data frame wider, we can use the `pivot_wider` command from the `tidyverse` package. So, when we do the following:
-
-**Enter the following command into your R script and run it**:
+To make a data frame wider, we can use the `pivot_wider` command from the `tidyverse` package. 
+To illustrate, **enter the following comment and command into your R script and run it**:
 
 ```{r pivot1}
+# Pivot wordctrlCIsum into a wider data frame; place in 'ctrl'
 ctrl <- wordctrlCIsum %>% pivot_wider(names_from = congru, values_from = rt)
 ```
 
@@ -215,9 +260,10 @@ and look at `ctrl` in the Environment window, we can see that it now has fewer r
 
 _Mutation_ in this context means to take some things and change them to make something new. In this case, we want to mutate the congruent and incongruent reaction times into a difference score, i.e. incongruent RT minus congruent RT. We do this using the `mutate` command, as follows:
 
-**Enter the following command into your R script and run it**:
+**Enter the following comment and command into your R script and run it**:
 
 ```{r mutate1}
+# Calculate RT difference; place in 'ctrldiff'
 ctrldiff <- ctrl %>% mutate(diff = incong - cong)
 ```
 
@@ -231,15 +277,16 @@ Look at `ctrldiff` in the _Environment_ window - you will see that it has a four
 
 Now we have the difference scores, we can take a look at their distribution. We do this using a density plot, as we have on several previous occasions.
 
-**Enter the following commands into your R script and run them**:
+**Enter the following comment and commands into your R script and run them**:
 
 ```{r diffgraph}
+# Display density plot of RT differences
 ctrldiff %>% ggplot(aes(diff)) +
-    geom_density(aes(y=..scaled..)) +
+    geom_density(aes(y = ..scaled..)) +
     geom_vline(xintercept = 0, colour = 'red')
 ```
 
-The only slightly unusual thing about this command is the `geom_vline` part, which we use to draw a vertical line on the plot, that intercepts (hits) the x axis at zero (`xintercept = 0`). We used something like this before in [Putting R to work](risk-rat.html). 
+The only slightly unusual thing about this command is the `geom_vline` part, which we use to draw a vertical line on the plot, that intercepts (hits) the x axis at zero (`xintercept = 0`) - see also the [Risk Taking](risk-rat.html) worksheet in the _Putting R to Work_ guide.
 
 In this case, the vertical line allows us to quickly see that most of the distribution is to the right of zero. In other words, for most people, incongruent trials take longer to respond to than congruent trials. On average, it takes around 100 ms longer to react to incongruent trials, although the range is anything from around -200 to +300 milliseconds.
 
@@ -257,9 +304,10 @@ The word _factor_ is a jargon term for "column that contains information about t
 
 We tell R this in the following way.
 
-**Enter these commands into your R script and run them**:
+**Enter this comment and these commands into your R script and run them**:
 
 ```{r factor2}
+# Set 'congru' and 'subj' as factors
 wordctrlCIsum$congru <- factor(wordctrlCIsum$congru)
 wordctrlCIsum$subj <- factor(wordctrlCIsum$subj)
 ```
@@ -278,17 +326,19 @@ The second command works in the same way as the first.
 
 Now we've given R this information about factors, we're ready to calculate a Bayes Factor for the difference between congruent and incongruent trials. To do this, first we load the _BayesFactor_ package as before.
 
-**Enter this command into your R script and run it**:
+**Enter this comment and command into your R script and run it**:
 
 ```{r bf-init, message=FALSE}
+# Load BayesFactor package
 library(BayesFactor)
 ```
 
 and then we use the following command.
 
-**Enter this command into your R script and run it**:
+**Enter this comment and command into your R script and run it**:
 
 ```{r bfwithin}
+# Calculate w/subj Bayesian ANOVA for effect of 'congru' on RT
 anovaBF(formula = rt ~ congru + subj,
         data = data.frame(wordctrlCIsum),
         whichRandom = "subj")
@@ -324,9 +374,15 @@ Unlike `ttestBF`, `anovaBF` can cope with a _factor_ than has more than two _lev
 
 ## Summarising
 
-**WRITE A COMMAND**: Create a subject-level summary of mean reaction times, as you did [before](#summarise). However, this time, you'll need all three conditions in that summary, so use your `wordctrl` data frame, rather than your `wordctrlCI` data frame. Put your summary into a data frame called `wordctrlsum`.
+Add the following comment to your script:
 
-```{r sum2, echo=FALSE}
+```
+# Group 'wordctrl' by 'subj' and 'congru'; calculate mean RT; place in 'wordctrlsum'
+```
+
+and then **write and run a command** to create a subject-level summary of mean reaction times, as you did [before](#summarise). However, this time, you'll need all three conditions in that summary, so use your `wordctrl` data frame, rather than your `wordctrlCI` data frame. Put your summary into a data frame called `wordctrlsum`.
+
+```{r sum2, echo=FALSE, message=FALSE}
 wordctrlsum <- wordctrl %>% group_by(subj, congru) %>% summarise(rt = mean(rt))
 ```
 
@@ -334,12 +390,19 @@ _EXPECTED OUTPUT_: There will be a new data frame `wordctrlsum` in your _Environ
 
 ## Graphing
 
-**WRITE A COMMAND** that produces a density plot that contains all three conditions. You can do this the same way as [before](group-differences.html#group-density), just use `wordctrlsum` instead of `wordctrlsumCI`. 
+Add the following comment to your script:
+
+```
+# Display density plot of RT, by 'congru'
+
+```
+
+and then **write and run a command** that produces a density plot that contains all three conditions. You can do this the same way as [before](group-differences.html#group-density), just use `wordctrlsum` instead of `wordctrlsumCI`. 
 
 _EXPECTED OUTPUT_: This is what the graph should look like:
 
 ```{r graph2, echo=FALSE}
-wordctrlsum %>% ggplot(aes(rt, colour=congru)) + geom_density(aes(y=..scaled..))
+wordctrlsum %>% ggplot(aes(rt, colour = congru)) + geom_density(aes(y = ..scaled..))
 ```
 
 The main thing to notice about this density plot is that the reaction times for neutral trials are intermediate between the congruent and incongruent trials, both in terms of their mean, and in terms of their variance. 
@@ -348,9 +411,16 @@ It's still the case that it is the _difference_ between conditions that is key h
 
 ## Evidence
 
-The command `anovaBF` allows us to calculate a Bayes Factor across all three conditions, all we need to do is give it the appropriate subject-level summary (`wordctrlsum` in this case). However, don't forget that, before `anovaBF` can work, it needs to know which columns of `wordctrlsum` are factors (you will need to set `subj` and `congru` as factors). So:
+The command `anovaBF` allows us to calculate a Bayes Factor across all three conditions, all we need to do is give it the appropriate subject-level summary (`wordctrlsum` in this case). However, don't forget that, before `anovaBF` can work, it needs to know which columns of `wordctrlsum` are factors (you will need to set `subj` and `congru` as factors). So add the following comments to your script:
 
-**WRITE SOME COMMANDS** to perform an Bayesian ANOVA that includes all three levels of the congruency condition. 
+```
+# Set 'congru' and 'subj' as factors
+
+# Calculate w/subj Bayesian ANOVA for effect of 'congru' on RT
+
+```
+
+and then **insert and run some commands** to perform a Bayesian ANOVA that includes all three levels of the congruency condition. 
 
 _EXPECTED OUTPUT_: The correct output is as follows (your Bayes Factor may be slightly different):
 
@@ -380,30 +450,30 @@ The goal in this exercise is to look at the reaction time difference between con
 
 **Specifically, the task is to write a new R script that contains _all_ the necessary commands, and _only_ the necessary commands, to do all of the following, in this order:**
 
-1. Start a new script and call it **anova1ex.R**. Start your script with the command `rm(list=ls())`. This command clears your _Environment_ and so ensures your script is not relying on commands you have previously run. 
+1. Start a new script and call it **anova1ex.R**. Add the following comment:
 
-2. Load the packages you need (`tidyverse` and `BayesFactor`).
+```
+# Within-subject differences
+# EXERCISE
+```
 
-3. Load the data file _wordnaming2.csv_ (using `read_csv`).
+1. Start your script with the command `rm(list=ls())` (preceded by a suitable comment). This command clears your _Environment_ and so ensures your script is not relying on commands you have previously run. 
 
-4. Preprocess the data to include only the control condition, and **exclude the incongruent trials**. Use the `filter` command to do this.
+2. Load the packages you need (`tidyverse` and `BayesFactor`). Precede with an appropriate comment.
 
-5. Generate a subject-level summary of these filtered data (use the `group_by` and `summarise` commands).
+3. Load the data file _wordnaming2.csv_ (using `read_csv`). Precede with an appropriate comment.
 
-6. Show a density plot of the RT differences for congruent versus neutral trials. You'll need to use `pivot_wider` and `mutate` to get the data in the right format, and then use `ggplot` to produce the graph.
+4. Preprocess the data to include only the control condition, and **exclude the incongruent trials**. Use the `filter` command to do this. Precede with an appropriate comment.
 
-7. Calculate a Bayes Factor for this difference. Use `anovaBF` to do this, and don't forget to use the `factor` command to tell R which columns of your data frame are factors.
+5. Generate a subject-level summary of these filtered data (use the `group_by` and `summarise` commands). Precede with an appropriate comment.
+
+6. Show a density plot of the RT differences for congruent versus neutral trials. You'll need to use `pivot_wider` and `mutate` to get the data in the right format, and then use `ggplot` to produce the graph. Precede with an appropriate comments.
+
+7. Calculate a Bayes Factor for this difference. Use `anovaBF` to do this, and don't forget to use the `factor` command to tell R which columns of your data frame are factors. Precede with an appropriate comments.
 
 Other requirements:
 
 - Use short, meaningful names for data frames. For example, don't call a dataframe `ctrlCI` if in fact it contains the congruent and neutral trial types (call it e.g. `ctrlCN`). 
-
-- Use comments in your code to make it more human readable. Comments are any line that begins with `##` and are ignored by R. They are there to make your code easier for humans to understand. For example:
-
-```{r clearcomm}
-## Clear the environment
-rm(list = ls())
-```
 
 ## Expected output, submitting your work
 
@@ -434,7 +504,7 @@ ctrldiff <- ctrl %>% mutate(diff = neutral - cong)
 
 ## Produce RT difference plot
 ctrldiff %>% ggplot(aes(diff)) +
-    geom_density(aes(y=..scaled..)) +
+    geom_density(aes(y = ..scaled..)) +
     geom_vline(xintercept = 0, colour = 'red')
 
 ## Specify factors
