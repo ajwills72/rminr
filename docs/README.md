@@ -163,7 +163,7 @@ separate site, but have been designed to fit in here in this sequence of
 materials. Only the _quantitative_ section of Ben's site contains information
 concerning the usage of R.
 
-- [Research Methods in Practice](https://benwhalley.github.io/rmip/data.html): Data handling, [fitting lines](https://benwhalley.github.io/rmip/regression.html) - _scatterplot with best fit line_ , **converting Likert scales from text to numbers**, **reverse scoring scale items**, multiple regression.
+- [Research Methods in Practice](https://benwhalley.github.io/rmip): Data handling, [fitting lines](https://benwhalley.github.io/rmip/regression.html) - _scatterplot with best fit line_ , **converting Likert scales from text to numbers**, **reverse scoring scale items**, multiple regression.
 
 ## Intermediate Guide to R
 
@@ -179,11 +179,14 @@ These are intermediate-level materials. They  provide analysis methods for condu
 
 - [Data preprocessing](preproc.html): Getting data from lab-based (OpenSesame)
   experiments into a format closer to something you can actually analyse, in
-  five steps: loading, selecting, filtering, summarising, and combining. Also covers combining data frames, renaming columns, and using **loops**.
+  five steps: loading, selecting, filtering, summarising, and combining. Also covers combining data frames, renaming columns.
+  
     - [More on preprocessing](more-on-preproc.html): A slightly more advanced worksheet, covering adding columns to a data frame, and subsetting strings.
 
 - [Within-subject differences](anova1.html): Data preprocessing (pivoting and
   mutating). One-factor within-subject Bayesian ANOVA. Pairwise comparisons, multiple comparisons.
+  
+      - [More on Bayes Factors](more-on-bf.html). A more detailed discussion of Bayes Factors.
 
 - [Understanding interactions](anova2.html): Learn what an interaction is, and
   learn how to do line plots at the same time.
