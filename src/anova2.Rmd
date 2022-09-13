@@ -11,7 +11,7 @@ output: html_document
 ## knitr::opts_chunk$set(echo = TRUE, message = FALSE, results='hide', fig.keep = 'none', comment=NA)
 
 ## Show commands and putout.
-knitr::opts_chunk$set(echo = TRUE, comment=NA, cache = TRUE)
+knitr::opts_chunk$set(echo = TRUE, comment = NA, cache = TRUE)
 
 
 ```
@@ -62,11 +62,15 @@ Open a new blank script, and save it as **anova2.R**. Enter all your commands in
 
 The first step is to make sure you have loaded the data, and have loaded the R packages you need.
 
-**Add the following commands to your script and run them:**
+**Add the following comments and commands to your script and run them:**
 
 ```{r started, message=FALSE}
+# Understanding interactions
+# Load tidyverse
 library(tidyverse)
+# Load BayesFactor package
 library(BayesFactor)
+# Load data into 'words'
 words <- read_csv("wordnaming2.csv")
 ```
 
@@ -82,9 +86,13 @@ As before, we need to preprocess this large data set before we can analyse it.
 
 ## Filtering
 
-In the full experiment, there were actually three between-subject conditions: meditation training, no training ("control"), and relaxation training. In this first example, we're only going to look at the first two of those conditions: `meditate` and `control`. So,
+In the full experiment, there were actually three between-subject conditions: meditation training, no training ("control"), and relaxation training. In this first example, we're only going to look at the first two of those conditions: `meditate` and `control`. So, add this comment to your script:
 
-**WRITE A COMMAND** that removes the participants in `relax` condition from the `words` data frame. It is the `medit` column of that data frame that contains the information about which condition each participant was in. Use the `filter` command to do this, and put the result into a new data frame called `MCwords`. As the `filter` command sets which data to _keep_, you may find the `!=` operator useful here -- it means 'not equal to'. If you need to revise how to do this, take a look back at the [preprocessing](preproc.html#filter) worksheet.
+```
+# Filter out 'relax' condition; place remainder in 'MCwords'
+```
+
+and **add and run a command** that removes the participants in `relax` condition from the `words` data frame. It is the `medit` column of that data frame that contains the information about which condition each participant was in. Use the `filter` command to do this, and put the result into a new data frame called `MCwords`. As the `filter` command sets which data to _keep_, you may find the `!=` operator useful here -- it means 'not equal to'. If you need to revise how to do this, take a look back at the [preprocessing](preproc.html#filter) worksheet.
 
 ```{r filter, echo=FALSE}
 MCwords <- words %>% filter(medit != "relax")
@@ -92,9 +100,13 @@ MCwords <- words %>% filter(medit != "relax")
 
 _EXPECTED OUTPUT_: A new data frame called `MCwords` will be in your _Environment_. It will have 25,200 rows and 10 columns.
 
-The full experiment also included three types of trial: congruent, incongruent, and neutral. The first two are described above. In _neutral_ trials, the word is presented alone, without a picture. In this first example, we're only going to look at the congruent and incongruent trials. So,
+The full experiment also included three types of trial: congruent, incongruent, and neutral. The first two are described above. In _neutral_ trials, the word is presented alone, without a picture. In this first example, we're only going to look at the congruent and incongruent trials. So, add the following comment to your script:
 
-**WRITE A COMMAND** that removes the `neutral` trials from the `MCwords` data frame, and puts the filtered data into a new data frame called `MCwordsCI`. It is the `congru` column that contains information about trial type.
+```
+# Filter out 'neutral' condition; place remainder in 'MCwordsCI'
+```
+
+and then **add and run a command** that removes the `neutral` trials from the `MCwords` data frame, and puts the filtered data into a new data frame called `MCwordsCI`. It is the `congru` column that contains information about trial type.
 
 ```{r filter2, echo=FALSE}
 MCwordsCI <- MCwords %>% filter(congru != "neutral")
@@ -106,12 +118,16 @@ _EXPECTED OUTPUT_: A new data frame called `MCwordsCI` will be in your _Environm
 
 ## Summarising
 
-The data frame `MCwordsCI` is still very long, because it contains every trial for every participant. What we want to know, for each participant, is their mean reaction time on congruent and incongruent trials (i.e. two numbers per person). So,
+The data frame `MCwordsCI` is still very long, because it contains every trial for every participant. What we want to know, for each participant, is their mean reaction time on congruent and incongruent trials (i.e. two numbers per person). So, add the following comment to your script:
 
-**WRITE A COMMAND** to _group_ the data by participant ID (`subj`), trial type (`congru`) and between-subjects condition (i.e. meditation versus control, `medit`). Get the mean reaction times using the `summarise` command, and put this summarised data into a new data frame called `MCwordsCIsum`. If you need a reminder of how to group and summarise data, take a look at the [preprocessing](preproc.html#summary) worksheet. The column containing the RT data in this new data frame will need to have the name `rt`, because we assume this later on. You can set the column name within the `summarise` command. For example, `summarise(acc = mean(acc))` takes the mean of the column `acc` and puts the answer into a column called `acc` in your new data frame.
+```
+# Group by 'subj', 'congru' & 'medit'; calculate mean RT; place into 'MCwordsCIsum'
+```
+
+and then **add and run a command** to _group_ the data by participant ID (`subj`), trial type (`congru`) and between-subjects condition (i.e. meditation versus control, `medit`). Get the mean reaction times using the `summarise` command, and put this summarised data into a new data frame called `MCwordsCIsum`. If you need a reminder of how to group and summarise data, take a look at the [preprocessing](preproc.html#summary) worksheet. The column containing the RT data in this new data frame will need to have the name `rt`, because we assume this later on. You can set the column name within the `summarise` command. For example, `summarise(acc = mean(acc))` takes the mean of the column `acc` and puts the answer into a column called `acc` in your new data frame.
 
 ```{r sum1, echo=FALSE, message=FALSE}
-MCwordsCIsum <- MCwordsCI %>% group_by(subj, congru, medit) %>% summarise(rt=mean(rt))
+MCwordsCIsum <- MCwordsCI %>% group_by(subj, congru, medit) %>% summarise(rt = mean(rt))
 ```
 
 _EXPECTED OUTPUT_: A new data frame called `MCwordsCIsum` will be in your _Environment_. It will have 560 rows and 4 columns. There will be two rows for each participant, one for incongruent trials, one for congruent trials. Each participant will be identified as being in either the `meditate` or `control` condition. 
@@ -122,9 +138,10 @@ _EXPECTED OUTPUT_: A new data frame called `MCwordsCIsum` will be in your _Envir
 
 Exactly as we did in the [within-subject differences](anova1.html#preproc2) worksheet, we can now use the `pivot_wider` and `mutate` commands to work out a _difference score_ for each participant. This gives us the size of the _congruency effect_ for that participant, i.e. how much more time they take on incongruent trials than congruent trials (on average). 
 
-**Enter these commands into your R script and run them**:
+**Enter the following comment and commands into your R script and run them**:
 
 ```{r diffscore}
+# Pivot MCwordsCIsum into a wider data frame, calculate RT differences; results to 'medidiff'
 medidiff <- MCwordsCIsum %>%
     pivot_wider(names_from = congru, values_from = rt) %>%
     mutate(diff = incong - cong)
@@ -138,11 +155,12 @@ Take a look at the `medidiff` data frame in your _Environment_. You'll see there
 
 We can look at this difference in congruency effect  more closely using a density plot. We make such a plot in the same way as we have  on many previous occasions.
 
-**Enter these commands into your R script and run them**:
+**Enter the following comment and commands into your R script and run them**:
 
 ```{r diffplot}
-medidiff %>% ggplot(aes(diff, colour=medit)) +
-    geom_density(aes(y=..scaled..)) +
+# Display density plot of RT differences, by 'medit'
+medidiff %>% ggplot(aes(diff, colour = medit)) +
+    geom_density(aes(y = ..scaled..)) +
     geom_vline(xintercept = 0, colour = 'purple')
 ```
 
@@ -150,7 +168,7 @@ This plot is very much like the one we drew in the [within-subject differences](
 
 The new part of this graph is that we also have a curve for the meditation condition. It is the `colour=medit` part of the command that causes this to happen - it draws one curve for each _level_ of the `medit` factor, and gives each a different colour.
 
-We can see that the curve for the `meditate` condition is approximately centred on zero. In other words, on average, there is no congruency effect after meditation training. 
+We can see that the curve for the `meditate` condition is approximately centered on zero. In other words, on average, there is no congruency effect after meditation training. 
 
 # Understanding interactions
 
@@ -200,9 +218,9 @@ library(tidyverse)
 interact <- read_csv("interact.csv")
 intgraph <- function(data) {
     data %>%
-        ggplot(aes(x=Trial, y=RT, group=Training)) +
-        geom_line(aes(color=Training)) +
-        geom_point(aes(colour=Training)) +
+        ggplot(aes(x = Trial, y = RT, group = Training)) +
+        geom_line(aes(color = Training)) +
+        geom_point(aes(colour = Training)) +
         theme_bw()
 }
 onegraph <- interact %>% filter(Graph == 1)
@@ -245,9 +263,10 @@ In the next part of this exercise, we'll use R to generate another graph of main
 
 The data points for these graphs were loaded from a CSV file. There's a copy of this file in the same _git_ repository that we've being using throughout this worksheet, so the first thing to do is load it.
 
-**Enter this command into your R script and run it**:
+**Enter this comment and command into your R script and run it**:
 
 ```{r load-int, message = FALSE}
+# Load data for interaction plot into 'interact'
 interact <- read_csv("interact.csv")
 ```
 
@@ -266,21 +285,23 @@ Graphs 1 to 3 are the three shown above. There are no reaction times for Graph 4
 
 First, we're going to reproduce Graph 1. The first step is to `filter` the data so it just includes the first graph.
 
-**Enter this command into your R script and run it**:
+**Enter this comment and command into your R script and run it**:
 
 ```{r filter-g}
+# Select Graph 1 data, place in 'graph1'
 graph1 <- interact %>% filter(Graph == 1)
 ```
 
 Once that's done, we can make a line graph, like this.
 
-**Enter these commands into your R script and run them**:
+**Enter this comment and these commands into your R script and run them**:
 
 ```{r line-graph}
+# Display line graph, with Trial on x-axis; RT on y-axis, and 'Training' as a group
 graph1 %>%
     ggplot(aes(x = Trial, y = RT, group = Training)) +
-    geom_line(aes(colour=Training)) +
-    geom_point(aes(colour=Training)) +
+    geom_line(aes(colour = Training)) +
+    geom_point(aes(colour = Training)) +
     theme_bw()
 ```
 
@@ -312,9 +333,9 @@ Download `interact.csv` to your local computer. Use a spreadsheet application to
 
 If you need instructions on how to do this, see these worksheets on [downloading](exploring-incomes.html#writing) and [uploading](entering-data-by-hand.html#upload). If you're having trouble finding files within Rstudio, make sure you are looking in the _Files_ tab, and make sure you are in the correct _folder_. The folder you are currently in is listed just to the right of the little picture of a house. You should be looking in `Home > rminr-data`.
 
-Next, reload `interact.csv` using `read_csv` and use the code above to produce the graph. 
+Next, reload `interact.csv` using `read_csv` and use a modified version of the code above to produce the graph. Include your code, along with appropriate comments, in your script.
 
-**Export your graph, download it to your local machine, and upload it to PsycEL**. If you need a reminder of how to do this, see [downloading](exploring-incomes.html#writing). 
+Finally, **export your graph, download it to your local machine, and upload it to PsycEL**. If you need a reminder of how to do this, see [downloading](exploring-incomes.html#writing). 
 
 ___
 
