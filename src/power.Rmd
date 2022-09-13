@@ -11,7 +11,7 @@ output: html_document
 ## knitr::opts_chunk$set(echo = TRUE, message = FALSE, results='hide', fig.keep = 'none', comment=NA)
 
 ## Show commands and output.
-knitr::opts_chunk$set(echo = TRUE, comment=NA)
+knitr::opts_chunk$set(echo = TRUE, comment = NA)
 
 ```
 
@@ -49,7 +49,9 @@ Open the project you created in the [revision worksheet](revision.html). Now cre
 
 Collecting data takes time and effort, both for the experimenter and for the participants. So, we don't want to collect more data than is necessary to answer our question. On the other hand, psychologists often [don't collect enough data](http://www.marjanbakker.eu/Bakker%20et%20al.%202016.pdf) to support the conclusions they make. In this worksheet, we'll cover the basics of how to work efficiently, by collecting _just enough_ data to answer your question. 
 
-In these _Research Methods in R_ materials, we generally use Bayesian techniques (e.g.  Bayes Factors), rather than more traditional techniques (e.g.  p values). We do this because Bayes Factors are easy to interpret. This is in contrast to p values, which are traditionally used in psychology, but which are widely misunderstood. This worksheet, however, is an exception - it uses traditional techniques. This is because there is no Bayesian method to answer these particular questions that is sufficiently simple for this intermediate-level course. 
+In these _Research Methods in R_ materials, we generally use Bayesian techniques (e.g.  Bayes Factors), rather than more traditional techniques (e.g.  p values). We do this because Bayes Factors are easy to interpret. This is in contrast to p values, which are traditionally used in psychology, but which are widely misunderstood. This worksheet, however, is an exception - it uses traditional techniques. This is because there is no Bayesian method to answer these particular questions that is sufficiently simple for this intermediate-level course.
+In the advanced-level guide, _Going Further with R_, there is a worksheet on 
+[Bayesian power estimation](power-bayesian.html)
 
 <a name="size"></a>
 
@@ -102,7 +104,14 @@ If you expect a particular direction, and have good reasons for doing so, you se
 
 # Exercise 1: Estimating sample size
 
-Use `pwr.t.test` to work out how many people per group you need to test for 80% power to detect the median effect size in psychology, assuming that you do not know which direction the effect will be in.
+Enter this comment into your script:
+
+```
+# Statistical power
+# EXERCISE 1
+```
+
+and then add a `pwr.t.test` command to work out how many people per group you need to test for 80% power to detect the median effect size in psychology, assuming that you do not know which direction the effect will be in.
 
 If you get it right, your result should look like this:
 
@@ -114,13 +123,19 @@ alternative = "two.sided", sig.level = .05)
 
 So, to the nearest whole person, you need 64 people **per group** (so, 128 people in total) to stand a good chance of finding a typically-sized effect, if it exists. This is about three times as much data as psychologists have traditionally collected, according to [Marsalek et al.'s (2011)](https://pdfs.semanticscholar.org/ab75/e988e0544e01eec517a5d56d948ff6c3abc5.pdf?_ga=2.234340318.1716447176.1572344276-250129162.1572344276) review of sample sizes.
 
-**Copy the R code you used for this exercise into PsycEL.**
+**Copy the R code (not the comment) you used for this exercise into PsycEL.**
 
 <a name="ex2"></a>
 
 # Exercise 2: Estimating power
 
-Traditionally, psychologists test about 20 participant per group. Calculate the power of such an experiment, assuming the same typical effect size of 0.5. You can do this by removing `power` from the command and adding `n = 20`. 
+Enter the following comment into your script:
+
+```
+# EXERCISE 2
+```
+
+Traditionally, psychologists test about 20 participant per group. Enter a command to calculate the power of such an experiment, assuming the same typical effect size of 0.5. You can do this by removing `power` from the command and adding `n = 20`. 
 
 Your answer should look like this:
 
@@ -131,7 +146,7 @@ alternative = "two.sided", sig.level = .05)
 
 As you can see, statistical power in traditional psychology experiments is very low ... in this case, around 33%. This means that very often, we'll end up without good evidence there is a difference between groups, even though the groups are in fact different. 
 
-**Copy the R code you used for this exercise into PsycEL.**
+**Copy the R code (not the comment) you used for this exercise into PsycEL.**
 
 <a name="ws"></a>
 
@@ -151,7 +166,13 @@ Before looking at the power of within-subjects designs, we have to decide how to
 
 # Exercise 3: Estimating within-subjects sample size
 
-The `pwr.t.test` command lets us work out how many people we need for a within-subjects design, too. Just set `type="paired"` and use as before. Here's the answer you should get:
+The `pwr.t.test` command lets us work out how many people we need for a within-subjects design, too. Just set `type="paired"` and use as before. Add the following comment to your script:
+
+```
+# EXERCISE 3
+```
+
+and then add the appropriate command. Here's the answer you should get:
 
 ```{r pwr4, echo=FALSE}
 pwr.t.test(power = .8, d = .5, type = "paired", 
@@ -162,11 +183,17 @@ In other words, you only need test 34 people _in total_ in a within-subjects des
 
 This comparison assumes the effect size would be the same in a within-subjects design, as in a between-subjects design. This is not necessarily the case, a point covered in more detail in the "[more on power](effsize_from_papers.html)" worksheet. Nevertheless, the comparison illustrates that within-subject designs tend to get the same power with fewer participants. This is sometimes described as within-subject designs being more _efficient_ than between-subject designs. 
 
-**Copy the R code you used for this exercise into PsycEL.**
+**Copy the R code (not the comment) you used for this exercise into PsycEL.**
 
 <a name="ex4"></a>
 
 # Exercise 4: Estimating required effect size
+
+Add the following to your script:
+
+```
+# EXERCISE 4
+```
 
 Often, there is a maximum number of people you can test given the time and resources available. For example, if you're taking PSYC520 at Plymouth University, you will only be able to test 25 people in your first data collection period due to time constraints. When you have this kind of constraint, it's important to know what effect size you will be able to detect with 80% power. To do this, take your last command and replace `d = .5` with `n = 25`. If you do this correctly, you'll see this output:
 
@@ -177,7 +204,7 @@ alternative = "two.sided", sig.level = .05)
 
 So, if you can only test 25 people in a within-subjects study, then you will only be able to reliably 'see' effect sizes of 0.58 or greater. If you are taking PSYC520 at Plymouth University, the good news is that the course designers chose topic areas where the published effect sizes are at least that large. 
 
-**Copy the R code you used for this exercise into PsycEL.**
+**Copy the R code (not the comment) you used for this exercise into PsycEL.**
 
 <a name="good-design"></a>
 
