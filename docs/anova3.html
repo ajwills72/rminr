@@ -393,13 +393,20 @@ the script regularly.</p>
 <code>MCwordsCIsum</code> data frame we made in the <a href="anova2.html">understanding interactions</a> worksheet. Start by
 running the following commands to make sure you have this data frame in
 your <em>environment</em>.</p>
-<p><strong>Enter these commands into your R script and run
+<p><strong>Enter these comments and commands into your R script and run
 them</strong>:</p>
-<pre class="r"><code>library(tidyverse)
+<pre class="r"><code># Factorial differences
+# Load tidyverse
+library(tidyverse)
+# Load BayesFactor package
 library(BayesFactor)
+# Load data into &#39;words&#39;
 words &lt;- read_csv(&quot;wordnaming2.csv&quot;)
+# Remove &#39;relax&#39; condition; place into &#39;MCwords&#39;
 MCwords &lt;- words %&gt;% filter(medit != &quot;relax&quot;)
+# Remove &#39;neutral&#39; condition; place into &#39;MCwordsCI&#39;
 MCwordsCI &lt;- MCwords %&gt;% filter(congru != &quot;neutral&quot;)
+# Group by &#39;subj&#39;, &#39;medit&#39;, &#39;congru&#39;; calculate mean RT; place into &#39;MCwordsCIsum&#39;
 MCwordsCIsum &lt;-
     MCwordsCI %&gt;% group_by(subj, medit, congru) %&gt;% summarise(rt = mean(rt))</code></pre>
 <p><a name="start"></a></p>
@@ -437,9 +444,10 @@ this data frame are <em>factors</em>. The columns <code>medit</code> and
 design. Recall that the participant ID is also a factor. So, you need to
 set three of the four columns of <code>MCwordsCIsum</code> as factors,
 as follows.</p>
-<p><strong>Enter these commands into your R script and run
-them</strong>:</p>
-<pre class="r"><code>MCwordsCIsum$subj &lt;- factor(MCwordsCIsum$subj)
+<p><strong>Enter this comment and these commands into your R script and
+run them</strong>:</p>
+<pre class="r"><code># Convert &#39;subj&#39;, &#39;medit&#39;, &#39;congru&#39; to factors
+MCwordsCIsum$subj &lt;- factor(MCwordsCIsum$subj)
 MCwordsCIsum$medit &lt;- factor(MCwordsCIsum$medit)
 MCwordsCIsum$congru &lt;- factor(MCwordsCIsum$congru)</code></pre>
 <p><a name="bfact"></a></p>
@@ -459,9 +467,10 @@ factors?</p></li>
 <p>This is a big calculation for R, so run the following commands, and
 then read the explanation while you’re waiting for the results. It could
 take up to a minute to get the answer.</p>
-<p><strong>Enter this command into your R script and run
+<p><strong>Enter this comment and command into your R script and run
 it</strong>:</p>
-<pre class="r"><code>bf &lt;- anovaBF(formula = rt ~ medit*congru + subj,
+<pre class="r"><code># Calculate Bayesian ANOVA for effect of &#39;medit&#39; and &#39;congru&#39; on RT
+bf &lt;- anovaBF(formula = rt ~ medit*congru + subj,
               data = data.frame(MCwordsCIsum), whichRandom = &quot;subj&quot;)</code></pre>
 <div id="explanation-of-command" class="section level2">
 <h2>Explanation of command</h2>
@@ -510,13 +519,14 @@ examples of <code>anovaBF</code>, this just says where to find the data
 <h2>Explanation of output</h2>
 <p>Once calculation has finished, take a look at the results. You do
 this by typing in the name of the object you stored the results in:</p>
-<pre class="r"><code>bf</code></pre>
+<pre class="r"><code># Display results of calculation
+bf</code></pre>
 <pre><code>Bayes factor analysis
 --------------
-[1] medit + subj                         : 351.0813   ±0.94%
-[2] congru + subj                        : 799.3982   ±3.24%
-[3] medit + congru + subj                : 301276.9   ±1.44%
-[4] medit + congru + medit:congru + subj : 1784485426 ±3.66%
+[1] medit + subj                         : 409.192    ±13.8%
+[2] congru + subj                        : 786.0506   ±1.53%
+[3] medit + congru + subj                : 308340     ±3.43%
+[4] medit + congru + medit:congru + subj : 1856991390 ±5.02%
 
 Against denominator:
   rt ~ subj 
@@ -554,9 +564,10 @@ which direction is the main effect in? Does meditation training make you
 faster overall, or slower overall?</p>
 <p>We can find this out by using the <code>group_by</code> and
 <code>summarise</code> commands we have used several times before.</p>
-<p><strong>Enter this command into your R script and run
+<p><strong>Enter this comment and command into your R script and run
 it</strong>:</p>
-<pre class="r"><code>MCwordsCIsum %&gt;% group_by(medit) %&gt;% summarise(mean(rt))</code></pre>
+<pre class="r"><code># Display mean RT, by &#39;medit&#39;
+MCwordsCIsum %&gt;% group_by(medit) %&gt;% summarise(mean(rt))</code></pre>
 <pre><code># A tibble: 2 × 2
   medit    `mean(rt)`
   &lt;fct&gt;         &lt;dbl&gt;
@@ -578,7 +589,8 @@ congruence. As before, we can find out which direction this effect is
 in.</p>
 <p><strong>Enter this command into your R script and run
 it</strong>:</p>
-<pre class="r"><code>MCwordsCIsum %&gt;% group_by(congru) %&gt;% summarise(mean(rt))</code></pre>
+<pre class="r"><code># Display mean RT, by &#39;congru&#39;
+MCwordsCIsum %&gt;% group_by(congru) %&gt;% summarise(mean(rt))</code></pre>
 <pre><code># A tibble: 2 × 2
   congru `mean(rt)`
   &lt;fct&gt;       &lt;dbl&gt;
@@ -629,12 +641,13 @@ Factor for the interaction, we compare the evidence for hypothesis
 do this, we divide the Bayes Factor for <code>[4]</code> by the Bayes
 Factor for <code>[3]</code>.</p>
 <p>In R we can use the <code>bf</code> object to do this.</p>
-<p><strong>Enter this command into your R script and run
+<p><strong>Enter this comment and command into your R script and run
 it</strong>:</p>
-<pre class="r"><code>bf[4] / bf[3]</code></pre>
+<pre class="r"><code># Calculate Bayes Factor for interaction
+bf[4] / bf[3]</code></pre>
 <pre><code>Bayes factor analysis
 --------------
-[1] medit + congru + medit:congru + subj : 5923.075 ±3.93%
+[1] medit + congru + medit:congru + subj : 6022.545 ±6.08%
 
 Against denominator:
   rt ~ medit + congru + subj 
@@ -663,18 +676,15 @@ shown). Once your script is working correctly, <strong>copy and paste it
 into PsycEL</strong>.</p>
 <p>Start a new R script in your current project
 (<strong>rminr-data</strong>), call it <strong>anova3ex.R</strong> and
-begin it with <code>rm(list=ls())</code> to make sure you’ve cleared
-everything from your environment. Then, write R commands to do the
-following (see below). Only include the commands that are needed to do
-this, and use meaningful names for your variables.</p>
+begin it with appropriate comments, followed
+by<code>rm(list=ls())</code> to make sure you’ve cleared everything from
+your environment. Then, write R commands to do the following (see
+below). Only include the commands that are needed to do this, and use
+meaningful names for your variables.</p>
 <ol style="list-style-type: decimal">
 <li><p>Load packages and data,</p></li>
 <li><p>Preprocess that data and place it in a data frame called
 <code>wordsum</code></p></li>
-</ol>
-<pre><code>`summarise()` has grouped output by &#39;subj&#39;, &#39;medit&#39;. You can override using the
-`.groups` argument.</code></pre>
-<ol start="3" style="list-style-type: decimal">
 <li><p>Tell R which columns of your preprocessed data are
 factors</p></li>
 <li><p>Calculate a factorial Bayesian ANOVA for this full 3 (meditate,
@@ -727,8 +737,6 @@ Bayes factor type: BFlinearModel, JZS</code></pre>
 experiment, and place these data in a new data frame so you can graph
 them:</li>
 </ol>
-<pre><code>`summarise()` has grouped output by &#39;medit&#39;. You can override using the
-`.groups` argument.</code></pre>
 <pre><code># A tibble: 9 × 3
 # Groups:   medit [3]
   medit    congru     rt
@@ -819,8 +827,8 @@ to also say exactly what calculation you did. In this case you would
 say:</p>
 <p>We performed a factorial Bayesian ANOVA with one within-subjects
 factor (congruency) and one between-subject factor (training type),
-using the BayesFactor package (Morey &amp; Rouder, 2018) in R (R Core
-Team, 2019).</p>
+using the BayesFactor package (Morey &amp; Rouder, 2022) in R (R Core
+Team, 2022).</p>
 <p>It’s also important to include those references in your Reference
 section. R will tell you the reference for a package if you type
 e.g. <code>citation(&quot;BayesFactor&quot;)</code>. The reference for R itself is

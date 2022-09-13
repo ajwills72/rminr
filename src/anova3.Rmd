@@ -11,7 +11,7 @@ output: html_document
 ## knitr::opts_chunk$set(echo = TRUE, message = FALSE, results='hide', fig.keep = 'none', comment=NA)
 
 ## Show commands and putout.
-knitr::opts_chunk$set(echo = TRUE, comment=NA, cache = FALSE)
+knitr::opts_chunk$set(echo = TRUE, comment = NA, cache = FALSE)
 
 
 ```
@@ -44,14 +44,21 @@ Return to the project that you used for the [understanding interactions](anova2.
 
 This worksheet makes use of the preprocessed `MCwordsCIsum` data frame we made in the [understanding interactions](anova2.html) worksheet. Start by running the following commands to make sure you have this data frame in your _environment_.
 
-**Enter these commands into your R script and run them**:
+**Enter these comments and commands into your R script and run them**:
 
 ```{r init, message=FALSE}
+# Factorial differences
+# Load tidyverse
 library(tidyverse)
+# Load BayesFactor package
 library(BayesFactor)
+# Load data into 'words'
 words <- read_csv("wordnaming2.csv")
+# Remove 'relax' condition; place into 'MCwords'
 MCwords <- words %>% filter(medit != "relax")
+# Remove 'neutral' condition; place into 'MCwordsCI'
 MCwordsCI <- MCwords %>% filter(congru != "neutral")
+# Group by 'subj', 'medit', 'congru'; calculate mean RT; place into 'MCwordsCIsum'
 MCwordsCIsum <-
     MCwordsCI %>% group_by(subj, medit, congru) %>% summarise(rt = mean(rt))
 ```
@@ -76,9 +83,10 @@ The command `anovaBF` allows us to answer all these three questions in one go.
 
 Take a look at the data frame `MCwordsCIsum`. It gives the mean congruent reaction time, and mean incongruent reaction time, for each participant. As before, you have to tell R which of the columns of this data frame are _factors_. The columns `medit` and `congru` are factors - they are the two factors of the design. Recall that the participant ID is also a factor. So, you need to set three of the four columns of `MCwordsCIsum` as factors, as follows.
 
-**Enter these commands into your R script and run them**:
+**Enter this comment and these commands into your R script and run them**:
 
 ```{r three-factors}
+# Convert 'subj', 'medit', 'congru' to factors
 MCwordsCIsum$subj <- factor(MCwordsCIsum$subj)
 MCwordsCIsum$medit <- factor(MCwordsCIsum$medit)
 MCwordsCIsum$congru <- factor(MCwordsCIsum$congru)
@@ -98,9 +106,10 @@ Once you have told R which columns are _factors_, you're ready to answer these t
 
 This is a big calculation for R, so run the following commands, and then read the explanation while you're waiting for the results. It could take up to a minute to get the answer.
 
-**Enter this command into your R script and run it**:
+**Enter this comment and command into your R script and run it**:
 
 ```{r bf-fact-1, cache=TRUE}
+# Calculate Bayesian ANOVA for effect of 'medit' and 'congru' on RT
 bf <- anovaBF(formula = rt ~ medit*congru + subj,
               data = data.frame(MCwordsCIsum), whichRandom = "subj")
 ```
@@ -138,6 +147,7 @@ As the calculation takes a while to run, it makes sense to save the results of t
 Once calculation has finished, take a look at the results. You do this by typing in the name of the object you stored the results in:
 
 ```{r reveal}
+# Display results of calculation
 bf
 ```
 
@@ -158,9 +168,10 @@ The Bayes Factor for this hypothesis is around 340, which is really strong evide
 
 We can find this out by using the `group_by` and `summarise` commands we have used several times before.
 
-**Enter this command into your R script and run it**:
+**Enter this comment and command into your R script and run it**:
 
 ```{r meditME, message=FALSE}
+# Display mean RT, by 'medit'
 MCwordsCIsum %>% group_by(medit) %>% summarise(mean(rt))
 ```
 
@@ -175,6 +186,7 @@ The Bayes Factor is about 860, strong evidence for  a main effect of congruence.
 **Enter this command into your R script and run it**:
 
 ```{r congruME, message=FALSE}
+# Display mean RT, by 'congru'
 MCwordsCIsum %>% group_by(congru) %>% summarise(mean(rt))
 ```
 
@@ -202,9 +214,10 @@ Remember that a Bayes Factor is always a comparison of two types of evidence. So
 
 In R we can use the `bf` object to do this.
 
-**Enter this command into your R script and run it**:
+**Enter this comment and command into your R script and run it**:
 
 ```{r int-fact}
+# Calculate Bayes Factor for interaction
 bf[4] / bf[3]
 ```
 
@@ -218,7 +231,7 @@ As covered in the [within-subject differences](anova1.html#threeplus), one of th
 
 Below are further instructions. In some cases, there are also examples of what your output should look like at each stage if you've got it right (recall that your BF may be slightly different to those shown). Once your script is working correctly, **copy and paste it into PsycEL**.
 
-Start a new R script in your current project (**rminr-data**), call it **anova3ex.R** and begin it with `rm(list=ls())` to make sure you've cleared everything from your environment. Then, write R commands to do the following (see below).
+Start a new R script in your current project (**rminr-data**), call it **anova3ex.R** and begin it with appropriate comments, followed by`rm(list=ls())` to make sure you've cleared everything from your environment. Then, write R commands to do the following (see below).
 Only include the commands that are needed to do this, and use meaningful names for your variables.
 
 1. Load packages and data, 
@@ -232,7 +245,7 @@ words <- read_csv("wordnaming2.csv")
 
 2. Preprocess that data and place it in a data frame called `wordsum`
 
-```{r ex-b, echo=FALSE}
+```{r ex-b, echo=FALSE, message = FALSE}
 wordsum <- words %>% group_by(subj, medit, congru) %>% summarise(rt = mean(rt))
 ```
 
@@ -274,7 +287,7 @@ wordsum %>% group_by(congru) %>% summarise(mean(rt))
 
 6. Calculate the mean RT for each of the nine conditions of the experiment, and place these data in a new data frame so you can graph them:
 
-```{r ex-h, echo=FALSE}
+```{r ex-h, echo=FALSE, message=FALSE}
 gdat <- wordsum %>% group_by(medit, congru) %>% summarise(rt = mean(rt))
 gdat
 ```
@@ -327,7 +340,7 @@ It's important to remember that Bayes Factors without means are basically meanin
 
 There are a number of different ways to do Bayesian calculations, and these can lead to somewhat different results. So, it's really important to also say exactly what calculation you did. In this case you would say:
 
-We performed a factorial Bayesian ANOVA with one within-subjects factor (congruency) and one between-subject factor (training type), using the BayesFactor package (Morey & Rouder, 2018) in R (R Core Team, 2019).
+We performed a factorial Bayesian ANOVA with one within-subjects factor (congruency) and one between-subject factor (training type), using the BayesFactor package (Morey & Rouder, 2022) in R (R Core Team, 2022).
 
 It's also important to include those references in your Reference section. R will tell you the reference for a package if you type e.g.  `citation("BayesFactor")`. The reference for R itself is found by typing `citation()`. Note that R is what is doing your calculations, while _RStudio_ is a web page that makes it easier to use R. _RStudio_ does not have any affect on the output you get. So, you don't normally cite _RStudio_ in your writeups. 
 
