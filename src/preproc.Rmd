@@ -11,7 +11,7 @@ output: html_document
 ## knitr::opts_chunk$set(echo = TRUE, message = FALSE, results='hide', fig.keep = 'none', comment=NA)
 
 ## Show commands and output.
-knitr::opts_chunk$set(echo = TRUE, comment=NA)
+knitr::opts_chunk$set(echo = TRUE, comment = NA)
 ```
 
 # Contents
@@ -38,7 +38,7 @@ knitr::opts_chunk$set(echo = TRUE, comment=NA)
 
 # Introduction
 
-Preprocessing is all the things you have to do to your data before you can analyse it. In the _Absolute Beginners' Guide to R_, the preprocessing was mostly done for you, and you just used `read_csv` to load in the preprocessed data. However, in most realistic situations, data does not come preprocessed. In this worksheet, we'll look at preprocessing data from computerised experiments. Preprocessing data from these kinds of experiments typically comes in five parts - loading, tidying, filtering, summarising, and combining. We'll cover these in turn below.
+Preprocessing is all the things you have to do to your data before you can analyse it. In the _Absolute Beginners' Guide to R_, the preprocessing was mostly done for you, and you just used `read_csv` to load in the preprocessed data. However, in most realistic situations, data does not come preprocessed. In this worksheet, we'll look at preprocessing data from computerized experiments. Preprocessing data from these kinds of experiments typically comes in five parts - loading, tidying, filtering, summarizing, and combining. We'll cover these in turn below.
 
 In this first part of the worksheet, the commands you need to do each step are given to you. It's important to take time to read all the instructions, try out the commands in RStudio for yourself, and read the descriptions and explanations of how they work. This is because, in the next section,  you'll be preprocessing another data set. You won't be given any of the commands. Instead, you'll adapt what you've learned to that new data set.
 
@@ -82,10 +82,13 @@ In order to work out whether we get the expected result, we need to know the mea
 
 We'll start by loading the data for one of the participants, `subject-11.csv`. Recall that we can do this using the `read_csv` command. In this case, the CSV file we want to load is inside the `rawdata` folder of our project so we have to say `rawdata/subject-11.csv` rather than just `subject-11.csv`, so RStudio knows where to look for the file. 
 
-Add the following commands to **preproc.R**, and run the script:
+Add the following comments and commands to **preproc.R**, and run the script:
 
 ```{r load, message=FALSE}
+# Preprocessing worksheet
+# Load tidyverse
 library(tidyverse)
+# Load data
 dat <- read_csv("rawdata/subject-11.csv")
 ```
 
@@ -144,9 +147,11 @@ You may have noticed that the list of 'columns to keep' is not in alphabetical o
 
 # Selecting columns
 
-Having worked out which columns we need, we now tidy things up by selecting just the columns we need and putting them into a new data frame. This is done using R's `select` command
+Having worked out which columns we need, we now tidy things up by selecting just the columns we need and putting them into a new data frame. This is done using R's `select` command. Add the following to your
+script and run it
 
 ```{r select}
+# Select columns; place into 'dat_subset'
 dat_subset <- dat %>% select(subject_nr, phase, live_row, type, response)
 ```
 
@@ -158,9 +163,10 @@ Click on `dat_subset` in the _Environment_ window. You'll see we have a much eas
 
 # Renaming columns {#rename}
 
-When working with data, it's useful to have meaningful column names, because it makes it easier to remember what they contain. The column `live_row` could be more clearly named as `trial`, as that's the information it contains. Also, `subject_nr` is longer than it needs to be, `subj` is clear, and quicker to type. We rename columns in R using the `colnames` command:
+When working with data, it's useful to have meaningful column names, because it makes it easier to remember what they contain. The column `live_row` could be more clearly named as `trial`, as that's the information it contains. Also, `subject_nr` is longer than it needs to be, `subj` is clear, and quicker to type. We rename columns in R using the `set_names` command. Add the following to your script and run it:
 
 ```{r rename}
+# Rename columns; place into 'tidydat'
 tidydat <- dat_subset %>% 
   set_names(c("subj", "phase", "trial", "type", "response"))
 ```
@@ -173,9 +179,11 @@ tidydat <- dat_subset %>%
 
 We now have a clear, tidy dataframe (`tidydat`), which we can start to analyse. The expected result is that the participant will show high confidence ratings for having seen the prototype, despite not having seen it before. Does this participant show this pattern of results?
 
-Our predictions are about the test phase, but this data frame also contains data about the exposure phase (the masculinity ratings). So, the first thing we have to do is _filter_ the data so that it only contains the test phase. As covered in [Absolute Beginners' Guide to R](group-differences.html#filter), we use the `filter` command to do this, telling it which parts of the data we want to keep
+Our predictions are about the test phase, but this data frame also contains data about the exposure phase (the masculinity ratings). So, the first thing we have to do is _filter_ the data so that it only contains the test phase. As covered in [Absolute Beginners' Guide to R](group-differences.html#filter), we use the `filter` command to do this, telling it which parts of the data we want to keep. Add the following to your script
+and run it:
 
 ```{r filter}
+# Filter test phase data into 'testdat'
 testdat <- tidydat %>% filter(phase == "test")
 ```
 
@@ -187,9 +195,11 @@ Click on `testdat` in the Environment window. You'll see that now we just have 2
 
 # Summarising data
 
-We can now use the `group_by` and `summarise` commands covered in [Absolute Beginners' Guide to R](group-differences.html#group) to answer our question.
+We can now use the `group_by` and `summarise` commands covered in [Absolute Beginners' Guide to R](group-differences.html#group) to answer our question. Add the following to your script and 
+run it:
 
 ```{r summary}
+# Group data by 'type', display mean of 'response'
 testdat %>% group_by(type) %>% summarise(mean(response))
 ```
 
@@ -205,15 +215,19 @@ Experiments generally involve testing relatively large numbers of people, in ord
 
 ## Combining two files
 
-We'll start by loading in data from a second participant into a different dataframe:
+We'll start by loading in data from a second participant into a different dataframe. Add the 
+following to your script and run it:
 
 ```{r second-load, message=FALSE}
+# Load data from second participant
 dat2 <- read_csv("rawdata/subject-12.csv")
 ```
 
-To combine these two participants into a single dataframe, we use the `bind_rows` command:
+To combine these two participants into a single dataframe, we use the `bind_rows` command. 
+Add the following to your script and run it:
 
 ```{r bind}
+# Combine the two data sets; place into 'alldat'
 alldat <- bind_rows(dat, dat2)
 ```
 
@@ -227,30 +241,35 @@ Generally, we have a lot more than two people in an experiment. You could use th
 
 ### List of files
 
-The first thing we need to do to combine many participants is to get a list of the names of their data files (e.g. `subject-11.csv`). We do this using the `list.files` command:
+The first thing we need to do to combine many participants is to get a list of the names of their data files (e.g. `subject-11.csv`). We do this using the `list.files` command. Add the following to your script
+and run it:
 
 ```{r listfiles}
-tibble(filename = list.files("rawdata", "*.csv", full.names=TRUE))
+# Display list of filenames
+tibble(filename = list.files("rawdata", "*.csv", full.names = TRUE))
 ```
 
 **Explanation of command**: We say `tibble(filename=` to tell R to make a new dataframe, with a column containing filenames. The first part of `list.files`, `"rawdata"`, tells R which folder the data files are in. Generally, it's a good idea to keep all your data files inside a single folder, so it is easier for commands like this to find them. The second part of `list.files`, `"*.csv"` tells R to only give the names of files that end in `.csv` (the `"*"` means "any character or number"). This is useful, because sometimes raw data folders contain other files, too. For example, `rawdata` contains `README.md`, a file that generally provides information relating to the data, rather than being data itself. The third part, `full.names=TRUE`, tells R to give the name of the file including the name of the folder it is in, so `rawdata/subject-11.csv` rather than just `subject-11.csv`.
 
 ### Load every file 
 
-We know how to make a new dataframe containing a list of filenames to process. We can use this to load each file in turn and combine them into a single large datset.
+We know how to make a new dataframe containing a list of filenames to process. We can use this to load each file in turn and combine them into a single large dataset.
 
 To do this, we make use another tidyverse function called `do`. 
 
 The `do` function performs an operation for each group in a dataframe. All of the results are joined into a large, combined datafile. All we need to do is:
 
 - Make a dataframe containing the list of file names to be used
+
 - Remind R to read the files one at a time (explanation below)
+
 - Tell it which function to use to read the raw files
 
-The entire command looks like this:
+The entire command looks like this; which you should enter into your script and run:
 
 ```{r readinit,message=FALSE}
-alldat <- tibble(filename = list.files("rawdata", "*.csv", full.names=TRUE)) %>% 
+# Combine data from all participants into 'alldat'
+alldat <- tibble(filename = list.files("rawdata", "*.csv", full.names = TRUE)) %>% 
   group_by(filename) %>% 
   do(read_csv(.$filename))
 ```
@@ -267,15 +286,30 @@ If you look at `alldat` in the Environment window, you'll see that it has 168 ro
 
 Of course, this combined data file has the same problems as the individual files that make it up -- there are over 100 columns, most of which we don't need. We can fix this with the same commands as before.
 
-**WRITE SOME COMMANDS** to select the relevant columns, put them into `tidydat` and then rename the columns.
+Add this comment to your script:
 
-Click on `tidydat`, you'll see a human-readable data frame with 168 rows, and 5 columns. This is the full dataset for the experiment, so we can now start analyzing it.
+```
+# Select and rename columns; place into 'tidydat'
+```
+
+Next **add some commands** to select the relevant columns, put them into `tidydat` and then rename the columns.
+
+Run those commands. Now, click on `tidydat`, you'll see a human-readable data frame with 168 rows, and 5 columns. This is the full dataset for the experiment, so we can now start analyzing it.
 
 ## Back to summarising
 
 Now we have this combined file, we summarise the test phase data for each participant using the same commands as before. We just need to include `subj` in the `group_by` command, so `group_by(subj, type)`, so we get a separate summary for each person.
 
-**WRITE SOME COMMANDS** to filter the data to the test phase, and put that data into a data fram called `test`. Now use `test` to group by subject and trial type, and summarize using the mean response, and put the resulting summary into `test.sum`. If you've got this right, you'll end up with this summary. You can view it either by typing `test.sum`, or by clicking on `test.sum` in the _Environment_ window:
+Add the following comment to your script:
+
+```
+# Filter test phase data into 'test' 
+
+# Group 'test' by 'type' and 'subj', calculate mean of 'response', place into 'test.sum'
+
+```
+
+Now, fill in the blanks, i.e. **insert and run some commands** to filter the data to the test phase, and put that data into a data frame called `test`. Now use `test` to group by subject and trial type, and summarize using the mean response, and put the resulting summary into `test.sum`. If you've got this right, you'll end up with this summary. You can view it either by typing `test.sum`, or by clicking on `test.sum` in the _Environment_ window:
 
 ```{r sumagain, echo=FALSE, message=F}
 test <- alldat %>% filter(phase == "test")
@@ -298,7 +332,7 @@ Your task is to write R code that gives the mean reaction time for each particip
 This can, and should, be done with less than 15 files of R code (plus comments, see below). When your code is working correctly, it will give you the following numbers:
 
 ```{r ex1, echo=FALSE, message=FALSE}
-lexdat <- tibble(filename=list.files("lexdec", pattern = "csv", full.names=TRUE)) %>% 
+lexdat <- tibble(filename = list.files("lexdec", pattern = "csv", full.names = TRUE)) %>% 
   group_by(filename) %>% 
   do(read_csv(.$filename)) 
 
@@ -317,11 +351,11 @@ Other requirements:
 
 - Use short, meaningful names for data frames and column names.
 
-- Use comments in your code to make it more human readable. Comments are any line that begins with `##` and are ignored by R. They are there to make your code easier for humans to understand. For example:
+- Use comments in your code to make it more human readable. Comments are any line that begins with `#` and are ignored by R. They are there to make your code easier for humans to understand. For example:
 
 ```{r clearcomm, eval=F}
 # Create a dataframe containing all the filenames we want to read
-raw.data.files <- tibble(filename = list.files("rawdata", "*.csv", full.names=TRUE))
+raw.data.files <- tibble(filename = list.files("rawdata", "*.csv", full.names = TRUE))
 ```
 
 **Hints:** Your code should first get a list of files, then `do` to load all those files in and combine them. Next you'll have to find the relevant columns among the 100+ columns of the data file. Once you've found them, use `select` to select just those columns and use `set_names` to give the selected columns better names. Use `filter` to remove the practice phase and keep only the correct responses. Note that accuracy in this data file is a number, not a word, so the correct phrase is something like `acc == 1`, rather than `acc == "1"`. Finally, use `group_by` and `summarise` to report the mean response time for words and non words for each participant. Good luck!
