@@ -7,16 +7,11 @@ output: html_document
 ```{r setup, include=FALSE}
 ## DEVELOPERS: Uncomment one option, as appropriate
 
-## Data required to knit
-## https://github.com/ajwills72/rminr-data/tree/master/going-further/dass21.csv
-##
-## I check out rminr-data and make a symbolic link to going-further
-
 ## Show only commands.
 ## knitr::opts_chunk$set(echo = TRUE, message = FALSE, results='hide', fig.keep = 'none', comment=NA)
 
 ## Show commands and output.
-knitr::opts_chunk$set(echo = TRUE, comment=NA, cache = TRUE)
+knitr::opts_chunk$set(echo = TRUE, comment = NA, cache = TRUE)
 options(tibble.width = Inf) # show all columns in output
 ```
 
@@ -94,10 +89,13 @@ sses_post_raw <- select(sses, 1, 25:45) %>%
 
 We'll use the `cronbach()` function from the `psy` package to calculate Cronbach's alpha for the SSES.
 
-**Enter these commands into your script, and run them:**
+**Enter these comments and commands into your script, and run them:**
 
 ```{r cronbach-all}
+# Analyzing scales
+# Load 'psy' library, for 'cronbach' command
 library(psy)
+# Calculate Cronbach's alpha on Q1 -> Q20
 sses_cronbach_total <- sses_pre_raw %>%
   select(q1:q20) %>%
   cronbach()
@@ -106,7 +104,7 @@ sses_cronbach_total$alpha
 
 **Explanation of commands:**
 
-1. The `cronbach()` function expects a wide data frame (one row per subject), with columns containing the scale scores. We supply this using the function `select(sses_raw, q1:q20)`. Notice how we can use the column names to specify the range of columns to `select()`.
+1. The `cronbach()` function expects a wide data frame (one row per subject), with columns containing the scale scores. We supply this using the function `select(q1:q20)`. Notice how we can use the column names to specify the range of columns to `select()`.
 
 1. In addition to the value of alpha, `cronbach()` returns the number of subjects and the number of items. Here were only interested in alpha, which we print with `sses_cronbach$alpha`.
 
@@ -136,7 +134,7 @@ stress_cronbach <- select(dass21, c('DASS1', 'DASS6', 'DASS8', 'DASS11', 'DASS12
 
 Calculate Cronbach's alpha for the depression, anxiety and stress subscales in the DASS-21 data introduced in the [Preprocessing scales worksheet](preproc-scales.html). In each case, round alpha to 2 decimal places. The command `select(dass21, c('DASS3', 'DASS5', 'DASS10', 'DASS13', 'DASS16', 'DASS17', 'DASS21'))` selects the columns for the depression subscale. Use similar commands to select the correct columns for the anxiety and stress subscales. You can find the items for these subscales in [this article](https://www.researchgate.net/profile/Jenelle_Slavin-Mulford/publication/51726801_Psychometric_Evaluation_and_Normative_Data_for_the_Depression_Anxiety_and_Stress_Scales-21_DASS-21_in_a_Nonclinical_Sample_of_US_Adults/links/542413680cf26120b7a7171a/Psychometric-Evaluation-and-Normative-Data-for-the-Depression-Anxiety-and-Stress-Scales-21-DASS-21-in-a-Nonclinical-Sample-of-US-Adults.pdf). Cronbach's alpha should be `r  round(depression_cronbach$alpha, 2)` for depression, `r  round(anxiety_cronbach$alpha, 2)` for anxiety, and `r  round(stress_cronbach$alpha, 2)` for stress.
 
-**Copy the R code you used for this exercise into PsycEL.**
+**Copy the R code you used for this exercise, including appropriate comments, into PsycEL.**
 
 # References
 
