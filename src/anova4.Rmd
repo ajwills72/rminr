@@ -11,7 +11,7 @@ output: html_document
 ## knitr::opts_chunk$set(echo = TRUE, message = FALSE, results='hide', fig.keep = 'none', comment=NA)
 
 ## Show commands and putout.
-knitr::opts_chunk$set(echo = TRUE, comment=NA, cache = FALSE)
+knitr::opts_chunk$set(echo = TRUE, comment = NA, cache = FALSE)
 
 library(pander)
 ```
@@ -50,17 +50,21 @@ Return to the project that you used for the [factorial differences](anova3.html)
 
 Ensure you have the files required for this worksheet, by asking git to "`pull`" the repository. Select the `Git` tab, which is located in the row of tabs which includes the `Environment` tab. Click the `Pull` button with a downward pointing arrow. A window will open showing the files which have been pulled from the repository. Close the `Git pull` window.
 
-Now, open a new blank script and save it as **anova4.R**. Put all commands in that script, and save the script regularly. 
+Now, open a new blank script and save it as **anova4.R**. Put all comments and commands in that script, and save the script regularly. 
 
 First, you'll need to load some standard packages, load the data we used in the previous worksheet, and set the appropriate columns up as factors. 
 
-**Enter these commands into your script, and run them:**
+**Enter these comments and commands into your script, and run them:**
 
 ```{r init, message=FALSE}
+# Clear workspace
 rm(list = ls())
+# Load packages
 library(tidyverse)
 library(BayesFactor, quietly = TRUE)
+# Load data
 words <- read_csv("wordnaming2.csv")
+# Set columns as factors
 words$sex <- factor(words$sex)
 words$subj <- factor(words$subj)
 words$medit <- factor(words$medit)
@@ -76,15 +80,17 @@ We can use `anovaBF` to do a factorial Bayesian ANOVA where both factors are bet
 
 First we create a subject-level summary of the data - this involves averaging across the 90 data points that contribute to the reaction time (RT) measure for each participant. We do this using the now-familiar `group_by` and `summarise` commands. 
 
-**Enter these commands into your script, and run them:**
+**Enter this comment and commands into your script, and run them:**
 
-```{r preproc}
+```{r preproc, message=FALSE}
+# Create subject-level summary
 wordsum <- words %>% group_by(subj, medit, sex) %>% summarise(rt = mean(rt))
 ```
 
 Now we run the Bayesian ANOVA, as follows; **enter these commands into your script, and run them:**
 
 ```{r bf-2bs}
+# Calculate Bayes Factors
 bf2bs <- anovaBF(
     formula = rt ~ medit*sex,
     data = data.frame(wordsum))
@@ -94,9 +100,10 @@ Note that, unlike the Bayesian ANOVAs we previously did that included a within-s
 
 ## Explanation of output
 
-The output is interpreted the same way as before; **enter this command into your script, and run it:**
+The output is interpreted the same way as before; **enter this comment and command into your script, and run it:**
 
 ```{r reveal}
+# Show results of analysis
 bf2bs
 ```
 
@@ -133,9 +140,10 @@ The BF for this hypothesis is also large (about 85). We'd expect this, because t
 
 #### Interaction BF
 
-The Bayes Factor for the interaction is given, as before, by **entering this command into your script, and running it:**
+The Bayes Factor for the interaction is given, as before, by **entering this comment and command into your script, and running it:**
 
 ```{r int-fact}
+# Calculate Bayes Factor for interaction
 bf2bs[4] / bf2bs[3]
 ```
 
@@ -147,33 +155,36 @@ This gives us a Bayes Factor for the interaction around 0.07. So, there's substa
 
 # Two within-subject factors
 
-**NOTE:** In this section, we present the simplest possible way to perform this calculation. There
+**NOTE:** In this section, we present the simplest way to perform this calculation. There
 are better ways. For further discussion, see [Bayesian ANOVA for Pros](anova5.html)
 
 We can also use `anovaBF` to look at two within-subjects factors. Again, this works just the same way as before. For example, we can do a factorial Bayesian ANOVA for `congru` and `block` like this:
 
 First, we create the appropriate subject-level summary for our analysis. 
 
-**Enter these commands into your script, and run them:**
+**Enter this comment and commands into your script, and run them:**
 
-```{r preproc2}
+```{r preproc2,message=FALSE}
+# Create subject-level summary
 wordsum2 <- words %>%
   group_by(subj, congru,block) %>% 
   summarise(rt = mean(rt))
 ```
 Next, for the purposes of this worksheet, we're also going to reduce the sample size from 420 participants to 60 participants. This is something you'd never do in a real analysis, but here we need to address the issue that within-subject Bayesian ANOVAs can take a very long time to run when we have, as in this case, several hundred participants (in this case, it would take around 15 minutes). The correct approach when analysing your own data is, of course, to just wait for the analysis to finish. 
 
-**Enter this command into your script, and run it:**
+**Enter this comment and command into your script, and run it:**
 
 ```{r reduce}
+# Reduce sample size (FOR DEMONSTRATION PURPOSES ONLY !!)
 wordsum2 <- wordsum2 %>% filter(as.numeric(subj) < 61)
 ```
 
 Now we run the Bayesian analysis as before.
 
-**Enter these commands into your script, and run them:**
+**Enter this comment and command into your script, and run them:**
 
 ```{r bf-2ws}
+# Calculate Bayes Factors
 bf2ws <- anovaBF(
     formula = rt ~ congru*block + subj,
     data = data.frame(wordsum2),
@@ -182,9 +193,10 @@ bf2ws <- anovaBF(
 
 ## Explanation of output
 
-The output is interpreted the same way as before; **enter this command into your script, and run it:**
+The output is interpreted the same way as before; **enter this comment command into your script, and run it:**
 
 ```{r reveal-2}
+# Display results
 bf2ws
 ```
 
@@ -221,6 +233,7 @@ The BF for this hypothesis is considerably lower than for the `main effects` hyp
 The Bayes Factor for the interaction is given, as before. **Enter this command into your script, and run it:**
 
 ```{r int-fact-2}
+# Calculate interaction Bayes Factor
 bf2ws[4] / bf2ws[3]
 ```
 
@@ -230,16 +243,18 @@ This gives us a Bayes Factor for the interaction is around 0.01. So, there's sub
 
 # Single between-subjects factor
 
-It is also possible to use `anovaBF` to analyse a single factor, between-subjects design. Where that factor has two levels, you could alternatively use [ttestBF](evidence.html#bayes-t). One of the useful things about `anovaBF` is that, unlike `ttestBF`, you can use it in a one-factor design that has more than two levels. For example: (**enter these commands into your script, and run them:**)
+It is also possible to use `anovaBF` to analyse a single factor, between-subjects design. Where that factor has two levels, you could alternatively use [ttestBF](evidence.html#bayes-t). One of the useful things about `anovaBF` is that, unlike `ttestBF`, you can use it in a one-factor design that has more than two levels. For example: (**enter these comments and commands into your script, and run them:**)
 
-```{r bf-1bs}
+```{r bf-1bs,message=FALSE}
+# Create subject-level summary
 wordsum3 <- words %>%
   group_by(subj, medit) %>% 
   summarise(rt = mean(rt))
-
+# Calculate Bayes Factor
 bf1bs <- anovaBF(
     formula = rt ~ medit,
     data = data.frame(wordsum3))
+# Display Bayes Factor
 bf1bs
 ```
 
@@ -251,11 +266,13 @@ Although in principle it is possible to run Bayesian ANOVAs with more than two f
 
 # Exercise 1
 
-The data for this first exercise comes from a between-subjects experiment with two factors. Start by loading the data and removing any missing data (`NA`), using thd following command.
+The data for this first exercise comes from a between-subjects experiment with two factors. Start by loading the data and removing any missing data (`NA`), using the following command.
 
-**Enter these commands into your script, and run them:**
+**Enter this comment and commands into your script, and run them:**
 
 ```{r ex1-data, message=FALSE}
+# EXERCISE
+# Load data
 cf_raw <- read_csv('going-further/counterfactual.csv') %>% drop_na()
 ```
 
@@ -275,7 +292,7 @@ If you've done it correctly, your means should look like this:
 cf <- cf_raw %>%
     mutate(subj = factor(subj), perspective = factor(perspective),
            predictability = factor(predictability))
-cf_sum <- cf %>% group_by(perspective, predictability) %>% summarise(blame=mean(blame))
+cf_sum <- cf %>% group_by(perspective, predictability) %>% summarise(blame = mean(blame))
 cf_sum
 ```
 
@@ -294,7 +311,7 @@ Now, do your Bayesian ANOVA. Set each of the independent variables as a `factor`
 Your results should look similar to this:
 
 ```{r ex1, echo=FALSE, message=FALSE}
-cf_bf <- anovaBF(blame ~ perspective*predictability, data=data.frame(cf))
+cf_bf <- anovaBF(blame ~ perspective*predictability, data = data.frame(cf))
 cf_bf
 cf_bf[4] / cf_bf[3]
 ```
@@ -307,9 +324,11 @@ cf_bf[4] / cf_bf[3]
 
 The data for this second exercise come from a within-subjects experiment with two factors. Start by loading the data, selecting the columns and rows we'll need for this analysis, and removing missing data (`NA`). 
 
-**Enter these commands into your script, and run them:**
+**Enter these comments and commands into your script, and run them:**
 
 ```{r ex2-data, message=FALSE}
+# EXERCISE 2
+# Load data, select Test phase and appropriate columns; drop NA entries
 raw <- read_csv('case-studies/chris-mitchell/priming-faces.csv') %>%
   filter(Running == "Test") %>%
   select(Subject, Congruency, Load, RT) %>%
@@ -327,7 +346,7 @@ Participants were trained to associate two screen colours with pictures of two d
 Start by calculating the mean RT for each of the four conditions, and plotting these in a line graph. You can use the commands from Exercise 1, slightly modified, to do this. If you get it right, your output should look like this:
 
 ```{r ex2a, echo=FALSE, warning=FALSE, message=FALSE}
-con_sum <- raw %>% group_by(Congruency, Load) %>% summarise(RT=mean(RT))
+con_sum <- raw %>% group_by(Congruency, Load) %>% summarise(RT = mean(RT))
 con_sum
 con_sum %>%
     ggplot(aes(x = Congruency, y = RT, group = Load, colour = Load)) +
@@ -346,7 +365,7 @@ priming <- raw %>%
            Load = factor(Load)) %>%
   group_by(Subject, Congruency, Load) %>% summarise(RT = mean(RT))
 
-priming_bf <- anovaBF(RT ~ Congruency*Load + Subject, data=data.frame(priming),
+priming_bf <- anovaBF(RT ~ Congruency*Load + Subject, data = data.frame(priming),
                       whichRandom = 'Subject')
 priming_bf
 priming_bf[4] / priming_bf[3]

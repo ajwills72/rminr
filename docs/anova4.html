@@ -407,17 +407,21 @@ downward pointing arrow. A window will open showing the files which have
 been pulled from the repository. Close the <code>Git pull</code>
 window.</p>
 <p>Now, open a new blank script and save it as
-<strong>anova4.R</strong>. Put all commands in that script, and save the
-script regularly.</p>
+<strong>anova4.R</strong>. Put all comments and commands in that script,
+and save the script regularly.</p>
 <p>First, you’ll need to load some standard packages, load the data we
 used in the previous worksheet, and set the appropriate columns up as
 factors.</p>
-<p><strong>Enter these commands into your script, and run
+<p><strong>Enter these comments and commands into your script, and run
 them:</strong></p>
-<pre class="r"><code>rm(list = ls())
+<pre class="r"><code># Clear workspace
+rm(list = ls())
+# Load packages
 library(tidyverse)
 library(BayesFactor, quietly = TRUE)
+# Load data
 words &lt;- read_csv(&quot;wordnaming2.csv&quot;)
+# Set columns as factors
 words$sex &lt;- factor(words$sex)
 words$subj &lt;- factor(words$subj)
 words$medit &lt;- factor(words$medit)
@@ -435,14 +439,14 @@ as before. For example, we can do a factorial Bayesian ANOVA for
 averaging across the 90 data points that contribute to the reaction time
 (RT) measure for each participant. We do this using the now-familiar
 <code>group_by</code> and <code>summarise</code> commands.</p>
-<p><strong>Enter these commands into your script, and run
+<p><strong>Enter this comment and commands into your script, and run
 them:</strong></p>
-<pre class="r"><code>wordsum &lt;- words %&gt;% group_by(subj, medit, sex) %&gt;% summarise(rt = mean(rt))</code></pre>
-<pre><code>`summarise()` has grouped output by &#39;subj&#39;, &#39;medit&#39;. You can override using the
-`.groups` argument.</code></pre>
+<pre class="r"><code># Create subject-level summary
+wordsum &lt;- words %&gt;% group_by(subj, medit, sex) %&gt;% summarise(rt = mean(rt))</code></pre>
 <p>Now we run the Bayesian ANOVA, as follows; <strong>enter these
 commands into your script, and run them:</strong></p>
-<pre class="r"><code>bf2bs &lt;- anovaBF(
+<pre class="r"><code># Calculate Bayes Factors
+bf2bs &lt;- anovaBF(
     formula = rt ~ medit*sex,
     data = data.frame(wordsum))</code></pre>
 <p>Note that, unlike the Bayesian ANOVAs we previously did that included
@@ -453,14 +457,15 @@ data in which each participant only contributes one data point.</p>
 <div id="explanation-of-output" class="section level2">
 <h2>Explanation of output</h2>
 <p>The output is interpreted the same way as before; <strong>enter this
-command into your script, and run it:</strong></p>
-<pre class="r"><code>bf2bs</code></pre>
+comment and command into your script, and run it:</strong></p>
+<pre class="r"><code># Show results of analysis
+bf2bs</code></pre>
 <pre><code>Bayes factor analysis
 --------------
 [1] medit                   : 718.3828 ±0.01%
 [2] sex                     : 1.446498 ±0.01%
-[3] medit + sex             : 1168.252 ±1.63%
-[4] medit + sex + medit:sex : 80.01519 ±1.52%
+[3] medit + sex             : 1160.597 ±1.38%
+[4] medit + sex + medit:sex : 83.20431 ±2.23%
 
 Against denominator:
   Intercept only 
@@ -526,12 +531,13 @@ lower than for the <code>main effects</code> hypothesis.</p>
 <div id="interaction-bf" class="section level4">
 <h4>Interaction BF</h4>
 <p>The Bayes Factor for the interaction is given, as before, by
-<strong>entering this command into your script, and running
+<strong>entering this comment and command into your script, and running
 it:</strong></p>
-<pre class="r"><code>bf2bs[4] / bf2bs[3]</code></pre>
+<pre class="r"><code># Calculate Bayes Factor for interaction
+bf2bs[4] / bf2bs[3]</code></pre>
 <pre><code>Bayes factor analysis
 --------------
-[1] medit + sex + medit:sex : 0.06849141 ±2.23%
+[1] medit + sex + medit:sex : 0.07169096 ±2.63%
 
 Against denominator:
   rt ~ medit + sex 
@@ -548,23 +554,21 @@ interaction.</p>
 </div>
 <div id="two-within-subject-factors" class="section level1">
 <h1>Two within-subject factors</h1>
-<p><strong>NOTE:</strong> In this section, we present the simplest
-possible way to perform this calculation. There are better ways. For
-further discussion, see <a href="anova5.html">Bayesian ANOVA for
-Pros</a></p>
+<p><strong>NOTE:</strong> In this section, we present the simplest way
+to perform this calculation. There are better ways. For further
+discussion, see <a href="anova5.html">Bayesian ANOVA for Pros</a></p>
 <p>We can also use <code>anovaBF</code> to look at two within-subjects
 factors. Again, this works just the same way as before. For example, we
 can do a factorial Bayesian ANOVA for <code>congru</code> and
 <code>block</code> like this:</p>
 <p>First, we create the appropriate subject-level summary for our
 analysis.</p>
-<p><strong>Enter these commands into your script, and run
+<p><strong>Enter this comment and commands into your script, and run
 them:</strong></p>
-<pre class="r"><code>wordsum2 &lt;- words %&gt;%
+<pre class="r"><code># Create subject-level summary
+wordsum2 &lt;- words %&gt;%
   group_by(subj, congru,block) %&gt;% 
   summarise(rt = mean(rt))</code></pre>
-<pre><code>`summarise()` has grouped output by &#39;subj&#39;, &#39;congru&#39;. You can override using
-the `.groups` argument.</code></pre>
 <p>Next, for the purposes of this worksheet, we’re also going to reduce
 the sample size from 420 participants to 60 participants. This is
 something you’d never do in a real analysis, but here we need to address
@@ -573,26 +577,30 @@ to run when we have, as in this case, several hundred participants (in
 this case, it would take around 15 minutes). The correct approach when
 analysing your own data is, of course, to just wait for the analysis to
 finish.</p>
-<p><strong>Enter this command into your script, and run it:</strong></p>
-<pre class="r"><code>wordsum2 &lt;- wordsum2 %&gt;% filter(as.numeric(subj) &lt; 61)</code></pre>
+<p><strong>Enter this comment and command into your script, and run
+it:</strong></p>
+<pre class="r"><code># Reduce sample size (FOR DEMONSTRATION PURPOSES ONLY !!)
+wordsum2 &lt;- wordsum2 %&gt;% filter(as.numeric(subj) &lt; 61)</code></pre>
 <p>Now we run the Bayesian analysis as before.</p>
-<p><strong>Enter these commands into your script, and run
+<p><strong>Enter this comment and command into your script, and run
 them:</strong></p>
-<pre class="r"><code>bf2ws &lt;- anovaBF(
+<pre class="r"><code># Calculate Bayes Factors
+bf2ws &lt;- anovaBF(
     formula = rt ~ congru*block + subj,
     data = data.frame(wordsum2),
     whichRandom = &#39;subj&#39;)</code></pre>
 <div id="explanation-of-output-1" class="section level2">
 <h2>Explanation of output</h2>
 <p>The output is interpreted the same way as before; <strong>enter this
-command into your script, and run it:</strong></p>
-<pre class="r"><code>bf2ws</code></pre>
+comment command into your script, and run it:</strong></p>
+<pre class="r"><code># Display results
+bf2ws</code></pre>
 <pre><code>Bayes factor analysis
 --------------
-[1] congru + subj                        : 3811.163   ±0.75%
-[2] block + subj                         : 0.03462185 ±0.98%
-[3] congru + block + subj                : 140.0294   ±2.19%
-[4] congru + block + congru:block + subj : 1.524279   ±1.6%
+[1] congru + subj                        : 3830.96    ±0.76%
+[2] block + subj                         : 0.03441736 ±0.81%
+[3] congru + block + subj                : 136.0741   ±1.25%
+[4] congru + block + congru:block + subj : 1.543383   ±2.04%
 
 Against denominator:
   rt ~ subj 
@@ -646,10 +654,11 @@ nor <code>block</code> have any effect.</p>
 <h4>Interaction BF</h4>
 <p>The Bayes Factor for the interaction is given, as before.
 <strong>Enter this command into your script, and run it:</strong></p>
-<pre class="r"><code>bf2ws[4] / bf2ws[3]</code></pre>
+<pre class="r"><code># Calculate interaction Bayes Factor
+bf2ws[4] / bf2ws[3]</code></pre>
 <pre><code>Bayes factor analysis
 --------------
-[1] congru + block + congru:block + subj : 0.01088542 ±2.71%
+[1] congru + block + congru:block + subj : 0.01134222 ±2.39%
 
 Against denominator:
   rt ~ congru + block + subj 
@@ -670,16 +679,17 @@ factor, between-subjects design. Where that factor has two levels, you
 could alternatively use <a href="evidence.html#bayes-t">ttestBF</a>. One
 of the useful things about <code>anovaBF</code> is that, unlike
 <code>ttestBF</code>, you can use it in a one-factor design that has
-more than two levels. For example: (<strong>enter these commands into
-your script, and run them:</strong>)</p>
-<pre class="r"><code>wordsum3 &lt;- words %&gt;%
+more than two levels. For example: (<strong>enter these comments and
+commands into your script, and run them:</strong>)</p>
+<pre class="r"><code># Create subject-level summary
+wordsum3 &lt;- words %&gt;%
   group_by(subj, medit) %&gt;% 
-  summarise(rt = mean(rt))</code></pre>
-<pre><code>`summarise()` has grouped output by &#39;subj&#39;. You can override using the
-`.groups` argument.</code></pre>
-<pre class="r"><code>bf1bs &lt;- anovaBF(
+  summarise(rt = mean(rt))
+# Calculate Bayes Factor
+bf1bs &lt;- anovaBF(
     formula = rt ~ medit,
     data = data.frame(wordsum3))
+# Display Bayes Factor
 bf1bs</code></pre>
 <pre><code>Bayes factor analysis
 --------------
@@ -707,10 +717,12 @@ often going to be pretty difficult to interpret).</p>
 <h1>Exercise 1</h1>
 <p>The data for this first exercise comes from a between-subjects
 experiment with two factors. Start by loading the data and removing any
-missing data (<code>NA</code>), using thd following command.</p>
-<p><strong>Enter these commands into your script, and run
+missing data (<code>NA</code>), using the following command.</p>
+<p><strong>Enter this comment and commands into your script, and run
 them:</strong></p>
-<pre class="r"><code>cf_raw &lt;- read_csv(&#39;going-further/counterfactual.csv&#39;) %&gt;% drop_na()</code></pre>
+<pre class="r"><code># EXERCISE
+# Load data
+cf_raw &lt;- read_csv(&#39;going-further/counterfactual.csv&#39;) %&gt;% drop_na()</code></pre>
 <p>The first few rows of data look like this:</p>
 <table style="width:64%;">
 <colgroup>
@@ -803,8 +815,8 @@ this dataset, so don’t include <code>subj</code>or
 --------------
 [1] perspective                                               : 3.252175  ±0.01%
 [2] predictability                                            : 0.2035932 ±0.03%
-[3] perspective + predictability                              : 0.6699359 ±0.96%
-[4] perspective + predictability + perspective:predictability : 0.2988153 ±2.49%
+[3] perspective + predictability                              : 0.6617437 ±2.26%
+[4] perspective + predictability + perspective:predictability : 0.3010063 ±4.16%
 
 Against denominator:
   Intercept only 
@@ -812,7 +824,7 @@ Against denominator:
 Bayes factor type: BFlinearModel, JZS</code></pre>
 <pre><code>Bayes factor analysis
 --------------
-[1] perspective + predictability + perspective:predictability : 0.4460357 ±2.67%
+[1] perspective + predictability + perspective:predictability : 0.4548684 ±4.74%
 
 Against denominator:
   blame ~ perspective + predictability 
@@ -829,9 +841,11 @@ code you used to do your analysis, into PsycEL.</strong></p>
 experiment with two factors. Start by loading the data, selecting the
 columns and rows we’ll need for this analysis, and removing missing data
 (<code>NA</code>).</p>
-<p><strong>Enter these commands into your script, and run
+<p><strong>Enter these comments and commands into your script, and run
 them:</strong></p>
-<pre class="r"><code>raw &lt;- read_csv(&#39;case-studies/chris-mitchell/priming-faces.csv&#39;) %&gt;%
+<pre class="r"><code># EXERCISE 2
+# Load data, select Test phase and appropriate columns; drop NA entries
+raw &lt;- read_csv(&#39;case-studies/chris-mitchell/priming-faces.csv&#39;) %&gt;%
   filter(Running == &quot;Test&quot;) %&gt;%
   select(Subject, Congruency, Load, RT) %&gt;%
   drop_na()</code></pre>
@@ -922,10 +936,10 @@ Bayesian ANOVA.</p>
 <p>Your results should look similar to this:</p>
 <pre><code>Bayes factor analysis
 --------------
-[1] Congruency + Subject                          : 0.3052106 ±1.93%
-[2] Load + Subject                                : 19421.66  ±1.5%
-[3] Congruency + Load + Subject                   : 6378.065  ±1.66%
-[4] Congruency + Load + Congruency:Load + Subject : 2116.225  ±2.39%
+[1] Congruency + Subject                          : 0.3059866 ±1.85%
+[2] Load + Subject                                : 19235.62  ±1.11%
+[3] Congruency + Load + Subject                   : 6457.079  ±1.88%
+[4] Congruency + Load + Congruency:Load + Subject : 2191.695  ±5.73%
 
 Against denominator:
   RT ~ Subject 
@@ -933,7 +947,7 @@ Against denominator:
 Bayes factor type: BFlinearModel, JZS</code></pre>
 <pre><code>Bayes factor analysis
 --------------
-[1] Congruency + Load + Congruency:Load + Subject : 0.3317974 ±2.91%
+[1] Congruency + Load + Congruency:Load + Subject : 0.3394252 ±6.04%
 
 Against denominator:
   RT ~ Congruency + Load + Subject 
