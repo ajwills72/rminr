@@ -6,7 +6,6 @@ output:
     toc: true
     toc_depth: 2
     number_sections: true
-date: '`r format(Sys.Date())`'
 ---
 
 ```{r setup, include=FALSE}
@@ -14,7 +13,7 @@ date: '`r format(Sys.Date())`'
 ## Show only commands.
 ## knitr::opts_chunk$set(echo = TRUE, message = FALSE, results='hide', fig.keep = 'none', comment=NA)
 ## Show commands and output.
-knitr::opts_chunk$set(echo = TRUE, comment=NA, cache = TRUE)
+knitr::opts_chunk$set(echo = TRUE, comment = NA, cache = TRUE)
 ```
 
 # Before you start
@@ -203,20 +202,22 @@ how to create projects and R scripts, look at [this brief intro to Rstudio](http
 * Upload the CSV file to the `data` folder.
 
 ```{r, include = FALSE}
-# always start with loading all the packages you need for a given analysis
+# Bayesian Power Analysis
+# Always start with loading all the packages you need for a given analysis
 library(BayesFactor, quietly = TRUE)
 library(tidyverse)
 
-# set seed for reproducability
+# set seed for reproducibility
 set.seed(1)
 ```
 
 ```r
-# always start with loading all the packages you need for a given analysis
+# Bayesian Power Analysis
+# Always start with loading all the packages you need for a given analysis
 library(BayesFactor, quietly = TRUE)
 library(tidyverse)
 
-# set seed for reproducability
+# set seed for reproducibility
 set.seed(1)
 ```
 
@@ -227,9 +228,9 @@ the data according to some really vague description by the original authors.
 Let us start by importing said data.
 
 ```{r}
-# import dataset
+# Import dataset
 dta <- read_csv("data/george1935pilot.csv")
-# make sure that every column is in the right format
+# Make sure that every column is in the right format
 dta$condition <- factor(dta$condition)
 dta$ppt <- factor(dta$ppt)
 ```
@@ -246,7 +247,7 @@ Now, let us have a look at how the data look like. Here is what each column in t
 * `fluctuations` - This is our dependent variable. It contains the proportion of fluctuations participants reported during the experiment. For this exercise, imagine that we showed the Necker Cube to participants for 100 seconds and they can switch between percepts once in every second. This means that if participants keep switching between percepts as fast as possible, they can report a maximum of 100 switches. The proportion of fluctiation is then whatever they reported divided by a 100.
 
 ```{r}
-# inspect our data
+# Inspect our data
 dta %>%
     head(20)
 ```
@@ -254,7 +255,7 @@ dta %>%
 Look at the means and standard deviations first.
 
 ```{r}
-# look at some descriptive statistics
+# Look at some descriptive statistics
 dta %>%
     group_by(condition) %>%
     summarise(mean = mean(fluctuations), sd = sd(fluctuations))
@@ -300,22 +301,22 @@ commands and approaches.
 For now, we will make it easy and straightforward. We will use `rnorm` to create our data. The command looks like this:
 
 ```r
-# do not copy and paste it
+# Do not copy and paste this
 rnorm(n = group_size, mean = mean_from_data, sd = standard_deviation)
 ```
 
 The next step is to simply give `rnorm` the means and standard deviations of the two conditions we already looked at. Remember in a few steps before, we looked at the mean and standard deviation of each group in our data. Those will be the values we use in `rnorm`. 
 
 ```{r}
-# generate random data for the control condition
+# Generate random data for the control condition
 control <- rnorm(n = 1000, mean = 0.566, sd = 0.173)
-# generate random data for the caffein condition
+# Generate random data for the caffeine condition
 caffeine <- rnorm(n = 1000, mean = 0.666, sd = 0.118)
-# here we create a vector for the group column
+# Here we create a vector for the group column
 group <- rep(c("control", "caffeine"), each = 1000)
-# create a participant column
+# Create a participant column
 ppt <- 1:2000
-# here we combine everything together
+# Here we combine everything together
 ideal_data <- tibble(ppt = ppt,
                      condition = group,
                      fluctuations = c(control, caffeine))
@@ -328,7 +329,7 @@ should be the number of fluctuations. We should briefly inspect the data
 before moving on.
 
 ```{r}
-# see first ten lines of data
+# View first ten lines of data
 ideal_data %>%
     head(10)
 ```
@@ -336,6 +337,7 @@ ideal_data %>%
 This looks exactly what we want.
 
 ```{r}
+# Display density plot of data
 ideal_data %>% ggplot(aes(x = fluctuations, fill = condition)) +
     geom_density(alpha = 0.5) +
     theme_void()
@@ -361,8 +363,9 @@ condition, and another 40 random whole numbers between 1001 and 2000 for the c
 caffeine condition.
 
 ```{r}
-# for the control condition
+# Random participant numbers, for the control condition
 control <- sample(1:1000, size = 40)
+# Random participant numbers, for the caffeine condition
 caffeine <- sample(1001:2000, size = 40)
 ```
 
@@ -370,21 +373,24 @@ Here, we created two objects that contain random numbers exactly like our
 participant numbers. We now filter the data by these numbers.
 
 ```{r}
+# Select random sample of 'ideal_data'
 random_data <- ideal_data %>%
   filter(ppt %in% c(control, caffeine))
 ```
 
 `c(control, caffeine)` essentially puts the two objects together.
 
-If the data is subset, we can carry out the Bayesian t-test.
+Now, we can carry out the Bayesian t-test.
 
 ```{r}
+# Calculate Bayes Factor
 test <- ttestBF(formula = fluctuations ~ condition, data = random_data)
 ```
 
 The final step is to extract the Bayes Factor.
 
 ```{r}
+# Extract Bayes Factor
 bf <- test %>%
     data.frame() %>% # change the format to a data frame for usability
     select(bf) %>% # select the bf column
@@ -394,6 +400,7 @@ bf <- test %>%
 Let us now look at the Bayes Factor.
 
 ```{r}
+# Show Bayes Factor
 bf
 ```
 
@@ -423,17 +430,17 @@ This is exactly what we just did, but described in a simpler way. You can
 simply copy-paste the code below into your R script.
 
 ```{r}
-## we take the sample size n and a data set as inputs
+## We take the sample size n and a data set as inputs
 get_bf <- function(n, data) {
-    ## 1. we randomly pick n number of participants for each group
+    ## 1. We randomly pick n number of participants for each group
     control <- sample(1:1000, n) # get participant identifiers for control
     caffeine <- sample(1001:2000, n) # get participant identifiers for caffeine
-    # subset data
+    # Subset data
     random_data <- data %>% filter(ppt %in% c(control, caffeine))
-    ## 2. do the Bayesian t-test
+    ## 2. Do the Bayesian t-test
     test <- ttestBF(formula = fluctuations ~ condition, data = random_data)
-    ## 3. get the Bayes Factor
-    ## we have to change the format to data.frame to extract the Bayes Factor
+    ## 3. Get the Bayes Factor
+    ## We have to change the format to data.frame to extract the Bayes Factor
     bf <- test %>% data.frame() %>% select(bf) %>% as.numeric()
     ## 4. return it to the user
     return(bf)
@@ -443,6 +450,7 @@ get_bf <- function(n, data) {
 This is our function. Let's try it out for a sample size of 40 with our `ideal_data`. So we will have `n = 40` and `data = ideal_data`.
 
 ```{r}
+# Test function
 get_bf(n = 40, data = ideal_data)
 ```
 
@@ -479,7 +487,7 @@ participants we need to recruit.
 There are two things to decide before we start simulating data collection:
 
 1. The sample sizes we want to check. We create all sample sizes as a `tibble`. If you want to know more about what tibble is, see [More on Tibbles](https://www.andywills.info/rminr/more-on-tibbles.html). This means that we will have a one-column data frame with all the sample sizes we want to check.
-2. The number of draws we wish to make for each sample sizes. This will simply be the number of times a certain sample size occurs in our `tibble` data frame.
+2. The number of draws we wish to make for each sample size. This will simply be the number of times a certain sample size occurs in our `tibble` data frame.
 
 First, we will create a `tibble` with sample sizes from 10 to 200. We will also
 repeat each
@@ -505,12 +513,13 @@ call `bf`.
 We also need to make sure to store the results in an object.
 
 We will also get a *warning message* from R that it converted our tibble
-to a data.frame. This is not an error message. R still succesfully executed the
+to a data.frame. This is not an error message. R still successfully executed the
 code below.
 
 **The command below will take approximately 5 minutes to complete.**
 
 ```{r, warning = FALSE}
+# Run Monte Carlo simulation (approx. 5 min run time)
 monte <- tibble(n = rep(seq(from = 10, to = 200, by = 10), each = 1000)) %>%
     mutate(bf = map_dbl(n, get_bf, data = ideal_data))
 ```
@@ -534,11 +543,12 @@ times we got a BF that was conclusive - outside of the interval
 1/3 and 1.
 
 ```{r}
+# Calculate results of Monte Carlo simulation
 power <- monte %>%
     group_by(n) %>%
     summarise(power = 1 - (sum(between(bf, 1/3, 3)) / 1000))
 
-# show all the rows where power is larger than 80%
+# Show all the rows where power is larger than 80%
 power %>%
     filter(power > 0.80)
 ```
@@ -564,6 +574,7 @@ size has at least 80% power or not. We will also save the object by overwriting
 `power`.
 
 ```{r}
+# Add 'criterion' column
 power <- power %>%
     mutate(criterion = power > 0.80)
 ```
@@ -584,18 +595,18 @@ We also need to make sure that axis labels are correct and informative. On top
 of that, I also choose to better look for our plot by using `"theme_classic`.
 
 ```{r}
-## sample size on the x-axis and power on the y-axis
+# Display line plot with  sample size on the x-axis and power on the y-axis
 ggplot(power, aes(x = n, y = power)) +
-    # make a line graph
+    # Make a line graph
     geom_line(linetype = 2) +
-    # add points with different colours for our criterion
-    # increase the size of those points for better visibility
+    # Add points with different colours for our criterion
+    # Increase the size of those points for better visibility
     geom_point(aes(colour = criterion), size = 2) +
-    # put a vertical line at 50 on the x axis
+    # Put a vertical line at 50 on the x axis
     geom_vline(aes(xintercept = 50)) +
-    # put a tick on the x-axis at 50, 100, and 200
+    # Put a tick on the x-axis at 50, 100, and 200
     scale_x_continuous(breaks = sort(c(50, 100, 200))) +
-    # rename axis labels
+    # Rename axis labels
     xlab("sample size") +
     ylab("power") +
     # nice theme
@@ -603,9 +614,9 @@ ggplot(power, aes(x = n, y = power)) +
 ```
 
 As you can see, the power goes up not linearly, but more as
-a curve. This resembles more to a logarithmic function, which has this
+a curve. It resembles a logarithmic function, which has this
 steep curve that seems to plateau after a certain point. Power after a certain
-point remains stationary. This means that collecting too much data is
+point remains nearly stationary. This means that collecting too much data is
 not harmful, but can be unnecessary.
 
 # Exercise 1: Estimate the sample size for a new data set.
