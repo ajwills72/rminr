@@ -1,9 +1,7 @@
 ---
 title: "More on regression"
 author: "Paul Sharpe and Andy Wills"
-output:
-  html_document:
-    highlight: pygment
+output: html_document
 ---
 
 ```{r setup, include=FALSE}
@@ -11,10 +9,8 @@ output:
 ## Show only commands.
 ## knitr::opts_chunk$set(echo = TRUE, message = FALSE, results='hide', fig.keep = 'none', comment=NA)
 ## Show commands and output.
-knitr::opts_chunk$set(echo = TRUE, comment=NA, cache = FALSE)
+knitr::opts_chunk$set(echo = TRUE, comment = NA, cache = FALSE)
 library(pander)
-# Line numbering guide
-# https://blog.atusy.net/submodules/rmd-line-num/index.html
 ```
 
 ## Contents
@@ -53,11 +49,14 @@ Next, create a new, empty R script and save it in the `rminr-data` folder as `mo
 
 We'll use some data from an undergraduate student dissertation which explored relationships between Polish (n=93) and British (n=104) people's religious orientation, spiritual beliefs and emotional intelligence. We start by loading the data.
 
-**Enter these commands into your script, and run them:**
+**Enter these comments and commands into your script, and run them:**
 
 ```{r load, message=FALSE}
-rm(list = ls()) # clear the environment
+# Clear the environment
+rm(list = ls()) 
+# Load tidyverse
 library(tidyverse)
+# Load data
 data <- read_csv('going-further/religion-preproc.csv')
 ```
 
@@ -78,9 +77,10 @@ In order to follow the rest of this worksheet, you need to understand the data y
 
 We need to do a little bit of preprocessing of the `education` variable. Specifically, `education` is an _ordered_ variable -- people in this sample have a reported level of education which ranges from low (`no formal quals`) to high (`degree`). R does not know what order to put these levels in unless we tell it. The easiest way to do this is to recode the data, as you did previously in the [cleaning up questionnaire data](https://benwhalley.github.io/rmip/data.html#using-recode) worksheet.
 
-**Enter these commands into your script, and run them:**
+**Enter these comments and commands into your script, and run them:**
 
 ```{r demographics2, warning=FALSE}
+# Recode data
 edu_map <- c('no formal quals' = 1, 
              'GCSE or equiv' = 2, 
              'A level or equiv' = 3,
@@ -136,25 +136,27 @@ The linear model you built in [the multiple regression worksheet](https://benwha
 
 ### Fitting the model
 
-**Enter these commands into your script, and run them:**
+**Enter these comments and commands into your script, and run them:**
 
 ```{r oi1, class.source = 'numberLines lineAnchors'}
+# Select Polish participants; remove NA entries
 polish <- data %>% filter(nationality == 'Polish')
 polish <- polish %>% drop_na()
-
+# Perform regression
 oi_lm1 <- lm(ro_i ~ age + sex + edu_sc + religious, data = polish)
+# Display results of regression
 oi_lm1
 ```
 
 **Explanation of commands:**
 
-Line 1 filters the data to only include Polish participants. 
+Command line 1 filters the data to only include Polish participants. 
 
-Line 2 removes any participants for which we have missing data (shown as `NA` in the data frame). We have to do this because the `lmBF` function we'll use later cannot cope with missing data.
+Command line 2 removes any participants for which we have missing data (shown as `NA` in the data frame). We have to do this because the `lmBF` function we'll use later cannot cope with missing data.
 
-Line 4 builds a regression model that predicts intrinsic religious orientation, defined by `ro_i ~`. The variables on the right of the `~` are the predictors. As you can see, these are the four demographics variables `age + sex + edu_sc + religious`. 
+Command line 3 builds a regression model that predicts intrinsic religious orientation, defined by `ro_i ~`. The variables on the right of the `~` are the predictors. As you can see, these are the four demographics variables `age + sex + edu_sc + religious`. 
 
-Line 5 prints the result of fitting the regression model. 
+Command line 4 prints the result of fitting the regression model. 
 
 **Explanation of output**: We are given the [equation of the line](https://benwhalley.github.io/rmip/automatic-line-fitting.html) for the regression model. We can see from this output that the best fitting line involves a positive relation between `age` and `ro_i`, i.e. older people score higher on intrinsic religious orientation in this sample. For _binary_ predictors, for example `religious`, which only have two levels in our dataset (`yes` or `no` for `religious`), the output indicates which way round R has decided to set these up. In this case, it says `religiousyes`, meaning that `yes` has been taken as the positive value. The co-efficient of `-0.69` is negative, so this means that people who answer `yes` to this question scored lower on intrinsic religious orientation that those who replied `no`. Similarly, `sex` was set up with `male` as the positive value (`sexmale`), and the co-efficient (`.006`) is positive, so men scored higher than women on intrinsic religious orientation in this sample. 
 
@@ -162,14 +164,16 @@ Line 5 prints the result of fitting the regression model.
 
 How much of the variance in intrinsic religious orientation is explained by the demographic variables? As explained in the [how good was our model?](https://benwhalley.github.io/rmip/how-good-was-our-model.html) worksheet, we can assess this using the $R^2$ statistic.
 
-**Enter these commands into your script, and run them:**
+**Enter these comments and commands into your script, and run them:**
 
 ```{r oi1a, class.source = 'numberLines lineAnchors'}
+# Load 'broom' package, for 'glance' command
 library(broom)
+# Display further results of regression
 glance(oi_lm1)
 ```
 
-**Explanation of commands:** Line 1 loads the `broom` library which provides the `glance()` function. Line 2 uses `glance()` to print some statistics for our model.
+**Explanation of commands:** Command line 1 loads the `broom` library which provides the `glance()` function. Command line 2 uses `glance()` to print some statistics for our model.
 
 **Explanation of output:**
 
@@ -183,18 +187,21 @@ As explained in previous worksheets, the value of `r r_squared1` in `adj.r.squar
 
 [The multiple regression worksheet](https://benwhalley.github.io/rmip/how-good-was-our-model.html) also showed you how to calculate a Bayes factor to decide whether a regression model is any better than a simpler model with no predictors.
 
-**Enter these commands into your script, and run them:**
+**Enter these comments and commands into your script, and run them:**
 
 ```{r oi1-bf, class.source = 'numberLines lineAnchors', message=FALSE}
+# Load BayesFactor package
 library(BayesFactor, quietly = TRUE)
+# Calculate BayesFactor for regression model
 oi_lmbf1 <- lmBF(ro_i ~ age + sex + edu_sc + religious,
                  data = data.frame(polish))
+# Display results
 oi_lmbf1
 ```
 
 **Explanation of commands:**
 
-Line 1 loads the `BayesFactor` package. Lines 2-3 build a Bayesian model using the same outcome and predictors as above. Line 3 displays information about the model.
+Command line 1 loads the `BayesFactor` package. Command lines 2-3 build a Bayesian model using the same outcome and predictors as above. Command line 4 displays information about the model.
 
 **Explanation of output:**
 
@@ -216,19 +223,21 @@ We can test this hypothesis by extending the demographics model to include the s
 
 ### Fit the model and report $R^2$
 
-**Enter these commands into your script, and run them:**
+**Enter these comments and commands into your script, and run them:**
 
 ```{r oi2, warning=FALSE}
+# Perform second regression
 oi_lm2 <- lm(ro_i ~ age + sex + edu_sc + religious +
                happiness + universe + others + nature + places,
              data = polish)
+# Display results of regression
 oi_lm2
 glance(oi_lm2)
 ```
 
 **Explanation of commands:**
 
-Lines 1-3 build our new model. This includes the demographics variables, and adds the spirituality variables `happiness + universe + others + nature + places`. Line 4 shows the output of the model, and Line 5 gives us the $R^2$ value.
+Command lines 1-3 build our new model. This includes the demographics variables, and adds the spirituality variables `happiness + universe + others + nature + places`. Comman line 4 shows the output of the model, and command line 5 gives us the $R^2$ value.
 
 **Explanation of output:**
 
@@ -246,18 +255,20 @@ We've compared Bayesian models in a couple of previous worksheets. For example, 
 
 We can use the same approach here.
 
-**Enter these commands into your script, and run them:**
+**Enter these comments and commands into your script, and run them:**
 
 ```{r oi2-bf, class.source = 'numberLines lineAnchors', warning=FALSE}
+# Calculate Bayes Factor for second regression model
 oi_lmbf2 <- lmBF(ro_i ~ age + sex + edu_sc + religious +
                happiness + universe + others + nature + places,
                data = data.frame(polish))
+# Calculate Bayes Factor for model 2 versus model 1
 oi_lmbf2 / oi_lmbf1
 ```
 
 **Explanation of commands:**
 
-Lines 1-3 build a Bayesian regression model with the demographic and spirituality predictors. Line 4 compares the model with the demographics and spirituality variables, `oi_lmbf2`, against the model with just the demographics variables, `oi_lmbf1`. You can think of this as dividing a more complex model by a simpler one, but remember that this is actually a comparison of the evidence for the two models.
+Command lines 1-3 build a Bayesian regression model with the demographic and spirituality predictors. Command line 4 compares the model with the demographics and spirituality variables, `oi_lmbf2`, against the model with just the demographics variables, `oi_lmbf1`. You can think of this as dividing a more complex model by a simpler one, but remember that this is actually a comparison of the evidence for the two models.
 
 **Explanation of output:**
 
@@ -270,17 +281,19 @@ In this study, the researchers also hypothesized that trait emotional intelligen
 **Enter these commands into your script, and run them:**
 
 ```{r oi3, warning=FALSE}
+# Perform third regression
 oi_lm3 <- lm(ro_i ~ age + sex + edu_sc + religious +
                happiness + universe + others + nature + places +
                wellbeing + self_control + emotionality + sociability + ro_e,
              data = polish)
+# Display results
 oi_lm3
 glance(oi_lm3)
 ```
 
 **Explanation of commands:**
 
-Lines 1-4 builds our third model. This contains all of the variables in `oi_lmbf2`, and adds the emotional intelligence variables `wellbeing + self_control + emotionality + sociability`, and `ro_e` for extrinsic religiosity. Line 5 shows the best fitting line, and Line 6 gives us the $R^2$ value.
+Copmmand lines 1-4 build our third model. This contains all of the variables in `oi_lmbf2`, and adds the emotional intelligence variables `wellbeing + self_control + emotionality + sociability`, and `ro_e` for extrinsic religiosity. Command line 5 shows the best fitting line, and command line 6 gives us the $R^2$ value.
 
 **Explanation of output:**
 
@@ -292,19 +305,21 @@ For this model, `adj.r.squared` = `r r_squared3`, which means it explains `r r_s
 
 Finally, we compare the Bayesian model, with the one from step 2.
 
-**Enter these commands into your script, and run them:**
+**Enter these comments and commands into your script, and run them:**
 
 ```{r oi3-bf, warning=FALSE}
+# Calculate Bayes Factor for third model
 oi_lmbf3 <- lmBF(ro_i ~ age + sex + edu_sc + religious +
                happiness + universe + others + nature + places +
                wellbeing + self_control + emotionality + sociability + ro_e,
                data = data.frame(polish))
+# Compute Bayes Factor for model 3 versus model 2
 oi_lmbf3 / oi_lmbf2
 ```
 
 **Explanation of commands:**
 
-Lines 1-4 build the Bayesian model. Line 5 compares this new model against the previous one.
+Command lines 1-4 build the Bayesian model. Command line 5 compares this new model against the previous one.
 
 **Explanation of output:**
 
@@ -320,20 +335,24 @@ All of the regression models we've been creating and comparing were built based 
 
 We earlier saw that there was strong evidence ($BF > 8000$) for the model `ro_i ~ age + sex + edu_sc + religious`, and we noted that this is evidence for the whole model, not for any one predictor (e.g. `age`). Nonetheless, you might sometimes be asked to report whether there is evidence for a particular predictor within a model _individually_ having an effect on the outcome variable. You can answer such questions using the same approach as above. In other words, calculate the evidence for a model omitting that one predictor -- `ro_i ~ sex + edu_sc + religious` -- and compare it to the original model.
 
-**Enter these commands into your script, and run them:**
+**Enter these comments and commands into your script, and run them:**
 
 ```{r single}
+# Calculate Bayes Factor for model1, minus age
 oi_lmbf1_minus_age <- lmBF(ro_i ~ sex + edu_sc + religious,
                            data = data.frame(polish))
+# Calculate Bayes Factor for age in model 1
 oi_lmbf1 / oi_lmbf1_minus_age
 ```
 
 In this case, the result of our analysis is inconclusive. The Bayes Factor is close to 1, so the evidence for and against `age` being an effective predictor in the model is about evenly matched. In contrast, there is strong evidence for `relgion` being an effective predictor within the model.
 
-**Enter these commands into your script, and run them:**
+**Enter these comments and commands into your script, and run them:**
 
 ```{r single2}
+# Calculate Bayes Factor for model 1, minus religion
 oi_lmbf1_minus_rel <- lmBF(ro_i ~ age + sex + edu_sc, data = data.frame(polish))
+# Calculate Bayes Factor for religion in model 1
 oi_lmbf1 / oi_lmbf1_minus_rel
 ```
 
@@ -380,7 +399,7 @@ ei_bf2 <- lmBF(tei ~ age + sex + edu_sc + religious  +
 ei_bf2 / ei_bf1
 ```
 
-**Copy the R code you used for this exercise into PsycEL.**
+**Copy the R code you used for this exercise, along with appropriate comments, into PsycEL.**
 
 **Write a sentence interpreting _R^2^_ and the Bayes Factor for the model comparison.**
 
