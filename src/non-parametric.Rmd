@@ -1,9 +1,7 @@
 ---
 title: "Traditional non-parametric tests"
 author: "Paul Sharpe, Andy Wills, Allegra Cattani, Helen Lloyd"
-output:
-  html_document:
-    highlight: pygment
+output: html_document
 ---
 
 ```{r setup, include=FALSE}
@@ -13,7 +11,7 @@ output:
 ## Mann-Whitney based on https://stackoverflow.com/questions/43033884/r-mann-whitney-u-test-output-like-in-spss
 ## For Kruskal-Wallis see http://www.sthda.com/english/wiki/kruskal-wallis-test-in-r
 ## Show commands and output.
-knitr::opts_chunk$set(echo = TRUE, comment=NA, cache = FALSE)
+knitr::opts_chunk$set(echo = TRUE, comment = NA, cache = FALSE)
 library(pander)
 ```
 
@@ -63,7 +61,7 @@ To prepare for this worksheet:
 
 1. If you don't see the folder or the files, it means you created your project _before_ the data required for this worksheet was added to the `rminr-data` git repository. You fix this by asking git to "`pull`" the repository. Select the `Git` tab, which is located in the row of tabs which includes the `Environment` tab. Click the `Pull` button with a downward pointing arrow. A window will open showing the files which have been pulled from the repository. Close the `Git pull` window.
 
-1. Create a script named `non-parametric.R` in the `rminr-data` folder (the folder above `going-further`). Add the code to this script as you work through each section of the worksheet.
+1. Create a script named `non-parametric.R` in the `rminr-data` folder (the folder above `going-further`). Add the comments and commands to this script as you work through each section of the worksheet.
 
 <a name="wilcox"></a>
 
@@ -76,14 +74,18 @@ We'll demonstrate the Wilcoxon rank-sum test using data from an experiment which
 We start by loading the data. **Enter these commands into your script, and run them:**
 
 ```{r load, message=FALSE, class.source = 'numberLines lineAnchors'}
-rm(list = ls()) # clear the environment
+# Non-parametric tests
+# Clear environment
+rm(list = ls()) 
+# Load tidyverse
 library(tidyverse)
+# Load data
 wing_preproc <- read_csv('going-further/picture-naming-long.csv')
 ```
 
 **Explanation of commands:**
 
-These commands should be familiar from previous worksheets. Line 1 clears the environment. Line 2 loads the `tidyverse` package. Line 3 reads the data. 
+These commands should be familiar from previous worksheets. Command line 1 clears the environment. Command line 2 loads the `tidyverse` package. Command line 3 reads the data. 
 
 The first few lines of `wing_preproc` look like this:
 
@@ -94,10 +96,10 @@ The first three columns are the participant ID number, gender of the participant
 
 In the next section, we are going to compare English and Italian on the noun comprehension task. So, we filter the data (which contains all four tasks) to include just that task. We also remove any missing data.
 
-**Enter this command into your script, and run it:**
+**Enter this comment and command into your script, and run it:**
 
 ```{r}
-# Filter
+# Select 'nc' task; drop NA entries
 nc_include <- wing_preproc %>% filter(task == 'nc') %>% drop_na()
 ```
 
@@ -109,10 +111,10 @@ nc_include <- wing_preproc %>% filter(task == 'nc') %>% drop_na()
 
 When we report non-parametric tests, we normally report the median (rather than the mean) as our descriptive statistic. This makes practical sense, because [the mean can be misleading when the distribution is skewed](https://ajwills72.github.io/critical-thinking/distributions-samples.pdf) and, if we have chosen to do a non-parametric test, we are (presumably) uncertain whether the distribution is skewed or not.
 
-**Enter these commands into your script, and run them:**
+**Enter these comments and commands into your script, and run them:**
 
 ```{r}
-# summary statistics
+# Display medians
 nc_include %>%
   group_by(cards) %>%
   summarise(median = median(correct))
@@ -126,10 +128,10 @@ As we said earlier in this worksheet, the Wilcoxon rank sum test is a non-parame
 
 We'll run a Wilcoxon rank-sum test to see if there were any significant differences between scores for the Italian and English cards on the noun comprehension (`nc`) task.
 
-**Enter this command into your script, and run it:**
+**Enter this comment and command into your script, and run it:**
 
 ```{r mw-nc}
-# Wilcoxon rank-sum test (Mann-Whitney U) for noun comprehension
+# Perform Wilcoxon rank-sum test for noun comprehension
 wilcox.test(correct ~ cards, nc_include)
 ```
 
@@ -167,7 +169,7 @@ In some journal articles, you may see a non-parametric test called a "Mann-Whitn
 
 ## Exercise 1
 
-Calculate summary statistics and the Wilxocon rank-sum for the noun production task. Your results should look like this:
+Calculate summary statistics and the Wilcoxon rank-sum for the noun production task. Your results should look like this:
 
 ```{r ex1, echo=FALSE}
 np_include <- wing_preproc %>% filter(task == 'np') %>% drop_na()
@@ -187,10 +189,11 @@ The Kruskal-Wallis H test is a non-parametric equivalent of a one-way between su
 
 We'll demonstrate the Kruskal-Wallis test using data from a study which compared emotion regulation strategies between fans of mainstream (control group), goth, metal and emo music. Participants were measured using the Emotion Regulation Strategies for Artistic Creative Activities Scale (ERS-ACA), an 18 item inventory, with each item scored from 1 ('strongly disagree') to 5 ('strongly agree'). The ERS-ACA gives an overall measure of the strategy people use to regulate their emotions when they engage in artistic, creative activities, and scores on three strategy sub-scales; avoidance, approach and self-development.
 
-We start by loading the data; **enter this command into your script, and run it:**
+We start by loading the data; **enter these comments and command into your script, and run it:**
 
 ```{r load-ers, message=FALSE}
 # Kruskal-Wallis H test
+# Load data
 ers_l <- read_csv('going-further/music-emotion-preproc.csv')
 ```
 
@@ -209,7 +212,9 @@ We'll start by calculating the medians for the 'approach' subscale.
 **Enter these commands into your script, and run them:**
 
 ```{r k-w-summary, class.source = 'numberLines lineAnchors'}
+# Select 'approach' conditionl; drop NAs
 approach <- ers_l %>% filter(ers == 'approach') %>% drop_na()
+# Display medians by 'subculture'
 approach %>%
   group_by(subculture) %>%
   summarise(median = median(score))
@@ -217,7 +222,7 @@ approach %>%
 
 **Explanation of commands:**
 
-Line 1 filters the data to only include measurements for the 'approach' subscale and removes missing data. Lines 2-5 are very similar to the summary statistics we generated for the Mann-Whitney test. In this case we group by music `subculture`.
+Command line 1 filters the data to only include measurements for the 'approach' subscale and removes missing data. Command lines 2-5 are very similar to the summary statistics we generated for the Mann-Whitney test. In this case we group by music `subculture`.
 
 **Explanation of output:**
 
@@ -227,9 +232,10 @@ The differences in medians between groups look quite small.
 
 We can now run the Kruskal-Wallis test. 
 
-**Enter this command into your script, and run it:**
+**Enter this comment and command into your script, and run it:**
 
 ```{r k-w}
+# Perform Kruskal-Wallis test
 kruskal.test(score ~ subculture, data = approach)
 ```
 
