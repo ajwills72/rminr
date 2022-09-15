@@ -400,13 +400,15 @@ et al. (2022)</a>.</p>
 <h2>Load and preprocess data</h2>
 <p>The following commands are part of the answer to Exercise 2 of <a href="anova4.html#ex2">More on Bayesian ANOVA</a> and are not discussed
 further here:</p>
-<pre class="r"><code>library(tidyverse)
+<pre class="r"><code># Load packages
+library(tidyverse)
 library(BayesFactor)
+# Load data, select Test phase, select appropriate columns, drop NAs
 raw &lt;- read_csv(&#39;case-studies/chris-mitchell/priming-faces.csv&#39;) %&gt;%
   filter(Running == &quot;Test&quot;) %&gt;%
   select(Subject, Congruency, Load, RT) %&gt;%
   drop_na()
-
+# Create subject-level summary
 priming &lt;- raw %&gt;%
     mutate(Subject = factor(Subject), Congruency = factor(Congruency),
            Load = factor(Load)) %&gt;%
@@ -416,24 +418,26 @@ priming &lt;- raw %&gt;%
 <h2>Calculate some initial Bayes factors</h2>
 <p>Enter this code into your script and run it; it may take a minute or
 so to produce a result:</p>
-<pre class="r"><code>BFo &lt;- generalTestBF(
+<pre class="r"><code># Calculate Bayes Factors
+BFo &lt;- generalTestBF(
     formula = RT ~ Congruency*Load + Subject + Subject:Congruency + Subject:Load,
     data = data.frame(priming),
     whichRandom = &quot;Subject&quot;,
     neverExclude = c(&quot;Subject&quot;, &quot;Subject:Congruency&quot;, &quot;Subj:Load&quot;),
     whichModels = &quot;all&quot;
 )
+# Display Bayes Factors
 BFo</code></pre>
 <pre><code>Bayes factor analysis
 --------------
-[1] Congruency + Subject + Congruency:Subject + Load:Subject                          : 1.898877e+30 ±1.17%
-[2] Load + Subject + Congruency:Subject + Load:Subject                                : 7.701102e+33 ±0.69%
-[3] Congruency:Load + Subject + Congruency:Subject + Load:Subject                     : 1.979604e+30 ±1.1%
-[4] Congruency + Load + Subject + Congruency:Subject + Load:Subject                   : 2.772553e+33 ±3.52%
-[5] Congruency + Congruency:Load + Subject + Congruency:Subject + Load:Subject        : 7.317355e+29 ±6.83%
-[6] Load + Congruency:Load + Subject + Congruency:Subject + Load:Subject              : 2.92025e+33  ±2.82%
-[7] Congruency + Load + Congruency:Load + Subject + Congruency:Subject + Load:Subject : 1.012915e+33 ±2.05%
-[8] Subject + Congruency:Subject + Load:Subject                                       : 5.663742e+30 ±0.43%
+[1] Congruency + Subject + Congruency:Subject + Load:Subject                          : 1.883333e+30 ±1.15%
+[2] Load + Subject + Congruency:Subject + Load:Subject                                : 7.871082e+33 ±0.79%
+[3] Congruency:Load + Subject + Congruency:Subject + Load:Subject                     : 2.085742e+30 ±6.18%
+[4] Congruency + Load + Subject + Congruency:Subject + Load:Subject                   : 2.734706e+33 ±1.83%
+[5] Congruency + Congruency:Load + Subject + Congruency:Subject + Load:Subject        : 6.585271e+29 ±1.56%
+[6] Load + Congruency:Load + Subject + Congruency:Subject + Load:Subject              : 2.940871e+33 ±2.25%
+[7] Congruency + Load + Congruency:Load + Subject + Congruency:Subject + Load:Subject : 1.240869e+33 ±20.75%
+[8] Subject + Congruency:Subject + Load:Subject                                       : 5.655589e+30 ±0.38%
 
 Against denominator:
   Intercept only 
@@ -490,17 +494,19 @@ the <em>intercept</em>, as the null model.</p>
 the interaction in Exercise 2, i.e. by the <code>/</code> operator. What
 we want to do is apply that operator for each of the models, which we
 can do with the following command:</p>
-<pre class="r"><code>BF &lt;- BFo[-length(BFo)] / BFo[length(BFo)]
+<pre class="r"><code># Recalculate Bayes Factors, taking subject model as denominator model
+BF &lt;- BFo[-length(BFo)] / BFo[length(BFo)]
+# Display results
 BF</code></pre>
 <pre><code>Bayes factor analysis
 --------------
-[1] Congruency + Subject + Congruency:Subject + Load:Subject                          : 0.3352691 ±1.25%
-[2] Load + Subject + Congruency:Subject + Load:Subject                                : 1359.72   ±0.81%
-[3] Congruency:Load + Subject + Congruency:Subject + Load:Subject                     : 0.3495222 ±1.18%
-[4] Congruency + Load + Subject + Congruency:Subject + Load:Subject                   : 489.5267  ±3.55%
-[5] Congruency + Congruency:Load + Subject + Congruency:Subject + Load:Subject        : 0.1291965 ±6.85%
-[6] Load + Congruency:Load + Subject + Congruency:Subject + Load:Subject              : 515.6043  ±2.85%
-[7] Congruency + Load + Congruency:Load + Subject + Congruency:Subject + Load:Subject : 178.8421  ±2.1%
+[1] Congruency + Subject + Congruency:Subject + Load:Subject                          : 0.3330038 ±1.21%
+[2] Load + Subject + Congruency:Subject + Load:Subject                                : 1391.735  ±0.87%
+[3] Congruency:Load + Subject + Congruency:Subject + Load:Subject                     : 0.368793  ±6.19%
+[4] Congruency + Load + Subject + Congruency:Subject + Load:Subject                   : 483.5404  ±1.87%
+[5] Congruency + Congruency:Load + Subject + Congruency:Subject + Load:Subject        : 0.1164383 ±1.61%
+[6] Load + Congruency:Load + Subject + Congruency:Subject + Load:Subject              : 519.9937  ±2.29%
+[7] Congruency + Load + Congruency:Load + Subject + Congruency:Subject + Load:Subject : 219.4058  ±20.76%
 
 Against denominator:
   RT ~ Subject + Congruency:Subject + Load:Subject 
@@ -544,14 +550,16 @@ et al. (2022)</a></p>
 by identifying them manually, and then removing them from the list. In
 this case, the ill-defined models are 3, 5 and 6; and we remove them
 using the <code>-</code> operator.</p>
-<pre class="r"><code>BFp &lt;- BF[-c(3, 5, 6)]
+<pre class="r"><code># Remove ill-defined models
+BFp &lt;- BF[-c(3, 5, 6)]
+# Display remaining set
 BFp</code></pre>
 <pre><code>Bayes factor analysis
 --------------
-[1] Congruency + Subject + Congruency:Subject + Load:Subject                          : 0.3352691 ±1.25%
-[2] Load + Subject + Congruency:Subject + Load:Subject                                : 1359.72   ±0.81%
-[3] Congruency + Load + Subject + Congruency:Subject + Load:Subject                   : 489.5267  ±3.55%
-[4] Congruency + Load + Congruency:Load + Subject + Congruency:Subject + Load:Subject : 178.8421  ±2.1%
+[1] Congruency + Subject + Congruency:Subject + Load:Subject                          : 0.3330038 ±1.21%
+[2] Load + Subject + Congruency:Subject + Load:Subject                                : 1391.735  ±0.87%
+[3] Congruency + Load + Subject + Congruency:Subject + Load:Subject                   : 483.5404  ±1.87%
+[4] Congruency + Load + Congruency:Load + Subject + Congruency:Subject + Load:Subject : 219.4058  ±20.76%
 
 Against denominator:
   RT ~ Subject + Congruency:Subject + Load:Subject 
@@ -561,11 +569,12 @@ Bayes factor type: BFlinearModel, JZS</code></pre>
 <div id="main-effects" class="section level2">
 <h2>Main effects</h2>
 <p>At this point, we have an table of Bayes Factors of the same form as
-Excercise 2. Row 1 is the main effect of Conrguency. Row 2 is the main
-effect of Load. The Bayes Factors are not quite the same as in Exercise
-2 - we shouldn’t expect them to be, as this is a different test. But the
-conclusions are the same. There is moderate evidence for the null in the
-case of Congruency, and strong evidence for an effect of Load.</p>
+Exercise 2 of the previous worksheet. Row 1 is the main effect of
+Conrguency. Row 2 is the main effect of Load. The Bayes Factors are not
+quite the same as in Exercise 2 - we shouldn’t expect them to be, as
+this is a different test. But the conclusions are the same. There is
+moderate evidence for the null in the case of Congruency, and strong
+evidence for an effect of Load.</p>
 </div>
 <div id="interaction" class="section level2">
 <h2>Interaction</h2>
@@ -573,10 +582,11 @@ case of Congruency, and strong evidence for an effect of Load.</p>
 comparing two models - the model that contains just the two main effects
 (model 3), and the model that also contains the interaction term (model
 4)</p>
-<pre class="r"><code>BFp[4] / BFp[3]</code></pre>
+<pre class="r"><code># Calculate Bayes Factor for interaction
+BFp[4] / BFp[3]</code></pre>
 <pre><code>Bayes factor analysis
 --------------
-[1] Congruency + Load + Congruency:Load + Subject + Congruency:Subject + Load:Subject : 0.3653367 ±4.12%
+[1] Congruency + Load + Congruency:Load + Subject + Congruency:Subject + Load:Subject : 0.4537487 ±20.84%
 
 Against denominator:
   RT ~ Congruency + Load + Subject + Congruency:Subject + Load:Subject 
@@ -589,9 +599,9 @@ evidence for the absence of an interaction.</p>
 <div id="robustness-of-analysis" class="section level2">
 <h2>Robustness of analysis</h2>
 <p>You might feel a bit uneasy that the results of two analyses - both
-called Bayesian ANOVAs - are not the same. You should not. Analyzing
-data always involves making assumptions about those data and the
-underlying psychological processes that generated them. For example,
+called Bayesian ANOVAs - are not exactly the same. You should not.
+Analyzing data always involves making assumptions about those data and
+the underlying psychological processes that generated them. For example,
 here, the assumptions you make about the presence of individual
 differences can matter for your conclusions about the presence of group
 effects. Making reasonable assumptions is part of being a scientist, and
@@ -603,6 +613,9 @@ confidence in the conclusions we have drawn - we say the analysis is
 robust across a range of assumptions. If your substantive conclusions
 depend on your assumptions, and those assumptions are not well founded,
 then your data may not be good enough to answer your questions.</p>
+<hr />
+<p>This material is distributed under a <a href="https://creativecommons.org/">Creative Commons</a> licence.
+CC-BY-SA 4.0.</p>
 </div>
 </div>
 

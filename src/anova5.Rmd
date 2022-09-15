@@ -11,7 +11,7 @@ output: html_document
 ## knitr::opts_chunk$set(echo = TRUE, message = FALSE, results='hide', fig.keep = 'none', comment=NA)
 
 ## Show commands and putout.
-knitr::opts_chunk$set(echo = TRUE, comment=NA, cache = TRUE)
+knitr::opts_chunk$set(echo = TRUE, comment = NA, cache = TRUE)
 
 ```
 
@@ -43,13 +43,15 @@ The following commands are part of the answer to Exercise 2 of
 are not discussed further here:
 
 ```{r ex2-data, message=FALSE}
+# Load packages
 library(tidyverse)
 library(BayesFactor)
+# Load data, select Test phase, select appropriate columns, drop NAs
 raw <- read_csv('case-studies/chris-mitchell/priming-faces.csv') %>%
   filter(Running == "Test") %>%
   select(Subject, Congruency, Load, RT) %>%
   drop_na()
-
+# Create subject-level summary
 priming <- raw %>%
     mutate(Subject = factor(Subject), Congruency = factor(Congruency),
            Load = factor(Load)) %>%
@@ -61,6 +63,7 @@ priming <- raw %>%
 Enter this code into your script and run it; it may take a minute or so to produce a result:
 
 ```{r bf-2bs}
+# Calculate Bayes Factors
 BFo <- generalTestBF(
     formula = RT ~ Congruency*Load + Subject + Subject:Congruency + Subject:Load,
     data = data.frame(priming),
@@ -68,6 +71,7 @@ BFo <- generalTestBF(
     neverExclude = c("Subject", "Subject:Congruency", "Subj:Load"),
     whichModels = "all"
 )
+# Display Bayes Factors
 BFo
 ```
 ### Explanation of command
@@ -114,7 +118,9 @@ i.e. by the `/` operator. What we want to do is apply that operator for each of 
 which we can do with the following command:
 
 ```{r further-bf}
+# Recalculate Bayes Factors, taking subject model as denominator model
 BF <- BFo[-length(BFo)] / BFo[length(BFo)]
+# Display results
 BF
 ```
 ### Explanation of output
@@ -151,12 +157,15 @@ and then removing them from the list.
 In this case, the ill-defined models are 3, 5 and 6; and we remove them using the `-` operator.
 
 ```{r prune}
+# Remove ill-defined models
 BFp <- BF[-c(3, 5, 6)]
+# Display remaining set
 BFp
 ```
 ## Main effects
 
-At this point, we have an table of Bayes Factors of the same form as Excercise 2. Row 1 is the
+At this point, we have an table of Bayes Factors of the same form as Exercise 2 of the previous worksheet.
+Row 1 is the
 main effect of Conrguency. Row 2 is the main effect of Load. The Bayes Factors are not quite the
 same as in Exercise 2 - we shouldn't expect them to be, as this is a different test. But the
 conclusions are the same. There is moderate evidence for the null in the case of Congruency, and 
@@ -169,6 +178,7 @@ model that contains just the two main effects (model 3), and the model that also
 interaction term (model 4)
 
 ```{r interaction}
+# Calculate Bayes Factor for interaction
 BFp[4] / BFp[3]
 ```
 
@@ -178,7 +188,7 @@ is similar - there is moderate evidence for the absence of an interaction.
 ## Robustness of analysis
 
 You might feel a bit uneasy that
-the results of two analyses - both called Bayesian ANOVAs - are not the same. You should not. 
+the results of two analyses - both called Bayesian ANOVAs - are not exactly the same. You should not. 
 Analyzing data always involves making assumptions about those data and the underlying psychological processes
 that generated them. For example, here, the assumptions you make about the presence of 
 individual differences can matter for your conclusions about the presence of group effects. Making
@@ -192,6 +202,10 @@ a range of assumptions. If your substantive conclusions depend on your assumptio
 assumptions are not well founded, then your data may not be good enough to answer your questions. 
 
 
+
+___
+
+This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0.
 
 
 
