@@ -11,7 +11,7 @@ output: html_document
 ## knitr::opts_chunk$set(echo = TRUE, message = FALSE, results='hide', fig.keep = 'none', comment=NA)
 
 ## Show commands and putout.
-knitr::opts_chunk$set(echo = TRUE, comment=NA, cache = TRUE)
+knitr::opts_chunk$set(echo = TRUE, comment = NA, cache = TRUE)
 ```
 
 # Introduction
@@ -26,7 +26,7 @@ In the [preprocessing](preproc.html) worksheet, you loaded data from a _git_ rep
 
 Now that you're in the `rminr-data` project, "pull" from the repository to make sure you have the most up to date version. If you're not sure how to do this, see the [data management](data-github.html) worksheet.
 
-Finally, create a new script called **onesample.R**, put all the commands you use in this worksheet into that file, and save regularly. 
+Finally, create a new script called **onesample.R**, put all the comments and commands you use in this worksheet into that file, and save regularly. 
 
 You will notice that your _Environment_ still contains all the data frames from the previous worksheet. You can leave them there if you like, but some people prefer to start with a "clean slate". If that's you, see the [within-subjects differences](anova1.html#clear) for information on how to clear your environment.
 
@@ -37,7 +37,10 @@ Now load this new data set.
 **Enter these commands into your script, and run them:**
 
 ```{r newdat, message=FALSE}
+# One-sample Bayesian t-test
+# Load tidyverse
 library(tidyverse)
+# Load data
 iq.data <- read_csv("going-further/iqdata.csv")
 ```
 
@@ -49,7 +52,7 @@ Note that these data have already been preprocessed - in other words, the studen
 
 # Exercise: Density plot
 
-Now, as you did in the Absolute Beginners' Guide to R, **WRITE A COMMAND** to create a density plot of IQ. Put a red vertical line at the population mean (IQ = 100), change the y-axis label, and add journal styling.
+Now, as you did in the Absolute Beginners' Guide to R, **WRITE A COMMAND** to create a density plot of IQ. Put a red vertical line at the population mean (IQ = 100), change the y-axis label, and add journal styling. Precede your command with an appropriate comment.
 
 If you get it right, it should look like this:
 
@@ -72,16 +75,18 @@ We can see from this plot that the distribution of IQs in our sample peaks highe
 
 We can use the command `ttestBF` to look at the evidence for this apparent difference between our sample of students and the population mean. We've used this command before to do a _between-groups_ test, but we can also use it in a slightly different way to do a one-sample test.
 
-**Enter these commands into your script, and run them:**
+**Enter these comments and commands into your script, and run them:**
 
 ```{r bf-init, message=FALSE}
+# Load BayesFactor package
 library(BayesFactor)
+# Conduct one-sample Bayesian t-test
 ttestBF(iq.data$IQ, mu = 100)
 ```
 
 ## Explanation of command
 
-Line 1 loads the BayesFactor package. Line 2 runs a one-sample Bayesian t-test; `mu` is the single number against which you are comparing the sample (in this case, the population mean IQ of 100). As covered in previous worksheets, `iq.data$IQ` says to use the `IQ` column of the `iq.data` data frame.
+Command line 1 loads the BayesFactor package. Command line 2 runs a one-sample Bayesian t-test; `mu` is the single number against which you are comparing the sample (in this case, the population mean IQ of 100). As covered in previous worksheets, `iq.data$IQ` says to use the `IQ` column of the `iq.data` data frame.
 
 ## Explanation of output
 
