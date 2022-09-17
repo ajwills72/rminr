@@ -1,3 +1,5 @@
+{% include google-analytics.html %}
+
 # Research Methods in R
 _2022 Edition._
 
