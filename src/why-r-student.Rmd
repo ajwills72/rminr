@@ -85,18 +85,18 @@ systems are substantively limited when it comes to data preprocessing, they do n
 repoducible (script-based) approach to open science, and they obscure the process of analysis
 from the user, which tends to reduce understanding. 
 
-[Jamovi][1] and [JASP][6] are also relatively new projects, with a low "bus number", while [R](https://en.wikipedia.org/wiki/R_(programming_language)) has
+[Jamovi][1] and [JASP][6] are also relatively new projects, with a low [bus factor](https://en.wikipedia.org/wiki/Bus_factor), while [R](https://en.wikipedia.org/wiki/R_(programming_language)) has
 been freely available for more than 20 years, is supported by an international core team of [20
 developers](https://www.r-project.org/contributors.html), and is also supported by major tech 
 companies including Microsoft, and [posit](https://posit.co/) (who provide the RStudio interface).
 
 In the summer of 2022, JASP changed their 
 underlying algorithm for Bayesian ANOVA, leading to the latest version sometimes producing substantially
-different answers to older versions (e.g. a change in which of two main effect is reported as
+different answers to older versions (e.g. a change in which of two main effects is reported as
 having substantial Bayesian evidence). Although the change was well-motivated, it was announced
 with little fanfare, and it seems likely that the average user of JASP would not have been aware of 
 the underlying change. This kind of non-obvious change is hard to avoid when the process of analysis
-is obscured from the user by the use of a point and click interface, and causes problems for the repoducibility
+is obscured from the user by the use of a point and click interface, and causes problems for the reproducibility
 of analyses over time.
 
 ___
