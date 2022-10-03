@@ -186,7 +186,7 @@ These are intermediate-level materials. They  provide analysis methods for condu
 - [Within-subject differences](anova1.html): Data preprocessing (pivoting and
   mutating). One-factor within-subject Bayesian ANOVA. Pairwise comparisons, multiple comparisons.
   
-      - [More on Bayes Factors](more-on-bf.html). A more detailed discussion of Bayes Factors.
+     - [More on Bayes Factors](more-on-bf.html). A more detailed discussion of Bayes Factors.
 
 - [Understanding interactions](anova2.html): Learn what an interaction is, and
   learn how to do line plots at the same time.
@@ -298,3 +298,7 @@ Paul Sharpe, Alastair Smith, Julian Stander,
 Sylvia Terbeck,
 Michael Verde,
 Clare Walsh, Ben Whalley.
+
+___
+
+[![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fandywills.info%2Frminr&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=false)](https://hits.seeyoufarm.com)
