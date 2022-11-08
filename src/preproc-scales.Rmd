@@ -138,37 +138,47 @@ If you look at the **Value** column in the **Environment** pane, you'll see that
 
 ## Calculating subscale scores
 
-Our next step is to calculate the scores for the constructs measured by our scale. Many scales consist of groups of questions which measure multiple, distinct constructs. The DASS-21 is an example of a scale with subscale scores for depression, anxiety and stress. These are calculated by adding together responses for specific items, which we can do using the `rowSums()` function.
+Our next step is to calculate the scores for the constructs measured by our scale. Many scales consist of groups of questions which measure multiple, distinct constructs. The DASS-21 is an example of a scale with subscale scores for depression, anxiety and stress. These are calculated by adding together or finding the mean of responses for specific items.
 
 **Enter these comments and commands into your script, and run them:**
 
 ```{r dass21-subscales}
 # Calculate depression subscale score
-dass21 <- dass21 %>%
-  mutate(depression = rowSums(dass21[4 + c(3,5,10,13,16,17,21)]))
+depression.items <- c("DASS3", "DASS5", "DASS10", "DASS13",
+                      "DASS16", "DASS17", "DASS21")
+depression <- dass21 %>%
+  pivot_longer(DASS1:DASS21) %>%
+  filter(name %in% depression.items) %>%
+  group_by(partID) %>%
+  mutate(depression = sum(value))
+  
 # Add relevant columns to 'dass21_total'
-dass21_total <- dass21 %>% select(partID, Age, Gender, depression)
+dass21_total <- left_join(dass21, depression) %>% 
+  select(partID, Age, Gender, depression)
 ```
 
 **Explanation of command:**
 
-* We use `mutate()` to create a `depression` column which is the sum of items 3, 5, 10, 13, 16, 17 and 21. Item 1 of the DASS-21 data is in column 5 of `dass21`, so we add 4 to each item number to select the correct columns to add together. The command `dass21[4 + c(3,5,10,13,16,17,21)]` is an example of "vectorised addition". It adds `4` to each of the columns defined in the vector to the right of the `+`. For each row, the values in the resulting columns are added together using `rowSums()`. We assign the result back to `dass21`, thereby creating a `depression` column for each row.
+* We create a `depression.items` vector which is a list of the names of items 3, 5, 10, 13, 16, 17 and 21. 
+*	We turn the `dass21` data from wide to long format using `pivot_longer` so that the item names are put into a new column `name` and the scores of each item into a column `value`.
+*	We `filter` to keep only the rows where `name` matches an item in `depression.items`
+*	For each participant `partID`,  we compute the sum of those items 
+*	We create `dass21_total` by using `left_join` to combine the result with `dass21`, and then select the demographic variables and the new depression score, dropping the item scores.
+
 
 <a name="ex1"></a>
 
 ## Exercise 1
 
-Use similar commands to add scores for anxiety and stress to `dass21`. The anxiety subscale is the sum of questions 2,4,7,9,15,19 and 20. The stress subscale is the sum of questions 1,6,8,11,12,14 and 18. After running your commands, the first few rows of `dass21_total` should look like this:
+Use similar commands to add scores for anxiety and stress to `dass21`. The anxiety subscale is the sum of questions 2,4,7,9,15,19 and 20. The stress subscale is the sum of questions 1,6,8,11,12,14 and 18. The first two rows should look like this:
 
 ```{r ex1, echo=FALSE}
-dass21 <- mutate(dass21, anxiety = rowSums(dass21[4 + c(2,4,7,9,15,19,20)]))
-dass21 <- mutate(dass21, stress = rowSums(dass21[4 + c(1,6,8,11,12,14,18)]))
-dass21_total <- select(dass21, partID, Age, Gender, depression, anxiety, stress)
+anxiety.items <- c("DASS2", "DASS4", "DASS7", "DASS9",
+                      "DASS15", "DASS19", "DASS20")
+stress.items <- c("DASS1", "DASS6", "DASS8", "DASS11",
+                      "DASS12", "DASS14", "DASS18")
 ```
 
-```{r ex1-correct, echo=FALSE}
-dass21_total %>% head(10) %>% pander()
-```
 
 **Copy the R code you used for this exercise, along with appropriate comments, into PsycEL.**
 
