@@ -14,13 +14,12 @@ sure how to do that, just email me: andy@willslab.co.uk
 | Ben-Gurion University of the Negev | Israel | | 2019 | [PG (intro)](https://github.com/mattansb/Advanced-Research-Methods-foR-Psychologists), [PG (SEM)](https://github.com/mattansb/Structural-Equation-Modeling-foR-Psychologists), [PG (ANOVA)](https://github.com/mattansb/Analysis-of-Factorial-Designs-foR-Psychologists) |
 | Duke University.       | U.S.A.  | 2019  |      | [UG](https://osf.io/8a9ch/wiki/home/) |
 | Harrisburg University of Science and Technology | U.S.A. |     | 2018 | [PG](https://statisticsofdoom.com/page/basic-statistics/) |
-| Lancaster University | U.K. | 2020 | 2013 | |
+| Lancaster University | U.K. | 2020 | 2013 | [UG](https://tombeesley.github.io/PSYC121_2021-22/) |
 | Missouri State         | U.S.A.  |      | 2017  | [PG](https://statisticsofdoom.com/page/basic-statistics/) | 
 | Nottingham Trent University | U.K. | 2012 | 2010|  |
 | Stanford University | U.S.A. | 2018 |    | [UG](http://statsthinking21.org)
 | [University of Edinburgh](https://www.ed.ac.uk/ppls/psychology/research/seminars-and-reading-groups/psychology-statistics-group) | U.K.   | 2018  | 2018  | |           
 | [University of Glasgow](https://psyteachr.github.io/)  | U.K.    | 2015  | 2010 | [UG](https://psyteachr.github.io/), [PG](https://psyteachr.github.io/) | 
-| University of Lancaster | U.K. | 2020 | ? | [UG](https://tombeesley.github.io/PSYC121_2021-22/) |
 | University of Lincoln | U.K. |     | 2018| [PG](https://craddm.github.io/resmethods)|
 | University of Manchester | U.K. |   | 2018 | [PG](https://r-openresearch-reproducibility.netlify.app/)
 | University of Plymouth | U.K.    | 2018 (Year 1) - 2020 (Year 3)| 2017 | [UG](https://ajwills72.github.io/rminr), [PG](https://benwhalley.github.io/just-enough-r/) |
