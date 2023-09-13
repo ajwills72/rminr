@@ -1,8 +1,6 @@
 # Research Methods in R
 _2023 Edition._
 
-**On 13th September 2023, the School of Psychology at University of Plymouth, decided to phase out Rstudio for their research methods teaching. These materials will remain in case others find them useful, but no new content is planned.**
-
 _Research Methods in R_ is a set of guides on how to use R as your central research methods tool. They are written by various authors, and curated by [Andy Wills](https://www.andywills.info). The target audience is psychology undergraduate students. _Research Methods in R_ is [Creative Commons](https://creativecommons.org/), so you are free to reuse these materials and adapt them as you wish, as long as you attribute them to their authors, and as long as your modifications have a Creative Commons licence. They come with absolutely no warranty of any kind.
 
 _Note to teachers_: These materials have been tested against R version 4.2.1 (released 23rd June 2022), and the most recent version of packages that were available on [MRAN](https://mran.microsoft.com/) on the 1st June 2022.
