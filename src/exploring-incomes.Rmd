@@ -56,7 +56,7 @@ Here's how you do this:
 
 1. Now ask RStudio to run the command `library(tidyverse)`. You do this by putting your cursor on the line of the script window containing the command, and pressing CTRL+ENTER (i.e. press the key marked 'Ctrl' and the RETURN or ENTER key together). The line is automatically copied to your _Console_ window and run. 
 
-```{r init}
+```{r init, warning=FALSE}
 # EXPLORING INCOMES
 # Load packages
 library(tidyverse)
@@ -136,7 +136,8 @@ If you're happy with the output you've got, move on to the next section. If you 
 
 If you get an error here, please see [common errors](common-errors.html).
 
-**RECORD YOUR ANSWER** - Type the exact mean income into the Answer Section of Psyc\:EL.
+**RECORD YOUR ANSWER** - Type the exact mean income into your Data Exercise template (Word document
+available from the DLE).
 
 ### Explanation of command
 This command has three components:
@@ -165,7 +166,7 @@ If you've entered the correct command, you'll get this answer:
 cpsdata %>% summarise(median(income))
 ```
 
-**RECORD YOUR ANSWER** - Type the exact command you used to calculate median income into the Answer Section of Psyc\:EL.
+**RECORD YOUR ANSWER** - Type the exact command you used to calculate median income into your Data Exercise template.
 
 <a name="missing"></a>
 
@@ -279,29 +280,25 @@ cpsdata %>% ggplot(aes(income)) + geom_histogram(fill = 'blue', binwidth=50000) 
   annotate("text", x = Inf, y = -Inf, label = "EXAMPLE PLOT", col = "red", hjust = 5.1, vjust = -1.1)
 ```
 
-Now, export your histogram, using the _Export_ icon on RStudio's _Plots_ window, and selecting "Save as image...". Give it a meaninful file name (e.g. "ExploringIncomes") and click 'Save'. 
+Now, export your histogram, using the _Export_ icon on RStudio's _Plots_ window, and selecting "Save as image...". Give it a meaningful file name (e.g. "ExploringIncomes") and click 'Save'. 
 
 **RECORD YOUR ANSWER** - _Psyc\:EL_ and _RStudio Online_ are entirely separate web pages that don't talk to each other, so you'll need to download your graph from RStudio Online and then upload it to Psyc\:EL. Here's how:
 
-### Downloading files from RStudio Online
+### Adding graph to your Data exercise template
 
 Instructions on how to do download a file from RStudio online are on the [Analyzing Your Project Data](using-projects.html#download) worksheet. Read those instructions then return to this worksheet.
 
-### Uploading files to PsycEL
-
 1. Open your computer's Downloads folder (e.g. on a Windows 10 machine, click on the little yellow folder at the bottom of the screen, and then click on "Downloads"). 
 
-2. Find your file in that Downloads folder, and drag it to the appropriate box on your Psyc\:EL Answer Sheet. 
-
-3. Click 'Upload image' on your Psyc\:EL answer sheet. 
+2. Find your file in that Downloads folder, and drag it to the appropriate part your Data Exercise template.
 
 <a name="writing"></a>
 
-## PsycEL writing exercise
+## Writing exercise
 
 In class, we discussed how the histogram helped us to understand why the mean and median incomes were so different, and whether the mean or the median gave a better account of average US income. Here are the [slides](mean-median.html), if you'd like to look at them again.
 
-On the Psyc\:EL Answer Section, you'll find the question "Does the mean or the median give a better indication of average salary in this case?" **In the text box provided, give a short answer to this question**. You need not write more than a few sentences, but you should explain your reasoning. 
+On your Data Exercise template, you'll find the question "Does the mean or the median give a better indication of average salary in this case?" **Write a short answer to this question**. You need not write more than a few sentences, but you should explain your reasoning. 
 
 ## Extension exercise
 
