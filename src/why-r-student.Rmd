@@ -4,6 +4,8 @@ author: "Andy Wills"
 output: html_document
 ---
 
+RMINR: [Home](README.html)
+
 ```{r setup, include=FALSE}
 ## DEVELOPERS: Uncomment one option, as appropriate
 
@@ -27,10 +29,14 @@ R is a piece of software for handling data. It's the one used on this course, bu
 [6]: https://jasp-stats.org/
 
 ### Student experience
-Students prefer R. In a recent study, undergraduate psychology students at Glasgow University were given a choice between R and SPSS, having experienced both. Two-thirds of the students chose R. Those who chose R did better in the final assessments and showed lower stats anxiety. R is being used to teach Plymouth University undergraduates (and visiting Year 10 students) across a range of different courses. [Read more](https://github.com/gupsych/trdair_workshop/blob/master/LTC_workshop.pdf).
+Students prefer R - undergraduate psychology students at Glasgow University were given a choice between R and SPSS, having experienced both. Two-thirds of the students chose R. Those who chose R did better in the final assessments and showed lower stats anxiety. R is being used to teach Plymouth University undergraduates (and visiting Year 10 students) across a range of different courses. [Read more](https://github.com/gupsych/trdair_workshop/blob/master/LTC_workshop.pdf).
 
 ### Employability
-[Data science][7] is a graduate skill in high demand, and using R is a key skill in that market. In contrast, demand for SPSS skills has been declining dramatically for a decade. At SPSS's current rate of decline, it'll be gone by the time you graduate. Read more at [r4stats](http://r4stats.com/articles/popularity/) and at [loveR](https://www.discovr.rocks/lover/).
+
+[Data science][7] is a graduate skill in high demand, and using R is a key skill in that market. 
+SPSS is in low demand, the proportions of people using SPSS as their primary tool are: Corporate (5%),  Consultancy (6%), Academics (10%), NGO/Gov't (0%) (Rexler Analytics report, 2020). Read more at [r4stats](http://r4stats.com/articles/popularity/) and at [loveR](https://www.discovr.rocks/lover/).
+
+In academic research, use of SPSS has been declining dramatically for a decade, as measured by citations: 
 
 [7]: https://hbr.org/2012/10/data-scientist-the-sexiest-job-of-the-21st-century
 
@@ -42,7 +48,7 @@ cit  <- read_csv("google-cites.csv")
 cit <- cit %>% filter(software != "Python")
 options(scipen=999)
 citline  <- cit %>%
-    ggplot(aes(x=year, y=scholar2022 * 1000, group=software, colour=software)) +
+    ggplot(aes(x=year, y=scholar2023 * 1000, group=software, colour=software)) +
     geom_line() + geom_point() + ylab("Citations") +
     xlab("Year")  + ylim(0, 600000) + theme_classic() + labs(colour="")
 citline
@@ -52,7 +58,7 @@ citline
 R is free. You don't need to pay anything to download or use it, and never will. In contrast, once you leave university, SPSS would cost you or your employer around [£1,000 - £3,400 per person per year](https://www.ibm.com/products/spss-statistics/pricing).
 
 ### Never out of date
-Every analysis you can think of is already available in R, thanks to over [18,000 free packages](https://cran.rstudio.com/). As new analyses are developed, they become available in R first. In 2013, SPSS realised it couldn't keep up with R, and [admitted defeat](https://www.ibm.com/developerworks/library/ba-call-r-spss/index.html).
+Every analysis you can think of is already available in R, thanks to over [19,000 free packages](https://cran.rstudio.com/). As new analyses are developed, they become available in R first. In 2013, SPSS realised it couldn't keep up with R, and [admitted defeat](https://www.ibm.com/developerworks/library/ba-call-r-spss/index.html).
 
 ### Real
 Real data analysis is mainly preprocessing -- scientists spend around [80% of their analysis time][8] getting the data into a format where they can apply statistical tests. R is fantastically good at preprocessing. 
@@ -74,21 +80,22 @@ R is "free as in freedom" because all the source code is available to everyone (
 2. All software is eventually abandoned by the people who wrote it (if for no other reason than their death). Open source software only dies if no one in the world cares enough about it to maintain it. In contrast, closed-source software (e.g. SPSS) dies as soon as the current owners decide to kill it. 
 
 ### Runs inside a browser
-You can use R without having to install it, e.g. [RStudio Plymouth](https://rstudio.plymouth.ac.uk). 
+You can use R without having to install it, e.g. [RStudio Plymouth](https://psyrstudio.plymouth.ac.uk). 
 
 ### A note on JASP and Jamovi
 
 [Jamovi][1] and [JASP][6] are free software packages for statistical analysis that are written using
 R, and hence have some similarities to R. They also have some similarities to SPSS in the sort of user 
 interface they provide. Although some people find "point and click" interfaces appealing, such
-systems are substantively limited when it comes to data preprocessing, they do not encourage a
+systems are substantively limited when it comes to data preprocessing, and data visualization.
+They also do not encourage a
 repoducible (script-based) approach to open science, and they obscure the process of analysis
 from the user, which tends to reduce understanding. 
 
 [Jamovi][1] and [JASP][6] are also relatively new projects, with a low [bus factor](https://en.wikipedia.org/wiki/Bus_factor), while [R](https://en.wikipedia.org/wiki/R_(programming_language)) has
 been freely available for more than 20 years, is supported by an international core team of [20
 developers](https://www.r-project.org/contributors.html), and is also supported by major tech 
-companies including Microsoft, and [posit](https://posit.co/) (who provide the RStudio interface).
+companies including [posit](https://posit.co/) (who provide the RStudio interface).
 
 In the summer of 2022, JASP changed their 
 underlying algorithm for Bayesian ANOVA, leading to the latest version sometimes producing substantially

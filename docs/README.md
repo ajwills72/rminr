@@ -1,20 +1,13 @@
 # Research Methods in R
-_2022 Edition._
+_2023 Edition._
+
+_Research Methods in R_ is a set of guides on how to use R as your central research methods tool [(why R?)](why-r-student.html). The target audience is psychology undergraduate students. 
+The materials are written by various authors, and curated by [Andy Wills](https://www.andywills.info). 
 
 
-_Research Methods in R_ is a set of guides on how to use R as your central research methods tool. They are written by various authors, and curated by [Andy Wills](https://www.andywills.info). The target audience is psychology undergraduate students. _Research Methods in R_ is [Creative Commons](https://creativecommons.org/), so you are free to reuse these materials and adapt them as you wish, as long as you attribute them to their authors, and as long as your modifications have a Creative Commons licence. They come with absolutely no warranty of any kind.
+**The [subject index](subject_index.html) is a searchable list of topics covered by these materials.**
 
-_Note to teachers_: These materials have been tested against R version 4.2.1 (released 23rd June 2022), and the most recent version of packages that were available on [MRAN](https://mran.microsoft.com/) on the 1st June 2022.
-
-## Curriculum map
-
-To see how a subset of these resources is used in undergraduate psychology teaching, click below:
-
-- [University of Plymouth](maps/plymouth-map.html)
-
-## List of guides
-
-### Introductory quides
+## Introductory guides
 
 Start with **ONE** of these three options:
 
@@ -28,7 +21,7 @@ Start with **ONE** of these three options:
 - Even shorter introduction
     - [A Very Brief Guide to R](#vbgtr)
 
-### Intermediate guides
+## Intermediate guides
 
 Next, go through **BOTH** of these guides.
 
@@ -36,7 +29,7 @@ Next, go through **BOTH** of these guides.
 
 - [Intermediate Guide to R](#rmip)
 
-### Advanced guides
+## Advanced guides
 
 - [Going further with R](#gfwr)
 
@@ -44,22 +37,6 @@ Next, go through **BOTH** of these guides.
 
 <a name="gen"></a>
 
-## General resources
-
-1. [Why R?](why-r-student.html) Discussion of the advantages of R over other software packages.
-
-1. [Pedagogy](course-phil.html) Discussion of philosophy of teaching and learning underlying these materials (mainly aimed at teachers).
-
-1. [Who is using R?](rminrinpsy.html) Partial list of psychology degree
-   programmes around the world than use R.
-
-1. [Other resources](resources.html). A list of other Creative Commons resources about using R.
-
-1. [Calculating your module mark](modmark.html). How to calculate a final module mark from your component marks, using R.
-
-1. [Dealing with common errors](common-errors.html). List of commonly-encountered errors and how to solve them.
-
-1. [Case studies](#studies)
 
 
 ## Absolute Beginners' Guide to R
@@ -254,6 +231,19 @@ high-achieving undergraduates, as well as postgraduate students and professional
 assume familiarity with material up to and including _Going Further with R_.
 
 - [Bayesian ANOVA for Pros](anova5.html): doing two-factor within-subjects Bayesian ANOVA better.
+
+## Notes for teachers
+
+These materials have been tested against R version 4.3.1 (released 2023-06-16), 
+and the most recent version of packages that were available on CRAN on 2023-09-11. 
+
+- [Pedagogy](course-phil.html) Discussion of philosophy of teaching and learning underlying these materials 
+- [Who is using R?](rminrinpsy.html) Partial list of psychology degree
+   programmes around the world than use R.
+
+To see how a subset of these resources is used in undergraduate psychology teaching, click below:
+
+- [University of Plymouth](maps/plymouth-map.html)
 
 ____
 

@@ -88,7 +88,7 @@ We're now going to write a very simple R script. In the script file you have jus
 
 In R, any line beginning with a `#` is a **comment**. This means it's text design to be read only by humans, the `#` tells the computer to ignore anything else written on that line. It is helpful to include comments in your scripts -- as you go through this guide, write comments so as to remind yourself what you did and why. 
 
-_Mac users_: On a UK Mac keyboard, you get the `#` symbol by pressing Alt + 3. If you need a longer explanation, click this [link](https://www.macworld.co.uk/how-to/hashtag-mac-3688542/).
+_Mac users_: On a UK Mac keyboard, you get the `#` symbol by pressing option + 3. If you need a longer explanation, click this [link](https://www.macworld.co.uk/how-to/hashtag-mac-3688542/). 
 
 You should notice that the name `Untitled1` on the script tab has now gone red. This is to remind you that your script has changed since the last time you saved it. So, click on the "Save" icon (the little floppy disk) and save your R script **using the name `exploring.R`** The `.R` indicates that it is an R script. Note that it is very important that the name ends with `.R`. For example, using `exploring R.` will cause a problem, because R will not realise the file is an R script. Make sure you always end the name of your R scripts with `.R`. 
 
