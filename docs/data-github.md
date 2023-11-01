@@ -88,14 +88,20 @@ To generate your github PAT, follow these steps on the github website (make sure
 
 1. Click 'generate token'.
 
-1. Copy and paste the token, which will look something like ` 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` to a document on your laptop (e.g. a wordprocessor document). **Treat this token with the same care, security and confidentiality as you would, for example, the password to your online bank account.**
+1. Copy and paste the token, which will look something like ` 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` to a document on your laptop (e.g. a wordprocessor document). **Treat this token with the same care, security and confidentiality as you would, for example, the password to your online bank account.** You have to copy it somewhere because, once you click away from the github page you got it from, you can never get it from github again. This is for security. When subsequently copy-pasting your PAT from your local document, make sure you select just the PAT code - don't include any other characters, including spaces. 
 
 
 ## Add your repository as an RStudio project
 
-Back in the [preprocessing data](preproc.html#load) worksheet, you created a new RStudio project from a github repository I had created. Go back to that worksheet, and do the same now for your own github repository. The location of your repository is:
+Back in the [preprocessing data](preproc.html#load) worksheet, you created a new RStudio project from a github repository I had created. Go back to that worksheet, and follow the instructions. *BUT* this time, use it to set up your own github repository as an Rstudio project, rather than the rminr-data repository. The location of your repository is:
 
 `https://github.com/your-username/your-repository-name`
+
+You will see there is an option to pick where in RStudio to place your project directory. The default is `~`, which means at the top of your directory structure. **DO NOT CHANGE THIS**. RStudio has a bug where if you try to change this, it seems to work, but then produces a misleading error message later on, see below.
+
+## Rstudio's misleading error message
+
+Sometimes, when you try to add your repository as an RStudio project, you get a message saying something along the lines of 'password access to github hasn't been possible since 2021'. This can be caused by using your github password when Rstudio asks for your password - as mentioned before, it needs your PAT token when it asks for this. However, the same misleading error message comes up if you, for example, have mis-copied your PAT token, or if you're trying to open a git project somewhere other than in your home directory (`~`).
 
 ## Your computer, RStudio project, and github
 
@@ -191,7 +197,7 @@ Let's say we decided that the change to our file was not in fact an improvement,
 
 1. Click the tiny down arrow next to the blue cog on the Git panel. 
 
-1. Select 'Shell...'
+1. Select 'Shell...' (in newer versions of RStudio, it may come up as 'New Terminal'). 
 
 1. In the new Terminal window you have opened (bottom left of Rstudio), type:
 
