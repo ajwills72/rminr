@@ -160,7 +160,7 @@ The reason for switching to a within-subjects design is that it's much more effi
 
 ## Within-subjects effect size
 
-Before looking at the power of within-subjects designs, we have to decide how to calculate effect size for this kind of experiment. There are at least [five different ways](http://jakewestfall.org/blog/index.php/2016/03/25/five-different-cohens-d-statistics-for-within-subject-designs/) of doing this, but we'll use the one required by the `pwr.t.test` command - Cohen's $d_{z}$. This is the mean difference between conditions, divided by the standard deviation of the _differences_. The `cohen.d` command we used earlier does **not** calculate this sort of within-subjects effect size. We won't need to calculate $d_{z}$ in this worksheet but, if you need to in later work, see the "[more on power](effsize_from_papers.html)" worksheet.
+Before looking at the power of within-subjects designs, we have to decide how to calculate effect size for this kind of experiment. There are at least [five different ways](https://imaging.mrc-cbu.cam.ac.uk/statswiki/FAQ/tdunpaired) of doing this, but we'll use the one required by the `pwr.t.test` command - Cohen's $d_{z}$. This is the mean difference between conditions, divided by the standard deviation of the _differences_. The `cohen.d` command we used earlier does **not** calculate this sort of within-subjects effect size. We won't need to calculate $d_{z}$ in this worksheet but, if you need to in later work, see the "[more on power](effsize_from_papers.html)" worksheet.
 
 <a name="ex3"></a>
 
