@@ -62,7 +62,7 @@ That's it! You should now see that your _Files_ window in RStudio has a number o
 
 Click on the name 'rawdata' in the Files window of RStudio. You'll see there are three CSV files, and one file called `README.md`. We'll use the CSV files in a minute. 
 
-Each CSV file (e.g. `subject-11.csv`) contains the data from one participant in a [facial prototypes](http://cabezalab.org/wp-content/uploads/2011/11/Cabeza99_PrototypeEffectFaceRecogExtensionLimits_MemCog.pdf) experiment. The experiment was run using [OpenSesame](https://osdoc.cogsci.nl/). OpenSesame, like R, is a free and open-source program. Install OpenSesame on your machine and run the experiment on yourself. To do this, you will need to download the OpenSesame experiment, which is in the `expt-scripts` folder of your R project. Click on `expt-scripts`, tick the box next to `facialproto_short.osexp`, click 'More...' and click 'Export'. Now open the experiment on your machine using OpenSesame.
+Each CSV file (e.g. `subject-11.csv`) contains the data from one participant in a [facial prototypes](https://cabezalab.org/wp-content/uploads/2021/12/Cabeza-et-al.-1999_The-prototype-effect-in-face-recognition.pdf) experiment. The experiment was run using [OpenSesame](https://osdoc.cogsci.nl/). OpenSesame, like R, is a free and open-source program. Install OpenSesame on your machine and run the experiment on yourself. To do this, you will need to download the OpenSesame experiment, which is in the `expt-scripts` folder of your R project. Click on `expt-scripts`, tick the box next to `facialproto_short.osexp`, click 'More...' and click 'Export'. Now open the experiment on your machine using OpenSesame.
 
 ## Create a new script
 
