@@ -33,7 +33,7 @@ library(pander)
 
 ## Introduction
 
-Previous worksheets introduced [linear regression using a single predictor variable](https://benwhalley.github.io/rmip/regression.html), and [multiple regression with two predictors](https://benwhalley.github.io/rmip/multiple-regression.html). This worksheet builds on this foundation, by explaining how to build models with more than two predictors.
+Previous worksheets introduced [linear regression using a single predictor variable](https://benwhalley.github.io/rmip/regression.html), and [multiple regression with two predictors](https://benwhalley.github.io/rmip/regression-multiple.html). This worksheet builds on this foundation, by explaining how to build models with more than two predictors.
 
 <a name="start"></a>
 
