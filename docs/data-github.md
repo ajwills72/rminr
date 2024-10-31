@@ -8,7 +8,7 @@ Whether you're working on a study by yourself, or with a team, it's critical to 
 
 This worksheet is an introduction to using [github](https://github.com/) repositories as your data archive and log book. It can also (eventually) be your open science publication platform, although that aspect is not covered in the current worksheet. 
 
-Github is possibly the biggest website you've never heard of: 40 million users,
+Github is possibly the biggest website you've never heard of: 100 million users,
 acquired by Microfost in 2018 for $7.5bn dollars. Based on git, the system used
 to develop Linux, the world's most commonly used operating system (e.g. basis
 of all Android phones)
@@ -82,7 +82,9 @@ To generate your github PAT, follow these steps on the github website (make sure
 
 1. Go to [https://github.com/settings/tokens](https://github.com/settings/tokens)
 
-1. Click 'generate new token'
+1. Click 'generate new token' (classic version)
+
+1. Add a 'note' - here you can just write 'PAT'. 
 
 1. You'll see a long list of tick boxes. Select the `repo`, `workflow` and `user` tick boxes.
 
@@ -214,7 +216,7 @@ This will revert the file back to the older version. Next:
 1. In the Terminal window, type these three commands:
 
 ```
-git checkout master
+git checkout main
 git merge old-instruct
 git push
 ````
