@@ -25,7 +25,7 @@ We are going to use private repositories on github, which can only be accessed b
 
 1. If your work is later published, basic principles of open science mean that you should share anonymized versions of your data, materials, and analysis scripts, publicly. 
 
-For both these reasons, even though your github repository is private, you should treat it as if it were globally public. For this reason, you **must never place participants' names, addresses, etc.** on github. You must also get **explicit approval from your supervisor to include an biographical information on github, even if names etc. are not included**. Biographical information includes age, gender, education level, and so on. Often, it is possible to de-anonymize data if you have sufficient biographical information. For example, if your participant is recorded as a 54-year-old man in the second year of their psychology degree at Plymouth University, this information is probably sufficient to unqiuely identify that individual. 
+For both these reasons, even though your github repository is private, you should treat it as if it were globally public. For this reason, you **must never place participants' names, addresses, etc.** on github. You must also get **explicit approval from your supervisor to include an biographical information on github, even if names etc. are not included**. Biographical information includes age, gender, education level, and so on. Often, it is possible to de-anonymize data if you have sufficient biographical information. For example, if your participant is recorded as a 54-year-old man in the second year of their psychology degree at Plymouth University, this information is probably sufficient to uniquely identify that individual. 
 
 Further, **never** make your github repository public -- leave that decision to your supervisor. If you accidentally add anything to github that might de-anonymize a participant, tell your supervisor immediately (**you have a legal duty to do so**).
 
@@ -33,9 +33,9 @@ What all of this means is that you will need to talk to your supervisor about yo
 
 ## Good and bad types of files
 
-Wherever possible, keep everything in open-format, text-based file formats. These include CSV files for data, plain text files for text, and R files for analysis scripts. Using these kinds of files ensures: (a) that everyone can access them, irrespective of what type of computer and software they have, (b) that github can work efficiently and effectively with these files. Most wordprocessors have the option to save as plain text, or use a text editor such as [Notepad++](https://notepad-plus-plus.org/) for Windows.
+Wherever possible, keep everything in open-format, text-based file formats. These include CSV files for data, plain text files for text, and R files for analysis scripts. Using these kinds of files ensures: (a) that everyone can access them, irrespective of what type of computer and software they have, (b) that github can work efficiently and effectively with these files. Most word processors have the option to save as plain text, or use a text editor such as [Notepad++](https://notepad-plus-plus.org/) for Windows.
 
-Sometimes, you have to use other types of files. The most obvious examples are pictures. For pictures, use open formats such as PNG or JPEG. Another area may be text that you wish to format (e.g. using bold, headings, and so forth). For these, consider using [markdown](https://daringfireball.net/), which is supported by Rstudio. If you absolutely have to use a wordprocessor, use an open format such as ODT, ODP rather than closed proprietary formats such as Word, PowerPoint (Microsoft). Free software such as [LibreOffice](https://www.libreoffice.org/) defaults to such free formats, so is a good choice for creating open, shareable materials. However, keep to text-based files where you can (CSV, TXT, R) because git can tell you for such files exactly which words/numbers changed each time you update the file. It cannot do this for e.g. wordprocessor files.
+Sometimes, you have to use other types of files. The most obvious examples are pictures. For pictures, use open formats such as PNG or JPEG. Another area may be text that you wish to format (e.g. using bold, headings, and so forth). For these, consider using [markdown](https://daringfireball.net/), which is supported by Rstudio. If you absolutely have to use a word processor, use an open format such as ODT, ODP rather than closed proprietary formats such as Word, PowerPoint (Microsoft). Free software such as [LibreOffice](https://www.libreoffice.org/) defaults to such free formats, so is a good choice for creating open, shareable materials. However, keep to text-based files where you can (CSV, TXT, R) because git can tell you for such files exactly which words/numbers changed each time you update the file. It cannot do this for e.g. word processor files.
 
 Never use Excel or SPSS as a format for storing your data or analyses --- for further discussion of this last point, [click here](why-r-student.html).
 
@@ -68,9 +68,9 @@ Private repositories can only been seen by people who you invite. Folow these st
 
 1. Click 'settings' (a cog wheel)
 
-1. Click "manage access"
+1. Click "Collaborators"
 
-1. Click 'invite a collaborator'. To share it, you need to know their github username. For now, share with me - `ajwills72`. After the session, invite your supervisor, and your dissertation partner(s). 
+1. Click 'Add people'. To share it, you need to know their github username. For now, share with me - `ajwills72`. After the session, invite your supervisor, and your dissertation partner(s). 
 
 ## Creating your PAT for github
 
@@ -80,9 +80,13 @@ So, for github, you will have both a password (which you use to login to the git
 
 To generate your github PAT, follow these steps on the github website (make sure you are logged in)
 
-1. Go to [https://github.com/settings/tokens](https://github.com/settings/tokens)
+1. Go to your github profile (top right) and click settings. 
 
-1. Click 'generate new token' (classic version)
+1. Go to left-hand menu, scroll down, click 'Developer settings'
+
+1. Click the arrow by 'Personal access tokens' and then select 'tokens (classic)'
+
+1. Click 'generate new token' and then 'generate new token (classic)'
 
 1. Add a 'note' - here you can just write 'PAT'. 
 
@@ -143,9 +147,9 @@ The first file you're going to add is some aspect of the materials of your disse
 
 At this point, your file (e.g. 'instructions.txt') is ready to be added to github, but it has not yet been added. To do this, we'd click the green up arrow (known as 'pushing' to the repository). However, first we need to make sure that we have the latest version of the github repository. This is really important, because you have shared the repository with others, who may have made changes. To get these changes, you click the blue down arrow (known as 'pulling' from the repository). So, the steps are:
 
-1. Pull from the repository: Click the blue arrow, enter your username and **PAT** (not password, PAT), click 'close'.
+1. Pull from the repository: Click the blue arrow. If requested, enter your username and **PAT** (not password, PAT), click 'close'.
 
-1. Push to the repository: Click the green arrow, enter your username and **PAT** (not password, PAT), click 'Close'. 
+1. Push to the repository: Click the green arrow. If requested, enter your username and **PAT** (not password, PAT), click 'Close'. 
 
 **IMPORTANT: Although RStudio asks for your 'password', it actually wants your PAT. Remember that your github password is what you use to log into the github website, while the PAT is what you use in RStudio when it asks for a password to confirm pulling or pushing from github.**
 
