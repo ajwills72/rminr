@@ -580,7 +580,7 @@ The simplest graph we could produce here would be to just plot the three means r
 ## Plot of expectancy by Level
 
 ### Load APA theme
-source("http://www.willslab.org.uk/rminr/theme-apa.R")
+source("themeapa.R")
 
 ### Create a blank plot
 base  <- ggplot()
