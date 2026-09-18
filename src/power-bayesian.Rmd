@@ -197,9 +197,7 @@ how to create projects and R scripts, look at [this brief intro to Rstudio](http
 
 * Create a new project called power-bayesian
 * Add the code in this worksheet to a script called power.R
-* Right click on [the data I made](https://raw.githubusercontent.com/ajwills72/rminr-data/master/going-further/george1935pilot.csv) and save the CSV file.
-* Create a folder called `data` in your R project.
-* Upload the CSV file to the `data` folder.
+* Download [`george1935pilot.csv`](https://raw.githubusercontent.com/ajwills72/rminr/master/src/data/george1935pilot.csv) and save it in the `data` folder of your R project. Create that folder first if it does not exist.
 
 ```{r, include = FALSE}
 # Bayesian Power Analysis
@@ -626,7 +624,7 @@ data set.
 
 The data will be on the production effect in memory. More explanation on the
 data can be found in the [Revision worksheet](https://www.andywills.info/rminr/revision.html).
-You can right click on [production data](https://raw.githubusercontent.com/ajwills72/rminr-data/master/production.csv) and
+You can right click on [the local production data](production.csv) and
 save it as a CSV.
 
 Additionally, you will need to do so for a harsher interval,
