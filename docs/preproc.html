@@ -395,14 +395,13 @@ that new data set.</p>
 <h1>Loading data</h1>
 <div id="getting-the-data-into-your-project" class="section level2">
 <h2>Getting the data into your project</h2>
-<p>The data for this exercise is included in this archive in
-<code>src/rawdata/</code>. When working through the exercise in a
-separate RStudio project, copy that folder into the project first. The
-original version asked learners to clone a separate repository; keeping
-the files here means this archived lesson does not depend on that
-repository remaining available.</p>
-<p>You should then see a folder called <em>rawdata</em> in the
-<em>Files</em> window.</p>
+<p>Create a folder called <em>rawdata</em> in your RStudio project, then
+download the three participant files: <a href="https://raw.githubusercontent.com/ajwills72/rminr/master/src/rawdata/subject-11.csv"><code>subject-11.csv</code></a>,
+<a href="https://raw.githubusercontent.com/ajwills72/rminr/master/src/rawdata/subject-12.csv"><code>subject-12.csv</code></a>,
+and <a href="https://raw.githubusercontent.com/ajwills72/rminr/master/src/rawdata/subject-13.csv"><code>subject-13.csv</code></a>.
+Save all three files in that folder. If your browser displays a file
+rather than downloading it, use the <strong>Raw</strong> link and save
+the result with its <code>.csv</code> filename.</p>
 <p>Click on the name ‘rawdata’ in the Files window of RStudio. You’ll
 see there are three CSV files, and one file called
 <code>README.md</code>. We’ll use the CSV files in a minute.</p>
@@ -600,7 +599,7 @@ longer than it needs to be, <code>subj</code> is clear, and quicker to
 type. We rename columns in R using the <code>set_names</code> command.
 Add the following to your script and run it:</p>
 <pre class="r"><code># Rename columns; place into &#39;tidydat&#39;
-tidydat &lt;- dat_subset %&gt;% 
+tidydat &lt;- dat_subset %&gt;%
   set_names(c(&quot;subj&quot;, &quot;phase&quot;, &quot;trial&quot;, &quot;type&quot;, &quot;response&quot;))</code></pre>
 <p><strong>Explanation of command</strong> - The command
 <code>c()</code> means <em>concatenate</em> i.e. put together. So
@@ -716,8 +715,8 @@ run it:</p>
 <pre class="r"><code># Display list of filenames
 tibble(filename = list.files(&quot;rawdata&quot;, &quot;*.csv&quot;, full.names = TRUE))</code></pre>
 <pre><code># A tibble: 3 × 1
-  filename              
-  &lt;chr&gt;                 
+  filename
+  &lt;chr&gt;
 1 rawdata/subject-11.csv
 2 rawdata/subject-12.csv
 3 rawdata/subject-13.csv</code></pre>
@@ -758,8 +757,8 @@ below)</p></li>
 <p>The entire command looks like this; which you should enter into your
 script and run:</p>
 <pre class="r"><code># Combine data from all participants into &#39;alldat&#39;
-alldat &lt;- tibble(filename = list.files(&quot;rawdata&quot;, &quot;*.csv&quot;, full.names = TRUE)) %&gt;% 
-  group_by(filename) %&gt;% 
+alldat &lt;- tibble(filename = list.files(&quot;rawdata&quot;, &quot;*.csv&quot;, full.names = TRUE)) %&gt;%
+  group_by(filename) %&gt;%
   do(read_csv(.$filename))</code></pre>
 <p><strong>Explanation of command</strong>: At the start of line 1 we
 write <code>alldat &lt;-</code>. This means the results will be saved
@@ -809,7 +808,7 @@ include <code>subj</code> in the <code>group_by</code> command, so
 <code>group_by(subj, type)</code>, so we get a separate summary for each
 person.</p>
 <p>Add the following comment to your script:</p>
-<pre><code># Filter test phase data into &#39;test&#39; 
+<pre><code># Filter test phase data into &#39;test&#39;
 
 # Group &#39;test&#39; by &#39;type&#39; and &#39;subj&#39;, calculate mean of &#39;response&#39;, place into &#39;test.sum&#39;
 </code></pre>
@@ -828,8 +827,8 @@ window:</p>
   &lt;chr&gt;                  &lt;chr&gt;                &lt;dbl&gt;
 1 rawdata/subject-11.csv prototype             4.75
 2 rawdata/subject-11.csv seen                  3.88
-3 rawdata/subject-11.csv unseen                5   
-4 rawdata/subject-12.csv prototype             5.5 
+3 rawdata/subject-11.csv unseen                5
+4 rawdata/subject-12.csv prototype             5.5
 5 rawdata/subject-12.csv seen                  4.75
 6 rawdata/subject-12.csv unseen                5.12
 7 rawdata/subject-13.csv prototype             4.88
@@ -873,8 +872,8 @@ you the following numbers:</p>
   &lt;dbl&gt; &lt;chr&gt;        &lt;dbl&gt;
 1    11 nonword      1158.
 2    11 word          888.
-3    12 nonword      1339 
-4    12 word         1818 
+3    12 nonword      1339
+4    12 word         1818
 5    13 nonword      1458.
 6    13 word         1526 </code></pre>
 <p>Other requirements:</p>

@@ -48,17 +48,8 @@ In this first part of the worksheet, the commands you need to do each step are g
 
 ## Getting the data into your project
 
-In order to get the data for this exercise, we're going to load it from a [git](https://en.wikipedia.org/wiki/Git) repository. The best-known git repository is [github](https://github.com/), and that's the one we'll use here. Git repositories are a common way of sharing code and data via the internet, and RStudio can easily make use of them. Here's how:
-
-1. Create a new RStudio [project](using-projects.html#create) as before, but click on "Version Control" rather than "New Directory". 
-
-2. Click on "Git".
-
-3. Enter the location of the repository into the first line. It's `https://github.com/ajwills72/rminr-data`
-
-4. Click "Create Project"
-
-That's it! You should now see that your _Files_ window in RStudio has a number of files showing, including a folder called _rawdata_. If so, you have successfully downloaded data from a git repository on github and put it in an RStudio project.
+Create a folder called _rawdata_ in your RStudio project, then download the
+three participant files: [`subject-11.csv`](https://raw.githubusercontent.com/ajwills72/rminr/master/src/rawdata/subject-11.csv), [`subject-12.csv`](https://raw.githubusercontent.com/ajwills72/rminr/master/src/rawdata/subject-12.csv), and [`subject-13.csv`](https://raw.githubusercontent.com/ajwills72/rminr/master/src/rawdata/subject-13.csv). Save all three files in that folder. If your browser displays a file rather than downloading it, use the **Raw** link and save the result with its `.csv` filename.
 
 Click on the name 'rawdata' in the Files window of RStudio. You'll see there are three CSV files, and one file called `README.md`. We'll use the CSV files in a minute. 
 
@@ -66,7 +57,7 @@ Each CSV file (e.g. `subject-11.csv`) contains the data from one participant in 
 
 ## Create a new script
 
-Within the `rminr-data` project, create a new script file and call it **preproc.R**. Put all your commands for this worksheet into this script, and save regularly. This will make it easier to see what you have done, especially when you come back to it after a break.
+Within your RStudio project, create a new script file and call it **preproc.R**. Put all your commands for this worksheet into this script, and save regularly. This will make it easier to see what you have done, especially when you come back to it after a break.
 
 ## Summary of the experiment
 
