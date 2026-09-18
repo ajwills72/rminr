@@ -1,11 +1,30 @@
 # Welcome to Research Methods in R
 
+> **Archived project.** This repository is a preserved snapshot of the Research
+> Methods in R teaching materials. It is no longer under active development and
+> should be treated as read-only. The published materials remain available at
+> <https://ajwills72.github.io/rminr/>.
+
 This is the website we use to develop these teaching materials. If you were looking for the actual materials, 
 [click here](https://ajwills72.github.io/rminr/)
 
-## Notes for new contributors
+## Archive notes
 
-If you've a suggestion for an improvement, or a bug report, please make a pull request. Or, if you don't know how to do that, use the Issues function of github to log an issue and someone will pick it up and deal with it as soon as possible.
+The source materials are retained for reference and reuse under the licences
+described in [docs/README.md](docs/README.md#licence). External links in the
+lessons are references for learners; build-time data and helper files used by
+the source documents are stored in this repository wherever possible.
+
+The final archive review is recorded in [ARCHIVE.md](ARCHIVE.md), including the
+known optional R package dependencies and the checks used to validate the
+published snapshot.
+
+## Notes for contributors
+
+This project is closed to routine development. Please do not open feature
+requests or pull requests expecting ongoing maintenance. You may still fork the
+repository for your own teaching or research, subject to the licences and
+attributions in the materials.
 
 ## Notes to developers
 
