@@ -232,11 +232,12 @@ source("make-effect-sizes.R")
 ## Calculating effect size
 In this section, we're going to calculate the effect size for the gender pay gap, in our sample of people who earn less than $150k. We could do this using the `mean` and `sd` summaries we used previously to calculate means and standard deviations. However, there is a quicker way, using the _effsize_ package. 
 
-Recall that _packages_ in R are a way to add new commands. So, the first thing we need to do is load the `effsize` package using the `library` command.
+Recall that _packages_ in R are a way to add new commands. If you have not installed `effsize` before, install it once by running `install.packages("effsize")` in the Console. Then load the package using the `library` command.
 
 **So, add this comment and command to your script and run it**:
 
 ```{r load-effsize}
+# Install once if needed: install.packages("effsize")
 # Load effect size package
 library(effsize)
 ```
