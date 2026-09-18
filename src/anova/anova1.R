@@ -5,7 +5,7 @@
 rm(list=ls())
 ## Stage 1 revision
 library(tidyverse)
-cpsdata <- read_csv(url("http://www.willslab.org.uk/cps2.csv"))
+cpsdata <- read_csv("../cps2.csv")
 library(BayesFactor)
 ## For documentation on BayesFactor, type 'BFmanual()'
 cpsdata %>% ggplot(aes(income, colour=factor(sex))) + geom_density(aes(y=..scaled..)) 
