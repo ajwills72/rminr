@@ -33,7 +33,7 @@ library(pander)
 
 ## Introduction
 
-Previous worksheets introduced [linear regression using a single predictor variable](https://benwhalley.github.io/rmip/regression.html), and [multiple regression with two predictors](https://benwhalley.github.io/rmip/regression-multiple.html). This worksheet builds on this foundation, by explaining how to build models with more than two predictors.
+Previous worksheets introduced [linear regression using a single predictor variable](rmip/regression.html), and [multiple regression with two predictors](rmip/regression-multiple.html). This worksheet builds on this foundation, by explaining how to build models with more than two predictors.
 
 <a name="start"></a>
 
@@ -53,7 +53,7 @@ We'll use some data from an undergraduate student dissertation which explored re
 
 ```{r load, message=FALSE}
 # Clear the environment
-rm(list = ls()) 
+rm(list = ls())
 # Load tidyverse
 library(tidyverse)
 # Load data
@@ -68,23 +68,23 @@ In order to follow the rest of this worksheet, you need to understand the data y
 
 | Column | Description                             | Values             |
 | ------ | --------------------------------------- | ------------------ |
-| subj   | Unique anonymous participant number     | 1-197              | 
+| subj   | Unique anonymous participant number     | 1-197              |
 | age    | Age of participant                      | 18-74              |
 | sex    | Biological sex of participant           | male, female       |
 | education | Highest education level of participant  | no formal quals, GCSE or equiv, A level or equiv, degree, Technical, HNC, FD or equiv |
 | religious  | Did the participant identify with a recognised religion? | yes, no  |
 | nationality | Nationality of participant         | British, Polish |
 
-We need to do a little bit of preprocessing of the `education` variable. Specifically, `education` is an _ordered_ variable -- people in this sample have a reported level of education which ranges from low (`no formal quals`) to high (`degree`). R does not know what order to put these levels in unless we tell it. The easiest way to do this is to recode the data, as you did previously in the [cleaning up questionnaire data](https://benwhalley.github.io/rmip/data.html#using-recode) worksheet.
+We need to do a little bit of preprocessing of the `education` variable. Specifically, `education` is an _ordered_ variable -- people in this sample have a reported level of education which ranges from low (`no formal quals`) to high (`degree`). R does not know what order to put these levels in unless we tell it. The easiest way to do this is to recode the data, as you did previously in the [cleaning up questionnaire data](rmip/data.html#using-recode) worksheet.
 
 **Enter these comments and commands into your script, and run them:**
 
 ```{r demographics2, warning=FALSE}
 # Recode data
-edu_map <- c('no formal quals' = 1, 
-             'GCSE or equiv' = 2, 
+edu_map <- c('no formal quals' = 1,
+             'GCSE or equiv' = 2,
              'A level or equiv' = 3,
-              'Technical, HNC, FD or equiv' = 4, 
+              'Technical, HNC, FD or equiv' = 4,
              'degree' = 5)
 data <- data %>% mutate(edu_sc = recode(education, !!!edu_map))
 ```
@@ -96,21 +96,21 @@ data <- data %>% mutate(edu_sc = recode(education, !!!edu_map))
 We now turn to the three scales that the participants completed. In the the data we loaded, the scale scores have already been calculated. In practice, you would need to calculate the scores for each scale from the raw data. This is explained in the [Preprocessing scales worksheet](preproc-scales.html).
 
 ##### Religious Orientation
- 
-Religious orientation (RO) was was measured with the amended Religious Orientation Scale (ROS). According to the ROS, people who are intrinsically religious treat religion as a spiritual end in and of itself. Those who are extrinsically religious practise religion for self-serving reasons, such as social status. Therefore, the ROS has two subscales. 
+
+Religious orientation (RO) was was measured with the amended Religious Orientation Scale (ROS). According to the ROS, people who are intrinsically religious treat religion as a spiritual end in and of itself. Those who are extrinsically religious practise religion for self-serving reasons, such as social status. Therefore, the ROS has two subscales.
 
 | Column | Description                    | Values |
 | ------ | ------------------------------ | ------ |
-| ro_i   | Intrinsic relgious orientation | 1-3    | 
+| ro_i   | Intrinsic relgious orientation | 1-3    |
 | ro_e   | Extrinsic relgious orientation | 1-3    |
 
 ##### Spirituality
 
-Spirituality was measured with the Spiritual Connection Questionnaire (SCQ). The SCQ has five subscales: 
+Spirituality was measured with the Spiritual Connection Questionnaire (SCQ). The SCQ has five subscales:
 
 | Column | Description                                                            | Values |
 | ------ | ---------------------------------------------------------------------- | ------ |
-| happiness | Extent to which spirituality brings the participant happiness | 1-7| 
+| happiness | Extent to which spirituality brings the participant happiness | 1-7|
 | places   | Extent to which the participant feels spiritually connected to places | 1-7 |
 | others | Extent to which the participant feels spiritually connected to others | 1-7  |
 | nature | Extent to which the participant feels spiritually connected to nature | 1-7 |
@@ -123,7 +123,7 @@ In this study, emotional intelligence was treated as a trait; a personality fact
 | Column | Description                                                            | Values |
 | ------ | ---------------------------------------------------------------------- | ------ |
 | tei    | Total trait emotional intelligence score                               | 1-7    |
-| wellbeing | Wellbeing | 1-7| 
+| wellbeing | Wellbeing | 1-7|
 | self_control   | Self-control | 1-7 |
 | emotionality | Emotionality | 1-7  |
 | sociability | Sociability | 1-7 |
@@ -132,7 +132,7 @@ In this study, emotional intelligence was treated as a trait; a personality fact
 
 ## Multiple regression with more than two predictors
 
-The linear model you built in [the multiple regression worksheet](https://benwhalley.github.io/rmip/multiple-regression.html) worksheet used two predictors. It's straightforward to add additional predictors to a model. We'll start with a model which predicts intrinsic religious orientation from the demographics variables in our Polish sample.
+The linear model you built in [the multiple regression worksheet](rmip/regression-multiple.html) worksheet used two predictors. It's straightforward to add additional predictors to a model. We'll start with a model which predicts intrinsic religious orientation from the demographics variables in our Polish sample.
 
 ### Fitting the model
 
@@ -150,19 +150,19 @@ oi_lm1
 
 **Explanation of commands:**
 
-Command line 1 filters the data to only include Polish participants. 
+Command line 1 filters the data to only include Polish participants.
 
 Command line 2 removes any participants for which we have missing data (shown as `NA` in the data frame). We have to do this because the `lmBF` function we'll use later cannot cope with missing data.
 
-Command line 3 builds a regression model that predicts intrinsic religious orientation, defined by `ro_i ~`. The variables on the right of the `~` are the predictors. As you can see, these are the four demographics variables `age + sex + edu_sc + religious`. 
+Command line 3 builds a regression model that predicts intrinsic religious orientation, defined by `ro_i ~`. The variables on the right of the `~` are the predictors. As you can see, these are the four demographics variables `age + sex + edu_sc + religious`.
 
-Command line 4 prints the result of fitting the regression model. 
+Command line 4 prints the result of fitting the regression model.
 
-**Explanation of output**: We are given the [equation of the line](https://benwhalley.github.io/rmip/automatic-line-fitting.html) for the regression model. We can see from this output that the best fitting line involves a positive relation between `age` and `ro_i`, i.e. older people score higher on intrinsic religious orientation in this sample. For _binary_ predictors, for example `religious`, which only have two levels in our dataset (`yes` or `no` for `religious`), the output indicates which way round R has decided to set these up. In this case, it says `religiousyes`, meaning that `yes` has been taken as the positive value. The co-efficient of `-0.69` is negative, so this means that people who answer `yes` to this question scored lower on intrinsic religious orientation that those who replied `no`. Similarly, `sex` was set up with `male` as the positive value (`sexmale`), and the co-efficient (`.006`) is positive, so men scored higher than women on intrinsic religious orientation in this sample. 
+**Explanation of output**: We are given the [equation of the line](rmip/regression.html) for the regression model. We can see from this output that the best fitting line involves a positive relation between `age` and `ro_i`, i.e. older people score higher on intrinsic religious orientation in this sample. For _binary_ predictors, for example `religious`, which only have two levels in our dataset (`yes` or `no` for `religious`), the output indicates which way round R has decided to set these up. In this case, it says `religiousyes`, meaning that `yes` has been taken as the positive value. The co-efficient of `-0.69` is negative, so this means that people who answer `yes` to this question scored lower on intrinsic religious orientation that those who replied `no`. Similarly, `sex` was set up with `male` as the positive value (`sexmale`), and the co-efficient (`.006`) is positive, so men scored higher than women on intrinsic religious orientation in this sample.
 
 ### Proportion of variance explained
 
-How much of the variance in intrinsic religious orientation is explained by the demographic variables? As explained in the [how good was our model?](https://benwhalley.github.io/rmip/how-good-was-our-model.html) worksheet, we can assess this using the $R^2$ statistic.
+How much of the variance in intrinsic religious orientation is explained by the demographic variables? As explained in the [how good was our model?](rmip/regression-multiple.html) worksheet, we can assess this using the $R^2$ statistic.
 
 **Enter these comments and commands into your script, and run them:**
 
@@ -185,7 +185,7 @@ As explained in previous worksheets, the value of `r r_squared1` in `adj.r.squar
 
 ### Evidence for the model
 
-[The multiple regression worksheet](https://benwhalley.github.io/rmip/how-good-was-our-model.html) also showed you how to calculate a Bayes factor to decide whether a regression model is any better than a simpler model with no predictors.
+[The multiple regression worksheet](rmip/regression-multiple.html) also showed you how to calculate a Bayes factor to decide whether a regression model is any better than a simpler model with no predictors.
 
 **Enter these comments and commands into your script, and run them:**
 
@@ -249,9 +249,9 @@ For this model, `adj.r.squared` = `r r_squared2`, which means it explains `r r_s
 
 ### Evidence for the new model
 
-Earlier, we found that a model with demographics predictors was better than a model with no predictors. To test the hypothesis that the spirituality variables help to explain the variance in intrinsic religiosity, we can compare our second model against the first. 
+Earlier, we found that a model with demographics predictors was better than a model with no predictors. To test the hypothesis that the spirituality variables help to explain the variance in intrinsic religiosity, we can compare our second model against the first.
 
-We've compared Bayesian models in a couple of previous worksheets. For example, in the [multiple regression worksheet](https://benwhalley.github.io/rmip/how-good-was-our-model.html), we compared a model where the relationship between grades and study time was assumed to be different for men and women, with one where it was assumed to be the same.  You were also comparing two Bayesian models when you [tested for an interaction in a Bayesian ANOVA](anova4.html#twoBS).
+We've compared Bayesian models in a couple of previous worksheets. For example, in the [multiple regression worksheet](rmip/regression-multiple.html), we compared a model where the relationship between grades and study time was assumed to be different for men and women, with one where it was assumed to be the same.  You were also comparing two Bayesian models when you [tested for an interaction in a Bayesian ANOVA](anova4.html#twoBS).
 
 We can use the same approach here.
 
@@ -376,7 +376,7 @@ ei_bf1 <- lmBF(tei ~ age + sex + edu_sc + religious, data = data.frame(british),
 ei_bf1
 ```
 
-**Note:** For reasons [previously explained](anova1.html#anovaWS), your Bayes Factor may not be exactly the same as the one shown here. Any value between about 7 and 8 is fine. 
+**Note:** For reasons [previously explained](anova1.html#anovaWS), your Bayes Factor may not be exactly the same as the one shown here. Any value between about 7 and 8 is fine.
 
 **Copy the R code you used for this exercise into PsycEL.**
 

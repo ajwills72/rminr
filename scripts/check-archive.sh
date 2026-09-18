@@ -24,6 +24,11 @@ if grep -RInE 'source\("https?://' src --include='*.Rmd' --include='*.R'; then
     failed=1
 fi
 
+if grep -RIn 'https://benwhalley.github.io/rmip' src docs --include='*.Rmd' --include='*.md' --include='*.html' | grep -v '^docs/rmip/'; then
+    printf 'repository content still links to the external RMIP site\n'
+    failed=1
+fi
+
 if ! grep -q '^google_analytics: G-WXTBHY6FJW$' docs/_config.yml; then
     printf 'analytics property is not configured in docs/_config.yml\n'
     failed=1

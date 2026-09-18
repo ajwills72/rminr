@@ -162,7 +162,7 @@ separate site, but have been designed to fit in here in this sequence of
 materials. Only the _quantitative_ section of Ben's site contains information
 concerning the usage of R.
 
-- [Research Methods in Practice](https://benwhalley.github.io/rmip): Data handling, [fitting lines](https://benwhalley.github.io/rmip/regression.html) - _scatterplot with best fit line_ , **converting Likert scales from text to numbers**, **reverse scoring scale items**, multiple regression.
+- [Research Methods in Practice](rmip/index.html): Data handling, [fitting lines](rmip/regression.html) - _scatterplot with best fit line_ , **converting Likert scales from text to numbers**, **reverse scoring scale items**, multiple regression.
 
 ## Intermediate Guide to R
 

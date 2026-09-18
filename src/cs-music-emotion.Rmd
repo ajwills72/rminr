@@ -26,7 +26,7 @@ library(pander)
 
 ## Before you start
 
-This is an advanced worksheet, which assumes you have completed the [Absolute Beginners' Guide to R](https://ajwills72.github.io/rminr/#beginners) course, the [Research Methods in Practice (Quantitative section)](https://benwhalley.github.io/rmip/) course, and the [Intermediate Guide to R](https://ajwills72.github.io/rminr/#rmip) course. 
+This is an advanced worksheet, which assumes you have completed the [Absolute Beginners' Guide to R](https://ajwills72.github.io/rminr/#beginners) course, the [Research Methods in Practice (Quantitative section)](rmip/index.html) course, and the [Intermediate Guide to R](https://ajwills72.github.io/rminr/#rmip) course.
 
 <a name="intro"></a>
 
@@ -195,7 +195,7 @@ The Kruskal-Wallis _H_ test is described in the [Traditional non-parametric test
 ```{r avoidance}
 library("ggpubr")
 avoidance <- ers_l %>% filter(ers == 'avoidance')
-ggboxplot(avoidance, x = 'subculture', y = 'score', 
+ggboxplot(avoidance, x = 'subculture', y = 'score',
           color = 'subculture', order = c('Mainstream', 'Goth', 'Emo', 'Metal'),
           ylab = "ERS avoidance", xlab = "Subculture")
 avoidance <- avoidance %>% mutate(rank = rank(score))
@@ -219,7 +219,7 @@ approach %>%
             median = median(score, na.rm = TRUE),
             mean_rank = mean(rank),
             sum_rank = sum(rank))
-ggboxplot(approach, x = 'subculture', y = 'score', 
+ggboxplot(approach, x = 'subculture', y = 'score',
           color = 'subculture', order = c('Mainstream', 'Goth', 'Emo', 'Metal'),
           ylab = "ERS approach", xlab = "Subculture")
 kruskal.test(score ~ subculture, data = approach)
@@ -236,7 +236,7 @@ development %>%
             median = median(score, na.rm = TRUE),
             mean_rank = mean(rank),
             sum_rank = sum(rank))
-ggboxplot(development, x = 'subculture', y = 'score', 
+ggboxplot(development, x = 'subculture', y = 'score',
           color = 'subculture', order = c('Mainstream', 'Goth', 'Emo', 'Metal'),
           ylab = "ERS self-development", xlab = "Subculture")
 kruskal.test(score ~ subculture, data = development)
@@ -246,9 +246,9 @@ kruskal.test(score ~ subculture, data = development)
 
 Watson, D., Clark, L. A., & Tellegen, A. (1988). [Development and validation of brief measures of positive and negative affect: The PANAS scales.](https://www.researchgate.net/profile/Rachel_Bachner-Melman/post/Is_there_a_way_to_measure_negative_emotions/attachment/59d644a1c49f478072ead59a/AS:273817966972930@1442294698972/download/PANAS.+20+items.pdf) Journal of Personality and Social Psychology, 54(6), 1063.
 
-Fancourt, D., Garnett, C., Spiro, N., West, R., & Müllensiefen, D. (2019). [How do artistic creative activities regulate our emotions? Validation of the Emotion Regulation Strategies for Artistic Creative Activities Scale (ERS-ACA)](https://doi.org/10.1371/journal.pone.0211362). PLOS ONE, 14(2), e0211362. 
+Fancourt, D., Garnett, C., Spiro, N., West, R., & Müllensiefen, D. (2019). [How do artistic creative activities regulate our emotions? Validation of the Emotion Regulation Strategies for Artistic Creative Activities Scale (ERS-ACA)](https://doi.org/10.1371/journal.pone.0211362). PLOS ONE, 14(2), e0211362.
 
 ___
-  
-  This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0. 
+
+  This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0.
 

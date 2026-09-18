@@ -257,7 +257,7 @@ pre code {
 
 <div id="before-you-start" class="section level2">
 <h2>Before you start</h2>
-<p>This is an advanced worksheet, which assumes you have completed the <a href="https://ajwills72.github.io/rminr/#beginners">Absolute Beginners’ Guide to R</a> course, the <a href="https://benwhalley.github.io/rmip/">Research Methods in Practice (Quantitative section)</a> course, and the <a href="https://ajwills72.github.io/rminr/#rmip">Intermediate Guide to R</a> course.</p>
+<p>This is an advanced worksheet, which assumes you have completed the <a href="https://ajwills72.github.io/rminr/#beginners">Absolute Beginners’ Guide to R</a> course, the <a href="rmip/index.html">Research Methods in Practice (Quantitative section)</a> course, and the <a href="https://ajwills72.github.io/rminr/#rmip">Intermediate Guide to R</a> course.</p>
 </div>
 <div id="contents" class="section level2">
 <h2>Contents</h2>
@@ -436,7 +436,7 @@ pre code {
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>cormap <span class="ot">=</span> <span class="fu">c</span>(<span class="st">&quot;C&quot;</span> <span class="ot">=</span> <span class="dv">1</span>, <span class="st">&quot;C*&quot;</span> <span class="ot">=</span> <span class="dv">1</span>)</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>wing <span class="ot">&lt;-</span> wing <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">correct =</span> <span class="fu">recode</span>(value, <span class="sc">!!!</span>cormap, <span class="at">.default =</span> <span class="dv">0</span>))</span></code></pre></div>
 <p><strong>Explanation of command:</strong></p>
-<p>We’ve recoded data before, in the <a href="https://benwhalley.github.io/rmip/data.html#using-recode">cleaning up questionnaire data</a> worksheet. First, we tell R how we want each value to be recoded, in this case in <code>cormap</code>. Then we use <code>mutate</code> to add a column called <code>correct</code> that recodes the <code>value</code> column using the mapping in <code>cormap</code>.</p>
+<p>We’ve recoded data before, in the <a href="rmip/data.html#using-recode">cleaning up questionnaire data</a> worksheet. First, we tell R how we want each value to be recoded, in this case in <code>cormap</code>. Then we use <code>mutate</code> to add a column called <code>correct</code> that recodes the <code>value</code> column using the mapping in <code>cormap</code>.</p>
 <p>New to the current worksheet is <code>.default</code>, which allows us to give a default value for the recoding. That way, we don’t have to explicitly say that all the other letters should be recoded as <code>0</code>, we can just write <code>.default = 0</code>.</p>
 </div>
 <div id="further-recoding" class="section level3">

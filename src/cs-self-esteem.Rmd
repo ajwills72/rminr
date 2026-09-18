@@ -17,7 +17,7 @@ library(pander)
 
 ## Before you start
 
-This is an advanced worksheet, which assumes you have completed the [Absolute Beginners' Guide to R](https://ajwills72.github.io/rminr/#beginners) course, the [Research Methods in Practice (Quantitative section)](https://benwhalley.github.io/rmip/) course, and the [Intermediate Guide to R](https://ajwills72.github.io/rminr/#rmip) course.
+This is an advanced worksheet, which assumes you have completed the [Absolute Beginners' Guide to R](https://ajwills72.github.io/rminr/#beginners) course, the [Research Methods in Practice (Quantitative section)](rmip/index.html) course, and the [Intermediate Guide to R](https://ajwills72.github.io/rminr/#rmip) course.
 
 ## Contents
 

@@ -19,7 +19,7 @@ library(pander)
 
 ## Before you start
 
-This is an advanced worksheet, which assumes you have completed the [Absolute Beginners' Guide to R](https://ajwills72.github.io/rminr/#beginners) course, the [Research Methods in Practice (Quantitative section)](https://benwhalley.github.io/rmip/) course, and the [Intermediate Guide to R](https://ajwills72.github.io/rminr/#rmip) course. 
+This is an advanced worksheet, which assumes you have completed the [Absolute Beginners' Guide to R](https://ajwills72.github.io/rminr/#beginners) course, the [Research Methods in Practice (Quantitative section)](rmip/index.html) course, and the [Intermediate Guide to R](https://ajwills72.github.io/rminr/#rmip) course.
 
 ## Contents
 
@@ -80,12 +80,12 @@ Next we preprocess the WinG data.  Preprocessing is generally easier if our data
 **Enter these commands into your script, and run them:**
 
 ```{r nc}
-# preprocess 
+# preprocess
 wing <- bind_rows(
   pivot_longer(nc, Mountain:Wellyboots) %>% add_column(task = "nc"),
-  pivot_longer(np, Beach:Gloves) %>% add_column(task = "np"), 
+  pivot_longer(np, Beach:Gloves) %>% add_column(task = "np"),
   pivot_longer(pc, Big:Pulling) %>% add_column(task = "pc"),
-  pivot_longer(pp, Small:Pushing) %>% add_column(task = "pp") 
+  pivot_longer(pp, Small:Pushing) %>% add_column(task = "pp")
 )
 ```
 
@@ -93,11 +93,11 @@ wing <- bind_rows(
 
 The key commands here are:
 
-- `pivot_longer`: We came across this command in the [better tables](better-tables.html#descriptives) worksheet - it takes a wide data frame (e.g. `nc`) and makes it longer by turning columns into name-value pairs. In the first case, we do this for all the columns from `Mountain` to `Wellyboots`. 
+- `pivot_longer`: We came across this command in the [better tables](better-tables.html#descriptives) worksheet - it takes a wide data frame (e.g. `nc`) and makes it longer by turning columns into name-value pairs. In the first case, we do this for all the columns from `Mountain` to `Wellyboots`.
 
 - `add_column`: We used this command before in the [more on preprocessing](more-on-preproc.html) worksheet. In the first case, it adds a column called `task` and fills it with `nc`. This way, we record which task each piece of data came from.
 
-- `bind_rows`: We used this command in the [preprocessing data](preproc.html#combine) worksheet - it takes a series of data frames and combines them together. 
+- `bind_rows`: We used this command in the [preprocessing data](preproc.html#combine) worksheet - it takes a series of data frames and combines them together.
 
 Putting this all together, we make each of the four data frames longer, add a column indicating which task they are from, and the combine them into a single data frame called `wing`.
 
@@ -157,15 +157,15 @@ cormap = c("C" = 1, "C*" = 1)
 wing <- wing %>% mutate(correct = recode(value, !!!cormap, .default = 0))
 ```
 
-**Explanation of command:** 
+**Explanation of command:**
 
-We've recoded data before, in the [cleaning up questionnaire data](https://benwhalley.github.io/rmip/data.html#using-recode) worksheet. First, we tell R how we want each value to be recoded, in this case in `cormap`. Then we use `mutate` to add a column called `correct` that recodes the `value` column using the mapping in `cormap`. 
+We've recoded data before, in the [cleaning up questionnaire data](rmip/data.html#using-recode) worksheet. First, we tell R how we want each value to be recoded, in this case in `cormap`. Then we use `mutate` to add a column called `correct` that recodes the `value` column using the mapping in `cormap`.
 
-New to the current worksheet is `.default`, which allows us to give a default value for the recoding. That way, we don't have to explicitly say that all the other letters should be recoded as `0`, we can just write `.default = 0`. 
+New to the current worksheet is `.default`, which allows us to give a default value for the recoding. That way, we don't have to explicitly say that all the other letters should be recoded as `0`, we can just write `.default = 0`.
 
 ### Further recoding
 
-We can use the same technique to create two further columns. The first column, `related` contains a `1` if the answer is wrong but semantically related. The second new column, `inter` contains a 1 if the task was interrupted for some reason. 
+We can use the same technique to create two further columns. The first column, `related` contains a `1` if the answer is wrong but semantically related. The second new column, `inter` contains a 1 if the task was interrupted for some reason.
 
 **Enter these commands into your script, and run them:**
 
@@ -187,13 +187,13 @@ In order to do this, we need to work out which participants were interrupted dur
 
 ```{r ex1}
 # List interrupted tasks
-wing %>% group_by(subj, task) %>% 
-  filter(card < 18) %>% 
-  summarise(inter = sum(inter)) %>% 
+wing %>% group_by(subj, task) %>%
+  filter(card < 18) %>%
+  summarise(inter = sum(inter)) %>%
   filter(inter > 0)
 ```
 
-**Explanation of commands:** We've used all these commands many times before, with the possible exception of `sum` - `sum` is a command like `mean` except that it adds up the numbers rather than taking their average. So, this series of commands groups the data by `subj` and `task`, then filters it to contain just the first 17 questions. It adds up the number of interruptions in each case, and filters to include just those where the number of interruptions was greater than zero. 
+**Explanation of commands:** We've used all these commands many times before, with the possible exception of `sum` - `sum` is a command like `mean` except that it adds up the numbers rather than taking their average. So, this series of commands groups the data by `subj` and `task`, then filters it to contain just the first 17 questions. It adds up the number of interruptions in each case, and filters to include just those where the number of interruptions was greater than zero.
 
 ### Removing participants from the dataset
 
@@ -207,9 +207,9 @@ wing <- wing %>% filter(!(subj == 1 & task %in% c("pc", "pp")))
 wing <- wing %>% filter(!(subj == 10 & task %in% c("pc", "pp")))
 ```
 
-**Explanation of commands:** We've excluded participants before, in the [preprocessing experiments](preproc-experiments.html#exclude) worksheet. The first line uses `!` (meaning "not") in order to keep all participants except participant 18. The second line in addition uses `&` (meaning AND), and `%in%`, to keep all the data except the `pc` and `pp` tasks of participant 1. The third line does the same for participant 10. 
+**Explanation of commands:** We've excluded participants before, in the [preprocessing experiments](preproc-experiments.html#exclude) worksheet. The first line uses `!` (meaning "not") in order to keep all participants except participant 18. The second line in addition uses `&` (meaning AND), and `%in%`, to keep all the data except the `pc` and `pp` tasks of participant 1. The third line does the same for participant 10.
 
-_Note_: In the original report, some participants were also excluded for poor performance. For reasons of brevity, and also because this practice is of somewhat debatable validity in this case, we have not included this step in the current worksheet. 
+_Note_: In the original report, some participants were also excluded for poor performance. For reasons of brevity, and also because this practice is of somewhat debatable validity in this case, we have not included this step in the current worksheet.
 
 ### Calculate scores
 
@@ -218,7 +218,7 @@ Next, we calculate how many questions each participant got right in each task, a
 **Enter these commands into your script, and run them:**
 
 ```{r calc}
-wing_sum <- wing %>% group_by(subj, Cards, task) %>% 
+wing_sum <- wing %>% group_by(subj, Cards, task) %>%
   summarise(correct = sum(correct), related = sum(related))
 ```
 
@@ -236,7 +236,7 @@ Our preprocessing is now nearly over, but some of the analyses we do later will 
 
 ```{r widen}
 # Widen
-task_by_subj <- wing_sum %>% 
+task_by_subj <- wing_sum %>%
   pivot_wider(names_from = task, values_from = c(correct, related))
 ```
 
@@ -272,7 +272,7 @@ task_by_subj %>% pander(split.table = Inf)
 
 ## Randomization check
 
-In our preprocessed data frame, `task_by_subj`, we included two columns, `CDI_U` and `CDI_S`. These are the parent's ratings of their child's level of mastery of a list of words, both in terms of the child _understanding_ the words (`CDI_U`) and _speaking_ the words (`CDI_S`). 
+In our preprocessed data frame, `task_by_subj`, we included two columns, `CDI_U` and `CDI_S`. These are the parent's ratings of their child's level of mastery of a list of words, both in terms of the child _understanding_ the words (`CDI_U`) and _speaking_ the words (`CDI_S`).
 
 In this first analysis, we're going to use these measures as a check of whether the random allocation of children to the two conditions of the experiment (English cards versus Italian cards) was successful in eliminating pre-experimental differences in language mastery between those two groups. If it was, we should be able to demonstrate evidence for the null hypothesis that the two groups do not differ in their `CDI_U` or `CDI_S` scores.  We do this using Bayesian between-subjects t-tests of their parents' CD_I ratings. Bayesian t-tests were introduced in the [Evidence worksheet](evidence.html).
 
@@ -318,13 +318,13 @@ descript <- task_by_subj_l %>%
 descript_table <- descript %>%
   pivot_wider(names_from = Gender, values_from = c(mean, sd))
 
-descript_table <- descript_table %>% select(task, mean_Female, sd_Female, mean_Male, sd_Male) 
+descript_table <- descript_table %>% select(task, mean_Female, sd_Female, mean_Male, sd_Male)
 
 task_names <- c(
   correct_nc = 'Noun Comprehension',
   correct_np = 'Noun Production',
   correct_pc = 'Predicate Comprehension',
-  correct_pp = 'Predicate Production'  
+  correct_pp = 'Predicate Production'
 )
 
 descript_table$task <- descript_table$task %>% recode(!!!task_names)
@@ -370,7 +370,7 @@ one.task <- task_by_subj_l %>% filter(task == "correct_pp") %>% drop_na()
 ttestBF(formula=correct ~ Gender, data = data.frame(one.task))
 ```
 
-**Summary**: There is no substantial evidence for or against gender differences in these tasks. This lack of conclusion is unsurprising given the small sample size. 
+**Summary**: There is no substantial evidence for or against gender differences in these tasks. This lack of conclusion is unsurprising given the small sample size.
 
 <a name="correlate-cdi-wing"></a>
 
@@ -389,7 +389,7 @@ cor(task_by_subj$CDI_U, task_by_subj$correct_nc, use="complete.obs")
 correlationBF(task_by_subj$CDI_U, task_by_subj$correct_nc)
 ```
 
-This particular correlation is relatively small (around 0.2), and the evidence for a relationship is inconclusive (0.33 < BF < 3). 
+This particular correlation is relatively small (around 0.2), and the evidence for a relationship is inconclusive (0.33 < BF < 3).
 
 We can go on and do the same thing for the other three relevant correlations:
 
@@ -416,17 +416,17 @@ cor(task_by_subj$CDI_S, task_by_subj$correct_pp, use="complete.obs")
 correlationBF(task_by_subj$CDI_S, task_by_subj$correct_pp)
 ```
 
-**Summary**: There is evidence of a positive correlation in the case of noun production. In the other three cases, the analysis is inconclusive. This is unsurprising given the small sample size. 
+**Summary**: There is evidence of a positive correlation in the case of noun production. In the other three cases, the analysis is inconclusive. This is unsurprising given the small sample size.
 
 <a name="compare-acc"></a>
 
 ## Comparing accuracy on English and Italian cards
 
-We're now ready to examine our main hypothesis, which predicts that there will be a difference WinG task scores, depending on which set of cards the children were tested with. 
+We're now ready to examine our main hypothesis, which predicts that there will be a difference WinG task scores, depending on which set of cards the children were tested with.
 
 ### Half-violin plots
 
-We'll start by creating plots to show the distribution of scores for the two card sets on the WinG tasks. 
+We'll start by creating plots to show the distribution of scores for the two card sets on the WinG tasks.
 
 **Enter these commands into your script, and run them:**
 
@@ -447,7 +447,7 @@ Line 2 recodes the `task` labels, to make them more meaningful on the plot's x a
 
 The warning `Removed 4 rows...` is just a reminder that some data is missing. We already know this, and so we can safely avoid the warning.
 
-The plot gives a visual indication of whether there were differences between the Italian and English cards on each of the tests. Given the extensive overlap in scores between the card sets, this seems unlikely. 
+The plot gives a visual indication of whether there were differences between the Italian and English cards on each of the tests. Given the extensive overlap in scores between the card sets, this seems unlikely.
 
 ### Non-parametric tests
 
@@ -466,7 +466,7 @@ test_include %>%
 wilcox.test(correct ~ Cards, test_include)
 ```
 
-**Explanation of output**: The difference between conditions is not significant. This is unsurprising given the small sample size and a lack of any clear prior expectation of the effect size. 
+**Explanation of output**: The difference between conditions is not significant. This is unsurprising given the small sample size and a lack of any clear prior expectation of the effect size.
 
 Unlike traditional tests, a Bayesian t-test can assessment evidence for the null hypothesis. It is easy to apply a Bayesian t-test to these data, although the small sample size again makes it unsurprising that the result is inconclusive:
 
@@ -533,7 +533,7 @@ task_by_subj_l <- task_by_subj %>%
 
 task_names <- c(
   related_np = 'Noun Production',
-  related_pp = 'Predicate Production'  
+  related_pp = 'Predicate Production'
 )
 task_by_subj_l$task <- task_by_subj_l$task %>% recode(!!!task_names)
 
@@ -570,5 +570,5 @@ There's not a great deal we can conclude from these data. Unless the authors had
 
 ___
 
-This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0. 
+This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0.
 

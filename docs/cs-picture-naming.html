@@ -436,7 +436,7 @@ summary {
 
 <div id="before-you-start" class="section level2">
 <h2>Before you start</h2>
-<p>This is an advanced worksheet, which assumes you have completed the <a href="https://ajwills72.github.io/rminr/#beginners">Absolute Beginners’ Guide to R</a> course, the <a href="https://benwhalley.github.io/rmip/">Research Methods in Practice (Quantitative section)</a> course, and the <a href="https://ajwills72.github.io/rminr/#rmip">Intermediate Guide to R</a> course.</p>
+<p>This is an advanced worksheet, which assumes you have completed the <a href="https://ajwills72.github.io/rminr/#beginners">Absolute Beginners’ Guide to R</a> course, the <a href="rmip/index.html">Research Methods in Practice (Quantitative section)</a> course, and the <a href="https://ajwills72.github.io/rminr/#rmip">Intermediate Guide to R</a> course.</p>
 </div>
 <div id="contents" class="section level2">
 <h2>Contents</h2>
@@ -1654,7 +1654,7 @@ Bayes factor type: BFindepSample, JZS</code></pre>
 <a class="sourceLine" id="cb33-9" href="#cb33-9" title="9"><span class="kw">colnames</span>(descript_table) &lt;-</a>
 <a class="sourceLine" id="cb33-10" href="#cb33-10" title="10"><span class="st">  </span><span class="kw">c</span>(<span class="st">&quot;Task&quot;</span>, <span class="st">&quot;Female (M)&quot;</span>, <span class="st">&quot;Female (SD)&quot;</span>, <span class="st">&quot;Male (M)&quot;</span>, <span class="st">&quot;Male (SD)&quot;</span>, <span class="st">&quot;BF&quot;</span>)</a></code></pre></div>
 <p><strong>Explanation of commands:</strong></p>
-<p>Lines 1-7 use the approach for renaming factor levels that was introduced in the <a href="https://benwhalley.github.io/rmip/worksheet-recoding.html">cleaning up questionnaire data worksheet</a>. The last 2 lines give the columns more meaningful headings.</p>
+<p>Lines 1-7 use the approach for renaming factor levels that was introduced in the <a href="rmip/data.html">cleaning up questionnaire data worksheet</a>. The last 2 lines give the columns more meaningful headings.</p>
 <p>Now we can print our finished table.</p>
 <div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb34-1" title="1"><span class="kw">library</span>(kableExtra)</a>
 <a class="sourceLine" id="cb34-2" title="2">descript_table <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">kable</span>(<span class="dt">digits=</span><span class="dv">2</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">kable_styling</span>()</a></code></pre></div>

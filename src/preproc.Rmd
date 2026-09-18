@@ -93,7 +93,7 @@ Our first job is to tidy up this dataset so it's clear and readable to the avera
 
 The first thing you need to know to make sense of this dataset is that each row is one _trial_ of the experiment. In a typical experiment, a _trial_ begins with the presentation of a stimulus (in this case, a face) and ends with the participant making a response (in this case, a rating). Participants rate 32 pictures for masculinity, and then 24 pictures for confidence they've seen them before, leading to a total of 56 trials in this experiment, and hence 56 rows in this data frame.
 
-This is what's sometimes called  [tidy data](https://benwhalley.github.io/rmip/data-handling.html), which means there is one row for each observation (each trial, in this case). It is also called _long format_ data, because it has more rows and fewer columns than the main alternative, which is to put all data from a single participant on the same row. This is called _wide_ format, and in this case would result in a dataset with 1 row and 5656 columns.
+This is what's sometimes called  [tidy data](rmip/data.html), which means there is one row for each observation (each trial, in this case). It is also called _long format_ data, because it has more rows and fewer columns than the main alternative, which is to put all data from a single participant on the same row. This is called _wide_ format, and in this case would result in a dataset with 1 row and 5656 columns.
 
 Most commands in R assume your data is in _long_ format, so it's good news our raw data is also in that format, even if it still needs a bunch of tidying up before we can analyse it. The first step is to go through the 101 columns and find those we actually need.
 

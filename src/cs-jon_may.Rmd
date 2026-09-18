@@ -19,7 +19,7 @@ library(pander)
 
 ## Before you start
 
-This is an advanced worksheet, which assumes you have completed the [Absolute Beginners' Guide to R](https://ajwills72.github.io/rminr/#beginners) course, the [Research Methods in Practice (Quantitative section)](https://benwhalley.github.io/rmip/) course, and the [Intermediate Guide to R](https://ajwills72.github.io/rminr/#rmip) course. 
+This is an advanced worksheet, which assumes you have completed the [Absolute Beginners' Guide to R](https://ajwills72.github.io/rminr/#beginners) course, the [Research Methods in Practice (Quantitative section)](rmip/index.html) course, and the [Intermediate Guide to R](https://ajwills72.github.io/rminr/#rmip) course.
 
 ## Contents
 
@@ -150,16 +150,16 @@ bw = 1
 mean <- mean(data$problems)
 sd <- sd(data$problems)
 
-data %>% ggplot(aes(problems))  + 
-  geom_histogram(colour = "black", binwidth = bw) + 
-  stat_function(fun = function(x) 
+data %>% ggplot(aes(problems))  +
+  geom_histogram(colour = "black", binwidth = bw) +
+  stat_function(fun = function(x)
     dnorm(x, mean = mean, sd = sd) * bw * n_obs) +
   xlab('Problems solved') + ylab('Count (participants)')
 ```
 
 ## Scatterplot and best fit line, openness vs. problems solved
 
-You learnt how to create a scatterplot and a best fit line in the [regression worksheet](https://benwhalley.github.io/rmip/regression.html).
+You learnt how to create a scatterplot and a best fit line in the [regression worksheet](rmip/regression.html).
 
 <a name="cor-o-problems"></a>
 
@@ -255,9 +255,9 @@ data %>%
 
 ## References
 
-Andrade, J., May, J., Deeprose, C., Baugh, S.-J., & Ganis, G. (2014). [Assessing vividness of mental imagery: The Plymouth Sensory Imagery Questionnaire](https://onlinelibrary.wiley.com/doi/pdf/10.1111/bjop.12050?casa_token=-IMvMthFsKQAAAAA:_b6s7nwZ8JS-5fWM4Xxgey5sBBPpbIRPUupgZ2XFQ-jNYGNOK0ARomtRNgCIWUfZqUD7w9PBoLbeng) British Journal of Psychology, 105(4), 547–563. 
+Andrade, J., May, J., Deeprose, C., Baugh, S.-J., & Ganis, G. (2014). [Assessing vividness of mental imagery: The Plymouth Sensory Imagery Questionnaire](https://onlinelibrary.wiley.com/doi/pdf/10.1111/bjop.12050?casa_token=-IMvMthFsKQAAAAA:_b6s7nwZ8JS-5fWM4Xxgey5sBBPpbIRPUupgZ2XFQ-jNYGNOK0ARomtRNgCIWUfZqUD7w9PBoLbeng) British Journal of Psychology, 105(4), 547–563.
 
-Costa, P. T., & McCrae, R. R. (1992). Neo personality inventory-revised (NEO PI-R). 
+Costa, P. T., & McCrae, R. R. (1992). Neo personality inventory-revised (NEO PI-R).
 Psychological Assessment Resources Odessa, FL.
 
 May, J. (1987). The cognitive analysis of flexible thinking. Unpublished PhD
@@ -265,5 +265,5 @@ thesis, University of Exeter.
 
 ___
 
-This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0. 
+This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0.
 

@@ -76,7 +76,7 @@
 
 ## PSYC519 Research Methods in Practice 1 (Semester 1)
 
-- [Research Methods in Practice](https://benwhalley.github.io/rmip/data.html): Data handling, [fitting lines](https://benwhalley.github.io/rmip/regression.html) - _scatterplot with best fit line_ , **converting Likert scales from text to numbers**, **reverse scoring scale items**, multiple regression.
+- [Research Methods in Practice](rmip/data.html): Data handling, [fitting lines](rmip/regression.html) - _scatterplot with best fit line_ , **converting Likert scales from text to numbers**, **reverse scoring scale items**, multiple regression.
 
 ## PSYC520 Research Methods in Practice 2 (Semester 2)
 

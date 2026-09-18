@@ -220,7 +220,7 @@ task_names <- c(
 descript$task <- descript$task %>% recode(!!!task_names)
 ```
 
-**Explanation of commands**: We're using the `recode` command that we've previously used in the [cleaning up questionnaire data](https://benwhalley.github.io/rmip/data.html#using-recode) worksheet:
+**Explanation of commands**: We're using the `recode` command that we've previously used in the [cleaning up questionnaire data](rmip/data.html#using-recode) worksheet:
 
 1. We start by telling R what each of the codes, `nc` etc., mean. So, for example `nc = 'Noun Comprehension'`. We combine the four 'translations' together into `task_names` using `c()` (short for 'concatenate', i.e. put things together).
 

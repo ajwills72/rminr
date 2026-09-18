@@ -371,8 +371,8 @@ predictors</a></p></li>
 </div>
 <div id="introduction" class="section level2">
 <h2>Introduction</h2>
-<p>Previous worksheets introduced <a href="https://benwhalley.github.io/rmip/regression.html">linear
-regression using a single predictor variable</a>, and <a href="https://benwhalley.github.io/rmip/regression-multiple.html">multiple
+<p>Previous worksheets introduced <a href="rmip/regression.html">linear
+regression using a single predictor variable</a>, and <a href="rmip/regression-multiple.html">multiple
 regression with two predictors</a>. This worksheet builds on this
 foundation, by explaining how to build models with more than two
 predictors.</p>
@@ -468,7 +468,7 @@ an <em>ordered</em> variable – people in this sample have a reported
 level of education which ranges from low (<code>no formal quals</code>)
 to high (<code>degree</code>). R does not know what order to put these
 levels in unless we tell it. The easiest way to do this is to recode the
-data, as you did previously in the <a href="https://benwhalley.github.io/rmip/data.html#using-recode">cleaning
+data, as you did previously in the <a href="rmip/data.html#using-recode">cleaning
 up questionnaire data</a> worksheet.</p>
 <p><strong>Enter these comments and commands into your script, and run
 them:</strong></p>
@@ -627,7 +627,7 @@ emotionality and sociability.</p>
 </div>
 <div id="multiple-regression-with-more-than-two-predictors" class="section level2">
 <h2>Multiple regression with more than two predictors</h2>
-<p>The linear model you built in <a href="https://benwhalley.github.io/rmip/multiple-regression.html">the
+<p>The linear model you built in <a href="rmip/regression-multiple.html">the
 multiple regression worksheet</a> worksheet used two predictors. It’s
 straightforward to add additional predictors to a model. We’ll start
 with a model which predicts intrinsic religious orientation from the
@@ -663,7 +663,7 @@ the right of the <code>~</code> are the predictors. As you can see,
 these are the four demographics variables
 <code>age + sex + edu_sc + religious</code>.</p>
 <p>Command line 4 prints the result of fitting the regression model.</p>
-<p><strong>Explanation of output</strong>: We are given the <a href="https://benwhalley.github.io/rmip/automatic-line-fitting.html">equation
+<p><strong>Explanation of output</strong>: We are given the <a href="rmip/regression.html">equation
 of the line</a> for the regression model. We can see from this output
 that the best fitting line involves a positive relation between
 <code>age</code> and <code>ro_i</code>, i.e. older people score higher
@@ -684,7 +684,7 @@ women on intrinsic religious orientation in this sample.</p>
 <div id="proportion-of-variance-explained" class="section level3">
 <h3>Proportion of variance explained</h3>
 <p>How much of the variance in intrinsic religious orientation is
-explained by the demographic variables? As explained in the <a href="https://benwhalley.github.io/rmip/how-good-was-our-model.html">how
+explained by the demographic variables? As explained in the <a href="rmip/regression-multiple.html">how
 good was our model?</a> worksheet, we can assess this using the <span class="math inline">\(R^2\)</span> statistic.</p>
 <p><strong>Enter these comments and commands into your script, and run
 them:</strong></p>
@@ -711,7 +711,7 @@ beyond the scope of this worksheet and are not discussed here.</p>
 </div>
 <div id="evidence-for-the-model" class="section level3">
 <h3>Evidence for the model</h3>
-<p><a href="https://benwhalley.github.io/rmip/how-good-was-our-model.html">The
+<p><a href="rmip/regression-multiple.html">The
 multiple regression worksheet</a> also showed you how to calculate a
 Bayes factor to decide whether a regression model is any better than a
 simpler model with no predictors.</p>
@@ -819,7 +819,7 @@ better than a model with no predictors. To test the hypothesis that the
 spirituality variables help to explain the variance in intrinsic
 religiosity, we can compare our second model against the first.</p>
 <p>We’ve compared Bayesian models in a couple of previous worksheets.
-For example, in the <a href="https://benwhalley.github.io/rmip/how-good-was-our-model.html">multiple
+For example, in the <a href="rmip/regression-multiple.html">multiple
 regression worksheet</a>, we compared a model where the relationship
 between grades and study time was assumed to be different for men and
 women, with one where it was assumed to be the same. You were also
