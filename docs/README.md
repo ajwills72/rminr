@@ -1,6 +1,8 @@
 # Research Methods in R
 _2023 Edition._
 
+[Search these materials](search.html)
+
 > **Archived project.** This is a preserved teaching snapshot and is no longer
 > under active development. The materials remain available for reference and
 > reuse under the licences and attributions below.
