@@ -71,21 +71,23 @@ If you get an output that includes the word 'error', please see [common errors](
 ## Loading data
 Now, we're going to load some data on the income of 10,000 people in the United States of America. I've made up this dataset for teaching purposes, but it's somewhat similar to large open data sets available on the web, such as [US Current Population Survey](https://www.census.gov/programs-surveys/cps/data.html).
 
+Download the archived teaching data file [`cps2.csv`](https://github.com/ajwills72/rminr/blob/master/src/cps2.csv) and save it in the same folder as your R script. If your browser displays the file rather than downloading it, use the **Raw** button and then save the page as `cps2.csv`.
+
 **Copy the comment and command in the grey box to your script in RStudio and then press CTRL+ENTER to run it:** (don't forget to save your script)
 
 ```{r load,cache=TRUE}
 # Load data
-cpsdata <- read_csv("https://www.andywills.info/cps2.csv")
+cpsdata <- read_csv("cps2.csv")
 ```
 
 ### Explanation of command
-There are three parts to the command `cpsdata <- read_csv("https://www.andywills.info/cps2.csv")`:
+There are three parts to the command `cpsdata <- read_csv("cps2.csv")`:
 
 1. The first part of the command is `cpsdata`. This gives a name to the data we are going to load. We'll use this name to refer to it later, so it's worth using a name that is both short and meaningful. I've called it `cpsdata` because it's somewhat similar to data from the US Current Population Survey, but you can give data pretty much any name you choose (e.g. _fart_). 
 
 2. The bit in the middle, `<-`, is an arrow and is typed by pressing `<` and then `-`, without a space. This arrow means "put the thing on the right of the arrow into the thing on the left of the arrow". 
 
-3. The last part of the command is `read_csv("https://www.andywills.info/cps2.csv")`. It's a way of downloading data from the Internet. The part inside the speech marks, `https://www.andywills.info/cps2.csv`, is a web address, such as you'd use to access any other web page (e.g. <http://www.twitter.com/ajwills72>)
+3. The last part of the command is `read_csv("cps2.csv")`. It tells R to read the file named `cps2.csv` from the current project folder. That is why you downloaded the file and saved it alongside your script before running this command.
 
 ### Explanation of output
 R likes to print things in red sometimes -- this does not mean there's a problem. If there's a problem, it will actually say 'error'. The output here tells us that R has loaded the data, which has eight parts (columns, or `cols`). It gives us the name of the columns (`ID, sex, ...`) and tells us what sort of data each column contains: `character` means the data is words  (e.g. 'female'), `integer` means the data is a whole number (e.g. '42').
