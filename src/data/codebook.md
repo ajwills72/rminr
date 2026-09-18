@@ -14,11 +14,11 @@ Status - 'In progress' or 'complete', indicating a full dataset.
 
 ## PGKE_DATA.csv
 
-tblDataKey - unique row identifier 
+tblDataKey - unique row identifier
 
-tblMainKey - Participant ID, matching tblMainKey in PGKE_MAIN.csv 
+tblMainKey - Participant ID, matching tblMainKey in PGKE_MAIN.csv
 
-ExpTimeStamp - time stamp during the experimental process in milliseconds. GSR is polled every 50ms. 
+ExpTimeStamp - time stamp during the experimental process in milliseconds. GSR is polled every 50ms.
 
 ExpType - type of value recorded:
 
