@@ -22,6 +22,11 @@ run with:
 sh scripts/check-archive.sh
 ```
 
+One historical worksheet, `src/anova_plots.Rmd`, still uses the external
+Zenodo file `blind_data.csv`. The Zenodo endpoint was unavailable during this
+archive review and no local copy is currently present, so that worksheet is a
+known exception to the self-contained data rule.
+
 ## Analytics
 
 The published site uses Google Analytics property `G-WXTBHY6FJW` to provide
