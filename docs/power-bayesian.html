@@ -580,7 +580,7 @@ intro to Rstudio</a>.</p>
 <ul>
 <li>Create a new project called power-bayesian</li>
 <li>Add the code in this worksheet to a script called power.R</li>
-<li>Download <a href="https://raw.githubusercontent.com/ajwills72/rminr/master/src/data/george1935pilot.csv"><code>george1935pilot.csv</code></a> and save it in the <code>data</code> folder of your R project. Create that folder first if it does not exist.</li>
+<li>Download <a href="data/george1935pilot.csv"><code>george1935pilot.csv</code></a> and save it in the <code>data</code> folder of your R project. Create that folder first if it does not exist.</li>
 </ul>
 <pre class="r"><code># Bayesian Power Analysis
 # Always start with loading all the packages you need for a given analysis
@@ -676,7 +676,7 @@ plan to do on our own data. We will use a</p>
 [1] Alt., r=0.707 : 0.8560438 ±0%
 
 Against denominator:
-  Null, mu1-mu2 = 0 
+  Null, mu1-mu2 = 0
 ---
 Bayes factor type: BFindepSample, JZS</code></pre>
 <p>Our results are not conclusive, as BF = 0.8560438. This is an
@@ -967,11 +967,11 @@ power %&gt;%
  8   120 0.995
  9   130 0.998
 10   140 0.999
-11   150 1    
-12   160 1    
+11   150 1
+12   160 1
 13   170 0.998
-14   180 1    
-15   190 1    
+14   180 1
+15   190 1
 16   200 1    </code></pre>
 <p>The only thing that remains is to find out the actual sample size we
 need. In frequentist methods, people usually expect your study to have
@@ -1039,7 +1039,7 @@ the sample size for a new data set.</h1>
 different data set.</p>
 <p>The data will be on the production effect in memory. More explanation
 on the data can be found in the <a href="https://www.andywills.info/rminr/revision.html">Revision
-worksheet</a>. You can right click on <a href="https://raw.githubusercontent.com/ajwills72/rminr-data/master/production.csv">production
+worksheet</a>. You can right click on <a href="production.csv">production
 data</a> and save it as a CSV.</p>
 <p>Additionally, you will need to do so for a harsher interval, where
 the BF falls outside of 1/10 and 10. You will need to find the sample

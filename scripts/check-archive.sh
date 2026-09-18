@@ -24,6 +24,13 @@ if grep -RInE 'source\("https?://' src --include='*.Rmd' --include='*.R'; then
     failed=1
 fi
 
+remote_data_reads=$(grep -RInE 'read_csv\([^)]*https?://|read\.csv\([^)]*https?://|download\.file\([^)]*https?://' src --include='*.Rmd' --include='*.R' | grep -v 'zenodo.org/record/1120364/files/blind_data.csv' || true)
+if [ -n "$remote_data_reads" ]; then
+    printf '%s\n' "$remote_data_reads"
+    printf 'source files still read data from external URLs\n'
+    failed=1
+fi
+
 if grep -RIn 'https://benwhalley.github.io/rmip' src docs --include='*.Rmd' --include='*.md' --include='*.html' | grep -v '^docs/rmip/'; then
     printf 'repository content still links to the external RMIP site\n'
     failed=1

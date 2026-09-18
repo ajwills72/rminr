@@ -44,11 +44,11 @@ An earlier study found a difference between the English and Italian cards, for a
 
 ## Loading data
 
-Open the `rminr-data` project we used [previously](preproc.html#load).
+Open your project we used [previously](preproc.html#load).
 
-Ensure you have the latest files by asking git to "`pull`" the repository. Select the `Git` tab, which is located in the row of tabs which includes the `Environment` tab. Click the `Pull` button with a downward pointing arrow. A window will open showing the files which have been pulled from the repository. Close the `Git pull` window. The `case-studies` folder should contain a folder named `allegra-cattani`.
+Ensure you have the latest files by use the files included in this archive; no repository pull is needed. The `case-studies` folder should contain a folder named `allegra-cattani`.
 
-Next, **create a new, empty R script and save it in the `rminr-data` folder as `wing.R`. Put all the commands from this worksheet into this file, and run them from there.** Save your script regularly.
+Next, **create a new, empty R script and save it in the `your project` folder as `wing.R`. Put all the commands from this worksheet into this file, and run them from there.** Save your script regularly.
 
 We start by reading the data.
 

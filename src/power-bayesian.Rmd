@@ -197,7 +197,7 @@ how to create projects and R scripts, look at [this brief intro to Rstudio](http
 
 * Create a new project called power-bayesian
 * Add the code in this worksheet to a script called power.R
-* Download [`george1935pilot.csv`](https://raw.githubusercontent.com/ajwills72/rminr/master/src/data/george1935pilot.csv) and save it in the `data` folder of your R project. Create that folder first if it does not exist.
+* Download [`george1935pilot.csv`](data/george1935pilot.csv) and save it in the `data` folder of your R project. Create that folder first if it does not exist.
 
 ```{r, include = FALSE}
 # Bayesian Power Analysis
@@ -303,7 +303,7 @@ For now, we will make it easy and straightforward. We will use `rnorm` to create
 rnorm(n = group_size, mean = mean_from_data, sd = standard_deviation)
 ```
 
-The next step is to simply give `rnorm` the means and standard deviations of the two conditions we already looked at. Remember in a few steps before, we looked at the mean and standard deviation of each group in our data. Those will be the values we use in `rnorm`. 
+The next step is to simply give `rnorm` the means and standard deviations of the two conditions we already looked at. Remember in a few steps before, we looked at the mean and standard deviation of each group in our data. Those will be the values we use in `rnorm`.
 
 ```{r}
 # Generate random data for the control condition

@@ -43,13 +43,13 @@ knitr::opts_chunk$set(echo = TRUE, comment = NA, cache = TRUE)
 
 In the [within-subject differences](anova1.html) and [factorial differences](anova2.html) worksheets, we looked at Bayesian ANOVA methods. Throughout _Research Methods in R_ we focus on Bayesian, rather than traditional ("p value") methods, because Bayes Factors are more useful and easier to understand. However, psychologists have been using traditional ANOVA methods since the 1970s, and it was not until the 2010s that we started using Bayesian methods. So, there's a lot of older work out there that uses a different technique. For this reason, it is probably still worth knowing how to do a traditional ANOVA. This is what we'll cover in this worksheet.
 
-The following assumes you have completed the  [within-subject differences](anova1.html) and [factorial differences](anova2.html) worksheets. Make sure you are in your R project that contains the data downloaded from the _git_ repository - see the [preprocessing](preproc.html#load) worksheet for details. **Create a new R script called `afex.R`** and enter all comments and commands from this worksheet into it.
+The following assumes you have completed the  [within-subject differences](anova1.html) and [factorial differences](anova2.html) worksheets. Make sure you are in your R project that contains the data downloaded from a project - see the [preprocessing](preproc.html#load) worksheet for details. **Create a new R script called `afex.R`** and enter all comments and commands from this worksheet into it.
 
 <a name="afex"></a>
 
 # Getting started
 
-To do traditional ANVOA in R, you will need to load the `afex` package. 
+To do traditional ANVOA in R, you will need to load the `afex` package.
 
 **Enter this comment and command into your script, and run them:**
 
@@ -87,14 +87,14 @@ To do a traditional, one between-subject factor ANOVA, use the following command
 # One b/subj factor ANOVA
 aov_car(formula = rt ~ medit + Error(subj), data = wordsum)
 ```
- 
+
 ### Explanation of command
 
 The command `aov_car` is similar to the command `anovaBF`, but for traditional ANOVA. In most ways, this command works like `anovaBF`. For example, the part `formula = rt ~ medit` says we want to look at the effect of the `medit` (meditation) variable on the `rt` (reaction time) variable. The next bit, `+ Error(subj)` is also very similar to `anovaBF` - it  tells `aov_car` which column contains the participant IDs (in this case, `subj`). The final part, `data = wordsum` tells the command where to find the data (just as with `anovaBF`).
 
 ### Explanation of output
 
-Although there's quite a lot in this output, the main thing to focus on is the number underneath `p.value`. In this case, the number is '<.0001'. So, the p-value in this case is less than .0001, written as `p < .0001`. Recall that [p values are widely misinterpreted by psychologists](evidence.html#p-wrong), but we have a convention that if the p value is less than .05, then people will believe there is a difference. In this case, the p value is less than .05, and so people will believe there is a difference. 
+Although there's quite a lot in this output, the main thing to focus on is the number underneath `p.value`. In this case, the number is '<.0001'. So, the p-value in this case is less than .0001, written as `p < .0001`. Recall that [p values are widely misinterpreted by psychologists](evidence.html#p-wrong), but we have a convention that if the p value is less than .05, then people will believe there is a difference. In this case, the p value is less than .05, and so people will believe there is a difference.
 
 If you are reporting the results of a traditional ANOVA in a journal article, you are generally expected to report the `F` value, along with the degrees of freedom (`df`), as well as the p value. So, in this case, you would write:
 
@@ -184,9 +184,9 @@ There is one new aspect here, the statement at the end:
 
 `Sphericity correction method: GG`
 
-You'll see something like this in traditional ANOVA outputs when a within-subjects factor has more than two levels. It turns out that traditional ANOVA methods generally get the p value wrong in these cases, because they make assumptions about the data which are normally untrue. The incorrect assumption they make is that the data is "spherical" -- if you're curious what that means, click [here](https://en.wikipedia.org/wiki/Mauchly%27s_sphericity_test). 
+You'll see something like this in traditional ANOVA outputs when a within-subjects factor has more than two levels. It turns out that traditional ANOVA methods generally get the p value wrong in these cases, because they make assumptions about the data which are normally untrue. The incorrect assumption they make is that the data is "spherical" -- if you're curious what that means, click [here](https://en.wikipedia.org/wiki/Mauchly%27s_sphericity_test).
 
-Fortunately, there are ways of correcting this error. These are called _sphericity corrections_ ("sphericity" is the property of being spherical). The two main methods are Greenhouse-Geisser (`GG`) correction, and Huynh-Feldt (`HF`) correction. `aov_car` picks the most appropriate one, makes the correction, and tells you it's done so by including that statement `Sphericity correction method: GG` at the end. Another way you can tell a sphericity correction has been applied is that the degrees of freedom (`df`) are normally not whole numbers (`1.05` and `145.44` in this case). 
+Fortunately, there are ways of correcting this error. These are called _sphericity corrections_ ("sphericity" is the property of being spherical). The two main methods are Greenhouse-Geisser (`GG`) correction, and Huynh-Feldt (`HF`) correction. `aov_car` picks the most appropriate one, makes the correction, and tells you it's done so by including that statement `Sphericity correction method: GG` at the end. Another way you can tell a sphericity correction has been applied is that the degrees of freedom (`df`) are normally not whole numbers (`1.05` and `145.44` in this case).
 
 You would normally report towards the beginning of your results that you used such a correction. For example:
 
@@ -250,8 +250,8 @@ wordsum$subj <- factor(wordsum$subj)
 wordsum$medit <- factor(wordsum$medit)
 ```
 
-The command for a two between-subject factor traditional ANOVA is given below. 
-This is much like previous commands, the only thing to note is that `*` is used to combine between-subjects factors in `aov_car`. The output can be interpreted in the same way as before. 
+The command for a two between-subject factor traditional ANOVA is given below.
+This is much like previous commands, the only thing to note is that `*` is used to combine between-subjects factors in `aov_car`. The output can be interpreted in the same way as before.
 
 **Enter this command into your script, and run it:**
 
@@ -277,7 +277,7 @@ wordsum$subj <- factor(wordsum$subj)
 wordsum$block <- factor(wordsum$block)
 ```
 
-The command for a two within-subject factor traditional ANOVA is given below. 
+The command for a two within-subject factor traditional ANOVA is given below.
 This is much like previous commands, the only thing to note is that `*` is used to combine within-subjects factors in `aov_car`. The output can be interpreted in the same way as before.
 
 **Enter this command into your script, and run it:**
@@ -291,7 +291,7 @@ aov_car(formula = rt ~ Error(subj/congru*block), data = wordsum)
 
 # More than two factors
 
-Unlike Bayesian ANOVA, traditional ANOVA techniques can handle designs with more than two factors quite efficiently. 
+Unlike Bayesian ANOVA, traditional ANOVA techniques can handle designs with more than two factors quite efficiently.
 
 First, preprocess the data for this example; **Enter these commands into your script, and run them:**
 
@@ -319,6 +319,6 @@ __
 
 
 
-This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0. 
+This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0.
 
 

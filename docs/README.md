@@ -86,7 +86,7 @@ A series of worksheets on using R for data analysis in psychology. No previous k
 
 * [Analyzing your project data](using-projects.html). Analysing your own data.
 
-* [Entering data by hand](entering-data-by-hand.html). Entering data into a spreadsheet. Saving data into your RStudio project.
+* [Entering data by hand](entering-data-by-hand.html). Entering data into a spreadsheet. Saving data into your project.
 
 ### Part 2
 

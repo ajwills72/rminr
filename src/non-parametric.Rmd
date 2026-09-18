@@ -35,9 +35,9 @@ library(pander)
 
 ## Introduction
 
-This worksheet covers the Wilcoxon rank-sum test, which is an alternative to the [between-subjects t-test](evidence.html#bs-ttest), and the Kruskal-Wallis H test, which is an alternative to the [between-subjects one-factor ANOVA](anova4.html#oneBS). 
+This worksheet covers the Wilcoxon rank-sum test, which is an alternative to the [between-subjects t-test](evidence.html#bs-ttest), and the Kruskal-Wallis H test, which is an alternative to the [between-subjects one-factor ANOVA](anova4.html#oneBS).
 
-The Wilcoxon rank-sum and Kruskal-Wallis H tests are both  _non-parametric_ tests. This means they make fewer assumptions about your data than do standard _parametric_ tests (such as t-tests, and ANOVA). Specifically, where your sample size is small, parametric tests assume that your population is approximately [normally distributed](https://ajwills72.github.io/critical-thinking/distributions-samples.pdf). However, it's  important to realise that as your sample size increases, parametric tests make fewer and fewer assumptions about your population distribution, due to the [central limit theorem](https://ajwills72.github.io/critical-thinking/distributions-samples.pdf). It's also important to realise that parametric tests have greater [statistical power](power.html) than non-parametric tests, so we should use parametric tests when their assumptions are met. 
+The Wilcoxon rank-sum and Kruskal-Wallis H tests are both  _non-parametric_ tests. This means they make fewer assumptions about your data than do standard _parametric_ tests (such as t-tests, and ANOVA). Specifically, where your sample size is small, parametric tests assume that your population is approximately [normally distributed](https://ajwills72.github.io/critical-thinking/distributions-samples.pdf). However, it's  important to realise that as your sample size increases, parametric tests make fewer and fewer assumptions about your population distribution, due to the [central limit theorem](https://ajwills72.github.io/critical-thinking/distributions-samples.pdf). It's also important to realise that parametric tests have greater [statistical power](power.html) than non-parametric tests, so we should use parametric tests when their assumptions are met.
 
 Putting this all together, there's **a relatively small set of situations where it makes sense to use a non-parametric test** such as the Wilcoxon rank-sum or Kruskal-Wallis H. These are when:
 
@@ -45,9 +45,9 @@ Putting this all together, there's **a relatively small set of situations where 
 1. you do not know whether the population distribution is approximately normal **and**
 1. you have reason to expect the effect size will be large (d > 1)
 
-For example, you wouldn't use an non-parametric test on a small sample of IQ scores, because IQ is known to be normally distributed. The point about effect size follows from the other two - if your sample size is small, you will only be able to detect large effects - see the [statistical power](power.html) worksheet. 
+For example, you wouldn't use an non-parametric test on a small sample of IQ scores, because IQ is known to be normally distributed. The point about effect size follows from the other two - if your sample size is small, you will only be able to detect large effects - see the [statistical power](power.html) worksheet.
 
-**Where's the Bayes Factor?** The Wilcoxon rank-sum and Kruskal-Wallis are traditional tests, in the sense that they give us a p-value rather than a Bayes Factor. As we have previously covered, [p-values are widely misinterpreted by psychologists](evidence.html#p-wrong), and can never provide evidence for the null hypothesis. For this reason, we have generally advised that you instead use the Bayesian equivalents of these tests - such as [Bayesian t-tests](evidence.html#bayes-t), [Bayesian ANOVA](anova1.html#anovaWS), and [Bayesian chi-square](chi.html#evidence). However, it is not straight forward to calculate Bayesian equivalents of the Mann-Whitney and Kruskal-Wallis tests in R at the moment. So, in this case, we'll stick to the traditional tests. 
+**Where's the Bayes Factor?** The Wilcoxon rank-sum and Kruskal-Wallis are traditional tests, in the sense that they give us a p-value rather than a Bayes Factor. As we have previously covered, [p-values are widely misinterpreted by psychologists](evidence.html#p-wrong), and can never provide evidence for the null hypothesis. For this reason, we have generally advised that you instead use the Bayesian equivalents of these tests - such as [Bayesian t-tests](evidence.html#bayes-t), [Bayesian ANOVA](anova1.html#anovaWS), and [Bayesian chi-square](chi.html#evidence). However, it is not straight forward to calculate Bayesian equivalents of the Mann-Whitney and Kruskal-Wallis tests in R at the moment. So, in this case, we'll stick to the traditional tests.
 
 <a name="start"></a>
 
@@ -55,13 +55,13 @@ For example, you wouldn't use an non-parametric test on a small sample of IQ sco
 
 To prepare for this worksheet:
 
-1. Open the `rminr-data` project we used [previously](preproc.html#load).
+1. Open your project we used [previously](preproc.html#load).
 
 1. Open the `Files` tab. You should see a folder called `going-further`. This folder should contain the files `picture-naming-long.csv` and `music-emotion-preproc.csv`.
 
-1. If you don't see the folder or the files, it means you created your project _before_ the data required for this worksheet was added to the `rminr-data` git repository. You fix this by asking git to "`pull`" the repository. Select the `Git` tab, which is located in the row of tabs which includes the `Environment` tab. Click the `Pull` button with a downward pointing arrow. A window will open showing the files which have been pulled from the repository. Close the `Git pull` window.
+1. If you don't see the folder or the files, it means you created your project _before_ the data required for this worksheet was added to your project files. You fix this by use the files included in this archive; no repository pull is needed.
 
-1. Create a script named `non-parametric.R` in the `rminr-data` folder (the folder above `going-further`). Add the comments and commands to this script as you work through each section of the worksheet.
+1. Create a script named `non-parametric.R` in the `your project` folder (the folder above `going-further`). Add the comments and commands to this script as you work through each section of the worksheet.
 
 <a name="wilcox"></a>
 
@@ -76,7 +76,7 @@ We start by loading the data. **Enter these commands into your script, and run t
 ```{r load, message=FALSE, class.source = 'numberLines lineAnchors'}
 # Non-parametric tests
 # Clear environment
-rm(list = ls()) 
+rm(list = ls())
 # Load tidyverse
 library(tidyverse)
 # Load data
@@ -85,14 +85,14 @@ wing_preproc <- read_csv('going-further/picture-naming-long.csv')
 
 **Explanation of commands:**
 
-These commands should be familiar from previous worksheets. Command line 1 clears the environment. Command line 2 loads the `tidyverse` package. Command line 3 reads the data. 
+These commands should be familiar from previous worksheets. Command line 1 clears the environment. Command line 2 loads the `tidyverse` package. Command line 3 reads the data.
 
 The first few lines of `wing_preproc` look like this:
 
 ```{r, echo=FALSE}
 wing_preproc %>% head(12) %>% pander(split.table = Inf)
 ```
-The first three columns are the participant ID number, gender of the participant, and the type of card presented. The fourth column is the test (e.g. "nc" = "Noun comprehension"). The final column is the number of correct responses. Some data is missing - indicated as "NA". 
+The first three columns are the participant ID number, gender of the participant, and the type of card presented. The fourth column is the test (e.g. "nc" = "Noun comprehension"). The final column is the number of correct responses. Some data is missing - indicated as "NA".
 
 In the next section, we are going to compare English and Italian on the noun comprehension task. So, we filter the data (which contains all four tasks) to include just that task. We also remove any missing data.
 
@@ -150,11 +150,11 @@ The command `wilcox.test(correct ~ cards, nc_include)` runs the test to compare 
 
 The phrase `with continuity correction` is a technical detail that can be safely ignored. If you're curious, you can read more in the help file, by typing `?wilcoxon.test` into the console.
 
-The phrase `correct by cards` reminds you that you compared the values in `correct` between the levels in the `cards` factor. A `p` value of less than .05 is generally considered by psychologists to be evidence that the two groups are different. 
+The phrase `correct by cards` reminds you that you compared the values in `correct` between the levels in the `cards` factor. A `p` value of less than .05 is generally considered by psychologists to be evidence that the two groups are different.
 
 The phrase `alternative hypothesis: true location shift is not equal to 0` can be safely ignored, as it's just another (rather obscure) way of saying that you are testing whether the two groups are different.
 
-The warning `cannot compute exact p-value with ties` lets you know that the method used to calculate _p_ will not be exact, because some items in the Italian and English scores had identical rankings. It is possible to calculate the exact p value using the `pwilcox` command, but that's beyond what we'll cover in this worksheet. If your p-value is sufficiently close to .05 that it would matter if the estimate is a bit off, then a better solution would be to attempt to replicate your finding in a second study with a larger sample. 
+The warning `cannot compute exact p-value with ties` lets you know that the method used to calculate _p_ will not be exact, because some items in the Italian and English scores had identical rankings. It is possible to calculate the exact p value using the `pwilcox` command, but that's beyond what we'll cover in this worksheet. If your p-value is sufficiently close to .05 that it would matter if the estimate is a bit off, then a better solution would be to attempt to replicate your finding in a second study with a larger sample.
 
 We now have all of the information we need to report the results. For the noun comprehension task, there was no significant difference in accuracy between the Italian (_Mdn_ = `r nc_summary[nc_summary$cards == 'italian', 'median']`) and English (_Mdn_ = `r nc_summary[nc_summary$cards == 'english', 'median']`) cards _W_ = `r nc_u$statistic`, _p_ = `r round(nc_u$p.value, 2)`.
 
@@ -162,7 +162,7 @@ We now have all of the information we need to report the results. For the noun c
 
 ## What about Mann-Whitney?
 
-In some journal articles, you may see a non-parametric test called a "Mann-Whitney U". This is exactly the same test as computed in the Wilcoxon rank-sum test above, just with a different name (and represented by a U rather than a W). 
+In some journal articles, you may see a non-parametric test called a "Mann-Whitney U". This is exactly the same test as computed in the Wilcoxon rank-sum test above, just with a different name (and represented by a U rather than a W).
 
 
 <a name="ex1"></a>
@@ -230,7 +230,7 @@ The differences in medians between groups look quite small.
 
 ### Calculating the Kruskal-Wallis
 
-We can now run the Kruskal-Wallis test. 
+We can now run the Kruskal-Wallis test.
 
 **Enter this comment and command into your script, and run it:**
 
@@ -252,7 +252,7 @@ The command `kruskal.test(score ~ subculture, data = approach)` runs the test to
 
 **Explanation of output:**
 
-The string `score by subculture` reminds you that you compared the values in `score` between the levels in the `subculture` factor. The Kruskal-Wallis _H_ statistic is `r round(kw$statistic,4)`. R describes it as `chi-squared` because it is possible to estimate the relevant p-value using a [chi-square distribution](https://en.wikipedia.org/wiki/Chi-square_distribution) with the degrees of freedom (`df`) for that distribution set to one less than the number of groups, in this case `df` = `r kw$parameter`. The `p` value tells us whether there was a significant difference between the four medians. It does not tell us which pairs of groups differ significantly from each other (for that, using a Wilcoxon rank-sum). 
+The string `score by subculture` reminds you that you compared the values in `score` between the levels in the `subculture` factor. The Kruskal-Wallis _H_ statistic is `r round(kw$statistic,4)`. R describes it as `chi-squared` because it is possible to estimate the relevant p-value using a [chi-square distribution](https://en.wikipedia.org/wiki/Chi-square_distribution) with the degrees of freedom (`df`) for that distribution set to one less than the number of groups, in this case `df` = `r kw$parameter`. The `p` value tells us whether there was a significant difference between the four medians. It does not tell us which pairs of groups differ significantly from each other (for that, using a Wilcoxon rank-sum).
 
 The results of this test are as follows:
 

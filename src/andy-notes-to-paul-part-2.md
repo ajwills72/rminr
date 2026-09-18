@@ -12,7 +12,7 @@ Hint: Getting an error? Don't forget you also need to include the column contain
 
 ## Selecting data
 
-The instructions and title here are misleading. You say "selecting data" and that "Our first step will be to remove columns". But actually the first step is to load the data. So either have a separate section for loading the data, or call this "Loading and selecting data" and have text specifically dedicated to the load operation (it needn't be much, but there should be something). 
+The instructions and title here are misleading. You say "selecting data" and that "Our first step will be to remove columns". But actually the first step is to load the data. So either have a separate section for loading the data, or call this "Loading and selecting data" and have text specifically dedicated to the load operation (it needn't be much, but there should be something).
 
 ## Handling missing data
 
@@ -22,7 +22,7 @@ The final table in this section has no explanatory text - there should be some.
 
 "We save the output of the pipeline in " - I don't think you've explained what you mean by 'pipeline'? You should.
 
-"column 25 is the participant’s condition." - Explain 'condition' 
+"column 25 is the participant’s condition." - Explain 'condition'
 
 "making it a factor" - you should link to somewhere that explains what a factor is e.g. anova1.html#anovaWS
 
@@ -43,7 +43,7 @@ Similarly:
 dass21 <- mutate(dass21, depression = rowSums(dass21[4 + c(3,5,10,13,16,17,21)]))
 dass21_total <- select(dass21, partID, Age, Gender, depression)
 
-and 
+and
 
 sses_pre_raw  <- select(sses, 1, 5:25)
 
@@ -71,9 +71,9 @@ Refer back to the [Cleaning up questionnaire data]() worksheet if you need a rem
 
 Some things I spotted:
 
-some degree of agreement each question 
+some degree of agreement each question
 
-to ensure that it is valid and reliable measure 
+to ensure that it is valid and reliable measure
 
 truely - https://www.grammarly.com/blog/truly-truely/
 
@@ -95,20 +95,20 @@ https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2792363/
 
 "First, alpha increases as more questions are added to a scale, so it would artificially report higher levels of reliability in a scale with lots of questions."
 
-Yes, I think we can just say this without explaining it, but you should link to a source, e.g.  
+Yes, I think we can just say this without explaining it, but you should link to a source, e.g.
 
 https://data.library.virginia.edu/using-and-interpreting-cronbachs-alpha/
 
 "Second, if your scale consists of subscales (for example it measures depression and anxiety, as well as stress) you should calculate alpha for the subscales and not the whole scale."
 
-Yes, agreed. But explain more, e.g. 
+Yes, agreed. But explain more, e.g.
 
 This is because subscales measure different things, and hence we would not expect them to strongly co-vary. For example, although depression and anxiety co-vary to some extent, we can imagine someone who is depressed but not anxious, or anxious but not depressed. So, we expect that our anxiety and depression subscales are measuring different things, which means even if our questionnaire was a good one, we would not necessarily expect high co-variance between these two scales.
 
 "Finally, reverse-coded items will decrease the value of alpha,"
 
-Yes, but to emphasize, "will artificially decrease" 
- 
+Yes, but to emphasize, "will artificially decrease"
+
 "Reverse coding was covered in the Preprocessing scales worksheet."
 
 Update link - see previous worksheet notes.
@@ -143,8 +143,8 @@ I found it hard to wind down -> find, perhaps?
 
 suggestive on an unreliable
 
-the specific sale 
+the specific sale
 
-the scaled you are using. 
+the scaled you are using.
 
 

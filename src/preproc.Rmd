@@ -48,16 +48,16 @@ In this first part of the worksheet, the commands you need to do each step are g
 
 ## Getting the data into your project
 
-Create a folder called _rawdata_ in your RStudio project, then download the
-three participant files: [`subject-11.csv`](https://raw.githubusercontent.com/ajwills72/rminr/master/src/rawdata/subject-11.csv), [`subject-12.csv`](https://raw.githubusercontent.com/ajwills72/rminr/master/src/rawdata/subject-12.csv), and [`subject-13.csv`](https://raw.githubusercontent.com/ajwills72/rminr/master/src/rawdata/subject-13.csv). Save all three files in that folder. If your browser displays a file rather than downloading it, use the **Raw** link and save the result with its `.csv` filename.
+Create a folder called _rawdata_ in your project, then download the
+three participant files: [`subject-11.csv`](data/subject-11.csv), [`subject-12.csv`](data/subject-12.csv), and [`subject-13.csv`](data/subject-13.csv). Save all three files in that folder.
 
-Click on the name 'rawdata' in the Files window of RStudio. You'll see there are three CSV files, and one file called `README.md`. We'll use the CSV files in a minute. 
+Click on the name 'rawdata' in the Files window of RStudio. You'll see there are three CSV files, and one file called `README.md`. We'll use the CSV files in a minute.
 
-Each CSV file (e.g. `subject-11.csv`) contains the data from one participant in a [facial prototypes](https://cabezalab.org/wp-content/uploads/2021/12/Cabeza-et-al.-1999_The-prototype-effect-in-face-recognition.pdf) experiment. The experiment was run using [OpenSesame](https://osdoc.cogsci.nl/). OpenSesame, like R, is a free and open-source program. Install OpenSesame on your machine and run the experiment on yourself. To do this, you will need to download the OpenSesame experiment, which is in the `expt-scripts` folder of your R project. Click on `expt-scripts`, tick the box next to `facialproto_short.osexp`, click 'More...' and click 'Export'. Now open the experiment on your machine using OpenSesame.
+Each CSV file (e.g. `subject-11.csv`) contains the data from one participant in a [facial prototypes](https://cabezalab.org/wp-content/uploads/2021/12/Cabeza-et-al.-1999_The-prototype-effect-in-face-recognition.pdf) experiment. The experiment was run using [OpenSesame](https://osdoc.cogsci.nl/). Running the experiment yourself is optional and is outside this archive; the OpenSesame experiment file is not included here. The CSV files are sufficient to complete this worksheet.
 
 ## Create a new script
 
-Within your RStudio project, create a new script file and call it **preproc.R**. Put all your commands for this worksheet into this script, and save regularly. This will make it easier to see what you have done, especially when you come back to it after a break.
+Within your project, create a new script file and call it **preproc.R**. Put all your commands for this worksheet into this script, and save regularly. This will make it easier to see what you have done, especially when you come back to it after a break.
 
 ## Summary of the experiment
 
@@ -65,13 +65,13 @@ In this experiment, people are shown some pictures of male faces. Each is a pict
 
 After participants have been shown 32 pictures, they move to the test phase. They're shown another 24 pictures, and have to rate their confidence they've seen that _exact_ picture before (0 = definitely not seen, 9 = definitely seen). The pictures they're shown include the exact distortions they've seen before (`seen`), the undistorted version of the faces (`prototype`), which they have not been shown before, and some other distortions of the same faces that they haven't seen before (`unseen`).
 
-The expected result is that people are confident they've seen the `prototype` pictures before, even though they haven't. One interpretation of this result is that we average across the pictures we see. The prototype is the average of the pictures we've seen of that face, so it seems familiar even though we've not seen it  before. 
+The expected result is that people are confident they've seen the `prototype` pictures before, even though they haven't. One interpretation of this result is that we average across the pictures we see. The prototype is the average of the pictures we've seen of that face, so it seems familiar even though we've not seen it  before.
 
-In order to work out whether we get the expected result, we need to know the mean confidence rating each participant gave for each face type (`seen, unseen, prototype`). 
+In order to work out whether we get the expected result, we need to know the mean confidence rating each participant gave for each face type (`seen, unseen, prototype`).
 
 ## Loading one participant
 
-We'll start by loading the data for one of the participants, `subject-11.csv`. Recall that we can do this using the `read_csv` command. In this case, the CSV file we want to load is inside the `rawdata` folder of our project so we have to say `rawdata/subject-11.csv` rather than just `subject-11.csv`, so RStudio knows where to look for the file. 
+We'll start by loading the data for one of the participants, `subject-11.csv`. Recall that we can do this using the `read_csv` command. In this case, the CSV file we want to load is inside the `rawdata` folder of our project so we have to say `rawdata/subject-11.csv` rather than just `subject-11.csv`, so RStudio knows where to look for the file.
 
 Add the following comments and commands to **preproc.R**, and run the script:
 
@@ -107,7 +107,7 @@ Although this data file contains the participant number, this may not always be 
 
 ## Responses
 
-One thing we'll definitely need to know is how the participant responded on each trial of the experiment. 
+One thing we'll definitely need to know is how the participant responded on each trial of the experiment.
 If you scroll through the columns of `dat`, which are organised alphabetically, you'll find a column called `response`. You'll see that each row contains a number from 0 to 9. So, this is the rating the participant made on that trial. We'll need to know that to analyse this data, so `response` is one of the columns we need to keep.
 
 Columns to keep: `subject_nr`, `response`
@@ -132,7 +132,7 @@ Columns to keep: `subject_nr`, `phase`, `live_row`, `type`, `response`
 
 ## Column ordering
 
-You may have noticed that the list of 'columns to keep' is not in alphabetical order. Instead, it follows the conventional ordering of _participant_ (`subject_nr`), _position in experiment_ (`phase, live_row`), _stimulus_ (`type`), _response_. Most experiments report their data in this order. Having conventions like these make it easier for others to read and understand our analyses. 
+You may have noticed that the list of 'columns to keep' is not in alphabetical order. Instead, it follows the conventional ordering of _participant_ (`subject_nr`), _position in experiment_ (`phase, live_row`), _stimulus_ (`type`), _response_. Most experiments report their data in this order. Having conventions like these make it easier for others to read and understand our analyses.
 
 <a name="select"></a>
 
@@ -146,9 +146,9 @@ script and run it
 dat_subset <- dat %>% select(subject_nr, phase, live_row, type, response)
 ```
 
-**Explanation of command** - Our original data frame `dat` is piped (sent to, `%>%`) the `select` command, which picks just the columns we name. These selected columns are put (`<-`) into a new dataframe called `dat_subset`. 
+**Explanation of command** - Our original data frame `dat` is piped (sent to, `%>%`) the `select` command, which picks just the columns we name. These selected columns are put (`<-`) into a new dataframe called `dat_subset`.
 
-Click on `dat_subset` in the _Environment_ window. You'll see we have a much easier-to-read data frame, still with 56 rows, but now only 5 columns. 
+Click on `dat_subset` in the _Environment_ window. You'll see we have a much easier-to-read data frame, still with 56 rows, but now only 5 columns.
 
 
 
@@ -158,7 +158,7 @@ When working with data, it's useful to have meaningful column names, because it 
 
 ```{r rename}
 # Rename columns; place into 'tidydat'
-tidydat <- dat_subset %>% 
+tidydat <- dat_subset %>%
   set_names(c("subj", "phase", "trial", "type", "response"))
 ```
 
@@ -186,7 +186,7 @@ Click on `testdat` in the Environment window. You'll see that now we just have 2
 
 # Summarising data
 
-We can now use the `group_by` and `summarise` commands covered in [Absolute Beginners' Guide to R](group-differences.html#group) to answer our question. Add the following to your script and 
+We can now use the `group_by` and `summarise` commands covered in [Absolute Beginners' Guide to R](group-differences.html#group) to answer our question. Add the following to your script and
 run it:
 
 ```{r summary}
@@ -194,9 +194,9 @@ run it:
 testdat %>% group_by(type) %>% summarise(mean(response))
 ```
 
-**Explanation of command** - Our test-phase data (`testdat`) is piped to `group_by(type)`, which groups it into the three parts given by the `type` column (seen, unseen, prototype). This grouped data is then sent to `summarise` to work out a summary value for each group. We tell `summarise` what summary we want, in this case we want a `mean`. And we tell the `mean` command that the data we want a mean of is in the `response` column. 
+**Explanation of command** - Our test-phase data (`testdat`) is piped to `group_by(type)`, which groups it into the three parts given by the `type` column (seen, unseen, prototype). This grouped data is then sent to `summarise` to work out a summary value for each group. We tell `summarise` what summary we want, in this case we want a `mean`. And we tell the `mean` command that the data we want a mean of is in the `response` column.
 
-As [before](group-differences.html#group), you can safely ignore the "ungrouping" message that you receive. Looking at the output, we can see that this participant was more confident they'd seen the prototypes (4.75) than that they'd seen the pictures they'd actually seen before (3.88). This fits our hypothesis. But, somewhat oddly, they were even more confident about other distortions they hadn't seen (5). An alternative hypothesis (and the correct one in this case) is that this particular participant just randomly pressed the buttons, so any difference in the three scores is down to chance. 
+As [before](group-differences.html#group), you can safely ignore the "ungrouping" message that you receive. Looking at the output, we can see that this participant was more confident they'd seen the prototypes (4.75) than that they'd seen the pictures they'd actually seen before (3.88). This fits our hypothesis. But, somewhat oddly, they were even more confident about other distortions they hadn't seen (5). An alternative hypothesis (and the correct one in this case) is that this particular participant just randomly pressed the buttons, so any difference in the three scores is down to chance.
 
 <a name="combine"></a>
 
@@ -206,7 +206,7 @@ Experiments generally involve testing relatively large numbers of people, in ord
 
 ## Combining two files
 
-We'll start by loading in data from a second participant into a different dataframe. Add the 
+We'll start by loading in data from a second participant into a different dataframe. Add the
 following to your script and run it:
 
 ```{r second-load, message=FALSE}
@@ -214,7 +214,7 @@ following to your script and run it:
 dat2 <- read_csv("rawdata/subject-12.csv")
 ```
 
-To combine these two participants into a single dataframe, we use the `bind_rows` command. 
+To combine these two participants into a single dataframe, we use the `bind_rows` command.
 Add the following to your script and run it:
 
 ```{r bind}
@@ -242,11 +242,11 @@ tibble(filename = list.files("rawdata", "*.csv", full.names = TRUE))
 
 **Explanation of command**: We say `tibble(filename=` to tell R to make a new dataframe, with a column containing filenames. The first part of `list.files`, `"rawdata"`, tells R which folder the data files are in. Generally, it's a good idea to keep all your data files inside a single folder, so it is easier for commands like this to find them. The second part of `list.files`, `"*.csv"` tells R to only give the names of files that end in `.csv` (the `"*"` means "any character or number"). This is useful, because sometimes raw data folders contain other files, too. For example, `rawdata` contains `README.md`, a file that generally provides information relating to the data, rather than being data itself. The third part, `full.names=TRUE`, tells R to give the name of the file including the name of the folder it is in, so `rawdata/subject-11.csv` rather than just `subject-11.csv`.
 
-### Load every file 
+### Load every file
 
 We know how to make a new dataframe containing a list of filenames to process. We can use this to load each file in turn and combine them into a single large dataset.
 
-To do this, we make use another tidyverse function called `do`. 
+To do this, we make use another tidyverse function called `do`.
 
 The `do` function performs an operation for each group in a dataframe. All of the results are joined into a large, combined datafile. All we need to do is:
 
@@ -260,12 +260,12 @@ The entire command looks like this; which you should enter into your script and 
 
 ```{r readinit,message=FALSE}
 # Combine data from all participants into 'alldat'
-alldat <- tibble(filename = list.files("rawdata", "*.csv", full.names = TRUE)) %>% 
-  group_by(filename) %>% 
+alldat <- tibble(filename = list.files("rawdata", "*.csv", full.names = TRUE)) %>%
+  group_by(filename) %>%
   do(read_csv(.$filename))
 ```
 
-**Explanation of command**: At the start of line 1 we write `alldat <-`. This means the results will be saved with the name `alldat`. Then we reuse the code from above to create a new dataframe with one column: `filename`. 
+**Explanation of command**: At the start of line 1 we write `alldat <-`. This means the results will be saved with the name `alldat`. Then we reuse the code from above to create a new dataframe with one column: `filename`.
 We then use `group_by` to tell R to process each filename individually. If we didn't do this then R would ask `read_csv` to open all the files at once, and `read_csv` would be confused!
 
 When we write `do(read_csv(.$filename))` we are telling `do` to apply the `read_csv` function to each filename. The `".$filename"` part is shorthand: The period `"."` means "the group in the data I am working with now". The `"$filename"` part means use the values from the `filename` column. So `read_csv(.$filename)` means, read the csv file using the value in the `filename` column.
@@ -294,7 +294,7 @@ Now we have this combined file, we summarise the test phase data for each partic
 Add the following comment to your script:
 
 ```
-# Filter test phase data into 'test' 
+# Filter test phase data into 'test'
 
 # Group 'test' by 'type' and 'subj', calculate mean of 'response', place into 'test.sum'
 
@@ -308,33 +308,33 @@ test.sum <- test %>% group_by(filename, type) %>% summarise(mean(response))
 test.sum
 ```
 
-Looking at the above summary, we can see that all three participants were more confident they'd seen the prototype than the pictures they'd actually seen, which supports our hypothesis. But they're also all at least as confident about other unseen distortions, too. So, again, an alternative hypothesis is that participants were just pressing keys randomly. This was in fact the case for these data. In the next part of the worksheet, you'll look at some data from a different experiment where the participants took the task more seriously. 
+Looking at the above summary, we can see that all three participants were more confident they'd seen the prototype than the pictures they'd actually seen, which supports our hypothesis. But they're also all at least as confident about other unseen distortions, too. So, again, an alternative hypothesis is that participants were just pressing keys randomly. This was in fact the case for these data. In the next part of the worksheet, you'll look at some data from a different experiment where the participants took the task more seriously.
 
 <a name="ex1"></a>
 
 # Exercise
 
-In this section of the worksheet, you'll preprocess the data from a different experiment. You'll find the data in the folder called `lexdec`, and the OpenSesame implementation of this experiment in the `expt-scripts` folder. 
+In this section of the worksheet, you'll preprocess the data from a different experiment. You'll find the data in the folder called `lexdec`, and the OpenSesame implementation of this experiment in the `expt-scripts` folder.
 
 In this experiment, words are shown on the screen one at a time. Some are real words, others are made-up words (non-words). The participant's job is to decide whether each is a word or non-word, as quickly as possible. The computer records for each decision whether they got it correct, and how long it took them to respond (their _response time_). The experiment begins with a practice phase, so participants can get used to the task. This is followed by the test phase, which is the part we analyse.
 
-Your task is to write R code that gives the mean reaction time for each participant, for both words and non-words. You should analyse only reaction times for trials in which they made the correct response, and you should not include the practice phase in your analysis. 
+Your task is to write R code that gives the mean reaction time for each participant, for both words and non-words. You should analyse only reaction times for trials in which they made the correct response, and you should not include the practice phase in your analysis.
 
 This can, and should, be done with less than 15 files of R code (plus comments, see below). When your code is working correctly, it will give you the following numbers:
 
 ```{r ex1, echo=FALSE, message=FALSE}
-lexdat <- tibble(filename = list.files("lexdec", pattern = "csv", full.names = TRUE)) %>% 
-  group_by(filename) %>% 
-  do(read_csv(.$filename)) 
+lexdat <- tibble(filename = list.files("lexdec", pattern = "csv", full.names = TRUE)) %>%
+  group_by(filename) %>%
+  do(read_csv(.$filename))
 
-lexdat.tidy <- lexdat %>% 
-  select(subject_nr, practice, live_row, category, correct, response_time) %>% 
+lexdat.tidy <- lexdat %>%
+  select(subject_nr, practice, live_row, category, correct, response_time) %>%
   set_names( c("filenamme", "subj", "practice", "trial", "type", "acc", "rt"))
 
-lexdat.tidy %>% 
-  filter(practice == "no") %>% 
-  filter(acc == 1)  %>% 
-  group_by(subj, type) %>% 
+lexdat.tidy %>%
+  filter(practice == "no") %>%
+  filter(acc == 1)  %>%
+  group_by(subj, type) %>%
   summarise(mean(rt))
 ```
 
@@ -355,6 +355,6 @@ raw.data.files <- tibble(filename = list.files("rawdata", "*.csv", full.names = 
 
 ___
 
-This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0. 
+This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0.
 
 

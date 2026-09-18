@@ -375,10 +375,8 @@ Dordoy</h4>
 introduction to getting and using RStudio – <a href="intro-rstudio.html">Introduction to RStudio</a>. You should also
 have also completed the workshop exercises for <a href="exploring-incomes.html">Exploring Data</a> and <a href="group-differences.html">Group Differences</a>. If not, take a look
 these earlier worksheets before continuing.</p>
-<p>First, log in to
-<a href="https://psyrstudio.plymouth.ac.uk/" target="blank">RStudio
-server</a>, and make sure you are in your <code>psyc411</code>
-project.</p>
+<p>First, open RStudio or another local R environment and create or open a
+project for this worksheet.</p>
 <p>Next, create a <strong>new</strong> script file in your project,
 called <code>evidence.R</code>.</p>
 <p>Now, you load <em>tidyverse</em> and you load the income <em>data
@@ -389,7 +387,7 @@ to run each command in turn:</p>
 # Load package
 library(tidyverse)
 # Load data
-cpsdata &lt;- read_csv(url(&quot;https://www.andywills.info/cps2.csv&quot;))
+cpsdata &lt;- read_csv(url(&quot;cps2.csv&quot;))
 # Filter to incomes &lt; $150K
 cpslow &lt;- cpsdata %&gt;% filter(income &lt; 150000)</code></pre>
 </div>

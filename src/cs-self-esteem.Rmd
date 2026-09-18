@@ -193,7 +193,7 @@ sses_raw %>% filter(time == 'pre') %>%
 
 ## Comparing interventions
 
-The main question we'd like to answer is whether our two imagery interventions 
+The main question we'd like to answer is whether our two imagery interventions
 (visualising a negative mental image of oneself, or someone else) had effects on self esteem which differed from our control condition. We can test this using a [factorial ANOVA](anova3.html#bfact) to compare SSES scores before and after the three interventions. In this design, `condition` is a between-subjects variable, and `time` (pre and post intervention) is a repeated measure.
 
 **Enter these commands into your script, and run them:**

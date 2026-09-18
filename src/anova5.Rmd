@@ -16,24 +16,24 @@ knitr::opts_chunk$set(echo = TRUE, comment = NA, cache = TRUE)
 ```
 
 This is a "pro" worksheet, meaning that it assumes familiarity with the material covered in sections
-up to and including _Going Further With R_.  For this worksheet, you'll need to use the **rminr-data** project; details of how to access this are provided on the [preprocessing](preproc.html#load) worksheet. Once you've opened that project, create a file **anova5.R** in which to enter your R commands.
+up to and including _Going Further With R_.  For this worksheet, you'll need to use the **your project** project; details of how to access this are provided on the [preprocessing](preproc.html#load) worksheet. Once you've opened that project, create a file **anova5.R** in which to enter your R commands.
 
-# Two-factor within-subjects 
+# Two-factor within-subjects
 
 In [More on Bayesian ANOVA](anova4.html) we looked at the simplest possible way of doing this
 kind of analysis within R. There is a reasonable case to be made that the approach we took there
-is too simple. In particular, it assumes that the true size of the effect is the same in every 
+is too simple. In particular, it assumes that the true size of the effect is the same in every
 participant. In other words, it assumes the absence of individual differences. As discussed
 by [van den Berg et al. (2022)](https://psyarxiv.com/fb8zn/), this is not only unlikely to be true,
-where there is more than one within-subjects factor, it can also lead to substantively different 
+where there is more than one within-subjects factor, it can also lead to substantively different
 conclusions to a traditional (NHST) ANOVA. This led them to propose an alternative analysis that
 is more similar in concept to the traditional analysis. In what follows we demonstrate how
-to do this analysis for the same data set as used in Exercise 2 of 
-[More on Bayesian ANOVA](anova4.html#ex2). 
+to do this analysis for the same data set as used in Exercise 2 of
+[More on Bayesian ANOVA](anova4.html#ex2).
 
 Whether emulating the models of traditional ANOVA is in itself the best thing to do is debatable,
-as traditional ANOVA is potentially problematic in a number of respects other than the use of NHST. 
-However, this is a discussion that we'll leave for another time - if you're curious, read 
+as traditional ANOVA is potentially problematic in a number of respects other than the use of NHST.
+However, this is a discussion that we'll leave for another time - if you're curious, read
 [Rouder et al. (2022)](https://link.springer.com/article/10.1007/s42113-022-00132-7).
 
 ## Load and preprocess data
@@ -76,7 +76,7 @@ BFo
 ```
 ### Explanation of command
 
-Much of the above code is the same as previous worksheets and is not re-described here. The new 
+Much of the above code is the same as previous worksheets and is not re-described here. The new
 components are:
 
 `generalTestBF` - Where you previously used the  `anovaBF` command, we now use this more powerful
@@ -91,16 +91,16 @@ allow for the possibility that (i) the true size of the effect of congruency dif
 individuals, and (ii) the true size of the effect of Load differs between individuals.
 
 `neverExclude = c("Subject", "Subject:Congruency", "Subj:Load"), whichModels = "all"` - There is
-nothing conceptually deep about these two lines of code, they just tell the `generalTestBF` 
+nothing conceptually deep about these two lines of code, they just tell the `generalTestBF`
 command to generate the set of Bayes Factors we need in the next step. When using this code with
 your own data, all you need to do is ensure that the `neverExclude` terms include the Subject factor,
-and the interaction of that factor with each of your two within-subject factors (in this case 
+and the interaction of that factor with each of your two within-subject factors (in this case
 Congruency and Load)
 
 ### Explanation of output
 
-Although longer, the table is much the same as the one we saw in Exercise 2. Each row is a Bayes 
-Factor, and in each case that Bayes Factor is calculated against a null model (`Intercept only` - 
+Although longer, the table is much the same as the one we saw in Exercise 2. Each row is a Bayes
+Factor, and in each case that Bayes Factor is calculated against a null model (`Intercept only` -
 the model that RT is unaffected by any of the factors, including the participants). So, for
 example, `[8] Subject + Congruency:Subject + Load:Subject` has a large BF in favour of the
 alternative model that RT is affected by individual differences in overall RT and the size of
@@ -147,12 +147,12 @@ are Bayes Factors in that list for models where interactions between the manipul
 (Congruency, Load) are assumed without the presence of
 corresponding main effects of those manipulated factors. For example,
 model 3 is `Congruency:Load + Subject + Congruency:Subject + Load:Subject`, which includes an
-interaction between Congurency and Load, but not a main effect of either Congruency or Load. These kinds 
-of models are _ill-defined_, which is sometimes considered to be a bad thing. So, we won't consider 
+interaction between Congurency and Load, but not a main effect of either Congruency or Load. These kinds
+of models are _ill-defined_, which is sometimes considered to be a bad thing. So, we won't consider
 them here. A relatively accessible discussion of the problems of ill-defined models is provided by
 [Rouder et al. (2022)](https://link.springer.com/article/10.1007/s42113-022-00132-7)
 
-We remove the models that are ill-defined on the manipulated factors by identifying them manually, 
+We remove the models that are ill-defined on the manipulated factors by identifying them manually,
 and then removing them from the list.
 In this case, the ill-defined models are 3, 5 and 6; and we remove them using the `-` operator.
 
@@ -168,13 +168,13 @@ At this point, we have an table of Bayes Factors of the same form as Exercise 2 
 Row 1 is the
 main effect of Conrguency. Row 2 is the main effect of Load. The Bayes Factors are not quite the
 same as in Exercise 2 - we shouldn't expect them to be, as this is a different test. But the
-conclusions are the same. There is moderate evidence for the null in the case of Congruency, and 
-strong evidence for an effect of Load. 
+conclusions are the same. There is moderate evidence for the null in the case of Congruency, and
+strong evidence for an effect of Load.
 
 ## Interaction
 
 Finally, as in Exercise 2, we assess evidence for the interaction by comparing two models - the
-model that contains just the two main effects (model 3), and the model that also contains the 
+model that contains just the two main effects (model 3), and the model that also contains the
 interaction term (model 4)
 
 ```{r interaction}
@@ -188,18 +188,18 @@ is similar - there is moderate evidence for the absence of an interaction.
 ## Robustness of analysis
 
 You might feel a bit uneasy that
-the results of two analyses - both called Bayesian ANOVAs - are not exactly the same. You should not. 
+the results of two analyses - both called Bayesian ANOVAs - are not exactly the same. You should not.
 Analyzing data always involves making assumptions about those data and the underlying psychological processes
-that generated them. For example, here, the assumptions you make about the presence of 
+that generated them. For example, here, the assumptions you make about the presence of
 individual differences can matter for your conclusions about the presence of group effects. Making
 reasonable assumptions is part of being a scientist, and your conclusions can be affected
-by the assumptions that you make. 
+by the assumptions that you make.
 
 What we saw in this case was that Exercise 2, and the current analysis, led to largely the same
-substantive conclusions, despite starting from different assumptions. When this happens, it 
+substantive conclusions, despite starting from different assumptions. When this happens, it
 increases our confidence in the conclusions we have drawn - we say the analysis is robust across
 a range of assumptions. If your substantive conclusions depend on your assumptions, and those
-assumptions are not well founded, then your data may not be good enough to answer your questions. 
+assumptions are not well founded, then your data may not be good enough to answer your questions.
 
 
 

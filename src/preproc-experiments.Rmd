@@ -43,26 +43,26 @@ In the [Intermediate Guide to R](https://ajwills72.github.io/rminr/#rmip), we co
 
 To prepare for this worksheet:
 
-1. Open the `rminr-data` project we used [previously](preproc.html#load).
+1. Open your project we used [previously](preproc.html#load).
 
 1. Open the `Files` tab. You should see a `going-further` folder which contains the files `perruchet-raw.csv` and `perruchet-sum.csv`.
 
-1. If you don't see the folder or files, ask git to "`pull`" the latest version of the repository. Select the `Git` tab, which is located in the row of tabs which includes the `Environment` tab. Click the `Pull` button with a downward pointing arrow. A window will open showing the files which have been pulled from the repository. Close the `Git pull` window.
+1. The required files are included in this archive; no repository pull is needed.
 
-1. Create a script named `preproc-experiments.R` in the `rminr-data` folder (the folder above `case-studies`). Put all the commands from this worksheet into this file, and run them from there. Save your script regularly.
+1. Create a script named `preproc-experiments.R` in the `your project` folder (the folder above `case-studies`). Put all the commands from this worksheet into this file, and run them from there. Save your script regularly.
 
 <a name="load"></a>
 
 ## Loading data
 
-We'll start by loading some data from [an undergraduate student dissertation on the Perruchet Effect](awdiss.html). Participants were repeatedly shown a picture of a brown cylinder. This picture was sometimes followed by a loud unpleasant noise. Their reaction to the noise was measured using their galvanic skin response. In addition, every time the cylinder was shown, participants rated their expectancy that the noise was about to occur on a 1-5 scale. 
+We'll start by loading some data from [an undergraduate student dissertation on the Perruchet Effect](awdiss.html). Participants were repeatedly shown a picture of a brown cylinder. This picture was sometimes followed by a loud unpleasant noise. Their reaction to the noise was measured using their galvanic skin response. In addition, every time the cylinder was shown, participants rated their expectancy that the noise was about to occur on a 1-5 scale.
 
 **Enter these comments and commands into your script, and run them:**
 
 ```{r load, message=FALSE, class.source = 'numberLines lineAnchors'}
 # Further preprocessing for experiments
 # Clear the environment
-rm(list = ls()) 
+rm(list = ls())
 # Load tidyverse
 library(tidyverse)
 # Load data into 'raw'
@@ -89,13 +89,13 @@ Our data is in long format i.e. one observation per row. It is a large file, con
 
 - `key` : The type of observation being made. Mostly, these are `GS` observations, which are _galvanic skin responses_. These are measures of level of arousal in the participant. There were also `ES` observations, which are the participant's ratings of their expectancy of a shock.
 
-- `value` : The actual observation. Where `key` is `GS`, these are galvanic skin response values, which are measures of conductance (the reciprocal of electrical resistance). Higher values indicate higher arousal. Where the `key` is `ES`, the scores are ratings on a scale of 1-5. 
+- `value` : The actual observation. Where `key` is `GS`, these are galvanic skin response values, which are measures of conductance (the reciprocal of electrical resistance). Higher values indicate higher arousal. Where the `key` is `ES`, the scores are ratings on a scale of 1-5.
 
 <a name="dedup"></a>
 
 ## De-duplicating data
 
-This experiment was run by three people over many different days. They tried to manually stitch all their data files together, by copying-and-pasting them into one big file in Excel. This type of manual manipulation of data is notoriously error prone, and in the process, they accidentally duplicated some data. In this case, it's easy to detect and fix in R, because no two rows of this data can be identical - the subject number or the time is always going to be different. So, we can remove duplicates by telling R to give us just one copy of each of the different rows in the data set. The command `distinct` does that for us. 
+This experiment was run by three people over many different days. They tried to manually stitch all their data files together, by copying-and-pasting them into one big file in Excel. This type of manual manipulation of data is notoriously error prone, and in the process, they accidentally duplicated some data. In this case, it's easy to detect and fix in R, because no two rows of this data can be identical - the subject number or the time is always going to be different. So, we can remove duplicates by telling R to give us just one copy of each of the different rows in the data set. The command `distinct` does that for us.
 
 **Enter this comment and command into your script, and run it:**
 
@@ -121,7 +121,7 @@ raw <- raw %>% filter(subj > 161)
 
 ### Exclusions by criterion
 
-As part of this experiment, participants were told to rate their expectancy of hearing an unpleasant noise, _on every trial_. However, they only had 8 seconds to do this, and the experimenters noticed that sometimes people failed to make a rating. The experimental apparatus recorded this as a rating of zero. 
+As part of this experiment, participants were told to rate their expectancy of hearing an unpleasant noise, _on every trial_. However, they only had 8 seconds to do this, and the experimenters noticed that sometimes people failed to make a rating. The experimental apparatus recorded this as a rating of zero.
 
 Participants who miss a lot of ratings aren't really following the instructions, making their data hard to interpret. In such cases, we normally exclude those participants from further analysis. In order to do this, we need to find out how widespread the problem is. One way to do this is to calculate the number of zero ratings each participant makes.
 
@@ -139,7 +139,7 @@ The first command filters those rows of the raw data that contain expectancy rat
 
 ### Explanation of output
 
-The output shows the number of trials on which each participant failed to give an expectancy rating. If a participant never made a zero rating, their participant number does not appear on the table. We can see that sixteen participants missed at least one rating, and that six participants missed more than 3 (one participant never made a rating, missing all 46 trials of the experiment!). 
+The output shows the number of trials on which each participant failed to give an expectancy rating. If a participant never made a zero rating, their participant number does not appear on the table. We can see that sixteen participants missed at least one rating, and that six participants missed more than 3 (one participant never made a rating, missing all 46 trials of the experiment!).
 
 ### Removing participants from the dataset
 
@@ -155,7 +155,7 @@ raw  <- raw %>% filter(!(subj %in% exclude))
 
 ### Explanation of commands
 
-The first command creates a list of the participant numbers we wish to exclude. With the second command, we remove those participants from the `raw` data frame. The `filter` command will be familiar from previous worksheets. The command `subj %in% exclude` means 'any participant whose subject number is in our list `exclude`'. The use of `!()` in the filter statement means `not`. So, `filter(!(subj %in% exclude))` means keep the participants whose subject number is _not_ in the `exclude` list. 
+The first command creates a list of the participant numbers we wish to exclude. With the second command, we remove those participants from the `raw` data frame. The `filter` command will be familiar from previous worksheets. The command `subj %in% exclude` means 'any participant whose subject number is in our list `exclude`'. The use of `!()` in the filter statement means `not`. So, `filter(!(subj %in% exclude))` means keep the participants whose subject number is _not_ in the `exclude` list.
 
 ### Note
 
@@ -167,9 +167,9 @@ There are still a few trials where the participant makes no expectancy rating, a
 
 ### Loading preprocessed data
 
-After they had excluded participants, the students then performed a large number of further preprocessing steps. These steps were specific to the type of large neuroscience data set they had collected, so we won't go through them in this more general-purpose worksheet. You can read about the steps they took in the [case study](awdiss.html) if you are curious. 
+After they had excluded participants, the students then performed a large number of further preprocessing steps. These steps were specific to the type of large neuroscience data set they had collected, so we won't go through them in this more general-purpose worksheet. You can read about the steps they took in the [case study](awdiss.html) if you are curious.
 
-Instead, we'll just load in the results of their preprocessing. 
+Instead, we'll just load in the results of their preprocessing.
 
 **Enter this comment and command into your script, and run it:**
 
@@ -194,9 +194,9 @@ To answer the first question, a log transform compresses the range of the data. 
 plot(1:50,log(1:50))
 ```
 
-On the x-axis we have the numbers 1 to 50. On the y-axis, we have the natural logarithm of those numbers. As you can see, while the x-axis rises from 1 to 50, the y-axis rises from zero to around 4. You should also be able to notice that for each increase in x, the increase in y gets smaller. So, for example, where x rises from 1 to 2, log(x) rises from 0 to about .8; but where x rises from 2 to 3, log(x) rises by about 0.4. 
+On the x-axis we have the numbers 1 to 50. On the y-axis, we have the natural logarithm of those numbers. As you can see, while the x-axis rises from 1 to 50, the y-axis rises from zero to around 4. You should also be able to notice that for each increase in x, the increase in y gets smaller. So, for example, where x rises from 1 to 2, log(x) rises from 0 to about .8; but where x rises from 2 to 3, log(x) rises by about 0.4.
 
-As a result, a log transform doesn't change small numbers very much, but reduces large numbers a lot more. This can be useful if, for example, a few participants have unusually large GSRs. These very large GSRs would increase the _variance_ of the data substantially, and this can make it harder to detect real differences between conditions. A log transform can reduce that problem, and hence can make it easier to find real effects in such situations. So, this also answers the second part of the question - we apply a log transform to GSR data because it can make it easier to find real effects. Other common transformations of this type include a _square root_ transformation, and a _reciprocal_ (1/x) transformation. 
+As a result, a log transform doesn't change small numbers very much, but reduces large numbers a lot more. This can be useful if, for example, a few participants have unusually large GSRs. These very large GSRs would increase the _variance_ of the data substantially, and this can make it harder to detect real differences between conditions. A log transform can reduce that problem, and hence can make it easier to find real effects in such situations. So, this also answers the second part of the question - we apply a log transform to GSR data because it can make it easier to find real effects. Other common transformations of this type include a _square root_ transformation, and a _reciprocal_ (1/x) transformation.
 
 The students log transformed their GSR data using the `mutate` command we have come across in previous worksheets.
 
@@ -239,7 +239,7 @@ count(panas)
 
 ### Step 2
 
-This version of the PANAS used 10 questions to measure positive affect (`pa`), and 10 to measure negative affect (`na`). These measures were taken twice (`pre_` and `post_`). Answers to questions were scored from 1 to 5, meaning that scores could range from 10-50. For the second negative affect measurement, the researchers calculated and entered the scores by hand. This is a notoriously error-prone way to do things, and it resulted in some impossible scores - specifically scores greater than 50. 
+This version of the PANAS used 10 questions to measure positive affect (`pa`), and 10 to measure negative affect (`na`). These measures were taken twice (`pre_` and `post_`). Answers to questions were scored from 1 to 5, meaning that scores could range from 10-50. For the second negative affect measurement, the researchers calculated and entered the scores by hand. This is a notoriously error-prone way to do things, and it resulted in some impossible scores - specifically scores greater than 50.
 
 Use `filter()` to find any participants with a `post_na` score greater than 50. Use another `filter()` command to exclude any participants who meet this criterion. Enter these commands, along with appropriate
 comments, into your script.
@@ -268,5 +268,5 @@ panas_int %>% group_by(subculture) %>% summarise(mean(pre_na), mean(post_na))
 
 ___
 
-This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0. 
+This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0.
 

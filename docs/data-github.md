@@ -99,7 +99,7 @@ To generate your github PAT, follow these steps on the github website (make sure
 
 ## Add your repository as an RStudio project
 
-Back in the [preprocessing data](preproc.html#load) worksheet, you created a new RStudio project from a github repository I had created. Go back to that worksheet, and follow the instructions. *BUT* this time, use it to set up your own github repository as an Rstudio project, rather than the rminr-data repository. The location of your repository is:
+Back in the [preprocessing data](preproc.html#load) worksheet, you created a new RStudio project from a github repository I had created. Go back to that worksheet, and follow the instructions. *BUT* this time, use it to set up your own github repository as an Rstudio project, rather than your project repository. The location of your repository is:
 
 `https://github.com/your-username/your-repository-name`
 
@@ -128,7 +128,7 @@ You only need to do this once; Rstudio will then remember your answers forever, 
 
 The first file you're going to add is some aspect of the materials of your dissertation. If you haven't generated any materials yet, create a short text file with some dummy instructions for your experiment, and upload that. If you do have some materials, pick one file for now to upload.
 
-1. Use 'New Folder' under Files to create a folder called `materials` in your RStudio project. In order to keep your repository organized, it's a good idea to use folders. I suggest a standard set such as `materials`, `data`, and  `analysis`.
+1. Use 'New Folder' under Files to create a folder called `materials` in your project. In order to keep your repository organized, it's a good idea to use folders. I suggest a standard set such as `materials`, `data`, and  `analysis`.
 
 1. Click on the new folder
 

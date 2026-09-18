@@ -46,15 +46,15 @@ Each command in this worksheet is followed by one or more  _explanation_ section
 <a name="package"></a>
 
 ## Loading a package
-First, we need to load a package called *tidyverse*. A package is an extension to R that adds new commands. Nearly everything we'll do in this course uses the tidyverse package, so pretty much every project starts with this instruction. 
+First, we need to load a package called *tidyverse*. A package is an extension to R that adds new commands. Nearly everything we'll do in this course uses the tidyverse package, so pretty much every project starts with this instruction.
 
-Here's how you do this: 
+Here's how you do this:
 
 1. Type (or copy and paste) the comments and command in the grey box below into the _script_ you have already created on RStudio (top left window, _exploring.R_). **Use line 2 of the script.** (Line 1 contains the comment you entered in the last worksheet).
 
-1. Save your script again (click the Save icon), so you don't lose anything. Do this each time you add something important to your script. 
+1. Save your script again (click the Save icon), so you don't lose anything. Do this each time you add something important to your script.
 
-1. Now ask RStudio to run the command `library(tidyverse)`. You do this by putting your cursor on the line of the script window containing the command, and pressing CTRL+ENTER (i.e. press the key marked 'Ctrl' and the RETURN or ENTER key together). The line is automatically copied to your _Console_ window and run. 
+1. Now ask RStudio to run the command `library(tidyverse)`. You do this by putting your cursor on the line of the script window containing the command, and pressing CTRL+ENTER (i.e. press the key marked 'Ctrl' and the RETURN or ENTER key together). The line is automatically copied to your _Console_ window and run.
 
 ```{r init, warning=FALSE}
 # EXPLORING INCOMES
@@ -71,7 +71,7 @@ If you get an output that includes the word 'error', please see [common errors](
 ## Loading data
 Now, we're going to load some data on the income of 10,000 people in the United States of America. I've made up this dataset for teaching purposes, but it's somewhat similar to large open data sets available on the web, such as [US Current Population Survey](https://www.census.gov/programs-surveys/cps/data.html).
 
-Download the archived teaching data file [`cps2.csv`](https://github.com/ajwills72/rminr/blob/master/src/cps2.csv) and save it in the same folder as your R script. If your browser displays the file rather than downloading it, use the **Raw** button and then save the page as `cps2.csv`.
+Download the archived teaching data file [`cps2.csv`](data/cps2.csv) and save it in the same folder as your R script.
 
 **Copy the comment and command in the grey box to your script in RStudio and then press CTRL+ENTER to run it:** (don't forget to save your script)
 
@@ -83,9 +83,9 @@ cpsdata <- read_csv("cps2.csv")
 ### Explanation of command
 There are three parts to the command `cpsdata <- read_csv("cps2.csv")`:
 
-1. The first part of the command is `cpsdata`. This gives a name to the data we are going to load. We'll use this name to refer to it later, so it's worth using a name that is both short and meaningful. I've called it `cpsdata` because it's somewhat similar to data from the US Current Population Survey, but you can give data pretty much any name you choose (e.g. _fart_). 
+1. The first part of the command is `cpsdata`. This gives a name to the data we are going to load. We'll use this name to refer to it later, so it's worth using a name that is both short and meaningful. I've called it `cpsdata` because it's somewhat similar to data from the US Current Population Survey, but you can give data pretty much any name you choose (e.g. _fart_).
 
-2. The bit in the middle, `<-`, is an arrow and is typed by pressing `<` and then `-`, without a space. This arrow means "put the thing on the right of the arrow into the thing on the left of the arrow". 
+2. The bit in the middle, `<-`, is an arrow and is typed by pressing `<` and then `-`, without a space. This arrow means "put the thing on the right of the arrow into the thing on the left of the arrow".
 
 3. The last part of the command is `read_csv("cps2.csv")`. It tells R to read the file named `cps2.csv` from the current project folder. That is why you downloaded the file and saved it alongside your script before running this command.
 
@@ -105,7 +105,7 @@ Here's what each of the columns in the data set contains:
 
 | Column | Description                             | Values             |
 | ------ | --------------------------------------- | ------------------ |
-| ID     | Unique anonymous participant number     | 1-10,000           | 
+| ID     | Unique anonymous participant number     | 1-10,000           |
 | sex    | Biological sex of participant           | male, female       |
 | native | Participant born in the US?             | foreign, native           |
 | blind  | Participant blind?                      | yes, no            |
@@ -117,9 +117,9 @@ Here's what each of the columns in the data set contains:
 <a name="means"></a>
 
 ## Calculating a mean
-Now we have these data, one question we can ask is "what is the average income of people in the U.S.?" (or, at least, in this sample). In this first example, we're going to calculate the _mean_ income. 
+Now we have these data, one question we can ask is "what is the average income of people in the U.S.?" (or, at least, in this sample). In this first example, we're going to calculate the _mean_ income.
 
-I'm sure you learned about means in school but, as a reminder, you calculate a mean by adding up all the incomes and dividing by the number of incomes. Our sample has 10,000 participants, so this would be a long and tedious calculation -- and we'd probably make an error. 
+I'm sure you learned about means in school but, as a reminder, you calculate a mean by adding up all the incomes and dividing by the number of incomes. Our sample has 10,000 participants, so this would be a long and tedious calculation -- and we'd probably make an error.
 
 It would also be a little bit tedious and error prone in a spreadsheet application (e.g. Excel, Libreoffice Calc). There are some very famous cases of these kinds of "Excel errors" in research, e.g. [genetics](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-016-1044-7), [economics](https://arstechnica.com/tech-policy/2013/04/microsoft-excel-the-ruiner-of-global-economies/).
 
@@ -134,7 +134,7 @@ cpsdata %>% summarise(mean(income))
 
 Your output will tell you the mean income in this sample -- it's the last number on the bottom right, and it's approximately $87,000.
 
-If you're happy with the output you've got, move on to the next section. If you would like a more detailed explanation of this output, see [more on tibbles](more-on-tibbles.html). 
+If you're happy with the output you've got, move on to the next section. If you would like a more detailed explanation of this output, see [more on tibbles](more-on-tibbles.html).
 
 If you get an error here, please see [common errors](common-errors.html).
 
@@ -144,7 +144,7 @@ available from the DLE).
 ### Explanation of command
 This command has three components:
 
-1. The bit on the left, `cpsdata`, is our data frame, which we loaded and named earlier. 
+1. The bit on the left, `cpsdata`, is our data frame, which we loaded and named earlier.
 
 2. The bit in the middle, `%>%`, is called a *pipe*. Its job is to send data from one part of your command to another. It is typed by pressing `%` then `>` then `%`, without spaces. So `cpsdata %>%` sends our data frame to the next part of our command.
 
@@ -161,7 +161,7 @@ Add this comment to your script:
 # Calculate median income
 ```
 
-This time, I haven't given you the command you need to type -- your task is to work out what you need to type. Re-read the explanation above for clues if you need them. The way to indicate that the summary you want is a median is to use the command `median`. 
+This time, I haven't given you the command you need to type -- your task is to work out what you need to type. Re-read the explanation above for clues if you need them. The way to indicate that the summary you want is a median is to use the command `median`.
 
 If you've entered the correct command, you'll get this answer:
 ```{r median, echo=FALSE}
@@ -182,7 +182,7 @@ cpsdata %>% summarise(mean(hours, na.rm = TRUE))
 ```
 
 ### Explanation
-`rm` is short for 'remove', but 'ignore' would be a more accurate description, as this command doesn't delete the `NA` entries in `cpsdata`, it just ignores them. So `na.rm = TRUE` means "ignore the missing data". 
+`rm` is short for 'remove', but 'ignore' would be a more accurate description, as this command doesn't delete the `NA` entries in `cpsdata`, it just ignores them. So `na.rm = TRUE` means "ignore the missing data".
 
 If you get an error here, please see [common errors](common-errors.html).
 
@@ -211,13 +211,13 @@ cpsdata %>% ggplot(aes(income)) + geom_histogram(binwidth=20000) +
 
 2. The command `ggplot` needs to know which of the columns you want to show on your graph, and we use the command `aes` (short for "aesthetics") to specify this. In this case, we want to plot the incomes, so the command is ``ggplot(aes(income))``
 
-3. We also have to tell R *how* we want to graph the income data. The command ``geom_histogram`` says that we want a histogram (`geom_` in this context just means *graph*). We also need to specify the *bin width* for our histogram, using `binwidth`. 
+3. We also have to tell R *how* we want to graph the income data. The command ``geom_histogram`` says that we want a histogram (`geom_` in this context just means *graph*). We also need to specify the *bin width* for our histogram, using `binwidth`.
 
 <a name="custom-graphs"></a>
 
 ## Customising graphs
 
-There are a lot of ways to modify the standard graphs produced by R, to make them look the way you want. Here, we're going to try just a few of them. 
+There are a lot of ways to modify the standard graphs produced by R, to make them look the way you want. Here, we're going to try just a few of them.
 
 ### Changing the theme
 We can change the overall look of a graph by changing the *theme*. In this example, we use a **lighter background** by adding the command `+ theme_light()`:
@@ -233,7 +233,7 @@ cpsdata %>% ggplot(aes(income)) + geom_histogram(binwidth=20000) + theme_light()
 ```
 
 
-There are quite a lot of different themes. Try replacing `light` above with one of the following: `bw, classic, gray, linedraw, light, minimal, void, dark` 
+There are quite a lot of different themes. Try replacing `light` above with one of the following: `bw, classic, gray, linedraw, light, minimal, void, dark`
 
 ### Changing the colour
 We can also change the way particular parts of the graph look -- for example, changing the colour of the bars on the histogram, using the command `fill`. Here's one particularly nasty-looking example:
@@ -256,12 +256,12 @@ We can also change the labels that appear on the x-axis and on the y-axis. Here'
 
 ```{r labels-code, fig.keep='none'}
 # Plot a histogram with axis labels
-cpsdata %>% ggplot(aes(income)) + geom_histogram(binwidth=20000) + 
+cpsdata %>% ggplot(aes(income)) + geom_histogram(binwidth=20000) +
   xlab('insert a x-axis label here') + ylab('insert a y-axis label here')
 ```
 
 ```{r labels, echo=FALSE, fig.keep='all'}
-cpsdata %>% ggplot(aes(income)) + geom_histogram(binwidth=20000) + 
+cpsdata %>% ggplot(aes(income)) + geom_histogram(binwidth=20000) +
   xlab('insert a x-axis label here') + ylab('insert a y-axis label here') +
   annotate("text", x = Inf, y = -Inf, label = "EXAMPLE PLOT", col = "red", hjust = 5.1, vjust = -1.1)
 ```
@@ -278,11 +278,11 @@ Now, write a command that generates a histogram of these data with a bin width o
 
 ```{r hist-assess, echo=FALSE, fig.keep='all'}
 cpsdata %>% ggplot(aes(income)) + geom_histogram(fill = 'blue', binwidth=50000) + theme_bw() +
-  xlab('Income in US dollars') + ylab('Number of people') + 
+  xlab('Income in US dollars') + ylab('Number of people') +
   annotate("text", x = Inf, y = -Inf, label = "EXAMPLE PLOT", col = "red", hjust = 5.1, vjust = -1.1)
 ```
 
-Now, export your histogram, using the _Export_ icon on RStudio's _Plots_ window, and selecting "Save as image...". Give it a meaningful file name (e.g. "ExploringIncomes") and click 'Save'. 
+Now, export your histogram, using the _Export_ icon on RStudio's _Plots_ window, and selecting "Save as image...". Give it a meaningful file name (e.g. "ExploringIncomes") and click 'Save'.
 
 **RECORD YOUR ANSWER** - _Psyc\:EL_ and _RStudio Online_ are entirely separate web pages that don't talk to each other, so you'll need to download your graph from RStudio Online and then upload it to Psyc\:EL. Here's how:
 
@@ -290,7 +290,7 @@ Now, export your histogram, using the _Export_ icon on RStudio's _Plots_ window,
 
 Instructions on how to do download a file from RStudio online are on the [Analyzing Your Project Data](using-projects.html#download) worksheet. Read those instructions then return to this worksheet.
 
-1. Open your computer's Downloads folder (e.g. on a Windows 10 machine, click on the little yellow folder at the bottom of the screen, and then click on "Downloads"). 
+1. Open your computer's Downloads folder (e.g. on a Windows 10 machine, click on the little yellow folder at the bottom of the screen, and then click on "Downloads").
 
 2. Find your file in that Downloads folder, and drag it to the appropriate part your Data Exercise template.
 
@@ -300,7 +300,7 @@ Instructions on how to do download a file from RStudio online are on the [Analyz
 
 In class, we discussed how the histogram helped us to understand why the mean and median incomes were so different, and whether the mean or the median gave a better account of average US income. Here are the [slides](mean-median.html), if you'd like to look at them again.
 
-On your Data Exercise template, you'll find the question "Does the mean or the median give a better indication of average salary in this case?" **Write a short answer to this question**. You need not write more than a few sentences, but you should explain your reasoning. 
+On your Data Exercise template, you'll find the question "Does the mean or the median give a better indication of average salary in this case?" **Write a short answer to this question**. You need not write more than a few sentences, but you should explain your reasoning.
 
 ## Extension exercise
 
@@ -308,4 +308,4 @@ Take a look at the [R Graph Gallery](https://www.r-graph-gallery.com/) for lots 
 
 ___
 
-This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0. 
+This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0.

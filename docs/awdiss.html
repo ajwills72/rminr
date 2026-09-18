@@ -212,21 +212,16 @@ pre code {
 </div>
 <div id="getting-data-from-a-public-repository" class="section level2">
 <h2>Getting data from a public repository</h2>
-<p>A basic principle of open science is that you publicly share your raw data (in anonymized form). Many psychologists, including the ones who ran this study, choose the <a href="https://osf.io/">OSF</a> website to do this. So, the first thing you need to do is download the data from OSF. Of course, there’s an R package for that (<code>osfr</code>).</p>
+<p>A basic principle of open science is that you publicly share your raw data (in anonymized form). The anonymized data used in this worksheet is preserved in this archive under <code>src/data/</code>, so the exercise does not depend on the OSF copy remaining available.</p>
 <p>So, first, <a href="using-projects.html">create a new project</a> in R.</p>
 <p>Next, <strong>create a new, empty R script and save it as <code>perruchet.R</code>. Put all the commands from this worksheet into <code>perruchet.R</code>, and run them from there</strong>. Save your script regularly.</p>
-<p>Now, download data from OSF into your R project using the following commands.</p>
+<p>Now, copy <code>src/data/DATA.csv</code>, <code>src/data/MAIN.csv</code>, and <code>src/data/codebook.md</code> into a <code>data</code> folder in your R project.</p>
 <p><strong>Enter these commands into your script, and run them:</strong></p>
-<pre class="r"><code>## Load data from OSF (commands only need to be run once)
-library(osfr)
-proj  &lt;- osf_retrieve_node(&quot;r7axw&quot;)
-files  &lt;- osf_ls_files(proj)
-osf_download(files, conflicts = &quot;skip&quot;)</code></pre>
+<pre class="r"><code>## The data files are copied locally before this worksheet begins.</code></pre>
 <div id="explanation-of-commands" class="section level3">
 <h3>Explanation of commands</h3>
 <p>The first line is a comment. These are ignored by R, but make your script easier for humans to read. In this case, the comment reminds the human reader that you only need to download the data from OSF once.</p>
 <p>The second line loads the <code>osfr</code> package.</p>
-<p>The third line asks the OSF website for the information it needs to download the data. To do this, we need the last part of the web address. This repository is at <a href="https://osf.io/r7axw/" class="uri">https://osf.io/r7axw/</a>, so we need to use <code>r7axw</code>.</p>
 <p>The fourth line gets a list of the files in the repository, much as we did for local files in <a href="preproc.html#combine">Preprocessing data from experiments</a>.</p>
 <p>The final file actually downloads those files to your R project. In this case, you’ll find that you now have a directory called <code>data</code>, which contains those files. The component <code>conflicts = &quot;skip&quot;</code> means that, if these files are already in your project, you should not overwrite them, but leave them as they are.</p>
 </div>
@@ -246,11 +241,7 @@ raw &lt;- read_csv(&quot;data/DATA.csv&quot;)
 colnames(raw) &lt;- c(&quot;subj&quot;, &quot;time&quot;, &quot;key&quot;, &quot;value&quot;)</code></pre>
 <div id="explanation-of-commands-1" class="section level3">
 <h3>Explanation of commands</h3>
-<p>The second and third lines should be familiar from previous worksheets; we nearly always need the <code>tidyverse</code> package, and we use the <code>read_csv</code> command to load the data. The <code>data/</code> part of the filename <code>data/DATA.csv</code> says that the file <code>DATA.csv</code> is to be found in the directory (folder) called <code>data</code>.</p>
-<p>The final line renames the columns, as covered in the <a href="preproc.html#rename">Preprocessing data from experiments</a> worksheet. I didn’t like the names of the columns very much so I changed them to something more comprehensible and quicker to type, using the <code>colnames</code> command.</p>
-<p><a name="dedup"></a></p>
-</div>
-</div>
+<p>The data files are supplied with this archive and copied into the project before the analysis. This keeps the worksheet usable if the original OSF project changes or becomes unavailable.</p>
 <div id="de-duplicating-data" class="section level2">
 <h2>De-duplicating data</h2>
 <p>We’re now going to get the data into a state where we can meaningfully analyse it. The following commands were fully explained in the <a href="preproc-experiments.html">data preprocessing for experiments</a> worksheet.</p>

@@ -7,11 +7,7 @@ output: html_document
 ```{r setup, include=FALSE}
 ## DEVELOPERS: Uncomment one option, as appropriate
 
-## Data required to knit
-## https://github.com/ajwills72/rminr-data/tree/master/going-further/dass21.csv
-## https://github.com/ajwills72/rminr-data/tree/master/going-further/sses.csv
-##
-## I check out rminr-data and make a symbolic link to going-further
+## Data required to knit is stored in src/going-further/
 
 ## Show only commands.
 ## knitr::opts_chunk$set(echo = TRUE, message = FALSE, results='hide', fig.keep = 'none', comment=NA)
@@ -59,13 +55,13 @@ In this worksheet, we'll cover some common techniques you are likely to use to p
 
 To prepare for this worksheet:
 
-1. Open the `rminr-data` project we used [previously](preproc.html#load).
+1. Open your project we used [previously](preproc.html#load).
 
-1. If you don't see a folder named `going-further`, it means you created your project _before_ the data required for this worksheet was added to the `rminr-data` git repository. You can get the latest files by asking git to "`pull`" the repository. Select the `Git` tab, which is located in the row of tabs which includes the `Environment` tab. Click the `Pull` button with a downward pointing arrow. A window will open showing the files which have been pulled from the repository. Close the `Git pull` window.
+1. If you don't see a folder named `going-further`, it means you created your project _before_ the data required for this worksheet was added to your project files. You can get the latest files by use the files included in this archive; no repository pull is needed.
 
 1. Open the `Files` tab. The `going-further` folder should contain the files `dass21.csv` and `sses.sav`.
 
-1. Create a script named `scales.R` in the `rminr-data` folder (the folder above `going-further`). Add the comments and code to this script as you work through each section of the worksheet.
+1. Create a script named `scales.R` in the `your project` folder (the folder above `going-further`). Add the comments and code to this script as you work through each section of the worksheet.
 
 We start with some lines to clear the workspace and load `tidyverse`.
 
@@ -74,7 +70,7 @@ We start with some lines to clear the workspace and load `tidyverse`.
 ```{r init-load, message=FALSE}
 # Data preprocessing for scale
 # Clear the environment
-rm(list = ls()) 
+rm(list = ls())
 # Load tidyverse
 library(tidyverse)
 ```
@@ -130,7 +126,7 @@ dass21 <- dass21_raw %>% filter(!(partID %in% exclude))
 
 **Explanation of commands:**
 
-Line 1 creates a list of the participant numbers we wish to exclude. In line 2, we remove those participants from `dass21_raw`. The `filter` command will be familiar from previous worksheets. The command `partID %in% exclude` means 'any participant whose subject number is in our list `exclude`'. The use of `!()` in the filter statement means `not`. So, `filter(!(partID %in% exclude))` means keep the participants whose subject number is _not_ in the `exclude` list. 
+Line 1 creates a list of the participant numbers we wish to exclude. In line 2, we remove those participants from `dass21_raw`. The `filter` command will be familiar from previous worksheets. The command `partID %in% exclude` means 'any participant whose subject number is in our list `exclude`'. The use of `!()` in the filter statement means `not`. So, `filter(!(partID %in% exclude))` means keep the participants whose subject number is _not_ in the `exclude` list.
 
 If you look at the **Value** column in the **Environment** pane, you'll see that `dass21` now has six fewer rows than `dass21_raw`.
 
@@ -195,7 +191,7 @@ sses <- read_csv('going-further/sses.csv')
 sses %>% head(3) %>% pander(split.table = Inf)
 ```
 
-The data will be easier to analyse if we rename the columns. It will also be useful to divide the data into two data frames, one for the pre-intervention SSES, the other for the post-intervention SSES. We'll do this in stages. 
+The data will be easier to analyse if we rename the columns. It will also be useful to divide the data into two data frames, one for the pre-intervention SSES, the other for the post-intervention SSES. We'll do this in stages.
 
 **Enter this comment and command into your script, and run it:**
 
@@ -254,7 +250,7 @@ sses_pre_raw %>% head(3) %>% pander(split.table = Inf)
 ```
 
 Note that we could do all of these steps in a single pipeline (**DO NOT enter these commands**, you do not need to do the same thing twice, this is just an illustration of how the previous commands could be combined).
- 
+
 ```{r preprocess-sses-pre}
 sses_pre_raw  <- select(sses, 1, 5:25) %>%
   set_names(~ str_to_lower(.) %>% str_replace_all("pre_sse_", "q")) %>%
@@ -291,5 +287,5 @@ Henry, J. D., & Crawford, J. R. (2005). [The short-form version of the Depressio
 
 ___
 
-This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0. 
+This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0.
 

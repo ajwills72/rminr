@@ -1,13 +1,7 @@
 ## The final script
 rm(list=ls())
 ## Put all packages at start
-library(osfr)
 library(tidyverse)
-
-## Download data from OSF
-proj  <- osf_retrieve_node("r7axw")
-files  <- osf_ls_files(proj)
-osf_download(files, conflicts = "skip")
 
 ## Load data into R
 raw <- read_csv("data/DATA.csv")

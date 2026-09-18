@@ -14,7 +14,7 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE, comment=NA)
 ```
 
-```{r init-load,echo = FALSE, message=FALSE} 
+```{r init-load,echo = FALSE, message=FALSE}
 library(tidyverse)
 library(BayesFactor, quietly = TRUE)
 friends <- read_csv("chi.csv")
@@ -33,7 +33,7 @@ This worksheet contains further information about the analysis of relationships.
 
 ## Ordered variables
 
-You may have noticed that the _Relationships_ worksheet did not include Bayes Factor or chi-square calculations for the effect of the child's age. This is because these techniques, at least as covered in this worksheet, are intended for _unordered_ variables only. Culture is an unordered (aka. "nominal") variable because there is no order we can put China, Iceland and Russia in that is relevant to our investigation. Gender is also unordered. Age, however, is different; it has a clear order: 7, 9, 12, 15. It makes more sense to write the ages in this order than, for example, as: 12, 7, 9, 15. 
+You may have noticed that the _Relationships_ worksheet did not include Bayes Factor or chi-square calculations for the effect of the child's age. This is because these techniques, at least as covered in this worksheet, are intended for _unordered_ variables only. Culture is an unordered (aka. "nominal") variable because there is no order we can put China, Iceland and Russia in that is relevant to our investigation. Gender is also unordered. Age, however, is different; it has a clear order: 7, 9, 12, 15. It makes more sense to write the ages in this order than, for example, as: 12, 7, 9, 15.
 
 It is not correct to use the Bayes Factor or chi-square techniques described in the _Relationships_ worksheet on age, or any other ordered (aka. "ordinal") data. For the analysis of ordered variables, see the next worksheet.
 
@@ -54,7 +54,7 @@ Here's a more detailed explanation of the part of the command we skimmed over in
 
 `fixedMargin = "rows"` - The number of children sampled from each culture was decided by the experimenter. This means that the total of each row in the contingency table was known before the childrens' responses were coded. The jargon term for this is that the rows have _fixed marginal totals_. In contrast, the totals for each column were not known before the responses were coded, and would likely change a bit if a different sample was used. So, the columns do not have fixed marginal totals. In order to calculate the Bayes Factor, R needs to know whether it is the `rows` or the `cols` that are fixed. In this case, it is the rows.
 
-`sampleType = "indepMulti"` - If the rows are fixed and the columns are not (or vice versa), then the jargon term for the type of data you have is _independent multinomial_ data -- `indepMulti` for short. R can also deal with other types of data, but we don't cover them in this worksheet. The _Examples_ section of [Jamil et al. (2017)](https://www.researchgate.net/publication/304187391_Default_Gunel_and_Dickey_Bayes_factors_for_contingency_tables) explains the four options that are available, and give examples of the sorts of data each is used for. 
+`sampleType = "indepMulti"` - If the rows are fixed and the columns are not (or vice versa), then the jargon term for the type of data you have is _independent multinomial_ data -- `indepMulti` for short. R can also deal with other types of data, but we don't cover them in this worksheet. The _Examples_ section of [Jamil et al. (2017)](https://www.researchgate.net/publication/304187391_Default_Gunel_and_Dickey_Bayes_factors_for_contingency_tables) explains the four options that are available, and give examples of the sorts of data each is used for.
 
 
 ### Further explanation of output
@@ -63,7 +63,7 @@ Here's a more detailed explanation of the part of the command we skimmed over in
 
 `[1] Non-indep.` - This Bayes Factor assesses _non-independence_, e.g. that friendship concepts and culture are not independent, they are related.
 
-`(a=1)` - In order to calculate a Bayes Factor, R has to make some assumptions. By setting `a` to 1, you are saying that, prior to collecting the data, you would have expected every number in the contingency table to be about the same as every other number. This is sometimes called an _uninformative prior_ because it's basically saying you knew nothing about how these data were likely to turn out before you collected them. This is often a bit unrealistic, but we use it here because it's relatively simple. 
+`(a=1)` - In order to calculate a Bayes Factor, R has to make some assumptions. By setting `a` to 1, you are saying that, prior to collecting the data, you would have expected every number in the contingency table to be about the same as every other number. This is sometimes called an _uninformative prior_ because it's basically saying you knew nothing about how these data were likely to turn out before you collected them. This is often a bit unrealistic, but we use it here because it's relatively simple.
 
 `107633530` - The Bayes Factor (i.e. the main result of this analysis)
 
@@ -81,9 +81,9 @@ Here's a more detailed explanation of the part of the command we skimmed over in
 
 ## Interpreting large contingency tables
 
-The Bayes Factor, and chi-square, analyses only tell you that there is some kind of relationship between your two variables. They don't tell you which part of the contingency table is driving that relationship. 
+The Bayes Factor, and chi-square, analyses only tell you that there is some kind of relationship between your two variables. They don't tell you which part of the contingency table is driving that relationship.
 
-For example, in the contingency table above, it looks like 'helping' is more common than 'length' in China, but it's the other way around in the other countries. However, the BF and X<sup>2</sup> analyses don't tell you this, they just tell you there's a relationship of some sort be country and response. 
+For example, in the contingency table above, it looks like 'helping' is more common than 'length' in China, but it's the other way around in the other countries. However, the BF and X<sup>2</sup> analyses don't tell you this, they just tell you there's a relationship of some sort be country and response.
 
 In you want to directly test your hyopthesis that China is different to the other countries on helping and length, you must reduce your contingency table down to just the relevant rows and columns. So, first, you'd filter to just 'length' and 'helping', using the `filter` command covered in the _Group Differences_ worksheet:
 
@@ -99,7 +99,7 @@ You also need to simplify the data so it's just China verus Other. We can use th
 length.helping <- length.helping %>% mutate( cult2 = ifelse(culture == "China", "China", "Other"))
 ```
 
-If you click on `length.trust` in the _Enviornment_ tab of RStudio, you'll see that we now have a new column called `cult2` that classifies countries as `China` or `Other`. 
+If you click on `length.trust` in the _Enviornment_ tab of RStudio, you'll see that we now have a new column called `cult2` that classifies countries as `China` or `Other`.
 
 We can now re-do our analysis on this smaller contingency table:
 
@@ -109,13 +109,13 @@ cont
 contingencyTableBF(cont, fixedMargin = "rows", sampleType = "indepMulti")
 ```
 
-The Bayes Factor for the analysis of this smaller table is well over 3, so we conclude that indeed Chinese children differ from the other cultures we investigated on their use of the 'helping' and 'length' categories. 
+The Bayes Factor for the analysis of this smaller table is well over 3, so we conclude that indeed Chinese children differ from the other cultures we investigated on their use of the 'helping' and 'length' categories.
 
 <a name="effect"></a>
 
 ## Effect size for contingency tables
 
-In the _Group Differences_ worksheet, we talked about effect size. For a difference between groups, the effect size is the difference in the group means, divided by the standard deviation. It gives a sense of how large the between-group effect is, relative to the within-group variability. We used the `cohen.d()` command to calculate it. 
+In the _Group Differences_ worksheet, we talked about effect size. For a difference between groups, the effect size is the difference in the group means, divided by the standard deviation. It gives a sense of how large the between-group effect is, relative to the within-group variability. We used the `cohen.d()` command to calculate it.
 
 We can also calculate effect size for contingency tables. The most commonly used measure in this case is Cramer's Phi, which ranges between zero and one. We use the `cramer` command in the _sjstats_ package to calculate it:
 
@@ -128,7 +128,7 @@ cramer(cont)
 
 In this example, Cramer's Phi is about 0.28. For a contingency table that has 2 rows and 2 columns, this is conventionally described as a "medium" effect size (with 0.1 being "small" and 0.5 being "large"). For larger tables, see this [website](http://www.real-statistics.com/chi-square-and-f-distributions/effect-size-chi-square/).
 
-Where there is no within-group variability, Cramer's Phi is 1. Let's illustrate this with a different contingency table. Don't worry too much about the first three lines, they're just a way of setting up a contingency table without having the raw data to base it on. This is not something you'll need to do that often - it's only a good idea to do this if you don't have the raw data. 
+Where there is no within-group variability, Cramer's Phi is 1. Let's illustrate this with a different contingency table. Don't worry too much about the first three lines, they're just a way of setting up a contingency table without having the raw data to base it on. This is not something you'll need to do that often - it's only a good idea to do this if you don't have the raw data.
 
 ```{r phi1a}
 cont2 <- as.table(rbind(c(20,0), c(0,40)))
@@ -152,7 +152,7 @@ cramer(cont3)
 
 ___
 
-This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0. 
+This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0.
 It is part of [Research Methods in R](https://ajwills72.github.io/rminr), by [Andy Wills](http://www.willslab.org.uk).
 
 

@@ -15,7 +15,7 @@ knitr::opts_chunk$set(echo = TRUE, comment=NA)
 
 library(tidyverse)
 library(BayesFactor)
-cpsdata <- read_csv(url("http://www.willslab.org.uk/cps2.csv"))
+cpsdata <- read_csv("cps2.csv")
 cpslow <- cpsdata %>% filter(income < 150000)
 ```
 
@@ -45,7 +45,7 @@ Here's a more detailed explanation of the output of that test -- we'll go throug
 
 `Bayes factor analysis` - You're doing a Bayes Factor analysis.
 
-`[1] Alt., r=0.707` - In order to calculate a Bayes Factor, R has to make some assumptions about how big the difference is likely to be. The `ttestBF` command makes some broad assumptions that cover the range of effect sizes typically seen in psychology. 
+`[1] Alt., r=0.707` - In order to calculate a Bayes Factor, R has to make some assumptions about how big the difference is likely to be. The `ttestBF` command makes some broad assumptions that cover the range of effect sizes typically seen in psychology.
 
 More specifically, `ttestBF` assumes a Cauchy distribution of effect sizes centered on zero, with a scale of 0.707 -- this is where `r=0.707` comes from. That description probably didn't make much sense useless you have a very strong maths background, so here's the same idea, shown as a density plot. It's basically an assumption that small effect sizes are quite likely, and large effect sizes are quite unlikely.
 
@@ -60,7 +60,7 @@ plot(x, dcauchy(x, scale = .707),type="l", xlab = "Effect size", ylab = "")
 
 `Against denominator:` - This tells you that the null hypothesis is the denominator of the fraction that is used to calculate the Bayes Factor. So, in other words, you're getting BF~10~ rather than BF~01~ -- see the [Evidence](evidence.html) worksheet.
 
-`Null, mu1-mu2 = 0` - This tells you that the null hypothesis is that the difference between the two group means (called `mu1` and `mu2` here) is zero. 
+`Null, mu1-mu2 = 0` - This tells you that the null hypothesis is that the difference between the two group means (called `mu1` and `mu2` here) is zero.
 
 `Bayes factor type: BFindepSample` - You're doing a Bayes Factor analysis; `indepSample` is short for `independent samples`, which is another way of saying "between-subjects test". `JZS` is short for Jeffreys, Zellner, and Siow - the surnames of three people who are credited with coming up with this particular way of working out Bayes Factors.
 
@@ -76,8 +76,8 @@ This way of describing a Bayes Factor is only accurate if, before collecting the
 
 # When p-values and Bayes Factors disagree
 
-What if your p-value is less than .05, but your Bayes Factor is less than 3? The short answer is ... 
-believe the Bayes Factor, and ignore the p value. The p value is there for historical reasons and doesn't tell you anything you actually want to know. 
+What if your p-value is less than .05, but your Bayes Factor is less than 3? The short answer is ...
+believe the Bayes Factor, and ignore the p value. The p value is there for historical reasons and doesn't tell you anything you actually want to know.
 
 ### Long answer
 
@@ -118,7 +118,7 @@ Bayes factor analysis
 [1] congru + subj : 43834950 ±2.29%
 
 Against denominator:
-  rt ~ subj 
+  rt ~ subj
 ---
 Bayes factor type: BFlinearModel, JZS
 ```
@@ -130,7 +130,7 @@ Against denominator:
   rt ~ subj
 ```
 
-which is a bit different to `ttestBF`. Recall that a Bayes Factor is a fraction - it's the evidence for one hypothesis divided by the evidence for another. The top of that fraction (the _numerator_) is given in the first part of the output as `congru + subj`. The bottom of that fraction (the _denominator_) is given as `rt ~ subj`. 
+which is a bit different to `ttestBF`. Recall that a Bayes Factor is a fraction - it's the evidence for one hypothesis divided by the evidence for another. The top of that fraction (the _numerator_) is given in the first part of the output as `congru + subj`. The bottom of that fraction (the _denominator_) is given as `rt ~ subj`.
 
 The denominator is the _null_ hypothesis that reaction time is only affected by participant ID. In other words, it's a hypothesis that different people have different reaction times. This is compared to the _experimental_ hypothesis (the _numerator_), which was given earlier as `congru + subj`. This is the hypothesis that trial type (`congru`) has an effect on reaction times **and** that different people have different reaction times (`+ subj`)
 
@@ -155,7 +155,7 @@ Bayes factor analysis
 [1] medit + congru + medit:congru + subj : 5963.887 ±3.28%
 
 Against denominator:
-  rt ~ medit + congru + subj 
+  rt ~ medit + congru + subj
 ---
 Bayes factor type: BFlinearModel, JZS
 ```
@@ -166,6 +166,6 @@ ___
 
 
 #### Licence
-This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0. 
+This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0.
 
 

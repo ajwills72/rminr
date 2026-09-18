@@ -59,35 +59,24 @@ There are two predictions. The first prediction is that the GSR will increase wi
 
 ## Getting data from a public repository
 
-A basic principle of open science is that you publicly share your raw data (in anonymized form). Many psychologists, including the ones who ran this study, choose the [OSF](https://osf.io/) website to do this. So, the first thing you need to do is download the data from OSF. Of course, there's an R package for that (`osfr`).
+A basic principle of open science is that you publicly share your raw data (in anonymized form). The anonymized data used in this worksheet is preserved in this archive under `src/data/`, so the exercise does not depend on the OSF copy remaining available.
 
 So, first, [create a new project](using-projects.html) in R.
 
 Next, **create a new, empty R script and save it as `perruchet.R`. Put all the commands from this worksheet into `perruchet.R`, and run them from there**. Save your script regularly.
 
-Now, download data from OSF into your R project using the following commands.
+Now, copy `src/data/DATA.csv`, `src/data/MAIN.csv`, and `src/data/codebook.md` into a `data` folder in your R project.
 
 **Enter these commands into your script, and run them:**
 
 ```{r osf, message=FALSE, results='hide'}
 ## Load data from OSF (commands only need to be run once)
-library(osfr)
-proj  <- osf_retrieve_node("r7axw")
-files  <- osf_ls_files(proj)
-osf_download(files, conflicts = "skip")
+## The data files are copied locally before this worksheet begins.
 ```
 
 ### Explanation of commands
 
-The first line is a comment. These are ignored by R, but make your script easier for humans to read. In this case, the comment reminds the human reader that you only need to download the data from OSF once.
-
-The second line loads the `osfr` package.
-
-The third line asks the OSF website for the information it needs to download the data. To do this, we need the last part of the web address. This repository is at https://osf.io/r7axw/, so we need to use `r7axw`.
-
-The fourth line gets a list of the files in the repository, much as we did for local files in [Preprocessing data from experiments](preproc.html#combine).
-
-The final file actually downloads those files to your R project. In this case, you'll find that you now have a directory called `data`, which contains those files. The component `conflicts = "skip"` means that, if these files are already in your project, you should not overwrite them, but leave them as they are.
+The data files are supplied with this archive and copied into the project before the analysis. This keeps the worksheet usable if the original OSF project changes or becomes unavailable.
 
 ### Looking at the downloaded files
 

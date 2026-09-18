@@ -6,7 +6,7 @@ output: html_document
 
 ```{r setup, include=FALSE}
 ## DEVELOPERS: Uncomment one option, as appropriate
-## 
+##
 ## Show only commands.
 ## knitr::opts_chunk$set(echo = TRUE, message = FALSE, results='hide', fig.keep = 'none', comment=NA)
 
@@ -48,13 +48,13 @@ It can be helpful to present data in tables, rather than text, especially when y
 
 To prepare for this worksheet:
 
-1. Open the `rminr-data` project we used [previously](preproc.html#load).
+1. Open your project we used [previously](preproc.html#load).
 
-1. If you don't see a folder named `going-further`, it means you created your project _before_ the data required for this worksheet was added to the `rminr-data` git repository. You can get the latest files by asking git to "`pull`" the repository. Select the `Git` tab, which is located in the row of tabs which includes the `Environment` tab. Click the `Pull` button with a downward pointing arrow. A window will open showing the files which have been pulled from the repository. Close the `Git pull` window.
+1. If you don't see a folder named `going-further`, it means you created your project _before_ the data required for this worksheet was added to your project files. You can get the latest files by use the files included in this archive; no repository pull is needed.
 
 1. Open the `Files` tab. The `going-further` folder should contain the file `picture-naming-preproc.csv`.
 
-1. Create a script named `tables.R` in the `rminr-data` folder (the folder above `going-further`). Add the comments and code to this script as you work through each section of the worksheet.
+1. Create a script named `tables.R` in the `your project` folder (the folder above `going-further`). Add the comments and code to this script as you work through each section of the worksheet.
 
 <a name="cor-matrix"></a>
 
@@ -75,7 +75,7 @@ We'll use the `apaTables` package to generate the correlation matrix.
 ```{r, R.options = list(width = 10000)}
 # Better tables
 # Clear the environment
-rm(list = ls()) 
+rm(list = ls())
 # Load 'apaTables' package
 library(apaTables)
 # Create an APA correlation matrix from the 'attitude' dataset, into file 'table1.doc'
@@ -90,13 +90,13 @@ We load the `apaTables` package.The function to generate a correlation matrix is
 
 [Export](https://ajwills72.github.io/rminr/using-projects.html#download) `table1.doc` from RStudio and open it using a word processor
 
-The first thing to notice is that the styling (spacing, use of italics, horizontal lines, positioning of captions and footnotes etc.) complies with the APA guidelines for tables. 
+The first thing to notice is that the styling (spacing, use of italics, horizontal lines, positioning of captions and footnotes etc.) complies with the APA guidelines for tables.
 
 The table number and caption is above the table itself - you will need to edit the caption by hand to make it more meaningful, for example "Means, standard deviations, and correlations with confidence intervals, for the attitude measures of Study 1".
 
 The `Variable` column contains a number and the column name for the seven attitude variables. The next two columns show the mean and standard deviation for each variable. The remaining columns use the numbers from items in the `Variable` column as headings, indicating that they refer to the same variable. The cells show the correlation between the column variables and each of the variables in the rows. Cells are left empty where a variable would otherwise be correlated with itself. The 95% [confidence interval](https://ajwills72.github.io/rminr/more-on-t.html) for the correlation is shown in square brackets.
 
-For example, the correlation between `rating` and `complaints` in this sample is .83. The confidence interval indicates that the population value is likely to be between .66 and .91. 
+For example, the correlation between `rating` and `complaints` in this sample is .83. The confidence interval indicates that the population value is likely to be between .66 and .91.
 
 Evidence for the correlation is calculated using traditional statistics, rather than the Bayes factors described in the [Relationships, part 2 worksheet](corr.html). One asterisk (`*`) indicates `p < .05`. Two asterisks (`**`) signify `p < .01`. These calculations assumed a two-tailed test; one-tailed tests for correlations are explained in the [More on relationships, part 2](corr-extended.html) worksheet. Also recall that p-values are [widely misinterpreted](evidence.html#p-wrong), so it would be better to edit this part of the table by hand to reflect [Bayes Factors](corr.html#evidence) you have already calculated. We suggest using `*` for BF > 3, `**` for BF > 10, `o` for BF < 0.33, and `oo` for BF < 0.1. Change the text at the bottom of the table accordingly.
 
@@ -128,7 +128,7 @@ Create a correlation matrix for the five personality factors. Number the table a
 apa.cor.table(big5 %>% select(-subj), filename = 'table2.doc', table.number = 2)
 ```
 
-...and it should be APA formatted in the file `table2.doc`. 
+...and it should be APA formatted in the file `table2.doc`.
 
 **Copy the R code you used for this exercise, including the comments, into PsycEL**
 
@@ -155,7 +155,7 @@ wing_preproc %>% head() %>% pander(split.table = Inf)
 
 ### Table of descriptives
 
-Our test scores are currently in _wide_ format (lots of columns, few rows), but R generally requires data to be in _long_ format 
+Our test scores are currently in _wide_ format (lots of columns, few rows), but R generally requires data to be in _long_ format
 (lots of rows, few columns). This means we first have to make the data frame wider, so we can calculate summary statistics.
 
 **Enter this comment and these commands into your script, and run them:**
@@ -179,7 +179,7 @@ The first few rows of `task_by_subj` look like this:
 task_by_subj %>% head(5) %>% pander()
 ```
 
-Now we can calculate some summary statistics, using commands that we've already used in previous worksheets. 
+Now we can calculate some summary statistics, using commands that we've already used in previous worksheets.
 
 **Enter this comment and these commands into your script, and run them:**
 
@@ -192,9 +192,9 @@ descript <- task_by_subj %>%
 
 **Explanation of commands:**
 
-1. We've come across `group_by` [before](group-differences.html#group), here we use it to group the data by two variables at the same time, `task` and `gender`, giving us eight groups overall. 
+1. We've come across `group_by` [before](group-differences.html#group), here we use it to group the data by two variables at the same time, `task` and `gender`, giving us eight groups overall.
 
-2. We've also come across `summarize` [before](exploring-incomes.html#means), including the use of `na.rm = TRUE` to deal with missing data. 
+2. We've also come across `summarize` [before](exploring-incomes.html#means), including the use of `na.rm = TRUE` to deal with missing data.
 
 Our data now looks like this:
 
@@ -214,7 +214,7 @@ task_names <- c(
   nc = 'Noun Comprehension',
   np = 'Noun Production',
   pc = 'Predicate Comprehension',
-  pp = 'Predicate Production'  
+  pp = 'Predicate Production'
 )
 # Recode task codes into task names
 descript$task <- descript$task %>% recode(!!!task_names)
@@ -224,7 +224,7 @@ descript$task <- descript$task %>% recode(!!!task_names)
 
 1. We start by telling R what each of the codes, `nc` etc., mean. So, for example `nc = 'Noun Comprehension'`. We combine the four 'translations' together into `task_names` using `c()` (short for 'concatenate', i.e. put things together).
 
-2. We then take the `task` columns of the `descript` data frame (`descript$task`) and pipe (`%>%`) it to `recode`, where it uses `task_names` to do the recoding. We write (`<-`) that result back into `descript$task`. 
+2. We then take the `task` columns of the `descript` data frame (`descript$task`) and pipe (`%>%`) it to `recode`, where it uses `task_names` to do the recoding. We write (`<-`) that result back into `descript$task`.
 
 Our table now looks like this:
 
@@ -236,7 +236,7 @@ descript %>% pander()
 
 ## APA-format tables
 
-Our table is now clear and easy to read. We could include it in a report without much further effort, and the reader would be able to easily see what we wanted to show them. However, it is not quite in the format that psychologists are most familiar with (which is [APA format](https://apastyle.apa.org/style-grammar-guidelines/tables-figures/sample-tables#tests)). In APA format, the table would look more like this: 
+Our table is now clear and easy to read. We could include it in a report without much further effort, and the reader would be able to easily see what we wanted to show them. However, it is not quite in the format that psychologists are most familiar with (which is [APA format](https://apastyle.apa.org/style-grammar-guidelines/tables-figures/sample-tables#tests)). In APA format, the table would look more like this:
 
 ```{r echo=FALSE}
 # Format wider
@@ -244,7 +244,7 @@ descript_table <- descript %>%
   pivot_wider(names_from = gender, values_from = c(mean, sd))
 
 # Order columns
-descript_table <- descript_table %>% select(task, mean_female, sd_female, mean_male, sd_male) 
+descript_table <- descript_table %>% select(task, mean_female, sd_female, mean_male, sd_male)
 
 # Column names
 colnames(descript_table) <- c("Task", "Female (M)", "Female (SD)", "Male (M)", "Male (SD)")
@@ -259,16 +259,16 @@ descript_table %>% pander()
 rm(descript_table)
 ```
 
-In other words, it would be _wider_: more columns and fewer rows. 
+In other words, it would be _wider_: more columns and fewer rows.
 
-We can widen the table, using the `pivot_wider` command we have previously used in the [within-subject differences](anova1.html#pivot) worksheet. 
+We can widen the table, using the `pivot_wider` command we have previously used in the [within-subject differences](anova1.html#pivot) worksheet.
 
 **Enter this comment and these commands into your script, and run them:**
 
 ```{r descriptives-2}
 # Widen table
 descript_table <- descript %>%
-  pivot_wider(names_from = gender, values_from = c(mean, sd)) 
+  pivot_wider(names_from = gender, values_from = c(mean, sd))
 ```
 
 Our table now has the same format as an APA table...
@@ -283,14 +283,14 @@ descript_table %>% pander()
 
 ```{r rearrange}
 # Re-order columns
-descript_table <- descript_table %>% select(task, mean_female, sd_female, mean_male, sd_male) 
+descript_table <- descript_table %>% select(task, mean_female, sd_female, mean_male, sd_male)
 ```
 
 ```{r echo=FALSE}
 descript_table %>% pander()
 ```
 
-Finally, we can replace the column names with something a bit more human readable, using the `colnames` function. 
+Finally, we can replace the column names with something a bit more human readable, using the `colnames` function.
 
 **Enter this comment and command into your script, and run it:**
 
@@ -303,7 +303,7 @@ colnames(descript_table) <- c("Task", "Female (M)", "Female (SD)", "Male (M)", "
 descript_table %>% pander()
 ```
 
-Note that it would arguably be clearer to write "mean" rather than "M", but it's another quirk of APA style that we write "M" to stand for mean. 
+Note that it would arguably be clearer to write "mean" rather than "M", but it's another quirk of APA style that we write "M" to stand for mean.
 
 <a name="kable"></a>
 
@@ -340,14 +340,14 @@ Starting with the data in `task_by_subj`, generate a table of descriptive statis
 # Summarise
 descriptives_by_cards <- task_by_subj %>%
   group_by(task, cards) %>%
-  summarise(mean = mean(correct, na.rm = TRUE), sd = sd(correct, na.rm = TRUE)) 
+  summarise(mean = mean(correct, na.rm = TRUE), sd = sd(correct, na.rm = TRUE))
 
 # Labels
 task_names <- c(
   nc = 'Noun Comprehension',
   np = 'Noun Production',
   pc = 'Predicate Comprehension',
-  pp = 'Predicate Production'  
+  pp = 'Predicate Production'
 )
 
 descriptives_by_cards$task <- descriptives_by_cards$task %>% recode(!!!task_names)
@@ -357,7 +357,7 @@ by_cards_table <- descriptives_by_cards %>%
   pivot_wider(names_from = cards, values_from = c(mean, sd))
 
 # Order columns
-by_cards_table <- by_cards_table %>% select(task, mean_english, sd_english, mean_italian, sd_italian) 
+by_cards_table <- by_cards_table %>% select(task, mean_english, sd_english, mean_italian, sd_italian)
 
 # Column names
 colnames(by_cards_table) <- c("Task", "English (M)", "English (SD)", "Italian (M)", "Italian (SD)")
@@ -376,5 +376,5 @@ You can avoid copy-pasting tables (and all other analyses) by writing your repor
 
 ___
 
-This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0. 
+This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0.
 

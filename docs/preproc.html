@@ -395,29 +395,22 @@ that new data set.</p>
 <h1>Loading data</h1>
 <div id="getting-the-data-into-your-project" class="section level2">
 <h2>Getting the data into your project</h2>
-<p>Create a folder called <em>rawdata</em> in your RStudio project, then
-download the three participant files: <a href="https://raw.githubusercontent.com/ajwills72/rminr/master/src/rawdata/subject-11.csv"><code>subject-11.csv</code></a>,
-<a href="https://raw.githubusercontent.com/ajwills72/rminr/master/src/rawdata/subject-12.csv"><code>subject-12.csv</code></a>,
-and <a href="https://raw.githubusercontent.com/ajwills72/rminr/master/src/rawdata/subject-13.csv"><code>subject-13.csv</code></a>.
-Save all three files in that folder. If your browser displays a file
-rather than downloading it, use the <strong>Raw</strong> link and save
-the result with its <code>.csv</code> filename.</p>
+<p>Create a folder called <em>rawdata</em> in your project, then
+download the three participant files: <a href="data/subject-11.csv"><code>subject-11.csv</code></a>, <a href="data/subject-12.csv"><code>subject-12.csv</code></a>, and <a href="data/subject-13.csv"><code>subject-13.csv</code></a>. Save all
+three files in that folder.</p>
 <p>Click on the name ‘rawdata’ in the Files window of RStudio. You’ll
 see there are three CSV files, and one file called
 <code>README.md</code>. We’ll use the CSV files in a minute.</p>
 <p>Each CSV file (e.g. <code>subject-11.csv</code>) contains the data
 from one participant in a <a href="https://cabezalab.org/wp-content/uploads/2021/12/Cabeza-et-al.-1999_The-prototype-effect-in-face-recognition.pdf">facial
-prototypes</a> experiment. The experiment was run using <a href="https://osdoc.cogsci.nl/">OpenSesame</a>. OpenSesame, like R, is a
-free and open-source program. Install OpenSesame on your machine and run
-the experiment on yourself. To do this, you will need to download the
-OpenSesame experiment, which is in the <code>expt-scripts</code> folder
-of your R project. Click on <code>expt-scripts</code>, tick the box next
-to <code>facialproto_short.osexp</code>, click ‘More…’ and click
-‘Export’. Now open the experiment on your machine using OpenSesame.</p>
+prototypes</a> experiment. The experiment was run using <a href="https://osdoc.cogsci.nl/">OpenSesame</a>. Running the experiment
+yourself is optional and is outside this archive; the OpenSesame
+experiment file is not included here. The CSV files are sufficient to
+complete this worksheet.</p>
 </div>
 <div id="create-a-new-script" class="section level2">
 <h2>Create a new script</h2>
-<p>Within your RStudio project, create a new script file and call it
+<p>Within your project, create a new script file and call it
 <strong>preproc.R</strong>. Put all your commands for this worksheet
 into this script, and save regularly. This will make it easier to see
 what you have done, especially when you come back to it after a

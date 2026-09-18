@@ -35,11 +35,11 @@ Before starting this exercise, you should have had a brief introduction to using
 <a name="revision"></a>
 
 ## Loading packages and data (revision)
-The first few steps are the same as in the _Exploring Incomes_ workshop. First, log in to <a href = "https://psyrstudio.plymouth.ac.uk/" target = "blank">RStudio server</a>, and make sure you are in your `psyc411` project.
+The first few steps are the same as in the _Exploring Incomes_ workshop. First, open RStudio or another local R environment and make sure you are in the project containing `cps2.csv`.
 
 Next, create a **new** script file in your project, called `groupdiff.R`.
 
-Download the archived teaching data file [`cps2.csv`](https://github.com/ajwills72/rminr/blob/master/src/cps2.csv) and save it in the same folder as your new script. If your browser displays the file rather than downloading it, use the **Raw** button and then save the page as `cps2.csv`.
+Download the archived teaching data file [`cps2.csv`](data/cps2.csv) and save it in the same folder as your new script.
 
 Now, you load _tidyverse_ and you load the income _data frame_, by adding the following comments and commands to your R script, and using CTRL+ENTER to run each command in turn:
 
@@ -58,7 +58,7 @@ As a reminder, here's what each of the columns in the income data frame contain:
 
 | Column | Description                             | Values             |
 | ------ | --------------------------------------- | ------------------ |
-| ID     | Unique anonymous participant number     | 1-10,000           | 
+| ID     | Unique anonymous participant number     | 1-10,000           |
 | sex    | Biological sex of participant           | male, female       |
 | native | Participant born in the US?             | foreign, native           |
 | blind  | Participant blind?                      | yes, no            |
@@ -81,7 +81,7 @@ cpsdata %>% summarise(median(income))
 
 ### Grouping data
 
-What we need, though, are two median incomes -- one for males and one for females. In R, the command `group_by` allows us to do this. In this case, we want to group the data by biological sex, so the command is `group_by(sex)`. We *pipe* (`%>%`) the data in `cpsdata` to the `group_by` command in order to group it, and then we *pipe* (`%>%`) it to `summarise` to get a summary for each group (a median, in this case). 
+What we need, though, are two median incomes -- one for males and one for females. In R, the command `group_by` allows us to do this. In this case, we want to group the data by biological sex, so the command is `group_by(sex)`. We *pipe* (`%>%`) the data in `cpsdata` to the `group_by` command in order to group it, and then we *pipe* (`%>%`) it to `summarise` to get a summary for each group (a median, in this case).
 
 **So, the full command to add to your script and run (CTRL+ENTER) is:**
 
@@ -110,7 +110,7 @@ _Standard deviation_ is a number that basically represents how far, on average, 
 
 ### Calculating standard deviation
 
-What is the _standard deviation_ in pay for males, and for females? We can calculate this in R with a minor change to the commands we've previously used. Specifically, we want a by-group summary, not of `median` income, but of the standard deviation, `sd`, of income. 
+What is the _standard deviation_ in pay for males, and for females? We can calculate this in R with a minor change to the commands we've previously used. Specifically, we want a by-group summary, not of `median` income, but of the standard deviation, `sd`, of income.
 
 **So, the command to add to your script and run is:**
 
@@ -127,13 +127,13 @@ The standard deviations for both men and women are very large (around $130k) com
 
 In the [Exploring data](exploring-incomes.html) worksheet, we used R to produce a histogram of incomes. The first thing we're going to do now is to produce a _scaled density plot_ of incomes. Scaled density plots can be interpreted much the same way as a histogram - the higher the curve is at a particular income, the more people who have that income.
 
-The main difference between a scaled density plot and a histogram is that the highest point on a scaled density plot is always one. This can make it easier to compare two groups, particularly if one group has fewer people in it than the other. 
+The main difference between a scaled density plot and a histogram is that the highest point on a scaled density plot is always one. This can make it easier to compare two groups, particularly if one group has fewer people in it than the other.
 
-So **here's the command to add to your script**, that will do a scaled density plot for incomes, ignoring biological sex. It works the same way as the histogram command from last time, except that we've replaced `geom_histogram` with `+ geom_density`. 
+So **here's the command to add to your script**, that will do a scaled density plot for incomes, ignoring biological sex. It works the same way as the histogram command from last time, except that we've replaced `geom_histogram` with `+ geom_density`.
 
 ```{r density}
 # Produce a scaled density plot for income
-cpsdata %>% ggplot(aes(income)) + geom_density(aes(y=..scaled..)) 
+cpsdata %>% ggplot(aes(income)) + geom_density(aes(y=..scaled..))
 ```
 
 The part of the command `aes(y=..scaled..))` says that the aesthetic ('aes') we want for the y-axis of the graph is "scaled" ... in other words we want a scaled density plot.
@@ -143,15 +143,15 @@ The part of the command `aes(y=..scaled..))` says that the aesthetic ('aes') we 
 
 ### Drawing a density plot for each group
 
-Next, we're going to produce two density plots, on the same axes -- one for males, and one for females. This is so we can look at how much the two sets of incomes overlap. 
+Next, we're going to produce two density plots, on the same axes -- one for males, and one for females. This is so we can look at how much the two sets of incomes overlap.
 
-We want these two density plots to be different colours, to make it easy for us to tell them apart. We do this by adding `colour=factor(sex)` to the aesthetics (`aes`) of the plot. 
+We want these two density plots to be different colours, to make it easy for us to tell them apart. We do this by adding `colour=factor(sex)` to the aesthetics (`aes`) of the plot.
 
 **Here's the command to add to your script and run**:
 
 ```{r group-density}
 # Produce a scaled density plot for income, by sex
-cpsdata %>% ggplot(aes(income, colour=factor(sex))) + geom_density(aes(y=..scaled..)) 
+cpsdata %>% ggplot(aes(income, colour=factor(sex))) + geom_density(aes(y=..scaled..))
 ```
 
 Oh dear! That was not very revealing! These two lines seem basically on top of each other ... but they can't be because we know the two groups differ in median income by several thousand dollars. We have a problem to solve...
@@ -165,7 +165,7 @@ The problem is one of scale. As we discussed in [Exploring data](exploring-incom
 cpsdata %>% group_by(sex) %>% summarise(max(income))
 ```
 
-These figures relate to another phenomenon in the US (and many other countries) -- income inequality. When we work out income inequality for a company (e.g. Starbucks), we take the salary of the CEO and divide it by the median salary of the workers. The [CEO of Starbucks earns about 700 times as much as the average worker at Starbucks](https://www.glassdoor.com/research/ceo-pay-ratio/). In our sample of 10,000 people, the best paid woman earns about 36 times more than the average (median) woman: 
+These figures relate to another phenomenon in the US (and many other countries) -- income inequality. When we work out income inequality for a company (e.g. Starbucks), we take the salary of the CEO and divide it by the median salary of the workers. The [CEO of Starbucks earns about 700 times as much as the average worker at Starbucks](https://www.glassdoor.com/research/ceo-pay-ratio/). In our sample of 10,000 people, the best paid woman earns about 36 times more than the average (median) woman:
 
 ```{r income inequality}
 # Calculate income inequality
@@ -178,9 +178,9 @@ These figures relate to another phenomenon in the US (and many other countries) 
 
 Somehow, we need to deal with the fact that a few people in our sample are very well paid, which makes the difference between men and women hard to see on our graph, despite the difference being in the range of several thousand dollars a year. One of the easiest ways around this is to exclude these very high salaries from our graph.
 
-Looking at our previous density plots, we can see that the vast majority of people are paid less than $150k a year. So, let's restrict our plotting to just those people. 
+Looking at our previous density plots, we can see that the vast majority of people are paid less than $150k a year. So, let's restrict our plotting to just those people.
 
-We do this using the `filter` command. It's called _filter_ because it works a bit like the filter paper in a chemistry lab (or in your coffee machine) -- stopping some things, while letting other things pass through. We can filter our data by telling R *what data we want to keep*. Here, we want to keep all people who earn less than £150k, and filter out the rest. So the filter we need is `filter(income < 150000)`, where `<` means "less than". 
+We do this using the `filter` command. It's called _filter_ because it works a bit like the filter paper in a chemistry lab (or in your coffee machine) -- stopping some things, while letting other things pass through. We can filter our data by telling R *what data we want to keep*. Here, we want to keep all people who earn less than £150k, and filter out the rest. So the filter we need is `filter(income < 150000)`, where `<` means "less than".
 
 We'll be using this dataset of people with <$150k incomes a few times, so we're going to give it a new name, `cpslow` (or any other name you want, e.g. _angelface_ )
 
@@ -191,9 +191,9 @@ So, what we need to do is *pipe* (`%>%`) our `cpsdata` data to our `filter(incom
 cpslow <- cpsdata %>% filter(income < 150000)
 ```
 
-We can take a look at this new *data frame* by clicking on it in RStudio's _Environment_ window. By looking at the ID numbers, you can see that some people in our original sample have been taken out, because they earned at least $150k. 
+We can take a look at this new *data frame* by clicking on it in RStudio's _Environment_ window. By looking at the ID numbers, you can see that some people in our original sample have been taken out, because they earned at least $150k.
 
-Now, we can plot these filtered data in the same way as before, by changing the name of the dataframe from `cpsdata` to `cpslow`. 
+Now, we can plot these filtered data in the same way as before, by changing the name of the dataframe from `cpsdata` to `cpslow`.
 
 So start with the command `cpsdata %>% ggplot(aes(income, colour=factor(sex))) + geom_density(aes(y=..scaled..))`, **make that change, add it to your script (after copying the comment below), and run it.**.
 
@@ -204,33 +204,33 @@ So start with the command `cpsdata %>% ggplot(aes(income, colour=factor(sex))) +
 If you've got it right, your graph will look like this:
 
 ```{r group-density-filtered, echo = FALSE}
-cpslow %>% ggplot(aes(income, colour=factor(sex))) + geom_density(aes(y=..scaled..)) 
+cpslow %>% ggplot(aes(income, colour=factor(sex))) + geom_density(aes(y=..scaled..))
 ```
 
-At first glance, the two distributions of incomes still look quite similar. For example, the *modal* income -- the point where the graph is highest -- is at quite a low income, and that income is quite similar for both men and women. However, on closer inspection, you'll also see that the red line (females) is above the blue line (men) until about $60k, and below the blue line from then on. This means that more women than men earn less than $60k, and more men than women earn more than $60k. 
+At first glance, the two distributions of incomes still look quite similar. For example, the *modal* income -- the point where the graph is highest -- is at quite a low income, and that income is quite similar for both men and women. However, on closer inspection, you'll also see that the red line (females) is above the blue line (men) until about $60k, and below the blue line from then on. This means that more women than men earn less than $60k, and more men than women earn more than $60k.
 
-So, the gender pay gap is visible in this graph. The graph also illustrates that the difference in this sample is small, relative to the range of incomes. 
+So, the gender pay gap is visible in this graph. The graph also illustrates that the difference in this sample is small, relative to the range of incomes.
 
-**Note:** This doesn't mean that the gender pay gap is less (or more) important than income inequality. These kinds of questions of importance are moral, philosophical, and political. Statistics cannot directly answer these kinds of questions, but they can provide information to inform the debate. 
+**Note:** This doesn't mean that the gender pay gap is less (or more) important than income inequality. These kinds of questions of importance are moral, philosophical, and political. Statistics cannot directly answer these kinds of questions, but they can provide information to inform the debate.
 
 <a name="effsize"></a>
 
 ## Introducing effect size
 
-*Effect size* is a way of talking about the size of the difference between group means, relative to the standard deviations of those groups. We often use the letter *d* to stand for effect size. 
+*Effect size* is a way of talking about the size of the difference between group means, relative to the standard deviations of those groups. We often use the letter *d* to stand for effect size.
 
-If a difference has an effect size of 1, the difference in means is equal to the standard deviation. In social science, an effect size of 1 is considered "large" -- in other words, many of the things we are interested in have an effect size smaller than 1. 
+If a difference has an effect size of 1, the difference in means is equal to the standard deviation. In social science, an effect size of 1 is considered "large" -- in other words, many of the things we are interested in have an effect size smaller than 1.
 
-At the other end of the scale, an effect size of 0.2 is considered to be "small". Note that "small" refers to the size of the effect relative to the standard deviation, not its importance to society. If you have an effect size of 0.2, the difference between your groups is one-fifth the size of the standard deviation. 
+At the other end of the scale, an effect size of 0.2 is considered to be "small". Note that "small" refers to the size of the effect relative to the standard deviation, not its importance to society. If you have an effect size of 0.2, the difference between your groups is one-fifth the size of the standard deviation.
 
-Below are some examples of small, medium, and large effect sizes. In these examples, each group has 100 participants. 
+Below are some examples of small, medium, and large effect sizes. In these examples, each group has 100 participants.
 
 ```{r generate d1, echo=FALSE, cache=FALSE}
 source("make-effect-sizes.R")
 ```
 
 ## Calculating effect size
-In this section, we're going to calculate the effect size for the gender pay gap, in our sample of people who earn less than $150k. We could do this using the `mean` and `sd` summaries we used previously to calculate means and standard deviations. However, there is a quicker way, using the _effsize_ package. 
+In this section, we're going to calculate the effect size for the gender pay gap, in our sample of people who earn less than $150k. We could do this using the `mean` and `sd` summaries we used previously to calculate means and standard deviations. However, there is a quicker way, using the _effsize_ package.
 
 Recall that _packages_ in R are a way to add new commands. If you have not installed `effsize` before, install it once by running `install.packages("effsize")` in the Console. Then load the package using the `library` command.
 
@@ -255,33 +255,33 @@ cohen.d(cpslow$income ~ cpslow$sex)
 ### Explanation of command
 Here's a step-by-step explanation of how the above command works. You'll need this in a moment to calculate effect sizes for yourself.
 
-1. `cohen.d()` - Effect size can be calculated in a number of different ways. The method we're using in this class is one of the most common. It's called _Cohen's d_, and is named after [Jacob Cohen][1]. This is why the command to calculate effect size we used is called `cohen.d()`. 
+1. `cohen.d()` - Effect size can be calculated in a number of different ways. The method we're using in this class is one of the most common. It's called _Cohen's d_, and is named after [Jacob Cohen][1]. This is why the command to calculate effect size we used is called `cohen.d()`.
 
 [1]:https://en.wikipedia.org/wiki/Jacob_Cohen_(statistician)
 
-2. `cpslow$income` - We need to tell `cohen.d()` where to find the numbers we are interested in. In this case, its the `income` column of the `cpslow` _dataframe_ that we made earlier. We tell R this by typing `cpslow$income`. Yes, that's `$`, the same symbol as we use to indicate US Dollars. However, it doesn't mean "dollars" in R. It means _column_. So, `cpslow$income` means the `income`  column of the `cpslow` dataframe. 
+2. `cpslow$income` - We need to tell `cohen.d()` where to find the numbers we are interested in. In this case, its the `income` column of the `cpslow` _dataframe_ that we made earlier. We tell R this by typing `cpslow$income`. Yes, that's `$`, the same symbol as we use to indicate US Dollars. However, it doesn't mean "dollars" in R. It means _column_. So, `cpslow$income` means the `income`  column of the `cpslow` dataframe.
 
 3. `cpslow$sex` - We also need to tell `cohen.d()` whether each income was generated by a man or a woman. This information is in the `sex` column of the `cpslow` _dataframe_, so we type `cpslow$sex`.
 
 4. `~` - This symbol, called a _tilde_, means "as a function of". So, `cpslow$income ~ cps$sex` means "income as a function of sex", and hence `cohen.d(cpslow$income ~ cps$sex)` means "give me the effect size of biological sex on annual income in the `cpslow` dataset.
 
 ### Explanation of output
-The effect size is reported on the second line of text. The minus sign is there because "female" is earlier in the dictionary than "male". R takes the mean incomes in the order their names appear in the dictionary, and so calculates `female - male`. Female mean income is lower than male mean income, so the number is negative. Generally speaking, we can ignore the minus sign when reporting effect sizes. 
+The effect size is reported on the second line of text. The minus sign is there because "female" is earlier in the dictionary than "male". R takes the mean incomes in the order their names appear in the dictionary, and so calculates `female - male`. Female mean income is lower than male mean income, so the number is negative. Generally speaking, we can ignore the minus sign when reporting effect sizes.
 
-So the effect size is about 0.20. This is typically described as a _small_ effect size --- although recall that this just means the standard deviation is about five times larger than the difference between the groups. It does not mean "small" in the sense of "unimportant". Statistics cannot tell you which group differences are socially or morally important. 
+So the effect size is about 0.20. This is typically described as a _small_ effect size --- although recall that this just means the standard deviation is about five times larger than the difference between the groups. It does not mean "small" in the sense of "unimportant". Statistics cannot tell you which group differences are socially or morally important.
 
-The other lines of output report the _95% confidence interval_ for the effect size. This tell us that while our best estimate of the effect size on the basis of the data we have is about 0.202, it might not be exactly 0.202. However, we can be pretty confident the effect size is somewhere between 0.16 and 0.24. If we had more data, we could be more precise. 
+The other lines of output report the _95% confidence interval_ for the effect size. This tell us that while our best estimate of the effect size on the basis of the data we have is about 0.202, it might not be exactly 0.202. However, we can be pretty confident the effect size is somewhere between 0.16 and 0.24. If we had more data, we could be more precise.
 
 In the R output, _lower_ and _upper_ indicate the two ends of the range of likely effect sizes.
 
 <a name="ex1"></a>
 
 ## Exercise 1
-In this exercise, you'll consolidate what you've learned so far. 
+In this exercise, you'll consolidate what you've learned so far.
 
-**The task is to further examine this sample of participants who are living in the US, and earning less than $150k (`cpslow`).** 
+**The task is to further examine this sample of participants who are living in the US, and earning less than $150k (`cpslow`).**
 
-Specifically, the question to answer is whether people born in the US earn more. In order to do this, you should calculate the mean income for each group, produce a density plot with one line for each group, and calculate the effect size. 
+Specifically, the question to answer is whether people born in the US earn more. In order to do this, you should calculate the mean income for each group, produce a density plot with one line for each group, and calculate the effect size.
 
 ```
 # EXERCISE 1
@@ -299,20 +299,20 @@ cohen.d(cpslow$income ~ cpslow$native)
 <a name="ex2"></a>
 
 ## Exercise 2
-This second exercise is similar to the first, but a bit more challenging. 
+This second exercise is similar to the first, but a bit more challenging.
 
-**The task is to calculate mean income, a density plot, and effect size, for private versus public sector workers in the `cpslow` dataset.** 
+**The task is to calculate mean income, a density plot, and effect size, for private versus public sector workers in the `cpslow` dataset.**
 
 The thing that makes this slightly harder is that the datatset has more than two job types, so you're going to use the `filter` command to get just the participants in  _private_ or _public_ jobs. Here's how...
 
 <a name="more-filter"></a>
 
 ### More on filters
-You can list the values you want to keep with `filter`, using `|` to seperate them. For example, if you wanted to keep just the `master` and `doctor` levels of the dataset you'd write: 
+You can list the values you want to keep with `filter`, using `|` to seperate them. For example, if you wanted to keep just the `master` and `doctor` levels of the dataset you'd write:
 
 `cpslow %>% filter(education == "master" | education == "doctor")`
 
-The symbol `|` is read "or", so the command is "give me the people who have a Master's degree or a Doctoral degree". On a standard UK keyboard you'll find `|` to the immediate left of `Z`. On a UK Mac keyboard, it's immediately to the right of `"`. 
+The symbol `|` is read "or", so the command is "give me the people who have a Master's degree or a Doctoral degree". On a standard UK keyboard you'll find `|` to the immediate left of `Z`. On a UK Mac keyboard, it's immediately to the right of `"`.
 
 If you get an error, please see [common errors](common-errors.html).
 
@@ -334,6 +334,6 @@ cohen.d(pubpri$income ~ pubpri$job)
 
 ___
 
-This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0. 
+This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0.
 
 

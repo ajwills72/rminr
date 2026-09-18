@@ -46,13 +46,13 @@ In the [factorial differences](anova3.html)  worksheet, we did a two-factor Baye
 
 # Getting started
 
-Return to the project that you used for the [factorial differences](anova3.html) worksheet, which you named **rminr-data**. 
+Return to the project that you used for the [factorial differences](anova3.html) worksheet, which you named **your project**.
 
-Ensure you have the files required for this worksheet, by asking git to "`pull`" the repository. Select the `Git` tab, which is located in the row of tabs which includes the `Environment` tab. Click the `Pull` button with a downward pointing arrow. A window will open showing the files which have been pulled from the repository. Close the `Git pull` window.
+Ensure you have the files required for this worksheet, by use the files included in this archive; no repository pull is needed.
 
-Now, open a new blank script and save it as **anova4.R**. Put all comments and commands in that script, and save the script regularly. 
+Now, open a new blank script and save it as **anova4.R**. Put all comments and commands in that script, and save the script regularly.
 
-First, you'll need to load some standard packages, load the data we used in the previous worksheet, and set the appropriate columns up as factors. 
+First, you'll need to load some standard packages, load the data we used in the previous worksheet, and set the appropriate columns up as factors.
 
 **Enter these comments and commands into your script, and run them:**
 
@@ -78,7 +78,7 @@ words$block <- factor(words$block)
 
 We can use `anovaBF` to do a factorial Bayesian ANOVA where both factors are between-subjects. It works exactly the same way as before. For example, we can do a factorial Bayesian ANOVA for  `sex` and `medit` like this:
 
-First we create a subject-level summary of the data - this involves averaging across the 90 data points that contribute to the reaction time (RT) measure for each participant. We do this using the now-familiar `group_by` and `summarise` commands. 
+First we create a subject-level summary of the data - this involves averaging across the 90 data points that contribute to the reaction time (RT) measure for each participant. We do this using the now-familiar `group_by` and `summarise` commands.
 
 **Enter this comment and commands into your script, and run them:**
 
@@ -96,7 +96,7 @@ bf2bs <- anovaBF(
     data = data.frame(wordsum))
 ```
 
-Note that, unlike the Bayesian ANOVAs we previously did that included a within-subjects factor, we do not include `+ subj` or `whichRandom = 'subj'` in this entirely between-subjects ANOVA. This is because we have created a subject-level summary of the data in which each participant only contributes one data point. 
+Note that, unlike the Bayesian ANOVAs we previously did that included a within-subjects factor, we do not include `+ subj` or `whichRandom = 'subj'` in this entirely between-subjects ANOVA. This is because we have created a subject-level summary of the data in which each participant only contributes one data point.
 
 ## Explanation of output
 
@@ -109,9 +109,9 @@ bf2bs
 
 ### `[1] medit`
 
-This is the **main effect** of training type, `medit`. More specifically, it is a test of the hypothesis that `medit`, affects `rt`. 
+This is the **main effect** of training type, `medit`. More specifically, it is a test of the hypothesis that `medit`, affects `rt`.
 
-The Bayes Factor for this hypothesis is around 718, which is strong evidence that there is a main effect of meditation training. If you've got a particularly good memory, you'll have noticed this isn't quite the same Bayes Factor as we saw for the main effect of meditation in [this analysis](anova3.html#ex1) of the same data. As with many forms of multi-factor ANOVA (including traditional, p-value, ones) the evidence terms you get depend somewhat on the formula you specify. Here, you included `sex` but not `congru` as factors; in the previous analysis, it was the other way around. This can affect the results you get. 
+The Bayes Factor for this hypothesis is around 718, which is strong evidence that there is a main effect of meditation training. If you've got a particularly good memory, you'll have noticed this isn't quite the same Bayes Factor as we saw for the main effect of meditation in [this analysis](anova3.html#ex1) of the same data. As with many forms of multi-factor ANOVA (including traditional, p-value, ones) the evidence terms you get depend somewhat on the formula you specify. Here, you included `sex` but not `congru` as factors; in the previous analysis, it was the other way around. This can affect the results you get.
 
 If the type of analysis you choose to conduct affects the central conclusions of your study, then that is normally an indication that you need to replicate your result with a larger sample. Conclusions should be robust to variations in analysis technique.
 
@@ -128,13 +128,13 @@ As before, `anovaBF` does not directly give us a Bayes Factor for the interactio
 
 #### [3] `medit + sex`
 
-This the hypothesis that there is a main effect of both factors. There is no assumption that the two main effects are of the same size. This 'main effects' hypothesis is compared against the null hypothesis, i.e. that neither `medit` nor `sex` affect `rt`. 
+This the hypothesis that there is a main effect of both factors. There is no assumption that the two main effects are of the same size. This 'main effects' hypothesis is compared against the null hypothesis, i.e. that neither `medit` nor `sex` affect `rt`.
 
 The BF for this hypothesis is large (about 1200). We'd expect this, given that there was substantial evidence for `medit` alone.
 
 #### [4] `medit + sex + medit:sex`
 
-This is the Bayes Factor for the hypothesis that there are main effects for both factors (`medit + sex`) _and_ that the two factors interact (`+ medit:sex`). This is again compared against the null hypothesis that neither `medit` nor `sex` have any effect. 
+This is the Bayes Factor for the hypothesis that there are main effects for both factors (`medit + sex`) _and_ that the two factors interact (`+ medit:sex`). This is again compared against the null hypothesis that neither `medit` nor `sex` have any effect.
 
 The BF for this hypothesis is also large (about 85). We'd expect this, because there was substantial evidence for the 'main effects' hypothesis `medit + congru`. However, the BF is considerably lower than for the `main effects` hypothesis.
 
@@ -160,17 +160,17 @@ are better ways. For further discussion, see [Bayesian ANOVA for Pros](anova5.ht
 
 We can also use `anovaBF` to look at two within-subjects factors. Again, this works just the same way as before. For example, we can do a factorial Bayesian ANOVA for `congru` and `block` like this:
 
-First, we create the appropriate subject-level summary for our analysis. 
+First, we create the appropriate subject-level summary for our analysis.
 
 **Enter this comment and commands into your script, and run them:**
 
 ```{r preproc2,message=FALSE}
 # Create subject-level summary
 wordsum2 <- words %>%
-  group_by(subj, congru,block) %>% 
+  group_by(subj, congru,block) %>%
   summarise(rt = mean(rt))
 ```
-Next, for the purposes of this worksheet, we're also going to reduce the sample size from 420 participants to 60 participants. This is something you'd never do in a real analysis, but here we need to address the issue that within-subject Bayesian ANOVAs can take a very long time to run when we have, as in this case, several hundred participants (in this case, it would take around 15 minutes). The correct approach when analysing your own data is, of course, to just wait for the analysis to finish. 
+Next, for the purposes of this worksheet, we're also going to reduce the sample size from 420 participants to 60 participants. This is something you'd never do in a real analysis, but here we need to address the issue that within-subject Bayesian ANOVAs can take a very long time to run when we have, as in this case, several hundred participants (in this case, it would take around 15 minutes). The correct approach when analysing your own data is, of course, to just wait for the analysis to finish.
 
 **Enter this comment and command into your script, and run it:**
 
@@ -208,9 +208,9 @@ The Bayes Factor is very large (about 3,800), meaning the evidence for a main ef
 
 ### `[2] block`
 
-This is the **main effect** of test `block`. More specifically, it is a test of the hypothesis that `block`, affects `rt`. 
+This is the **main effect** of test `block`. More specifically, it is a test of the hypothesis that `block`, affects `rt`.
 
-The Bayes Factor for this hypothesis is around 0.04, which is strong evidence for the _absence_ of an effect of block. 
+The Bayes Factor for this hypothesis is around 0.04, which is strong evidence for the _absence_ of an effect of block.
 
 ### The interaction
 
@@ -218,13 +218,13 @@ As before, `anovaBF` does not directly give us a Bayes Factor for the interactio
 
 #### [3] `congru + block`
 
-This the hypothesis that there is a main effect of both factors. There is no assumption that the two main effects are of the same size. This 'main effects' hypothesis is compared against the null hypothesis, i.e. that neither `congru` nor `block` affect `rt`. 
+This the hypothesis that there is a main effect of both factors. There is no assumption that the two main effects are of the same size. This 'main effects' hypothesis is compared against the null hypothesis, i.e. that neither `congru` nor `block` affect `rt`.
 
 The BF for this hypothesis is large - about 135. We'd expect this, given that there was substantial evidence for `congru` alone.
 
 #### [4] `congru + block + congru:block`
 
-This is the Bayes Factor for the hypothesis that there are main effects for both factors (`congru + block`) _and_ that the two factors interact (`+ congru:block`). This is again compared against the null hypothesis that neither `congru` nor `block` have any effect. 
+This is the Bayes Factor for the hypothesis that there are main effects for both factors (`congru + block`) _and_ that the two factors interact (`+ congru:block`). This is again compared against the null hypothesis that neither `congru` nor `block` have any effect.
 
 The BF for this hypothesis is considerably lower than for the `main effects` hypothesis.
 
@@ -248,7 +248,7 @@ It is also possible to use `anovaBF` to analyse a single factor, between-subject
 ```{r bf-1bs,message=FALSE}
 # Create subject-level summary
 wordsum3 <- words %>%
-  group_by(subj, medit) %>% 
+  group_by(subj, medit) %>%
   summarise(rt = mean(rt))
 # Calculate Bayes Factor
 bf1bs <- anovaBF(
@@ -262,7 +262,7 @@ bf1bs
 
 # More than two factors?
 
-Although in principle it is possible to run Bayesian ANOVAs with more than two factors, they can take hours or days to run with realistically large data sets. They also produce output that is considerably harder to interpret than the output of two-factor analyses. For these reasons, we only look at up to two-factor Bayesian ANOVA in these worksheets. If you need to conduct an ANOVA with more than two factors, consider using [traditional ANOVA](more-on-anova.html) techniques (bearing in mind, of course, the interpretative difficulties surrounding p values - and that _any_ kind of analysis with more than two factors is often going to be pretty difficult to interpret). 
+Although in principle it is possible to run Bayesian ANOVAs with more than two factors, they can take hours or days to run with realistically large data sets. They also produce output that is considerably harder to interpret than the output of two-factor analyses. For these reasons, we only look at up to two-factor Bayesian ANOVA in these worksheets. If you need to conduct an ANOVA with more than two factors, consider using [traditional ANOVA](more-on-anova.html) techniques (bearing in mind, of course, the interpretative difficulties surrounding p values - and that _any_ kind of analysis with more than two factors is often going to be pretty difficult to interpret).
 
 # Exercise 1
 
@@ -284,7 +284,7 @@ cf_raw %>% head(6) %>% pander()
 
 In this experiment, participants read a scenario describing some events leading up to an accident. The scenario was written from either a first-person or a third-person perspective. Next, they generated some counterfactual thoughts in relation to the scenario. For example, "If only I hadn't been looking at my phone, then ...". These thoughts were coded as either predictive, or not predictive of whether the accident occurred. Participants rated how much the protagonist was to blame for the accident, on a scale of 1 (strongly disagree) to 7 (strongly agree).
 
-It's crucial to look at your data before analysing it. Start by calculating the mean `blame` score in each of the four conditions of this experiment. You can do this using the `group_by` and `summarise` commands that we have covered in many previous worksheets; for example, in the [group differences](group-differences.html#group) worksheet. 
+It's crucial to look at your data before analysing it. Start by calculating the mean `blame` score in each of the four conditions of this experiment. You can do this using the `group_by` and `summarise` commands that we have covered in many previous worksheets; for example, in the [group differences](group-differences.html#group) worksheet.
 
 If you've done it correctly, your means should look like this:
 
@@ -306,7 +306,7 @@ cf_sum %>%
     theme_bw()
 ```
 
-Now, do your Bayesian ANOVA. Set each of the independent variables as a `factor` and then use `anovaBF` to conduct the Bayesian ANOVA. There is only one observation for each participant in this dataset, so don't include `subj`or `whichRandom=subj`. 
+Now, do your Bayesian ANOVA. Set each of the independent variables as a `factor` and then use `anovaBF` to conduct the Bayesian ANOVA. There is only one observation for each participant in this dataset, so don't include `subj`or `whichRandom=subj`.
 
 Your results should look similar to this:
 
@@ -322,7 +322,7 @@ cf_bf[4] / cf_bf[3]
 
 # Exercise 2
 
-The data for this second exercise come from a within-subjects experiment with two factors. Start by loading the data, selecting the columns and rows we'll need for this analysis, and removing missing data (`NA`). 
+The data for this second exercise come from a within-subjects experiment with two factors. Start by loading the data, selecting the columns and rows we'll need for this analysis, and removing missing data (`NA`).
 
 **Enter these comments and commands into your script, and run them:**
 
@@ -355,7 +355,7 @@ con_sum %>%
     theme_bw()
 ```
 
-Next, calculate Bayes Factors for the main effects and the interaction. In order to do this, you will first have to create a subject-level summary of your data - you can then pass this your your Bayesian ANOVA. 
+Next, calculate Bayes Factors for the main effects and the interaction. In order to do this, you will first have to create a subject-level summary of your data - you can then pass this your your Bayesian ANOVA.
 
 Your results should look similar to this:
 
@@ -376,6 +376,6 @@ priming_bf[4] / priming_bf[3]
 ___
 
 
-This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0. 
+This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0.
 
 

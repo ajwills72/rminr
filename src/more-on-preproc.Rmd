@@ -16,7 +16,7 @@ knitr::opts_chunk$set(echo = TRUE, comment = NA)
 
 # Adding participant numbers
 
-Sometimes, a data file does not contain a participant number within it, it's just provided as part of the filename. If you encounter this issue, here's how to resolve it using the `add_column` command. The following assumes you have a project in Rstudio associated with the _git_ repository used in the [preprocessing](preproc.html) worksheet.
+Sometimes, a data file does not contain a participant number within it, it's just provided as part of the filename. If you encounter this issue, here's how to resolve it using the `add_column` command. The following assumes you have a project in Rstudio associated with a project used in the [preprocessing](preproc.html) worksheet.
 
 ```{r load, message=FALSE}
 library(tidyverse)
@@ -27,14 +27,14 @@ subj.11 <- read_csv('rawdata/subject-11.csv') %>%
 In the case that you need to read multiple participants' datafiles at once, we saw how to use `do` with `read_csv` in the [preproc worksheet](preproc.html):
 
 ```{r, message=F}
-alldat <- tibble(filename = list.files("rawdata", "*.csv", full.names=TRUE)) %>% 
-  group_by(filename) %>% 
+alldat <- tibble(filename = list.files("rawdata", "*.csv", full.names=TRUE)) %>%
+  group_by(filename) %>%
   do(read_csv(.$filename))
 ```
 
 
 **Explanation of command**: This is the same code we saw in the [preproc worksheet](preproc.html). We use `list.files` to produce a list of all the files in the `rawdata` directory which end in `.csv`.  This list is used to make a column in a new dataframe, which is piped to the `group_by(filename)` function.
-The grouped data is then piped to the `do` function. This works on each group (in this case, each filename) in turn and uses the `filename` column as input the `read_csv` command.  
+The grouped data is then piped to the `do` function. This works on each group (in this case, each filename) in turn and uses the `filename` column as input the `read_csv` command.
 Because `read_csv` produces a dataframe as output, these are automatically combined into a single dataframe of all participants. The `filename` column remains and provides a record of where the data came from.
 
 When you run this code, you should notice that `alldat` has a new column, `filename`. This contains the original file name of the raw data.
@@ -50,9 +50,9 @@ str_sub("investment", 3, 6)
 Looking at the filename `rawdata/subject-11.csv`, we can see that the participant number starts at the 17th position and ends at the 18th. This will be true for any two-digit participant number (a good reason to start subject numbers at 11 rather than at 1). So, putting this all together, we get:
 
 ```{r fulload, message=FALSE}
-alldat <- tibble(filename = list.files("rawdata", "*.csv", full.names=TRUE)) %>% 
-  group_by(filename) %>% 
-  do(read_csv(.$filename)) %>% 
+alldat <- tibble(filename = list.files("rawdata", "*.csv", full.names=TRUE)) %>%
+  group_by(filename) %>%
+  do(read_csv(.$filename)) %>%
   mutate(subj = str_sub(filename, 17, 18), .before="filename")
 ```
 

@@ -56,9 +56,9 @@ We don't use RStudio to enter data by hand. Instead, we use a spreadsheet applic
 
 ## Uploading files to RStudio server
 
-6. Log in to <a href = "https://rstudio.plymouth.ac.uk" target = "blank">RStudio server</a>, if you have not already done so.
+6. Open RStudio and the project where you want to use the data. If you use a hosted RStudio server, open the same project there.
 
-7. Click on the 'Files' tab in RStudio server.
+7. Click on the 'Files' tab in RStudio.
 
 8. Click the 'Upload' button.
 

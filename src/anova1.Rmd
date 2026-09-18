@@ -52,7 +52,7 @@ In the [Absolute Beginners' Guide to R](evidence.html#bf) and in the [revision w
 
 ```{r bayes-factor-table, echo = FALSE, warning = FALSE, message = FALSE}
 library(viridis)
-library(gt) 
+library(gt)
 
 bf <- read_csv("bayes_factors.csv")
 bf_table <- gt(bf)
@@ -79,15 +79,15 @@ In this worksheet, we'll cover  how to calculate a Bayes Factor for a simple _wi
 
 The technique we're going to use is called _ANOVA_, short for **AN**alysis **O**f **VA**riance. It's probably the most used analysis technique in psychology. Its name (ANOVA) has a long history that isn't really worth getting into here, particularly as it comes from our history in psychology of using p-values as evidence terms. As we've covered [previously](evidence.html#p-wrong), p-values have no interpretation that is simultaneously accurate, simple, and useful. In this worksheet, we focus on a form of ANOVA that calculates Bayes Factors, which are more easily interpretable. If you ever need to calculate a traditional ANOVA, take a look at the [traditional ANOVA](more-on-anova.html) worksheet.
 
-# Getting started 
+# Getting started
 
-In the [preprocessing](preproc.html) worksheet, you loaded data from a _git_ repository into an R project. **Go back to that project now on RStudio; the project was called `rminr-data`** This is very important. Make sure you are in the `rminr-data` project, changing your Rstudio project using the drop-down list on the top right of Rstudio if you need to (change to the  `rminr-data` project you used for the preprocessing worksheet). If you do not do this, the rest of this worksheet will not work. 
+In the [preprocessing](preproc.html) worksheet, you loaded data from a project into an R project. **Go back to that project now on RStudio; the project was called `your project`** This is very important. Make sure you are in your project, changing your Rstudio project using the drop-down list on the top right of Rstudio if you need to (change to the  `your project` project you used for the preprocessing worksheet). If you do not do this, the rest of this worksheet will not work.
 
-Now that you're in the `rminr-data` project, create a new script called **anova1.R**, put all the comments and commands you use in this worksheet into that file, and save regularly. 
+Now that you're in your project, create a new script called **anova1.R**, put all the comments and commands you use in this worksheet into that file, and save regularly.
 
 # Clearing the environment
 
-You will notice that your _Environment_ still contains all the data frames from the previous worksheet. You can leave them there if you like, but some people prefer to start with a "clean slate". You can remove data frames with the `rm` command (as in **r**e**m**ove). For example, to remove the `dat` data frame you'd 
+You will notice that your _Environment_ still contains all the data frames from the previous worksheet. You can leave them there if you like, but some people prefer to start with a "clean slate". You can remove data frames with the `rm` command (as in **r**e**m**ove). For example, to remove the `dat` data frame you'd
 type `rm(dat)`.
 
 The `rm` command can also be used with the `ls()` command. The `ls()` command gives you a list of the names of the things in your environment. The command is called `ls` because it **l**i**s**ts them. We can use the `ls()` and `rm()` commands together to remove everything from our _Environment_, as follows.
@@ -100,13 +100,13 @@ Add the following comments and commands to your script and run them:
 rm(list = ls())
 ```
 
-Notice that your _Environment_ tab in Rstudio is now empty. This command only clears the _Environment_, it leaves all the files in your project as they were (you can still see them in the _Files_ panel). 
+Notice that your _Environment_ tab in Rstudio is now empty. This command only clears the _Environment_, it leaves all the files in your project as they were (you can still see them in the _Files_ panel).
 
 # Loading data
 
 <a name="load"></a>
 
-**Now add these comments and commands to your script, and run them**, to load this new  data set: 
+**Now add these comments and commands to your script, and run them**, to load this new  data set:
 
 ```{r newdat, message=FALSE}
 # Load tidyverse
@@ -115,7 +115,7 @@ library(tidyverse)
 words <- read_csv("wordnaming2.csv")
 ```
 
-Now click on the `words` data frame in the _Environment_ tab, and take a look. You'll see that its a data frame with 10 columns and 37,800 rows. 
+Now click on the `words` data frame in the _Environment_ tab, and take a look. You'll see that its a data frame with 10 columns and 37,800 rows.
 
 ## Description of data set
 
@@ -127,13 +127,13 @@ In this experiment, the word naming task is being used to study the effects of m
 
 So, in this experiment, 140 participants were randomly allocated to a meditation-training condition, in which they received a week's training on how to meditate, before doing the word naming experiment. Another 140 were assigned to a no-training condition. These people  just did the word naming experiment, with no meditation training. Finally, another 140 people were assigned to a relaxation-training condition, in which they received a week's training, but on some relaxation techniques, instead of meditation.
 
-Within each group of participants, half were male and half were female. Each participant completed 90 trials of the word naming task. They did 30 trials, took a short break, then did another 30 trials, took another short break, and did the final 30 trials. This gives us 37,800 word naming trials in total. On each trial, the participant either named the word correctly, or they didn't. Either way, they took a certain amount of time (measured in milliseconds) to name the word. 
+Within each group of participants, half were male and half were female. Each participant completed 90 trials of the word naming task. They did 30 trials, took a short break, then did another 30 trials, took another short break, and did the final 30 trials. This gives us 37,800 word naming trials in total. On each trial, the participant either named the word correctly, or they didn't. Either way, they took a certain amount of time (measured in milliseconds) to name the word.
 
 Here's a summary of what each of the columns in the data set contains:
 
 | Column | Description                             | Values             |
 | ------ | --------------------------------------- | ------------------ |
-| subj   | Unique anonymous participant number     | 1-420               | 
+| subj   | Unique anonymous participant number     | 1-420               |
 | sex    | Biological sex of the participant       | "male", "female"   |
 | medit  | Whether the participant has had meditation, relaxation, or no training | "meditate", "relax", "control" |
 | block  | Block of trials                         | 1-3                |
@@ -195,7 +195,7 @@ The data frame is still very long, because it contains data for every trial. Wha
 # Group by 'subj' and 'congru'; calculate mean RT; pass to 'wordctrlCIsum'
 ```
 
-and then **write and run a command** to _group_ the data by participant (`subj`) and experimental condition (`congru`), using the `group_by` command, get the mean reaction times using the `summarise` command, and put this summarised data into a new data frame called `wordctrlCIsum`. If you need a reminder of how to group and summarise data, take a look at the [preprocessing](preproc.html#filter) worksheet. 
+and then **write and run a command** to _group_ the data by participant (`subj`) and experimental condition (`congru`), using the `group_by` command, get the mean reaction times using the `summarise` command, and put this summarised data into a new data frame called `wordctrlCIsum`. If you need a reminder of how to group and summarise data, take a look at the [preprocessing](preproc.html#filter) worksheet.
 
 **Column names with `summarize`**: There is one new thing to learn here, though, relative to the previous worksheet. The column containing the RT data in this new data frame will need to have the name `rt`, because we use this name later on. You can set the column name within the `summarise` command. For example, `summarise(acc = mean(acc))` takes the mean of the column `acc` and puts the answer into a column called `acc` in your new data frame. If you just use `summarise(mean(acc))` then the column name you end up with is `mean(acc)` and this would be a pain to use in later commands, so we rename the column as `acc` by typing `summarise(acc = mean(acc))` instead.
 
@@ -224,9 +224,9 @@ If you get it right, it should look like this:
 wordctrlCIsum %>% ggplot(aes(rt, colour = congru)) + geom_density(aes(y = ..scaled..))
 ```
 
-We can see a few different things in  this plot. First, there's quite a lot of variation between people in how fast they react, with mean reaction time for incongruent trials anywhere from about 200 milliseconds to 800 milliseconds. Second, reaction times seem to vary less on congruent trials (averages around 400-600 milliseconds). Third, the peak of the incongruent distribution is slightly to the right of the congruent distribution, suggesting that, overall, incongruent trials might take a bit longer to react to than congruent trials. 
+We can see a few different things in  this plot. First, there's quite a lot of variation between people in how fast they react, with mean reaction time for incongruent trials anywhere from about 200 milliseconds to 800 milliseconds. Second, reaction times seem to vary less on congruent trials (averages around 400-600 milliseconds). Third, the peak of the incongruent distribution is slightly to the right of the congruent distribution, suggesting that, overall, incongruent trials might take a bit longer to react to than congruent trials.
 
-But...looking at the data this way misses the most important thing about the design of this experiment, which is that it is _within subjects_. This is not two different groups of people, one who see only congruent trials, and the other who only see incongruent trials. Every participant sees both types. So, there's a better way to look at this data, particularly when (as here) people differ a lot in their average reaction time. 
+But...looking at the data this way misses the most important thing about the design of this experiment, which is that it is _within subjects_. This is not two different groups of people, one who see only congruent trials, and the other who only see incongruent trials. Every participant sees both types. So, there's a better way to look at this data, particularly when (as here) people differ a lot in their average reaction time.
 
 What we can do is calculate a _difference score_ for each participant. In other words, how much longer each participant takes to respond to incongruent trials, than congruent ones.
 
@@ -242,7 +242,7 @@ In order to do this, we have to learn some new types of data preprocessing - _pi
 
 _Pivoting_ is where you take a long data file (lots of rows, few columns) and make it wider. Or where you take a wide data file (lots of columns, few rows) and make it longer. In this case, we need to make `wordctrlCIsum` wider, for reasons that will become clearer in the next step.
 
-To make a data frame wider, we can use the `pivot_wider` command from the `tidyverse` package. 
+To make a data frame wider, we can use the `pivot_wider` command from the `tidyverse` package.
 To illustrate, **enter the following comment and command into your R script and run it**:
 
 ```{r pivot1}
@@ -252,7 +252,7 @@ ctrl <- wordctrlCIsum %>% pivot_wider(names_from = congru, values_from = rt)
 
 and look at `ctrl` in the Environment window, we can see that it now has fewer rows (140). It has the same number of columns, but the column names are different. Specifically, we now have one row for each participant and we have one column for their congruent reaction time, and one column for their incongruent reaction time.
 
-**Explanation of command:** The `pivot_wider` command has two components: `names_from` and `values_from`. The first one, `names_from`, tells R which column you want to use to as the column names in your new, wider data frame. In this case, we want to take them from the `congru` column of `wordctrlCIsum`. The `values_from` part tells R which column contains the data you want to put in these new columns. In this case, it's the `rt` column of `wordctrlCIsum`. 
+**Explanation of command:** The `pivot_wider` command has two components: `names_from` and `values_from`. The first one, `names_from`, tells R which column you want to use to as the column names in your new, wider data frame. In this case, we want to take them from the `congru` column of `wordctrlCIsum`. The `values_from` part tells R which column contains the data you want to put in these new columns. In this case, it's the `rt` column of `wordctrlCIsum`.
 
 <a name="mutate"></a>
 
@@ -267,9 +267,9 @@ _Mutation_ in this context means to take some things and change them to make som
 ctrldiff <- ctrl %>% mutate(diff = incong - cong)
 ```
 
-Look at `ctrldiff` in the _Environment_ window - you will see that it has a fourth column, `diff` and that each row contains the incongruent reaction minus the congruent reaction time. For most participants, the difference is positive, meaning that incongruent trials are slower. However, some participants are the other way around (e.g. participant 146). 
+Look at `ctrldiff` in the _Environment_ window - you will see that it has a fourth column, `diff` and that each row contains the incongruent reaction minus the congruent reaction time. For most participants, the difference is positive, meaning that incongruent trials are slower. However, some participants are the other way around (e.g. participant 146).
 
-**Explanation of command:** It's the `mutate` command that's doing all the work here. We give it a name for the new column we want to create, in this case `diff`. We then tell it how to calculate that new column. In this case, by subtracting the congruent reaction time from the incongruent reaction time, `incong - cong`. 
+**Explanation of command:** It's the `mutate` command that's doing all the work here. We give it a name for the new column we want to create, in this case `diff`. We then tell it how to calculate that new column. In this case, by subtracting the congruent reaction time from the incongruent reaction time, `incong - cong`.
 
 <a name="densediff"></a>
 
@@ -296,7 +296,7 @@ It is these differences, rather than the absolute reaction times for incongruent
 
 # Bayesian ANOVA (within-subjects)
 
-We can use the command `anovaBF` to look at the evidence for this _within-subjects_ effect of congruency. This command takes data in the format of our `wordctrlCIsum` data frame, so we're almost ready to go. But, before we can do this analysis, we have to tell R which columns of this data frame are _factors_. 
+We can use the command `anovaBF` to look at the evidence for this _within-subjects_ effect of congruency. This command takes data in the format of our `wordctrlCIsum` data frame, so we're almost ready to go. But, before we can do this analysis, we have to tell R which columns of this data frame are _factors_.
 
 ## Factors
 
@@ -346,11 +346,11 @@ anovaBF(formula = rt ~ congru + subj,
 
 ### Explanation of command
 
-Much of this `anovaBF` command is the same as for a [Bayesian t-test](). For example, `formula = rt ~ congru` means we want to know the effect of the congruency condition (`congru`) on the dependent measure of reaction time (`rt`). 
+Much of this `anovaBF` command is the same as for a [Bayesian t-test](). For example, `formula = rt ~ congru` means we want to know the effect of the congruency condition (`congru`) on the dependent measure of reaction time (`rt`).
 
-The first part that's new is that the `formula` contains `+ subj`. Unlike for `ttestBF`, we always need to include this for `anovaBF`, so it knows which data came from which participant. What we include is the name of the column that contains the subject IDs -- in this case, `subj`. 
+The first part that's new is that the `formula` contains `+ subj`. Unlike for `ttestBF`, we always need to include this for `anovaBF`, so it knows which data came from which participant. What we include is the name of the column that contains the subject IDs -- in this case, `subj`.
 
-The other part that's new is `whichRandom = "subj"`. The command `whichRandom` means "tell me which _factors_ are **random** factors". A random factor is one where, if you ran the experiment again, the levels of the factor would be different. So, if you ran this experiment again, you'd almost certainly want to test different people, so the levels of the `subj` factor would be different if you re-ran the experiment. This makes it a _random_ factor. In contrast, if you wanted to re-run this experiment in the same way as before, you would still have congruent and incongruent trials, so the levels of the `congru` factor aren't random. They're generally described as _fixed_. The command `anovaBF` assumes factors are fixed unless you tell it they are random. 
+The other part that's new is `whichRandom = "subj"`. The command `whichRandom` means "tell me which _factors_ are **random** factors". A random factor is one where, if you ran the experiment again, the levels of the factor would be different. So, if you ran this experiment again, you'd almost certainly want to test different people, so the levels of the `subj` factor would be different if you re-ran the experiment. This makes it a _random_ factor. In contrast, if you wanted to re-run this experiment in the same way as before, you would still have congruent and incongruent trials, so the levels of the `congru` factor aren't random. They're generally described as _fixed_. The command `anovaBF` assumes factors are fixed unless you tell it they are random.
 
 The remaining part, `data = data.frame(wordctrlCIsum)`, just tells R where to find the data.
 
@@ -360,7 +360,7 @@ The first part of the output is just a way of showing a 'progress bar' on a work
 
 The second part of the output gives the Bayes Factor. The key figure here is `44286971`, which is the Bayes Factor. **Note that your number might be slightly different**. This is what the `±1.23%` part of the above output indicates. The number `44286971` is the correct answer, to within about plus or minus 1%. It's like saying "this person is 2 metres tall, give or take 5cm". The command `anovaBF` can take a while to run, so we prioritise speed over accuracy to some extent. If it was important to get the Bayes Factor precisely correct, we could let R work on the problem for much longer (e.g. overnight). However, the extra time is usually not worth it, and we don't cover how to increase accuracy of the output in this worksheet.
 
-The Bayes Factor on this occasion is around 40 **million**, meaning there is really very strong evidence in support of an effect of congruency. Pretty much however unlikely we thought it was beforehand that an incongruent picture would slow down word naming, we should now be pretty confident that it does. 
+The Bayes Factor on this occasion is around 40 **million**, meaning there is really very strong evidence in support of an effect of congruency. Pretty much however unlikely we thought it was beforehand that an incongruent picture would slow down word naming, we should now be pretty confident that it does.
 
 The rest of the output is not crucial to understand right now, but if you are curious take a look at the [more on Bayes factors](more-on-bf.html) worksheet.
 
@@ -397,7 +397,7 @@ Add the following comment to your script:
 
 ```
 
-and then **write and run a command** that produces a density plot that contains all three conditions. You can do this the same way as [before](group-differences.html#group-density), just use `wordctrlsum` instead of `wordctrlsumCI`. 
+and then **write and run a command** that produces a density plot that contains all three conditions. You can do this the same way as [before](group-differences.html#group-density), just use `wordctrlsum` instead of `wordctrlsumCI`.
 
 _EXPECTED OUTPUT_: This is what the graph should look like:
 
@@ -405,7 +405,7 @@ _EXPECTED OUTPUT_: This is what the graph should look like:
 wordctrlsum %>% ggplot(aes(rt, colour = congru)) + geom_density(aes(y = ..scaled..))
 ```
 
-The main thing to notice about this density plot is that the reaction times for neutral trials are intermediate between the congruent and incongruent trials, both in terms of their mean, and in terms of their variance. 
+The main thing to notice about this density plot is that the reaction times for neutral trials are intermediate between the congruent and incongruent trials, both in terms of their mean, and in terms of their variance.
 
 It's still the case that it is the _difference_ between conditions that is key here, because this is a within-subjects experiment. However, there are three differences we could work out here (incongruent - neutral, neutral - congruent, incongruent - congruent), so we're going to leave further graphing until a bit later.
 
@@ -420,7 +420,7 @@ The command `anovaBF` allows us to calculate a Bayes Factor across all three con
 
 ```
 
-and then **insert and run some commands** to perform a Bayesian ANOVA that includes all three levels of the congruency condition. 
+and then **insert and run some commands** to perform a Bayesian ANOVA that includes all three levels of the congruency condition.
 
 _EXPECTED OUTPUT_: The correct output is as follows (your Bayes Factor may be slightly different):
 
@@ -446,7 +446,7 @@ Calculating the evidence for a particular pair in an experiment is called doing 
 
 # Exercise
 
-The goal in this exercise is to look at the reaction time difference between congruent and neutral trials in the control condition of this experiment. 
+The goal in this exercise is to look at the reaction time difference between congruent and neutral trials in the control condition of this experiment.
 
 **Specifically, the task is to write a new R script that contains _all_ the necessary commands, and _only_ the necessary commands, to do all of the following, in this order:**
 
@@ -457,7 +457,7 @@ The goal in this exercise is to look at the reaction time difference between con
 # EXERCISE
 ```
 
-1. Start your script with the command `rm(list=ls())` (preceded by a suitable comment). This command clears your _Environment_ and so ensures your script is not relying on commands you have previously run. 
+1. Start your script with the command `rm(list=ls())` (preceded by a suitable comment). This command clears your _Environment_ and so ensures your script is not relying on commands you have previously run.
 
 2. Load the packages you need (`tidyverse` and `BayesFactor`). Precede with an appropriate comment.
 
@@ -473,13 +473,13 @@ The goal in this exercise is to look at the reaction time difference between con
 
 Other requirements:
 
-- Use short, meaningful names for data frames. For example, don't call a dataframe `ctrlCI` if in fact it contains the congruent and neutral trial types (call it e.g. `ctrlCN`). 
+- Use short, meaningful names for data frames. For example, don't call a dataframe `ctrlCI` if in fact it contains the congruent and neutral trial types (call it e.g. `ctrlCN`).
 
 ## Expected output, submitting your work
 
-Your output should look like the example below. Note that your Bayes Factor may be _slightly_ different to the one reported here, for the reasons we covered earlier. 
+Your output should look like the example below. Note that your Bayes Factor may be _slightly_ different to the one reported here, for the reasons we covered earlier.
 
-Once it does, **copy and paste your R script for this exercise into PsycEL**. REMEMBER: This should be _all_ the code you need to complete this exercise, and _only_ the code you need to complete this exercise (not any other code from this worksheet). Even with comments, it shouldn't be longer than around 25 lines of code. Your code has to run, produce the correct answer, and not include irrelevant code, to pass this exercise. 
+Once it does, **copy and paste your R script for this exercise into PsycEL**. REMEMBER: This should be _all_ the code you need to complete this exercise, and _only_ the code you need to complete this exercise (not any other code from this worksheet). Even with comments, it shouldn't be longer than around 25 lines of code. Your code has to run, produce the correct answer, and not include irrelevant code, to pass this exercise.
 
 ```{r ex1,echo = FALSE, message = FALSE}
 ## Clear the environment
@@ -523,16 +523,16 @@ anovaBF(formula = rt ~ congru + subj,
 
 Just before we finish, some notes on the issue of _multiple comparisons_, just because this is something you may hear about elsewhere.
 
-To explain the concept of multiple comparisons, I'd like you to imagine you had a factor with five levels. The command `anovaBF` would cope just fine with this. But, with five levels, there are ten pairwise comparisons you could do (1 versus 2, 1 versus 3, etc.). In traditional analysis techniques (i.e. techniques resulting in p values) you will sometimes hear people talking about 'correcting for multiple comparisons'. This is because the more tests you do, the more likely it is that one of them will be 'significant' ($p < .05$), even if there is in fact no difference between any of the levels of the factor. One common suggestion is to use a stricter significance level (e.g. $p < .01$) if you're doing a lot of tests. 
+To explain the concept of multiple comparisons, I'd like you to imagine you had a factor with five levels. The command `anovaBF` would cope just fine with this. But, with five levels, there are ten pairwise comparisons you could do (1 versus 2, 1 versus 3, etc.). In traditional analysis techniques (i.e. techniques resulting in p values) you will sometimes hear people talking about 'correcting for multiple comparisons'. This is because the more tests you do, the more likely it is that one of them will be 'significant' ($p < .05$), even if there is in fact no difference between any of the levels of the factor. One common suggestion is to use a stricter significance level (e.g. $p < .01$) if you're doing a lot of tests.
 
 This is not an approach covered in these worksheets. This is for two reasons:
 
 First, we're using Bayesian methods, not traditional ANOVA. Although issues around multiple comparisons still occur with Bayesian techniques, the issues are not the same, the solutions are not same, and the whole thing is just a bit too complex for this intermediate-level worksheet.
 
-Second, correcting for multiple comparisons is seldom the answer anyway. If you knew you needed to compare those two conditions before you looked at the data, this is known as a _confirmatory_ analysis, and we don't generally adjust for multiple comparisons for such analyses. Alternatively, you might be exploring your data after you collected it. For example, you might observe a difference you didn't expect to see, and do a test on this. This is called _exploratory_ analysis, and it's fine --- it's good to fully explore your data. But, results from _exploratory_ analysis should normally be replicated before we are particularly convinced by them, whatever the p value (or Bayes Factor). In other words, you should run the study again, predict you would see the difference again, and then test for it. This is because, if you look long and hard enough, you'll always find some pattern in a set of data, even if there is not actually anything to be found. 
+Second, correcting for multiple comparisons is seldom the answer anyway. If you knew you needed to compare those two conditions before you looked at the data, this is known as a _confirmatory_ analysis, and we don't generally adjust for multiple comparisons for such analyses. Alternatively, you might be exploring your data after you collected it. For example, you might observe a difference you didn't expect to see, and do a test on this. This is called _exploratory_ analysis, and it's fine --- it's good to fully explore your data. But, results from _exploratory_ analysis should normally be replicated before we are particularly convinced by them, whatever the p value (or Bayes Factor). In other words, you should run the study again, predict you would see the difference again, and then test for it. This is because, if you look long and hard enough, you'll always find some pattern in a set of data, even if there is not actually anything to be found.
 
 ___
 
-This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0. 
+This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0.
 
 

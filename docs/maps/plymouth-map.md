@@ -22,7 +22,7 @@
 
 * [Analyzing your project data](../using-projects.html). Analysing your own data. 
 
-* [Entering data by hand](../entering-data-by-hand.html). Entering data into a spreadsheet. Saving data into your RStudio project.
+* [Entering data by hand](../entering-data-by-hand.html). Entering data into a spreadsheet. Saving data into your project.
 
 ## PSYC412 Psychological Science (Semester 1, from 5th week)
 
