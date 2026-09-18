@@ -39,6 +39,8 @@ The first few steps are the same as in the _Exploring Incomes_ workshop. First, 
 
 Next, create a **new** script file in your project, called `groupdiff.R`.
 
+Download the archived teaching data file [`cps2.csv`](https://github.com/ajwills72/rminr/blob/master/src/cps2.csv) and save it in the same folder as your new script. If your browser displays the file rather than downloading it, use the **Raw** button and then save the page as `cps2.csv`.
+
 Now, you load _tidyverse_ and you load the income _data frame_, by adding the following comments and commands to your R script, and using CTRL+ENTER to run each command in turn:
 
 
@@ -50,7 +52,7 @@ library(tidyverse)
 
 ```{r load,message=FALSE,cache=TRUE}
 # Load data
-cpsdata <- read_csv("https://www.andywills.info/cps2.csv")
+cpsdata <- read_csv("cps2.csv")
 ```
 As a reminder, here's what each of the columns in the income data frame contain:
 
