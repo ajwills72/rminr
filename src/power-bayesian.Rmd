@@ -18,7 +18,7 @@ knitr::opts_chunk$set(echo = TRUE, comment = NA, cache = TRUE)
 
 # Before you start
 
-This is an advanced worksheet, which assumes you have completed the [Absolute Beginners' Guide to R](https://ajwills72.github.io/rminr/#beginners), the [Research Methods in Practice (Quantitative section)](https://benwhalley.github.io/rmip/overview-quantitative.html), and the [Intermediate Guide to R](https://ajwills72.github.io/rminr/#rmip).
+This is an advanced worksheet, which assumes you have completed the [Absolute Beginners' Guide to R](https://ajwills72.github.io/rminr/#beginners), the [Research Methods in Practice (Quantitative section)](https://benwhalley.github.io/rmip/), and the [Intermediate Guide to R](https://ajwills72.github.io/rminr/#rmip).
 
 You should be able to follow this worksheet if you understand the following
 materials:

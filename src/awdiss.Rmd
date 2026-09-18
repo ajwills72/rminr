@@ -16,7 +16,7 @@ knitr::opts_chunk$set(echo = TRUE, comment=NA, cache = TRUE)
 
 ## Before you start...
 
-This is an advanced worksheet, which assumes you have completed the [Absolute Beginners' Guide to R](https://ajwills72.github.io/rminr/#beginners) course, the [Research Methods in Practice (Quantitative section)](https://benwhalley.github.io/rmip/overview-quantitative.html) course, and the [Intermediate Guide to R](https://ajwills72.github.io/rminr/#rmip) course. 
+This is an advanced worksheet, which assumes you have completed the [Absolute Beginners' Guide to R](https://ajwills72.github.io/rminr/#beginners) course, the [Research Methods in Practice (Quantitative section)](https://benwhalley.github.io/rmip/) course, and the [Intermediate Guide to R](https://ajwills72.github.io/rminr/#rmip) course. 
 
 ## Contents
 
@@ -522,7 +522,7 @@ This is a standard `filter` command. The `!=` part reads as 'not equal to'. So, 
 
 Another convention of analyzing Perruchet effect experiments is that you convert run length (-3 to +3) into a dependent variable called "Level". This involves coding `-3` and `+1` as Level 1, `-2` and `+2` as Level 2, and `-1` and `+3` as Level 3. If GSR rises from -3 to +3 run lengths, it will also rise from Level 1 to Level 3. Equally, if GSR drops from -3 to +3, it will also drop from Level 1 to Level 3. The reasons for recoding the dependent variable in this way are not straight forward, and are a matter of some debate. Nonetheless, as this experiment is essentially an attempt to replicate McAndrew et al.'s paper with an unpleasant noise, we chose to use the same analyses they did, and that involves recoding the run length as Level. 
 
-We covered recoding data in the _Cleaning up questionnaire data_ part of [Research Methods in Practice (Quantitative Section)](https://benwhalley.github.io/rmip/overview-quantitative.html). To recode some data, we need to take two steps. First, we define the _mapping_ - so, for each run length, what Level is that? We do this as follows.
+We covered recoding data in the _Cleaning up questionnaire data_ part of [Research Methods in Practice (Quantitative Section)](https://benwhalley.github.io/rmip/). To recode some data, we need to take two steps. First, we define the _mapping_ - so, for each run length, what Level is that? We do this as follows.
 
 **Enter these commands into your script, and run them:**
 
@@ -533,7 +533,7 @@ level.code  <- c(`-3` = 1, `-2` = 2, `-1` = 3, `1` = 1, `2` = 2, `3` = 3)
 
 So, for example, a run length of `-2` becomes a Level of `2`. 
 
-Once we have our mapping, we can use it, via `mutate` to create a new column called `level`. We use the `recode` command to do this, converting the column `run` using the mapping `level.code` we've just written. The `!!!` part probably isn't worth spending the time to understand deeply, but if you'd like to dig deeper, see the explanation in  [Research Methods in Practice (Quantitative Section)](https://benwhalley.github.io/rmip/overview-quantitative.html).
+Once we have our mapping, we can use it, via `mutate` to create a new column called `level`. We use the `recode` command to do this, converting the column `run` using the mapping `level.code` we've just written. The `!!!` part probably isn't worth spending the time to understand deeply, but if you'd like to dig deeper, see the explanation in  [Research Methods in Practice (Quantitative Section)](https://benwhalley.github.io/rmip/).
 
 **Enter these commands into your script, and run them:**
 
@@ -623,7 +623,7 @@ We can see from this plot that the GSR data is a lot more variable than the expe
 
 ## More on Bayesian linear regression
 
-In the [within-subject differences](anova1.html#anovaWS) worksheet you learned how to apply a Bayesian ANOVA to data from within-subjects manipulations, and in the [Research Methods in Practice (Quantitative Section)](https://benwhalley.github.io/rmip/overview-quantitative.html) course, you learned how to apply a Bayesian linear regression to a set of between-subjects data. To analyze these data, we need to combine those two techniques.
+In the [within-subject differences](anova1.html#anovaWS) worksheet you learned how to apply a Bayesian ANOVA to data from within-subjects manipulations, and in the [Research Methods in Practice (Quantitative Section)](https://benwhalley.github.io/rmip/) course, you learned how to apply a Bayesian linear regression to a set of between-subjects data. To analyze these data, we need to combine those two techniques.
 
 First, some preliminaries.
 
