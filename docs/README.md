@@ -1,5 +1,5 @@
 # Research Methods in R
-_2023 Edition._
+_2026 Edition._
 
 [Search these materials](search.html)
 
@@ -11,7 +11,7 @@ _Research Methods in R_ is a set of guides on how to use R as your central resea
 
 _Historical note to teachers_: These materials were tested against R version
 4.2.1 (released 23rd June 2022), and the most recent version of packages that
-were available on [MRAN](https://mran.microsoft.com/) on the 1st June 2022.
+were available on the non-defunct [MRAN](https://mran.microsoft.com/) on the 1st June 2022.
 
 ## List of guides
 
