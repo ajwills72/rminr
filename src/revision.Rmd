@@ -15,7 +15,7 @@ knitr::opts_chunk$set(echo = TRUE, comment = NA)
 
 ```
 
-In this worksheet, you'll revise concepts you've already learned. We'll use these concepts in the next worksheet. 
+In this worksheet, you'll revise concepts you've already learned. We'll use these concepts in the next worksheet.
 
 In this worksheet, we'll analyse some data on the [production effect](https://uwaterloo.ca/memory-attention-cognition-lab/sites/ca.memory-attention-cognition-lab/files/uploads/files/pbr2011.pdf) in memory. In this particular production-effect experiment, the experimenters examined whether people remember words better if they read them silently, or if someone else reads the words out loud to them. It was a between-subjects experiment; in other words, some participants read silently, while others had the words read out loud to them.  All participants  were later given a recognition test, where they had to pick out the presented words from a list that contained both old and new words. These data were computer-generated for the purposes of this exercise, but are similar to real data in this area.
 
@@ -35,11 +35,11 @@ First, you need to get the data and load it into Rstudio. Here's how:
 
 - Open an [R script](intro-rstudio.html) ready to record all your commands, and save it as **revision.R**
 
-- Use RStudio to [upload](entering-data-by-hand.html#upload) the production effect data to that project. 
+- Use RStudio to [upload](entering-data-by-hand.html#upload) the production effect data to that project.
 
 - [Load](exploring-incomes.html#package) the data into a dataframe.
 
-Now, take a look at the data by clicking on its name in the _Environment_ tab. You will see there are three columns, named `subj`, `cond`, and `phit`. The `subj` column is an anonymous ID number for each participant. The `cond` column indicates which of the two conditions of the experiment the participant was in. The `phit` column gives the probability of a 'hit'. This is a measure of how good that participant's memory was (bigger is better). 
+Now, take a look at the data by clicking on its name in the _Environment_ tab. You will see there are three columns, named `subj`, `cond`, and `phit`. The `subj` column is an anonymous ID number for each participant. The `cond` column indicates which of the two conditions of the experiment the participant was in. The `phit` column gives the probability of a 'hit'. This is a measure of how good that participant's memory was (bigger is better).
 
 ## Descriptive statistics
 
@@ -54,12 +54,12 @@ prod %>% group_by(cond) %>% summarise(mean(phit))
 - Look at the variability in each group, and group overlap, using a [density plot](group-differences.html#group-density). It should look like this:
 
 ```{r graph, echo=FALSE, message=FALSE}
-prod %>% ggplot(aes(phit, colour=factor(cond))) + geom_density(aes(y=..scaled..)) 
+prod %>% ggplot(aes(phit, colour=factor(cond))) + geom_density(aes(y=..scaled..))
 ```
 
 ## Effect size
 
-In you have not previously been taught about effect sizes, take a look at the materials [here](group-differences.html) before proceeding. 
+In you have not previously been taught about effect sizes, take a look at the materials [here](group-differences.html) before proceeding.
 
 In those materials, you learned that effect size measures how big the difference between two groups is, relative to the amount of variability within each group. For example, you worked out that the gender pay gap in the U.S. is several thousand dollars a year, and that the effect size is small, because both men and women vary a lot in how much they earn. The variability of incomes in the U.S. is high because there are a wide range of incomes above and below the mean.
 
@@ -70,13 +70,13 @@ library(effsize)
 cohen.d(prod$phit ~ prod$cond)
 ```
 
-Effect size measures how big the difference between the groups is, relative to the amount of variability in each group. Specifically, effect size is the difference in the means, divided by the standard deviation (a measure of variability). An effect size of 0.5 occurs when the difference in the means is half the standard deviation. Anything below 0.5 is considered to be a small effect size. Anything above 0.8 is considered large. Between these two figures, effect sizes are described as 'medium'. 
+Effect size measures how big the difference between the groups is, relative to the amount of variability in each group. Specifically, effect size is the difference in the means, divided by the standard deviation (a measure of variability). An effect size of 0.5 occurs when the difference in the means is half the standard deviation. Anything below 0.5 is considered to be a small effect size. Anything above 0.8 is considered large. Between these two figures, effect sizes are described as 'medium'.
 
 This experiment has a small effect size.
 
 ## Bayes Factor
 
-Bayes Factors measure the level of evidence for there being (or not being) a difference between groups. If you get a Bayes Factor of 3 or more, psychologists generally consider that meaningful evidence for a difference. If you get a Bayes Factor of 0.33 or less, we generally consider that meaningful evidence for the _absence_ of a difference. Where a Bayes Factor is greater than 0.33 but smaller than 3, we generally conclude the experiment didn't tell us anything worth listening to. 
+Bayes Factors measure the level of evidence for there being (or not being) a difference between groups. If you get a Bayes Factor of 3 or more, psychologists generally consider that meaningful evidence for a difference. If you get a Bayes Factor of 0.33 or less, we generally consider that meaningful evidence for the _absence_ of a difference. Where a Bayes Factor is greater than 0.33 but smaller than 3, we generally conclude the experiment didn't tell us anything worth listening to.
 
 Calculate the [Bayes Factor](evidence.html#bf) for this experiment. The correct answer is:
 
@@ -85,7 +85,7 @@ library(BayesFactor, quietly = TRUE)
 ttestBF(formula = phit ~ cond, data = data.frame(prod))
 ```
 
-This experiment didn't tell us anything worth listening to: the Bayes Factor was close to 1. 
+This experiment didn't tell us anything worth listening to: the Bayes Factor was close to 1.
 
 ## All done!
 
@@ -94,6 +94,6 @@ That's the end of the revision. You are now ready to start the intermediate-leve
 ___
 
 
-This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0. 
+This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0.
 
 

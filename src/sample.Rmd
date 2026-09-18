@@ -16,7 +16,7 @@ knitr::opts_chunk$set(echo = TRUE, comment=NA)
 
 In the [Relationships](chi.html) worksheet, we loaded a large data set, like this:
 
-```{r init-load, message=FALSE} 
+```{r init-load, message=FALSE}
 library(tidyverse)
 friends <- read_csv("chi.csv")
 ```
@@ -65,12 +65,12 @@ We can investigate by using the `unique` command we used before:
 ```{r gender}
 unique(friends$gender)
 ```
-We can see that the gender column has three different entries -- male, female, and `NA`. The last of those means "Not Available"; in other words, the gender of some participants was not recorded. In R, when information is missing, you put `NA` to indicate that. We came across this before in the [exploring data](exploring-incomes.html) worksheet, where we had to tell the command `mean` to ignore `NA`  by typing `na.rm = TRUE`. The `table` command is slightly different, in that it assumes you want to ignore `NA` without having to tell it. 
+We can see that the gender column has three different entries -- male, female, and `NA`. The last of those means "Not Available"; in other words, the gender of some participants was not recorded. In R, when information is missing, you put `NA` to indicate that. We came across this before in the [exploring data](exploring-incomes.html) worksheet, where we had to tell the command `mean` to ignore `NA`  by typing `na.rm = TRUE`. The `table` command is slightly different, in that it assumes you want to ignore `NA` without having to tell it.
 
 So, the complete answer here is that 784 participants were tested, 404 were male, 375 female, and for 5 gender was not recorded.
 
 ___
 
-This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0. 
+This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0.
 It is part of [Research Methods in R](https://ajwills72.github.io/rminr), by [Andy Wills](http://www.willslab.org.uk)
 

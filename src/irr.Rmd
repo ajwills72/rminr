@@ -27,16 +27,16 @@ Before starting this exercise, you should have completed **all** the previous [A
 
 You and your partner must first complete the friendship interview coding exercise. You'll then get a CSV file that contains both your ratings. If you were unable to complete the coding exercise, you can use this [example CSV file](irr.csv) instead. _You can only gain marks for this exercise if you use your personal CSV file._
 
-Once you have downloaded your CSV file, [set up a new project](intro-rstudio.html) on RStudio Server (**Plymouth University students**: Call your new project `psyc414`), [upload your CSV](entering-data-by-hand.html#upload) to your project, and create a new R script called `irr.R`. 
+Once you have downloaded your CSV file, [set up a new project](intro-rstudio.html) on RStudio Server (**Plymouth University students**: Call your new project `psyc414`), [upload your CSV](entering-data-by-hand.html#upload) to your project, and create a new R script called `irr.R`.
 
 ## Exploring your data
 
 ### Load
-**Relevant worksheet:** [Exploring data](exploring-incomes.html) 
+**Relevant worksheet:** [Exploring data](exploring-incomes.html)
 
 **Add comments and commands to your script to load the _tidyverse_ package, and load your data, and run them (CTRL+ENTER)**:
 
-```{r init-load, message=FALSE} 
+```{r init-load, message=FALSE}
 ## Inter-rater reliability
 # Load package
 library(tidyverse)
@@ -58,7 +58,7 @@ Look at the data by clicking on it in the _Environment_ tab in RStudio. Each row
 
 ## Percentage agreement
 
-To what extent did you and your workshop partner agree on how each participant's response should be coded? The simplest way to answer this question is just to count up the number of times you gave the same answer. You're already looking at the data (you clicked on it in the _Environment_ tab in the previous step, see above), and you only categorized a few participants, so it's easy to do this by hand. 
+To what extent did you and your workshop partner agree on how each participant's response should be coded? The simplest way to answer this question is just to count up the number of times you gave the same answer. You're already looking at the data (you clicked on it in the _Environment_ tab in the previous step, see above), and you only categorized a few participants, so it's easy to do this by hand.
 
 For example, you might have given the same answer for four out of the five participants. You therefore agreed on 80% of occasions. Your **percentage agreement** in this example was 80%. The number might be higher or lower for your workshop pair.
 
@@ -66,31 +66,31 @@ For realistically-sized data sets, calculating percent agreement by hand would b
 
 ### 1. Select the ratings
 
-**Relevant worksheet:** [Group differences](group-differences.html). 
+**Relevant worksheet:** [Group differences](group-differences.html).
 
 Your `friends` data frame contains not only your ratings, but also a list of participant numbers in the `subj` column. For the next step to work properly, we have to remove this column. We can do this using the `select` command. In the _Group Differences_ worksheet, you learned how to use the `filter` command to say which rows of a data frame you wanted to keep. The command `select` works in a similar way, except that it filters columns.
 
 **Add this comment and command to your script and run it:**
 
-```{r select, message=FALSE} 
+```{r select, message=FALSE}
 # Select 'rater1' and 'rater2' columns from 'friends', write to 'ratings'
 ratings <- friends %>% select(rater1, rater2)
 ```
 
-In the command above, we take the `friends` data frame, select the `rater1` and `rater2` columns, and put them in a new data frame called `ratings`. 
+In the command above, we take the `friends` data frame, select the `rater1` and `rater2` columns, and put them in a new data frame called `ratings`.
 
 ### 2. Calculate percentage agreement
 We can now use the `agree` command to work out percentage agreement. The `agree` command is part of the package `irr` (short for Inter-Rater Reliability), so we need to load that package first.
 
 **Add these comments and commands to your script and run them**:
 
-```{r pc, message=FALSE} 
+```{r pc, message=FALSE}
 # Load inter-rater reliability package
 library(irr)
 # Calculate percentage agreement
 agree(ratings)
 ```
-**NOTE**: If you get an error here, type `install.packages("irr")`, wait for the package to finish installing, and try again. 
+**NOTE**: If you get an error here, type `install.packages("irr")`, wait for the package to finish installing, and try again.
 
 The key result here is `%-agree`, which is your percentage agreement. The output also tells you how many subjects you rated, and the number of people who made ratings. The bit that says `Tolerance=0` refers to an aspect of percentage agreement not covered in this course. If you're curious about _tolerance_ in a percentage agreement calculation, type `?agree` into the Console and read the help file for this command.
 
@@ -102,7 +102,7 @@ One problem with the _percentage agreement_ measure is that people will sometime
 
 50% agreement is a lot more impressive if there are, say, six options. Imagine in this case that both raters roll a dice. One time in six they would get the same number. So, percentage agreement by chance when there are six options is 1/6 --- about 17% agreement. If two raters agree 50% of the time when using six options, that level of agreement is much higher than we'd expect by chance.
 
-[Jacob Cohen][1] thought it would be much neater if we could have a measure of agreement where zero always meant the level of agreement expected by chance, and 1 always meant perfect agreement. This can be achieved by the following sum: 
+[Jacob Cohen][1] thought it would be much neater if we could have a measure of agreement where zero always meant the level of agreement expected by chance, and 1 always meant perfect agreement. This can be achieved by the following sum:
 
 _(P - C) / (100 - C)_
 
@@ -146,13 +146,13 @@ There are some words that psychologists sometimes use to describe the level of a
 | 0.81 - 0.99 | almost perfect |
 | 1           | perfect |
 
-So, in the above example, there is _substantial_ agreement between the two raters. 
+So, in the above example, there is _substantial_ agreement between the two raters.
 
-This choice of words comes from an article by [Landis & Koch (1977)][2]. Their choice was based on personal opinion. 
+This choice of words comes from an article by [Landis & Koch (1977)][2]. Their choice was based on personal opinion.
 
 ### Cohen's kappa and evidence
 
-**Relevant worksheet:** [Evidence](evidence.html). 
+**Relevant worksheet:** [Evidence](evidence.html).
 
 Let's take another look at the output we just generated, because there are some bits we haven't talked about yet:
 
@@ -160,7 +160,7 @@ Let's take another look at the output we just generated, because there are some 
 kappa2(ratings)
 ```
 
-The `z` and `p-value` lines relate to a significance test, much like the ones you covered in the _Evidence_ worksheet. As we said back then, psychologists often misinterpret _p values_, so it's important to emphasise here that this _p value_ is **not**, for example, the probability that the raters agree at the level expected by chance. In fact, there is no way to explain this p value that is simple, useful and accurate. A Bayes Factor (see the _Evidence_ workshop) would have been more useful, and easier to interpret, but the `irr` package does not provide one. 
+The `z` and `p-value` lines relate to a significance test, much like the ones you covered in the _Evidence_ worksheet. As we said back then, psychologists often misinterpret _p values_, so it's important to emphasise here that this _p value_ is **not**, for example, the probability that the raters agree at the level expected by chance. In fact, there is no way to explain this p value that is simple, useful and accurate. A Bayes Factor (see the _Evidence_ workshop) would have been more useful, and easier to interpret, but the `irr` package does not provide one.
 
 By convention, if the _p value_ is less than 0.05, psychologists will generally believe you when you assert that the two raters agreed more than would be expected by chance. If the _p value_ is greater than 0.05, they will generally be skeptical. If you were writing a report, you could make a statement like:
 
@@ -182,7 +182,7 @@ The "Cohen" bit comes from its inventor, [Jacob Cohen][1]. Kappa (κ) is the Gre
 
 ___
 
-This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0. 
+This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0.
 
 
 

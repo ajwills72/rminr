@@ -47,9 +47,9 @@ weights <- c(.35, .3, .3, .05)
 round(sum(components * weights))
 ```
 
-The number you get from the above command is your overall module mark. 
+The number you get from the above command is your overall module mark.
 
 ___
 
-This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0. 
+This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0.
 

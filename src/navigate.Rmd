@@ -29,12 +29,12 @@ Once you have downloaded your CSV file, [open a project](intro-rstudio.html) on 
 ## Exploring your data
 
 ### Load
-**Relevant worksheet:** [Exploring data](exploring-incomes.html) 
+**Relevant worksheet:** [Exploring data](exploring-incomes.html)
 
-Load the _tidyverse_ package, and load your data. 
+Load the _tidyverse_ package, and load your data.
 **Note**: Everyone's CSV file has a different name. For example, yours might be called `10435678 data.csv`. In the example below, you'll need to replace `navigate.csv` with the name of your personal CSV file.
 
-```{r init-load, message=FALSE} 
+```{r init-load, message=FALSE}
 # Load tidyverse
 library(tidyverse)
 # Load data
@@ -52,7 +52,7 @@ Look at the data by clicking on it in the _Environment_ tab in RStudio. Each row
 
 ## Making a bar chart
 
-**Relevant worksheet:** [Exploring data](exploring-incomes.html). 
+**Relevant worksheet:** [Exploring data](exploring-incomes.html).
 
 In the [Face Recognition](face-recog.html) exercise, you made a simple bar chart with two bars. This time, you'll make a more complex, eight-bar plot. The data you loaded has eight test scores, four for your personal scores, and four for the mean scores of your peers. In order to make it easy to compare each of your scores to the cohort mean, we are going to plot four pairs of bars: (1) Your Direction score, (2) Cohort Direction score, (3) Your Landmark score, and so on. For clarity, and beautification, the bars for your scores are going to be a different colour to the bars for the cohort mean. Here's the command we need:
 
@@ -63,7 +63,7 @@ navplot <- nav %>% ggplot(aes(x = Test, y = Percent, fill = Who)) + geom_col(pos
 navplot
 ```
 
-Your output will look a bit like the above, but the heights of the bars will probably be different. 
+Your output will look a bit like the above, but the heights of the bars will probably be different.
 
 ### Explanation of command
 
@@ -77,9 +77,9 @@ Your output will look a bit like the above, but the heights of the bars will pro
 
 `aes` tells ggplot which columns of your data frame to use in the plot. In this case, we want 'Test' on the x axis, 'Percent' on the y axis, and 'Who' being used to set the colour we use to fill in the bar.
 
-`+ geom_col()` says that the type of graph we want is a bar chart (`col` is short for columns, another word for bars). 
+`+ geom_col()` says that the type of graph we want is a bar chart (`col` is short for columns, another word for bars).
 
-`position = "dodge"` - By default, ggplot would put the two scores for each test (yours and the cohort's) directly on top of each other. This is sometimes useful, but more often we want the bars to avoid ("dodge") each other, and appear side-by-side. 
+`position = "dodge"` - By default, ggplot would put the two scores for each test (yours and the cohort's) directly on top of each other. This is sometimes useful, but more often we want the bars to avoid ("dodge") each other, and appear side-by-side.
 
 `navplot` - This tells R to display the graph that we have named `navplot`.
 
@@ -93,11 +93,11 @@ navplot <- navplot + scale_fill_manual(values = c("yellow","black"))
 navplot
 ```
 
-Type `colours()` into the console to see the 657 named colours available in R. Pick two you find clear and pleasing, and modify the command above to use them. 
+Type `colours()` into the console to see the 657 named colours available in R. Pick two you find clear and pleasing, and modify the command above to use them.
 
 ### Recording your answer
 
-1. Export your graph, using the _Export_ icon on RStudio's _Plots_ window, and selecting "Save as image...". Give it a meaningful file name (e.g. "nav-bar") and click 'Save'. 
+1. Export your graph, using the _Export_ icon on RStudio's _Plots_ window, and selecting "Save as image...". Give it a meaningful file name (e.g. "nav-bar") and click 'Save'.
 
 2. Download your graph from RStudio server - see [these instructions](using-projects.html#download) for a reminder of how to do this.
 
@@ -105,5 +105,5 @@ Type `colours()` into the console to see the 657 named colours available in R. P
 
 ___
 
-This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0. 
+This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0.
 

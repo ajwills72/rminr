@@ -29,10 +29,10 @@ Once you have downloaded your CSV file, [open a project](intro-rstudio.html) on 
 ## Exploring your data
 
 ### Load
-**Relevant worksheet:** [Exploring incomes](exploring-incomes.html) 
+**Relevant worksheet:** [Exploring incomes](exploring-incomes.html)
 
 Load the _tidyverse_ package, and load your data.
-```{r init-load, message=FALSE} 
+```{r init-load, message=FALSE}
 # Load tidyverse
 library(tidyverse)
 # Load data into 'ill'
@@ -55,7 +55,7 @@ There may be an extra column called "Pattern", but you can just ignore it. You c
 
 ## Muller-Lyer illusion
 
-**Relevant worksheet:** [Exploring data](exploring-incomes.html), [Group differences](group-differences.html). 
+**Relevant worksheet:** [Exploring data](exploring-incomes.html), [Group differences](group-differences.html).
 
 ### Filter
 
@@ -71,7 +71,7 @@ Your Muller-Lyer data are now in the data frame `mull`.
 ### Size of illusion, by angle
 Did you experience the Muller-Lyer illusion? If so, did the angle of the lines affect the size of the illusion?
 
-To look at this,  you calculate the average(mean) size of your error in estimating the length of the line. You do this separately for each angle. If you did not experience the illusion, your average error would be around zero for all angles. 
+To look at this,  you calculate the average(mean) size of your error in estimating the length of the line. You do this separately for each angle. If you did not experience the illusion, your average error would be around zero for all angles.
 
 The error of your judgement on each trial is in the `Difference200` column of your `mull` data frame. The angle is in the `Angle` column. You can therefore calculate your mean error for each angle using the `group_by`, `summarize` and `mean` commands, as we covered in the _Group Differences_ worksheet:
 
@@ -94,14 +94,14 @@ So, instead, we're going to make a _violin plot_. A violin plot is just a densit
 
 ```{r densityeg, echo=FALSE}
 # Produce density plot of 'Difference200'
-mull %>% ggplot(aes(Difference200)) + geom_density() 
+mull %>% ggplot(aes(Difference200)) + geom_density()
 ```
 
 ...and here's the same data shown as a violin plot:
 
 ```{r violineg, echo=FALSE}
 # Produce violin plot of 'Difference200'
-mull %>% ggplot(aes(x=1, y=Difference200)) + geom_violin() + 
+mull %>% ggplot(aes(x=1, y=Difference200)) + geom_violin() +
   theme(axis.title.x=element_blank(),
         axis.text.x=element_blank(),
         axis.ticks.x=element_blank())
@@ -124,7 +124,7 @@ In this example, we can see that the range of lengths the participant produced i
 
 `ggplot` is the command in R used to draw graphs
 
-`aes` tells ggplot which columns of your data frame to use in the plot. In this case, we want 'Angle' on the x axis, and 'Difference200' (i.e. the size of the illusion) on the y axis. 
+`aes` tells ggplot which columns of your data frame to use in the plot. In this case, we want 'Angle' on the x axis, and 'Difference200' (i.e. the size of the illusion) on the y axis.
 
 `+ geom_violin()` says that the type of graph we want is a violin chart.
 
@@ -139,11 +139,11 @@ There's quite a lot more that might be done with this data set, but you haven't 
 mut <- mull %>% filter(Angle == 45 | Angle == 135)
 ```
 
-As we've already seen (at least for our example data), the length of the line was over-estimated at 45 degrees, and under-estimated at 135 degrees (see the table of means, above). We also saw that the range of lengths estimated for 45 degrees barely overlapped with the range of lengths estimated for 135 degrees (see the violin plot, above). 
+As we've already seen (at least for our example data), the length of the line was over-estimated at 45 degrees, and under-estimated at 135 degrees (see the table of means, above). We also saw that the range of lengths estimated for 45 degrees barely overlapped with the range of lengths estimated for 135 degrees (see the violin plot, above).
 
 How likely is it that this difference between the estimates at 45 degrees and 135 degrees is down to chance? As we saw in the _Evidence_ worksheet, the best way to answer this question is to calculate a Bayes Factor. In this case, the data frame is `mut`, which we just made with the `filter` command above. The column `Difference200` contains the size of the illusion, and the column `Angle` contains the angle of the stimulus:
 
-```{r  mull-bf, message=FALSE} 
+```{r  mull-bf, message=FALSE}
 # Load BayesFactor package
 library(BayesFactor, quietly = TRUE)
 # Perform Bayesian t-test on effect of 'Angle' on 'Difference200'
@@ -152,7 +152,7 @@ ttestBF(formula = Difference200 ~ Angle, data = data.frame(mut))
 
 In this example, the Bayes Factor is about 9986, so it's almost 10,000 times as likely there is a difference, than there isn't. This is good evidence for the presence of a Muller-Lyer illusion in this participant. How does it look for your data?
 
-**Note**: If you're looking back at this activity after having done the _Intermediate Guide to R_, 
+**Note**: If you're looking back at this activity after having done the _Intermediate Guide to R_,
 you might be wondering why an _independent samples_ test is being used here, when this appears
 to be a repeated-measures ("within-subject") design. This is because the current experiment is a
 special case. Although the manipulation is within-subject, there is just one participant in total
@@ -164,21 +164,21 @@ from multiple participants, it gets more complicated, and we need to use repeate
 
 Now do the following:
 
-1. Produce a violin plot for the _other_ illusion type in your data file, the T illusion. How does angle affect the size of the illusion in this case?  
+1. Produce a violin plot for the _other_ illusion type in your data file, the T illusion. How does angle affect the size of the illusion in this case?
 
-2. Export your violin plot, using the _Export_ icon on RStudio's _Plots_ window, and selecting "Save as image...". Give it a meaninful file name (e.g. "illusion-violin") and click 'Save'. 
+2. Export your violin plot, using the _Export_ icon on RStudio's _Plots_ window, and selecting "Save as image...". Give it a meaninful file name (e.g. "illusion-violin") and click 'Save'.
 
 3. Download your violin plot from RStudio server - see [these instructions](using-projects.html#download) for a reminder of how to do this.
 
 4. **Upload your violin plot** to PsycEL (see the PsychEL activity for instructions of how to do this).
 
-5. Calculate the Bayes Factor for the comparison between 0 and 90 degrees for the T illusion. **Enter the exact Bayes Factor into the PsycEL answer section.**. 
+5. Calculate the Bayes Factor for the comparison between 0 and 90 degrees for the T illusion. **Enter the exact Bayes Factor into the PsycEL answer section.**.
 
-_Hint for T illusion exercise:_ Your first step should be to produce a data frame that contains only the data from the T illusion (perhaps call it `tee`). This is the first command we covered in this worksheet. Once you've done that, the rest of the commands should work as long as you replace `mull` with `tee`. 
+_Hint for T illusion exercise:_ Your first step should be to produce a data frame that contains only the data from the T illusion (perhaps call it `tee`). This is the first command we covered in this worksheet. Once you've done that, the rest of the commands should work as long as you replace `mull` with `tee`.
 
 
 
 ___
 
-This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0. 
+This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0.
 

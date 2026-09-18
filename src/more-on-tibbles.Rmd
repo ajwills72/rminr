@@ -7,7 +7,7 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, comment = NA)
 library(tidyverse)
-cpsdata <- read_csv(url("http://www.willslab.org.uk/cps2.csv"))
+cpsdata <- read_csv("cps2.csv")
 ```
 ![Kitten that might be called Tibbles. Possibly.](pics/kitten.jpg)
 
@@ -21,9 +21,9 @@ The answer is the last number on the bottom right -- but what about all that oth
 
 1. The first line, `A tibble: 1 x 1`, says your output is a data frame (aka. `tibble`) with one row and one column ... so, a single number. No, I don't think anyone knows why it's called a tibble.
 
-2. The second line tells you what summary you calculated -- `mean(income)`, the mean of the incomes. 
+2. The second line tells you what summary you calculated -- `mean(income)`, the mean of the incomes.
 
-3. The third line, `<dbl>` tells you that what you calculated is a number (in case you were wondering `dbl` is short for 'double precision floating point number', but that's probably more detail than you needed...). 
+3. The third line, `<dbl>` tells you that what you calculated is a number (in case you were wondering `dbl` is short for 'double precision floating point number', but that's probably more detail than you needed...).
 
 4. The fourth line gives you the number you calculated, the mean income of `87293`. The `1` at the beginning is a row number, which you can ignore.
 
@@ -43,7 +43,7 @@ cpsdata %>% group_by(sex) %>% summarise(median(income))
 
 This can be read much the same way as the last example. These are the differences:
 
-- Your tibble is now 2 x 2 because it has two rows (female, male) and two columns (sex, median income). 
+- Your tibble is now 2 x 2 because it has two rows (female, male) and two columns (sex, median income).
 
 - The `<chr>` in sex column says that column contains letters (male, female) rather than numbers -- chr is short for "characters" (another word for letters).
 
@@ -51,7 +51,7 @@ This can be read much the same way as the last example. These are the difference
 
 ___
 
-This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0. 
+This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0.
 
 Kitten picture by 0x010C - Own work, CC BY-SA 4.0, https://commons.wikimedia.org/w/index.php?curid=42929793
 

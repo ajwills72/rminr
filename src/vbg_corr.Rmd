@@ -47,11 +47,11 @@ cpsdata %>% summarise(mean(hours, na.rm = TRUE))
 # Group by sex, display mean income
 cpsdata %>% group_by(sex) %>% summarise(mean(income))
 # Display density plot of income, by sex
-cpsdata %>% ggplot(aes(income, colour = factor(sex))) + geom_density(aes(y = ..scaled..)) 
+cpsdata %>% ggplot(aes(income, colour = factor(sex))) + geom_density(aes(y = ..scaled..))
 # Filter people with income < $150K into 'cpslow'
 cpslow <- cpsdata %>% filter(income < 150000)
 # Display density plot of incomes below $150K, by sex
-cpslow %>% ggplot(aes(income, colour = factor(sex))) + geom_density(aes(y = ..scaled..)) 
+cpslow %>% ggplot(aes(income, colour = factor(sex))) + geom_density(aes(y = ..scaled..))
 # EXERCISE
 # Group by 'native', display mean income below $150K
 cpslow %>% group_by(native) %>% summarise(mean(income))
@@ -92,7 +92,7 @@ We're going to use some new data in this final worksheet, so download it from [h
 gdata <- read_csv("gcorr.csv")
 ```
 
-Next, click on `gdata` in the Environment window, and take a look. The data is from an experiment where each of 25 groups of people selected a leader and then completed a task together. Afterwards, they  answered some questions about their group. Specifically, they rated their _ingroup closeness_ (how close, psychologically speaking, they felt to members of their own group), their _outgroup distance_ (how distant they felt from members of other groups), and how _dominant_ their group leader was in their group. The ratings were made individually, and then averaged to give one number per group per measure. 
+Next, click on `gdata` in the Environment window, and take a look. The data is from an experiment where each of 25 groups of people selected a leader and then completed a task together. Afterwards, they  answered some questions about their group. Specifically, they rated their _ingroup closeness_ (how close, psychologically speaking, they felt to members of their own group), their _outgroup distance_ (how distant they felt from members of other groups), and how _dominant_ their group leader was in their group. The ratings were made individually, and then averaged to give one number per group per measure.
 
 Here's what each of the column labels mean:
 
@@ -109,19 +109,19 @@ This is a small dataset comprising 25 groups.
 
 ## Scatterplots
 
-One question we can ask about these data concerns the relationship between ingroup closeness and outgroup distance. 
+One question we can ask about these data concerns the relationship between ingroup closeness and outgroup distance.
 
-For example, does high ingroup closeness tend to be associated with high outgroup distance -- perhaps feeling close to your ingroup is associated with feeling distant from your outgroup? 
+For example, does high ingroup closeness tend to be associated with high outgroup distance -- perhaps feeling close to your ingroup is associated with feeling distant from your outgroup?
 
 Or perhaps high ingroup closeness is associated with low outgroup distance --- feeling close to your own group also makes you feel close to other groups? Or, a third option, perhaps the two things are unrelated --- whether you have high or low ingroup closeness does not predict your outgroup distance.
 
-One way to look at this question is to produce a _scatterplot_. On a scatterplot, each point represents one group. That point's position on the x-axis represents their ingroup closeness, and that point's position on the y-axis represents their outgroup distance. 
+One way to look at this question is to produce a _scatterplot_. On a scatterplot, each point represents one group. That point's position on the x-axis represents their ingroup closeness, and that point's position on the y-axis represents their outgroup distance.
 
 The command to produce a scatterplot in R is much like the command for a density plot. It is:
 
 ```{r scatter}
 # Display scatterplot of 'ingroup' versus 'outgroup'
-gdata %>% ggplot(aes(x = ingroup, y = outgroup)) + geom_point() 
+gdata %>% ggplot(aes(x = ingroup, y = outgroup)) + geom_point()
 ```
 
 ### Explanation of command
@@ -134,9 +134,9 @@ The command takes the data from the `gdata` dataframe, and _pipes_ it (`%>%`) to
 
 ### Discussion of output
 
-In the above scatterplot, many of the points are close to the x axis. This is becasue, as we saw above, most groups gave a rating close to 1 for outgroup distance. However, once we get to an ingroup closeness above 8, an interesting pattern starts to emerge. As ingroup closeness increases from 8 to 10, outgroup distance rises from around 1 to around 7 or 8. 
+In the above scatterplot, many of the points are close to the x axis. This is becasue, as we saw above, most groups gave a rating close to 1 for outgroup distance. However, once we get to an ingroup closeness above 8, an interesting pattern starts to emerge. As ingroup closeness increases from 8 to 10, outgroup distance rises from around 1 to around 7 or 8.
 
-So it seems that, in this example dataset, ingroup closeness and outgroup distance are related. We call this type of relationship a _correlation_. 
+So it seems that, in this example dataset, ingroup closeness and outgroup distance are related. We call this type of relationship a _correlation_.
 
 <a name="corr"></a>
 
@@ -151,7 +151,7 @@ cor(gdata$ingroup, gdata$outgroup)
 
 ### Explanation of command
 
-Here's what each part of the command means: 
+Here's what each part of the command means:
 
 `cor()` - The command to calculate a correlation co-efficient.
 
@@ -163,7 +163,7 @@ Here's what each part of the command means:
 
 ### Explanation of output
 
-In the above example, the correlation co-efficient was about 0.66. By tradition, we use a lower case _r_ to represent a correlation co-efficient, so here _r = 0.66_. In order to make sense of this number, you need to know that the biggest _r_ can ever be is 1, and the smallest it can ever be is -1. 
+In the above example, the correlation co-efficient was about 0.66. By tradition, we use a lower case _r_ to represent a correlation co-efficient, so here _r = 0.66_. In order to make sense of this number, you need to know that the biggest _r_ can ever be is 1, and the smallest it can ever be is -1.
 
 **Where r = 1**: A correlation of 1 means a perfect linear relationship. In other words, there is a straight line you can draw that goes exactly through the centre of each dot on your scatterplot. The line can be shallow, or steep. Here are some examples:
 
@@ -225,17 +225,17 @@ Start by adding the following to your script:
 In this exercise, you'll apply what you've learned to the relationship between _ingroup closeness_, and _group-leader dominance_. Do each of the following analyses, adding the appropriate comments and
 commands to your script:
 
-1. Make a scatterplot with _ingroup_ closeness on the x-axis, and group-leader _dominance_ on the y-axis. 
+1. Make a scatterplot with _ingroup_ closeness on the x-axis, and group-leader _dominance_ on the y-axis.
 
-2. Calculate the correlation co-efficient for _ingroup_ versus _dominance_. 
+2. Calculate the correlation co-efficient for _ingroup_ versus _dominance_.
 
-3. Calculate the Bayes Factor for this correlation. 
+3. Calculate the Bayes Factor for this correlation.
 
 ### Expected output
 If you've done it right, these are the answers you'll get:
 
 ```{r ex1, echo=FALSE}
-gdata %>% ggplot(aes(x = ingroup, y = dominance)) + geom_point() 
+gdata %>% ggplot(aes(x = ingroup, y = dominance)) + geom_point()
 cor(gdata$ingroup, gdata$dominance)
 correlationBF(gdata$ingroup, gdata$dominance)
 ```
@@ -248,4 +248,4 @@ If you're able to complete the above exercise on your own, you're all set! If no
 ___
 
 
-This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0. 
+This material is distributed under a [Creative Commons](https://creativecommons.org/) licence. CC-BY-SA 4.0.
