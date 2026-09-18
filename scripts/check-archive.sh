@@ -14,6 +14,11 @@ check_file README.md
 check_file ARCHIVE.md
 check_file docs/_config.yml
 check_file docs/_includes/google-analytics.html
+check_file docs/_includes/head-custom.html
+check_file docs/search.html
+check_file docs/search.js
+check_file docs/search.json
+check_file scripts/build-search-index.rb
 check_file src/themeapa.R
 check_file src/cps2.csv
 check_file src/data/george1935pilot.csv
@@ -38,6 +43,11 @@ fi
 
 if ! grep -q '^google_analytics: G-WXTBHY6FJW$' docs/_config.yml; then
     printf 'analytics property is not configured in docs/_config.yml\n'
+    failed=1
+fi
+
+if ! grep -q '{% include google-analytics.html %}' docs/_includes/head-custom.html; then
+    printf 'analytics include is not wired into the active Jekyll head\n'
     failed=1
 fi
 
