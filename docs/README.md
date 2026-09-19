@@ -9,13 +9,14 @@ _2026 Edition._
 
 _Research Methods in R_ is a set of guides on how to use R as your central research methods tool. They are written by various authors, and curated by [Andy Wills](https://www.andywills.info). The target audience is psychology undergraduate students. _Research Methods in R_ is [Creative Commons](https://creativecommons.org/), so you are free to reuse these materials and adapt them as you wish, as long as you attribute them to their authors, and as long as your modifications have a Creative Commons licence. They come with absolutely no warranty of any kind.
 
-_Historical note to teachers_: These materials were tested against R version
-4.2.1 (released 23rd June 2022), and the most recent version of packages that
-were available on the non-defunct [MRAN](https://mran.microsoft.com/) on the 1st June 2022.
+_Historical note to teachers_: These materials were originally tested against R
+version 4.2.1 (released 23rd June 2022). The current compatibility review uses
+R 4.6.1; package availability and statistical output can still change as
+dependencies evolve.
 
 ## List of guides
 
-### Introductory quides
+### Introductory guides
 
 Start with **ONE** of these three options:
 
@@ -94,7 +95,7 @@ A series of worksheets on using R for data analysis in psychology. No previous k
 
 * [Inter-rater reliability](irr.html). Percentage agreement. Cohen's kappa.
 
-    * [More on Cohen's kappa](more-on-kappa.html). A discussion of some potentially surprising outputs from a Cohen's kaapa calculation.
+    * [More on Cohen's kappa](more-on-kappa.html). A discussion of some potentially surprising outputs from a Cohen's kappa calculation.
 
 * [Relationships](chi.html). Frequency and contingency tables. Mosaic plots. Traditional chi-square test. Bayesian test.
 
@@ -102,7 +103,7 @@ A series of worksheets on using R for data analysis in psychology. No previous k
     
     * [Sample characteristics](sample.html). How to calculate summary information about your sample, such as number of participants or gender balance, from your data file.
 
-* [Relationships, part 2](corr.html). Density plots. Scatter plots. Correlation co-efficient. Bayesian and traditional tests.
+* [Relationships, part 2](corr.html). Density plots. Scatter plots. Correlation coefficient. Bayesian and traditional tests.
 
     * [More on relationships, part 2](corr-extended.html). Spearman's correlation, Kendall's tau, one-tailed tests, confidence intervals, plus a deeper look at the output of the Bayesian correlation test.
 
