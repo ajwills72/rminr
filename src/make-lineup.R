@@ -40,8 +40,8 @@ ttestBF(formula = Q4 ~ Cond, data = data.frame(lup))
 ## (2) Some DVs are binary, others continuous. This requires different tests, which is good
 ## at this last-quarter of Stage 1 timing, but I also didn't want to overload them.
 
-Q3*, Q4, Q5**, Q7, Q9 - continuous
-Q2*, Q6, Q8** - binary
+## Q3*, Q4, Q5**, Q7, Q9 - continuous
+## Q2*, Q6, Q8** - binary
 
 
 ## Q2, Q6, Q8 are binary DVs. Probably not a good idea to teach students to analyse
