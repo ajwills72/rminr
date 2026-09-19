@@ -391,7 +391,7 @@ The final step is to extract the Bayes Factor.
 # Extract Bayes Factor
 bf <- test %>%
     data.frame() %>% # change the format to a data frame for usability
-    select(bf) %>% # select the bf column
+    dplyr::select(bf) %>% # select the bf column
     as.numeric() # make sure that R converts BF to a number and not a character
 ```
 
@@ -439,7 +439,7 @@ get_bf <- function(n, data) {
     test <- ttestBF(formula = fluctuations ~ condition, data = random_data)
     ## 3. Get the Bayes Factor
     ## We have to change the format to data.frame to extract the Bayes Factor
-    bf <- test %>% data.frame() %>% select(bf) %>% as.numeric()
+    bf <- test %>% data.frame() %>% dplyr::select(bf) %>% as.numeric()
     ## 4. return it to the user
     return(bf)
 }

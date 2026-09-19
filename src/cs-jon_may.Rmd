@@ -70,7 +70,7 @@ problems <- read_csv('case-studies/jon-may/problems.csv')
 solved <- problems %>%
   rowwise() %>%
   mutate(problems = sum(c_across(bridges:dots))) %>%
-  select(subj, problems)
+  dplyr::select(subj, problems)
 ```
 
 ### OCEAN
@@ -89,19 +89,19 @@ names(scaleIDs) <- oceankey$ItemID           # name each new name with the old n
 ocean.scales<-ocean %>%
    pivot_longer(S1:S50,names_to='Item', values_to='Value') %>%     # put the 50 items into a column
    mutate(ScaleID=scaleIDs[Item])%>%                               # lookup the new names from the vector
-   select(-Item) %>%                                               # drop the columns we don't need
+  dplyr::select(-Item) %>%                                        # drop the columns we don't need
    mutate(Value=ifelse(Value>5,NA,ifelse(Value<1, NA, Value))) %>% # screen for absurd values
    mutate(Value=ifelse(grepl("r",ScaleID), 6-Value, Value)) %>%    # reverse score items containg 'r' ...
    mutate(ScaleID = sub("r", "", ScaleID)) %>%                     # ... and remove the 'r'
    pivot_wider(names_from="ScaleID", values_from="Value") %>%      # make the data wide again
-   select(subj,sort(names(.))) %>%                                 # sort the columns by the new names
+  dplyr::select(subj,sort(names(.))) %>%                          # sort the columns by the new names
    rowwise() %>%                                                   # for each participant...
    mutate(openness=mean(c_across(o01:o10), na.rm = TRUE),          # ... mean of 10 items in each scale
           conscientiousness=mean(c_across(C01:C10), na.rm = TRUE),
           extraversion=mean(c_across(E01:E10), na.rm = TRUE),
           agreeableness=mean(c_across(A01:A10), na.rm = TRUE),
           neuroticism=mean(c_across(N01:N10), na.rm = TRUE)) %>%
-   select(subj, openness, conscientiousness, extraversion, agreeableness, neuroticism)
+  dplyr::select(subj, openness, conscientiousness, extraversion, agreeableness, neuroticism)
 ```
 
 ### Flexible thinking test
@@ -112,7 +112,7 @@ ocean.scales<-ocean %>%
 ftt <- read_csv('case-studies/jon-may/ftt.csv') %>%
    rowwise() %>%
    mutate(ftt = mean(c_across(ftt1:ftt3))) %>%
-   select(subj, ftt)
+  dplyr::select(subj, ftt)
 ```
 
 * the 35 PsiQ vividness of imagery items - 5 of each of 7 modalities (0 not at all to 10 as vivid as real life) (score = mean of all items)
@@ -121,7 +121,7 @@ ftt <- read_csv('case-studies/jon-may/ftt.csv') %>%
 psiq <- read_csv('case-studies/jon-may/psiq.csv') %>%
    rowwise() %>%
    mutate(psiq = mean(c_across(2:36))) %>%
-   select(subj, psiq)
+  dplyr::select(subj, psiq)
 ```
 
 ```{r}
@@ -201,7 +201,7 @@ Correlation matrices are covered in the [Better tables](better-tables.html#cor-m
 
 ```{r cor-matrix, R.options = list(width = 10000)}
 library(apaTables)
-apa.cor.table(data %>% select(conscientiousness:problems), filename='table1.doc', table.number = 1)
+apa.cor.table(data %>% dplyr::select(conscientiousness:problems), filename='table1.doc', table.number = 1)
 ```
 
 **Explanation of output:**
@@ -248,7 +248,7 @@ Pairs plots are are covered in the [Better graphs](better-graphs.html#pairs) wor
 library(GGally)
 source('themeapa.R')
 data %>%
-  select(psiq, openness, problems, ftt) %>%
+  dplyr::select(psiq, openness, problems, ftt) %>%
   ggpairs(lower=list(continuous='smooth')) +
   theme_APA
 ```

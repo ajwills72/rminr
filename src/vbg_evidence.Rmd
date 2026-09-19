@@ -97,7 +97,7 @@ tab_source_note(source_note = html(paste(
         "alternative hypothesis."))
         ) %>%
 data_color(columns = Interpretation,
-           colors = scales::col_factor(palette = colors, levels = Interpretation, ordered = FALSE),
+           colors = scales::col_factor(palette = colors, levels = bf$Interpretation, ordered = FALSE),
            autocolor_text = TRUE,
         ) %>%
 tab_options(table.font.size = 14)

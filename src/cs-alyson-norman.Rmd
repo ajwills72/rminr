@@ -53,15 +53,15 @@ data <- read_csv('case-studies/alyson-norman/ses-dass.csv') %>%
 data$subj <- factor(seq.int(nrow(data)))
 
 anxiety <- data %>%
-  select(subj, ses, ses_category, contains('anxiety'))
+  dplyr::select(subj, ses, ses_category, contains('anxiety'))
 anxiety <- mutate(anxiety, total = rowSums(anxiety[4:17]))
 
 depression <- data %>%
-  select(subj, ses, ses_category, contains('depression'))
+  dplyr::select(subj, ses, ses_category, contains('depression'))
 depression <- mutate(depression, total = rowSums(depression[4:17]))
 
 stress <- data %>%
-  select(subj, ses, ses_category, contains('stress'))
+  dplyr::select(subj, ses, ses_category, contains('stress'))
 stress <- mutate(stress, total = rowSums(stress[4:17]))
 ```
 

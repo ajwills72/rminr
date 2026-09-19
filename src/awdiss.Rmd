@@ -583,7 +583,7 @@ mdot  <- geom_point(aes(x=level, y=expect), data = mdata, colour="black")
 
 ### Combine plots, tidy up x and y axis labels, and apply APA theme
 eplot  <- base + lns + mline + mdot + xlab("Level") +
-    ylab("Expectancy rating") + ylim(1,5) + scale_x_continuous(breaks = c(1,2,3))  + theme_APA() +
+    ylab("Expectancy rating") + ylim(1,5) + scale_x_continuous(breaks = c(1,2,3))  + theme_APA +
     theme(legend.position="none")
 eplot
 ```
@@ -604,7 +604,7 @@ lns  <- geom_line(aes(x=level, y=lcval, group=subj, colour=subj), data = lvl.sum
 mline  <- geom_line(aes(x=level, y=lcval), data = mdata, colour="black")
 mdot  <- geom_point(aes(x=level, y=lcval), data = mdata, colour="black")
 base + lns + mline + mdot + xlab("Level") +
-    ylab("Mean log GSR (uS)") + scale_x_continuous(breaks = c(1,2,3))  + theme_APA() +
+    ylab("Mean log GSR (uS)") + scale_x_continuous(breaks = c(1,2,3))  + theme_APA +
     theme(legend.position="none")
 ```
 

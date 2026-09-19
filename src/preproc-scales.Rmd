@@ -87,7 +87,7 @@ Our first step will be to load the data and remove columns from the raw survey d
 # Load data
 dass21_raw <- read_csv("going-further/dass21.csv")
 # Select relevant columns of data
-dass21_raw <- dass21_raw %>% select(partID, Age:DASS21)
+dass21_raw <- dass21_raw %>% dplyr::select(partID, Age:DASS21)
 ```
 
 **Explanation of command:**
@@ -143,7 +143,7 @@ Our next step is to calculate the scores for the constructs measured by our scal
 dass21 <- dass21 %>%
   mutate(depression = rowSums(dass21[4 + c(3,5,10,13,16,17,21)]))
 # Add relevant columns to 'dass21_total'
-dass21_total <- dass21 %>% select(partID, Age, Gender, depression)
+dass21_total <- dass21 %>% dplyr::select(partID, Age, Gender, depression)
 ```
 
 **Explanation of command:**
@@ -159,7 +159,7 @@ Use similar commands to add scores for anxiety and stress to `dass21`. The anxie
 ```{r ex1, echo=FALSE}
 dass21 <- mutate(dass21, anxiety = rowSums(dass21[4 + c(2,4,7,9,15,19,20)]))
 dass21 <- mutate(dass21, stress = rowSums(dass21[4 + c(1,6,8,11,12,14,18)]))
-dass21_total <- select(dass21, partID, Age, Gender, depression, anxiety, stress)
+dass21_total <- dplyr::select(dass21, partID, Age, Gender, depression, anxiety, stress)
 ```
 
 ```{r ex1-correct, echo=FALSE}
@@ -197,7 +197,7 @@ The data will be easier to analyse if we rename the columns. It will also be use
 
 ```{r preprocess-sses-pre-1}
 # Place pre-intervention SSES into 'sses_pre_raw'
-sses_pre_raw  <- sses %>% select(1, 5:25)
+sses_pre_raw  <- sses %>% dplyr::select(1, 5:25)
 ```
 
 **Explanation of command:**
@@ -237,7 +237,7 @@ Now we'll convert some columns to [factors](anova1.html#anovaWS).
 sses_pre_raw <- sses_pre_raw %>%
   mutate(subj = factor(partid), condition = factor(condition),
          time = factor('pre')) %>%
-  select(subj, condition, time, q1:q20)
+  dplyr::select(subj, condition, time, q1:q20)
 ```
 
 1. `mutate(subj = factor(partid), condition = factor(condition), time = factor('pre'))` -  We use `mutate` to add and modify some columns. The argument `subj = factor(partid)` creates a new column named `subj` (which is a bit clearer than `partid`) by copying the `partid` column and making it a factor. The argument `condition = factor(condition)` makes the `condition` column a factor. The argument `time = factor('pre')` creates a new factor called `time` and sets all values to `pre`.
@@ -252,11 +252,11 @@ sses_pre_raw %>% head(3) %>% pander(split.table = Inf)
 Note that we could do all of these steps in a single pipeline (**DO NOT enter these commands**, you do not need to do the same thing twice, this is just an illustration of how the previous commands could be combined).
 
 ```{r preprocess-sses-pre}
-sses_pre_raw  <- select(sses, 1, 5:25) %>%
+sses_pre_raw  <- dplyr::select(sses, 1, 5:25) %>%
   set_names(~ str_to_lower(.) %>% str_replace_all("pre_sse_", "q")) %>%
   mutate(subj = factor(partid), condition = factor(condition),
          time = factor('pre')) %>%
-  select(subj, condition, time, q1:q20)
+  dplyr::select(subj, condition, time, q1:q20)
 ```
 
 <a name="ex2"></a>
@@ -266,11 +266,11 @@ sses_pre_raw  <- select(sses, 1, 5:25) %>%
 Write a similar pipeline (including comments) to create a data frame named `sses_post_raw` containing the post-intervention SSES data. The condition and post-intervention SSES data are in columns `25:45`. The SSES columns have the prefix `post_sse_` rather than `pre_sse_`. Set the value in the `time` factor to `post`. After running your commands, the first few rows of `sses_post_raw` should look like this:
 
 ```{r ex2, echo=FALSE}
-sses_post_raw <- select(sses, 1, 25:45) %>%
+sses_post_raw <- dplyr::select(sses, 1, 25:45) %>%
   set_names(~ str_to_lower(.) %>% str_replace_all("post_sse_", "q")) %>%
   mutate(subj = factor(partid), condition = factor(condition),
          time = factor('post')) %>%
-  select(subj, condition, time, q1:q20)
+  dplyr::select(subj, condition, time, q1:q20)
 ```
 
 ```{r ex2-correct, echo=FALSE}

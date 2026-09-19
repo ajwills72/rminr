@@ -156,7 +156,7 @@ source("themeapa.R")
 Now all you need to do is add this theme to your graph, using `+ theme_APA()`. If you get it right, your graph will look something like this (without the words "example plot", of course, and with your meaningful y-axis label):
 
 ```{r theme-apa-apply, echo=FALSE}
-meanplot <- meanplot + theme_APA() + annotate("text", x = Inf, y = -Inf, label = "EXAMPLE PLOT", col = "red", hjust = 5.1, vjust = -1.1)
+meanplot <- meanplot + theme_APA + annotate("text", x = Inf, y = -Inf, label = "EXAMPLE PLOT", col = "red", hjust = 5.1, vjust = -1.1)
 meanplot
 ```
 

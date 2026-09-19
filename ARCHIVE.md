@@ -17,6 +17,12 @@ The source tree has been syntax-checked with R 4.6.1 using
 `Rscript scripts/check-r-source.R`. This is separate from rendering: a render
 also needs the packages used by the individual worksheet.
 
+The R 4.6.1 render audit successfully rendered the standalone worksheets after
+updating current `gt`, `emmeans`, `ggplot2`, and `dplyr` interfaces. Three source
+files are not standalone render targets: `src/cs-alison-bacon.Rmd` requires the
+missing `raw_data.csv` case-study file, while `src/fragments.Rmd` and
+`src/more-on-nonpara.Rmd` assume data objects created by earlier worksheets.
+
 The data and helper files needed by the lessons are stored under `src/`.
 External websites mentioned in the lessons are references or optional services,
 not required repositories for the published site. A lightweight audit can be

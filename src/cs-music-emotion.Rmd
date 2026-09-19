@@ -91,7 +91,7 @@ include <- include %>%
   set_names(~ str_to_lower(.)) %>%
   mutate(subj = factor(subj), subculture = factor(subculture)) %>%
   mutate(subculture = recode(.$subculture, Main = 'Mainstream')) %>%
-  select(subj, subculture, interestedpre:ersq18)
+  dplyr::select(subj, subculture, interestedpre:ersq18)
 include %>% head(3) %>% pander(split.table = Inf)
 ```
 
@@ -120,7 +120,7 @@ panas <- include %>%
                                     ashamedpost, nervouspost, jitterypost,
                                     afraidpost))),
          ) %>%
-  select(subj, subculture, pre_emotion:post_na)
+  dplyr::select(subj, subculture, pre_emotion:post_na)
 panas %>% head(3) %>% pander(split.table = Inf)
 ```
 
@@ -138,7 +138,7 @@ ers <- include %>%
          approach = rowSums(across(all_of(approach_q))) / length(approach_q),
          development = rowSums(across(all_of(development_q))) / length(development_q),
          total = rowSums(across(all_of(c(avoidance_q, approach_q, development_q))) / 18)) %>%
-  select(subj, subculture, avoidance, approach, development, total)
+  dplyr::select(subj, subculture, avoidance, approach, development, total)
 ```
 
 ### Explanation of commands
