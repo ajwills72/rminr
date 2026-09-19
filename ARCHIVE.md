@@ -13,6 +13,10 @@ packages such as `tidyverse`, `ggplot2`, `pander`, `viridis`, `gt`, `psych`,
 change as R packages evolve; this archive does not promise a fresh rebuild of
 every historical worksheet.
 
+The source tree has been syntax-checked with R 4.6.1 using
+`Rscript scripts/check-r-source.R`. This is separate from rendering: a render
+also needs the packages used by the individual worksheet.
+
 The data and helper files needed by the lessons are stored under `src/`.
 External websites mentioned in the lessons are references or optional services,
 not required repositories for the published site. A lightweight audit can be
