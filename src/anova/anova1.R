@@ -292,17 +292,16 @@ aov_car(formula = rt ~ Error(subj/congru), data = incong.neut)
 
 
 ## Note: Last bit to think about including -- simple effects.
-,
 
 
-a priori, each comparison
+## a priori, each comparison
 ## is quite unlikely to result in a difference - say P(difference) = .01 then make use of that --- you'd need
 ## a BF of 50 to update to the position that a difference or an absence of a difference were equally likely. 
 
 
 
 
-With repeated-measures designs, looking at pairs is best done like this (essentially, follow-up t-tests).
+## With repeated-measures designs, looking at pairs is best done like this (essentially, follow-up t-tests).
 ## Tukey (see b/subjects) not appropriate here as it assumes independence between the conditions, which isn't
 ## true in a repeated-measures design.
 
