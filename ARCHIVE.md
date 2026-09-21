@@ -18,10 +18,14 @@ The source tree has been syntax-checked with R 4.6.1 using
 also needs the packages used by the individual worksheet.
 
 The R 4.6.1 render audit successfully rendered the standalone worksheets after
-updating current `gt`, `emmeans`, `ggplot2`, and `dplyr` interfaces. Three source
-files are not standalone render targets: `src/cs-alison-bacon.Rmd` requires the
-missing `raw_data.csv` case-study file, while `src/fragments.Rmd` and
-`src/more-on-nonpara.Rmd` assume data objects created by earlier worksheets.
+updating current `gt`, `emmeans`, `ggplot2`, and `dplyr` interfaces. The Alison
+Bacon case study (`src/cs-alison-bacon.Rmd`) is retained as partially developed
+course material, but was not completed as a reproducible standalone lesson: its
+published HTML exists, but the source requires the missing
+`case-studies/alison-bacon/raw_data.csv` file and the lesson is not linked from
+the course index. The source file `src/more-on-nonpara.Rmd` is an internal
+teaching fragment that assumes data objects created by earlier worksheets and
+is not a standalone render target.
 
 The data and helper files needed by the lessons are stored under `src/`.
 External websites mentioned in the lessons are references or optional services,
