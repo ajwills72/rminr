@@ -23,9 +23,7 @@ Bacon case study (`src/cs-alison-bacon.Rmd`) is retained as partially developed
 course material, but was not completed as a reproducible standalone lesson: its
 published HTML exists, but the source requires the missing
 `case-studies/alison-bacon/raw_data.csv` file and the lesson is not linked from
-the course index. The source file `src/more-on-nonpara.Rmd` is an internal
-teaching fragment that assumes data objects created by earlier worksheets and
-is not a standalone render target.
+the course index.
 
 The data and helper files needed by the lessons are stored under `src/`.
 External websites mentioned in the lessons are references or optional services,
